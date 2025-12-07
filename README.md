@@ -11,6 +11,7 @@
 **Last Updated:** 2025-12-07
 **Total Scripts:** 756 with README documentation
 **Awesome Badge:** [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+**Wiki:** 📖 [Comprehensive Wiki Guide](https://github.com/kaktaknet/awesome-uo-scripts/wiki)
 
 ## Overview
 
@@ -124,6 +125,7 @@ Each script folder contains:
 ### Root Documentation Files
 
 - **README.md** - This file (main documentation)
+- **[Wiki](https://github.com/kaktaknet/awesome-uo-scripts/wiki)** - 📖 Comprehensive guides and tutorials
 - **ultima_online_scripts/** - All organized scripts with descriptive folder names
 - **ultima_online_scripts/README.md** - Full project documentation with resources
 - **ultima_online_scripts/INDEX.md** - Directory structure and statistics
