@@ -1,7 +1,7 @@
 <div align="center">
 <img src="assets/awesome_ultima-online_cover.jpg" alt="Ultima Online Logo" width="1280">
 
-# Awesome UO Scripts
+# Awesome Ultima Online Scripts
 
 </div>
 
