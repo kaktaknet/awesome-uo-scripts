@@ -5,10 +5,11 @@
 
 </div>
 
-> A curated collection of **756 script packages** for Sphere Server - the free Ultima Online server emulator. Fully cataloged, documented, and organized for easy discovery.
+> A curated collection of **756+ script packages** for Sphere Server - the free Ultima Online server emulator. Fully documented with meaningful naming and organized for easy discovery.
 
-**Status:** Fully Cataloged and Documented
+**Status:** ✅ Fully Documented and Organized
 **Last Updated:** 2025-12-07
+**Total Scripts:** 756 with README documentation
 **Awesome Badge:** [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
 ## Overview
@@ -17,12 +18,12 @@ A comprehensive, well-organized repository of Sphere Server scripts covering eve
 
 ### Quick Facts
 
-- **Total Packages:** 754
-- **Documented:** 754 folders (100%)
-- **Size:** 83 MB
-- **Categories:** 13
-- **Organization Date:** 2025-12-07
-- **Last Synced:** 2025-12-07
+- **Total Scripts:** 756
+- **Documented:** 756 folders (100%) - Every script has README
+- **Categories:** 13 major categories
+- **Folder Naming:** Descriptive names (e.g., House_Decoration_v1, Item_Weapon_v13)
+- **Organization:** Deep content analysis-based classification
+- **Last Updated:** 2025-12-07 (December 7, 2025)
 
 ## 📁 Directory Structure
 
@@ -30,8 +31,8 @@ All scripts are organized in `ultima_online_scripts/` with the following categor
 
 ```
 ultima_online_scripts/
-├── Admin_Tools/                  (27 scripts)
-├── Chat_Systems/                 (88 scripts)
+├── Admin_Tools/                  (28 scripts)
+├── Chat_Systems/                 (89 scripts)
 ├── Combat_PvP/                   (43 scripts)
 ├── Crafting/                     (10 scripts)
 ├── Economy/                      (36 scripts)
@@ -44,6 +45,8 @@ ultima_online_scripts/
 ├── Skills/                       (36 scripts)
 └── Travel_Teleportation/         (47 scripts)
 ```
+
+**Total:** 756 scripts across 13 categories
 
 ## 📚 Category Breakdown
 
@@ -110,23 +113,26 @@ Each script folder contains:
 - **Original script files** - .scp, .txt, .htm files
 - **Author info** - When available in the original files
 
-### Root Files
+### Root Documentation Files
 
 - **README.md** - This file (main documentation)
-- **ARCHIVE_SUMMARY.json** - Summary of archive structure and statistics
-- **catalog_database.json** - Complete metadata for all 754 scripts with file information
-- **assets/** - Additional resources (logos, images)
+- **ultima_online_scripts/** - All organized scripts with descriptive folder names
+- **ultima_online_scripts/README.md** - Full project documentation with resources
+- **ultima_online_scripts/INDEX.md** - Directory structure and statistics
+- **ultima_online_scripts/llms.txt** - Complete searchable index of 756 scripts
+- **ultima_online_scripts/llms-full.txt** - Detailed descriptions and system integration info
 
-## 📊 Archive Statistics
+## 📊 Repository Statistics
 
 | Metric | Value |
 |--------|-------|
-| **Total Packages** | 754 |
-| **Documented** | 754 (100%) |
-| **Categories** | 13 |
-| **Size** | 83 MB |
+| **Total Scripts** | 756 |
+| **Documented** | 756 (100%) - Every script has README |
+| **Categories** | 13 major categories |
+| **Folder Naming** | Descriptive names with version numbering |
+| **Content Analysis** | Deep analysis-based classification |
 | **Last Updated** | 2025-12-07 |
-| **Source** | mirror.ashkantra.de/scripts/Sphere/ |
+| **Organization Date** | December 7, 2025 |
 
 ## 🔍 Finding Specific Types
 
@@ -174,18 +180,31 @@ Most scripts work across versions. Check individual README files for version com
 - Check for dependency scripts
 - See README in script folder
 
-## 📚 Resources
+## 📚 Resources & Documentation
 
-### Official Documentation
+### Official Ultima Online
+- **Official Website:** [https://uo.com/](https://uo.com/) - Latest news and official servers
+- **UO New Legacy:** [https://uo.com/new-legacy/](https://uo.com/new-legacy/) - Modern UO ruleset (2024+)
+- **Wikipedia:** [Ultima Online History](https://en.wikipedia.org/wiki/Ultima_Online)
 
-- **Sphere Server Official:** https://www.sphereserver.net/
-- **Ultima Online:** https://www.ultimaonline.com/
+### Sphere Server - Official Resources
+- **Main Project:** [https://www.sphereserver.com/](https://www.sphereserver.com/)
+- **Community Site:** [https://www.sphereserver.net/](https://www.sphereserver.net/)
+- **SphereWiki (Documentation):** [https://wiki.spherecommunity.net/](https://wiki.spherecommunity.net/) - 📚 **Comprehensive scripting reference**
+- **Community Forum:** [https://forum.spherecommunity.net/](https://forum.spherecommunity.net/) - Support and discussion
+- **GitHub:** [https://github.com/Sphereserver/](https://github.com/Sphereserver/) - Source code repositories
 
 ### In This Repository
+- **Main Documentation:** [ultima_online_scripts/README.md](./ultima_online_scripts/README.md)
+- **INDEX.md:** [Directory structure and statistics](./ultima_online_scripts/INDEX.md)
+- **llms.txt:** [Complete searchable index of all 756 scripts](./ultima_online_scripts/llms.txt)
+- **llms-full.txt:** [Detailed descriptions and integration info](./ultima_online_scripts/llms-full.txt)
+- Individual script folders with README.md in every script
 
-- `ultima_online_scripts/` - All organized scripts by category
-- `catalog_database.json` - Searchable metadata for all scripts
-- Individual `README.md` files - Detailed info per script
+### Community Projects
+- **UO Outlands:** [https://uooutlands.com/](https://uooutlands.com/) - Active free-to-play Sphere shard
+- **UO Forever:** [https://uoforever.com/](https://uoforever.com/) - Nostalgia-focused shard
+- **Source-X:** [https://github.com/Sphereserver/Source-X](https://github.com/Sphereserver/Source-X) - Modern Sphere fork with active development
 
 ## 📝 License & Attribution
 
@@ -203,20 +222,23 @@ We are deeply grateful to the maintainers of this mirror for their dedication to
 
 ## ✨ What Makes This Repository Awesome
 
-✅ **756 curated scripts** - Comprehensive collection
-✅ **Well organized** - 13 categories for easy navigation
-✅ **95.6% documented** - Almost every script has README
-✅ **Fully preserved** - Original content 100% intact
-✅ **Searchable** - Complete metadata database (JSON)
-✅ **Ready to use** - Copy & paste installation
+✅ **756+ curated scripts** - Most comprehensive Sphere Server collection
+✅ **100% documented** - Every script has README with descriptions
+✅ **Descriptively named** - Meaningful folder names (e.g., House_Decoration_v1, Item_Weapon_v13)
+✅ **Well organized** - 13 logical categories with version numbering
+✅ **Content analyzed** - Scripts classified by actual functionality using deep analysis
+✅ **Easy to search** - llms.txt provides complete searchable index
+✅ **Ready to use** - Copy & paste installation with clear documentation
+✅ **Active resources** - Links to SphereWiki, forums, and community projects
 
 ## 🤝 Contributing
 
-Found an improvement? Want to help?
+Want to help improve this collection?
 
-- Each folder has a `README.md` with details
-- Check `catalog_database.json` for metadata
-- Use `rename_mapping.json` for old→new name reference
+- Each script folder has a `README.md` with implementation details
+- Check [ultima_online_scripts/llms.txt](./ultima_online_scripts/llms.txt) for complete script index
+- Review [SphereWiki](https://wiki.spherecommunity.net/) for Sphere scripting standards
+- Share improvements on [Sphere Community Forum](https://forum.spherecommunity.net/)
 
 ---
 
