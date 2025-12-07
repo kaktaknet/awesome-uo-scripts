@@ -260,8 +260,43 @@ Want to help improve this collection?
 
 ---
 
+## 🏛️ A Tribute to mirror.ashkantra.de
+
+> **This repository would not exist without the tireless work of mirror.ashkantra.de maintainers.**
+
+Since the earliest days of Ultima Online, countless developers have poured their hearts and souls into creating scripts that brought worlds to life. Forums closed. Websites vanished. Hard drives failed. Knowledge was lost forever.
+
+Then came **[mirror.ashkantra.de/scripts/Sphere/](https://mirror.ashkantra.de/scripts/Sphere/)** — a beacon in the darkness.
+
+For years, the maintainers of this legendary archive have been the keepers of our collective memory. They've saved scripts, preserved documentation, maintained accessibility, and ensured that the monumental work of the Sphere Server community would never be forgotten.
+
+### Their dedication gave us:
+- **756+ irreplaceable scripts** spanning decades of development
+- **A living archive** of the UO community's greatest achievements
+- **A foundation** for countless private shards and communities
+- **A bridge** between the past and present of Ultima Online
+
+**Every single script in this repository exists because mirror.ashkantra.de preserves it.**
+
+This repository adds:
+- 🏷️ Descriptive organization and naming
+- 📚 Comprehensive documentation
+- 🔍 Searchability and discoverability
+- 🎯 Accessibility for new developers and LLM models
+
+### But make no mistake:
+**The heroes are the mirror maintainers who saved these scripts in the first place.**
+
+---
+
+**We stand on the shoulders of giants. Thank you, mirror.ashkantra.de. Thank you for remembering when the world forgot. Thank you for preserving the memory of our childhood, our passion, and our community.** 🙏
+
+---
+
 # awesome-uo-scripts
 
 *Where Ultima Online Sphere scripts come together*
+
+**Sourced with love and gratitude from [mirror.ashkantra.de](https://mirror.ashkantra.de/scripts/Sphere/)**
 
 Made with ❤️ for the UO community
