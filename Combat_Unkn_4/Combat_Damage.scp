@@ -1,0 +1,625 @@
+// 
+// Author : Jorge Pereira ( Kell ap Aran ), evren@portugalmail.pt 
+// Description: a purely scripted damage system, with the following features: 
+// * being scripted, anything can be changed 
+// * STR and damage become independant, for NPCs. 
+// * works seamlessly with no-weapon (wrestling skill), and allows for easy implementation of wrestling weapons 
+// * total control over how the combat skills affect damage 
+// * custom damage messages 
+// * damage still goes through armour, as normal 
+// * non-composite percentual damage bonuses (all bonuses are added up first, and applied 
+// once, instead of being applied one after another) 
+// * debug messages for damage/modifier applied (set TAG.DEBUG.COMBAT 1 on a PC/NPC to see 
+// the damage applied) 
+// * easily customisable special effects for weapons 
+// * ... 
+// 
+// TESTING this script: 
+// Because getting it installed on every character takes its time, you might want to test it 
+// first. For that, just add the event with a command like ".xEVENTS +e_combat 
+// to the NPCs you wish to test with and yourself. You can also do ".xTAG.DEBUG.COMBAT 1" 
+// to see damage information. 
+// 
+// INSTALATION: 
+// Getting this to work is fairly easy, yet takes a little work. The e_combat event, needs 
+// to be attached to every character ingame. So, you will need to add the following to *every* 
+// [CHARDEF ...] section: 
+// TEVENTS = e_combat 
+// 
+// including the chardef for c_man and c_woman, which is PCs ( if you have a good text editor 
+// with regular expressions, you can do it in little time ) 
+// 
+// SUGGESTIONS: 
+// With this, you can do fairly new and inventive stuff, such as a propper parrying skill, 
+// rides participating in combat, special weapon effects... 
+// 
+
+// add this to all CHARDEF sections: 
+// TEVENTS = e_combat 
+[EVENTS e_combat] 
+ON = @Hit 
+return <f_weapon_damage> 
+
+
+
+[DEFNAME def_materials] // TDATA1 of weapons 
+mat_default 0 
+mat_flesh 1 // fists 
+
+mat_copper 2 
+mat_iron 3 
+mat_silver 4 
+mat_agapite 5 
+mat_shadow 6 
+
+
+
+// Main function, called from @Hit 
+[FUNCTION f_weapon_damage] 
+// roll the damage and apply modifiers 
+f_weapon_calc_dam 
+
+// apply weapon special function 
+doswitch <VAR.WPN.MAT> 
+f_weapon_mat_default // default 
+f_weapon_mat_default // fists 
+f_weapon_mat_default // copper 
+f_weapon_mat_default // iron 
+f_weapon_mat_silver // silver 
+f_weapon_mat_agapite // agapite 
+f_weapon_mat_shadow // shadow 
+enddo 
+
+return <f_weapon_apply_damage> 
+
+
+// get the damage roll of weapon/hands 
+[FUNCTION f_weapon_extract_dam] 
+VAR.HIT_ACT = <ACT> 
+ACT = <findlayer(layer_hand1).uid> 
+if ( 0<ACT.UID> == 0 ) 
+ACT = <findlayer(layer_hand2).uid> 
+endif 
+
+if ( <ACT.UID> == 0 ) 
+elseif ( <ACT.type> == t_weapon_mace_smith ) 
+elseif ( <ACT.type> == t_weapon_mace_sharp ) 
+elseif ( <ACT.type> == t_weapon_mace_staff ) 
+elseif ( <ACT.type> == t_weapon_mace_crook ) 
+elseif ( <ACT.type> == t_weapon_mace_pick ) 
+elseif ( <ACT.type> == t_weapon_sword ) 
+elseif ( <ACT.type> == t_weapon_axe ) 
+elseif ( <ACT.type> == t_weapon_fence ) 
+elseif ( <ACT.type> == t_weapon_bow ) 
+elseif ( <ACT.type> == t_weapon_xbow ) 
+elseif ( <ACT.type> == t_weapon_arrow ) // ? 
+elseif ( <ACT.type> == t_weapon_bolt ) // ? 
+else 
+ACT = 0 
+endif 
+
+if ( <ACT.UID> == 0 ) // wrestling 
+VAR.WPN.NAME = fists 
+VAR.WPN.TYPE = 0 
+VAR.WPN.MAT = mat_flesh 
+VAR.WPN.MOREx = 0 
+VAR.WPN.MOREy = 0 
+VAR.WPN.MOREz = 0 
+VAR.WPN.MOREm = 0 
+
+NEWITEM i_gold // new item to parse the damage 
+VAR.MOREP = <ACT.MOREP> 
+ACT.MOREP = <DAM> 
+VAR.WPN.MIN = <ACT.MOREx> 
+VAR.WPN.MAX = <ACT.MOREy> 
+ACT.MOREP = <VAR.MOREP> 
+if ( <VAR.WPN.MIN> <= 0 ) 
+VAR.WPN.MIN = 1 
+VAR.WPN.MAX = 8 
+endif 
+if ( <VAR.WPN.MAX> < <VAR.WPN.MIN> ) 
+VAR.WPN.MAX = <VAR.WPN.MIN> 
+endif 
+ACT.REMOVE 
+else 
+VAR.WPN.NAME = <ACT.NAME> 
+VAR.WPN.TYPE = <ACT.TYPE> 
+VAR.WPN.MAT = <ACT.TDATA1> 
+VAR.WPN.MOREx = <ACT.MOREx> 
+VAR.WPN.MOREy = <ACT.MOREy> 
+VAR.WPN.MOREz = <ACT.MOREz> 
+VAR.WPN.MOREm = <ACT.MOREm> 
+
+// use the weapon's MOREP field to parse the damage 
+VAR.TEMP = <ACT.MOREP> 
+ACT.MOREP = <ACT.DAM> 
+VAR.WPN.MIN = <ACT.MOREX> 
+VAR.WPN.MAX = <ACT.MOREY> 
+ACT.MOREP = <VAR.TEMP> 
+
+if ( <VAR.WPN.MAX> < <VAR.WPN.MIN> ) 
+VAR.WPN.MAX = <VAR.WPN.MIN> 
+endif 
+endif 
+
+ACT = <VAR.HIT_ACT> 
+// VAR.WPN.DAM = <eval (<VAR.WPN.MIN> + rand( <eval (<VAR.WPN.MAX> - <VAR.WPN.MIN>)> ))> 
+VAR.WPN.DAM = <eval ( { <VAR.WPN.MIN> <VAR.WPN.MAX> } )> 
+VAR.WPN.BONUS = 100 // init bonus modifier at 100% (normal damage) 
+
+
+// apply a weapon-specific skill 
+[FUNCTION f_weapon_apply_skill] 
+VAR.ROLL = { <eval (<argn>/12)> <eval (<argn>/10)> } // above 1000 
+doswitch <eval (<argn> / 100)> 
+VAR.ROLL = { -10 -20 } // 0 
+VAR.ROLL = { -10 0 } // 1 
+VAR.ROLL = { -5 5 } // 2 
+VAR.ROLL = { 0 10 } // 3 
+VAR.ROLL = { 5 12 } // 4 
+VAR.ROLL = { 10 15 } // 5 
+VAR.ROLL = { 10 20 } // 6 
+VAR.ROLL = { 12 25 } // 7 
+VAR.ROLL = { 15 30 } // 8 
+VAR.ROLL = { 17 35 } // 9 
+VAR.ROLL = { 20 40 } // 10 
+VAR.ROLL = { 25 45 } // 11 special 
+VAR.ROLL = { 30 50 } // 12 special 
+VAR.ROLL = { 50 60 } // 13 special 
+VAR.ROLL = { 55 65 } // 14 special 
+VAR.ROLL = { 60 70 } // 15 special 
+enddo 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + <VAR.ROLL>)> 
+
+
+// apply the tactics skill, which should make up for STR not being used on damage on NPCs 
+[FUNCTION f_weapon_apply_tactics] 
+if ( <NPC> ) 
+VAR.ROLL = { <eval ((<TACTICS>)/10)> <eval ((<TACTICS>)/8)> } // NPCs 
+else 
+VAR.ROLL = { <eval (<TACTICS>/20)> <eval (<TACTICS>/12)> } // above 1000 
+doswitch <eval (<TACTICS> / 100)> 
+VAR.ROLL = { -10 -20 } // 0 
+VAR.ROLL = { -10 -5 } // 1 
+VAR.ROLL = { -5 5 } // 2 
+VAR.ROLL = { 0 7 } // 3 
+VAR.ROLL = { 4 12 } // 4 
+VAR.ROLL = { 7 16 } // 5 
+VAR.ROLL = { 11 20 } // 6 
+VAR.ROLL = { 13 25 } // 7 
+VAR.ROLL = { 15 30 } // 8 
+VAR.ROLL = { 18 35 } // 9 
+VAR.ROLL = { 20 40 } // 10 
+VAR.ROLL = { 23 45 } // 11 special 
+VAR.ROLL = { 26 50 } // 12 special 
+VAR.ROLL = { 29 55 } // 13 special 
+VAR.ROLL = { 32 60 } // 14 special 
+VAR.ROLL = { 35 65 } // 15 special 
+enddo 
+endif 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + <VAR.ROLL>)> 
+
+
+// apply strength modifier (cap at 100 for NPCs) 
+[FUNCTION f_weapon_apply_strength] 
+if ( !<npc> ) 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + ((<STR>-50)/2) )> 
+else 
+VAR.TMP = <STR> 
+if (<VAR.TMP> > 100) 
+VAR.TMP = 100 
+endif 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + ((<VAR.TMP>-50)/2) )> 
+endif 
+
+[FUNCTION f_weapon_apply_poison] 
+if !( <findlayer(42).uid> ) 
+return 0 
+endif 
+// - 5% bonus per 10% poison effect 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> - (<findlayer(42).morey>/20) )> 
+
+
+[FUNCTION f_weapon_apply_anatomy] 
+if ( rand(1500) < <ANATOMY> ) // 66% chance at 100% skill 
+if ( <ANATOMY> < 300 ) 
+elseif ( <ANATOMY> < 500 ) 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 9)> // 30 - 50 
+elseif ( <ANATOMY> < 600 ) 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 12)> // 50 - 60 
+elseif ( <ANATOMY> < 700 ) 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 15)> // 60 - 70 
+elseif ( <ANATOMY> < 800 ) 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 17)> // 70 - 80 
+elseif ( <ANATOMY> < 900 ) 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 20)> // 80 - 90 
+elseif ( <ANATOMY> < 1000 ) 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 23)> // 90 - 100 
+else 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 25)> // 100 
+endif 
+endif 
+
+
+[FUNCTION f_weapon_apply_main] 
+if ( 0 ) 
+elseif ( <VAR.WPN.TYPE> == 0 ) // WRESTLING 
+VAR.WPN.MSG = 0 
+elseif ( <VAR.WPN.TYPE> == t_weapon_fence ) // FENCING 
+VAR.WPN.MSG = 1 
+VAR.SKILL = <EVAL ((<FENCING>/5) + (<ANATOMY>/10))> 
+if ( rand(1000) < <VAR.SKILL> ) 
+VAR.LOC = 0 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 50)> // success 
+else 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> - 20)> // failure 
+endif 
+f_weapon_apply_skill <FENCING> 
+elseif ( (<VAR.WPN.TYPE> == t_weapon_sword) | (<VAR.WPN.TYPE> == t_weapon_axe) ) // SWORDSMANSHIP 
+VAR.WPN.MSG = 2 
+f_weapon_apply_skill <SWORDSMANSHIP> 
+f_weapon_apply_anatomy 
+elseif ( (<VAR.WPN.TYPE> == t_weapon_bow) | (<VAR.WPN.TYPE> == t_weapon_xbow) ) 
+VAR.WPN.MSG = 4 
+f_weapon_apply_skill <ARCHERY> 
+//f_weapon_apply_anatomy 
+else // MACE FIGHTING 
+VAR.WPN.MSG = 3 
+f_weapon_apply_skill <MACEFIGHTING> 
+f_weapon_apply_anatomy 
+endif 
+
+
+[FUNCTION f_weapon_calc_dam] 
+f_weapon_extract_dam 
+f_weapon_apply_location 
+f_weapon_apply_strength 
+f_weapon_apply_poison 
+f_weapon_apply_tactics 
+f_weapon_apply_main 
+
+
+[FUNCTION f_weapon_apply_damage] 
+VAR.WPN.DAM0 = <VAR.WPN.DAM> 
+VAR.HITS = <SRC.HITS> 
+VAR.WPN.DAM = <eval ((<VAR.WPN.DAM> * <VAR.WPN.BONUS>)/100)> 
+
+f_weapon_show_message_init 
+doswitch <var.wpn.MSG> 
+f_weapon_show_message_wrestling 
+f_weapon_show_message_fencing 
+f_weapon_show_message_swords 
+f_weapon_show_message_maces 
+f_weapon_show_message_archery 
+enddo 
+
+if ( <SRC.REGION.FLAGS> & (region_flag_safe|region_flag_no_pvp) ) 
+return 1 
+endif 
+
+if ( <src.flags> & statf_reactive ) 
+if ( <src.findlayer(33).uid> ) 
+VAR.REACT = <src.findlayer(33).morey> 
+else 
+VAR.REACT = <SRC.MAGICRESISTANCE> // has flag but no spell object? NPC? 
+endif 
+SRC.EFFECT 3, i_fx_curse, 3, 10 
+VAR.REACT = <eval ((<VAR.WPN.DAM> * <var.react>)/3000)> 
+HITS = <eval (<HITS> - <VAR.REACT>)> 
+UPDATE 
+endif 
+
+if ( <src.flags> & statf_invul ) 
+SRC.EFFECT 3, i_fx_glow, 3, 20, 1 
+return 1 
+endif 
+
+// lose some stamina on hits, more in PvP 
+VAR.STAM_LOSS = <eval (rand(2))> 
+if ( !<NPC> ) 
+VAR.STAM_LOSS = <eval (<VAR.STAM_LOSS> + rand(2))> 
+elseif ( rand(2) ) 
+VAR.STAM_LOSS = 0 
+endif 
+
+if ( <VAR.STAM_LOSS> > <SRC.STAM> ) 
+SRC.STAM = 0 
+else 
+SRC.STAM = <eval (<SRC.STAM> - <VAR.STAM_LOSS>)> 
+endif 
+
+if ( 0<tag.debug.combat>) 
+SAY (<NAME>): <eval <VAR.WPN.DAM0>> * <eval <VAR.WPN.BONUS>>% == <eval <VAR.WPN.DAM>> 
+endif 
+
+SRC.TAG.COMBAT.DAMAGE <VAR.WPN.DAM> 
+SRC.events +e_stop_original_damage // catch the original damage 
+return 0 
+
+
+// catch the original damage and handle the new one 
+[EVENTS e_stop_original_damage] 
+ON=@GetHit 
+EVENTS -e_stop_original_damage 
+DAMAGE <TAG.COMBAT.DAMAGE> 
+return 1 
+
+
+// damage modifier for location 
+[FUNCTION f_weapon_apply_location] 
+VAR.LOC = <eval rand(11)> 
+
+doswitch <var.loc> 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 10)> // 0: head 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 1: arm 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 2: arm 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 3: leg 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 4: leg 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 5: leg 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 6: leg 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 5)> // 7: chest 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 8: chest 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 9: chest 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 10: chest 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS> + 0)> // 11: chest 
+enddo 
+
+
+
+[FUNCTION f_weapon_location_name_humanoid] 
+doswitch <VAR.LOC> 
+VAR.LOC_NAME = head 
+VAR.LOC_NAME = left arm 
+VAR.LOC_NAME = right arm 
+VAR.LOC_NAME = left leg 
+VAR.LOC_NAME = left leg 
+VAR.LOC_NAME = right leg 
+VAR.LOC_NAME = right leg 
+VAR.LOC_NAME = rib cage 
+VAR.LOC_NAME = rib cage 
+VAR.LOC_NAME = chest 
+VAR.LOC_NAME = chest 
+VAR.LOC_NAME = guts 
+enddo 
+
+
+[FUNCTION f_weapon_location_name_animal] 
+doswitch <VAR.LOC> 
+VAR.LOC_NAME = head 
+VAR.LOC_NAME = leg 
+VAR.LOC_NAME = leg 
+VAR.LOC_NAME = leg 
+VAR.LOC_NAME = leg 
+VAR.LOC_NAME = back 
+VAR.LOC_NAME = back 
+VAR.LOC_NAME = back 
+VAR.LOC_NAME = body 
+VAR.LOC_NAME = body 
+VAR.LOC_NAME = body 
+VAR.LOC_NAME = body 
+enddo 
+
+
+[FUNCTION f_weapon_location_name_generic] 
+doswitch <VAR.LOC> 
+VAR.LOC_NAME = head 
+VAR.LOC_NAME = head 
+VAR.LOC_NAME = front 
+VAR.LOC_NAME = front 
+VAR.LOC_NAME = front 
+VAR.LOC_NAME = back 
+VAR.LOC_NAME = back 
+VAR.LOC_NAME = back 
+VAR.LOC_NAME = body 
+VAR.LOC_NAME = body 
+VAR.LOC_NAME = body 
+VAR.LOC_NAME = body 
+enddo 
+
+
+[FUNCTION f_weapon_location_name] 
+if ( 0 ) 
+elseif ( <SRC.BODY> == c_man ) 
+f_weapon_location_name_humanoid 
+elseif ( <SRC.BODY> == c_woman ) 
+f_weapon_location_name_humanoid 
+elseif ( <SRC.BODY> == c_man ) 
+f_weapon_location_name_humanoid 
+elseif ( <src.obody> == c_m_skeletonarcher ) 
+f_weapon_location_name_humanoid 
+elseif ( <src.obody> == c_skeleton ) 
+f_weapon_location_name_humanoid 
+elseif ( <src.obody> == c_liche ) 
+f_weapon_location_name_humanoid 
+elseif ( <src.obody> == c_spectre ) 
+f_weapon_location_name_humanoid 
+elseif ( <src.obody> == c_zombie ) 
+f_weapon_location_name_humanoid 
+elseif ( <src.npc> == brain_animal ) 
+f_weapon_location_name_animal 
+else 
+f_weapon_location_name_generic 
+endif 
+
+
+[FUNCTION f_weapon_show_message_init] 
+if ( 0 ) 
+elseif ( <VAR.WPN.DAM> < ((<VAR.WPN.MAX> * 7) / 10) ) 
+doswitch rand(1) 
+VAR.WPN.ADJ = puny 
+VAR.WPN.ADJ = weak 
+enddo 
+elseif ( <VAR.WPN.DAM> < ((<VAR.WPN.MAX> * 11) / 10) ) 
+VAR.WPN.ADJ1 = r 
+VAR.WPN.ADJ2 = 's 
+VAR.WPN.ADJ = 
+return 0 
+elseif ( <VAR.WPN.DAM> < ((<VAR.WPN.MAX> * 17) / 10) ) 
+doswitch rand(1) 
+VAR.WPN.ADJ = powerful 
+VAR.WPN.ADJ = strong 
+enddo 
+else 
+doswitch rand(1) 
+VAR.WPN.ADJ = tremendous 
+VAR.WPN.ADJ = shattering 
+enddo 
+endif 
+
+VAR.WPN.ADJ1 = r <VAR.WPN.ADJ> 
+VAR.WPN.ADJ2 = 's <VAR.WPN.ADJ> 
+
+
+
+[FUNCTION f_weapon_show_message_wrestling] 
+f_weapon_location_name 
+
+// non-human 
+if ( 0 ) 
+elseif ( (<BRAIN> == brain_undead) ) 
+// human messages 
+dorand 4 
+SYSMESSAGE You touch <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You bite <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> lash hits <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> chilling touch hurts <SRC.NAME> in the <VAR.LOC_NAME>. 
+enddo 
+dorand 4 
+SRC.SYSMESSAGE <NAME> lashes you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME> touches you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> lash hits you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> chilling touch hurts you in the <VAR.LOC_NAME>. 
+enddo 
+elseif ( (<BODY> == c_man) || (<BODY> == c_woman) ) // human messages 
+dorand 4 
+SYSMESSAGE You punch <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You kick <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> punch hits <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> kick hits <SRC.NAME> in the <VAR.LOC_NAME>. 
+enddo 
+dorand 4 
+SRC.SYSMESSAGE <NAME> kicks you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME> punches you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> kick hits you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> punch hits you in the <VAR.LOC_NAME>. 
+enddo 
+else 
+dorand 4 
+SYSMESSAGE You lash <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You bite <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> lash hits <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> bite pierces <SRC.NAME> in the <VAR.LOC_NAME>. 
+enddo 
+dorand 4 
+SRC.SYSMESSAGE <NAME> lashes you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME> bites you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> lash hits you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> bite pierces you in the <VAR.LOC_NAME>. 
+enddo 
+endif 
+
+
+[FUNCTION f_weapon_show_message_swords] 
+f_weapon_location_name 
+
+doswitch rand(3) 
+SYSMESSAGE You slash <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You slice <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> slice hits <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> hits <SRC.NAME> in the <VAR.LOC_NAME>. 
+enddo 
+
+doswitch rand(3) 
+SRC.SYSMESSAGE <NAME> slashes you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME> slices you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> slice hits your <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> slash lands on your <VAR.LOC_NAME>. 
+enddo 
+
+
+[FUNCTION f_weapon_show_message_maces] 
+f_weapon_location_name 
+
+doswitch rand(2) 
+SYSMESSAGE You crush <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You smash <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> blow lands on <SRC.NAME>'s <VAR.LOC_NAME>. 
+enddo 
+
+doswitch rand(2) 
+SRC.SYSMESSAGE <NAME> crushes you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME> smashes you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> blow lands on your <VAR.LOC_NAME>. 
+enddo 
+
+[FUNCTION f_weapon_show_message_fencing] 
+f_weapon_location_name 
+
+doswitch rand(2) 
+SYSMESSAGE You pierce <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> pierce hits <SRC.NAME>'s <VAR.LOC_NAME>. 
+enddo 
+
+doswitch rand(2) 
+SRC.SYSMESSAGE <NAME> pierces you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> strike pierces you in the <VAR.LOC_NAME>. 
+enddo 
+
+
+[FUNCTION f_weapon_show_message_archery] 
+f_weapon_location_name 
+
+doswitch rand(2) 
+SYSMESSAGE You shoot <SRC.NAME> in the <VAR.LOC_NAME>. 
+SYSMESSAGE You<VAR.WPN.ADJ1> shot hits <SRC.NAME>'s <VAR.LOC_NAME>. 
+enddo 
+
+doswitch rand(2) 
+SRC.SYSMESSAGE <NAME> shoots you in the <VAR.LOC_NAME>. 
+SRC.SYSMESSAGE <NAME><VAR.WPN.ADJ2> shot hits you in the <VAR.LOC_NAME>. 
+enddo 
+
+
+
+
+// sideffect functions 
+
+[FUNCTION f_weapon_mat_default] 
+// nothing to do here 
+
+[FUNCTION f_weapon_mat_agapite] 
+if ( (<SRC.KARMA> > -1000) || (<karma> < 1000) ) 
+return 0 
+endif 
+VAR.DIFF = <eval (<karma> - <src.karma>)> 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS>+ (<var.diff>/300))> 
+SRC.SYSMESSAGE You writhe in pain with the touch of the <VAR.WPN.NAME>. 
+SYSMESSAGE <SRC.NAME> writhes in pain with the touch of the <VAR.WPN.NAME>. 
+
+
+[FUNCTION f_weapon_mat_shadow] 
+if ( (<SRC.KARMA> < 1000) || (<karma> > -1000) ) 
+return 0 
+endif 
+VAR.DIFF = <eval (<src.karma> - <karma>)> 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS>+ (<var.diff>/300))> 
+SRC.SYSMESSAGE You writhe in pain with the touch of the <VAR.WPN.NAME>. 
+SYSMESSAGE <SRC.NAME> writhes in pain with the touch of the <VAR.WPN.NAME>. 
+
+
+[FUNCTION f_weapon_mat_silver] 
+if ( 0 ) 
+elseif ( <src.npc> == brain_undead ) 
+elseif ( <src.body> == c_ghost ) 
+elseif ( <src.body> == c_liche ) 
+elseif ( <src.body> == c_spectre ) 
+elseif ( <src.body> == c_zombie ) 
+else 
+return 0 
+endif 
+VAR.WPN.BONUS = <eval (<VAR.WPN.BONUS>+70)> 
+SRC.SYSMESSAGE You writhe in pain with the touch of the <VAR.WPN.NAME>. 
+SYSMESSAGE <SRC.NAME> writhes in pain with the touch of the <VAR.WPN.NAME>. 
+
+
+[EOF]

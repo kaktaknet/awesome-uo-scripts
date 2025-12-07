@@ -1,0 +1,131 @@
+//////////////////////////////////////////
+// Script Anti Teot - AmountFix e DupeFix
+// Script, por SoloYo
+// Ajuste, por Chaves
+// Otimização, por ClouD
+// Script Final por Forkius
+// - Adicionar events e_fix_teot no player.
+// - Adicionar Stone i_amountfix em um local seguro.
+// - Configurar na funcao f_onserver_save o UID da stone adicionada.
+// - Alterar o arquivo speakshopkeep.scp
+//////////////////////////////////////////
+// Events
+//////////////////////////////////////////
+
+[EVENTS e_fix_teot]
+ON=@Login
+f_amountfix
+
+ON=@Logout
+f_amountfix
+
+ON=@Death
+f_amountfix
+
+ON=@ItemClick
+f_amountfix_item
+
+ON=@ItemDClick
+f_amountfix_item
+
+ON=@ItemEquip
+f_amountfix_item
+
+ON=@ItemPickup_Pack
+f_amountfix_item
+
+//////////////////////////////////////////
+// Funcoes
+//////////////////////////////////////////
+
+[FUNCTION f_amountfix_item]
+IF (<ACT.AMOUNT> <= 0) || (<act.type>==t_teot_fix)
+SERV.LOG TEOT AMOUNTFIX: acct='<SRC.ACCOUNT>', char='<SRC.NAME>', uid='<UID>' (<NAME>).
+ACT.REMOVE
+ENDIF
+
+[FUNCTION dupefix]
+findlayer.27.timer=0
+
+[FUNCTION f_amountfix]
+FORCONT <FINDLAYER.21> 0
+IF (<amount> <= 0) 
+SERV.LOG TEOT DUPE FIX: acct='<SRC.ACCOUNT>', char='<SRC.NAME>', uid='<UID>' (<NAME>).
+attr 090
+amount 1
+REMOVE
+RETURN 1
+ENDIF
+ENDFOR
+
+
+[FUNCTION f_amountfix2]
+FORCONT <FINDLAYER.26>
+IF !(<TYPE>==t_gold)
+IF (<amount> > 255 )
+//SERV.LOG TEOT DUPE FIX: acct='<SRC.ACCOUNT>', char='<SRC.NAME>', uid='<UID>' (<NAME>).
+remove
+//src.jail
+ENDIF
+ENDIF
+ENDFOR
+
+[TYPEDEF t_teot_fix]
+ON=@Timer
+REMOVE
+RETURN 1
+
+//////////////////////////////////////////
+// Item
+//////////////////////////////////////////
+
+[ITEMDEF i_amountfix]
+ID=0ed6
+NAME=Amount Fix
+TYPE=T_SCRIPT
+
+ON=@CREATE
+ATTR=0b0
+
+ON=@TIMER
+IF !(<VAR0.SAVE>)
+VAR.SAVE=1
+SERV.ALLCLIENTS f_amountfix
+SERV.SAVE
+ENDIF
+RETURN 1
+
+
+///*  from here you need to pu these itens in the scp file///
+//////////////////////////////////////////
+// sphere_serv_triggers.scp
+//////////////////////////////////////////
+
+//[FUNCTION f_onserver_start]
+//VAR.SAVE
+
+//[FUNCTION f_onserver_save]
+//IF !(<ARGN>) && !(<VAR0.SAVE>)
+//UID.(AQUI VAI UID).TIMER=5
+//ENDIF
+//RETURN 1
+
+//////////////////////////////////////////
+// speakshopkeep.scp
+//////////////////////////////////////////
+
+///ON=*sell*
+//ON=*thou*purchase*
+//ON=*you*purchase*
+//ON=*you*buy*
+//ON=*I*sale*
+//SRC.f_amountfix
+
+//ON=*buy*
+//ON=*supplies*
+//ON=*wares*
+//SRC.f_amountfix
+//f_dupefix
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+

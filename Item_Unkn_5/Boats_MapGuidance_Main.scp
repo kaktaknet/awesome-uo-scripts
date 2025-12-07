@@ -1,0 +1,211 @@
+//Sven's Course Plotting System - V1.0
+//Created 7-24-03
+//Please Read Instructions.txt
+
+
+[ITEMDEF i_shipmove_timer]										//Shipmove Timer - This moves the ship!
+ID=i_worldgem_bit
+TYPE=t_script
+NAME=ShipMove Timer											//This is the ITEMS name... can you say N....A...M...E...?
+
+ON=@CREATE
+ATTR=attr_move_never | attr_invis | attr_static								//Players getting ahold of this would be bad :P
+
+ON=@TIMER
+IF !(0<LINK.REGION.TAG.GEMREM>=0)
+	LINK.REGION.TAG.GEMREM=
+	REMOVE
+	RETURN 1
+ENDIF
+LINK.SHIPMOVER												//Has the shippart execute Shipmover, the function which moves the ship
+TIMER=2
+RETURN 1
+
+[FUNCTION PINCYCLE]											//Executed by the ship itself, ARGN is current PIN #
+REGION.TAG.PINSTAT=<ARGN>										//Sets Current PIN # into TAG.PINSTAT
+IF (<TYPE> == t_ship)											//Makes sure a ship is running this command.
+	SHIPSTOP
+	TRY UID.<REGION.TAG.MUID>.PINFIND <ARGN>							//Runs PINFIND, checks to see if a PIN exists at the current stage. *This is nesesary for some reason*
+	MOREP=<VAR.PINC>										//Store the PINS array position into MOREP in order to split the coords.
+	IF (<VAR.PINEXIST> == 0)									//Checks to see if a PIN was found, if not executes IF section.
+		TRY UID.<MORE1>.SYSMESSAGE Voyage Done.							//Sysmessage to ship owner.
+		shipguidestop
+	ENDIF												//ENDS IF loop
+	TRY UID.<MORE1>.SYSMESSAGE Guiding Ship to Pin #<ARGN>						//Sysmessage to ship owner.
+	REGION.TAG.MXSCALE=<EVAL (<REGION.TAG.MAXX> - <REGION.TAG.MINX>)>				//X Scale
+	REGION.TAG.MYSCALE=<EVAL (<REGION.TAG.MAXY> - <REGION.TAG.MINY>)>				//Y Scale	
+	REGION.TAG.MOVEDX=0										//Sets MOVEDX (which is true if the ship has passed the X coord destination) to false.
+	REGION.TAG.MOVEDY=0										//Sets MOVEDY (which is true if the ship has passed the Y coord destination) to false.
+	MOREX=<EVAL (<REGION.TAG.MINX> + (<EVAL (<EVAL (<MOREX> * <REGION.TAG.MXSCALE>)> / 209)>)>	//Algorithm for converting MAP P to world P
+	MOREY=<EVAL (<REGION.TAG.MINY> + (<EVAL (<EVAL (<MOREY> * <REGION.TAG.MYSCALE>)> / 198)>)>	//Algorithm for converting MAP P to world P
+	SHIPXDECIDE											//Runs function to determine to go West or East
+	SHIPYDECIDE											//Runs function to determine to go North or South
+	IF (0<REGION.TAG.TUID>=0)
+		VAR.TLINK=<LINK>
+		LINK=<REGION.TAG.PUID>
+		LINK.NEWITEM i_shipmove_timer								//Makes the worldgem which controls the SHIP
+		LINK.ACT.P=<P>										//Sets the P equal to the ship's P
+		LINK.ACT.FIX										//Fixes Z
+		LINK.ACT.TIMER=2									//Sets TIMER to 0 (begins execution of @TIMER trigger)
+		LINK.ACT.LINK=<UID>									//Sets LINK of the gem to the Ship's UID
+		LINK=<VAR.TLINK>
+		REGION.TAG.TUID=<SRC.ACT.UID>								//Sets the REGION's TAG.TUID equal to the UID of the mover gem.
+	ELSE
+		TRY UID.<REGION.TAG.TUID>.TIMER=2
+	ENDIF
+ELSE
+MESSAGE This cannot execute the PINCYCLE function!
+ENDIF
+RETURN 1
+
+[FUNCTION SHIPMOVER]											//Moves the ship. Called by the shipmove timer.
+IF !(<EVAL (<REGION.TAG.MOVEDX> +  <REGION.TAG.MOVEDY>)> == 2)						//Makes sure that the ship hasnt cleared both X and Y objectives.
+	REGION.TAG.LPX=<P.X>
+	REGION.TAG.LPY=<P.Y>
+	IF (<REGION.TAG.MOVEDY>==0)									//Makes sure the ship hasnt cleared Y objectives
+		IF !(STRCMPI(<REGION.TAG.DETERMINEDY>, N)) && (<MOREY> < <P.Y>)				//Does the ship go North?
+				SHIPMOVE N
+				SHIPMOVE N
+		ELSEIF !(STRCMPI(<REGION.TAG.DETERMINEDY>, S)) && (<MOREY> > <P.Y>)			//Does the ship go South?
+				SHIPMOVE S
+				SHIPMOVE S
+		ELSE
+			REGION.TAG.MOVEDY=1								//If it goes neither North or South, store that its achieved objective.
+		ENDIF
+	ENDIF
+	IF (<REGION.TAG.MOVEDX>==0)									//Make sure ship hasnt cleared X objectives.
+		IF !(STRCMPI(<REGION.TAG.DETERMINEDX>, W)) && (<MOREX> < <P.X>)				//Does the ship go West?
+				SHIPMOVE W
+				SHIPMOVE W
+		ELSEIF !(STRCMPI(<REGION.TAG.DETERMINEDX>, E)) && (<MOREX> > <P.X>)			//Does the ship go East?
+				SHIPMOVE E
+				SHIPMOVE E
+		ELSE					
+				REGION.TAG.MOVEDX=1							//If it goes neither West or East, store that it has achieved objective.
+		ENDIF
+	ENDIF
+	IF ((<REGION.TAG.LPY> == <P.Y>) && (<REGION.TAG.LPX> == <P.X>) && (!(<EVAL (<REGION.TAG.MOVEDX> +  <REGION.TAG.MOVEDY>)> == 2))
+		TRY UID.<MORE1>.SYSMESSAGE Path Obstructed. Voyage Ending.
+		shipguidestop
+	ENDIF
+ELSE
+	TRY UID.<REGION.TAG.TUID>.TIMER=-1
+	PINCYCLE <EVAL (<REGION.TAG.PINSTAT> + 1)>						//If both objectives are met, run PINCYCLE with one higher PIN #
+	RETURN 0
+ENDIF
+RETURN 1
+
+//Tillerman Def Replacement - To have Tillerman dclick to target map.
+//If you wish another item to target the map intead of the tilerman, simply have IT! call tillermandclick @dclick  and tillermantargon @targon_item
+[ITEMDEF 03e4a]
+DEFNAME=i_ship_tillerman
+TYPE=T_SHIP_TILLER
+
+CATEGORY=Ship Parts
+SUBSECTION=Tillerman
+DESCRIPTION=@
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e4b]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e4c]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e4d]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e4e]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e4f]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e50]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e51]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e52]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e53]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e54]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1
+
+[ITEMDEF 03e55]
+TYPE=T_SHIP_TILLER
+ON=@DCLICK
+Tillermandclick
+RETURN 1
+ON=@TARGON_ITEM
+MapTargon 1
+RETURN 1

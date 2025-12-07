@@ -1,0 +1,81 @@
+//===============================================//
+// Newbie Only Stuff   				 //
+// By GM Samson aka Sanchezuk			 //
+// (www.krackatoah.cjb.net)			 //
+// Please dont remove this header.		 //
+//						 //
+// Donation Box for Vets to help newbies.	 //
+// Door switches for a newbie town, was used for //
+// Cove wheni used them, edited region to anti   //
+// Recall & Gate and blocked entrance with wall  //
+// etc.. to stop vets entering and placed the    //
+// switch items below to enter/exit cove.	 //
+//===============================================//
+
+//Place in popular area, brit bank for example.
+
+[ITEMDEF i_donation_box]
+NAME=Newbie Donation Box
+ID=0e42
+FLIP=1
+DUPELIST=0e43
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Newbie Stuff
+DESCRIPTION=Newbie Donation Box
+
+ON=@CREATE
+ATTR=08010
+
+ON=@DCLICK
+IF (<SRC.ISGM>==1)
+RETURN 0
+ELIF (<SRC.AGE><=2419200) //Under one Month Old
+RETURN 0
+ELSE
+SRC.SYSMESSAGE Sorry, you are no longer a newbie!
+RETURN 1
+ENDIF
+
+
+[ITEMDEF i_newbie_enter]
+NAME=Enter Cove
+ID=01090
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Newbie Stuff
+DESCRIPTION=Cove Entrance
+
+ON=@CREATE
+ATTR=08010
+
+ON=@DCLICK
+IF (<SRC.ISGM>==1)
+SRC.GO Cove
+Return 0
+ELIF (<SRC.AGE><=2419200) //Under One Month Old
+SRC.GO 2280,1208,0
+Return 0
+ELSE
+SRC.SYSMESSAGE Sorry, you are no longer a newbie!
+RETURN 1
+ENDIF
+
+
+[ITEMDEF i_newbie_exit]
+NAME=Exit Cove
+ID=01091
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Newbie Stuff
+DESCRIPTION=Cove Exit
+
+ON=@CREATE
+ATTR=08010
+
+ON=@DCLICK
+SRC.GO 2284,1208,0
+RETURN 1
+ENDIF
+
+[EOF]

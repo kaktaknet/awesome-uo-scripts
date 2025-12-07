@@ -1,0 +1,1405 @@
+//******************************************************************\\
+//                      _                    _                      \\
+//                   ,/                        \,                   \\
+//         _________{(                          })_________         \\
+//        /.-------./\\                        //\.-------.\        \\
+//       //@@@@@@@//@@\\  )                (  //@@\\@@@@@@@\\       \\
+//      //@@@@@@@//@@@@>>/                  \<<@@@@\\@@@@@@@\\      \\
+//     //O@O@O@O//@O@O//                      \\O@O@\\O@O@O@O\\     \\
+//   //OOOOOOOO//OOOO||          \  /          ||OOOO\\OOOOOOOO\\   \\
+//  //O%O%O%O%//O%O%O%\\         ))((         //%O%O%O\\%O%O%O%O\\  \\
+// ||%%%%%%%%//'  `%%%%\\       //  \\       //%%%%'   `\\%%%%%%%|| \\
+// ((%%%%%%%((      %%%%%\\    ((    ))    //%%%%%       ))%%%%%%)) \\
+//  \:::' `::\\      `:::::\\   \)~~(/    //:::::'      //::' `:::/ \\
+//   )'     `;)'      (`  ` \\ `<@  @>' / / '  ')      `(;'     `(  \\
+//           (               \`\ )^^( /  /               )          \\
+//         _                  ) \\oo/   (                           \\
+//        (@)                  \  `'   /                      _     \\
+//        |-|\__________________\__^__<________oOo__________ (@)    \\
+//        |-|                                  VVV          \-\     \\
+//        |-|               Rune Book v4.20                  |-|    \\
+//        |-|             By  Weedy Da Smokah                |-|    \\
+//        |_|\______________________________________________ |-|    \\
+//       (@)                 / ,/ \_____/ \\ ~\/~         ` \|_|    \\
+//         ~             ___//^~      \____/\\               (@)    \\
+//                      <<<  \     __  <____/||               ~     \\
+//                                <   \ <___/||                     \\
+//                                   || <___//                      \\
+//                                   \ \/__//                       \\
+//                                    ~----~                        \\
+//                                                                  \\
+//******************************************************************\\
+//******************** If you remove this header... ****************\\
+//************** You will die a horrible horrible death. ***********\\
+//******************************************************************\\
+
+
+//********************************************************************
+//**************************** IMPORTANT *****************************
+//********************************************************************
+//*** IMPORTANT NOTE : With this Rune Book, recalling / gating     ***
+//*** will not randomly fail due to skill like normal magery does. ***
+//*** I would've scripted it, but I'm too lazy to create an        ***
+//*** efficient algorithm for something I won't even use. If you   ***
+//*** want it so bad, do it yourself. :)            -Weedy         ***
+//********************************************************************
+//********************************************************************
+
+
+//******************************* USAGE *****************************
+//*** Just make the i_rune_book available to your players through ***
+//*** vendors, stones, crafting, monster excrements, or whatever. ***
+//***    You can also modify some of the settings just below.     ***
+//*******************************************************************
+
+
+[DEFNAME runebook_settings]
+
+runebook_empty_slot_msg			Blank		//The text's that's written in empty Rune Book slots. (You can leave this empty if you want.)
+
+runebook_recalling_delay 		2   		//Delay in seconds for recalling
+runebook_gating_delay 			4   		//Delay in seconds for casting a gate
+
+runebook_gate_timer			45 		//How long gates last. Lower delays = Less chances of 
+								//people exploiting gates (trapping ppl).
+
+runebook_recall_magery_req		35.0		//Magery skill required to recall
+runebook_gate_magery_req		70.0		//Magery skill required to gate
+
+runebook_recall_mana			15		//Amount of mana recalling uses
+runebook_gate_mana			35		//Amount of mana gating uses.
+
+runebook_gate_color			000a		//Moongate color(s). (If you wanna use more than one color,
+								//there's examples in Spheredefs.scp, in the "hues_range" defname.)
+
+runebook_gate_showsrc			1		//Show who created the gate.
+runebook_gate_showtime			1		//Show how much time the gate has left before it disapears.
+
+runebook_use_reagents 			0		//Weither to use reagents or not.
+runebook_consume_regs_on_fail		0		//Weither to waste reagents on fail or not.
+
+runebook_use_charges			1		//Weither to use Rune Book charges or not.
+runebook_max_charges			20		//Maximum charges for the Rune Book.
+
+
+//***************************
+//***** Actual Runebook *****
+//***************************
+
+[ITEMDEF i_rune_book]
+ID=i_spellbook
+TYPE=t_script
+NAME=Rune Book
+WEIGHT=1
+
+ON=@CREATE
+COLOR=0e
+TAG.CHARGES=<DEF.runebook_max_charges>
+
+ON=@DCLICK
+DIALOGCLOSE d_rune_book_weedy
+DIALOG d_rune_book_weedy
+RETURN 1
+
+
+
+//***************************
+//********** Items **********
+//***************************
+
+
+[ITEMDEF i_runebook_recall_timer]
+ID=i_gold
+DEFNAME=i_runebook_recall_timer
+NAME=Recall Timer
+TYPE=t_eq_script
+WEIGHT=0
+
+ON=@CREATE
+ATTR=attr_invis|attr_Decay
+COLOR=01
+
+ON=@TIMER
+IF !(<LINK.TOPOBJ.UID> == <CONT.UID>)
+CONT.MESSAGE The spell fizzles.
+CONT.SFX 005c
+CONT.EVENTS -e_runebook_interrupt
+CONT.SYSMESSAGE You don't have your Rune Book anymore.
+CONT.f_consume_regs_recall_fiz
+REMOVE
+RETURN 1
+ELSEIF (<CONT.MAGERY> < <DEF.runebook_recall_magery_req>)
+CONT.MESSAGE The spell fizzles.
+CONT.SFX 005c
+CONT.EVENTS -e_runebook_interrupt
+CONT.SYSMESSAGE You need higher magery for this.
+CONT.f_consume_regs_recall_fiz
+REMOVE
+RETURN 1
+ELSEIF (<CONT.MANA> < <DEF.runebook_recall_mana>)
+CONT.MESSAGE The spell fizzles.
+CONT.SFX 005c
+CONT.EVENTS -e_runebook_interrupt
+CONT.SYSMESSAGE You don't have enough mana.
+CONT.f_consume_regs_recall_fiz
+REMOVE
+RETURN 1
+
+ELSEIF (<DEF.runebook_use_reagents> == 1)
+ IF (<CONT.FINDID.i_reag_mandrake_root>) && (<CONT.FINDID.i_reag_black_pearl>) && (<CONT.FINDID.i_reag_blood_moss>)
+ ELSE
+ CONT.MESSAGE The spell fizzles.
+ CONT.SFX 005c
+ CONT.EVENTS -e_runebook_interrupt
+ CONT.SYSMESSAGE You do not have the required reagents.
+ CONT.f_consume_regs_recall_fiz
+ REMOVE
+ RETURN 1
+ ENDIF
+
+ELSEIF (<REGION.FLAGS>&04)
+CONT.MESSAGE The spell fizzles.
+CONT.SFX 005c
+CONT.EVENTS -e_runebook_interrupt
+CONT.SYSMESSAGE An anti-magic field disturbs the spell.
+CONT.f_consume_regs_recall_fiz
+REMOVE
+RETURN 1
+ELSEIF (<DEF.runebook_use_charges> == 1)
+ IF (<LINK.TAG0.CHARGES> <= 0)
+ CONT.MESSAGE The spell fizzles.
+ CONT.SFX 005c
+ CONT.EVENTS -e_runebook_interrupt
+ CONT.SYSMESSAGE You do not have enough charges.
+ CONT.f_consume_regs_gate_fiz
+ REMOVE
+ RETURN 1
+ ENDIF
+ENDIF
+
+LINK.TAG.CHARGES=<LINK.TAG.CHARGES> +-1
+
+CONT.MANA=<EVAL <CONT.MANA> +- <DEF.runebook_recall_mana>>
+CONT.GOPLACE=<MOREP>
+CONT.SFX=snd_spell_recall
+CONT.EVENTS -e_runebook_interrupt
+CONT.f_consume_regs_recall
+REMOVE
+RETURN 1
+
+
+
+[ITEMDEF i_runebook_gate_timer]
+ID=i_gold
+DEFNAME=i_runebook_gate_timer
+NAME=Gate Timer
+TYPE=t_eq_script
+WEIGHT=0
+
+ON=@CREATE
+ATTR=attr_invis|attr_Decay
+COLOR=01
+
+ON=@TIMER
+IF !(<LINK.TOPOBJ.UID> == <CONT.UID>)
+CONT.MESSAGE The spell fizzles.
+CONT.SFX 005c
+CONT.EVENTS -e_runebook_interrupt
+CONT.SYSMESSAGE You don't have your Rune Book anymore.
+CONT.f_consume_regs_gate_fiz
+REMOVE
+RETURN 1
+ELSEIF (<CONT.MAGERY> < <DEF.runebook_gate_magery_req>)
+CONT.MESSAGE The spell fizzles.
+CONT.SFX 005c
+CONT.EVENTS -e_runebook_interrupt
+CONT.SYSMESSAGE You need higher magery for this.
+CONT.f_consume_regs_gate_fiz
+REMOVE
+RETURN 1
+ELSEIF (<CONT.MANA> < <DEF.runebook_gate_mana>)
+CONT.MESSAGE The spell fizzles.
+CONT.SFX 005c
+CONT.EVENTS -e_runebook_interrupt
+CONT.SYSMESSAGE You don't have enough mana.
+CONT.f_consume_regs_gate_fiz
+REMOVE
+RETURN 1
+
+ELSEIF (<DEF.runebook_use_reagents> == 1)
+ IF (<CONT.FINDID.i_reag_mandrake_root>) && (<CONT.FINDID.i_reag_black_pearl>) && (<CONT.FINDID.i_reag_sulfur_ash>)
+ ELSE
+ CONT.MESSAGE The spell fizzles.
+ CONT.SFX 005c
+ CONT.EVENTS -e_runebook_interrupt
+ CONT.SYSMESSAGE You do not have the required reagents.
+ CONT.f_consume_regs_gate_fiz
+ REMOVE
+ RETURN 1
+ ENDIF
+
+ELSEIF (<REGION.FLAGS>&04) || (<REGION.FLAGS>&08)
+CONT.MESSAGE The spell fizzles.
+CONT.SFX 005c
+CONT.EVENTS -e_runebook_interrupt
+CONT.SYSMESSAGE An anti-magic field disturbs the spell.
+CONT.f_consume_regs_gate_fiz
+REMOVE
+RETURN 1
+ELSEIF (<DEF.runebook_use_charges> == 1)
+ IF (<LINK.TAG0.CHARGES> <= 0)
+ CONT.MESSAGE The spell fizzles.
+ CONT.SFX 005c
+ CONT.EVENTS -e_runebook_interrupt
+ CONT.SYSMESSAGE You do not have enough charges.
+ CONT.f_consume_regs_gate_fiz
+ REMOVE
+ RETURN 1
+ ENDIF
+ENDIF
+
+LINK.TAG.CHARGES=<LINK.TAG.CHARGES> +-1
+CONT.MANA=<EVAL <CONT.MANA> +- <DEF.runebook_gate_mana>>
+CONT.NEWITEM=i_runebook_gate
+CONT.ACT.P=<CONT.P>
+CONT.ACT.MOREP=<MOREP>
+CONT.ACT.LINK=<CONT.UID>
+CONT.ACT.MORE1=<DEF.runebook_gate_timer>
+CONT.ACT.TIMER=1
+CONT.NEWITEM=i_runebook_gate
+CONT.ACT.P=<MOREP>
+CONT.ACT.MOREP=<CONT.P>
+CONT.ACT.LINK=<CONT.UID>
+CONT.ACT.MORE1=<DEF.runebook_gate_timer>
+CONT.ACT.TIMER=1
+CONT.SFX=526
+CONT.EVENTS -e_runebook_interrupt
+CONT.f_consume_regs_gate
+REMOVE
+RETURN 1
+
+[ITEMDEF i_runebook_gate]
+ID=0f6c
+DEFNAME=i_runebook_gate
+NAME=Rune Gate
+TYPE=t_telepad
+
+ON=@Create
+COLOR=<DEF.runebook_gate_color>
+MORE1=<DEF.runebook_gate_timer>
+
+ON=@CLICK
+IF (<DEF.runebook_gate_showtime> == 1)
+MESSAGE @0482 [Time left : <EVAL <MORE1>>]
+ENDIF
+
+IF (<DEF.runebook_gate_showsrc> == 1)
+MESSAGE <LINK.NAME>'s Gate
+RETURN 1
+ENDIF
+
+ON=@TIMER
+IF (<MORE1>)
+MORE1=<MORE1>-1
+TIMER=1
+RETURN 1
+ELSE
+SOUND=528
+REMOVE
+RETURN 1
+ENDIF
+
+
+//***************************
+//******** Functions ********
+//***************************
+
+
+[FUNCTION f_runebook_recall]
+
+IF (<SRC.ISEVENT.e_runebook_interrupt>)
+SRC.CONSUME i_runebook_recall_timer
+SRC.CONSUME i_runebook_gate_timer
+SRC.MESSAGE The spell fizzles.
+SRC.SFX 005c
+SRC.EVENTS -e_runebook_interrupt
+ENDIF
+
+IF !(<TOPOBJ.UID>==<SRC.UID>)
+SRC.SYSMESSAGE The Rune Book must be in your pack.
+RETURN 1
+ENDIF
+
+IF (<REGION.FLAGS>&04)
+SRC.SYSMESSAGE An anti-magic field disturbs the spell.
+RETURN 1
+ENDIF
+
+IF (<SRC.MAGERY> < <DEF.runebook_recall_magery_req>)
+SRC.SYSMESSAGE You need higher magery for this.
+RETURN 1
+ENDIF
+
+IF (<SRC.MANA> < <DEF.runebook_recall_mana>)
+SRC.SYSMESSAGE You don't have enough mana.
+RETURN 1
+ENDIF
+
+IF (<DEF.runebook_use_reagents> == 1)
+ IF (<SRC.FINDID.i_reag_mandrake_root>) && (<SRC.FINDID.i_reag_black_pearl>) && (<SRC.FINDID.i_reag_blood_moss>)
+ ELSE
+ SRC.SYSMESSAGE You do not have the required reagents.
+ RETURN 1
+ ENDIF
+ENDIF
+
+IF (<DEF.runebook_use_charges> == 1)
+ IF (<TAG0.CHARGES> <= 0)
+ SRC.SYSMESSAGE You do not have enough charges.
+ RETURN 1
+ ENDIF
+ENDIF
+
+SRC.NEWITEM=i_worldgem_bit
+SRC.ACT.COLOR=01
+SRC.ACT.P=<TAG.POS_<EVAL <ARGN>>>
+IF (<SRC.ACT.REGION.FLAGS>&02)
+VAR.RECALLCHECK=1
+SRC.ACT.REMOVE
+ELSE
+VAR.RECALLCHECK=0
+SRC.ACT.REMOVE
+ENDIF
+
+IF (<VAR0.RECALLCHECK> == 0)
+SRC.SAY Kal Ort Por
+SRC.ANIM 17
+SRC.NEWITEM=i_runebook_recall_timer
+SRC.ACT.EQUIP
+SRC.ACT.MOREP=<TAG.POS_<EVAL <ARGN>>>
+SRC.ACT.TIMER=<EVAL <DEF.runebook_recalling_delay>>
+SRC.ACT.LINK=<UID>
+SRC.EVENTS +e_runebook_interrupt
+VAR.RECALLCHECK=
+ELSE
+SRC.SYSMESSAGE An anti-magic field blocks you.
+VAR.RECALLCHECK=
+RETURN 1
+ENDIF
+
+
+
+[FUNCTION f_runebook_gate]
+
+IF (<SRC.ISEVENT.e_runebook_interrupt>)
+SRC.CONSUME i_runebook_recall_timer
+SRC.CONSUME i_runebook_gate_timer
+SRC.MESSAGE The spell fizzles.
+SRC.SFX 005c
+SRC.EVENTS -e_runebook_interrupt
+ENDIF
+
+IF !(<TOPOBJ.UID>==<SRC.UID>)
+SRC.SYSMESSAGE The Rune Book must be in your pack.
+RETURN 1
+ENDIF
+
+IF (<REGION.FLAGS>&04) || (<REGION.FLAGS>&08)
+SRC.SYSMESSAGE An anti-magic field disturbs the spell.
+RETURN 1
+ENDIF
+
+IF (<SRC.MAGERY> < <DEF.runebook_gate_magery_req>)
+SRC.SYSMESSAGE You need higher magery for this.
+RETURN 1
+ENDIF
+
+IF (<SRC.MANA> < <DEF.runebook_gate_mana>)
+SRC.SYSMESSAGE You don't have enough mana.
+RETURN 1
+ENDIF
+
+IF (<DEF.runebook_use_reagents> == 1)
+ IF (<SRC.FINDID.i_reag_mandrake_root>) && (<SRC.FINDID.i_reag_black_pearl>) && (<SRC.FINDID.i_reag_sulfur_ash>)
+ ELSE
+ SRC.SYSMESSAGE You do not have the required reagents.
+ RETURN 1
+ ENDIF
+ENDIF
+
+IF (<DEF.runebook_use_charges> == 1)
+ IF (<TAG0.CHARGES> <= 0)
+ SRC.SYSMESSAGE You do not have enough charges.
+ RETURN 1
+ ENDIF
+ENDIF
+
+SRC.NEWITEM=i_worldgem_bit
+SRC.ACT.COLOR=01
+SRC.ACT.P=<TAG.POS_<EVAL <ARGN>>>
+IF (<SRC.ACT.REGION.FLAGS>&02) || (<SRC.ACT.REGION.FLAGS>&08)
+VAR.GATECHECK=1
+SRC.ACT.REMOVE
+ELSE
+VAR.GATECHECK=0
+SRC.ACT.REMOVE
+ENDIF
+
+IF (<VAR0.GATECHECK> == 0)
+SRC.SAY Vas Rel Por
+SRC.ANIM 17
+SRC.NEWITEM=i_runebook_gate_timer
+SRC.ACT.EQUIP
+SRC.ACT.MOREP=<TAG.POS_<EVAL <ARGN>>>
+SRC.ACT.TIMER=<EVAL <DEF.runebook_gating_delay>>
+SRC.ACT.LINK=<UID>
+SRC.EVENTS +e_runebook_interrupt
+VAR.GATECHECK=
+ELSE
+SRC.SYSMESSAGE An anti-magic field blocks you.
+VAR.GATECHECK=
+RETURN 1
+ENDIF
+
+
+
+
+[FUNCTION f_targ_rune]
+OBJ <ARGO.UID>
+IF !(<OBJ.TYPE>==t_rune)
+SRC.SYSMESSAGE That is not a rune!
+RETURN 1
+ELSEIF !(<OBJ.TOPOBJ.UID>==<SRC.UID>)
+SRC.SYSMESSAGE The rune must be in your pack.
+RETURN 1
+ELSEIF !(<TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.SYSMESSAGE The book must be in your pack.
+RETURN 1
+ELSEIF (<OBJ.MOREX> > 0) && (<OBJ.MOREY> > 0)
+TRY TARG.TAG.POS_<ARGN>=<EVAL <OBJ.MOREX>>,<EVAL <OBJ.MOREY>>,<EVAL <OBJ.MOREZ>>,<EVAL <OBJ.MOREM>>
+TRY TARG.TAG.POS_<ARGN>_NAME=<OBJ.NAME>
+TARG.DCLICK
+SRC.SFX 79
+SRC.SYSMESSAGE The rune has been successfully copied.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE That's a blank rune!
+RETURN 1
+ENDIF
+
+
+[FUNCTION f_add_charges]
+OBJ <ARGO.UID>
+IF !(<OBJ.BaseID>==i_scroll_recall)
+SRC.SYSMESSAGE That is not a recall scroll!
+RETURN 1
+ELSEIF (<TARG.TAG0.CHARGES> >= <EVAL <DEF.runebook_max_charges>>)
+SRC.SYSMESSAGE The Rune Book is already fully charged.
+RETURN 1
+ELSEIF !(<OBJ.TOPOBJ.UID>==<SRC.UID>)
+SRC.SYSMESSAGE The scrolls must be in your pack.
+RETURN 1
+ELSEIF !(<TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.SYSMESSAGE The book must be in your pack.
+RETURN 1
+ELSE
+LOCAL.MAXCHARGES=<EVAL <DEF.runebook_max_charges> +- <TARG.TAG0.CHARGES>>
+ IF (<OBJ.AMOUNT> > <LOCAL.MAXCHARGES>)
+ TARG.TAG.CHARGES=<DEF.runebook_max_charges>
+ SRC.CONSUME <LOCAL.MAXCHARGES> i_scroll_recall
+ ELSE
+ TARG.TAG.CHARGES=<TARG.TAG.CHARGES> + <OBJ.AMOUNT>
+ OBJ.REMOVE
+ ENDIF
+SRC.SYSMESSAGE The charges were added successfully.
+TARG.DCLICK
+SRC.SFX 79
+RETURN 1
+ENDIF
+
+
+
+[FUNCTION f_recall_flag_check_2]
+CONT.SAY RECALL FLAG CHECK CONT
+CONT.NEWITEM=i_gold
+CONT.ACT.COLOR=01
+CONT.ACT.P=<MOREP>
+IF (<CONT.ACT.REGION.FLAGS>&02)
+VAR.RECALLCHECK=1
+CONT.SAY YES
+CONT.ACT.REMOVE
+ELSE
+VAR.RECALLCHECK=0
+CONT.SAY NO
+CONT.ACT.REMOVE
+ENDIF
+
+[FUNCTION f_gate_flag_check]
+SRC.NEWITEM=i_gold
+SRC.ACT.COLOR=01
+SRC.ACT.P=<LOCAL.POS>
+IF (<SRC.ACT.REGION.FLAGS>&02) || (<SRC.ACT.REGION.FLAGS>&08)
+VAR.GATECHECK=1
+SRC.ACT.REMOVE
+ELSE
+VAR.GATECHECK=0
+SRC.ACT.REMOVE
+ENDIF
+
+[FUNCTION f_gate_flag_check_2]
+CONT.NEWITEM=i_gold
+CONT.ACT.COLOR=01
+CONT.ACT.P=<MOREP>
+IF (<CONT.ACT.REGION.FLAGS>&02) || (<CONT.ACT.REGION.FLAGS>&08)
+VAR.GATECHECK=1
+CONT.ACT.REMOVE
+ELSE
+VAR.GATECHECK=0
+CONT.ACT.REMOVE
+ENDIF
+
+
+
+[FUNCTION f_consume_regs_recall]
+IF (<DEF.runebook_use_reagents> == 1)
+CONSUME i_reag_black_pearl
+CONSUME i_reag_blood_moss
+CONSUME i_reag_mandrake_root
+ENDIF
+
+[FUNCTION f_consume_regs_gate]
+IF (<DEF.runebook_use_reagents> == 1)
+CONSUME i_reag_sulfur_ash
+CONSUME i_reag_mandrake_root
+CONSUME i_reag_black_pearl
+ENDIF
+
+[FUNCTION f_consume_regs_recall_fiz]
+IF (<DEF.runebook_use_reagents> == 1) && (<DEF.runebook_consume_regs_on_fail> == 1)
+CONSUME i_reag_black_pearl
+CONSUME i_reag_blood_moss
+CONSUME i_reag_mandrake_root
+ENDIF
+
+[FUNCTION f_consume_regs_gate_fiz]
+IF (<DEF.runebook_use_reagents> == 1) && (<DEF.runebook_consume_regs_on_fail> == 1)
+CONSUME i_reag_sulfur_ash
+CONSUME i_reag_mandrake_root
+CONSUME i_reag_black_pearl
+ENDIF
+
+
+//***************************
+//********* Events **********
+//***************************
+
+
+
+[EVENTS e_runebook_interrupt]
+
+ON=@GETHIT
+IF (<FINDID.i_runebook_recall_timer>)
+CONSUME i_runebook_recall_timer
+f_consume_regs_recall_fiz
+ELSE
+CONSUME i_runebook_gate_timer
+f_consume_regs_gate_fiz
+ENDIF
+MESSAGE The spell fizzles.
+SFX 005c
+EVENTS -e_runebook_interrupt
+
+ON=@LOGOUT
+IF (<FINDID.i_runebook_recall_timer>)
+CONSUME i_runebook_recall_timer
+f_consume_regs_recall_fiz
+ELSE
+CONSUME i_runebook_gate_timer
+f_consume_regs_gate_fiz
+ENDIF
+MESSAGE The spell fizzles.
+SFX 005c
+EVENTS -e_runebook_interrupt
+
+ON=@UserWarmode
+CONSUME i_runebook_recall_timer
+CONSUME i_runebook_gate_timer
+MESSAGE The spell fizzles.
+SFX 005c
+EVENTS -e_runebook_interrupt
+
+ON=@SKILLSTART
+IF (<FINDID.i_runebook_recall_timer>)
+CONSUME i_runebook_recall_timer
+f_consume_regs_recall_fiz
+ELSE
+CONSUME i_runebook_gate_timer
+f_consume_regs_gate_fiz
+ENDIF
+MESSAGE The spell fizzles.
+SFX 005c
+EVENTS -e_runebook_interrupt
+
+ON=@SPELLCAST
+IF (<FINDID.i_runebook_recall_timer>)
+CONSUME i_runebook_recall_timer
+f_consume_regs_recall_fiz
+ELSE
+CONSUME i_runebook_gate_timer
+f_consume_regs_gate_fiz
+ENDIF
+MESSAGE The spell fizzles.
+SFX 005c
+EVENTS -e_runebook_interrupt
+
+ON=@HITTRY
+IF (<FINDID.i_runebook_recall_timer>)
+CONSUME i_runebook_recall_timer
+f_consume_regs_recall_fiz
+ELSE
+CONSUME i_runebook_gate_timer
+f_consume_regs_gate_fiz
+ENDIF
+MESSAGE The spell fizzles.
+SFX 005c
+EVENTS -e_runebook_interrupt
+
+ON=@DEATH
+IF (<FINDID.i_runebook_recall_timer>)
+CONSUME i_runebook_recall_timer
+f_consume_regs_recall_fiz
+ELSE
+CONSUME i_runebook_gate_timer
+f_consume_regs_gate_fiz
+ENDIF
+MESSAGE The spell fizzles.
+SFX 005c
+EVENTS -e_runebook_interrupt
+
+
+
+
+//***************************
+//********** Gumps **********
+//***************************
+
+
+
+[DIALOG d_rune_book_weedy]
+0, 0
+button 241 285 2094 2095 1 0 2
+gumppic 405 67 59
+gumppic 219 67 59
+gumppic 41 37 500
+gumppic 93 48 57
+gumppic 72 67 57
+text 128 44 455 0
+gumppic 193 48 59
+gumppic 259 67 57
+gumppic 219 67 59
+gumppic 87 70 50
+gumppic 404 67 59
+gumppic 274 69 50
+text 299 43 455 1
+
+IF (<DEF.runebook_use_charges> == 1)
+text 300 10 343 44
+text 120 10 343 45
+button 100 12 2117 2118 1 0 5
+ENDIF
+
+SRC.SFX 055
+
+button 342 43 4005 4006 1 0 1
+
+PAGE 1
+
+button 116 93 2445 2445 1 0 101
+button 73 97 2117 2118 1 0 201
+button 91 97 2117 2118 1 0 301
+button 228 97 2117 2118 1 0 401
+
+button 116 123 2445 2445 1 0 102
+button 73 127 2117 2118 1 0 202
+button 91 127 2117 2118 1 0 302
+button 228 127 2117 2118 1 0 402
+
+button 116 153 2445 2445 1 0 103
+button 73 157 2117 2118 1 0 203
+button 91 157 2117 2118 1 0 303
+button 228 157 2117 2118 1 0 403
+
+button 116 183 2445 2445 1 0 104
+button 73 187 2117 2118 1 0 204
+button 91 187 2117 2118 1 0 304
+button 228 187 2117 2118 1 0 404
+
+button 116 213 2445 2445 1 0 105
+button 73 217 2117 2118 1 0 205
+button 91 217 2117 2118 1 0 305
+button 228 217 2117 2118 1 0 405
+
+button 305 93 2445 2445 1 0 106
+button 262 97 2117 2118 1 0 206
+button 280 97 2117 2118 1 0 306
+button 416 97 2117 2118 1 0 406
+
+button 305 123 2445 2445 1 0 107
+button 262 127 2117 2118 1 0 207
+button 280 127 2117 2118 1 0 307
+button 416 127 2117 2118 1 0 407
+
+button 305 153 2445 2445 1 0 108
+button 262 157 2117 2118 1 0 208
+button 280 157 2117 2118 1 0 308
+button 416 157 2117 2118 1 0 408
+
+button 305 183 2445 2445 1 0 109
+button 262 187 2117 2118 1 0 209
+button 280 187 2117 2118 1 0 309
+button 416 187 2117 2118 1 0 409
+
+button 305 213 2445 2445 1 0 110
+button 262 217 2117 2118 1 0 210
+button 280 217 2117 2118 1 0 310
+button 416 217 2117 2118 1 0 410
+
+IF (<TAG0.POS_1> > 0)
+text 122 94 0000 2
+ELSE
+text 122 94 0000 3
+ENDIF
+
+IF (<TAG0.POS_2> > 0)
+text 122 124 0000 4
+ELSE
+text 122 124 0000 5
+ENDIF
+
+IF (<TAG0.POS_3> > 0)
+text 122 154 0000 6
+ELSE
+text 122 154 0000 7
+ENDIF
+
+IF (<TAG0.POS_4> > 0)
+text 122 184 0000 8
+ELSE
+text 122 184 0000 9
+ENDIF
+
+IF (<TAG0.POS_5> > 0)
+text 122 214 0000 10
+ELSE
+text 122 214 0000 11
+ENDIF
+
+IF (<TAG0.POS_6> > 0)
+text 311 94 0000 12
+ELSE
+text 311 94 0000 13
+ENDIF
+
+IF (<TAG0.POS_7> > 0)
+text 311 124 0000 14
+ELSE
+text 311 124 0000 15
+ENDIF
+
+IF (<TAG0.POS_8> > 0)
+text 311 154 0000 16
+ELSE
+text 311 154 0000 17
+ENDIF
+
+IF (<TAG0.POS_9> > 0)
+text 311 184 0000 18
+ELSE
+text 311 184 0000 19
+ENDIF
+
+IF (<TAG0.POS_10> > 0)
+text 311 214 0000 20
+ELSE
+text 311 214 0000 21
+ENDIF
+
+//button 41 37 501 501 0 1 0
+button 397 37 502 502 0 2 0
+
+text 415 236 455 42
+
+PAGE 2
+
+button 116 93 2445 2445 1 0 111
+button 73 97 2117 2118 1 0 211
+button 91 97 2117 2118 1 0 311
+button 228 97 2117 2118 1 0 411
+
+button 116 123 2445 2445 1 0 112
+button 73 127 2117 2118 1 0 212
+button 91 127 2117 2118 1 0 312
+button 228 127 2117 2118 1 0 412
+
+button 116 153 2445 2445 1 0 113
+button 73 157 2117 2118 1 0 213
+button 91 157 2117 2118 1 0 313
+button 228 157 2117 2118 1 0 413
+
+button 116 183 2445 2445 1 0 114
+button 73 187 2117 2118 1 0 214
+button 91 187 2117 2118 1 0 314
+button 228 187 2117 2118 1 0 414
+
+button 116 213 2445 2445 1 0 115
+button 73 217 2117 2118 1 0 215
+button 91 217 2117 2118 1 0 315
+button 228 217 2117 2118 1 0 415
+
+button 305 93 2445 2445 1 0 116
+button 262 97 2117 2118 1 0 216
+button 280 97 2117 2118 1 0 316
+button 416 97 2117 2118 1 0 416
+
+button 305 123 2445 2445 1 0 117
+button 262 127 2117 2118 1 0 217
+button 280 127 2117 2118 1 0 317
+button 416 127 2117 2118 1 0 417
+
+button 305 153 2445 2445 1 0 118
+button 262 157 2117 2118 1 0 218
+button 280 157 2117 2118 1 0 318
+button 416 157 2117 2118 1 0 418
+
+button 305 183 2445 2445 1 0 119
+button 262 187 2117 2118 1 0 219
+button 280 187 2117 2118 1 0 319
+button 416 187 2117 2118 1 0 419
+
+button 305 213 2445 2445 1 0 120
+button 262 217 2117 2118 1 0 220
+button 280 217 2117 2118 1 0 320
+button 416 217 2117 2118 1 0 420
+
+IF (<TAG0.POS_11> > 0)
+text 122 94 0000 22
+ELSE
+text 122 94 0000 23
+ENDIF
+
+IF (<TAG0.POS_12> > 0)
+text 122 124 0000 24
+ELSE
+text 122 124 0000 25
+ENDIF
+
+IF (<TAG0.POS_13> > 0)
+text 122 154 0000 26
+ELSE
+text 122 154 0000 27
+ENDIF
+
+IF (<TAG0.POS_14> > 0)
+text 122 184 0000 28
+ELSE
+text 122 184 0000 29
+ENDIF
+
+IF (<TAG0.POS_15> > 0)
+text 122 214 0000 30
+ELSE
+text 122 214 0000 31
+ENDIF
+
+IF (<TAG0.POS_16> > 0)
+text 311 94 0000 32
+ELSE
+text 311 94 0000 33
+ENDIF
+
+IF (<TAG0.POS_17> > 0)
+text 311 124 0000 34
+ELSE
+text 311 124 0000 35
+ENDIF
+
+IF (<TAG0.POS_18> > 0)
+text 311 154 0000 36
+ELSE
+text 311 154 0000 37
+ENDIF
+
+IF (<TAG0.POS_19> > 0)
+text 311 184 0000 38
+ELSE
+text 311 184 0000 39
+ENDIF
+
+IF (<TAG0.POS_20> > 0)
+text 311 214 0000 40
+ELSE
+text 311 214 0000 41
+ENDIF
+
+
+button 41 37 501 501 0 1 0
+button 397 37 502 502 0 3 0
+
+text 415 236 455 43
+
+
+PAGE 3
+
+button 116 93 2445 2445 1 0 121
+button 73 97 2117 2118 1 0 221
+button 91 97 2117 2118 1 0 321
+button 228 97 2117 2118 1 0 421
+
+button 116 123 2445 2445 1 0 122
+button 73 127 2117 2118 1 0 222
+button 91 127 2117 2118 1 0 322
+button 228 127 2117 2118 1 0 422
+
+button 116 153 2445 2445 1 0 123
+button 73 157 2117 2118 1 0 223
+button 91 157 2117 2118 1 0 323
+button 228 157 2117 2118 1 0 423
+
+button 116 183 2445 2445 1 0 124
+button 73 187 2117 2118 1 0 224
+button 91 187 2117 2118 1 0 324
+button 228 187 2117 2118 1 0 424
+
+button 116 213 2445 2445 1 0 125
+button 73 217 2117 2118 1 0 225
+button 91 217 2117 2118 1 0 325
+button 228 217 2117 2118 1 0 425
+
+button 305 93 2445 2445 1 0 126
+button 262 97 2117 2118 1 0 226
+button 280 97 2117 2118 1 0 326
+button 416 97 2117 2118 1 0 426
+
+button 305 123 2445 2445 1 0 127
+button 262 127 2117 2118 1 0 227
+button 280 127 2117 2118 1 0 327
+button 416 127 2117 2118 1 0 427
+
+button 305 153 2445 2445 1 0 128
+button 262 157 2117 2118 1 0 228
+button 280 157 2117 2118 1 0 328
+button 416 157 2117 2118 1 0 428
+
+button 305 183 2445 2445 1 0 129
+button 262 187 2117 2118 1 0 229
+button 280 187 2117 2118 1 0 329
+button 416 187 2117 2118 1 0 429
+
+button 305 213 2445 2445 1 0 130
+button 262 217 2117 2118 1 0 230
+button 280 217 2117 2118 1 0 330
+button 416 217 2117 2118 1 0 430
+
+IF (<TAG0.POS_21> > 0)
+text 122 94 0000 46
+ELSE
+text 122 94 0000 47
+ENDIF
+
+IF (<TAG0.POS_22> > 0)
+text 122 124 0000 48
+ELSE
+text 122 124 0000 49
+ENDIF
+
+IF (<TAG0.POS_23> > 0)
+text 122 154 0000 50
+ELSE
+text 122 154 0000 51
+ENDIF
+
+IF (<TAG0.POS_24> > 0)
+text 122 184 0000 52
+ELSE
+text 122 184 0000 53
+ENDIF
+
+IF (<TAG0.POS_25> > 0)
+text 122 214 0000 54
+ELSE
+text 122 214 0000 55
+ENDIF
+
+IF (<TAG0.POS_26> > 0)
+text 311 94 0000 56
+ELSE
+text 311 94 0000 57
+ENDIF
+
+IF (<TAG0.POS_27> > 0)
+text 311 124 0000 58
+ELSE
+text 311 124 0000 59
+ENDIF
+
+IF (<TAG0.POS_28> > 0)
+text 311 154 0000 60
+ELSE
+text 311 154 0000 61
+ENDIF
+
+IF (<TAG0.POS_29> > 0)
+text 311 184 0000 62
+ELSE
+text 311 184 0000 63
+ENDIF
+
+IF (<TAG0.POS_30> > 0)
+text 311 214 0000 64
+ELSE
+text 311 214 0000 65
+ENDIF
+
+
+button 41 37 501 501 0 2 0
+button 397 37 502 502 0 4 0
+
+text 415 236 455 66
+
+PAGE 4
+
+button 116 93 2445 2445 1 0 131
+button 73 97 2117 2118 1 0 231
+button 91 97 2117 2118 1 0 331
+button 228 97 2117 2118 1 0 431
+
+button 116 123 2445 2445 1 0 132
+button 73 127 2117 2118 1 0 232
+button 91 127 2117 2118 1 0 332
+button 228 127 2117 2118 1 0 432
+
+button 116 153 2445 2445 1 0 133
+button 73 157 2117 2118 1 0 233
+button 91 157 2117 2118 1 0 333
+button 228 157 2117 2118 1 0 433
+
+button 116 183 2445 2445 1 0 134
+button 73 187 2117 2118 1 0 234
+button 91 187 2117 2118 1 0 334
+button 228 187 2117 2118 1 0 434
+
+button 116 213 2445 2445 1 0 135
+button 73 217 2117 2118 1 0 235
+button 91 217 2117 2118 1 0 335
+button 228 217 2117 2118 1 0 435
+
+button 305 93 2445 2445 1 0 136
+button 262 97 2117 2118 1 0 236
+button 280 97 2117 2118 1 0 336
+button 416 97 2117 2118 1 0 436
+
+button 305 123 2445 2445 1 0 137
+button 262 127 2117 2118 1 0 237
+button 280 127 2117 2118 1 0 337
+button 416 127 2117 2118 1 0 437
+
+button 305 153 2445 2445 1 0 138
+button 262 157 2117 2118 1 0 238
+button 280 157 2117 2118 1 0 338
+button 416 157 2117 2118 1 0 438
+
+button 305 183 2445 2445 1 0 139
+button 262 187 2117 2118 1 0 239
+button 280 187 2117 2118 1 0 339
+button 416 187 2117 2118 1 0 439
+
+button 305 213 2445 2445 1 0 140
+button 262 217 2117 2118 1 0 240
+button 280 217 2117 2118 1 0 340
+button 416 217 2117 2118 1 0 440
+
+IF (<TAG0.POS_31> > 0)
+text 122 94 0000 67
+ELSE
+text 122 94 0000 68
+ENDIF
+
+IF (<TAG0.POS_32> > 0)
+text 122 124 0000 69
+ELSE
+text 122 124 0000 70
+ENDIF
+
+IF (<TAG0.POS_33> > 0)
+text 122 154 0000 71
+ELSE
+text 122 154 0000 72
+ENDIF
+
+IF (<TAG0.POS_34> > 0)
+text 122 184 0000 73
+ELSE
+text 122 184 0000 74
+ENDIF
+
+IF (<TAG0.POS_35> > 0)
+text 122 214 0000 75
+ELSE
+text 122 214 0000 76
+ENDIF
+
+IF (<TAG0.POS_36> > 0)
+text 311 94 0000 77
+ELSE
+text 311 94 0000 78
+ENDIF
+
+IF (<TAG0.POS_37> > 0)
+text 311 124 0000 79
+ELSE
+text 311 124 0000 80
+ENDIF
+
+IF (<TAG0.POS_38> > 0)
+text 311 154 0000 81
+ELSE
+text 311 154 0000 82
+ENDIF
+
+IF (<TAG0.POS_39> > 0)
+text 311 184 0000 83
+ELSE
+text 311 184 0000 84
+ENDIF
+
+IF (<TAG0.POS_40> > 0)
+text 311 214 0000 85
+ELSE
+text 311 214 0000 86
+ENDIF
+
+
+button 41 37 501 501 0 3 0
+//button 397 37 502 502 0 5 0
+
+text 415 236 455 87
+
+[DIALOG d_rune_book_weedy TEXT]
+Rune Book
+Help!
+<TAG.POS_1_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_2_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_3_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_4_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_5_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_6_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_7_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_8_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_9_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_10_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_11_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_12_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_13_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_14_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_15_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_16_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_17_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_18_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_19_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_20_NAME>
+<DEF.runebook_empty_slot_msg>
+1
+2
+Charges : <EVAL <TAG0.CHARGES>>
+Add Charge
+<TAG.POS_21_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_22_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_23_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_24_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_25_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_26_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_27_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_28_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_29_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_30_NAME>
+<DEF.runebook_empty_slot_msg>
+3
+<TAG.POS_31_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_32_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_33_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_34_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_35_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_36_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_37_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_38_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_39_NAME>
+<DEF.runebook_empty_slot_msg>
+<TAG.POS_40_NAME>
+<DEF.runebook_empty_slot_msg>
+4
+
+[DIALOG d_rune_book_weedy BUTTON]
+
+ON=0
+
+ONBUTTON=5
+IF (<TOPOBJ.UID>==<SRC.UID>)
+ IF (<TAG0.CHARGES> >= <DEF.runebook_max_charges>)
+ SRC.SYSMESSAGE The Rune Book is already fully charged.
+ DIALOG d_rune_book_weedy
+ ELSE
+ TARGETF f_add_charges
+ SRC.SYSMESSAGE Select the scrolls you want to use to charge the book.
+ ENDIF
+ELSE
+SRC.SYSMESSAGE The Rune Book must be in your pack.
+ DIALOG d_rune_book_weedy
+ENDIF
+
+ONBUTTON=1
+SRC.SYSMESSAGE The first button from the left is used for recalling. The second button is used for gating.
+SRC.SYSMESSAGE To Add / Rename a location, click the middle bar. The last button is used to remove locations from the book.
+SRC.SYSMESSAGE If you have any problems, please page a staff member.
+DIALOG d_rune_book_weedy
+
+ONBUTTON=101 199
+LOCAL.BUTTON=<EVAL <ARGN1> +- 100>
+IF !(<TAG0.POS_<EVAL <LOCAL.BUTTON>>>)
+TARGETF f_targ_rune <EVAL <LOCAL.BUTTON>>
+SRC.SYSMESSAGE Select the rune you want to add to book.
+ELSE
+TAG.RENAMEPOS=<EVAL <LOCAL.BUTTON>>
+DIALOG d_rune_pos_rename
+ENDIF
+
+ONBUTTON=201 299
+LOCAL.BUTTON=<EVAL <ARGN1> +- 200>
+IF (<TAG0.POS_<EVAL <LOCAL.BUTTON>>>)
+f_runebook_recall <EVAL <LOCAL.BUTTON>>
+ELSE
+SRC.SYSMESSAGE There is no location scribed in this slot.
+DIALOG d_rune_book_weedy
+ENDIF
+
+ONBUTTON=301 399
+LOCAL.BUTTON=<EVAL <ARGN1> +- 300>
+IF (<TAG0.POS_<EVAL <LOCAL.BUTTON>>>)
+f_runebook_gate <EVAL <LOCAL.BUTTON>>
+ELSE
+SRC.SYSMESSAGE There is no location scribed in this slot.
+DIALOG d_rune_book_weedy
+ENDIF
+
+ONBUTTON=401 499
+LOCAL.BUTTON=<EVAL <ARGN1> +- 400>
+IF (<TAG0.POS_<EVAL <LOCAL.BUTTON>>>)
+TAG.DELETEPOS=<EVAL <LOCAL.BUTTON>>
+DIALOG d_rune_pos_delete
+ELSE
+SRC.SYSMESSAGE There is no location scribed in this slot.
+DIALOG d_rune_book_weedy
+ENDIF
+
+
+
+[DIALOG d_rune_pos_rename]
+0, 0
+PAGE 0
+resizepic 55 47 2620 313 159
+text 80 66 1153 0
+gumppic 123 114 2440
+button 175 161 2311 2312 1 0 1
+textentry 130 116 1153 25 0 0 1
+
+[DIALOG d_rune_pos_rename TEXT]
+What would you like to name this location?
+<TAG.POS_<EVAL <TAG.RENAMEPOS>>_NAME>
+
+
+[DIALOG d_rune_pos_rename BUTTON]
+
+ON=0
+TAG.RENAMEPOS=
+
+ONBUTTON=1
+IF (<STRLENGTH <ARGTXT[0]>> == 0)
+SRC.SYSMESSAGE You must specify a name.
+DIALOG d_rune_pos_rename
+ELSEIF (<STRLENGTH <ARGTXT[0]>> > 14)
+SRC.SYSMESSAGE You must specify a shorter name.
+DIALOG d_rune_pos_rename
+ELSE
+TRY TAG.POS_<EVAL <TAG.RENAMEPOS>>_NAME=<ARGTXT[0]>
+DIALOGCLOSE d_rune_book_weedy
+DIALOG d_rune_book_weedy
+TAG.RENAMEPOS=
+ENDIF
+
+
+[DIALOG d_rune_pos_delete]
+0, 0
+PAGE 0
+resizepic 55 47 2620 313 129
+text 70 66 1153 0
+text 180 100 455 1
+button 225 135 2452 2451 1 0 1
+button 145 135 2453 2454 1 0 0
+
+[DIALOG d_rune_pos_delete TEXT]
+Are you sure you want to delete this location?
+<TAG.POS_<EVAL <TAG.DELETEPOS>>_NAME>
+
+
+[DIALOG d_rune_pos_delete BUTTON]
+
+ON=0
+TAG.DELETEPOS=
+DIALOGCLOSE d_rune_book_weedy
+DIALOG d_rune_book_weedy
+
+ONBUTTON=1
+SRC.SYSMESSAGE Location -> <TAG.POS_<EVAL <TAG.DELETEPOS>>_NAME> <- has been deleted.
+TRY TAG.POS_<EVAL <TAG.DELETEPOS>>=
+TRY TAG.POS_<EVAL <TAG.DELETEPOS>>_NAME=
+TAG.DELETEPOS=
+DIALOGCLOSE d_rune_book_weedy
+DIALOG d_rune_book_weedy
+
+
+[EOF]

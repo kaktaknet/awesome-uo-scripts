@@ -1,0 +1,63 @@
+///By ClouD_BR
+
+////The player just has to type ".chat on"  to activate the chat, and ".chat off" to deactivate it
+////and then, if it's activated, type ".chat whatever" to send the message (ex.: .chat hi).
+
+[plevel 1]
+c
+pm
+
+[function c]
+IF (<tag0.event.id> > 0)
+sysmessage @07a1 You can't use the chat in an event.
+return 1
+ENDIF
+IF !(STRCMPI("<args>","on")) && !(<tag0.chat>)
+tag.chat=1
+sysmessage @07a1 Chat activated
+return 1
+ENDIF
+IF !(STRCMPI("<args>","off")) && (<tag0.chat>)
+tag.chat=
+sysmessage @07a1 Chat deactivated
+return 1
+ENDIF
+IF !(<tag0.chat>)
+sysmessage @07a1 You aren't with the chat activated
+return 1
+ENDIF
+IF (<ISEMPTY <ARGS>>)
+sysmessage @07a1 You must type something
+return 1
+ENDIF
+serv.allclients chatmessage <args>
+
+[function pm]
+IF (<tag0.event.id> > 0)
+sysmessage @07a1 You can't use the chat in an event.
+return 1
+ENDIF
+IF !(<tag0.chat>)
+sysmessage @07a1 You aren't with the chat activated
+return 1
+ENDIF
+IF (<ISEMPTY <ARGS>>)
+sysmessage @07a1 You must type something
+return 1
+ENDIF
+serv.allclients pmmessage <STRARG <args>>,<STREAT <args>>
+
+[FUNCTION pmmessage]
+IF !(<isgm>)
+IF !(strcmpi("<argv[0]>","<name>")) && (<isonline>)
+sysmessage @07a1 PM From <src.name>: <argv[1]>
+src.sysmessage @07a1 PM sent
+ENDIF
+ENDIF
+
+[function chatmessage]
+IF (<tag0.chat>==1)
+sysmessage @036 Chat: <name>: <args>
+ENDIF
+
+[EOF]

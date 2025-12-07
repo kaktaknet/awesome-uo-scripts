@@ -1,0 +1,256 @@
+//--------------------------------------------------------------------------------------------
+//RaceNPC Script										
+//By Sven and Tested/debugged by Ironclaw	
+//Last Edited : 12:02 AM CMT, July 2nd 2003
+//Created under the guiding whip of Bamboo Bunny for Revelstone	
+//--------------------------------------------------------------------------------------------
+
+//-----------------------Required Scripts---------------------------------------------
+//Shard_RaceGate_Supporting.scp
+//Shard_RaceNPC.scp
+//-------------------------------------------------------------------------------------------
+
+//-----------------------Setup Instructions--------------------------------------------
+//Put ITEM=i_racenpc at the END of @CREATE on those you want to have races.
+//Please use RaceGates rather than this system for players.
+//When they are created they have race determination.
+//Make sure the REGION.NAME values (In region UID Finder) are right for your map.
+//And that they give the proper RaceUID you want.
+//-------------------------------------------------------------------------------------------
+
+//---------------------Script Details----------------------------------------------------
+//All Race Data is stored in the i_racetoken in layer_special
+//Name = Name of the race.
+//Color = Color of the race.
+//MORE1 = RaceShiftID
+//MORE2 = RaceUID
+//-------------------------------------------------------------------------------------------
+
+//---------------------Additional Functions------------------------------------------
+//Racename ARGS = Checks to see if the racename matches the ARGS. Returns 1 if true.
+//RaceUID ARGN = Checks to see if the RaceUID matches the ARGN. Returns 1 if true.
+//------------------------------------------------------------------------------------------
+
+// Race Table for currently defined races, numeric values for
+// the color and polymorphed form, a poly of 0 indicates
+// the inability to do so
+//
+//	UID	Name		Color		Poly Form
+//	1	Human		{1002 1057}	0
+//	2	Fairy		07a0		03a
+//	3	Draconic	054a		03c
+//	4	Werewolf	06d8		0e1
+//	5	Lizardman	0795		021
+//	6	Goblin		0795		01064
+//	7	Ent		0416		02f
+//	8	Vampire		03bc		01026
+//	9	Orc		06a5		07
+//	10	Ogre		0794		01
+//	11	Daemon		0493		09
+//	12	Highelf		012c		0
+//	13	Bloodelf	021		0
+//	14	Frostelf	0481		0
+//	15	Druegar		0492		0
+//	16	Woodelf		0592		0
+//	17	Dwarf		05eb		0
+//	18	Drow		0485		0
+
+
+//-------------------START OF : RACE COLOR DEFNAMES-----------------
+[DEFNAME RACECOLORS]
+RaceColor1		=	{1002 1057}	//Human
+RaceColor2		=	07a0		//Fairy
+RaceColor3		=	054a		//Draconic
+RaceColor4		=	06d8		//Werewolf
+RaceColor5		=	0795		//Lizardman
+RaceColor6		=	0795		//Goblin
+RaceColor7		=	0416		//Ent
+RaceColor8		=	03bc		//Vampire
+RaceColor9		=	06a5		//Orc
+RaceColor10	=	0794		//Ogre
+RaceColor11	=	0493		//Daemon
+Racecolor12		=	012c		//Highelf
+Racecolor13		=	021			//Bloodelf
+Racecolor14		=	0481		//FrostElf
+Racecolor15		=	0492		//Druegar
+Racecolor16		=	0592		//Woodelf
+Racecolor17		=	05eb		//Dwarf
+Racecolor18		=	0485		//Drow
+//-------------------END OF: RACE COLOR DEFNAMES---------------------
+
+//-------------------START OF: RACE SHIFT IDs-------------------------------
+[DEFNAME RACESHIFTIDS]
+RaceShiftID1	=	0			//Human
+RaceShiftID2	=	03a			//Fairly
+RaceShiftID3	=	03c			//Draconic
+RaceShiftID4	=	0e1			//Werewolf
+RaceShiftID5	=	021			//Lizardman
+RaceShiftID6	=	01064		//Goblin
+RaceShiftID7	=	02f			//Ent
+RaceShiftID8	=	01026		//Vampire
+RaceShiftID9	=	07			//Orc
+RaceShiftID10	=	01			//Ogre
+RaceShiftID11	=	09			//Daemon
+RaceShiftID12	=	0			//HighElf
+RaceShiftID13	=	0			//Bloodelf
+RaceShiftID14	=	0			//FrostElf
+RaceShiftID15	=	0			//Druegar
+RaceShiftID16	=	0			//Woodelf
+RaceShiftID17	=	0			//Dwarf
+RaceShiftID18	=	0			//Drow
+//-------------------END OF: RACE SHIFT IDs---------------------------------
+
+//-------------------START OF: RACENAME FINDER---------------------------------------
+[FUNCTION RaceName]
+DoSwitch <EVAL (<ARGN>+-1)>
+VAR.RaceName	=	Human
+VAR.RaceName	=	Fairy
+VAR.RaceName	=	Draconic
+VAR.RaceName	=	 Werewolf
+VAR.RaceName	= 	Lizardman
+VAR.RaceName	=	Goblin
+VAR.RaceName	=	Ent
+VAR.RaceName	=	Vampire	
+VAR.RaceName	=	Orc
+VAR.RaceName	=	Ogre
+VAR.RaceName	=	Daemon
+VAR.RaceName	=	Highelf
+VAR.RaceName	=	Bloodelf	
+VAR.RaceName	=	Frostelf
+VAR.RaceName	=	Druegar	
+VAR.RaceName	=	Woodelf	
+VAR.RaceName	=	Dwarf
+VAR.RaceName	=	Drow
+ENDDO
+//-------------------END OF: RACENAME FINDER-----------------------------------------
+
+//-------------------START OF : RACE UID FINDER-----------------
+[FUNCTION RegionRaceUID]
+VAR.TEST=<ARGS>
+if  STRMATCH(<ARGS>,britain)
+		var.raceuid={  1 2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  }
+	elseif  STRMATCH(<ARGS>,buccaneer's den)
+		var.raceuid=10
+	elseif  STRMATCH(<ARGS>,cove)
+		var.raceuid=1
+	elseif  STRMATCH(<ARGS>,delucia)
+		var.raceuid=6
+	elseif  STRMATCH(<ARGS>,jhelom)
+		var.raceuid=15
+	elseif  STRMATCH(<ARGS>,magincia)
+		var.raceuid=12
+	elseif  STRMATCH(<ARGS>,minoc territory)
+		var.raceuid=17
+	elseif  STRMATCH(<ARGS>,moonglow)
+		var.raceuid=13
+	elseif  STRMATCH(<ARGS>,nujel'm)
+		var.raceuid=3
+	elseif  STRMATCH(<ARGS>,ocllo)
+		var.raceuid=14
+	elseif  STRMATCH(<ARGS>,papua)
+		var.raceuid=5
+	elseif  STRMATCH(<ARGS>,serpent's hold)
+		var.raceuid=8
+	elseif  STRMATCH(<ARGS>,skara brae)
+		var.raceuid=16
+	elseif  STRMATCH(<ARGS>,trinsic)
+		var.raceuid=2
+	elseif  STRMATCH(<ARGS>,vesper)
+		var.raceuid=4
+	elseif  STRMATCH(<ARGS>,wind)
+		var.raceuid=18
+	elseif  STRMATCH(<ARGS>,yew)
+		var.raceuid=7
+	else
+		var.raceuid={  1 2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  }
+	endif
+//-------------------END OF: RACE UID FINDER---------------------
+
+//-------------------START OF: NPC RACE FUNCTIONS----------------------
+[FUNCTION NPCRACECHANGE]
+REGIONRACEUID <ARGS>
+RaceName <EVAL <VAR.RACEUID>>
+NEWITEM i_racetoken
+ACT.EQUIP
+	ACT.MORE1=<EVAL RaceShiftID<EVAL <VAR.RACEUID>>>
+	ACT.MORE2=<EVAL <VAR.RACEUID>>
+	ACT.NAME=<VAR.RACENAME>
+	ACT.COLOR=<EVAL RaceColor<EVAL <VAR.RACEUID>>>
+	COLOR=<ACT.COLOR>
+	//IF ({0 2} == 1) && !(<ACT.MORE1> == 0)		-Non-Human bodies dont talk?
+	//	BODY=<ACT.MORE1>					-Disabled
+	//ENDIF										-Disabled
+RETURN 1
+//-------------------END OF: NPC RACE FUNCTIONS------------------------
+
+//-------------------START OF: NPC RACE ITEMS-----------------------------
+[ITEMDEF i_racenpc] 
+ID=i_memory 
+LAYER=layer_special 
+TYPE=t_eq_script 
+NAME=RaceChanger 
+ 
+ON=@CREATE 
+ATTR=ATTR_DECAY 
+TIMER=0 
+ 
+ON=@TIMER 
+CONT.NPCRACECHANGE <CONT.REGION.NAME> 
+REMOVE
+//--------------------END OF: NPC RACE ITEMS------------------------------
+
+//------------------START OF: SAMPLE NPC-----------------------------------
+[CHARDEF 0450]
+DEFNAME=c_h_racenpc
+NAME=#NAMES_HUMANMALE the Magincia Servant
+ID=C_MAN
+HIREDAYWAGE=20
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=jobServant
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+TEVENTS=e_racenpc
+
+ON=@Create
+STR={16 30}
+DEX={21 35}
+INT={26 40}
+COLOR=colors_skin
+WRESTLING={15.0 38.0}
+TACTICS={15.0 38.0}
+
+NPC=brain_human
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+
+CATEGORY=Civilized
+SUBSECTION=Magincia Town Members
+DESCRIPTION=Magincia Servant (male)
+//----------------------------------------------------------------
+//THIS IS WHAT MAKES THE NPC HAVE A RACE
+//This MUST go at the end of @CREATE
+ITEM=i_racenpc
+//----------------------------------------------------------------
+
+ON=@NPCRestock
+ITEM=RANDOM_LIGHT
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_pants
+ITEM=i_sandals
+COLOR=colors_neutral
+ITEM=random_coin_purse
+//------------------END OF: SAMPLE NPC------------------------------------

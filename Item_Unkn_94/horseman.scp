@@ -1,0 +1,161 @@
+//*****************************************************************************************************
+//The Headless Horseman v1.1 by Mordaunt
+//Thanks to Elric Van Durrin for testing this script for bugs
+//*****************************************************************************************************
+
+[CHARDEF c_headless_horseman] 
+ID=c_man
+NAME=Headless Horseman
+SOUND=snd_HUMAN_M_DIE_01 
+DAM=10,20 
+ARMOR=30 
+CAN=MT_WALK|MT_RUN|MT_EQUIP 
+DESIRES=i_gold,e_notoriety 
+// AVERSIONS=t_TRAP,t_eerie_stuff 
+// ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=jobMageEvil 
+TSPEECH=spk_needs 
+TSPEECH=spk_rehello 
+TSPEECH=spk_human_default 
+//TEVENTS=monster_tag		//if you use these events, uncomment them
+//TEVENTS=e_fame_karma_gain
+
+ON=@Create 
+COLOR=07fff
+STR={450 500} 
+DEX={300 350} 
+INT={200 250} 
+
+PARRYING={85.0 98.0} 
+SWORDSMANSHIP={90.0 95.0} 
+ARCHERY={90.0 95.0}
+WRESTLING={67.0 90.0} 
+MAGICRESISTANCE={90.0 98.0} 
+TACTICS={90.0 98.0} 
+POISONING={90.0 100.0} 
+
+NPC=brain_monster 
+
+FAME=8000 
+KARMA=-9999 
+
+
+ON=@NPCRestock 
+ITEM=i_BLACKROCK_RINGMAIL_GLOVES
+ITEM=i_BLACKROCK_RINGMAIL_SLEEVES
+ITEM=i_BLACKROCK_RINGMAIL_TUNIC
+ITEM=i_BLACKROCK_RINGMAIL_LEGGINGS
+ITEM=i_CAPE 
+COLOR=0053f
+ITEM=i_SASH 
+COLOR=0053f
+ITEM=i_boots_calf
+COLOR=0053f
+ITEM=i_potion_healgreat 
+ITEM=i_potion_healgreat 
+ITEM=i_potion_healgreat
+ITEM=i_potion_healgreat
+ITEM=i_potion_healgreat
+ITEM=i_mt_nightmare
+ITEMNEWBIE=i_sword_viking 
+ITEMNEWBIE=i_pumpkin_launcher
+
+
+ITEM={ random_jewel 1 0 1 } 
+ITEM={ random_jewel 1 0 1 } 
+ITEM={ random_jewel 1 0 1 } 
+ITEM={ random_jewel 1 0 1 } 
+ITEM=i_gold,{400 1000} 
+
+
+on=@gethit // change weapon 
+if (<distance> < 2) 
+findid(i_sword_viking).cont=<uid> 
+endif 
+if (<distance> > 2) 
+findid(i_pumpkin_launcher).cont=<uid> 
+endif 
+return 0 
+endif 
+return 1 
+
+
+ON=@hit // heal
+IF (<hitpoints> < 100) 
+IF (<RESTEST 1 i_potion_healgreat>) 
+SPELLEFFECT s_greater_heal,100.0 
+CONSUME i_potion_healgreat 
+else 
+return 1 
+endif 
+
+ON=@SkillStart // recreate horse 
+if <SRC.RESTEST 1 i_mt_nightmare> 
+return 1 
+else 
+newitem=i_mt_nightmare 
+act.equip 
+return 0 
+endif 
+
+ON=@EnvironChange // recreate horse 
+if <SRC.RESTEST 1 i_mt_nightmare>
+return 1 
+else 
+newitem=i_mt_nightmare
+act.equip 
+return 1 
+endif 
+
+CATEGORY=Civilized 
+SUBSECTION=Headless Horseman
+DESCRIPTION=Headless Horseman
+
+//pumkin
+[ITEMDEF i_pumpkin_launcher]
+ID=i_crossbow_heavy
+NAME=Pumpkin Launcher
+WEIGHT=4
+DAM={15 30}
+REQSTR=30
+SPEED=1
+TDATA3=0
+TDATA4=i_fruit_pumpkin
+TWOHANDS=Y
+
+ON=@Create
+MOREY=100.0
+ATTR=attr_magic
+HITPOINTS=300
+COLOR=color_o_blackrock
+
+ON=@EQUIP
+src.events +e_pumpkin
+
+ON=@UNEQUIP
+src.events -e_pumpkin
+
+ON=@DAMAGE
+SRC.DAMAGE={50 60} 0010 <CONT.UID>
+
+[EVENTS e_pumpkin]
+ON=@HIT
+dorand 3
+EFFECT=2,0c6b,1,16,1
+EFFECT=2,0c6b,3,16,1
+EFFECT=2,0c6b,3,16,0
+enddo
+
+[ITEMDEF i_mt_nightmare]
+Name=nightmare
+ID=i_mt_horse_brown_dk
+LAYER=layer_horse
+TDATA3=c_m_nightmare
+
+ON=@Create
+COLOR=colors_black
+MORE1=c_m_nightmare
+
+[EOF]

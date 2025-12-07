@@ -1,0 +1,1636 @@
+﻿//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°//
+//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°//
+//       		     W  A  R  N  I  N  G			      //
+//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°//
+//°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°//
+//1.I (Silver Ghost) don't take any responsiblity for any damage that this script
+//  may cause/have caused to your shard.  You may use it at your own risk.
+//2.It is unofficially copyrighted © by me (Silver Ghost) on 7/8/02.  If you use
+//  this script in any way, the creidt below must stay untouched!
+//3.Claiming this script as your own is illegal, and simply not right.  If you
+//  do so, you shall loose the respect of the entire sphereserver.com community.
+//4.Feel free to ask me any questions about this script at sg@ablogic.com.
+//5.Please, send any found bugs to sg@ablogic.com, so that I could fix it (unless
+//  yu already have a fix - please send it too), and update this script.
+//6.Your support in developing this script will always be welcome.
+//
+// THIS FILE IS BEST VIEWED WITH EDITPLUS2 (www.editplus.com) OR 
+// TEXTPAD (www.textpad.com)
+//
+///////////////////////////////////////////////////////////////////////////////////
+//###############################################################################//
+//#                                v51PvP        	                     	#//
+//#                           Crafted by Silver Ghost                        	#//
+//# Version: Beta 0.9							     	#//
+//# E-Mail: sg@ablogic.com		                                     	#//
+//# ICQ: 553410                                                              	#//
+//# Date: 07/07/02                                                           	#//
+//# If you change this file, please leave your name and changes below...:    	#//
+//#									     	#//
+//# 1. Silver Ghost: Completed the first part - weapons.  See notes.	     	#//
+//# 2. Silver Ghost: Completed the spell  part.  Script is ready for beta-   	#//
+//#			testing!						#//
+//# 3. Silver Ghost: Player update - choose between differenty types of	     	#//
+//#			Messages (see notes 5)				     	#//
+//# 4. Silver Ghost: Fixed the reflect bug (see notes 11) - caused server to die#//
+//# 5. Silver Ghost: Updated the combat messaging system - no need to set any	#//
+//#			TAGs regarding it by default.				#//
+//# 6. Silver Ghost: Fixed the bug when player carries a spellbook in his arms, #//
+//#			or any other non-weapon type of thing.			#//
+//# 7. Silver Ghost: Paralyze's been fixed and now works perfectly.		#//
+//# 8. Silver Ghost: Fixed firewall bug.  Also added new f_resync function	#//
+//#			(by Flint), which is lag\free, and doesnt vanish	#//
+//# 			animation (unlike update).				#//
+//# 									     	#//
+//# NOTES:								     	#//
+//# 1. If you're going to use it on your shard, don't forget to make skill-  	#//
+//#    gain functions for battle skills, and anatomy.			     	#//
+//# 2. Please never remove this box, this is my "copyright". 		     	#//
+//# 3. Also need to make your own skillgain for magery and resistance.	     	#//
+//#    and others.  Some spells don't have animation... **fixed by SG except   	#//
+//#	for massive ones.							#//
+//# 4. Should slow down the wrestling and dagger speed - too fast OR make them 	#//
+//#	weaker - see the balance.						#//
+//# 5. Each player must recieve TAG.combatMessageType2 = 1 when created.  ***	#//
+//#	Fixed by SG - even if they don't have one it will be set to grey 	#//
+//#	sysmessage by default.							#//
+//#    Notify players about combatMessage function.				#//
+//# 6. May want to turn off poison - it works as ON=@GETHIT, thus needs editing.#//
+//# 7. Mana Drain and Mana Vampire needs working on?				#//
+//# 8. Paralyze not working?							#//
+//# 9. Chain Lightning and other massive spells animation applies to only 1	#//
+//#	character?								#//
+//# 10.Create Meteor Swarm animation?						#//
+//# 11.If you and somebody you cast spell on has magic Reflect - server dies	#//
+//#	instantly **Fixed by SG, tho might need some work on. (especially 	#//
+//#	regarding animation).							#//
+//# 12. Don't screw up with UPDATE thing - when u have EFFECT on sombody - don't#//
+//#	do update after that - it will vanish the animation. ***FIXED thankx to	#//
+//#	Flint's f_resync function!						#//
+//# 13. NPCs don't run away from firewall if they're paralyzed, even tho 	#//
+//#	it's released them?							#//
+//# 14. Must remove the deny messages for effects like firewall...		#//
+//#										#//
+//#										#//
+//#										#//
+//#										#//
+//#			D  O  C  U  M  E  N  T  A  T  I  O  N			#//
+//#
+//#	The removal of spell-fizzling effect is very simple.  Return 1 after	#//
+//# ON=@spelleffect doesn't vanish the animation, although it vanishes the 	#//
+//# effect.  Same with ON=@hit.  For each trigger skill goes thru various checks#//
+//# and if everything is OK, the damage/armor collecting functions are executed #//
+//# and damage is applied as removing of HITS instead of using DAMAGE function. #//
+//# I've tried to put as many comments is possible, but in overall view script	#//
+//# looks somewhat like this:							#//
+//# 1. ON=@HitTry - simply checks if everything is ok like region.		#//
+//# 2. ON=@Hit - first goes thru various checks, if everything is ok:		#//
+//#	- removes attacked's action unless it's combat				#//
+//#	- executes damage\armor collecting formulas				#//
+//#	- applies damage							#//
+//#	- return 1								#//
+//# 3. ON=@SpellCast - various checks, also revelas char if hidden.		#//
+//# 4. ON=@SpellEffect - various checks, if everything is ok:			#//
+//#	- Takes care of reflection spell					#//
+//#	- If spell is bad, counts up the damage					#//
+//#	- applies the damage							#//
+//#	- return 1								#//
+//# 5. Function - bunch of functions used in this script.			#//
+//###############################################################################//
+///////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+[PLEVEL 1]
+combatMessage		//Change type of combat message
+
+//This is the main event that you should put on your each character and NPC.
+/////////////////
+[EVENTS v51PvP]//
+/////////////////
+
+//*********************************************//
+//Tome 1 Chapter 1
+ON=@HITTRY	//[] = attacker, SRC = attacked
+//*********************************************//
+//Below you mostly have anti-bugs.
+
+//stop trying to hit yourself
+if ( <SRC.UID>==<UID> )
+	SRC.ACTION= -1
+	SRC.FLAGS=<SRC.FLAGS> & ~statf_war // out of war mode
+ 	return 1
+ endif
+
+//If I am in a safe region - prevent attack.
+IF (<region.safe>)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack in a safe zone!
+	RETURN 1
+ENDIF
+
+
+//If attacked is in a safe region - prevent the attack.
+IF (<SRC.region.safe>)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack targets inside the safe zone!
+	RETURN 1
+ENDIF
+
+
+//If attacked is GM - prevent attack
+IF (0<SRC.account.plevel> > 1)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack Game Masters!
+	RETURN 1
+ENDIF
+
+
+//If attacked is stoned - prevent attack.
+IF (<SRC.stone>)
+	//SAY <SRC.NAME>---
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack stoned targets!
+	RETURN 1
+ENDIF
+
+
+//If attacker is invulnerable - prevent the attack
+IF (<flags> & 01)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack while invulnerable!
+	RETURN 1
+ENDIF
+
+
+//If attacked is invulnerable - prevent the attack
+IF (<SRC.flags> & 01)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack invulnerable targets!
+	RETURN 1
+ENDIF
+
+
+
+//*********************************************//
+//Tome 1 Chapter 2
+ON=@HIT		//[] = attacker, SRC = attacked
+//*********************************************//
+//Here you also have all the antibugs, and the damage functions.
+
+//If attacker is invulnerable - prevent the attack
+IF (<flags> & 01)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack while invulnerable!
+	RETURN 1
+ENDIF
+
+
+//If attacker's stamina is 0 - prevent the attack
+IF !(<stamina>)
+	VAR.sua_color=02f
+	f_combat_message Thou art too exhausted to attack!
+	RETURN 1
+ENDIF
+
+
+//If attacker is in a safe region - prevent the attack.
+IF (<region.safe>)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack in a safe zone!
+	RETURN 1
+ENDIF
+
+
+//If attacked is in a safe zone - prevent the attack
+IF (<SRC.region.safe>)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack targets inside the safe zone!
+	RETURN 1
+ENDIF
+
+
+//If attacked is invulnerable - prevent the attack
+IF (<SRC.flags> & 01)
+	cancelAttack
+	VAR.sua_color=034
+	f_combat_message Thou can't attack invulnerable targets!
+	RETURN 1
+ENDIF
+
+
+//!!!! Important !!!!//
+//If action isn't one of the following - remove it
+IF (<SRC.FIXACTION>==skill_wrestling) || (<SRC.FIXACTION>==skill_swordsmanship) || (<SRC.FIXACTION>==skill_fencing) || (<SRC.FIXACTION>==skill_archery) || (<SRC.FIXACTION>==skill_tactics) || (<SRC.FIXACTION>==skill_parrying) || (<SRC.FIXACTION>==skill_healing) || (<SRC.FIXACTION>==skill_macefighting) || (<SRC.FIXACTION>==skill_magery)
+	//simply nothing
+ELSE
+	//Make attacked(SRC) attack attacker([])
+	attack_fudge <SRC.UID>
+	UPDATE
+	SRC.UPDATE
+ENDIF
+
+//!!!! Important !!!!//
+//If attacked(SRC) is paralyzed - release
+IF (<SRC.flags> & 04)
+	SRC.flags = <SRC.flags> &~ 04
+	VAR.sua_color=03E
+	SRC.f_combat_message Thee paralyze charms have vanished!
+ENDIF
+
+//**************************************************************//
+//		Here comes the damage function			//
+//**************************************************************//
+///******* Critical hit? not added
+
+//Define Variables
+VAR.DAMAGE=0		//stored damage (duh)
+VAR.ARMOR=0		//sores armor (duh :)
+VAR.FINAL=0		//stored final damage (see "Part of the balance" 2 blocks below)
+VAR.weaponLayer=<weaponCheck>
+
+//!!!! Important !!!!//
+//These 2 functions are basicly the balance - it's important
+//that you modify them so that they fit your needs.
+//Collect Damage and Armor
+///Skillgain inside
+f_collectDamage
+f_collectArmor
+
+
+//Part of the balance
+IF (<VAR.ARMOR> >= <VAR.DAMAGE>)				//If damage is less then armor - set final to rand 5
+	VAR.FINAL=<EVAL RAND(5)>
+ELSEIF (<EVAL <VAR.DAMAGE>+-<VAR.ARMOR>> > 80)
+	VAR.FINAL=<EVAL <VAR.DAMAGE>+-<VAR.ARMOR>+-20>		//If Damage - armor is over 80 - soften it by 20
+ELSE
+	VAR.FINAL=<EVAL <VAR.DAMAGE>+-<VAR.ARMOR>>		//If everything looks good, damage-armor
+ENDIF
+
+
+//Determine VAR.weaponWord (smash, cut, etc). ***Needs improving regarding language
+//tho works.  You should remove this if you don't want your players to get a message
+//each time they hit.
+//Also makes the hit sound
+get_varWeaponWord
+
+
+
+//Determine VAR.effectWord (slightly, hard, etc) .  ***Needs improving.
+//Same as above.
+get_varEffectWord
+
+
+//If final dmg is more then hits, send to heaven :)
+IF (<VAR.FINAL> >= <SRC.HITS>)
+	IF (<SRC.KARMA> < 0)
+		VAR.SUA_COLOR=034
+		SRC.SYSMESSAGE <NAME>'s final strike sends you to Hell!!!
+		if ( 0<TAG.combatMessage2> )
+			f_combat_message Your final strike sends <SRC.NAME> to Hell!!!
+		endif
+		SRC.HITS=0
+	ELSE
+		VAR.SUA_COLOR=034
+		SRC.SYSMESSAGE <NAME>'s final strike sends you to Heaven!!!
+		if ( 0<TAG.combatMessage2> )
+			f_combat_message Your final strike sends <SRC.NAME> to Heaven!!!
+		endif
+		SRC.HITS=0
+	ENDIF
+	TAG.KILLS = <eval <TAG.KILLS>> + 1
+	if (<SRC.fame>==0)
+		var.fame=0
+	else
+		var.fame=<SRC.fame>/100
+	endif
+	if (<SRC.karma>==0)
+		var.karma=0
+	else
+		var.karma=<SRC.karma>/100
+	endif
+	karma=<karma>+-<var.karma>
+	fame=<fame>+<eval <var.fame>>
+	if (<karma> > 10000) || (<karma> < -10000)
+		karma=10000
+	endif
+	if (<fame> > 10000)
+		fame=10000
+	endif
+	if ( 0<TAG.combatMessage7> )
+		f_combat_message You have gained <eval <var.fame>> fame.
+		f_combat_message Your fame is now <fame>
+		f_combat_message Your karma is now <karma>
+	endif
+	if (<SRC.kills> > 6) || (<SRC.karma> < -2000) || ( <SRC.flags> & statf_criminal )  || (<memoryfindtype.memory_harmedby.link.uid> == <src.uid>)
+		if ( 0<TAG.combatMessage7> )
+			f_combat_message You have killed a criminal!
+		endif
+	else
+		kills=<kills>+1
+	endif
+	
+ELSE
+	//Reactive Armor Thing
+	//the OSI type is that it disappears after about 4 hits.
+	IF (<SRC.FLAGS> & 040)
+		DAMAGE <EVAL <VAR.FINAL>/4>
+	ENDIF
+	
+	//Just a crazy idea - might want to add the "rip out guts" addon where when u do over 100 damage
+	//You get a "You rip out somebody's guts" message, put some guts on the floor, and apply the poison-
+	//type effect to the target - subtract 1 life every .1 second? :)
+	SRC.HITS=<SRC.HITS>+-<VAR.FINAL>
+	VAR.SUA_COLOR=020
+	if (STRCMPI(<SRC.TAG.combatMessage1>,))
+		SRC.f_combat_message <NAME> <VAR.weaponWord>es you <VAR.effectWord>!
+	endif
+	VAR.SUA_COLOR=034
+	if ( 0<TAG.combatMessage2> )
+		f_combat_message You <VAR.weaponWord> <SRC.NAME> <VAR.effectWord>!
+	endif
+ENDIF
+
+//criminal
+if ( <src.kills> > 6 ) || ( <src.karma> < -2000 ) || ( <src.flags> & statf_criminal ) || (<memoryfindtype.memory_harmedby.link.uid> == <SRC.uid>)
+	//do nothing
+else
+	VAR.SUA_COLOR=020
+	f_combat_message CRIMINAL!
+	makeCrim 5*60	//5 minutes
+endif
+
+
+//Animation
+SRC.ANIM 20
+
+//Sound of being hit	//females makes male sound????
+DORAND 5
+SFX <SEX snd_HUMAN_MOOMPH01/snd_HUMAN_FOOMPH01>
+SFX <SEX snd_HUMAN_MOOMPH02/snd_HUMAN_FOOMPH06>
+SFX <SEX snd_HUMAN_MOOMPH03/snd_HUMAN_FOOMPH07>
+SFX <SEX snd_HUMAN_MOOMPH04/snd_HUMAN_FOOMPH08>
+SFX <SEX snd_HUMAN_MOOMPH05/snd_HUMAN_FOOMPH09>
+ENDDO
+
+//used for testing
+//SRC.SAY FINAL: -<EVAL <VAR.FINAL>>-
+//SRC.SAY -<EVAL <VAR.ARMOR>>-
+//SRC.SAY -<EVAL <VAR.DAMAGE>>-
+
+
+//Apply Poison
+IF (<FINDLAYER.<VAR.weaponLayer>.MOREZ>)	//if weapon poisoned
+	SRC.POISON <EVAL <FINDLAYER.<VAR.weaponLayer>.MOREZ>>	//Is it supposed to be *10 ?
+	UPDATE
+	SRC.UPDATE
+ENDIF
+
+//EXPERIENCE
+//can gain on NPCs only
+if ( <SRC.NPC> )
+	get_exp_hit
+endif
+
+
+UPDATE
+SRC.UPDATE
+//###########
+RETURN 1//###
+//###########
+
+
+
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//			     TOME 2		       	       //
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+///*********** Should have skillgain here!
+
+//*********************************************//
+//Tome 2 Chapter 1
+ON=@SPELLCAST	//SRC/[] - caster, ACT - target
+//*********************************************//
+
+spellIsGood <argn>	//Defines whether spell is good or bad (stored in VAR.spellIsGood)
+
+//Preventing harmful spells in safe zone
+IF (<region.safe>) || (<ACT.region.safe>)
+	IF !(<VAR.spellIsGood>)
+		VAR.sua_color=034
+		f_combat_message Thou can't use this spell in/into a safe zone!
+		RETURN 1
+	ENDIF
+ENDIF
+
+
+//If I am invulnerable - prevent
+IF (<flags> & 01)
+	VAR.sua_color=034
+	f_combat_message Thou can't cast spells while invulnerable!
+	RETURN 1
+ENDIF
+
+
+//If mana is 0 - prevent
+IF (<mana>==0)
+	VAR.sua_color=034
+	f_combat_message Thou lack mana to cast that spell!
+	RETURN 1
+ENDIF
+
+
+//If target is GM - prevent
+IF (0<ACT.account.plevel> > 1)
+	VAR.sua_color=034
+	f_combat_message Thou can't cast spells on Game Masters!
+	RETURN 1
+ENDIF
+
+
+//If target is invulnerable - prevent
+IF (0<ACT.flags> & 01)
+	VAR.sua_color=034
+	f_combat_message Thou can't cast spells on invulnerable targets!
+	RETURN 1
+ENDIF
+
+
+//If target is stoned - prevent
+IF (0<ACT.stone>)
+	VAR.sua_color=034
+	f_combat_message Thou can't cast spells on stoned targets!
+	RETURN 1
+ENDIF
+
+
+//If target is dead - if spell isn't res - prevent
+IF (0<ACT.flags> & 02)
+IF (<argn>!=59)
+	VAR.sua_color=034
+	f_combat_message Thou can only resurrect dead targets!
+	RETURN 1
+ENDIF
+ENDIF
+
+
+
+//***********REGIONS************//
+IF (<region.flags> & region_antimagic_all) || (<ACT.region.flags> & region_antimagic_all)
+	VAR.sua_color=034	//no magic at all
+	f_combat_message Thou can't cast spells here!
+	RETURN 1
+ENDIF
+
+IF (<region.flags> & region_antimagic_recall_out) || (<ACT.region.flags> & region_antimagic_recall_out)
+	IF (<argn>==32)		//no recall
+		VAR.sua_color=034
+		f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<region.flags> & region_antimagic_gate) || (<ACT.region.flags> & region_antimagic_gate)
+	IF (<argn>==52)		//no gate
+		VAR.sua_color=034
+		f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<region.flags> & region_antimagic_teleport) || (<ACT.region.flags> & region_antimagic_teleport)
+	IF (<argn>==22)		//no teleport
+		VAR.sua_color=034
+		f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<region.flags> & region_antimagic_damage) || (<ACT.region.flags> & region_antimagic_damage)
+	IF !(<VAR.spellIsGood>)
+		VAR.sua_color=034	//no bad magic
+		f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<REGION.FLAGS>&region_flag_nobuilding) && (<REGION.FLAGS>&region_flag_nodecay)	//inside the house
+	IF (<argn>==21)		//no telekinesis
+		VAR.sua_color=034
+		f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+
+//If I am hidden - reveal
+IF (<flags> & 000800000)
+	MESSAGE Thou hast been revealed!
+	flags = <flags> &~ 000800000
+	f_resync
+ENDIF
+
+
+//*************************************//
+//	Skillgain Funct Here	       //
+//*************************************//
+//Moved to MYST class system
+
+
+
+
+//*********************************************//
+//Tome 2 Chapter 2
+ON=@SPELLEFFECT	//SRC/ACT - caster, [] - I
+//*********************************************//
+spellIsGood <argn>	//Defines whether spell is good or bad (stored in VAR.spellIsGood)
+VAR.DAMAGE=0		//spell damage
+VAR.RESISTANCE=0	//resistance
+VAR.FINAL=0		//final damage
+
+//Preventing harmful spells in safe zone
+IF (<region.safe>) || (<ACT.region.safe>)
+	IF !(<VAR.spellIsGood>)&&(<argn>!=38)
+		VAR.sua_color=034
+		SRC.f_combat_message Thou can't use this spell in/into a safe zone!
+		RETURN 1
+	ENDIF
+ENDIF
+
+
+//If I am dead - if spell isn't res - prevent
+IF (<flags> & 02)
+IF (<argn>!=59)
+	VAR.sua_color=034
+	SRC.f_combat_message Thou can only resurrect dead targets!
+	RETURN 1
+ENDIF
+ENDIF
+
+
+//If I am invulnerable - prevent
+IF (<flags> & 01)
+	VAR.sua_color=034
+	SRC.f_combat_message Thou can't cast spells on invulnerable targets!
+	RETURN 1
+ENDIF
+
+
+//If I am GM - prevent
+IF (0<account.plevel> > 1)
+	VAR.sua_color=034
+	SRC.f_combat_message Thou can't cast spells on Game Masters!
+	RETURN 1
+ENDIF
+
+
+//***********REGIONS************//
+IF (<region.flags> & region_antimagic_all) || (<ACT.region.flags> & region_antimagic_all)
+	VAR.sua_color=034	//no magic at all
+	SRC.f_combat_message Thou can't cast spells here!
+	RETURN 1
+ENDIF
+
+IF (<region.flags> & region_antimagic_recall_out) || (<ACT.region.flags> & region_antimagic_recall_out)
+	IF (<argn>==32)		//no recall
+		VAR.sua_color=034
+		SRC.f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<region.flags> & region_antimagic_gate) || (<ACT.region.flags> & region_antimagic_gate)
+	IF (<argn>==52)		//no gate
+		VAR.sua_color=034
+		SRC.f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<region.flags> & region_antimagic_teleport) || (<ACT.region.flags> & region_antimagic_teleport)
+	IF (<argn>==22)		//no teleport
+		VAR.sua_color=034
+		SRC.f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<region.flags> & region_antimagic_damage) || (<ACT.region.flags> & region_antimagic_damage)
+	IF !(<VAR.spellIsGood>)&&(<argn>!=38)
+		VAR.sua_color=034	//no bad magic
+		SRC.f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (0<SRC.region.flags> & region_flag_nodecay) && (0<SRC.region.flags> & region_antimagic_recall_in
+	IF (<argn>==21)		//no telekinesis
+		VAR.sua_color=034
+		SRC.f_combat_message Thou can't cast that spell here!
+		RETURN 1
+	ENDIF
+ENDIF
+
+//Below come the effects
+
+//Release from paralyze on Magic Arrow, or Fire Wall, or dispel
+IF (<flags> & 04)
+	IF (<argn>==5) || (<argn>==28) || (<argn>==41)
+		flags=<flags> &~ 04	//remove paralyze
+		VAR.sua_color=75
+		f_combat_message Thy paralyze charms hast vanished!
+	ENDIF
+ENDIF
+
+
+
+//Add reflective shield animation (portal type of thing)?
+//If I have reflective shield - remove it, and apply the same speleffect to the attacker.
+IF !(<VAR.spellIsGood>)&&(<argn>!=38)
+	IF (<flags> & 0200) && (<SRC.flags> & 0200)	//If both have reflect
+		flags=<flags> &~ 0200
+		SRC.flags=<SRC.flags> &~ 0200
+		VAR.sua_color=75
+		if ( 0<TAG.combatMessage5> )
+			f_combat_message Thee magic reflection reflects <SRC.NAME>'s offensive spell, but <SRC.SEX his/her> reflection returns it back!
+		endif
+		if ( <SRC.TAG.combatMessage5> )
+			SRC.f_combat_message Thy target's magic reflection returns your spell, but your magic reflection redirects it!
+		endif
+		RETURN 0
+	ELSEIF (<flags> & 0200)
+		SRC.spelleffect <argn> <SRC.magery>
+		flags=<flags> &~ 0200
+		VAR.sua_color=75
+		if ( 0<TAG.combatMessage5> )
+			f_combat_message Thee magic reflection reflects <SRC.NAME>'s offensive spell!
+		endif
+		UPDATE
+		
+		//spell animation
+		SRC.f_apply_animation <argn>
+		RETURN 1
+	ENDIF
+ENDIF
+
+
+//If spell is bad and If action isn't war action/magery - cancel.
+IF !(<VAR.spellIsGood>)&&(<argn>!=38)
+	IF (<FIXACTION>==skill_magery) || (<FIXACTION>==skill_wrestling) || (<FIXACTION>==skill_swordsmanship) || (<FIXACTION>==skill_fencing) || (<FIXACTION>==skill_archery) || (<FIXACTION>==skill_tactics) || (<FIXACTION>==skill_parrying) || (<FIXACTION>==skill_healing) || (<FIXACTION>==skill_macefighting)
+		//simply nothing
+	ELSE
+		//Make attacked([]) attack attacker(SRC)
+		SRC.attack_fudge <UID>	//cancels action
+		UPDATE
+	ENDIF
+ENDIF
+
+
+
+//IF a bad spell - count out the damage
+//spellpowers in globals.scp
+IF !(<VAR.spellIsGood>)
+	IF (<argn>==5)		//magic arrow
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_5 spell_power_h_5}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==12)	//harm - NO ANIM
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_12 spell_power_h_12}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==18)	//fire ball
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_18 spell_power_h_18}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==28)	//fire field
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_28 spell_power_h_28}>+<SRC.MAGERY>/100>
+		//SRC.SAY ---<SRC.NAME>
+	ELSEIF (<argn>==30)	//lightning - NO ANIM
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_30 spell_power_h_30}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==37)	//Mind blast - NO ANIM -- NOT WORKING FOR SOME REASON?
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_37 spell_power_h_37}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==42)	//energy bolt
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_42 spell_power_h_42}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==43)	//Explosion - NO ANIM
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_43 spell_power_h_43}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==49)	//Chain Lightning - NO ANIM
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_49 spell_power_h_49}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==51)	//Flame Strike
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_51 spell_power_h_51}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==55)	//Meteor Storm  - NO ANIM
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_55 spell_power_h_55}>+<SRC.MAGERY>/100>
+	ELSEIF (<argn>==57)	//EarthQuake
+		VAR.DAMAGE=<EVAL <EVAL {spell_power_l_57 spell_power_h_57}>+<SRC.MAGERY>/100>
+	ENDIF
+
+
+	//Magic Resistance - also should have skillgain here
+	VAR.RESISTANCE=<EVAL <magicresistance>/100>
+	skill_total_difference	//stores value in VAR.DIF
+	TAG.last_skill_gain = <eval gain_val_Skill_MagicResist + <VAR.DIF>*skilltotal_factor_Skill_MagicResist >
+	TAG.Skill_MagicResist_sub = 0<TAG.Skill_MagicResist_sub> + 0<TAG.last_skill_gain>
+	IF (0<TAG.Skill_MagicResist_SUB> > <magicresistance>*gain_factor_Skill_MagicResist) && (<magicresistance> < 0<TAG.Skill_MagicResist_cap>)
+		magicresistance = <magicresistance> + 1
+		update
+		TAG.Skill_MagicResist_SUB = 0
+	ENDIF
+	//SAY -R<EVAL <TAG.Skill_MagicResist_SUB>>
+	
+
+
+	//Final Damage formula, if it's a harmful spell
+	//these IF argnS are those bad spells that don't do any damage
+	IF (<argn>!=1) && (<argn>!=3) && (<argn>!=8) && (<argn>!=13) && (<argn>!=27) && (<argn>!=31) && (<argn>!=38) && (<argn>!=39) && (<argn>!=41) && (<argn>!=46) && (<argn>!=53) && (<argn>!=54) && (<argn>!=60) && (<argn>!=61) && (<argn>!=62) && (<argn>!=63) && (<argn>!=64)
+		IF (<VAR.DAMAGE> <= <VAR.RESISTANCE>)
+			VAR.FINAL=0
+			VAR.sua_color=75
+			if ( 0<TAG.combatMessage5> )
+				f_combat_message Thee magic resistance reflects <SRC.NAME>'s offensive spell completely!
+			endif
+			RETURN 1
+		ELSE
+			VAR.FINAL=<EVAL <VAR.DAMAGE>+-<VAR.RESISTANCE>>
+		ENDIF
+	ENDIF
+		
+
+	//Effect
+	IF (<VAR.FINAL> >= <HITS>)
+		IF (<SRC.KARMA> < 0)
+			VAR.SUA_COLOR=034
+			SYSMESSAGE <NAME>'s powerful spell sends you to Hell!!!
+			if ( <SRC.TAG.combatMessage4> )
+				SRC.f_combat_message Your powerful spell sends <NAME> to Hell!!!
+			endif
+			HITS=0
+		ELSE
+			VAR.SUA_COLOR=034
+			SYSMESSAGE <NAME>'s powerful spell sends you to Heaven!!!
+			if ( 0<TAG.combatMessage4> )
+				SRC.f_combat_message Your powerful spell sends <NAME> to Heaven!!!
+			endif
+			HITS=0
+		ENDIF
+		SRC.TAG.KILLS = <eval <SRC.TAG.KILLS>> + 1
+		if (<fame>==0)
+			var.fame=0
+		else
+			var.fame=<fame>/100
+		endif
+		if (<karma>==0)
+			var.karma=0
+		else
+			var.karma=<karma>/100
+		endif
+		src.karma=<src.karma>+-<var.karma>
+		src.fame=<src.fame>+<eval <var.fame>>
+		if (<src.karma> > 10000) || (<src.karma> < -10000)
+			src.karma=10000
+		endif
+		if (<src.fame> > 10000)
+			src.fame=10000
+		endif
+		if ( <SRC.TAG.combatMessage7> )
+			src.f_combat_message You have gained <eval <var.fame>> fame.
+			src.f_combat_message Your fame is now <src.fame>
+			src.f_combat_message Your karma is now <src.karma>
+		endif
+		//SERV.ALLCLIENTS message KILLED: kills: <kills> Karma: <eval <karma>> flags: flags
+		if (<kills> > 6) || (<karma> < -2000) || ( <flags> & statf_criminal )  || (<SRC.memoryfindtype.memory_harmedby.link.uid> == <uid>)
+			src.f_combat_message You have killed a criminal!
+		else
+			src.kills=<src.kills>+1
+		endif
+		SRC.spelleffect 4,100.0
+	ELSE
+		//Have the same effectWord thing as with the weapons?
+		HITS=<HITS>+-<VAR.FINAL>
+		
+		//messages
+		if ( <argn> != 28 )
+			VAR.SUA_COLOR=020
+			if ( <SRC.TAG.combatMessage4> )
+				SRC.f_combat_message Thy offensive spell reaches <NAME>!
+			endif
+			VAR.SUA_COLOR=034
+			if ( 0<TAG.combatMessage3> )
+				f_combat_message <SRC.NAME>'s offensive spell reaches you!
+			endif
+		endif
+	
+		//Animation
+		ANIM 20
+		
+		
+		//Sound of being hit
+		DORAND 5
+			SFX <SEX snd_HUMAN_MOOMPH01/snd_HUMAN_FOOMPH01>
+			SFX <SEX snd_HUMAN_MOOMPH02/snd_HUMAN_FOOMPH06>
+			SFX <SEX snd_HUMAN_MOOMPH03/snd_HUMAN_FOOMPH07>
+			SFX <SEX snd_HUMAN_MOOMPH04/snd_HUMAN_FOOMPH08>
+			SFX <SEX snd_HUMAN_MOOMPH05/snd_HUMAN_FOOMPH09>
+		ENDDO
+		
+	
+	ENDIF
+	
+	//criminal
+	if ( <kills> > 6 ) || ( <karma> < -2000 ) || ( <flags> & statf_criminal ) || (<SRC.memoryfindtype.memory_harmedby.link.uid> == <uid>)
+		//do nothing
+	else
+		if ( <UID> != <SRC.UID> ) && ( <argn> != 28 )
+			VAR.SUA_COLOR=020
+			src.f_combat_message CRIMINAL!
+			src.makeCrim 5*60	//5 minutes
+		endif
+	endif
+
+	//spell animation
+	f_apply_animation <argn>
+	
+	//EXPERIENCE
+	//can gain on NPCs only.. not firewall
+	if ( <NPC> ) && ( <argn> != 28 )
+		get_exp_spell
+	endif
+	
+	RETURN 1
+	
+ENDIF
+
+//for paralyze
+f_apply_animation <argn>
+//SAY ACT = <ACT.NAME>, CONT = <CONT.NAME>, SRC = <SRC.NAME>, SRC.TARG = <SRC.TARG.NAME>, ACTARG1 = <ACTARG1>
+RETURN 0
+
+ON=@CLICK
+if (<SRC.isGM>)
+if (<kills> > 6) || (<karma> < -2000) || ( <flags> & statf_criminal ) || (<memoryfindtype.memory_harmedby.link.uid> == <uid>)
+	MESSAGE CRIMINAL!
+else
+	MESSAGE NOT CRIMINAL!
+endif
+//SRC.sysmessage IAGRESSOR: <MEMORYFINDTYPE.MEMORY_IAGGRESSOR.LINK.NAME>, HARMEDBY: <MEMORYFINDTYPE.MEMORY_HARMEDBY.LINK.NAME>, IRRITATEDBY: <MEMORYFINDTYPE.MEMORY_IRRITATEDBY.LINK.NAME>, AGGREIVED: <MEMORYFINDTYPE.MEMORY_AGGREIVED.LINK.NAME>
+endif
+ON=@Death
+REM_COMBAT_MEMS
+
+
+
+
+
+//////////////////////////// F U N C T I O N S
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//			TOME 1 FUNCTIONS		       //
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+
+
+
+[FUNCTION get_varWeaponWord]
+IF (<VAR.weaponLayer>)
+	//Archery
+	IF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_bow) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_xbow)
+		VAR.weaponWord="shoot"
+		DORAND 2
+			SFX snd_WEAPONS_CROSSBOW
+			SFX 325
+		ENDDO
+	//Fencing
+	ELSEIF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_fence)
+		DORAND 2
+			VAR.weaponWord="cut"
+			VAR.weaponWord="slice"
+		ENDDO
+		DORAND 2
+			SFX snd_WEAPONS_SWORD1
+			SFX snd_WEAPONS_SWORD7
+		ENDDO
+	//Macefighting
+	ELSEIF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_smith) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_staff) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_crook) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_pick)
+		DORAND 2
+			VAR.weaponWord="smash"
+			VAR.weaponWord="crash"
+		ENDDO
+		DORAND 2
+			SFX snd_WEAPONS_HVYSWRD1
+			SFX snd_WEAPONS_HVYSWRD4
+		ENDDO
+	//Swordsmanship
+	ELSEIF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_sharp) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_sword) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_axe)
+		VAR.weaponWord="strike"
+		DORAND 4
+			SFX snd_WEAPONS_HVYSWRD1
+			SFX snd_WEAPONS_HVYSWRD4
+			SFX snd_WEAPONS_SWORD1
+			SFX snd_WEAPONS_SWORD7
+		ENDDO
+	ELSE
+		VAR.sua_color=024
+		f_combat_message Unknown weapon type - contact GM for a reward.
+	ENDIF
+//Wrestling
+ELSE
+	DORAND 2
+		VAR.weaponWord="pummel"
+		VAR.weaponWord="punch"
+	ENDDO
+	DORAND 7
+		SFX 309
+		SFX 311
+		SFX 315
+		SFX 316
+		SFX 317
+		SFX 327
+		SFX 330
+	ENDDO
+ENDIF
+
+
+
+
+
+[FUNCTION get_varEffectWord]
+IF (<VAR.FINAL> <= 5)
+	DORAND 2
+		VAR.effectWord="slightly"
+		VAR.effectWord="weakly"
+	ENDDO
+ELSEIF (<VAR.FINAL> > 5) && (<VAR.FINAL> <= 10)
+	VAR.effectWord=""
+ELSEIF (<VAR.FINAL> > 10) && (<VAR.FINAL> <= 20)
+	VAR.effectWord="hard"
+ELSEIF (<VAR.FINAL> > 20) && (<VAR.FINAL> <= 30)
+	VAR.effectWord="forcefully"
+ELSEIF (<VAR.FINAL> > 30) && (<VAR.FINAL> <= 40)
+	VAR.effectWord="terribly"
+ELSEIF (<VAR.FINAL> > 40) && (<VAR.FINAL> <= 50)
+	VAR.effectWord="EXTREMELY HARD"
+ELSEIF (<VAR.FINAL> > 50)
+	VAR.effectWord="DEADLY"
+ENDIF
+
+
+
+
+
+//Used to cancel the attack completely - so that player doesnt get a whole bunch of 
+//messages if triggered on hittry.
+[FUNCTION cancelAttack]
+action=-1
+MEMORYFINDTYPE.memory_war_targ.REMOVE
+UPDATE
+
+
+//Well, Taran gets credit for this.
+[FUNCTION sysmessageua]
+VAR.OLD_P <P>
+VAR.OLD_REGION_FLAGS <REGION.FLAGS>
+VAR.OLD_REGION_EVENTS <REGION.EVENTS>
+VAR.OLD_ACT <ACT.UID>
+REGION.EVENTS -0
+REGION.FLAGS=0
+P 11 11 0 1
+NEWITEM i_memory
+ACT.CONT <UID>
+ACT.SAYUA <VAR.SUA_COLOR> 0 0 1 <args>
+ACT.REMOVE
+P <VAR.OLD_P>
+REGION.FLAGS <VAR.OLD_REGION_FLAGS>
+REGION.EVENTS <VAR.OLD_REGION_EVENTS>
+ACT <VAR.OLD_ACT>
+
+
+//Kell gets credit for this
+[FUNCTION FIXACTION]
+RETURN (<ACTION>|0D2000000)
+
+
+//****************************************//
+
+//SRC.attack_fudge <ACT.UID>
+//SRC will be attacked by ACT
+
+//Idea by Taran, scripted and designed by me.
+[FUNCTION attack_fudge]
+// Preserve the ACT, so things don't become screwy
+VAR.OLD_ACT=<ACT>
+NEWITEM i_attack_fudge
+ACT.LINK <ARGS>
+EQUIP <ACT.UID>
+ACT=<VAR.OLD_ACT>
+
+[ITEMDEF i_attack_fudge]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@Create
+TAG.THE_DLG=0
+
+ON=@Equip
+LINK.ATTACK
+REMOVE
+RETURN 1
+
+//****************************************//
+
+
+//Gets damage from char's weapon
+[FUNCTION getDamage]
+IF (<weaponCheck>)
+	// Preserve the ACT, so things don't become screwy
+	VAR.OLD_ACT=<ACT>
+	NEWITEM=i_gold
+	ACT.MOREP=<FINDLAYER(<weaponCheck>).DAM>
+	//weapon usualy has damage like 5,15 - this thing below gets the random
+	VAR.weaponDamage=<EVAL {<ACT.MOREX> <ACT.MOREY>}>
+	VAR.DAM_low = <act.morex>	// used for gump
+	VAR.DAM_high = <act.morey>	// Used for gump
+	ACT.REMOVE
+	ACT=<VAR.OLD_ACT>
+ELSE
+	VAR.weaponDamage=0
+ENDIF
+
+
+//If weapon is single handed - you get the layer 1 else - layer 2
+[FUNCTION weaponCheck]
+IF (<FINDLAYER(1)>)	//If player holds a weapon in layer 1
+	IF (<FINDLAYER(1).TYPE>==t_weapon_mace_smith) || (<FINDLAYER(1).TYPE>==t_weapon_mace_sharp) || (<FINDLAYER(1).TYPE>==t_weapon_sword) || (<FINDLAYER(1).TYPE>==t_weapon_fence) || (<FINDLAYER(1).TYPE>==t_weapon_bow) || (<FINDLAYER(1).TYPE>==t_weapon_mace_staff) || (<FINDLAYER(1).TYPE>==t_weapon_mace_crook) || (<FINDLAYER(1).TYPE>==t_weapon_mace_pick) || (<FINDLAYER(1).TYPE>==t_weapon_axe) || (<FINDLAYER(1).TYPE>==t_weapon_xbow)
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<FINDLAYER(2)>)	//If player holds a weapon in layer 2
+	IF (<FINDLAYER(2).TYPE>==t_weapon_mace_smith) || (<FINDLAYER(2).TYPE>==t_weapon_mace_sharp) || (<FINDLAYER(2).TYPE>==t_weapon_sword) || (<FINDLAYER(2).TYPE>==t_weapon_fence) || (<FINDLAYER(2).TYPE>==t_weapon_bow) || (<FINDLAYER(2).TYPE>==t_weapon_mace_staff) || (<FINDLAYER(2).TYPE>==t_weapon_mace_crook) || (<FINDLAYER(2).TYPE>==t_weapon_mace_pick) || (<FINDLAYER(2).TYPE>==t_weapon_axe) || (<FINDLAYER(2).TYPE>==t_weapon_xbow)
+		RETURN 2
+	ENDIF
+ENDIF
+
+IF (<FINDLAYER(1)>)	//if player holds something but not a weapon in layer 1
+	IF (<FINDLAYER(1).TYPE>==t_weapon_mace_smith) || (<FINDLAYER(1).TYPE>==t_weapon_mace_sharp) || (<FINDLAYER(1).TYPE>==t_weapon_sword) || (<FINDLAYER(1).TYPE>==t_weapon_fence) || (<FINDLAYER(1).TYPE>==t_weapon_bow) || (<FINDLAYER(1).TYPE>==t_weapon_mace_staff) || (<FINDLAYER(1).TYPE>==t_weapon_mace_crook) || (<FINDLAYER(1).TYPE>==t_weapon_mace_pick) || (<FINDLAYER(1).TYPE>==t_weapon_axe) || (<FINDLAYER(1).TYPE>==t_weapon_xbow)
+		//do nothing
+	ELSE
+		RETURN 0
+	ENDIF
+ENDIF
+
+IF (<FINDLAYER(2)>) //if player holds something but not a weapon in layer 2
+	IF (<FINDLAYER(2).TYPE>==t_weapon_mace_smith) || (<FINDLAYER(2).TYPE>==t_weapon_mace_sharp) || (<FINDLAYER(2).TYPE>==t_weapon_sword) || (<FINDLAYER(2).TYPE>==t_weapon_fence) || (<FINDLAYER(2).TYPE>==t_weapon_bow) || (<FINDLAYER(2).TYPE>==t_weapon_mace_staff) || (<FINDLAYER(2).TYPE>==t_weapon_mace_crook) || (<FINDLAYER(2).TYPE>==t_weapon_mace_pick) || (<FINDLAYER(2).TYPE>==t_weapon_axe) || (<FINDLAYER(2).TYPE>==t_weapon_xbow)
+		//do nothing
+	ELSE
+		RETURN 0
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+
+
+//Used for the balance (see below)
+//add weapon skillgain here?
+[FUNCTION skillBonus]
+VAR.skillBonus=0
+IF (<VAR.weaponLayer>)
+	//Archery
+	IF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_bow) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_xbow)
+		VAR.skillBonus=<EVAL <ARCHERY>/50 >
+		
+		skill_total_difference	//stores value in VAR.DIF
+		TAG.last_skill_gain = <eval gain_val_Skill_Archery + <VAR.DIF>*skilltotal_factor_Skill_Archery >
+		TAG.Skill_Archery_sub = <TAG.Skill_Archery_sub> + <TAG.last_skill_gain>
+		
+		IF (<TAG.Skill_Archery_SUB> > <archery>*gain_factor_Skill_Archery) && (<archery> < <TAG.Skill_Archery_cap>)
+			archery = <archery> + 1
+			update
+			TAG.Skill_Archery_SUB = 0
+		ENDIF
+		//SAY -<EVAL <TAG.Skill_Archery_SUB>>
+	//Fencing
+	ELSEIF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_fence)
+		VAR.skillBonus=<EVAL <FENCING>/50 >
+		
+		skill_total_difference	//stores value in VAR.DIF
+		TAG.last_skill_gain = <eval gain_val_Skill_Fencing + <VAR.DIF>*skilltotal_factor_Skill_Fencing >
+		TAG.Skill_Fencing_sub = <TAG.Skill_Fencing_sub> + <TAG.last_skill_gain>
+		
+		IF (<TAG.Skill_Fencing_SUB> > <Fencing>*gain_factor_Skill_Skill_Fencing) && (<Fencing> < <TAG.Skill_Fencing_cap>)
+			Fencing = <Fencing> + 1
+			update
+			TAG.Skill_Fencing_SUB = 0
+		ENDIF
+		//SAY -<EVAL <TAG.Skill_Fencing_SUB>>
+	//Macefighting
+	ELSEIF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_smith) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_staff) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_crook) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_pick)
+		VAR.skillBonus=<EVAL <MACEFIGHTING>/50 >
+
+		skill_total_difference	//stores value in VAR.DIF
+		TAG.last_skill_gain = <eval gain_val_Skill_Macefighting + <VAR.DIF>*skilltotal_factor_Skill_Macefighting >
+		TAG.Skill_Macefighting_sub = 0<TAG.Skill_Macefighting_sub> + 0<TAG.last_skill_gain>
+
+		IF (0<TAG.Skill_Macefighting_SUB> > <Macefighting>*gain_factor_Skill_Skill_Macefighting) && (<Macefighting> < 0<TAG.Skill_Macefighting_cap>)
+			Macefighting = <Macefighting> + 1
+			update
+			TAG.Skill_Macefighting_SUB = 0
+		ENDIF
+		//SAY -<EVAL <TAG.Skill_Macefighting_SUB>>
+	//Swordsmanship
+	ELSEIF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_sharp) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_sword) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_axe)
+		VAR.skillBonus=<EVAL <SWORDSMANSHIP>/50 >
+		
+		skill_total_difference	//stores value in VAR.DIF
+		TAG.last_skill_gain = <eval gain_val_Skill_Swordsmanship + <VAR.DIF>*skilltotal_factor_Skill_Swordsmanship >
+		TAG.Skill_Swordsmanship_sub = 0<TAG.Skill_Swordsmanship_sub> + 0<TAG.last_skill_gain>
+		
+		IF (0<TAG.Skill_Swordsmanship_SUB> > <Swordsmanship>*gain_factor_Skill_Skill_Swordsmanship) && (<Swordsmanship> < 0<TAG.Skill_Swordsmanship_cap>)
+			Swordsmanship = <Swordsmanship> + 1
+			update
+			TAG.Skill_Swordsmanship_SUB = 0
+		ENDIF
+		//SAY -<EVAL <TAG.Skill_Swordsmanship_SUB>>
+	ELSE
+		VAR.sua_color=024
+		f_combat_message Unknown weapon type - contact GM for a reward.
+	ENDIF
+//Wrestling
+ELSE
+	VAR.skillBonus=<EVAL <WRESTLING>/50 >
+
+	skill_total_difference	//stores value in VAR.DIF
+	TAG.last_skill_gain = <eval gain_val_Skill_Wrestling + <VAR.DIF>*skilltotal_factor_Skill_Wrestling >
+	TAG.Skill_Wrestling_sub = 0<TAG.Skill_Wrestling_sub> + 0<TAG.last_skill_gain>
+
+	IF (0<TAG.Skill_Wrestling_SUB> > <Wrestling>*gain_factor_Skill_Skill_Wrestling) && (<Wrestling> < 0<TAG.Skill_Wrestling_cap>)
+		Wrestling = <Wrestling> + 1
+		update
+		TAG.Skill_Wrestling_SUB = 0
+	ENDIF
+	//SAY -<EVAL <TAG.Skill_Wrestling_SUB>>
+ENDIF
+
+
+//********************************************************************//
+// T H E    B A L A N C E
+//
+//This below is what you should modify until it fits your shard.
+//What I have right now works great for fresh .55i sphere
+
+//called from ON=@HIT section
+[FUNCTION f_collectDamage]
+//getting damage from weapon (if any) and strength bonus
+getDamage	//stores it in weaponDamage
+VAR.DAMAGE=<EVAL <VAR.weaponDamage> + (<STR>/10) >
+
+
+
+//Anatomy Bonus
+VAR.DAMAGE=<VAR.DAMAGE>+<EVAL <ANATOMY>/160 >
+//*******HERE SHOULD BE SKILLGAIN FOR ANATOMY
+
+
+//Magic weapon bonus (ie +15 vanqushing)
+IF (<VAR.weaponLayer>)
+	IF (<findLayer(<VAR.weaponLayer>).ATTR> & 020
+		VAR.DAMAGE=<EVAL <VAR.DAMAGE> + (<findLayer(<VAR.weaponLayer>.MOREY>/66) >
+	ENDIF
+ENDIF
+
+
+//Food Bonus - some imagination wouldn't hurt :)
+//Might think this over - when players are polymorphed to cow they can have food 2000???
+VAR.DAMAGE=<EVAL <VAR.DAMAGE>+(<FOOD>/5) >
+
+
+//Skill Bonus - bonus from skill which weapon is using (skillgain?)
+///Skillgain inside
+skillBonus
+VAR.DAMAGE=<VAR.DAMAGE> + <VAR.skillBonus>
+
+
+//Tactics Bonus  *** skillgain for tactics?
+skill_total_difference	//stores value in VAR.DIF
+TAG.last_skill_gain = <eval gain_val_Skill_tactics + <VAR.DIF>*skilltotal_factor_Skill_tactics >
+TAG.Skill_tactics_sub = 0<TAG.Skill_tactics_sub> + 0<TAG.last_skill_gain>
+
+IF (0<TAG.Skill_tactics_SUB> > <tactics>*gain_factor_Skill_Tactics) && (<tactics> < 0<TAG.Skill_tactics_cap>)
+	tactics = <tactics> + 1
+	update
+	TAG.Skill_tactics_SUB = 0
+ENDIF
+//SAY -T<EVAL <TAG.Skill_tactics_SUB>>
+VAR.DAMAGE=<EVAL <VAR.DAMAGE> + <TACTICS>/75 >
+
+
+//Arms Lore/Blacksmithing Bonus    ***May add skillgain but not neccessary
+IF ((<VAR.weaponLayer>) && (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_smith))
+	VAR.DAMAGE=<EVAL <VAR.DAMAGE>+(<ARMSLORE>/100) >
+	VAR.DAMAGE=<EVAL <VAR.DAMAGE>+(<BLACKSMITHING>/50) >
+ENDIF
+
+
+//Hitpoints bonus - weapons hitpoints.  Weapons with hitpoints over 500 will be modified.
+//(In other words quality)
+IF (<VAR.weaponLayer>)
+	IF (<FINDLAYER(<VAR.weaponLayer>).HITPOINTS> > 500)	//You have weapons with hitpoints over 500? (I do :)
+		TRY FINDLAYER.<EVAL <VAR.WEAPONLAYER>>.MORE1H=500		//max life of weapon
+		TRY FINDLAYER.<EVAL <VAR.WEAPONLAYER>>.MORE1L=<EVAL {50 500}>	//current life of weapon
+	ENDIF
+	VAR.DAMAGE=<EVAL <VAR.DAMAGE> + (<FINDLAYER(<VAR.weaponLayer>).HITPOINTS>/20) >
+ENDIF
+
+
+//Lumberjacking bonus		**may want to add lumberjacking skillgain here?
+IF (<VAR.weaponLayer>)
+	IF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_axe) || (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_sword)
+		VAR.DAMAGE=<EVAL <VAR.DAMAGE> + (<LUMBERJACKING>/75) >
+	ENDIF
+ENDIF
+
+
+//Dagger Bowcraft bonus
+IF (<FINDLAYER(1).BASEID>==i_dagger)
+	VAR.DAMAGE=<EVAL <VAR.DAMAGE> + (<BOWCRAFT>/50) >
+ENDIF
+
+
+//Pickaxe Minning Bonus
+IF (<VAR.weaponLayer>)
+	IF (<FINDLAYER(<VAR.weaponLayer>).TYPE>==t_weapon_mace_pick)
+		VAR.DAMAGE=<EVAL <VAR.DAMAGE> + (<MINING>/75) >
+	ENDIF
+ENDIF
+
+
+//Dexterity Bonus for wrestlers
+IF !(<VAR.weaponLayer>)
+	VAR.DAMAGE=<EVAL <VAR.DAMAGE> + RAND(<DEX>/5) >
+ENDIF
+
+
+//********************************************************************//
+
+//This is still the balance part
+//********************************************************************//
+[FUNCTION f_collectArmor]
+//Total Armor:
+VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.AC>/2 >
+
+
+//Shield And Parrying Bonus		**Might want to modify this one - shield becomes too important
+//Skillgain here
+IF (<SRC.FINDLAYER(2).TYPE>==t_shield)
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+<EVAL <SRC.FINDLAYER(2).ARMOR>>+(<SRC.PARRYING>/50) >
+
+	SRC.skill_total_difference	//stores value in VAR.DIF
+	SRC.TAG.last_skill_gain = <eval gain_val_Skill_Parrying + <VAR.DIF>*skilltotal_factor_Skill_Parrying >
+	SRC.TAG.Skill_Parrying_sub = 0<SRC.TAG.Skill_Parrying_sub> + 0<SRC.TAG.last_skill_gain>
+
+	IF (0<SRC.TAG.Skill_Parrying_SUB> > <SRC.Parrying>*3) && (<SRC.Parrying> < 0<SRC.TAG.Skill_Parrying_cap>)
+		SRC.Parrying = <SRC.Parrying> + 1
+		SRC.update
+		SRC.TAG.Skill_Parrying_SUB = 0
+	ENDIF
+	//SRC.SAY -P<EVAL <SRC.TAG.Skill_Parrying_SUB>>
+ENDIF
+
+
+//Dexterity Bonus
+VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.DEX>/10 >
+
+
+//Magic Armor Bonus  - same as with weapons
+IF (<SRC.FINDLAYER(layer_helm).ATTR> & 020)
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.FINDLAYER(layer_helm).MOREY>/66 >
+ENDIF
+IF (<SRC.FINDLAYER(layer_gloves).ATTR> & 020)
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.FINDLAYER(layer_gloves).MOREY>/66 >
+ENDIF
+IF (<SRC.FINDLAYER(layer_collar).ATTR> & 020)
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.FINDLAYER(layer_collar).MOREY>/66 >
+ENDIF
+IF (<SRC.FINDLAYER(layer_chest).ATTR> & 020)
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.FINDLAYER(layer_chest).MOREY>/66 >
+ENDIF
+IF (<SRC.FINDLAYER(layer_arms).ATTR> & 020)
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.FINDLAYER(layer_arms).MOREY>/66 >
+ENDIF
+IF (<SRC.FINDLAYER(layer_legs).ATTR> & 020)
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.FINDLAYER(layer_legs).MOREY>/66 >
+ENDIF
+
+
+//No Shield - Parrying applies to weapon.	** fresh idea - also needed skillgain
+IF (<SRC.weaponCheck>)
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+<SRC.PARRYING>/(<SRC.FINDLAYER(<SRC.weaponCheck>).WEIGHT>/2) >
+ELSE
+	VAR.ARMOR=<EVAL <VAR.ARMOR>+RAND(<SRC.WRESTLING>/100) >
+ENDIF
+
+//********************************************************************//
+
+
+
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//			TOME 2 FUNCTIONS		       //
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+//*************************************************************//
+
+//duh
+[FUNCTION spellIsGood]
+IF (<argn>==1) || (<argn>==3) || (<argn>==5) || (<argn>==8) || (<argn>==12) || (<argn>==13) || (<argn>==18) || (<argn>==19) || (<argn>==20) || (<argn>==21) || (<argn>==22) || (<argn>==24) || (<argn>==27) || (<argn>==28) || (<argn>==30) || (<argn>==31) || (<argn>==33) || (<argn>==37) || (<argn>==39) || (<argn>=41) || (<argn>==42) || (<argn>==43) || (<argn>==46) || (<argn>==47) || (<argn>==48) || (<argn>==49) || (<argn>==50) || (<argn>==51) || (<argn>==53) || (<argn>==54) || (<argn>==55) || (<argn>==57) || (<argn>==58) || (<argn>==60) || (<argn>==61) || (<argn>==62) || (<argn>==63) || (<argn>==64)
+	VAR.spellIsGood=0
+ELSE
+	VAR.spellIsGood=1
+ENDIF
+
+
+//applies spell animation argn holds spelleffect.
+[FUNCTION f_apply_animation]
+IF (<argn>==5)		//magic arrow
+	effect 0,036e4,4,16,6
+ELSEIF (<argn>==12)	//harm
+	effect 3,i_fx_curse,4,16,6
+ELSEIF (<argn>==18)	////fireball
+	effect 0,036d4,4,16,6
+ELSEIF (<argn>==30)	//lightning
+	effect 1,036d4,4,16,6
+ELSEIF (<argn>==37)	//Mind Blast
+	effect 3,i_fx_curse,4,16,6
+ELSEIF (<argn>==38)	//Paralyze
+	effect 3,i_fx_curse,4,16,6
+ELSEIF (<argn>==42)	//Energy Bolt
+	effect 0,0379f,4,16,6
+ELSEIF (<argn>==43)	//Expolsion
+	effect 2,036b0,4,16,6
+ELSEIF (<argn>==49)	//Chain Lightning
+	effect 1,037b9,4,5,6
+ELSEIF (<argn>==51)	//Flame Strike
+	effect 3,03709,1,16,0 
+ELSEIF (<argn>==55)	//Meteor Sworm - has no default animation?
+	effect 3,03728,4,16,6
+ELSEIF (<argn>==57)	//Earthquake - has no default animation?
+	effect 3,03728,4,16,6
+ENDIF
+
+
+//LAG-FREE Anim\vanish free RESYNCING	CREDIT - Flint
+[function f_resync]
+newnpc c_resync_area
+
+[CHARDEF c_resync_area]
+NAME=resync
+ID=C_MAN
+CATEGORY=Alphanine UO
+SUBSECTION=NPCs
+DESCRIPTION=Resync
+CAN=MT_EQUIP
+
+ON=@Create
+STONE=1
+INVUL=1
+INVIS=1
+COLOR=colors_skin
+TITLE=resync man
+
+
+STR={85 95}
+DEX={45 55}
+INT={61 75}
+KARMA=-100
+
+ITEMNEWBIE=i_fg_linker
+
+ON=@NPCSEENEWPLAYER
+if (<src.distance><=(5))
+	src.events -v51PvP
+	src.spelleffect 4,0
+	src.events +v51PvP
+endif
+
+[itemdef i_fg_linker]
+id=i_handr_1
+name=linker
+layer=layer_special
+type=t_eq_script
+
+on=@create
+tag.used=0
+attr=attr_decay|attr_newbie|attr_move_never
+timer 1
+
+on=@equip
+timer 1
+go 1,1,1,1
+
+on=@timer
+if (<tag.used>==0)
+	link=<cont.uid>
+	timer 1
+	tag.used=1
+	return 1
+endif
+if (<tag.used>==1)
+	link.remove
+	remove
+	return 1
+endif
+///////LAG-FREE Anim\vanish free RESYNCING over
+
+
+//////////////////////////// D I A L O G S
+
+//For players - change combat message type
+[FUNCTION CombatMessage]
+//If none is set
+IF (!0<TAG.combatMessageType1>) && (!0<TAG.combatMessageType2>) && (!0<TAG.combatMessageType3>)
+	TAG.combatMessageType2 = 1
+	TAG.combatMessage1 = 1
+	TAG.combatMessage2 = 1
+	TAG.combatMessage3 = 1
+	TAG.combatMessage4 = 1
+	TAG.combatMessage5 = 1
+	TAG.combatMessage6 = 1
+	TAG.combatMessage7 = 1
+ENDIF
+
+VAR.CHECK1 = <TAG.combatMessageType1>
+VAR.CHECK2 = <TAG.combatMessageType2>
+VAR.CHECK3 = <TAG.combatMessageType3>
+DIALOG combat_message_mode
+
+
+//Sends sysmessage, sysmessageua, or nothing, depending on player's choice.
+[FUNCTION f_combat_message]
+//If none is set
+IF (!0<TAG.combatMessageType1>) && (!0<TAG.combatMessageType2>) && (!0<TAG.combatMessageType3>)
+	TAG.combatMessageType2 = 1
+	TAG.combatMessage1 = 1
+	TAG.combatMessage2 = 1
+	TAG.combatMessage3 = 1
+	TAG.combatMessage4 = 1
+	TAG.combatMessage5 = 1
+	TAG.combatMessage6 = 1
+	TAG.combatMessage7 = 1
+	SYSMESSAGE Use ".combatMessage" to set your combat messaging mode!
+ENDIF
+
+IF (0<TAG.combatMessageType1>)
+	SYSMESSAGEUA <args>
+ELSEIF (0<TAG.combatMessageType2>)
+	SYSMESSAGE <args>
+ELSEIF (0<TAG.combatMessageType3>)
+ELSE
+	SYSMESSAGE Combat Message Error, contact GM for a reward!
+ENDIF
+
+
+//Choose combat message type
+[DIALOG combat_message_mode]
+0, 0
+
+PAGE 0
+resizepic 0 0 2600 450 380
+text 131 17 995 0
+text 131 45 995 1
+
+RADIO 30 75 208 209 <EVAL <TAG.combatMessageType1>> 10 
+RADIO 30 95 208 209 <EVAL <TAG.combatMessageType2>> 20 
+RADIO 30 115 208 209 <EVAL <TAG.combatMessageType3>> 30 
+
+text 60 75 995 2	//radios
+text 60 95 995 3
+text 60 115 995 4
+
+text 131 145 995 5	//что вы хотите видеть
+
+CHECKBOX 30 175 210 211 <EVAL <TAG.combatMessage1>> 40
+CHECKBOX 30 195 210 211 <EVAL <TAG.combatMessage2>> 50
+CHECKBOX 30 215 210 211 <EVAL <TAG.combatMessage3>> 60
+CHECKBOX 30 235 210 211 <EVAL <TAG.combatMessage4>> 70
+CHECKBOX 30 255 210 211 <EVAL <TAG.combatMessage5>> 80
+CHECKBOX 30 275 210 211 <EVAL <TAG.combatMessage6>> 90
+CHECKBOX 30 295 210 211 <EVAL <TAG.combatMessage7>> 100
+
+text 60 175 995 6	//checkboxes
+text 60 195 995 7
+text 60 215 995 8
+text 60 235 995 9
+text 60 255 995 10
+text 60 275 995 11
+text 60 295 995 12
+
+button 83 330 239 240 1 0 4	//ok
+button 271 330 243 241 1 0 5	//cancel
+
+[DIALOG combat_message_mode TEXT]
+Вид Боевых Сообщений
+Выберите вид:
+1. Цветное - красиво, но лагует.
+2. Серое - тяжелее смотреть, но меньше лага.
+3. Никакого - для матерых игроков.
+Что вы хотите видеть:
+1. Боевые - на вас напали.
+2. Боевые - вы напали.
+3. Магия - на вас подействовало заклятье.
+4. Магия - вы наложили заклятие на кого-то.
+5. Срабатывает твоя защита от магии.
+6. Вы заработали опыт.
+7. Боевой репорт при убийстве.
+
+
+[DIALOG combat_message_mode BUTTON]
+ONBUTTON=4
+TAG.combatMessageType1 = <ARGCHK[10]>
+TAG.combatMessageType2 = <ARGCHK[20]>
+TAG.combatMessageType3 = <ARGCHK[30]>
+TAG.combatMessage1 = <argchk[40]>
+TAG.combatMessage2 = <argchk[50]>
+TAG.combatMessage3 = <argchk[60]>
+TAG.combatMessage4 = <argchk[70]>
+TAG.combatMessage5 = <argchk[80]>
+TAG.combatMessage6 = <argchk[90]>
+TAG.combatMessage7 = <argchk[100]>
+
+ONBUTTON=5	//cancel
+Message Nothing's been changed!
+
+
+
+[FUNCTION makeCrim]
+if ( !<findid i_criminal> )
+	//I am not a criminal yet
+	newitem i_criminal
+	equip <act>
+	act.timer=<argn>
+	flags = <flags>|statf_criminal
+else	
+	//I have a criminal counter
+	findid.i_criminal.timer =<findid.i_criminal.timer> + <argn>
+	flags = <flags>|statf_criminal
+endif
+
+
+[ITEMDEF i_criminal]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Criminal Memory Do Not Remove
+
+ON=@CREATE
+ATTR=08096
+
+ON=@EQUIP
+ATTR=08096
+SRC.flags = <SRC.flags>|statf_criminal
+
+ON=@TIMER
+if ( <CONT.flags> & statf_criminal )
+	CONT.flags = <CONT.flags>&~statf_criminal
+endif
+remove
+return 1
+
+ON=@UNEQUIP
+if ( <SRC.flags> & statf_criminal )
+	SRC.flags = <SRC.flags>&~statf_criminal
+endif
+
+
+//Can't call guards after death
+[FUNCTION REM_COMBAT_MEMS]
+IF ( <MEMORYFINDTYPE.MEMORY_WAR_TARG.UID>) || (<MEMORYFINDTYPE.MEMORY_SAWCRIME.UID>) || (<MEMORYFINDTYPE.MEMORY_FIGHT.UID>) || (<MEMORYFINDTYPE.MEMORY_HARMEDBY.UID>)
+    IF (<MEMORYFINDTYPE.memory_fight.LINK.MEMORYFINDTYPE.memory_fight.LINK> == <UID>)
+        MEMORYFINDTYPE.memory_fight.LINK.MEMORYFINDTYPE.memory_fight.REMOVE
+    ENDIF
+    MEMORYFINDTYPE.MEMORY_WAR_TARG.REMOVE
+    MEMORYFINDTYPE.MEMORY_FIGHT.REMOVE
+    MEMORYFINDTYPE.MEMORY_SAWCRIME.REMOVE
+    MEMORYFINDTYPE.MEMORY_HARMEDBY.REMOVE
+    REM_COMBAT_MEMS
+ENDIF
+RETURN 1
+
+[EOF]

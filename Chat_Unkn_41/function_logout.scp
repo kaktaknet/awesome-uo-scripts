@@ -1,0 +1,119 @@
+///////////////////Logout Function/////////////////////////
+//////////////////MADE BY: Lady Krysta///////////////////
+/////////////////Do not claim this as your own///////////////
+//////////////If you do the boogey man will get you////////////////
+/////////Change the locations to any location you wish//////////////
+//////Any questions/comments are to be sent to tdb@uomail.com////////
+/////////////////////////////////////////////////////////////////////
+[PLEVEL 1]
+log_me
+
+[FUNCTION log_me]
+IF <SRC.TAG.LOGOUT>=1>>
+src.findid.i_logout_delay.remove
+SRC.TAG.LOGOUT=0
+SYSMESSAGE You have changed your mind about logging out right now
+RETURN 1
+ELSE
+SRC.TAG.LOGOUT=1
+SRC.NEWITEM=i_logout_delay
+SRC.ACT.EQUIP
+SYSMESSAGE You will be logged out in 30 seconds.
+SYSMESSAGE If you decide you dont want to log out simply type .log_me again.
+RETURN 0
+endif
+
+[ITEMDEF i_logout_delay]
+src.newitem i_logout_timer
+src.act.equip		
+src.act.timer 30
+
+NAME=Logout Delay
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	MORE1=30
+	MOREP=britain
+
+ON=@Equip
+	TIMER=1
+
+ON=@Timer
+	if ( <cont> )
+		if ( <more1> )
+			cont.message <EVAL(<more1>)> // put countdown above my head.
+			more1=<more1>-1
+			TIMER=1
+			return 1
+		else
+			DORAND 56
+CONT.GOPLACE 5447,1086
+CONT.GOPLACE 5447,1085
+CONT.GOPLACE 5447,1084
+CONT.GOPLACE 5447,1083
+CONT.GOPLACE 5447,1082
+CONT.GOPLACE 5447,1087
+CONT.GOPLACE 5447,1088
+CONT.GOPLACE 5447,1089
+CONT.GOPLACE 5447,1090
+CONT.GOPLACE 5448,1086
+CONT.GOPLACE 5449,1086
+CONT.GOPLACE 5450,1086
+CONT.GOPLACE 5446,1086
+CONT.GOPLACE 5445,1086
+CONT.GOPLACE 5444,1086
+CONT.GOPLACE 5443,1086
+CONT.GOPLACE 5448,1087
+CONT.GOPLACE 5448,1088
+CONT.GOPLACE 5448,1089
+CONT.GOPLACE 5448,1090
+CONT.GOPLACE 5448,1085
+CONT.GOPLACE 5448,1084
+CONT.GOPLACE 5448,1083
+CONT.GOPLACE 5448,1082
+CONT.GOPLACE 5449,1087
+CONT.GOPLACE 5449,1088
+CONT.GOPLACE 5449,1089
+CONT.GOPLACE 5449,1090
+CONT.GOPLACE 5449,1085
+CONT.GOPLACE 5449,1084
+CONT.GOPLACE 5449,1083
+CONT.GOPLACE 5449,1082
+CONT.GOPLACE 5450,1087
+CONT.GOPLACE 5450,1088
+CONT.GOPLACE 5450,1089
+CONT.GOPLACE 5450,1090
+CONT.GOPLACE 5450,1085
+CONT.GOPLACE 5450,1084
+CONT.GOPLACE 5450,1083
+CONT.GOPLACE 5450,1082 // Rand 40
+CONT.GOPLACE 5446,1087
+CONT.GOPLACE 5446,1088
+CONT.GOPLACE 5446,1089
+CONT.GOPLACE 5446,1090
+CONT.GOPLACE 5446,1085
+CONT.GOPLACE 5446,1084
+CONT.GOPLACE 5446,1083
+CONT.GOPLACE 5446,1082
+CONT.GOPLACE 5445,1087
+CONT.GOPLACE 5445,1088
+CONT.GOPLACE 5445,1089
+CONT.GOPLACE 5445,1090
+CONT.GOPLACE 5445,1085
+CONT.GOPLACE 5445,1084
+CONT.GOPLACE 5445,1083
+SRC.GOPLACE 5445,1082 // Rand 56
+ENDDO
+cont.tag.logout=0
+SRC.DISCONNECT
+	endif
+	endif
+	remove
+	return 1
+
+
+[EOF]

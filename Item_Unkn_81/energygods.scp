@@ -1,0 +1,113 @@
+// Kenton's Mass Energy Gods,
+// --Oct, 2nd 2002--
+// Place these NPC's in a temple or something like that
+// They will use bow/arrow for long distance and switch to a sword at close range
+// They will also heal them selfs when hurt with special potions they have on them till
+// they run out of them
+// Most players like these NPCs for the good challange.
+// http://AncalimaElenion.vze.com
+// http://AncalimaElenion.cjb.net
+// http://1400AD.cjb.net
+
+[CHARDEF c_h_lightninggod] 
+DEFNAME=c_h_lightninggod
+NAME=#NAMES_ORC Follower of the Temple
+ID=C_WOMAN 
+DAM=20,35 
+ARMOR=15,20 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE|MT_RUN|MT_FLY 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_needs 
+TSPEECH=spk_rehello 
+TSPEECH=spk_human_default 
+
+TEVENTS=e_Human_HearUnk 
+TEVENTS=e_Human_Needs 
+TEVENTS=e_Human_ConvInit 
+TEVENTS=e_Human_Greet 
+TEVENTS=e_Human_Space 
+TEVENTS=e_Human_Refuse 
+TEVENTS=e_Human_Environ 
+
+ON=@Create 
+COLOR=0481
+STR={150 220} 
+DEX={161 185} 
+INT={150 180} 
+
+MAGICRESISTANCE={3000.0 8000.0} 
+TACTICS={75.0 150.0} 
+WRESTLING={220.0 555.0} 
+ARCHERY={500.0 800.0} 
+FENCING={160.0 185.0} 
+
+NPC=BRAIN_MONSTER
+
+KARMA={-5000}
+FAME={900 2000}
+
+ITEMNEWBIE=i_hair_long
+COLOR=0482
+
+ON=@NPCRestock
+ITEM=i_bone_arms
+COLOR=0482 
+ITEM=i_bone_leggings
+COLOR=0482
+ITEM=i_arrow,{50 70}
+ITEM=i_gold, {450 1056}
+ITEMNEWBIE=i_BOW_vanq
+COLOR=0481
+ITEMNEWBIE=i_KATANA_vanq
+COLOR=0481
+ITEM=backpack_rich
+ITEM=random_meager_magic_loot
+COLOR=0482
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+
+CATEGORY=Civilized 
+SUBSECTION=Mass Energy God
+DESCRIPTION=Mass Energy God (female) 
+
+on=@gethit
+if (<distance> < 2) 
+findid(i_KATANA_vanq).cont=<uid> 
+endif 
+if (<distance> > 2) 
+findid(i_BOW_vanq).cont=<uid> 
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@hit // heal twice (two bottles) 
+IF (<hitpoints> < 100) 
+IF (<RESTEST 1 i_potion_templek9>) 
+SPELLEFFECT s_greater_heal,100.0 
+CONSUME i_potion_templek9 
+else 
+return 1 
+endif 
+
+
+[ITEMDEF i_potion_templek9]
+NAME=potion from the temple
+ID=i_bottle_YELLOW
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_ginseng 7, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.9
+
+ON=@Create
+COLOR=0482
+MORE1=s_greater_heal
+MORE2=100.0

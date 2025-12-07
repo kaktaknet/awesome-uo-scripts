@@ -1,0 +1,18 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Mordaunt's Tame Name Fix
+//
+//No more deers named "Bambi".  Add this event to all tameable NPC's, and once they go
+//wild, if a player clicks them, their name will revert to the original name.
+//!!!WARNING! DO NOT ADD THIS EVENT TO PLAYERS!!!
+//Doing so will cause loss of their names, and they will all be called "Man" or "Woman"
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+[EVENTS e_rename]
+ON=@CLICK
+IF !(<flags>&8000000)  
+IF !(<memoryfind(<act.uid>).color>&memory_IPET) 
+NAME=<TYPEDEF.NAME>
+ELSE
+RETURN 0
+ENDIF
+ENDIF

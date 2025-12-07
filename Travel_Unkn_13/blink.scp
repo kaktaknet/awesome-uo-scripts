@@ -1,0 +1,279 @@
+[COMMENT header]
+Name: Blink
+Version: 2.2
+Author: Swindler
+Sphere Version: 55i
+Last Updated: 11/16/2003
+
+// 2.2
+// - excluded dungeon entrances with townOnly
+// - relies on useful.scp now, I was avoiding this,
+//	but changed my mind as I updated more scripts
+// - decided to go back to the gold coin instead of i_blink_dummy
+// - minor changes
+
+WARNING: This script will *NOT* function properly without the following scripts:
+useful.scp
+
+Feel free to contact me any time with questions regarding any of my scripts.
+You can find me in the official #sphereserver IRC channel on the irc.sphereserver.net network.
+Please contact me with descriptions of any problems you may find, and I will more than likely repair them as soon as possible.
+
+// ".blink" ".blink 0" ".blink 1" - the parameter overrides the default value for townOnly set above
+// ".rift" ".rift 0" ".rift 1"
+// ".rift x y z" ".rift x,y,z" ".rift x, y, z"
+// ".rift placename" ie: ".rift Moonglow"
+
+[DEFNAME blink]
+// region_antimagic_all, region_antimagic_recall_in, region_antimagic_recall_out, region_antimagic_gate, region_antimagic_teleport, region_antimagic_damage
+// region_flag_ship, region_flag_nobuilding, region_flag_globalname, region_flag_announce, region_flag_insta_logout, region_flag_underground, region_flag_nodecay
+// region_flag_safe, region_flag_guarded, region_flag_no_pvp
+
+blink_xRange			{1 5119}
+blink_yRange			{1 4095}
+blink_defaultMap		1
+blink_allowedFlags		region_flag_globalname|region_flag_guarded|region_flag_no_pvp
+blink_townOnly			0
+blink_townFlags			region_flag_guarded
+blink_allowedTownFlags		region_antimagic_teleport|region_antimagic_damage|region_flag_nobuilding|region_flag_globalname|region_flag_no_pvp
+blink_riftColor			0
+
+[FUNCTION blink]
+IF (<ARGN> == 0) || (<ARGN> == 1)
+	VAR.townOnly <ARGN>
+ELSE
+	VAR.townOnly <VAR.blink_townOnly>
+ENDIF
+
+blink_randLoc
+P <EVAL X> <EVAL Y> <EVAL Z>
+UPDATE
+
+[FUNCTION rift]
+blink_rift <ARGS>
+
+[FUNCTION blink_rift]
+IF <ISITEM>
+	RETURN 0
+ENDIF
+
+IF (<ARGN> == 0) || (<ARGN> == 1)
+	VAR.townOnly <ARGN>
+	blink_randLoc
+ELIF STRMATCH(<ARGS>,)
+	VAR.townOnly <VAR.blink_townOnly>
+	blink_randLoc
+ELSE
+	VAR.font <FONT>
+	FONT 8
+	SAY <STRTOUPPER <ARGS>>
+	FONT font
+ENDIF
+
+ANIM 17
+SFX 01eb
+
+NEWITEM i_blink_rift
+ACT.P <P>
+
+DOSWITCH <DIR>
+	ACT.MOVE n
+	ACT.MOVE ne
+	ACT.MOVE e
+	ACT.MOVE se
+	ACT.MOVE s
+	ACT.MOVE sw
+	ACT.MOVE w
+	ACT.MOVE nw
+ENDDO
+
+ACT.FIX
+ACT.TIMERD 2
+
+VAR.uId <ACT>
+
+NEWITEM i_blink_riftOther
+ACT.LINK <VAR.uId>
+ACT.LINK.LINK <ACT>
+
+IF (<ARGN> == 0) || (<ARGN> == 1) || STRMATCH(<ARGS>,)
+	ACT.P <EVAL X> <EVAL Y> <EVAL Z>
+ELSE
+	ACT.P <ARGS>
+	ACT.FIX
+ENDIF
+
+[FUNCTION blink_randLoc]
+blink_randLocSetup
+IF <blink_randLocWater>
+	RETURN 0
+ENDIF
+blink_randLocStuck
+
+[FUNCTION blink_randLocSetup]
+VAR.X <EVAL blink_xRange>
+VAR.Y <EVAL blink_yRange>
+
+SRC.ACT <SRC.TAG.blink_randLocSetup_item>
+IF !<SRC.ACT.UID>
+	SRC.NEWITEM i_gold
+	SRC.TAG.blink_randLocSetup_item <SRC.ACT>
+ENDIF
+SRC.ACT.P <EVAL X> <EVAL Y>
+
+IF <SRC.ACT.COMPLEXITY> >= <SERV.MAXCOMPLEXITY>
+	blink_randLocSetup
+	RETURN 0
+ELIF blink_defaultMap && STRMATCH(<SRC.ACT.REGION.NAME>,<SERV.NAME>)
+	blink_randLocSetup
+	RETURN 0
+ELIF townOnly
+	IF !(<SRC.ACT.REGION.FLAGS> & blink_townFlags)
+		blink_randLocSetup
+		RETURN 0
+	ELIF <SRC.ACT.REGION.FLAGS> & (~(blink_townFlags|blink_allowedTownFlags) +- 0ffff0000)
+		blink_randLocSetup
+		RETURN 0
+	ELIF STRMATCH(*Entrance,<SRC.ACT.REGION.NAME>)
+		blink_randLocSetup
+		RETURN 0
+	ENDIF
+ELIF !townOnly
+	IF <SRC.ACT.REGION.FLAGS> & (~blink_allowedFlags +- 0ffff0000)
+		blink_randLocSetup
+		RETURN 0
+	ENDIF
+ELIF <SRC.UID.<SRC.ACT.REGION.UID>.TYPE> == t_multi
+	blink_randLocSetup
+ENDIF
+
+[FUNCTION blink_randLocWater]
+SRC.ACT <SRC.TAG.blink_randLocSetup_NPC>
+IF !<SRC.ACT.UID>
+	SRC.NEWNPC c_useful_dummy
+	SRC.TAG.blink_randLocSetup_NPC <SRC.ACT>
+ENDIF
+
+SRC.ACT.BODY c_dolphin
+SRC.ACT.P <EVAL X - 1> <EVAL Y> 126
+SRC.ACT.FIX
+SRC.ACT.WALK e
+
+IF (<SRC.ACT.P.X> == X) && (<SRC.ACT.P.Y> == Y)
+	blink_randLoc
+	RETURN 1
+ENDIF
+RETURN 0
+
+[FUNCTION blink_randLocStuck]
+SRC.ACT.BODY c_man_invisible
+SRC.ACT.P <EVAL X> <EVAL Y>
+SRC.ACT.blink_repFix
+VAR.Z <SRC.ACT.Z>
+
+SRC.ACT.TAG.maxSteps 3
+SRC.ACT.useful_checkDir nw
+SRC.ACT.useful_checkDir n
+SRC.ACT.useful_checkDir ne
+SRC.ACT.useful_checkDir e
+SRC.ACT.useful_checkDir se
+SRC.ACT.useful_checkDir s
+SRC.ACT.useful_checkDir sw
+SRC.ACT.useful_checkDir w
+
+IF 0<SRC.ACT.TAG.steps> < 3
+	blink_randLoc
+	RETURN 0
+ELSE
+	SRC.ACT.REMOVE
+	SRC.ACT <SRC.TAG.blink_randLocSetup_item>
+	SRC.ACT.REMOVE
+	SRC.TAG.blink_randLocSetup_item
+	SRC.TAG.blink_randLocSetup_NPC
+ENDIF
+
+[ITEMDEF i_blink_rift]
+ID=i_moongate_red_fx
+TYPE=t_script
+NAME=rift
+
+ON=@Create
+	ATTR attr_static|attr_decay
+	MOREZ 36
+	COLOR blink_riftColor
+	TIMERD 2
+
+ON=@Timer
+	IF !<TAG.stage>
+		IF <DISPIDDEC> < 01aed
+			TIMERD 2
+			DISPID <DISPIDDEC> + 1
+		ELSE
+			TAG.stage 1
+			TIMER 20
+			DISPID i_moongate_red
+		ENDIF
+	ELIF <TAG.stage> == 1
+		IF <DISPID> == i_moongate_red
+			DISPID 01aed
+		ELIF <DISPID> > 01ae4
+			DISPID <DISPIDDEC> +- 1
+		ELSE
+			REMOVE
+			LINK.REMOVE
+			RETURN 1
+		ENDIF
+		TIMERD 2
+	ENDIF
+	UPDATE
+	LINK.DISPID <DISPID>
+	LINK.UPDATE
+	RETURN 1
+
+ON=@Step
+	IF <DISPID> == i_moongate_red
+		blink_rift_step
+		IF <TIMER> > 10
+			TIMER 10
+		ENDIF
+	ENDIF
+
+[ITEMDEF i_blink_riftOther]
+ID=i_moongate_red_fx
+TYPE=t_script
+NAME=rift
+
+ON=@Create
+	ATTR attr_static|attr_decay
+	MOREZ 36
+	COLOR blink_riftColor
+
+ON=@Step
+	IF <DISPID> == i_moongate_red
+		blink_rift_step
+		IF <LINK.TIMER> > 10
+			LINK.TIMER 10
+		ENDIF
+	ENDIF
+
+[FUNCTION blink_rift_step]
+DOSWITCH <SRC.DIR>
+	SRC.P <LINK.P.X>		<EVAL <LINK.P.Y> - 1>	<LINK.P.Z>
+	SRC.P <EVAL <LINK.P.X> + 1>	<EVAL <LINK.P.Y> - 1>	<LINK.P.Z>
+	SRC.P <EVAL <LINK.P.X> + 1>	<LINK.P.Y>		<LINK.P.Z>
+	SRC.P <EVAL <LINK.P.X> + 1>	<EVAL <LINK.P.Y> + 1>	<LINK.P.Z>
+	SRC.P <LINK.P.X>		<EVAL <LINK.P.Y> + 1>	<LINK.P.Z>
+	SRC.P <EVAL <LINK.P.X> - 1>	<EVAL <LINK.P.Y> + 1>	<LINK.P.Z>
+	SRC.P <EVAL <LINK.P.X> - 1>	<LINK.P.Y>		<LINK.P.Z>
+	SRC.P <EVAL <LINK.P.X> - 1>	<EVAL <LINK.P.Y> - 1>	<LINK.P.Z>
+ENDDO
+SRC.UPDATE
+SRC.SOUND snd_spell_mark
+
+[FUNCTION blink_repFix]
+VAR.Z <Z>
+FIX
+
+IF <Z> != Z
+	blink_repFix
+ENDIF

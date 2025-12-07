@@ -1,0 +1,316 @@
+//Rudenid's Healing System, Version 1.5
+
+//This version of the healing system includes:
+	//Resurrection (Fixed in 1.1)
+	//Anatomy-based delay
+	//Skillgain (Sped up a tad in 1.5, adjust accordingly)
+	//More accurate random number checking.
+	//Criminal checking, using server preferences to see whether the
+	//Healer should be marked criminal
+	//Bloody bandages go on target if success
+	//You get them back if failure
+	//Curing works as of 1.3
+	//Line of sight now checked.
+	//Rewrote CONT= code in order to ensure compatibility with 55iR.
+	//Fixed missing ENDIF in 1.4.
+
+//Things to do for next version:
+	//Continue to work on more accurate skillgain.
+
+
+[ITEMDEF 0e21]
+DEFNAME=i_bandage
+RESOURCES=i_cloth
+TYPE=T_eq_script
+WEIGHT=.1
+VALUE=1
+DUPELIST=0ee9
+CATEGORY=Items by Professions
+SUBSECTION=Healer
+DESCRIPTION=Clean Bandages
+
+ON=@DClick
+
+IF (<TOPOBJ> != <SRC.UID>)
+	IF (<ATTR> & attr_move_never)
+		RETURN 1
+	ELSE
+		BOUNCE
+	ENDIF
+ENDIF
+
+TARGET Whom do you wish to apply the bandages to?
+RETURN 1
+
+ON=@TARGON_CHAR
+
+IF (<SRC.TARG.DISTANCE> > 8)
+	SRC.SYSMESSAGE You are too far away from the target to apply bandages
+	RETURN 1
+ENDIF
+
+IF !(<SRC.TARG.CANSEELOS>)
+	SRC.SYSMESSAGE You cannot see the target.
+	RETURN 1
+ENDIF
+
+IF (<SRC.TARG.FLAGS>&statf_dead)
+	IF (<SRC.HEALING><80.0)
+		SRC.SYSMESSAGE You are not a good enough healer to resurrect <SRC.TARG.NAME>!
+		RETURN 1
+	ELSE
+
+		IF <SRC.TARG.FINDID.i_heal_resurrect>
+			SRC.SYSMESSAGE You must wait until you are finished resurrecting before you can resurrect again.
+			RETURN 1
+		ENDIF
+
+		SRC.EMOTE attempt to resurrect <SRC.TARG.NAME>
+		SRC.NEWITEM i_heal_resurrect
+		SRC.ACT.TIMER={7 10}
+
+		IF <SRC.ACT.TIMER> < 1
+			SRC.ACT.TIMER=1
+		ENDIF
+
+		SRC.ACT.LINK=<SRC.SERIAL>
+		SRC.ACT.CONT=<SRC.TARG.SERIAL>
+		SRC.CONSUME 1 i_bandage
+
+		RETURN 1
+	ENDIF
+ELSE
+
+	IF (<SRC.TARG.HITS>==<SRC.TARG.STR>)
+		IF !(<SRC.TARG.FLAGS> & statf_poisoned)
+			SRC.SYSMESSAGE The target seems perfectly healthy
+			RETURN 1
+		ENDIF
+	ENDIF
+
+	IF <SRC.TARG.FINDID.i_heal_healing>
+		SRC.SYSMESSAGE A bandage is already being applied to <SRC.TARG.NAME>, either by you or someone else.
+		RETURN 1
+	ENDIF
+
+	SRC.CONSUME i_bandage
+	SRC.SYSMESSAGE You apply the bandages to <SRC.TARG.NAME>
+	SRC.TARG.SYSMESSAGE <SRC.NAME> applies bandages to you.
+
+	SRC.NEWITEM i_heal_healing
+
+	SRC.ACT.TIMER={7 8} - <eval <SRC.ANATOMY> / 16.7>
+
+	IF <SRC.ACT.TIMER> < 1
+		SRC.ACT.TIMER=1
+	ENDIF
+
+	SRC.ACT.LINK=<SRC.SERIAL>
+	SRC.ACT.CONT=<SRC.TARG.SERIAL>
+
+	RETURN 1
+
+ENDIF
+
+[ITEMDEF i_heal_resurrect_equipfudge]
+ID=i_memory
+WEIGHT=0
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@Equip
+SRC.RESURRECT
+REMOVE
+RETURN 1
+
+[ITEMDEF i_heal_resurrect]
+DEFNAME=i_heal_resurrect
+ID=i_memory
+WEIGHT=0
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=attr_invis|attr_newbie
+
+ON=@TIMER
+IF !(<CONT.FLAGS>&statf_dead)
+	LINK.SYSMESSAGE Maybe they weren't dead after all...
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (<SERV.HELPINGCRIMINALSISACRIME>)
+	IF <CONT.KARMA> < -1999
+		LINK.CRIMINAL=1
+	ELSEIF <CONT.FLAGS> & statf_criminal
+		LINK.CRIMINAL=1
+	ELSEIF <CONT.KILLS> > <SERV.MURDERMINCOUNT>
+		LINK.CRIMINAL=1
+	ENDIF
+ENDIF
+
+IF (rand(200)==1)
+	IF (<SRC.HEALING> < 100.0)
+		SRC.HEALING=<SRC.HEALING> + .1
+	ENDIF
+ENDIF
+
+IF (<LINK.HEALING> < 85.0)
+	IF (rand(30)==1)
+		CONT.NEWITEM i_heal_resurrect_equipfudge
+		CONT.EQUIP <CONT.ACT.UID>
+		LINK.EMOTE resurrect <CONT.NAME>
+		REMOVE
+		RETURN 1
+	ELSE
+		LINK.EMOTE fail to resurrect <CONT.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+ELSEIF (<LINK.HEALING> < 90.0)
+	IF (rand(15)==1)
+		CONT.NEWITEM i_heal_resurrect_equipfudge
+		CONT.EQUIP <CONT.ACT.UID>
+		LINK.EMOTE resurrect <CONT.NAME>
+		REMOVE
+		RETURN 1
+	ELSE
+		LINK.EMOTE fail to resurrect <CONT.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+ELSE
+	IF (rand(3)==1)
+		CONT.NEWITEM i_heal_resurrect_equipfudge
+		CONT.EQUIP <CONT.ACT.UID>
+		LINK.EMOTE resurrect <CONT.NAME>
+
+		REMOVE
+		RETURN 1
+	ELSE
+		LINK.EMOTE fail to resurrect <CONT.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+ENDIF
+
+REMOVE
+RETURN 1
+
+[ITEMDEF i_heal_healing]
+DEFNAME=i_heal_healing
+ID=i_memory
+WEIGHT=0
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=attr_invis|attr_decay
+
+ON=@TIMER
+
+IF (<CONT.HITS>==<CONT.STR>)
+	IF !(<CONT.FLAGS> & statf_poisoned)
+		LINK.SYSMESSAGE They don't seem to need healing anymore...
+		REMOVE
+		RETURN 1
+	ENDIF
+ENDIF
+
+VAR.BASESKILL=65.0
+VAR.HEALINGRAND=<EVAL RANDBELL(<EVAL <VAR.BASESKILL> + (-1*<LINK.HEALING>)>, 25.0)>
+
+IF (<EVAL <VAR.BASESKILL>> < <LINK.HEALING>)
+	VAR.HEALINGRAND=<EVAL 100.0 +- <VAR.HEALINGRAND>>	//Thanks for the idea, Taran.
+ENDIF
+
+VAR.BASESKILL=
+
+IF (<EVAL RAND(100.0)> <= <EVAL <VAR.HEALINGRAND>>)
+
+	LINK.SYSMESSAGE You heal <CONT.NAME>
+	CONT.SYSMESSAGE <LINK.NAME> heals you.
+
+	TAG.HEALMIN=<LINK.HEALING>/40
+	TAG.HEALMAX=<LINK.HEALING>/20
+
+	CONT.HITS=<CONT.HITS> + { <eval <TAG.HEALMIN>> <eval <TAG.HEALMAX>> }
+
+	IF (<CONT.HITS> > <CONT.STR>)
+		CONT.HITS=<CONT.STR>
+	ENDIF
+
+	//If they succeed, the bloody bandage goes on the target
+
+	IF !(RAND(4)==1)
+		CONT.NEWITEM i_bandage_bloody
+		CONT.ACT.CONT=<CONT.UID>
+	ENDIF
+
+	TAG.HEALMIN=
+	TAG.HEALMAX=
+
+	IF (<CONT.FLAGS> & statf_poisoned)
+		//CONT.SPELLEFFECT s_cure, <LINK.HEALING>
+		//This caused problems involving passing of return codes.
+
+		CONT.FLAGS=<CONT.FLAGS> &~ statf_poisoned
+
+		IF (<CONT.FINDID.i_rune_poison>)
+			CONT.FINDID.i_rune_poison.REMOVE
+		ELSEIF (<CONT.FINDID.i_rune_poison_field>)
+			CONT.FINDID.i_rune_poison_field.REMOVE
+		ENDIF
+
+	ENDIF
+
+	IF (<SERV.HELPINGCRIMINALSISACRIME>)
+		IF <CONT.KARMA> < -1999
+			LINK.CRIMINAL=1
+		ELSEIF <CONT.FLAGS> & statf_criminal
+			LINK.CRIMINAL=1
+		ELSEIF <CONT.KILLS> > <SERV.MURDERMINCOUNT>
+			LINK.CRIMINAL=1
+		ENDIF
+	ENDIF
+ELSE
+
+	//If they fail, they get the bloody bandage back
+
+	LINK.SYSMESSAGE You fail to heal <CONT.NAME>
+	CONT.SYSMESSAGE <LINK.NAME> fails to heal you.
+
+	IF !(RAND(4)==1)
+		LINK.NEWITEM i_bandage_bloody
+		LINK.ACT.CONT=<LINK.UID>
+	ENDIF
+ENDIF
+
+IF (<LINK.HEALING> < 100.0)
+
+	IF (<LINK.HEALING> < 30.0)
+		IF (rand(2)=1)
+			LINK.HEALING=<LINK.HEALING> + {.1 .2}
+		ENDIF
+	ELSEIF (<LINK.HEALING> < 50.0)
+		IF (rand(23)=1)
+			LINK.HEALING=<LINK.HEALING> + .1
+		ENDIF
+	ELSEIF (<LINK.HEALING> < 80.0)
+		IF (rand(43)=1)
+			LINK.HEALING=<LINK.HEALING> + .1
+		ENDIF
+	ELSE
+		IF (rand(73)=1)
+			LINK.HEALING=<LINK.HEALING> + .1
+		ENDIF
+
+	ENDIF
+
+ENDIF
+
+CONT.UPDATE
+
+REMOVE
+RETURN 1

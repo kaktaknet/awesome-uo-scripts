@@ -1,0 +1,565 @@
+///////////////////////
+//// Newbie System ////
+///////////////////////
+//Version 1.2
+
+//Scripted using EditPlus v2.11 with Swindler's SphereScript Syntax module installed
+//Built for & tested on Sphere 0.55i
+
+//Original Script by GM I DONO
+//http://www.landsofhadit.com/
+
+//Rescripted & Greatly Extended by WarpeÐ Dragon
+//http://warped.ods.org
+//warped_dragon@hotmail.com
+//ICQ: 86428337
+//AIM: Warped Dragon
+//MSN: Use Email...
+//YIM: Not Telling
+
+//Please don't remove this header//
+
+//INSTALLATION: Drop it into the script directory, Pick one of the install methods below. Don't forget to comment out both methods in this script once you've installed one of them!
+
+//METHOD #1
+//Add this code to the bottem of [SKILLCLASS 0] in spheretables.scp:
+
+//Start code to copy//
+ON=@Login
+//This will only make them a newbie if they don't have a newbie tag. (First time login)
+IF (2<SRC.TAG.Newbie> == 2)
+	f_newbie_become
+ENDIF
+//End code to copy//
+
+//METHOD #2
+//Add the following line under [NEWBIE MALE_DEFAULT] and [NEWBIE MALE_DEFAULT] in spherenewb.scp:
+
+//Start code to copy//
+ITEM=i_newbstart_crystal
+//End code to copy//
+
+//USEAGE: Set the options at the top to suit your liking or needs. Thats all!
+
+//If you have problems, suggestions or questions about this script,
+//please don't hesitate to email me.
+
+//Have Fun!!
+
+
+//Version History:
+
+//v1.2
+//- Added a new TYPEDEF, t_newbonly_chest. Now you can use any container item as a newbie chest, rather 
+//  then just a large crate. Just set the item's type to t_newbonly_chest.
+//- Added a new TYPEDEF, t_newbonly_gate. Now you can use any moongate, floor tile, or item that players can
+//  walk on as a newbie teleporter/gate. Just set it's type to t_newbonly_gate and cast mark on it for the
+//  destination, same as a regular moongate or telepad.
+//- Rewrote the version history to be more readable.
+//- Rescripted f_ns_stop_spell to speed up it's execution
+//- Rescripted ON=@SPELLCAST and ON=@SPELLEFFECT in the e_newbie even to reduce lag and make the code easier
+//  to read
+
+//v1.1
+//- Finally got around to testing Install Method #1. Found a bug and fixed it, it works.
+//- Added an option to deny players a choice in becoming a newbie when using Method #1.
+//- Added option to automaticly teleport a player to a specific place when they become a newbie.
+
+//v1.0
+//- Fixed the bugs with the Timer system and Time Remaining system as reported by Shay.I even tested them this
+//  time. They work :)
+
+//v0.9
+//- Added support for the pets of players and newbies
+
+//v0,8
+//- Added a display of Newbie time left on the remove newbie menu.
+//- Added option to have Newbie time decay while player is offline. It is an expirimental function, I
+//  coded it on logic, no idea if it works. In short, it's untested.
+
+//v0.7
+//- Fixed some bugs that were reported by ¤« Vï®ª| IÑfectïóÑ »¤ in the timer system.
+//- Finally fixed the name change system.
+
+//v0.6
+//- Added timer system for ending of newbie status at the request of Maggie Dunn. Turn it on to be used. At
+//  the end of the set time, the player will no longer be a newbie.
+
+//v0.5
+//- Fixed bug with newbie gates and chests, now GMs can open them as well as newbies.
+
+//v0.4
+//- Fixed the new revised version.
+//- Defname options work, the rest of it works, it all WORKS!
+
+//v0.3
+//- Admin Dazn kindley pointed out the whole new "revised" system was VSF. Remade the old verion, sent it 
+//  to him, updated website with it.
+
+//v0.2
+//- Re-scripted to use defname options, so new admins could customize it easier.
+
+//v0.1
+//- Added the Newbie Moongate and Chest.
+//- Added spell blocking support.
+
+//v0.0
+//- Admin Dazn sent me a newbie system, asked me to fix it so it worked. I did. 
+//- First working release.
+
+[DEFNAME Newbie_System_Options]
+//0 = off, 1 = on
+NS_opt_Newb_Player=0		//Sets whether or not Newbies can hurt Players
+NS_opt_Player_Newb=0		//Sets whether or not Players can hurt Newbies
+NS_opt_Newb_Newb=0		//Sets whether or not Newbies can hurt Newbies
+NS_opt_Player_Pet_Newb=0	//Sets whether or not a Player's pet can harm a Newbie
+NS_opt_Newb_Pet_Player=0	//Sets whether or not a Newbie's pet can harm a Player
+NS_opt_Newb_Pet_Newb=0		//Sets whether or not a Newbie's pet can harm a Newbie
+NS_opt_Timer_System=0		//Sets whether or not the timer is used to determine how long a player may be newbied.
+NS_opt_Timer_Time=604800	//The amount of time on the timer. (one week by default)
+NS_opt_Timer_Offline_Decay=0	//Sets whether or not the newbie timer will decay when player is logged out.
+NS_opt_Player_Choice=0		//Sets whether or not the player gets a choice in becoming a newbie.
+NS_opt_Player_Tele=0		//Sets whether ot not the player is relocated upon becoming a newbie.
+NS_opt_Player_Tele_Coord_X=0	//The X coordinate of the destination
+NS_opt_Player_Tele_Coord_Y=0	//The Y coordinate of the destination
+NS_opt_Player_Tele_Coord_Z=0	//The Z coordinate of the destination
+NS_opt_Player_Tele_Coord_W=0	//The facet of the destination. Set to 0 unless you have more then one facet.
+
+[PLEVEL 1]
+//Allows players to use this command
+newbie
+newbietime
+
+[MENU m_newbie_remove]
+//Menu for removeing newbie status
+This shall remove thy Newbie status
+Art thou sure thy dost wish to continue?
+ON=0 Yes
+IF (<SRC.TAG.Newbie> == 0)
+	SRC.SYSMESSAGE=Thou art not a newbie!
+
+ELSEIF (<SRC.TAG.Newbie> == 1)
+	SRC.TAG.Newbie=0
+	SRC.EVENTS -e_newbie 
+	SRC.FINDID.i_newbie_timer.REMOVE
+	SRC.SYSMESSAGE=Thou art no longer a newbie.
+
+ENDIF
+RETURN 1
+
+ON=0 No
+RETURN 1
+
+[MENU m_newbie_become]
+//Menu for becoming a newbie
+Dost thou wish to be a "newbie"?
+ON=0 Yes
+SRC.SYSMESSAGE=Thou hast been tagged as a "newbie".
+SRC.SYSMESSAGE=If thou dost wish to remove thy Newbie status, simply type .newbie
+SRC.TAG.Newbie=1
+SRC.EVENTS +e_newbie
+IF (<EVAL NS_opt_Timer_System> == 1)
+	SRC.NEWITEM i_newbie_timer
+	SRC.ACT.EQUIP
+	SRC.SYSMESSAGE You now have <EVAL NS_opt_Timer_Time> seconds as a newbie. Use them well.
+	SRC.SYSMESSAGE To see your remaining time, type .newbietime
+
+ENDIF
+
+f_newbie_tele
+RETURN 1
+
+ON=0 No
+SRC.TAG.Newbie=0
+RETURN 1
+
+[FUNCTION newbietime]
+IF ((<EVAL NS_opt_Timer_System> == 1) && (0<SRC.TAG.Newbie> == 01))
+SRC.TAG.Newbie_Days=<EVAL (<FINDID.i_newbie_timer.TIMER>/86400)>
+SRC.TAG.Newbie_Hours=<EVAL (<FINDID.i_newbie_timer.TIMER>/3600)>
+SRC.TAG.Newbie_Minutes=<EVAL ((<FINDID.i_newbie_timer.TIMER>/60)+(-<SRC.TAG.Newbie_Hours>*60))>
+SRC.TAG.Newbie_Seconds=<EVAL ((<FINDID.i_newbie_timer.TIMER>+(-(<SRC.TAG.Newbie_Hours>*3600)))+(-(<SRC.TAG.Newbie_Minutes>*60)))>
+SRC.TAG.Newbie_Hours=<EVAL (<SRC.TAG.Newbie_Hours>/7)>
+
+SRC.MESSAGE You have <EVAL (<SRC.TAG.Newbie_Days>)> days, <EVAL (<SRC.TAG.Newbie_Hours>)> hours, <EVAL (<SRC.TAG.Newbie_Minutes>)> minutes, and <EVAL <SRC.TAG.Newbie_Seconds>> seconds left as a newbie
+
+SRC.TAG.Newbie_Days=
+SRC.TAG.Newbie_Hours=
+SRC.TAG.Newbie_Minutes=
+SRC.TAG.Newbie_Seconds=
+
+ELSEIF (0<SRC.TAG.Newbie> != 01))
+	SRC.SYSMESSAGE You are not a newbie!
+
+ENDIF
+
+[FUNCTION f_newbie_become]
+IF (<EVAL NS_opt_Player_Choice> == 0)
+	SRC.SYSMESSAGE=Thou hast been tagged as a "newbie".
+	SRC.SYSMESSAGE=If thou dost wish to remove thy Newbie status, simply type .newbie
+	SRC.TAG.Newbie=1
+	SRC.EVENTS +e_newbie
+	IF (<EVAL NS_opt_Timer_System> == 1)
+		SRC.NEWITEM i_newbie_timer
+		SRC.ACT.EQUIP
+		SRC.SYSMESSAGE You now have <EVAL NS_opt_Timer_Time> seconds as a newbie. Use them well.
+		SRC.SYSMESSAGE To see your remaining time, type .newbietime
+
+	ENDIF
+	
+	f_newbie_tele
+	RETURN 1
+
+ELSE
+	MENU m_newbie_become
+
+ENDIF
+
+[FUNCTION f_newbie_tele]
+IF (<EVAL NS_opt_Player_Tele> == 1)
+	VAR.Coord_X=<EVAL NS_opt_Player_Tele_Coord_X>
+	VAR.Coord_Y=<EVAL NS_opt_Player_Tele_Coord_Y>
+	VAR.Coord_Z=<EVAL NS_opt_Player_Tele_Coord_Z>
+	VAR.Coord_W=<EVAL NS_opt_Player_Tele_Coord_W>
+
+	SRC.SYSMESSAGE Teleporting you to the newbie destination...
+	SRC.GO VAR.Coord_X, VAR.Coord_Y, VAR.Coord_Z, VAR.Coord_W
+
+	VAR.Coord_X=
+	VAR.Coord_Y=
+	VAR.Coord_Z=
+	VAR.Coord_W=
+
+ENDIF
+
+[FUNCTION newbie]
+//The .newbie command. Calls the remove newbie menu.
+MENU m_newbie_remove
+
+[FUNCTION f_ns_stop_spell]
+//Spell Blocking Function
+//Saves a lot of repeating code later on.
+//Having the IF all in one line rather then one for each <ARGN>
+//is hard for people to read, but easier and faster for sphere.
+IF ((<ARGN> == 30)  || (<ARGN> == 12)  || (<ARGN> == 18)  || (<ARGN> == 20)  || (<ARGN> == 42)  || (<ARGN> == 43) || (<ARGN> == 49)  || (<ARGN> == 51)  || (<ARGN> == 55)  || (<ARGN> == 57)  || (<ARGN> == 69)  ||  (<ARGN> == 5)  ||  (<ARGN> == 1)  ||  (<ARGN> == 3)  ||  (<ARGN> == 8)  ||  (<ARGN> == 27)  ||  (<ARGN> == 28)  ||  (<ARGN> == 31)  ||  (<ARGN> == 37)  ||  (<ARGN> == 38)  ||  (<ARGN> == 39)  ||  (<ARGN> == 41)  ||  (<ARGN> == 46)  ||  (<ARGN> == 47)  ||  (<ARGN> == 53)  ||  (<ARGN> == 54)  ||  (<ARGN> == 70)) 
+	RETURN 1	 
+
+ELSE
+	RETURN 0
+
+ENDIF 
+
+[EVENTS e_newbie] 
+//The guts of this system.
+
+ON=@LOGOUT
+IF (<EVAL NS_opt_Timer_Offline_Decay> == 1)
+	IF (<SRC.RESTEST i_newbie_timer>)
+		SRC.NEWITEM i_newbie_timer_offline
+		SRC.ACT.DROP
+		SRC.ACT.LINK=<SRC.UID>
+		SRC.ACT.Total_Time=<SRC.FINDID.i_newbie_timer.TIMER>
+		SRC.ACT.TIMER=1
+		SRC.TAG.Offline_Timer=<SRC.ACT.UID>
+		SRC.TAG.Offline_Timer_Exist=1
+
+	ELSE
+		SRC.TAG.Offline_Timer_Exist=0
+
+
+	ENDIF
+
+ENDIF
+
+ON=@LOGIN
+IF (<EVAL NS_opt_Timer_Offline_Decay> == 1)
+	IF (<SRC.RESTEST i_newbie_timer>)
+		IF (<EVAL (<SRC.TAG.Offline_Timer_Exist>)> == 1)
+			<SRC.TAG.Offline_Timer>.REMOVE
+
+		ENDIF
+
+	ENDIF
+
+ENDIF
+
+ON=@CLICK
+MESSAGE <NAME> (Newbie)
+
+ON=@ENVIRONCHANGE
+MESSAGE <NAME> (Newbie)
+
+ON=@GETHIT
+//Triggers when the player gets hit.
+//SRC=Attacker
+//ACT=Attacker
+//[]=Defender
+
+IF (<SRC.NPC> == 0)
+	IF (<EVAL NS_opt_Newb_Player> == 0) && (<TAG.Newbie> == 0) && (<SRC.TAG.Newbie> == 1)
+		SRC.SYSMESSAGE=Newbies cannot harm players!
+		RETURN 1
+
+	ENDIF
+
+	IF ((<EVAL NS_opt_Player_Newb> == 0) && (<TAG.Newbie> == 1) && (<SRC.TAG.Newbie> == 0))	
+		SRC.SYSMESSAGE=Players cannot harm Newbies!
+		RETURN 1
+
+	ENDIF
+
+	IF ((<EVAL NS_opt_Newb_Newb> == 0) && (<TAG.Newbie> == 1) && (<SRC.TAG.Newbie> == 1))	
+		SRC.SYSMESSAGE=Newbies cannot harm Newbies!
+		RETURN 1
+
+	ENDIF
+
+ELSE
+	IF (<EVAL NS_opt_Player_pet_Newb> == 0) && (<TAG.Newbie> == 1) && (<SRC.MEMORYFINDTYPE.MEMORY_IPET.LINK.TAG.Newbie> == 0)
+		SRC.SYSMESSAGE=Player pets cannot harm Newbies!
+		RETURN 1
+
+	ENDIF
+
+	IF (<EVAL NS_opt_Newb_pet_Player> == 0) && (<TAG.Newbie> == 0) && (<SRC.MEMORYFINDTYPE.MEMORY_IPET.LINK.TAG.Newbie> == 1)
+		SRC.SYSMESSAGE=Newbie pets cannot harm Players!
+		RETURN 1
+
+	ENDIF
+
+	IF (<EVAL NS_opt_Newb_pet_Newb> == 0) && (<TAG.Newbie> == 1) && (<SRC.MEMORYFINDTYPE.MEMORY_IPET.LINK.TAG.Newbie> == 1)
+		SRC.SYSMESSAGE=Newbie pets cannot harm Newbies!
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+ON=@HIT
+//Triggers when the player hits someone
+//SRC=Defender
+//ACT=Defender
+//[]=Attacker
+
+IF (<SRC.NPC> == 0)
+	IF (<EVAL NS_opt_Newb_Player> == 0) && (<TAG.Newbie> == 1) && (<SRC.TAG.Newbie> == 0)
+		SYSMESSAGE=Newbies cannot harm players!
+		RETURN 1
+
+	ENDIF
+
+	IF (<EVAL NS_opt_Player_Newb> == 0) && (<TAG.Newbie> == 0) && (<SRC.TAG.Newbie> == 1)
+		SYSMESSAGE=Players cannot harm Newbies!
+		RETURN 1
+
+	ENDIF
+
+	IF ((<EVAL NS_opt_Newb_Newb> == 0) && (<TAG.Newbie> == 1) && (<SRC.TAG.Newbie> == 1)
+		SYSMESSAGE=Newbies cannot harm Newbies!
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+ON=@SPELLEFFECT
+//Triggers when a spell is cast on someone
+//SRC=Caster
+//ACT=Caster
+//[]=Target
+
+IF (<SRC.NPC> == 0)
+	VAR.NS_Temp_1=<ARGN>
+	IF ((<EVAL NS_opt_Newb_Player> == 0) && (<f_ns_stop_spell> == 1) && ((<SRC.TAG.Newbie> == 1) && (<TAG.Newbie> == 0)))
+		SRC.SYSMESSAGE Newbies cannot harm Players!
+		VAR.NS_Temp_1=
+		RETURN 1
+
+	ENDIF
+
+	IF ((<EVAL NS_opt_Player_Newb> == 0) && (<f_ns_stop_spell> == 1) && ((<SRC.TAG.Newbie> == 0) && (<TAG.Newbie> == 1)))
+		SRC.SYSMESSAGE Players cannot harm Newbies!
+		VAR.NS_Temp_1=
+		RETURN 1
+
+	ENDIF
+
+	IF ((<EVAL NS_opt_Newb_Newb> == 0) && (<f_ns_stop_spell> == 1) && ((<SRC.TAG.Newbie> == 1) && (<TAG.Newbie> == 1)))
+		SRC.SYSMESSAGE Newbies cannot harm Newbies!
+		VAR.NS_Temp_1=
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+ON=@SPELLCAST
+//Triggers when someone casts a spell
+//SRC=Caster
+//ACT=Target
+
+IF (<SRC.NPC> == 0)
+	VAR.NS_Temp_1=<ARGN>
+	IF ((<EVAL NS_opt_Newb_Player> == 0) && (<f_ns_stop_spell> == 1) && (<SRC.TAG.Newbie> == 1) && (<ACT.TAG.Newbie> == 0))
+		SRC.SYSMESSAGE Newbies cannot harm Players!
+		VAR.NS_Temp_1=
+		RETURN 1
+
+	ENDIF
+
+	IF ((<EVAL NS_opt_Player_Newb> == 0) && (<f_ns_stop_spell> == 1) && ((<SRC.TAG.Newbie> == 0) && (<ACT.TAG.Newbie> == 1)))
+		SRC.SYSMESSAGE Players cannot harm Newbies!
+		VAR.NS_Temp_1=
+		RETURN 1
+
+	ENDIF
+
+	IF ((<EVAL NS_opt_Newb_Newb> == 0) && (<f_ns_stop_spell> == 1) && ((<SRC.TAG.Newbie> == 1) && (<ACT.TAG.Newbie> == 1)))
+		SRC.SYSMESSAGE Newbies cannot harm Newbies!
+		VAR.NS_Temp_1=
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+
+[ITEMDEF i_newbie_timer]
+//Used with the timer system
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+TIMER=NS_opt_timer_time
+
+ON=@TIMER
+CONT.TAG.Newbie=0
+CONT.EVENTS -e_newbie
+CONT.SYSMESSAGE=Thou art no longer a newbie.
+REMOVE
+RETURN 1
+
+
+[ITEMDEF i_newbie_timer_offline]
+ID=i_worldgem_bit
+TYPE=t_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+TIMER=-1
+TAG.Total_Time=0
+
+ON=@TIMER
+TAG.Total_Time=<EVAL (<TAG.Total_Time> + (-1))>
+
+IF (<EVAL (<TAG.Total_Time>)> <= 0)
+	LINK.EVENTS -e_newbie
+	LINK.FINDID.i_newbie_timer.REMOVE
+	LINK.TAG.Newbie=0
+	REMOVE
+
+ELSE
+	LINK.FINDID.i_newbie_timer.TIMER=<EVAl (<TAG.Total_Time>)>
+	TIMER=1
+
+ENDIF
+
+
+[ITEMDEF i_newbonly_gate]
+//By WarpeÐ Dragon
+ID=i_moongate_red
+NAME=Newbie Gate
+TYPE=t_newbonly_gate
+
+CATEGORY=Warped
+SUBSECTION=Newbie System
+DESCRIPTION=Newbie Gate
+
+
+[TYPEDEF t_newbonly_gate]
+//By WarpeÐ Dragon
+//Set the type of an item to t_newbonly_gate
+//Cast mark spell on the item to set location.
+//Only newbies and gms can use.
+//Helps if the item can be walked on
+
+ON=@Step
+IF (0<SRC.TAG.Newbie> != 01) && (!<SRC.ISGM>)
+	SRC.SYSMESSAGE You are not a newbie!
+	RETURN 1
+
+ELSEIF (<SRC.TAG.Newbie> == 1)
+	SRC.GO <MOREP>
+	RETURN 1
+
+ELSEIF (<SRC.ISGM>)
+	SRC.GO <MOREP>
+	RETURN 1
+
+ENDIF
+
+[ITEMDEF i_newbonly_chest]
+//By WarpeÐ Dragon
+NAME=Newbie Crate
+ID=i_crate_lg
+TYPE=t_container
+
+CATEGORY=Warped
+SUBSECTION=Newbie System
+DESCRIPTION=Newbie Chest
+
+ON=@CREATE
+TIMERD=1
+
+ON=@TIMER
+TYPE=t_newbonly_chest
+TIMER=-1
+RETURN 1
+
+[TYPEDEF t_newbonly_chest]
+//By WarpeÐ Dragon
+//Set the type of an item to t_newbonly_chest
+//Item will be a container for Newbies and GM's
+//Only newbies and gms can use.
+
+ON=@DCLICK
+IF (0<SRC.TAG.Newbie> != 01) && (!<SRC.ISGM>)
+	SRC.SYSMESSAGE You are not a newbie!
+	RETURN 1
+
+ELSEIF (<SRC.TAG.Newbie> == 1)
+	SRC.MESSAGE You are permitted to open the Newbie Chest
+	TYPE=t_container
+	OPEN
+	TYPE=t_newbonly_chest
+	RETURN 1
+
+ELSEIF (<SRC.ISGM>)
+	SRC.MESSAGE You are permitted to open the Newbie Chest
+	TYPE=t_container
+	OPEN
+	TYPE=t_newbonly_chest
+	RETURN 1
+ENDIF
+
+
+[ITEMDEF i_newbstart_crystal]
+//Used for making characters newbies
+ID=i_crystal_green
+TYPE=t_normal
+WEIGHT=1
+NAME=Newbie Creater
+
+CATEGORY=Warped
+SUBSECTION=Newbie System
+DESCRIPTION=Newbie Creater
+
+ON=@CREATE
+ATTR=attr_move_never
+
+ON=@DCLICK
+f_newbie_become
+REMOVE
+RETURN 1
+
+[EOF]

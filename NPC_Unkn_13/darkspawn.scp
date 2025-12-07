@@ -1,0 +1,280 @@
+[CHARDEF c_m_darkspawn1] 
+DEFNAME=c_m_darkspawn
+ 
+NAME=Dark Spawn 
+ID=c_DAEMON_W_SWORD 
+
+DESIRES=i_gold 
+
+ON=@Create
+NPC=brain_monster
+COLOR=colors_daemon
+STR={985 1185}
+DEX={175 255}
+INT={15 25} 
+FAME=4000 
+KARMA=-6999
+
+MAGERY=100.0 
+EVALUATINGINTEL=98.0 
+FENCING={90.0 100.0} 
+MAGICRESISTANCE={90.0 100.0} 
+TACTICS={95.0 100.0} 
+NECROMANCY=100.0 
+ANATOMY=98.0 
+WRESTLING={90.0 100.0}
+
+
+ON=@NPCRestock 
+ITEM=loot_BALRON 
+
+ON=@NPCSEENEWPLAYER
+ATTACK
+
+CATEGORY=Monsters 
+SUBSECTION=Undeads 
+DESCRIPTION=Demon Spawn 
+
+ON=@GETHIT 
+IF (<HITPOINTS> <250) 
+IF (<HITPOINTS> >50) 
+EMOTE=change Shape! 
+EFFECT=3,037c4,6,15,1 
+BODY=c_m_darkspawn2
+HITPOINTS=<STR>
+ELSE 
+ENDIF
+
+[CHARDEF c_m_darkspawn2]
+DEFNAME=c_m_dragon_wyrm2
+//DEFNAME2=C_M_WYRM
+NAME=Dark Spawn
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+
+DAM=11,53
+ARMOR=35
+RESOURCES=99 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+
+//ALIGNMENT=CHAOTIC
+CAN=MT_WALK|MT_FLY
+//SPELLCIRCLES=4,8
+FOODTYPE=80 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+COLOR=colors_wyrm
+STR={1095 1185}
+DEX={86 175}
+INT={685 775}
+HITS=<STR>
+
+PARRYING={55.0 95.0}
+MAGERY=99.0
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={98.0 100.0}
+WRESTLING={90.0 93.0}
+
+NPC=brain_dragon
+
+ON=@NPCRestock 
+ITEM=loot_BALRON
+
+ON=@NPCSEENEWPLAYER
+ATTACK
+
+
+FAME=4000 
+KARMA=-6999
+
+ON=@GETHIT 
+IF (<HITPOINTS> <250) 
+IF (<HITPOINTS> >50) 
+EMOTE=change Shape! 
+EFFECT=3,037c4,6,15,1 
+BODY=c_m_darkspawn3 
+HITPOINTS=<STR>
+ELSE 
+ENDIF
+
+[CHARDEF c_m_darkspawn3]
+ID=c_ophidian_mage
+NAME=Dark Spawn
+SOUND=snd_MONSTER_OPHIDIAN_MAGE1
+ICON=i_pet_ophid_mage
+ANIM=07fc7f
+CAN=MT_WALK|MT_USEHANDS
+DAM=3,12
+ARMOR=15
+RESOURCES=8 i_ribs_raw
+FOODTYPE=5 t_meat_raw, 5 t_food
+DESIRES=i_gold,t_reagent,t_web,i_reag_spider_silk,e_Ophidian
+SHELTER=r_civilization
+TEVENTS=e_Ophidian
+
+
+ON=@Create
+NPC=brain_monster
+FAME={100 2000}
+KARMA={-4000 -4999}
+
+STR={1000 3000}
+DEX={1000 3000}
+INT={1000 3000}
+
+PARRYING={72.0 87.0}
+MAGERY={87.0 97.0}
+MAGICRESISTANCE={95.0 100.0}
+TACTICS={70.0 87.0}
+WRESTLING={40.0 80.0}
+
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3-5
+ITEMNEWBIE=i_spellbook	// knows fire type spells.
+ADDSPELL=s_magic_arrow
+ADDSPELL=s_feeblemind
+ADDSPELL=s_weaken
+ADDSPELL=s_fireball
+ADDSPELL=s_poison
+ADDSPELL=s_explosion
+
+ON=@NPCRESTOCK
+CONTAINER=i_bag
+ITEM=i_reag_black_pearl,{ 1 15 }
+ITEM=i_reag_blood_moss,{ 1 15 }
+ITEM=i_reag_garlic,{ 1 15 }
+ITEM=i_reag_ginseng,{ 1 15 }
+ITEM=i_reag_mandrake_root,{ 1 15 }
+ITEM=i_reag_nightshade,{ 1 15 }
+ITEM=i_reag_sulfur_ash,{ 1 15 }
+ITEM=i_reag_spider_silk,{ 1 15 }
+
+
+ON=@NPCSEENEWPLAYER
+ATTACK
+
+
+ON=@GETHIT 
+IF (<HITPOINTS> <250) 
+IF (<HITPOINTS> >50) 
+EMOTE=change Shape! 
+EFFECT=3,037c4,6,15,1 
+BODY=c_m_darkspawn4 
+HITPOINTS=<STR>
+ELSE 
+ENDIF
+
+[CHARDEF c_m_darkspawn4]
+DEFNAME=c_m_gargoyle_stone2
+NAME=Dark Spawn
+ID=c_GARGOYLE
+SOUND=snd_MONSTER_GARGYL1
+ICON=i_pet_GARG
+CAN=MT_WALK|MT_FLY
+
+DAM=4,24
+ARMOR=25
+RESOURCES=8 i_ribs_raw, 5 tm_rocks
+FOODTYPE=2 t_arock, 2 t_meat_raw
+DESIRES=c_m_gargoyle_stone,c_GARGOYLE,t_bone,i_gold,t_wand
+
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_civilization
+
+ON=@Create
+COLOR=color_rock
+STR={96 125}
+DEX={86 105}
+INT={140 165}
+HITS={96 125}
+
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+PARRYING={55.0 65.0}
+MAGERY={50.0 65.0}
+MAGICRESISTANCE={50.0 65.0}
+TACTICS={50.0 70.0}
+WRESTLING={50.0 70.0}
+
+ON=@NPCSEENEWPLAYER
+ATTACK
+
+
+NPC=brain_monster
+
+FAME=4000
+KARMA=-6999
+
+ON=@NPCRestock 
+ITEM=loot_BALRON
+
+ON=@GETHIT 
+IF (<HITPOINTS> <250) 
+IF (<HITPOINTS> >50) 
+EMOTE=change Shape! 
+EFFECT=3,037c4,6,15,1 
+BODY=c_m_darkspawn5 
+HITPOINTS=<STR>
+ELSE 
+ENDIF
+
+[CHARDEF c_m_darkspawn5]
+ID=c_wisp
+NAME=Dark Wisp
+SOUND=snd_MONSTER_WISP1
+ICON=i_pet_WISP
+ANIM=078c7f
+DAM=15,20
+ARMOR=20
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE|MT_USEHANDS
+FOODTYPE=t_spell
+RESOURCES=t_magic
+SHELTER=r_swamp,r_jungle,r_forests
+AVERSIONS=r_civilization
+
+
+ON=@Create
+COLOR=01
+NPC=brain_beserk
+FAME={1000 5000}
+KARMA=-10000
+//ALIGNMENT=NEUTRAL
+
+STR={1000 3250}
+DEX={1000 3250}
+INT={1000 3250}
+
+PARRYING=95.0
+MAGERY=97.5
+MAGICRESISTANCE=100.0
+TACTICS=80.0
+WRESTLING=85.0
+//SPELLCIRCLES=5-7
+
+ITEMNEWBIE=i_light_source
+ATTR=attr_magic|attr_newbie
+
+ON=@NPCRestock
+ITEM={ i_ring_magery 1 0 4}
+ITEM=i_gold,{1000 6000}
+ITEM=i_random_sword
+ITEM={ RANDOM_SHIELD_INVULNERABILITY 1 RANDOM_PLATEMAIL_INVULNERABILITY 1 RANDOM_CHAINMAIL_INVULNERABILITY 1 RANDOM_RINGMAIL_INVULNERABILITY 1 0 3}
+ITEM={ RANDOM_POOR_MAGIC_GOODIE 16 RANDOM_MEAGER_MAGIC_GOODIE 8 RANDOM_AVERAGE_MAGIC_GOODIE 4 RANDOM_RICH_MAGIC_GOODIE 2 RANDOM_FILTHY_RICH_MAGIC_GOODIE 1 }
+ITEM=i_full_spellbook
+
+CONTAINER=i_bag
+ITEM=i_reag_black_pearl,{ 1 15 }
+ITEM=i_reag_blood_moss,{ 1 15 }
+ITEM=i_reag_garlic,{ 1 15 }
+ITEM=i_reag_ginseng,{ 1 15 }
+ITEM=i_reag_mandrake_root,{ 1 15 }
+ITEM=i_reag_nightshade,{ 1 15 }
+ITEM=i_reag_sulfur_ash,{ 1 15 }
+ITEM=i_reag_spider_silk,{ 1 15 }
+
+[EOF]
+

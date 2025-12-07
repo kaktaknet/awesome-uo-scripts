@@ -1,0 +1,45 @@
+//Critical Hits
+//v1.2
+//by Rudenid.
+
+//Dependency: Time magic system (or at least i_scroll_haste).
+//To install: Add the event below to your players using @Login in their skillclass.
+
+[EVENTS e_critical_hits]
+ON=@Hit
+IF ((<EVAL <REVERSEFIXACTION>> >= 40)&&(<EVAL <REVERSEFIXACTION>> <= 43))
+	//No archery criticals, no magery criticals
+
+	//Randbell code adapted from ithycaworld.com tutorial.
+	var.skill_req = 500.0
+	var.skill_curr = <eval <ANATOMY>+<TACTICS>+<EVAL <I.<EVAL <REVERSEFIXACTION>>>>>
+	var.skill_diff <eval <var.skill_req> + -<var.skill_curr>>
+	var.skill_bell <eval randbell( <var.skill_diff>, 50.0 )>
+
+	var.skill_curr=
+	var.skill_req=
+
+	if ( <var.skill_diff> < 0 )
+	    var.skill_bell <eval 1000 +- <var.skill_bell>>
+	endif
+
+	IF (RAND(1000) <= <EVAL <var.skill_bell>>)
+		EMOTE score a critical hit on <SRC.NAME>!
+		SRC.BARK 4
+
+		VAR.OLDACT=<SRC.ACT.UID>
+		SRC.NEWITEM i_scroll_haste
+		SRC.ACT.ATTR=attr_invis|attr_magic|attr_move_never
+		SRC.ACT.P=<P>
+		SRC.ACT.MORE1=4
+		SRC.ACT.LINK=<UID>
+		SRC.ACT.TIMERd=1
+		SRC.ACT=<EVAL <VAR.OLDACT>>
+
+		VAR.OLDACT=
+	ENDIF
+
+	var.skill_bell=
+	var.skill_diff=
+
+ENDIF

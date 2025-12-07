@@ -1,0 +1,679 @@
+// Created by Kenton C.
+// Along time ago someone els made savages but they were nothing like OSI Savs.
+// I made these ones close to OSI stats and same colors..
+// I also Took out the stupid things that OSI Savs do not have..
+// im going to make a update to this in the coming weeks to fix the tribal berrys
+// So that the berrys can be made into tribal paint..
+
+// How to Install This Script..
+// Go into SphereSkill add the following to cooking..
+
+   [SKILLMENU sm_cook2]
+   ON=i_tribal_berry
+   SKILLMENU=sm_cook_2
+
+   [SKILLMENU sm_cook_2]
+   Savage Paint Kit
+
+   ON=i_savage_paint_kit <name> (<resmake>)
+   MAKEITEM=i_savage_paint_kit
+
+// After you have that added to your skill menu
+// Add the rest of this script to a script named OSISavages.scp 
+// Into your Script folder
+// Then Spawn them on a island. OSI made them a town on a small island..
+// I just placed mine all over Avatar Island.. you can decide..
+
+[CHARDEF c_h_savagemage] 
+DEFNAME=c_h_savagemage 
+NAME=#NAMES_ORC the Savage 
+ID=C_WOMAN 
+DAM=20,35 
+ARMOR=15,20 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=00 
+STR={80 120} 
+DEX={61 85} 
+INT={50 80} 
+
+MAGICRESISTANCE={90.0 125.0} 
+TACTICS={50.0 80.0} 
+WRESTLING={40.0 55.0} 
+ARCHERY={55.0 65.0} 
+MAGERY={65.0 75.0} 
+FENCING={55.0 65.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000} 
+FAME={500 1000} 
+
+ITEMNEWBIE=i_spellbook 
+ADDSPELL=s_magic_arrow 
+ADDSPELL=s_fireball 
+ADDSPELL=s_fire_field 
+ADDSPELL=s_explosion 
+ADDSPELL=s_flamestrike 
+ADDSPELL=s_meteor_swarm 
+ADDSPELL=s_summon_elem_fire 
+ADDSPELL=s_fire_bolt 
+ADDSPELL=s_harm 
+ADDSPELL=s_poison 
+ADDSPELL=s_lightning 
+ADDSPELL=s_mana_drain 
+ADDSPELL=s_blade_spirits 
+ADDSPELL=s_mind_blast 
+ADDSPELL=s_paralyze 
+ADDSPELL=s_poison_field 
+ADDSPELL=s_energy_bolt 
+ADDSPELL=s_paralyzation_field 
+ADDSPELL=s_chain_lightning 
+ADDSPELL=s_mana_vampire 
+ADDSPELL=s_earthquake 
+ADDSPELL=s_energy_vortex 
+ADDSPELL=s_summon_daemon 
+ADDSPELL=s_Hallucination 
+
+ON=@NPCRestock 
+ITEM=i_bone_arms 
+ITEM=i_bone_leggings 
+ITEM=i_tribal_spear 
+ITEM=i_tribal_berry 8
+CONTAINER=i_backpack 
+ITEM={ RANDOM_ORC_TRIBALMASKS } 
+ITEM=backpack_rich
+ITEM=i_bola
+ITEM=i_savage_paint_kit
+ITEM=i_tribal_berry,2 
+
+CATEGORY=Civilized 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Mage (female) 
+
+[CHARDEF c_h_savagearcher] 
+DEFNAME=c_h_savagearcher 
+NAME=#NAMES_ORC the Savage 
+ID=C_WOMAN 
+DAM=20,35 
+ARMOR=15,20 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=00 
+STR={80 120} 
+DEX={61 85} 
+INT={50 80} 
+
+MAGICRESISTANCE={90.0 125.0} 
+TACTICS={50.0 80.0} 
+WRESTLING={40.0 55.0} 
+ARCHERY={55.0 65.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000} 
+FAME={500 1000} 
+
+ON=@NPCRestock 
+ITEM=i_bone_arms 
+ITEM=i_bone_leggings 
+ITEM=i_tribal_bow 
+ITEM=i_arrow,{20 50} 
+ITEM=i_tribal_berry 5 
+ITEM=i_gold, {65 256} 
+ITEM=i_bola
+CONTAINER=i_backpack 
+ITEM={ RANDOM_ORC_TRIBALMASKS } 
+
+ITEM=backpack_poor 
+
+CATEGORY=Civilized 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Archer (female) 
+
+[CHARDEF c_h_savageax] 
+DEFNAME=c_h_savageax 
+NAME=#NAMES_ORC the Savage 
+ID=C_MAN 
+DAM=20,35 
+ARMOR=15,20 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=00 
+STR={80 120} 
+DEX={61 85} 
+INT={50 80} 
+
+MAGICRESISTANCE={90.0 125.0} 
+TACTICS={50.0 80.0} 
+WRESTLING={40.0 55.0} 
+MACEFIGHTING={50.0 65.0} 
+SWORDSMANSHIP={55.0 65.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000} 
+FAME={500 1000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=00
+ITEMNEWBIE=random_facial_hair 
+COLOR=00 
+
+ON=@NPCRestock 
+ITEM=i_bone_arms 
+ITEM=i_bone_leggings 
+ITEM=i_tribal_ax 
+ITEM=i_bola
+ITEM=i_tribal_berry, 8 
+ITEM=i_gold, {56 129} 
+CONTAINER=i_backpack 
+ITEM={ RANDOM_ORC_TRIBALMASKS } 
+
+ITEM=backpack_rich
+
+CATEGORY=Civilized 
+SUBSECTION=Savages 
+DESCRIPTION=Savage ax (male) 
+
+[CHARDEF c_h_savagemace] 
+DEFNAME=c_h_savagemace 
+NAME=#NAMES_ORC the Savage 
+ID=C_MAN 
+DAM=20,35 
+ARMOR=15,20 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=00 
+STR={80 120} 
+DEX={61 85} 
+INT={50 80} 
+
+MAGICRESISTANCE={90.0 125.0} 
+TACTICS={50.0 80.0} 
+WRESTLING={40.0 55.0} 
+MACEFIGHTING={50.0 65.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000} 
+FAME={500 1000} 
+
+ON=@NPCRestock 
+ITEM=i_bone_arms 
+ITEM=i_bone_leggings 
+ITEM=i_tribal_mace 
+ITEM=i_bola
+ITEM=i_tribal_berry, 5 
+ITEM=i_gold, {25 129} 
+CONTAINER=i_backpack 
+ITEM={ RANDOM_ORC_TRIBALMASKS } 
+ITEM=backpack_rich
+
+CATEGORY=Civilized 
+SUBSECTION=Savages 
+DESCRIPTION=Savage mace (male) 
+
+[CHARDEF c_h_savagem] 
+DEFNAME=c_h_savagem 
+NAME=#NAMES_ORC the Savage 
+ID=C_MAN 
+DAM=20,35 
+ARMOR=15,20 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=00 
+STR={80 120} 
+DEX={61 85} 
+INT={50 80} 
+
+MAGICRESISTANCE={90.0 125.0} 
+TACTICS={50.0 80.0} 
+WRESTLING={40.0 55.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000} 
+FAME={500 1000} 
+
+ON=@NPCRestock 
+ITEM=i_bone_arms 
+ITEM=i_bone_leggings 
+ITEM=i_tribal_spear 
+ITEM=i_bola
+ITEM=i_tribal_berry, 3 
+ITEM=i_gold, {56 256} 
+CONTAINER=i_backpack 
+ITEM={ RANDOM_ORC_TRIBALMASKS } 
+ITEM=backpack_rich 
+
+CATEGORY=Civilized 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Warrior (male) 
+
+[CHARDEF c_h_savagef] 
+DEFNAME=c_h_savagef 
+NAME=#NAMES_ORC the Savage 
+ID=C_WOMAN 
+DAM=20,35 
+ARMOR=15,20 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=00 
+STR={80 120} 
+DEX={61 85} 
+INT={50 80} 
+
+MAGICRESISTANCE={90.0 125.0} 
+TACTICS={50.0 80.0} 
+WRESTLING={40.0 55.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000} 
+FAME={500 1000} 
+
+ON=@NPCRestock 
+ITEM=i_bone_arms 
+ITEM=i_bone_leggings 
+ITEM=i_tribal_spear
+ITEM=i_bola 
+ITEM=i_tribal_berry,4 
+ITEM=i_gold, {56 352} 
+CONTAINER=i_backpack 
+ITEM={ RANDOM_ORC_TRIBALMASKS } 
+ITEM=backpack_rich 
+
+CATEGORY=Civilized 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Warrior (female) 
+
+[CHARDEF c_h_savage_rider] 
+DEFNAME=c_h_savage_rider 
+NAME=#NAMES_ORC the Savage 
+ID=C_MAN 
+DAM=15,20 
+ARMOR=20 
+DESIRES=i_gold 
+SHELTER=r_civilization 
+
+TSPEECH=spk_human_prime 
+TSPEECH=jobpaladin 
+TSPEECH=spk_needs 
+TSPEECH=spk_rehello 
+TSPEECH=spk_human_default 
+
+TEVENTS=e_Human_HearUnk 
+TEVENTS=e_Human_Needs 
+TEVENTS=e_Human_ConvInit 
+TEVENTS=e_Human_Greet 
+TEVENTS=e_Human_Space 
+TEVENTS=e_Human_Refuse 
+TEVENTS=e_Human_Environ 
+
+ON=@Create 
+COLOR=00 
+STR={190 250} 
+DEX={200 300} 
+INT={51 85} 
+
+FENCING={78.0 99.0} 
+WRESTLING={20.0 45.0} 
+MAGICRESISTANCE={30.0 55.0} 
+TACTICS={40.0 70.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000} 
+FAME={500 1000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_reds
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair
+
+ON=@NPCRestock 
+ITEM=i_bone_arms 
+ITEM=i_bone_leggings 
+ITEM=i_tribal_spear
+ITEM=i_tribal_bow
+ITEM=i_bola
+ITEM=i_bola
+ITEM=i_gold, {250 323} 
+ITEM=random_meager_magic_loot 
+ITEM=random_coin_purse 
+ITEM=i_potion_healgreat 
+ITEM=i_potion_healgreat 
+ITEM=i_potion_healgreat 
+ITEM=i_potion_healgreat
+
+CATEGORY=Civilized 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Rider 
+
+on=@gethit // change weapon 
+if (<distance> < 2) 
+findid(i_tribal_spear).cont=<uid> 
+endif 
+if (<distance> > 2) 
+findid(i_tribal_bow).cont=<uid> 
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@hit // heal twice (two bottles) 
+IF (<hitpoints> < 100) 
+IF (<RESTEST 1 i_potion_healgreat>) 
+SPELLEFFECT s_greater_heal,100.0 
+CONSUME i_potion_healgreat 
+else 
+return 1 
+endif 
+
+ITEMNEWBIE=i_mt_ostard_desert 
+NAME=a savage ostard 
+COLOR=099 
+
+ON=@SkillStart // recreate horse 
+if <SRC.RESTEST 1 i_mt_ostard_desert> 
+return 1 
+else 
+newitem=i_mt_ostard_desert 
+act.equip 
+return 0 
+endif 
+
+ON=@EnvironChange // recreate horse 
+if <SRC.RESTEST 1 i_mt_ostard_desert> 
+return 1 
+else 
+newitem=i_mt_ostard_desert 
+act.equip 
+return 1 
+endif 
+
+[TEMPLATE tm_tribalmasks] 
+DEFNAME=RANDOM_ORC_TRIBALMASKS 
+CATEGORY=Item Templates 
+SUBSECTION=Random Masks 
+DESCRIPTION=Tribal Masks 
+ITEM={ i_orc_tribal_mask8 1 i_orc_tribal_mask7 1 i_orc_tribal_mask6 1 i_orc_tribal_mask5 1 i_orc_tribal_mask4 1 i_orc_tribal_mask3 1 i_orc_tribal_mask2 1 i_orc_tribal_mask1 1 } 
+
+[ITEMDEF i_helm_orc_evil] 
+DEFNAME=i_helm_orc 
+TYPE=T_ARMOR 
+FLIP=1 
+ID=01f0b 
+ARMOR=20 
+REQSTR=1 
+VALUE=1,10 
+WEIGHT=5 
+CATEGORY=Provisions - Armor 
+SUBSECTION=Helmets 
+DESCRIPTION=Orc Helm 
+DUPELIST=01f0c 
+NAME=Evil Orc Helm 
+
+ON=@Create 
+HITPOINTS={56 95} 
+COLOR=0455
+
+ON=@EQUIP 
+
+IF <SRC.KARMA> < -500 
+SRC.SYSMESSAGE You can't lose any more karma from wearing this item! 
+ELSE 
+SRC.KARMA=<SRC.KARMA>+-200 
+SRC.SYSMESSAGE=You have a lost some karma! 
+ENDIF 
+
+SRC.TAG.STR=<SRC.STR> 
+SRC.TAG.DEX=<SRC.DEX> 
+SRC.TAG.INT=<SRC.INT> 
+
+SRC.STR=<SRC.STR>+10 
+IF <SRC.DEX> = <SRC.INT> 
+SRC.INT=<SRC.INT>+-10 
+ELSE 
+IF <SRC.DEX> < <SRC.INT> 
+SRC.INT=<SRC.INT>+-10 
+ELSE 
+SRC.DEX=<SRC.DEX>+-10 
+ENDIF 
+ENDIF 
+
+ON=@UNEQUIP 
+SRC.STR=<SRC.TAG.STR> 
+SRC.DEX=<SRC.TAG.DEX> 
+SRC.INT=<SRC.TAG.INT> 
+
+[ITEMDEF i_orc_tribal_mask1] 
+DEFNAME=i_orc_tribal_mask1 
+ID=i_mask_tribal_red 
+NAME=tribal mask 
+WEIGHT=2 
+
+ON=@CREATE 
+COLOR=0847 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Tribal Mask (1) 
+
+[ITEMDEF i_orc_tribal_mask2] 
+DEFNAME=i_orc_tribal_mask2 
+ID=i_mask_tribal_red 
+NAME=tribal mask 
+WEIGHT=2 
+
+ON=@CREATE 
+COLOR=0534 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Tribal Mask (2) 
+
+[ITEMDEF i_orc_tribal_mask3] 
+DEFNAME=i_orc_tribal_mask3 
+ID=i_mask_tribal_red 
+NAME=tribal mask 
+WEIGHT=2 
+
+ON=@CREATE 
+COLOR=057e 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Tribal Mask (3) 
+
+[ITEMDEF i_orc_tribal_mask4] 
+DEFNAME=i_orc_tribal_mask4 
+ID=i_mask_tribal_red 
+NAME=tribal mask 
+WEIGHT=2 
+
+ON=@CREATE 
+COLOR=0774 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Tribal Mask (4) 
+
+[ITEMDEF i_orc_tribal_mask5] 
+DEFNAME=i_orc_tribal_mask5 
+ID=i_mask_tribal_red 
+NAME=tribal mask 
+WEIGHT=2 
+
+ON=@CREATE 
+COLOR=0763 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Tribal Mask (5) 
+
+[ITEMDEF i_orc_tribal_mask6] 
+DEFNAME=i_orc_tribal_mask6 
+ID=i_mask_tribal_red 
+NAME=tribal mask 
+WEIGHT=2 
+
+ON=@CREATE 
+COLOR=0592 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Tribal Mask (6) 
+
+[ITEMDEF i_orc_tribal_mask7] 
+DEFNAME=i_orc_tribal_mask7 
+ID=i_mask_tribal_red 
+NAME=tribal mask 
+WEIGHT=2 
+
+ON=@CREATE 
+COLOR=05dd 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Tribal Mask (7) 
+
+[ITEMDEF i_orc_tribal_mask8] 
+DEFNAME=i_orc_tribal_mask8 
+ID=i_mask_tribal_red 
+NAME=tribal mask 
+WEIGHT=2 
+
+ON=@CREATE 
+COLOR=0612 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Tribal Mask (8) 
+
+[ITEMDEF i_tribal_berry] 
+DEFNAME=i_tribal_berry 
+ID=i_fruit_apple 
+NAME=tribal berry 
+WEIGHT=1
+
+ON=@CREATE 
+COLOR=0529 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Tribal Berry 
+
+[ITEMDEF i_savage_paint_kit] 
+DEFNAME=i_savage_paint_kit 
+RESOURCES=15 i_tribal_berry
+ID=i_jar_honey 
+NAME=savage paint 
+WEIGHT=1 
+
+ON=@CREATE 
+COLOR=03bc 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Savage Paint Kit 
+
+ON=@DCLICK 
+TARGET Who shall wear the savage paint? 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.KARMA=-2000 
+IF <SRC.TARG.SERIAL>==<SRC.SERIAL> 
+SRC.ANIM 33 
+SRC.SOUND 601 
+SRC.OSKIN= 00 
+SRC.COLOR= 00
+SRC.SYSMESSAGE=You bear the markings of the savage people and feel safer around the savages!
+SRC.FINDID.i_savage_paint_kit.REMOVE 
+src.consume=i_savage_paint_kit
+Return 1 
+ENDIF 
+
+[ITEMDEF i_tribal_spear] 
+DEFNAME=i_tribal_spear 
+ID=i_spear 
+NAME=tribal spear 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Tribal Spear 
+
+ON=@Create 
+HITPOINTS={150 250} 
+COLOR=027d
+
+[ITEMDEF i_tribal_bow] 
+DEFNAME=i_tribal_bow 
+ID=i_bow 
+NAME=tribal Bow
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Tribal Bow 
+
+ON=@Create 
+HITPOINTS={100 190} 
+COLOR=027d 
+
+[ITEMDEF i_tribal_ax] 
+DEFNAME=i_tribal_ax 
+ID=i_axe_double 
+NAME=tribal ax 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Tribal Ax 
+
+ON=@Create 
+HITPOINTS={100 190} 
+COLOR=027d 
+
+[ITEMDEF i_tribal_mace] 
+DEFNAME=i_tribal_mace 
+ID=i_mace 
+NAME=tribal mace 
+
+CATEGORY=Rares 
+SUBSECTION=Savages 
+DESCRIPTION=Tribal Mace 
+
+ON=@Create 
+HITPOINTS={100 190} 
+COLOR=027d

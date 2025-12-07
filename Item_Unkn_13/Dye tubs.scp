@@ -1,0 +1,228 @@
+###################################################################
+##################  Scripted by Big_boy_uk89  ##################### 
+##################  Any Bugs Email Me at      #####################
+##################  Bennett_3001@hotmail.com  #####################
+###################################################################
+\********************Dye Tubs********************
+[ITEMDEF I_ANIMALDYE_TUB] 
+ID=I_DYE_TUB
+TYPE=T_DYE_VAT
+NAME=Animal Dying Tub
+WEIGHT=5
+
+SUBSECTION=Dye Tubs
+CATEGORY=Colour
+DESCRIPTION=Animal Dying Tub
+
+ON=@CREATE
+COLOR=0
+
+ON=@DCLICK 
+TARGET Choose the Animal to color
+RETURN 1
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can not dye a human! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE YOU CANNOT DYE YOURSELF! 
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET>
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+ELSE 
+SRC.SYSMESSAGE You can only dye Tame Animals with this stone! 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_ITEM 
+if <src.targ.baseid>==i_et_ebear
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+elseif <src.targ.baseid>==i_et_eo
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+elseif <src.targ.baseid>==i_et_eh
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+elseif <src.targ.baseid>==i_et_ed
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+elseif <src.targ.baseid>==i_et_eu
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+elseif <src.targ.baseid>==i_et_rb
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+elseif <src.targ.baseid>==i_et_euni
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+elseif <src.targ.baseid>==i_et_el
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+elseif <src.targ.baseid>==i_et_eb
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+else
+SRC.SYSMESSAGE You can only dye Animals with this Tub! 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE You can only dye Animals with this Tub! 
+Return 1
+
+[ITEMDEF I_ARMORDYE_TUB] 
+ID=I_DYE_TUB
+TYPE=T_DYE_VAT
+NAME=Armor Dying Tub
+WEIGHT=5
+
+SUBSECTION=Dye Tubs
+CATEGORY=Colour
+DESCRIPTION=Armor Dying Tub
+
+ON=@CREATE
+COLOR=0
+
+ON=@DCLICK 
+TARGET Choose the armor to color
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.TYPE>=T_ARMOR) || (<SRC.TARG.TYPE>=t_SHIELD)
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+ELSE 
+SRC.SYSMESSAGE You can only dye Armor with this Tub! 
+RETURN 1 
+ENDIF 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye Armor with this Tub! 
+RETURN 1 
+ENDIF
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye Armor with this Tub! 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE You can only dye Armor with this Tub! 
+Return 1 
+
+[ITEMDEF i_FURNITUREdye_tub]
+DEFNAME=i_furny_tub
+NAME=Furniture Dying Tub
+ID=0fab
+value=500
+TYPE=T_DYE_VAT
+DYE=1
+
+SUBSECTION=Dye Tubs
+CATEGORY=Colour
+DESCRIPTION=Furniture Dying Tub
+
+ON=@CREATE
+COLOR=00
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE You cannot dye that!
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.RESTEST 1 <SRC.TARG.BASEID>> >
+SRC.MESSAGE Things must be in your pack!
+SOUND 510
+RETURN 1
+ELSE
+IF (<SRC.TARG.TYPE>==t_table)
+SRC.TARG.COLOR=<SRC.COLOR>
+SRC.TARG.UPDATE
+SOUND 37
+SRC.SYSMESSAGE Your <src.targ.name> was Dyed
+RETURN 0
+ELSE
+IF (<SRC.TARG.TYPE>==t_chair) 
+SRC.TARG.COLOR=<SRC.COLOR>
+SRC.TARG.UPDATE
+SOUND 37
+SRC.SYSMESSAGE Your <src.targ.name> was Dyed
+RETURN 0
+ELSE
+IF (<SRC.TARG.TYPE>==t_container)
+SRC.TARG.COLOR=<SRC.COLOR>
+SRC.TARG.UPDATE
+SOUND 37
+SRC.SYSMESSAGE Your <src.targ.name> was Dyed
+RETURN 0
+ELSE
+SRC.SYSMESSAGE THAT IS NOT FURNITURE
+SOUND 510
+RETURN 1
+
+[ITEMDEF I_WEAPONDYE_TUB] 
+ID=I_DYE_TUB
+TYPE=T_DYE_VAT
+NAME=Weapon Dying Tub
+WEIGHT=5
+
+SUBSECTION=Dye Tubs
+CATEGORY=Colour
+DESCRIPTION=Weapon Dying Tub
+
+ON=@CREATE
+COLOR=0
+
+ON=@DCLICK 
+TARGET Choose the weapon to color
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.TYPE>=t_WEAPON_BOW) || (<SRC.TARG.TYPE>=t_WEAPON_FENCE) || (<SRC.TARG.TYPE>=t_WEAPON_SWORD) || (<SRC.TARG.TYPE>=t_WEAPON_MACE_SHARP)|| (<SRC.TARG.TYPE>=T_WEAPON_MACE_SMITH) 
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1
+ELSE 
+SRC.SYSMESSAGE You can only dye Weapons with this Tub! 
+RETURN 1 
+ENDIF 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye Weapons with this Tub! 
+RETURN 1 
+ENDIF
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye Weapons with this Tub! 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE You can only dye Weapons with this Tub! 
+Return 1 
+
+
+[EOF]

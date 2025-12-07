@@ -1,0 +1,2010 @@
+// ****************************************************************************
+// Created for/by UOCraZed. 
+// Ideas by: Achilles  ||  Scripted by: Trunks  || Edited/Fixed by: Freak, Death~ and ByTcH
+// Bug Reports should be posted to the ByTcHn ScripTs message board OR E-Mailed to Trunks. 
+//
+// THIS FILE SHOULD ONLY BE DOWNLOADED FROM THE UOCraZed WEBSITE OR The Majin Network!
+// IT IS THE ONLY WAY TO BE SURE YOU HAVE THE NEWEST VERSION!
+// ****************************************************************************
+// 
+// |&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|
+// |&|          Support Links                    |&|
+// |&| MNet Website: www.majinnet.com            |&|
+// |&| UOC Website: www.gamegrazed.net           |&|
+// |&| majin Network: www.majinnet.com           |&|
+// |&| Trunks' E-Mail: webmaster@majinnet.com    |&|
+// |&| Achilles E-Mail: gamecrazed@gamecrazed.net|&|
+// |&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|
+//
+// ##################
+// ## VERSION: 2.2 ##
+// ##################
+//
+// LAST UPDATE: August 12, 2001 by Trunks
+//
+
+[ITEMDEF i_acc_marker]
+NAME=DO NOT REMOVE!
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS|ATTR_NEWBIE
+
+
+[ITEMDEF i_acc_stone]
+NAME=Character Creation Stone
+ID=01174
+
+ON=@CREATE
+ATTR=ATTR_STATIC
+
+ON=@DCLICK
+IF <SRC.RESTEST 1 i_acc_marker>
+SRC.SYSMESSAGE You have already used this!
+Return 1
+ELSE
+DIALOG d_cc_welcome
+SRC.OBODY=c_wisp
+SRC.BODY=c_wisp
+SRC.ALLSKILLS=0.0
+SRC.STR=1
+SRC.INT=1
+SRC.DEX=1
+SRC.FIX
+Return 1
+ENDIF
+
+CATEGORY=UOCraZed
+SUBSECTION=Stones
+DESCRIPTION=Advanced Character Creation Stone
+
+[DIALOG d_cc_welcome] 
+50,50 //start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 550 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 220 80 126 0 // Title
+text 90 120 955 1 
+text 90 140 955 2 
+button 50 160 210 211 1 0 1 // This is Button 1
+text 90 160 955 3 //This puts text next to Button 0 
+text 465 365 010 4
+
+
+[DIALOG d_cc_welcome TEXT] 
+Welcome <SRC.NAME>!
+This stone will allow you to develope your character.
+This process is NOT reversable, so choose wisely!
+Click here to begin the process!
+v2.2
+
+
+[DIALOG d_cc_welcome BUTTON] 
+ONBUTTON=0
+SRC.SYSMESSAGE Menu Closed.
+ONBUTTON=1
+DIALOG d_cc_sex
+
+
+[DIALOG d_cc_sex] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 550 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 1 // This is Button 1
+text 65 150 955 1 //This puts text next to Button 1
+text 65 165 955 2
+button 40 190 210 211 1 0 2 // This is Button 2
+text 65 190 955 3 //This puts text next to Button 1 
+text 65 205 955 4
+
+[DIALOG d_cc_sex TEXT] 
+Choose a sex, <SRC.NAME>!
+Male: 
+Stonger than his female counter part, but only half as bright!
+Female: 
+Brighter than males, but lacking in brute strength!
+
+
+[DIALOG d_cc_sex BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0
+SRC.SYSMESSAGE Menu Closed
+ONBUTTON=1
+ SRC.DIALOG d_cc_family
+ SRC.0BODY=c_man
+ SRC.BODY=c_man
+ SRC.STR=40
+ SRC.DEX=40
+ SRC.INT=20
+ SRC.FIX
+ONBUTTON=2
+ SRC.DIALOG d_cc_family
+ SRC.0BODY=c_woman
+ SRC.BODY=c_woman
+ SRC.STR=20
+ SRC.DEX=40
+ SRC.INT=40
+ SRC.FIX
+ 
+[DIALOG d_cc_family] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+resizepic 0 0 2600 550 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0
+text 65 165 955 3
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 4 //This puts text next to Button 1
+text 65 205 955 5
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 6 //This puts text next to Button 2
+text 65 245 955 7
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 8 //This puts text next to Button 3 
+
+
+[DIALOG d_cc_family TEXT] 
+Choose Your Family <SRC.NAME>!
+Families of Nobility
+Montegro: 
+This family is born into a world of conquest and war!
+Santiago: 
+This family is born into a world of vast merchant empires!
+Quantell: 
+This family is born into a world of mystery and wonder!
+Middle Class Families:
+
+[DIALOG d_cc_family BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.NAME=<SRC.NAME> Montegro
+ SRC.STR=<SRC.STR>+1
+ SRC.KARMA=500
+ SRC.FAME=500
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=2500
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_montegro_skills
+ONBUTTON=1 
+ SRC.NAME=<SRC.NAME> Santiago
+ SRC.DEX=<SRC.DEX>+1
+ SRC.KARMA=500
+ SRC.FAME=500
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=5000
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_santiago_skills
+ONBUTTON=2
+ SRC.NAME=<SRC.NAME> Quantell
+ SRC.INT=<SRC.INT>+1
+ SRC.KARMA=500
+ SRC.FAME=500
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=2500
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_quantell_skills
+ONBUTTON=3
+SRC.dialog d_cc_family2
+
+[DIALOG d_cc_family2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 550 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_family2 TEXT] 
+Choose Your Family <SRC.NAME>!
+Middle Class Families
+Drelling: People of this family are plunged into a world of continuous battle!
+Gilsti: People of this family are born into a streetwise and Mercantile family!
+Uolar: People of this family are born into a family of forgotten Magi!
+Lower Class Families
+Back to Noble Families
+
+[DIALOG d_cc_family2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.NAME=<src.name> Drelling
+ SRc.STR<SRC.STR>+5
+ SRC.KARMA=100
+ SRC.FAME=100
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=1000
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_drelling_skills
+ONBUTTON=1 
+ SRC.NAME <src.name> Gilsti
+ SRC.DEX=<SRC.DEX>+5
+ SRC.KARMA=100
+ SRC.FAME=100
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=1500
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_gilsti_skills
+ONBUTTON=2
+ SRC.NAME=<src.name> Uolar
+ SRC.INT=<SRC.INT>+5
+ SRC.KARMA=100
+ SRC.FAME=100
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=1000
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_uolar_skills
+ONBUTTON=3
+ SRC.dialog d_cc_family3
+ONBUTTON=4
+ SRC.dialog d_cc_family
+
+[DIALOG d_cc_family3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 550 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+[DIALOG d_cc_family3 TEXT] 
+Choose Your Family <SRC.NAME>!
+Lower Class Families
+Thatcher: People of this family are born into a world of Thievery and Scandel!
+Wentell: People of this family are natural Con Artists!
+Cross Family: It is rumored that the Cross Family are elite Assasins!
+Back toMiddle Class Families
+Back to Noble Families
+
+[DIALOG d_cc_family3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.NAME=<src.name> Thatcher
+ SRC.STR=<SRC.STR>+7
+ SRC.KARMA=-250
+ SRC.FAME=-250
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=100
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_thatcher_skills
+ONBUTTON=1 
+ SRC.NAME=<src.name> Wentell
+ SRC.DEX=<SRC.DEX>+7
+ SRC.KARMA=-250
+ SRC.FAME=-250
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=100
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_wentell_skills
+ONBUTTON=2
+ SRC.NAME=<src.name> Cross
+ SRC.INT=<SRC.INT>+7
+ SRC.KARMA=-250
+ SRC.FAME=-250
+ SRC.NEWITEM i_gold
+ SRC.ACT.AMOUNT=100
+ SRC.ACT.BOUNCE
+ SRC.dialog d_cc_cross_skills
+ONBUTTON=3
+ SRC.dialog d_cc_family2
+ONBUTTON=4
+ SRC.dialog d_cc_family
+
+
+[DIALOG d_cc_montegro_skills] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+[DIALOG d_cc_montegro_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 3 skills
+Swordsmanship
+Macefighting
+Fencing
+Archery
+Tactics
+
+
+[DIALOG d_cc_montegro_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.SWORDSMANSHIP=50.0
+ SRC.DIALOG d_cc_montegro_skills2
+ONBUTTON=1 
+ SRC.MACEFIGHTING=50.0
+ SRC.DIALOG d_cc_montegro_skills2
+ONBUTTON=2
+ SRC.FENCING=50.0
+ SRC.DIALOG d_cc_montegro_skills2
+ONBUTTON=3
+ SRC.ARCHERY=50.0
+ SRC.DIALOG d_cc_montegro_skills2
+ONBUTTON=4
+ SRC.TACTICS=50.0
+ SRC.DIALOG d_cc_montegro_skills2
+
+[DIALOG d_cc_montegro_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+[DIALOG d_cc_montegro_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Swordsmanship
+Macefighting
+Fencing
+Archery
+Tactics
+
+
+[DIALOG d_cc_montegro_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.SWORDSMANSHIP=50.0
+ SRC.DIALOG d_cc_montegro_skills3
+ONBUTTON=1 
+ SRC.MACEFIGHTING=50.0
+ SRC.DIALOG d_cc_montegro_skills3
+ONBUTTON=2
+ SRC.FENCING=50.0
+ SRC.DIALOG d_cc_montegro_skills3
+ONBUTTON=3
+ SRC.ARCHERY=50.0
+ SRC.DIALOG d_cc_montegro_skills3
+ONBUTTON=4
+ SRC.TACTICS=50.0
+ SRC.DIALOG d_cc_montegro_skills3
+
+
+[DIALOG d_cc_montegro_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+[DIALOG d_cc_montegro_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Swordsmanship
+Macefighting
+Fencing
+Archery
+Tactics
+
+
+[DIALOG d_cc_montegro_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.SWORDSMANSHIP=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.MACEFIGHTING=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.FENCING=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+ SRC.ARCHERY=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.TACTICS=50.0
+ SRC.DIALOG d_cc_values
+
+[DIALOG d_cc_santiago_skills] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_santiago_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 3 skills
+Blacksmithing
+Carpentry
+Bowcraft/Fletching
+Tailoring
+Tinkering
+
+
+[DIALOG d_cc_santiago_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.BLACKSMITHING=50.0
+ SRC.DIALOG d_cc_santiago_skills2
+ONBUTTON=1 
+ SRC.CARPENTRY=50.0
+ SRC.DIALOG d_cc_santiago_skills2
+ONBUTTON=2
+ SRC.FLETCHING=50.0
+ SRC.DIALOG d_cc_santiago_skills2
+ONBUTTON=3
+ SRC.TAILORING=50.0
+ SRC.DIALOG d_cc_santiago_skills2
+ONBUTTON=4
+ SRC.TINKERING=50.0
+ SRC.DIALOG d_cc_santiago_skills2
+
+[DIALOG d_cc_santiago_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 95 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+[DIALOG d_cc_santiago_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Blacksmithing
+Carpentry
+Bowcraft/Fletching
+Tailoring
+Tinkering
+
+
+[DIALOG d_cc_santiago_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.BLACKSMITHING=50.0
+ SRC.DIALOG d_cc_santiago_skills3
+ONBUTTON=1 
+ SRC.CARPENTRY=50.0
+ SRC.DIALOG d_cc_santiago_skills3
+ONBUTTON=2
+ SRC.FLETCHING=50.0
+ SRC.DIALOG d_cc_santiago_skills3
+ONBUTTON=3
+ SRC.TAILORING=50.0
+ SRC.DIALOG d_cc_santiago_skills3
+ONBUTTON=4
+ SRC.TINKERING=50.0
+ SRC.DIALOG d_cc_santiago_skills3
+
+
+[DIALOG d_cc_santiago_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 95 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+[DIALOG d_cc_santiago_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Blacksmithing
+Carpentry
+Bowcraft/Fletching
+Tailoring
+Tinkering
+
+
+[DIALOG d_cc_santiago_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.BLACKSMITHING=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.CARPENTRY=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.FLETCHING=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+ SRC.TAILORING=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.TINKERING=50.0
+ SRC.DIALOG d_cc_values
+
+
+[DIALOG d_cc_quantell_skills] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_quantell_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 3 skills
+Magery
+Meditation
+Magic Resistance
+Inscription
+Alchemy
+
+
+[DIALOG d_cc_quantell_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MAGERY=50.0
+ SRC.DIALOG d_cc_quantell_skills2
+ONBUTTON=1 
+ SRC.MEDITATION=50.0
+ SRC.DIALOG d_cc_quantell_skills2
+ONBUTTON=2
+ SRC.MAGICRESISTANCE=50.0
+ SRC.DIALOG d_cc_quantell_skills2
+ONBUTTON=3
+ SRC.INSCRIPTION=50.0
+ SRC.DIALOG d_cc_quantell_skills2
+ONBUTTON=4
+ SRC.ALCHEMY=50.0
+ SRC.DIALOG d_cc_quantell_skills2
+
+[DIALOG d_cc_quantell_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_quantell_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Magery
+Meditation
+Magic Resistance
+Inscription
+Alchemy
+
+
+[DIALOG d_cc_quantell_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MAGERY=50.0
+ SRC.DIALOG d_cc_quantell_skills3
+ONBUTTON=1 
+ SRC.MEDITATION=50.0
+ SRC.DIALOG d_cc_quantell_skills3
+ONBUTTON=2
+ SRC.MAGICRESISTANCE=50.0
+ SRC.DIALOG d_cc_quantell_skills3
+ONBUTTON=3
+ SRC.INSCRIPTION=50.0
+ SRC.DIALOG d_cc_quantell_skills3
+ONBUTTON=4
+ SRC.ALCHEMY=50.0
+ SRC.DIALOG d_cc_quantell_skills3
+ 
+[DIALOG d_cc_quantell_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_quantell_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Magery
+Meditation
+Magic Resistance
+Inscription
+Alchemy
+
+
+[DIALOG d_cc_quantell_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MAGERY=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.MEDITATION=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.MAGICRESISTANCE=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+ SRC.INSCRIPTION=50.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.ALCHEMY=50.0
+ SRC.DIALOG d_cc_values
+
+[DIALOG d_cc_drelling_skills] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_drelling_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 3 skills
+Swordsmanship
+Macefighting
+Fencing
+Archery
+Tactics
+
+[DIALOG d_cc_drelling_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.SWORDSMANSHIP=55.0
+ SRC.DIALOG d_cc_drelling_skills2
+ONBUTTON=1 
+ SRC.MACEFIGHTING=55.0
+ SRC.DIALOG d_cc_drelling_skills2
+ONBUTTON=2
+ SRC.FENCING=55.0
+ SRC.DIALOG d_cc_drelling_skills2
+ONBUTTON=3
+SRC.ARCHERY=55.0
+ SRC.DIALOG d_cc_drelling_skills2
+ONBUTTON=4
+ SRC.TACTICS=55.0
+ SRC.DIALOG d_cc_drelling_skills2
+ 
+[DIALOG d_cc_drelling_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_drelling_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Swordsmanship
+Macefighting
+Fencing
+Archery
+Tactics
+
+[DIALOG d_cc_drelling_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.SWORDSMANSHIP=55.0
+ SRC.DIALOG d_cc_drelling_skills3
+ONBUTTON=1 
+ SRC.MACEFIGHTING=55.0
+ SRC.DIALOG d_cc_drelling_skills3
+ONBUTTON=2
+ SRC.FENCING=55.0
+ SRC.DIALOG d_cc_drelling_skills3
+ONBUTTON=3
+SRC.ARCHERY=55.0
+ SRC.DIALOG d_cc_drelling_skills3
+ONBUTTON=4
+ SRC.TACTICS=55.0
+ SRC.DIALOG d_cc_drelling_skills3
+
+[DIALOG d_cc_drelling_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_drelling_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Swordsmanship
+Macefighting
+Fencing
+Archery
+Tactics
+
+[DIALOG d_cc_drelling_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.SWORDSMANSHIP=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.MACEFIGHTING=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.FENCING=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+SRC.ARCHERY=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.TACTICS=55.0
+ SRC.DIALOG d_cc_values
+
+
+[DIALOG d_cc_gilsti_skills] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_gilsti_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 3 skills
+Blacksmithing
+Carpentry  
+Bowcraft/Fletching
+Tailoring
+Tinkering
+
+[DIALOG d_cc_gilsti_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.BLACKSMITHING=55.0
+ SRC.DIALOG d_cc_gilsti_skills2
+ONBUTTON=1 
+ SRC.CARPENTRY=55.0
+ SRC.DIALOG d_cc_gilsti_skills2
+ONBUTTON=2
+ SRC.FLETCHING=55.0
+ SRC.DIALOG d_cc_gilsti_skills2
+ONBUTTON=3
+ SRC.TAILORING=55.0
+ SRC.DIALOG d_cc_gilsti_skills2
+ONBUTTON=4
+ SRC.TINKERING=55.0
+ SRC.DIALOG d_cc_gilsti_skills2
+
+[DIALOG d_cc_gilsti_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_gilsti_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Blacksmithing
+Carpentry  
+Bowcraft/Fletching
+Tailoring
+Tinkering
+
+[DIALOG d_cc_gilsti_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.BLACKSMITHING=55.0
+ SRC.DIALOG d_cc_gilsti_skills3
+ONBUTTON=1 
+ SRC.CARPENTRY=55.0
+ SRC.DIALOG d_cc_gilsti_skills3
+ONBUTTON=2
+ SRC.FLETCHING=55.0
+ SRC.DIALOG d_cc_gilsti_skills3
+ONBUTTON=3
+ SRC.TAILORING=55.0
+ SRC.DIALOG d_cc_gilsti_skills3
+ONBUTTON=4
+ SRC.TINKERING=55.0
+ SRC.DIALOG d_cc_gilsti_skills3
+
+
+[DIALOG d_cc_gilsti_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_gilsti_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Blacksmithing
+Carpentry  
+Bowcraft/Fletching
+Tailoring
+Tinkering
+
+[DIALOG d_cc_gilsti_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.BLACKSMITHING=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.CARPENTRY=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.FLETCHING=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+ SRC.TAILORING=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.TINKERING=55.0
+ SRC.DIALOG d_cc_values
+
+
+[DIALOG d_cc_uolar_skills] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_uolar_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Magery    
+Meditation    
+Magic Resistance    
+Inscription    
+Alchemy
+
+
+[DIALOG d_cc_uolar_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MAGERY=55.0
+ SRC.DIALOG d_cc_uolar_skills2
+ONBUTTON=1 
+ SRC.MEDITATION=55.0
+ SRC.DIALOG d_cc_uolar_skills2
+ONBUTTON=2
+ SRC.MAGICRESISTANCE=55.0
+ SRC.DIALOG d_cc_uolar_skills2
+ONBUTTON=3
+ SRC.INSCRIPTION=55.0
+ SRC.DIALOG d_cc_uolar_skills2
+ONBUTTON=4
+ SRC.ALCHEMY=55.0
+ SRC.DIALOG d_cc_uolar_skills2
+
+
+[DIALOG d_cc_uolar_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_uolar_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Magery    
+Meditation    
+Magic Resistance    
+Inscription    
+Alchemy
+
+
+[DIALOG d_cc_uolar_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MAGERY=55.0
+ SRC.DIALOG d_cc_uolar_skills3
+ONBUTTON=1 
+ SRC.MEDITATION=55.0
+ SRC.DIALOG d_cc_uolar_skills3
+ONBUTTON=2
+ SRC.MAGICRESISTANCE=55.0
+ SRC.DIALOG d_cc_uolar_skills3
+ONBUTTON=3
+ SRC.INSCRIPTION=55.0
+ SRC.DIALOG d_cc_uolar_skills3
+ONBUTTON=4
+ SRC.ALCHEMY=55.0
+ SRC.DIALOG d_cc_uolar_skills3
+
+[DIALOG d_cc_uolar_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_uolar_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Magery    
+Meditation    
+Magic Resistance    
+Inscription    
+Alchemy
+
+
+[DIALOG d_cc_uolar_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MAGERY=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.MEDITATION=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.MAGICRESISTANCE=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+ SRC.INSCRIPTION=55.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.ALCHEMY=55.0
+ SRC.DIALOG d_cc_values
+
+
+
+[DIALOG d_cc_thatcher_skills] 
+0,0 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_thatcher_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 3 skills
+Stealing     
+Snooping    
+Hiding     
+Stealth     
+Poisoning
+
+
+[DIALOG d_cc_thatcher_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.STEALING=60.0
+ SRC.DIALOG d_cc_thatcher_skills2
+ONBUTTON=1 
+ SRC.SNOOPING=60.0
+ SRC.DIALOG d_cc_thatcher_skills2
+ONBUTTON=2
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_thatcher_skills2
+ONBUTTON=3
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_thatcher_skills2
+ONBUTTON=4
+ SRC.POISONING=60.0
+ SRC.DIALOG d_cc_thatcher_skills2
+
+
+[DIALOG d_cc_thatcher_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_thatcher_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Stealing     
+Snooping    
+Hiding     
+Stealth     
+Poisoning
+
+
+[DIALOG d_cc_thatcher_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.STEALING=60.0
+ SRC.DIALOG d_cc_thatcher_skills3
+ONBUTTON=1 
+ SRC.SNOOPING=60.0
+ SRC.DIALOG d_cc_thatcher_skills3
+ONBUTTON=2
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_thatcher_skills3
+ONBUTTON=3
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_thatcher_skills3
+ONBUTTON=4
+ SRC.POISONING=60.0
+ SRC.DIALOG d_cc_thatcher_skills3
+
+
+[DIALOG d_cc_thatcher_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_thatcher_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Stealing     
+Snooping    
+Hiding     
+Stealth     
+Poisoning
+
+
+[DIALOG d_cc_thatcher_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.STEALING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.SNOOPING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.POISONING=60.0
+ SRC.DIALOG d_cc_values
+
+
+[DIALOG d_cc_wentell_skills] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_wentell_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 3 skills
+Mining     
+Lumberjacking     
+Stealing      
+Snooping     
+Hiding
+
+
+[DIALOG d_cc_wentell_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MINING=60.0
+ SRC.DIALOG d_cc_wentell_skills2
+ONBUTTON=1 
+ SRC.LUMBERJACKING=60.0
+ SRC.DIALOG d_cc_wentell_skills2
+ONBUTTON=2
+ SRC.STEALING=60.0
+ SRC.DIALOG d_cc_wentell_skills2
+ONBUTTON=3
+ SRC.SNOOPING=60.0
+ SRC.DIALOG d_cc_wentell_skills2
+ONBUTTON=4
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_wentell_skills2
+
+[DIALOG d_cc_wentell_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_wentell_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Mining     
+Lumberjacking     
+Stealing      
+Snooping     
+Hiding
+
+
+[DIALOG d_cc_wentell_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MINING=60.0
+ SRC.DIALOG d_cc_wentell_skills3
+ONBUTTON=1 
+ SRC.LUMBERJACKING=60.0
+ SRC.DIALOG d_cc_wentell_skills3
+ONBUTTON=2
+ SRC.STEALING=60.0
+ SRC.DIALOG d_cc_wentell_skills3
+ONBUTTON=3
+ SRC.SNOOPING=60.0
+ SRC.DIALOG d_cc_wentell_skills3
+ONBUTTON=4
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_wentell_skills3
+
+
+[DIALOG d_cc_wentell_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_wentell_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Mining     
+Lumberjacking     
+Stealing      
+Snooping     
+Hiding
+
+
+[DIALOG d_cc_wentell_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.MINING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.LUMBERJACKING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.STEALING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+ SRC.SNOOPING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_values
+
+[DIALOG d_cc_cross_skills] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_cross_skills TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 3 skills
+Fencing     
+Tactics     
+Poisoning     
+Hiding     
+Stealth
+
+
+[DIALOG d_cc_cross_skills BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.FENCING=60.0
+ SRC.DIALOG d_cc_cross_skills2
+ONBUTTON=1 
+ SRC.TACTICS=60.0
+ SRC.DIALOG d_cc_cross_skills2
+ONBUTTON=2
+ SRC.POISONING=60.0
+ SRC.DIALOG d_cc_cross_skills2
+ONBUTTON=3
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_cross_skills2
+ONBUTTON=4
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_cross_skills2
+
+
+[DIALOG d_cc_cross_skills2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_cross_skills2 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 2 more skills
+Fencing     
+Tactics     
+Poisoning     
+Hiding     
+Stealth
+
+
+[DIALOG d_cc_cross_skills2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.FENCING=60.0
+ SRC.DIALOG d_cc_cross_skills3
+ONBUTTON=1 
+ SRC.TACTICS=60.0
+ SRC.DIALOG d_cc_cross_skills3
+ONBUTTON=2
+ SRC.POISONING=60.0
+ SRC.DIALOG d_cc_cross_skills3
+ONBUTTON=3
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_cross_skills3
+ONBUTTON=4
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_cross_skills3
+
+
+[DIALOG d_cc_cross_skills3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 400 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 148 85 126 0 //This puts text in the top center of the dialog- a Title
+text 148 100 126 1 //This puts text in the top center of the dialog- a Title
+button 40 150 210 211 1 0 0 // This is Button 0
+text 65 150 955 2 //This puts text next to Button 0 
+button 40 190 210 211 1 0 1 // This is Button 1
+text 65 190 955 3 //This puts text next to Button 1 
+button 40 230 210 211 1 0 2 // This is Button 2
+text 65 230 955 4 //This puts text next to Button 2 
+button 40 270 210 211 1 0 3 // This is Button 3
+text 65 270 955 5 //This puts text next to Button 3
+button 40 310 210 211 1 0 4 // This is Button 4
+text 65 310 955 6 //This puts text next to Button 4
+
+
+[DIALOG d_cc_cross_skills3 TEXT] 
+Choose Your Skills <SRC.NAME>!
+You may choose 1 more skill
+Fencing     
+Tactics     
+Poisoning     
+Hiding     
+Stealth
+
+
+[DIALOG d_cc_cross_skills3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.FENCING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=1 
+ SRC.TACTICS=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=2
+ SRC.POISONING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=3
+ SRC.HIDING=60.0
+ SRC.DIALOG d_cc_values
+ONBUTTON=4
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_values
+
+
+[DIALOG d_cc_values] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 450 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 135 65 126 0 //This puts text in the top center of the dialog- a Title
+button 40 120 210 211 1 0 0 // This is Button 0
+text 65 120 955 1 //This puts text next to Button 0 
+button 40 150 210 211 1 0 1 // This is Button 1
+text 65 150 955 2 //This puts text next to Button 1 
+button 40 180 210 211 1 0 2 // This is Button 2
+text 65 180 955 3 //This puts text next to Button 2 
+button 40 210 210 211 1 0 3 // This is Button 3
+text 65 210 955 4 //This puts text next to Button 3
+button 40 240 210 211 1 0 4 // This is Button 4
+text 65 240 955 5 //This puts text next to Button 4
+button 40 270 210 211 1 0 5 // This is Button 5
+text 65 270 955 6 //This puts text next to Button 5
+button 40 300 210 211 1 0 6 // This is Button 6
+text 65 300 955 7 //This puts text next to Button 6
+button 40 330 210 211 1 0 6 // This is Button 7
+text 65 330 955 8 //This puts text next to Button 7
+button 40 360 210 211 1 0 8 // This is Button 8
+text 65 360 955 9 //This puts text next to Button 8
+button 40 390 210 211 1 0 9 // This is Button 9
+text 65 390 955 10 //This puts text next to Button 9
+//button 40 450 210 211 1 0 10 // This is Button 10
+//text 65 450 955 11 //This puts text next to Button 10
+
+[DIALOG d_cc_values TEXT] 
+Choose Your Values <SRC.NAME>! [5]
+Value Freedom 
+Value Family
+Value Friends          
+Value Honor
+Value Trust
+Value Beauty
+Value Courage
+Value Pride
+Value Love
+Value Word
+
+
+[DIALOG d_cc_values BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=1 
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=2
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=3
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=4
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=5 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=6
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=7
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=8
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_values2
+ONBUTTON=9
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values2
+ONBUTTON=10
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values2
+
+//
+
+[DIALOG d_cc_values2] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 450 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 135 65 126 0 //This puts text in the top center of the dialog- a Title
+button 40 120 210 211 1 0 0 // This is Button 0
+text 65 120 955 1 //This puts text next to Button 0 
+button 40 150 210 211 1 0 1 // This is Button 1
+text 65 150 955 2 //This puts text next to Button 1 
+button 40 180 210 211 1 0 2 // This is Button 2
+text 65 180 955 3 //This puts text next to Button 2 
+button 40 210 210 211 1 0 3 // This is Button 3
+text 65 210 955 4 //This puts text next to Button 3
+button 40 240 210 211 1 0 4 // This is Button 4
+text 65 240 955 5 //This puts text next to Button 4
+button 40 270 210 211 1 0 5 // This is Button 5
+text 65 270 955 6 //This puts text next to Button 5
+button 40 300 210 211 1 0 6 // This is Button 6
+text 65 300 955 7 //This puts text next to Button 6
+button 40 330 210 211 1 0 6 // This is Button 7
+text 65 330 955 8 //This puts text next to Button 7
+button 40 360 210 211 1 0 8 // This is Button 8
+text 65 360 955 9 //This puts text next to Button 8
+button 40 390 210 211 1 0 9 // This is Button 9
+text 65 390 955 10 //This puts text next to Button 9
+
+[DIALOG d_cc_values2 TEXT] 
+Choose Your Values <SRC.NAME>! [4]
+Value Freedom 
+Value Family
+Value Friends          
+Value Honor
+Value Trust
+Value Beauty
+Value Courage
+Value Pride
+Value Love
+Value Word
+
+
+[DIALOG d_cc_values2 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=1 
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=2
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=3
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=4
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=5 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=6
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=7
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=8
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_values3
+ONBUTTON=9
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values3
+ONBUTTON=10
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values3
+
+//
+
+[DIALOG d_cc_values3] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 450 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 135 65 126 0 //This puts text in the top center of the dialog- a Title
+button 40 120 210 211 1 0 0 // This is Button 0
+text 65 120 955 1 //This puts text next to Button 0 
+button 40 150 210 211 1 0 1 // This is Button 1
+text 65 150 955 2 //This puts text next to Button 1 
+button 40 180 210 211 1 0 2 // This is Button 2
+text 65 180 955 3 //This puts text next to Button 2 
+button 40 210 210 211 1 0 3 // This is Button 3
+text 65 210 955 4 //This puts text next to Button 3
+button 40 240 210 211 1 0 4 // This is Button 4
+text 65 240 955 5 //This puts text next to Button 4
+button 40 270 210 211 1 0 5 // This is Button 5
+text 65 270 955 6 //This puts text next to Button 5
+button 40 300 210 211 1 0 6 // This is Button 6
+text 65 300 955 7 //This puts text next to Button 6
+button 40 330 210 211 1 0 6 // This is Button 7
+text 65 330 955 8 //This puts text next to Button 7
+button 40 360 210 211 1 0 8 // This is Button 8
+text 65 360 955 9 //This puts text next to Button 8
+button 40 390 210 211 1 0 9 // This is Button 9
+text 65 390 955 10 //This puts text next to Button 9
+
+[DIALOG d_cc_values3 TEXT] 
+Choose Your Values <SRC.NAME>! [3]
+Value Freedom 
+Value Family
+Value Friends          
+Value Honor
+Value Trust
+Value Beauty
+Value Courage
+Value Pride
+Value Love
+Value Word
+
+
+[DIALOG d_cc_values3 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=1 
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=2
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=3
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=4
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=5 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=6
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=7
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=8
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_values4
+ONBUTTON=9
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values4
+ONBUTTON=10
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values4
+
+//
+
+[DIALOG d_cc_values4] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 450 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 135 65 126 0 //This puts text in the top center of the dialog- a Title
+button 40 120 210 211 1 0 0 // This is Button 0
+text 65 120 955 1 //This puts text next to Button 0 
+button 40 150 210 211 1 0 1 // This is Button 1
+text 65 150 955 2 //This puts text next to Button 1 
+button 40 180 210 211 1 0 2 // This is Button 2
+text 65 180 955 3 //This puts text next to Button 2 
+button 40 210 210 211 1 0 3 // This is Button 3
+text 65 210 955 4 //This puts text next to Button 3
+button 40 240 210 211 1 0 4 // This is Button 4
+text 65 240 955 5 //This puts text next to Button 4
+button 40 270 210 211 1 0 5 // This is Button 5
+text 65 270 955 6 //This puts text next to Button 5
+button 40 300 210 211 1 0 6 // This is Button 6
+text 65 300 955 7 //This puts text next to Button 6
+button 40 330 210 211 1 0 6 // This is Button 7
+text 65 330 955 8 //This puts text next to Button 7
+button 40 360 210 211 1 0 8 // This is Button 8
+text 65 360 955 9 //This puts text next to Button 8
+button 40 390 210 211 1 0 9 // This is Button 9
+text 65 390 955 10 //This puts text next to Button 9
+
+[DIALOG d_cc_values4 TEXT] 
+Choose Your Values <SRC.NAME>! [2]
+Value Freedom 
+Value Family
+Value Friends          
+Value Honor
+Value Trust
+Value Beauty
+Value Courage
+Value Pride
+Value Love
+Value Word
+
+
+[DIALOG d_cc_values4 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=1 
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=2
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=3
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=4
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=5 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=6
+ SRC.DEX=<SRC.DEX>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=7
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=8
+ SRC.STEALTH=60.0
+ SRC.DIALOG d_cc_values5
+ONBUTTON=9
+ SRC.INT=<SRC.INT>+5
+ SRC.DIALOG d_cc_values5
+ONBUTTON=10
+ SRC.STR=<SRC.STR>+5
+ SRC.DIALOG d_cc_values5
+
+///
+
+[DIALOG d_cc_values5] 
+50,50 // This makes the dialog start in the top left corner of the screen
+nomove
+noclose
+resizepic 0 0 2600 500 450 // curved grey background
+gumppic 117 104 1418 //castle picture in the right bottom corner
+text 135 65 126 0 //This puts text in the top center of the dialog- a Title
+button 40 120 210 211 1 0 0 // This is Button 0
+text 65 120 955 1 //This puts text next to Button 0 
+button 40 150 210 211 1 0 1 // This is Button 1
+text 65 150 955 2 //This puts text next to Button 1 
+button 40 180 210 211 1 0 2 // This is Button 2
+text 65 180 955 3 //This puts text next to Button 2 
+button 40 210 210 211 1 0 3 // This is Button 3
+text 65 210 955 4 //This puts text next to Button 3
+button 40 240 210 211 1 0 4 // This is Button 4
+text 65 240 955 5 //This puts text next to Button 4
+button 40 270 210 211 1 0 5 // This is Button 5
+text 65 270 955 6 //This puts text next to Button 5
+button 40 300 210 211 1 0 6 // This is Button 6
+text 65 300 955 7 //This puts text next to Button 6
+button 40 330 210 211 1 0 6 // This is Button 7
+text 65 330 955 8 //This puts text next to Button 7
+button 40 360 210 211 1 0 8 // This is Button 8
+text 65 360 955 9 //This puts text next to Button 8
+button 40 390 210 211 1 0 9 // This is Button 9
+text 65 390 955 10 //This puts text next to Button 9
+
+[DIALOG d_cc_values5 TEXT] 
+Choose Your Values <SRC.NAME>! [1]
+Value Freedom 
+Value Family
+Value Friends          
+Value Honor
+Value Trust
+Value Beauty
+Value Courage
+Value Pride
+Value Love
+Value Word
+
+
+[DIALOG d_cc_values5 BUTTON] // Tells [DIALOG X] what to do when a button is pressed
+ONBUTTON=0
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP 
+ SRC.DEX=<SRC.DEX>+5
+ SRC.GO BRITAIN
+ONBUTTON=1
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP 
+ SRC.INT=<SRC.INT>+5
+ SRC.GO BRITAIN
+ONBUTTON=2
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.STR=<SRC.STR>+5
+ SRC.GO BRITAIN
+ONBUTTON=3
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.INT=<SRC.INT>+5
+ SRC.GO BRITAIN
+ONBUTTON=4
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.INT=<SRC.INT>+5
+ SRC.GO BRITAIN
+ONBUTTON=5 
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.DEX=<SRC.DEX>+5
+ SRC.GO BRITAIN
+ONBUTTON=6
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.DEX=<SRC.DEX>+5
+ SRC.GO BRITAIN
+ONBUTTON=7
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.STR=<SRC.STR>+5
+ SRC.GO BRITAIN
+ONBUTTON=8
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.STEALTH=60.0
+ SRC.GO BRITAIN
+ONBUTTON=9
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.INT=<SRC.INT>+5
+ SRC.GO BRITAIN
+ONBUTTON=10
+SRC.NEWITEM i_acc_marker
+SRC.ACT.EQUIP
+ SRC.STR=<SRC.STR>+5
+ SRC.GO BRITAIN
+
+[EOF]

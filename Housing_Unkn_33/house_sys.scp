@@ -1,0 +1,953 @@
+//-------------------------- /////
+////House System - by ClouD_BR /////
+//--------------------------
+////E-mail: alexbastos@ism.com.br ////
+//--------------------------
+////ICQ: 133411911 ////
+//--------------------------
+////Note: Edit only the defs IF you're a begginer ////
+//--------------------------
+////You can edit FUNCTIONs at the end of file
+//--------------------------
+////Please, do not take this header out :D plz? ////
+//-------------------------- /////
+
+[COMMENT house_explanations]
+Refresh:
+My script doesn't have refresh, IF the player doesn't exist anymore the house is deleted.
+Wich means, players don't have to worry about clicking the sign/doors
+
+Protections:
+There are 2 protections, one is the Invulnerability, where players become invul inside their houses and
+immune to bad spells. The second is the Force Field, wich disallows other players from entering your
+house.
+
+Force Field:
+It makes impossible for other players to enter your house, except for:
+Staffers (with .gm on)
+Members of the same guild
+Another character of the same account
+and the 4 other players you choose in the menu.
+
+Safe Chest:
+It is a chest that the player can create, and only him can open it. It doesn't need key.
+
+Redeeding House:
+Alert your players about the redeeding, because ALL items inside the house will be deleted with it.
+
+[COMMENT bug_fix]
+If you don't want your players to be able to put houses inside others, put this in ALL your house
+deeds:
+
+ON=@TARGON_GROUND 
+IF (<NOTBUILDABLE <src.targp>>) 
+SRC.SYSMESSAGE @07a1 You can't put a house too next to another.
+RETURN 1 
+ENDIF
+
+[DEFNAME house_sys_settings]
+HOUSE_CANREDEED 1 //can players redeed their houses? (1 = ON, 0 = OFF)
+HOUSE_CANCOPYKEY 1 //can players copy keys? (1 = ON, 0 = OFF)
+HOUSE_CANCHANGESIGN 1 //can players change signs? (1 = ON, 0 = OFF)
+HOUSE_CANTRANSFER 1 //can players transfer their houses? (1 = ON, 0 = OFF)
+HOUSE_CANPUTPROTECTIONS 1 //can players put the script protections to their houses? (1 = ON, 0 = OFF)
+HOUSE_CANCHANGEDOORS 1 //can players change the house's doors? (1 = ON, 0 = OFF)
+HOUSE_CANCHANGELOCKS 1 //can players change locks? (1 = ON, 0 = OFF)
+HOUSE_CANPUTSAFECHEST 1 //can players put a safe chest? (1 = ON, 0 = OFF)
+HOUSE_CANUSEBANK 1 //can players use their banks from the sign? (1 = ON, 0 = OFF)
+HOUSE_CHECKFORVENDORS 0 //should the script look for vendors from my vendor system inside your house before redeeding? (1=ON,0=OFF)
+
+HOUSE_NOCUSTOMHOUSES 1 //IF you don't have any custom houses leave as 1 (on), but IF you do, put 0 (off)
+
+house_redeedpercentage 10 //the cost for redeeding will be this percentage of the house's value
+house_copykey_price 3000 //price for copying the key (in gps)
+
+[DEFNAME house_sys_gump]
+house_owner_txt "Owner"
+house_redeed_txt "Redeed"
+house_copykey_txt "Copy Key"
+house_infos_txt "Informations"
+house_changesign_txt "Change Sign"
+house_changename_txt "Change house's name"
+house_transfer_txt "Transfer the Owner"
+house_protections_txt "Protections"
+house_changedoors_txt "Change door's type"
+house_changelocks_txt "Change Locks"
+house_putsafechest_txt "Put Safe Chest"
+house_name_txt "Name"
+house_type_txt "Type"
+house_price_txt "Price"
+house_keysmade_txt "Key copies made"
+house_housemadein_txt "House made in"
+house_trasnferedin_txt "Owner changed in"
+house_actual_sign "Actual Sign"
+house_invul_txt "Invulnerability"
+house_forcefield_txt "Force Field"
+house_whocanpass_txt "Who beyonds you can pass"
+house_neverchangedlocks_txt "You've never changed the locks"
+house_actuallock_txt "Actual lock"
+house_changelock_txt "Change Lock"
+house_actualdoors_txt "Actual type of door"
+house_usebank_txt "Access Bank"
+
+[DEFNAME house_sys_msgs]
+house_toofar_msg "@07a3 You're too far from your house"
+house_removeyourvendor_msg "@07a3 Remove your vendor before redeeding your house"
+house_youdonthavemoney_msg "@07a3 You don't have enough money"
+house_youmusttypesomething_msg "@07a3 You must type something"
+house_invalidtext_msg "@07a3 Invalid text"
+house_youvealreadychangedlocks_msg "@07a3 You've already changed the locks today"
+house_youcantgiveyourhousetothat_msg "@07a3 You can't give your house to that!"
+house_yourealreadytheowner_msg "@07a3 You're already the owner of this house"
+house_thisisntaplayer_msg "@07a3 This isn't a player"
+house_youcantputyourself_msg "@07a3 You can't put yourself in the list."
+
+house_invalidchars_msg "@07a3 Invalid characters"
+
+[defname house_signs]
+house_signs { 0bd4 0bd6 0bd8 0bda 0bdc 0bde 0be0 0be2 0be4 0be6 0be8 0bea 0bec 0bee 0bf0 0bf2 0bfe 0c02 0c0a }
+
+trade_signs { 0b96 0ba4 0ba6 0ba8 0baa 0bac 0bae 0bb0 0bb2 0bb4 0bb6 0bb8 0bba 0bbc 0bbe 0bc0 0bc2 0bc4 0bc6 0bc8 0bca 0bcc 0bce 0c0c 0c0e 0c44 } 
+
+[DIALOG d_house_pod]
+200,150
+PAGE 1 ///<-- index
+resizepic 0 0 2600 330 515
+resizepic 40 20 3500 250 40
+dtext 63 28 0 House System by ClouD BR
+resizepic 30 70 3500 270 40
+dtext 50 77 0 <def.house_owner_txt>: 
+dtext 105 77 2010 <uid.<uid.<region.uid>.more1>.name>
+resizepic 30 120 3500 270 360
+IF (<DEF.HOUSE_CANREDEED>)
+button 45 140 093A 0939 1 0 1
+dtext 57 135 0 <def.house_redeed_txt> (<eval <uid.<region.uid>.value>/<def.house_redeedpercentage>>gps)
+ENDIF
+IF (<DEF.HOUSE_CANCOPYKEY>)
+button 45 170 093A 0939 1 0 2
+dtext 57 165 0 <def.house_copykey_txt> (<eval <def.house_copykey_price>>gps)
+ENDIF
+button 45 200 093A 0939 0 2 3
+dtext 57 195 0 <def.house_infos_txt>
+IF (<DEF.HOUSE_CANCHANGESIGN>)
+button 45 230 093A 0939 0 3 4
+dtext 57 225 0 <def.house_changesign_txt>
+ENDIF
+button 45 260 093A 0939 0 4 8
+dtext 57 255 0 <def.house_changename_txt>
+IF (<DEF.HOUSE_CANTRANSFER>)
+button 45 290 093A 0939 1 0 10
+dtext 57 285 0 <def.house_transfer_txt>
+ENDIF
+IF (<DEF.HOUSE_CANPUTPROTECTIONS>)
+button 45 350 093A 0939 0 5 11
+dtext 57 345 0 <def.house_protections_txt>
+ENDIF
+IF (<DEF.HOUSE_CANCHANGEDOORS>)
+button 45 320 093A 0939 0 6 18
+dtext 57 315 0 <def.house_changedoors_txt>
+ENDIF
+IF (<DEF.HOUSE_CANCHANGELOCKS>)
+button 45 380 093A 0939 0 8 20
+dtext 57 375 0 <def.house_changelocks_txt>
+ENDIF
+IF (<DEF.HOUSE_CANPUTSAFECHEST>)
+button 45 410 093A 0939 1 0 22
+dtext 57 405 0 <def.house_putsafechest_txt> (<QVAL <TAG0.BAUSEGURO> ? Have:Don't have>)
+ENDIF
+IF (<DEF.HOUSE_CANUSEBANK>)
+button 45 440 093A 0939 1 0 23
+dtext 57 435 0 <def.house_usebank_txt>
+ENDIF
+
+PAGE 2
+resizepic 0 0 2600 330 440
+resizepic 40 20 3500 250 40
+dtext 63 28 0 House System by ClouD BR
+resizepic 30 70 3500 270 40
+dtext 50 77 0 <def.house_owner_txt>:
+dtext 105 77 2010 <uid.<uid.<region.uid>.more1>.name>
+resizepic 30 120 3500 270 280
+dtext 57 135 0 <def.house_name_txt>:
+dtext 110 135 88 <name>
+dtext 57 165 0 <def.house_type_txt>:
+dtext 110 165 88 <uid.<region.uid>.name>
+dtext 57 195 0 <def.house_price_txt>:
+dtext 110 195 88 <uid.<region.uid>.value>
+dtext 47 255 0 <def.house_keysmade_txt>:
+dtext 210 255 88 <eval <tag0.copiasfeitas>>
+dtext 47 285 0 <def.house_housemadein_txt>:
+dtext 160 285 88 <tag0.feitaem>
+IF (<uid.<region.uid>.tag0.trocadaem>)
+dtext 47 315 0 <def.house_trasnferedin_txt>:
+dtext 170 315 88 <uid.<region.uid>.tag0.trocadaem>
+ENDIF
+button 80 405 01467 0146E 0 1 5
+
+PAGE 3
+resizepic 0 0 2600 330 440
+resizepic 40 20 3500 250 40
+dtext 63 28 0 House System by ClouD BR
+resizepic 30 70 3500 270 40
+dtext 50 77 0 <def.house_owner_txt>:
+dtext 105 77 2010 <uid.<uid.<region.uid>.more1>.name>
+resizepic 30 120 3500 270 280
+dtext 120 130 2010 <def.house_actual_sign>:
+tilepic 140 170 <DISPIDDEC>
+button 80 405 01467 0146E 0 1 5
+button 80 225 01468 0146E 1 0 6
+dtext 100 223 88 Misc
+button 80 255 01468 0146E 1 0 7
+dtext 100 253 88 Trade
+
+PAGE 4
+resizepic 0 0 2600 330 250
+resizepic 40 20 3500 250 40
+dtext 63 28 0 House System by ClouD BR
+resizepic 30 70 3500 270 40
+dtext 50 77 0 <def.house_owner_txt>: 
+dtext 105 77 2010 <uid.<uid.<region.uid>.more1>.name>
+resizepic 30 120 3500 270 50
+dtextentry 50 135 300 25 99 0 <name>
+button 110 175 0ef 0f0 1 0 9
+button 80 195 01467 0146E 0 1 5
+
+PAGE 5
+resizepic 0 0 2600 330 440
+resizepic 40 20 3500 250 40
+dtext 63 28 0 House System by ClouD BR
+resizepic 30 70 3500 270 40
+dtext 50 77 0 <def.house_owner_txt>:
+dtext 105 77 2010 <uid.<uid.<region.uid>.more1>.name>
+resizepic 30 120 3500 270 280
+dtext 60 140 0 <def.house_invul_txt>
+dtext 70 160 90 <QVAL <UID.<REGION.UID>.TAG.PROTECAO> ? ON : OFF>
+button 45 145 093A 0939 1 0 12
+dtext 60 200 0 <def.house_forcefield_txt>
+dtext 70 220 90 <QVAL <UID.<REGION.UID>.TAG.PROTECAO2> ? ON : OFF>
+button 45 205 093A 0939 1 0 13
+dtext 60 250 0 <def.house_whocanpass_txt>:
+dtext 60 280 0ad <uid.<uid.<region.uid>.tag0.permitido.1>.name>
+dtext 60 300 0ad <uid.<uid.<region.uid>.tag0.permitido.2>.name>
+dtext 60 320 0ad <uid.<uid.<region.uid>.tag0.permitido.3>.name>
+dtext 60 340 0ad <uid.<uid.<region.uid>.tag0.permitido.4>.name>
+button 45 285 093A 0939 1 0 14
+button 45 305 093A 0939 1 0 15
+button 45 325 093A 0939 1 0 16
+button 45 345 093A 0939 1 0 17
+button 80 405 01467 0146E 0 1 5
+
+PAGE 6
+resizepic 0 0 2600 330 400
+resizepic 40 20 3500 250 40
+dtext 63 28 0 House System by ClouD BR
+resizepic 30 70 3500 270 40
+dtext 50 77 0 <def.house_owner_txt>:
+dtext 105 77 2010 <uid.<uid.<region.uid>.more1>.name>
+resizepic 30 120 3500 270 240
+dtext 100 130 2010 <def.house_actualdoors_txt>:
+dtext 120 160 88 <QVAL <UID.<REGION.UID>.TAG0.DOORTYPE> ? Guild:Normal>
+button 80 365 01467 0146E 0 1 5
+button 80 285 01468 0146E 1 0 19
+dtext 100 283 88 Change
+
+PAGE 7
+gumppic 7 10 100
+dtext 20 60 0 <def.house_owner_txt>:
+dtext 60 60 2010 <uid.<uid.<region.uid>.more1>.name>
+dtext 20 30 036 <name>
+
+PAGE 8
+resizepic 0 0 2600 330 440
+resizepic 40 20 3500 250 40
+dtext 63 28 0 House System by ClouD BR
+resizepic 30 70 3500 270 40
+dtext 50 77 0 <def.house_owner_txt>: 
+dtext 105 77 2010 <uid.<uid.<region.uid>.more1>.name>
+resizepic 30 120 3500 270 280
+IF !(<UID.<region.uid>.TAG0.TRANCAS>)
+dtext 50 160 2010 <def.house_neverchangedlocks_txt>
+ELSE
+dtext 50 160 0 <def.house_actuallock_txt>: <eval <uid.<region.uid>.tag0.trancas>>
+ENDIF
+button 45 205 093A 0939 1 0 21
+dtext 60 200 88 <def.house_changelock_txt>
+button 80 405 01467 0146E 0 1 5
+tilepic 120 250 0675
+
+[DIALOG d_house_pod BUTTON]
+ON=1
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+return 1
+ENDIF
+IF (<HASVENDORS <REGION.UID>>)
+src.sysmessage <def.house_removeyourvendor_msg>.
+return 1
+ENDIF
+IF !(<src.totalgold> > <eval (<uid.<region.uid>.value>/<def.house_redeedpercentage>)-1>)
+src.sysmessage <def.house_youdonthavemoney_msg>
+sdialog d_house_pod 1
+Else
+serv.log @HOUSEsys <src.name> (<src>) redeeded 1 house [<uid.<region.uid>.name>] (<region.uid>)
+src.consumegold <eval <uid.<region.uid>.value>/<def.house_redeedpercentage>>
+IF !(<DEF.HOUSE_NOCUSTOMHOUSES>)
+serv.newitem=i_deed
+new.more1=<uid.<region.uid>.baseid>
+ELSE
+serv.newitem=i_deed_<strsub 8 99 <uid.<region.uid>.baseid>>
+ENDIF
+new.bounce
+try uid.<region.uid>.f_remove_itens_floor
+src.z=<uid.<region.uid>.z>
+try uid.<region.uid>.remove
+src.update
+ENDIF
+
+ON=2
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+ELIF !(<src.totalgold> > 2999)
+src.sysmessage <def.house_youdonthavemoney_msg>
+sdialog d_house_pod 1
+ELIF !(<uid.<region.uid>.tag0.trancas>)
+src.consumegold 3000
+serv.newitem=i_key_copper
+new.link=<region.uid>
+new.more1=<region.uid>
+new.attr=attr_newbie
+new.bounce
+tag.copiasfeitas=<eval <tag0.copiasfeitas>+1>
+sdialog d_house_pod 1
+ELIF (<uid.<region.uid>.tag0.trancas>)
+src.consumegold 3000
+serv.newitem=i_key_copper
+new.link=<region.uid>
+new.more1=<uid.<region.uid>.tag.trancas>
+new.attr=attr_newbie
+new.bounce
+tag.copiasfeitas=<eval <tag0.copiasfeitas>+1>
+sdialog d_house_pod 1
+ENDIF
+
+on=6
+dispid=house_signs
+sdialog d_house_pod 3
+update
+
+on=7
+dispid=trade_signs
+sdialog d_house_pod 3
+update
+
+on=9
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+ELIF (<ISEMPTY <ARGTXT[0]>>)
+src.sysmessage <def.house_youmusttypesomething_msg>
+sdialog d_house_pod 4
+ELIF (<ISBADSTR <ARGTXT[0]>>) || (STRMATCH("*[0-9]*","<ARGTXT[0]>"))
+src.sysmessage <def.house_invalidtext_msg>
+sdialog d_house_pod 4
+else
+name=<strsub 0 30 <argtxt[0]>>
+sdialog d_house_pod 1
+ENDIF
+
+ON=10
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+else
+src.findid.i_mudardono_casa.remove
+Serv.Newitem=i_mudardono_casa
+new.cont=<src>
+new.timer=60
+new.link=<region.uid>
+new.target @07ad Choose the new owner.
+ENDIF
+
+ON=12
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+ELIF !(<uid.<region.uid>.tag0.protecao>)
+try uid.<region.uid>.tag.protecao=1
+src.events +e_house_safe
+sdialog d_house_pod 5
+else
+try uid.<region.uid>.tag.protecao=0
+src.events -e_house_safe
+sdialog d_house_pod 5
+ENDIF
+
+ON=13
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+ELIF !(<uid.<region.uid>.tag0.protecao2>)
+try uid.<region.uid>.tag.protecao2=1
+region.events=+r_force_field
+sdialog d_house_pod 5
+else
+try uid.<region.uid>.tag.protecao2=0
+region.events=-r_force_field
+sdialog d_house_pod 5
+ENDIF
+
+ON=14
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+else
+src.findid.i_adicionar_permicao.remove
+adicionar_permicao 1
+ENDIF
+
+ON=15
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+else
+src.findid.i_adicionar_permicao.remove
+adicionar_permicao 2
+ENDIF
+
+ON=16
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+else
+src.findid.i_adicionar_permicao.remove
+adicionar_permicao 3
+ENDIF
+
+ON=17
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+else
+src.findid.i_adicionar_permicao.remove
+adicionar_permicao 4
+ENDIF
+
+on=19
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+else
+IF !(<UID.<REGION.UID>.TAG0.DOORTYPE>)
+try uid.<region.uid>.f_change_doors 1
+ELIF (<UID.<REGION.UID>.TAG0.DOORTYPE>==1)
+try uid.<region.uid>.f_change_doors 0
+ENDIF
+sdialog d_house_pod 6
+ENDIF
+
+ON=21
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+return 1
+ENDIF
+IF (<TAG0.LASTTROCA.DAY>==<RTIME.DAY>) && (<TAG0.LASTTROCA.MONTH>==<RTIME.MONTH>) && (<TAG0.LASTTROCA.YEAR>==<RTIME.YEAR>)
+SRC.SYSMESSAGE <def.house_youvealreadychangedlocks_msg>.
+sdialog d_house_pod 1
+return 1
+ENDIF
+TAG.LASTTROCA.DAY=<rtime.day>
+TAG.LASTTROCA.MONTH=<rtime.month>
+TAG.LASTTROCA.YEAR=<rtime.year>
+LOCAL.RUID=<region.uid>
+serv.newitem=i_gold
+LOCAL.TRANCA=<new>
+new.remove
+TRY UID.<REGION.UID>.TAG.TRANCAS=<LOCAL.TRANCA>
+FORITEMS 50
+IF (<REGION.UID>==<Local.RUID>) && (<TYPE>==t_door) || (<Type>==t_door_locked)
+MORE1=<LOCAL.TRANCA>
+ENDIF
+ENDFOR
+sdialog d_house_pod 8
+
+ON=22
+IF (<distance> > 5)
+src.sysmessage <def.house_toofar_msg>.
+return 1
+ENDIF
+IF (<TAG0.BAUSEGURO>)
+TRY UID.<TAG0.BAUSEGURO>.ESVAZIARBAUSEGURO <src>
+TRY UID.<TAG0.BAUSEGURO>.REMOVE
+TAG.BAUSEGURO=
+SDIALOG d_house_pod 1
+ELSE
+SERV.NEWITEM i_bau_seguro
+NEW.P=<P>
+NEW.NUDGEDOWN 4
+NEW.LINK=<src>
+NEW.ATTR=ATTR_STATIC
+NEW.TIMER -1
+TAG.BAUSEGURO=<NEW>
+SDIALOG d_house_pod 1
+ENDIF
+
+ON=23
+SRC.BANKSELF
+SDIALOG d_house_pod 1
+
+/////////////////
+
+[itemdef i_mudardono_casa]
+NAME=Mudar Dono Memory
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@TARGON_CANCEL
+remove
+
+ON=@TARGON_GROUND
+remove
+return 1
+
+ON=@TARGON_ITEM
+src.sysmessage <def.house_youcantgiveyourhousetothat_msg>
+remove
+return 1
+
+ON=@TARGON_CHAR
+IF (<link.distance> > 30)
+src.sysmessage <def.house_toofar_msg>.
+remove
+return 1
+ELIF (<src.targ>==<src>)
+src.sysmessage <def.house_yourealreadytheowner_msg>.
+remove
+return 1
+ELIF (<src.targ.isplayer>) && !(<src.targ.isonline>)
+src.sysmessage @07ad <src.targ.name> isn't online.
+remove
+return 1
+ELIF (<src.targ.isplayer>)
+LINK.MORE1=<src.targ>
+src.sysmessage @07ad You gave your house to <src.targ.name>
+src.targ.sysmessage @07ad <src.name> gave you his house.
+src.removercasa <link> <src.targ>
+link.tag.trocadaem="<rtime.day>.<rtime.month>.<rtime.year>"
+remove
+return 1
+ELIF !(<src.targ.isplayer>)
+src.sysmessage @07ad <src.targ.name> isn't a player.
+remove
+return 1
+ENDIF
+
+///////////////////////
+
+[REGIONTYPE r_force_field]
+ON=@ENTER
+IF (<DEF.HOUSE_CANPUTPROTECTIONS>)
+IF (<SRC.ISNOTALLOWED <UID>>)
+src.update
+return 1
+ENDIF
+ENDIF
+
+[FUNCTION ISNOTALLOWED]
+IF (<UID.<ARGN1>.TAG0.PROTECAO2>!=1)
+RETURN 0
+ELIF (<UID.<ARGN1>.MORE1>==<UID>) || (<ISGM>)
+RETURN 0
+ELIF !(STRCMP("<UID.<UID.<ARGN1>.MORE1>.ACCOUNT>","<ACCOUNT>"))
+RETURN 0
+ELIF (<UID.<UID.<ARGN1>.MORE1>.MEMORYFINDTYPE.MEMORY_GUILD.LINK>==<MEMORYFINDTYPE.MEMORY_GUILD.LINK>)
+RETURN 0
+ELSE
+FOR 4
+IF (<UID.<ARGN1>.TAG0.PERMITIDO.<EVAL <LOCAL._FOR>>>==<UID>)
+RETURN 0
+ENDIF
+ENDFOR
+ENDIF
+RETURN 1
+
+/////////////////
+
+[FUNCTION adicionar_permicao]
+serv.newitem=i_adicionar_permicao
+new.cont=<src>
+new.timer=60
+new.attr=attr_invis|attr_decay
+new.tag.args=<args>
+new.tag.uidalvo=<region.uid>
+new.link=<uid>
+new.targetg @07ad Choose a player (CHAO = REMOVE)
+
+[itemdef i_adicionar_permicao]
+NAME=Adicionar Force Field
+ID=i_memory
+TYPE=t_eq_script
+LAYER=Layer_Special
+
+ON=@timer
+remove
+return 1
+
+ON=@Targon_ground
+try uid.<tag.uidalvo>.tag.permitido.<eval <tag.args>>="..."
+link.sdialog d_house_pod 5
+remove
+return 1
+
+ON=@TARGON_ITEM
+src.sysmessage <def.house_thisisntaplayer_msg>.
+remove
+return 1
+
+ON=@TARGON_CHAR
+IF !(<src.targ.isplayer>)
+src.sysmessage <def.house_thisisntaplayer_msg>.
+remove
+return 1
+ENDIF
+IF (<src.targ>==<src>)
+src.sysmessage <def.house_youcantputyourself_msg>
+remove
+return 1
+ENDIF
+IF (<uid.<tag.uidalvo>.tag0.permitido.1>==<src.targ>) || (<uid.<tag.uidalvo>.tag0.permitido.2>==<src.targ>) || (<uid.<tag.uidalvo>.tag0.permitido.3>==<src.targ>) || (<uid.<tag.uidalvo>.tag0.permitido.4>==<src.targ>)
+src.sysmessage @07ad <src.targ.name> is already in the list.
+remove
+return 1
+ENDIF
+try uid.<tag.uidalvo>.tag.permitido.<eval <tag.args>>=<src.targ>
+link.sdialog d_house_pod 5
+remove
+return 1
+
+ON=@TARGON_CANCEL
+remove
+return 1
+
+/////////////////
+
+[FUNCTION f_remove_itens_floor]
+LOCAL.UID_TEST=<uid>
+FORITEMS 100
+IF (0<region.uid>==<local.uid_test>)
+remove
+ENDIF
+ENDFOR
+
+/////////////////
+
+[FUNCTION f_change_doors]
+LOCAL.UID_TEST=<uid>
+TAG.DOORTYPE=<ARGN1>
+FORITEMS 100
+IF (0<region.uid>==<local.uid_test>) && (<type>==t_door_locked) || (<type>==t_door)
+IF !(<ARGN1>)
+EVENTS -t_door_guild
+ELIF (<ARGN1>==1)
+EVENTS +t_door_guild
+ENDIF
+ENDIF
+ENDFOR
+
+/////////////////////
+
+[FUNCTION NOTBUILDABLE]
+SERV.NEWITEM=i_gold
+NEW.ATTR=attr_invis|attr_decay
+NEW.P=<args>
+NEW.MOVE 4
+LOCAL.CHECK1=<new>
+SERV.NEWITEM=i_gold
+NEW.ATTR=attr_invis|attr_decay
+NEW.P=<args>
+NEW.MOVE -4
+LOCAL.CHECK2=<new>
+SERV.NEWITEM=i_gold
+NEW.ATTR=attr_invis|attr_decay
+NEW.P=<args>
+NEW.MOVE 0,4
+LOCAL.CHECK3=<new>
+SERV.NEWITEM=i_gold
+NEW.ATTR=attr_invis|attr_decay
+NEW.P=<args>
+NEW.MOVE 0,-4
+LOCAL.CHECK4=<new>
+SERV.NEWITEM=i_gold
+NEW.ATTR=attr_invis|attr_decay
+NEW.P=<args>
+NEW.MOVE 4,4
+LOCAL.CHECK5=<new>
+SERV.NEWITEM=i_gold
+NEW.ATTR=attr_invis|attr_decay
+NEW.P=<args>
+NEW.MOVE 4,-4
+LOCAL.CHECK6=<new>
+SERV.NEWITEM=i_gold
+NEW.ATTR=attr_invis|attr_decay
+NEW.P=<args>
+NEW.MOVE -4,4
+LOCAL.CHECK7=<new>
+SERV.NEWITEM=i_gold
+NEW.ATTR=attr_invis|attr_decay
+NEW.P=<args>
+NEW.MOVE -4,-4
+LOCAL.CHECK8=<new>
+FOR 8
+IF (<UID.<LOCAL.CHECK<EVAL <LOCAL._FOR>>>.REGION.FLAGS>&region_flag_nobuilding)
+CALL REMOVECOINS
+RETURN 1
+ENDIF
+ENDFOR
+IF (<uid.<uid.<local.check1>.region.uid>.type>==t_multi) || (<uid.<uid.<local.check2>.region.uid>.type>==t_multi) || (<uid.<uid.<local.check3>.region.uid>.type>==t_multi) || (<uid.<uid.<local.check4>.region.uid>.type>==t_multi) || (<uid.<uid.<local.check5>.region.uid>.type>==t_multi) || (<uid.<uid.<local.check6>.region.uid>.type>==t_multi) || (<uid.<uid.<local.check7>.region.uid>.type>==t_multi) || (<uid.<uid.<local.check8>.region.uid>.type>==t_multi)
+CALL REMOVECOINS
+RETURN 1
+else
+CALL REMOVECOINS
+RETURN 0
+ENDIF
+
+[function removecoins]
+FOR 8
+TRY UID.<LOCAL.CHECK<EVAL <LOCAL._FOR>>>.REMOVE
+ENDFOR
+
+//////////////////
+
+[DIALOG d_key_aspects]
+200,100
+PAGE 0
+resizepic 20 20 3500 290 130
+dtext 40 40 2010 Key to:
+dtext 115 40 88 <uid.<uid.<more1>.region.uid>.name>
+dtext 40 70 2010 Position:
+dtext 115 70 88 <uid.<uid.<more1>.region.uid>.p>
+button 40 110 093A 0939 1 0 1
+dtext 55 105 2010 Key Name:
+dtextentry 135 105 165 15 0ad 0 <name>
+
+[DIALOG d_key_aspects BUTTON]
+ON=1
+IF (<ISBADSTR <ARGTXT[0]>>)
+src.sysmessage <def.house_invalidchars_msg>
+sdialog d_key_aspects
+return 1
+ENDIF
+name=<strsub 0 20 <argtxt[0]>>
+
+//////////////////////
+
+[ITEMDEF i_bau_seguro]
+NAME=Safe Chest
+ID=i_chest_metal
+TYPE=t_container
+
+ON=@Create
+COLOR=07a1
+
+ON=@Dclick
+IF !(<SRC>==<LINK>) && !(<SRC.ISGM>)
+RETURN 1
+ENDIF
+
+/////////////////////
+
+[FUNCTION ESVAZIARBAUSEGURO]
+LOCAL._FOR=0
+LOCAL.ITEMS=0
+FORCONT <UID> 0
+LOCAL._FOR += 1
+TRY VAR.ITEM<EVAL <LOCAL._FOR>>=<UID>
+LOCAL.ITEMS += 1
+ENDFOR
+FOR <LOCAL.ITEMS>
+TRY UID.<VAR.ITEM<EVAL <LOCAL._FOR>>>.CONT=<ARGN1>
+TRY VAR.ITEM<EVAL <LOCAL._FOR>>=
+ENDFOR
+
+[FUNCTION HASVENDORS]
+IF (0<DEF.HOUSE_CHECKFORVENDORS>)
+FORCHARS 30
+IF (<BASEID>==c_vendor_pod)
+IF (<REGION.UID>==<ARGN1>) && (<TAG0.OWNER>==<SRC>)
+RETURN 1
+ENDIF
+ENDIF
+ENDFOR
+ENDIF
+RETURN 0
+
+//////////////////
+
+[ITEMDEF 0bd1]
+DEFNAME=i_sign_brass
+TYPE=T_SCRIPT
+DUPELIST=0bd0,0bcf,0bd1,0ba4,0ba6,0ba8,0baa,0bac,0bae,0bb0,0bb2,0bb4,0bb6,0bb8,0bba,0bbc,0bbe,0bc0,0bc2,0bc4,0bc6,0bc8,0bca,0bcc,0bce,0bd0,0bd2,0bd4,0bd6,0bd8,0bda,0bdc,0bde,0be0,0be2,0be4,0be6,0be8,0bea,0bec,0bee,0bf0,0bf2,0bf4,0bf6,0bf8,0bfa,0bfc,0bfe,0c00,0c02,0c04,0c06,0c08,0c0a,0c0c
+
+CATEGORY=Decoration - Signs
+SUBSECTION=Blank
+DESCRIPTION=Brass Blank
+
+ON=@Create
+tag.feitaem=<rtime.day>.<rtime.month>.<rtime.year>
+
+ON=@DCLICK
+IF !(<TAG0.FIRSTDCLICK>)
+TAG.FIRSTDCLICK=1
+TIMER=<EVAL 60*60*24>
+ENDIF
+IF !(<uid.<region.uid>.tag0.trancas>) && (<BASEID>==i_sign_brass) && (<UID.<REGION.UID>.MORE1>==<SRC>) && (<uid.<region.uid>.type>==t_multi)
+try uid.<region.uid>.tag.trancas=0
+ENDIF
+IF (<BASEID>==i_sign_brass) && (<uid.<region.uid>.type>==t_multi) && (<UID.<REGION.UID>.MORE1>==<SRC>) || (<src.isgm>)
+SDIALOG d_house_pod 1
+return 1
+ELIF (<BASEID>==i_sign_brass) && (<uid.<region.uid>.type>==t_multi) && !(<UID.<REGION.UID>.MORE1>==<SRC>) && !(<src.isgm>)
+SDIALOG d_house_pod 7
+return 1
+ENDIF
+
+ON=@Timer
+IF !(<UID.<UID.<REGION.UID>.MORE1>.ISPLAYER>)
+try uid.<region.uid>.f_remove_itens_floor
+try uid.<region.uid>.remove
+ELSE
+TIMER=<EVAL 60*60*24>
+ENDIF
+RETURN 1
+
+/////////////////
+
+[FUNCTION rtime.year]
+return <strsub 0 4 <serv.rtime>>
+
+[FUNCTION rtime.month]
+return <strsub 5 2 <serv.rtime>>
+
+[FUNCTION rtime.day]
+return <strsub 8 2 <serv.rtime>>
+
+[FUNCTION rtime.hour]
+return <strsub 10 3 <serv.rtime>>
+
+//////////////////
+
+[function removercasa]
+IF !(0<argn2>)
+LOCAL.TRANSFER=0
+ELSE
+LOCAL.TRANSFER=<argn2>
+ENDIF
+FORCHARMEMORYTYPE 0100
+IF (<LINK.TYPE>==t_multi)
+IF (<LINK>==<ARGN1>)
+IF !(<LOCAL.TRANSFER>)
+LINK.REMOVE
+REMOVE
+RETURN 1
+ENDIF
+LINK.MORE1=<LOCAL.TRANSFER>
+CONT=<LOCAL.TRANSFER>
+ENDIF
+ENDIF
+ENDFOR
+
+////////////////////
+
+[FUNCTION consumegold]
+IF (<TOTALGOLD> < <ARGN1>)
+RETURN 1
+ENDIF
+LOCAL.AMOUNT=<ARGN1>
+WHILE (<LOCAL.AMOUNT>)
+IF (0<FINDLAYER.21.FINDID.i_gold>)
+LOCAL.GOLD=<FINDLAYER.21.FINDID.i_gold.amount>
+IF (<EVAL <LOCAL.AMOUNT>-<LOCAL.GOLD>> < 0)
+FINDLAYER.21.FINDID.i_gold.AMOUNT -= <LOCAL.AMOUNT>
+LOCAL.AMOUNT=0
+ELSE
+FINDLAYER.21.FINDID.i_gold.remove
+LOCAL.AMOUNT -= <LOCAL.GOLD>
+ENDIF
+ELIF (0<FINDLAYER.29.FINDID.i_gold>)
+LOCAL.GOLD=<FINDLAYER.29.FINDID.i_gold.amount>
+IF (<EVAL <LOCAL.AMOUNT>-<LOCAL.GOLD>> < 0)
+FINDLAYER.29.FINDID.i_gold.AMOUNT -= <LOCAL.AMOUNT>
+LOCAL.AMOUNT=0
+ELSE
+FINDLAYER.29.FINDID.i_gold.remove
+LOCAL.AMOUNT -= <LOCAL.GOLD>
+ENDIF
+ENDIF
+ENDWHILE
+UPDATE
+
+/////////////
+
+[FUNCTION isbadstr]
+IF !(<STRPOS 0 41 <ARGS>>=-1) || !(<EVAL STRLEN(<ARGS>)>) || (STRMATCH("*[[]*","<ARGS>")) || (STRMATCH("*]*","<ARGS>")) || (STRMATCH("*[(]*","<ARGS>")) || (STRMATCH("*-*","<ARGS>")) || (STRMATCH("*[*}`>?´;:^%$¨!"<#.@_~|=+&/æ{]*","<ARGS>"))
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+//////////
+
+[events e_house_safe]
+ON=@GETHIT
+IF (<DEF.HOUSE_CANPUTPROTECTIONS>)
+IF (<UID.<REGION.UID>.TYPE>==t_multi)
+IF (<UID.<REGION.UID>.MORE1>==<UID>)
+IF (<UID.<REGION.UID>.TAG0.PROTECAO>)
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+
+ON=@Spelleffect
+IF (<DEF.HOUSE_CANPUTPROTECTIONS>)
+IF (<SERV.SPELL.<ARGN1>.FLAGS>&spellflag_harm)
+IF (<UID.<REGION.UID>.TYPE>==t_multi)
+IF (<UID.<REGION.UID>.MORE1>==<UID>)
+IF (<UID.<REGION.UID>.TAG0.PROTECAO>)
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+
+///////////////
+
+[ITEMDEF 0100e]
+DEFNAME=i_key_copper
+RESOURCES=3 i_ingot_iron
+WEIGHT=1
+TYPE=T_KEY
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Keys
+DESCRIPTION=Copper Key
+SKILLMAKE=TINKERING 43.0,t_tinker_tools
+RESOURCES2=1 i_ingot_copper
+
+ON=@CLICK
+LOCAL.TMP=<OBJ>
+OBJ=<UID.<MORE1>.REGION.UID>
+IF (<OBJ.TYPE>==t_multi) || (<OBJ.TYPE>==t_ship)
+sdialog d_key_aspects
+ENDIF
+OBJ=<LOCAL.TMP>
+
+////////////
+
+[TYPEDEF t_door_guild]
+ON=@DCLICK
+IF (<SRC>!=<UID.<REGION.UID>.MORE1>)
+IF (<SRC.GUILD>==<UID.<UID.<REGION.UID>.MORE1>.GUILD>) && (<UID.<UID.<REGION.UID>.MORE1>.GUILD>)
+TIMER 0
+RETURN 1
+ENDIF
+ENDIF
+
+///////////
+
+[function totalgold]
+RETURN <eval <rescount i_gold>+<findlayer.29.rescount i_gold>>
+
+[EOF]

@@ -1,0 +1,1337 @@
+/////////////////////////////////////////////////////
+//CREATED BY RASZITH
+//
+//You need to add the dragon hides to each of the 
+//the dragons "carve" loot (the resources) like this:
+//
+//[CHARDEF 01016]
+//DEFNAME=c_m_wyvern
+//NAME=Wyvern
+//ID=c_DRAGON_RED
+//DAM=3,24
+//ARMOR=20
+//RESOURCES=50 i_ribs_raw, {2 4} i_wyvern_hide <----------- That is the Hide
+//FOODTYPE=25 t_meat_raw
+//SHELTER=r_caves,r_dungeon
+//DESIRES=i_gold
+//AVERSIONS=r_civilization,r_water
+//
+//CATEGORY=Monsters
+//SUBSECTION=Dragons and Drakes
+//DESCRIPTION=Wyvern
+//
+//This NPC is the wyvern found in spherechar_evil.scp.
+//With the wyvern hide set like that, when a wyvern
+//is carved with a blade, the hides will appear on
+//the corpse.
+//
+//After thats added you will need to add the dragon
+//hide armour to the skill menu. The skill menu for
+//the hide selections are already done but you will
+//need to add these skill menus to the sphereskill.scp
+//skillmenus in order for them to show in the menus.
+//
+//IT MUST BE IN THE TAILORING MENU UNLESS YOU CHANGE
+//THE SCRIPT OR IT WON'T WORK.
+//
+//Contents:
+//Skillmenus- Line 44-237
+//Dragon hide Armour- Line 240-1109
+//Hides- Line 1112-1335
+/////////////////////////////////////////////////////////
+
+///////////////////SKILL MENUS
+[SKILLMENU sm_studded_dragon_armour]
+Studded Dragon Armour
+
+ON=i_studded_TUNIC Studded Black Drake Armour
+SKILLMENU=sm_studded_black_drake
+
+ON=i_studded_TUNIC Studded Red Drake Armour
+SKILLMENU=sm_studded_red_drake
+
+ON=i_studded_TUNIC Studded Gray Drake Armour
+SKILLMENU=sm_studded_gray_drake
+
+ON=i_studded_TUNIC Studded Red Dragon Armour
+SKILLMENU=sm_studded_red_dragon
+
+ON=i_studded_TUNIC Studded Green Dragon Armour
+SKILLMENU=sm_studded_green_dragon
+
+ON=i_studded_TUNIC Studded Crystal Dragon Armour
+SKILLMENU=sm_studded_crystal_dragon
+
+ON=i_studded_TUNIC Studded Wyvern Armour
+SKILLMENU=sm_studded_wyvern
+
+ON=i_studded_TUNIC Studded Wyrm Armour
+SKILLMENU=sm_studded_wyrm
+
+[SKILLMENU sm_studded_black_drake]
+Studded Black Drake Armour
+
+ON=i_black_drake_studded_sleeves <name> (<resmake>)
+MAKEITEM=i_black_drake_studded_sleeves
+
+ON=i_black_drake_studded_gorget <name> (<resmake>)
+MAKEITEM=i_black_drake_studded_gorget
+
+ON=i_black_drake_studded_gloves <name> (<resmake>)
+MAKEITEM=i_black_drake_studded_gloves
+
+ON=i_black_drake_studded_leggings <name> (<resmake>)
+MAKEITEM=i_black_drake_studded_leggings
+
+ON=i_black_drake_studded_tunic <name> (<resmake>)
+MAKEITEM=i_black_drake_studded_tunic
+
+ON=i_black_drake_studded_cap <name> (<resmake>)
+MAKEITEM=i_black_drake_studded_cap
+
+[SKILLMENU sm_studded_red_drake]
+Studded Red Drake Armour
+
+ON=i_red_drake_studded_sleeves <name> (<resmake>)
+MAKEITEM=i_red_drake_studded_sleeves
+
+ON=i_red_drake_studded_gorget <name> (<resmake>)
+MAKEITEM=i_red_drake_studded_gorget
+
+ON=i_red_drake_studded_gloves <name> (<resmake>)
+MAKEITEM=i_red_drake_studded_gloves
+
+ON=i_red_drake_studded_leggings <name> (<resmake>)
+MAKEITEM=i_red_drake_studded_leggings
+
+ON=i_red_drake_studded_tunic <name> (<resmake>)
+MAKEITEM=i_red_drake_studded_tunic
+
+ON=i_red_drake_studded_cap <name> (<resmake>)
+MAKEITEM=i_red_drake_studded_cap
+
+[SKILLMENU sm_studded_gray_drake]
+Studded Gray Drake Armour
+
+ON=i_gray_drake_studded_sleeves <name> (<resmake>)
+MAKEITEM=i_gray_drake_studded_sleeves
+
+ON=i_gray_drake_studded_gorget <name> (<resmake>)
+MAKEITEM=i_gray_drake_studded_gorget
+
+ON=i_gray_drake_studded_gloves <name> (<resmake>)
+MAKEITEM=i_gray_drake_studded_gloves
+
+ON=i_gray_drake_studded_leggings <name> (<resmake>)
+MAKEITEM=i_gray_drake_studded_leggings
+
+ON=i_gray_drake_studded_tunic <name> (<resmake>)
+MAKEITEM=i_gray_drake_studded_tunic
+
+ON=i_gray_drake_studded_cap <name> (<resmake>)
+MAKEITEM=i_gray_drake_studded_cap
+
+[SKILLMENU sm_studded_green_dragon]
+Studded Green Dragon Armour
+
+ON=i_green_dragon_studded_sleeves <name> (<resmake>)
+MAKEITEM=i_green_dragon_studded_sleeves
+
+ON=i_green_dragon_studded_gorget <name> (<resmake>)
+MAKEITEM=i_green_dragon_studded_gorget
+
+ON=i_green_dragon_studded_gloves <name> (<resmake>)
+MAKEITEM=i_green_dragon_studded_gloves
+
+ON=i_green_dragon_studded_leggings <name> (<resmake>)
+MAKEITEM=i_green_dragon_studded_leggings
+
+ON=i_green_dragon_studded_tunic <name> (<resmake>)
+MAKEITEM=i_green_dragon_studded_tunic
+
+ON=i_green_dragon_studded_cap <name> (<resmake>)
+MAKEITEM=i_green_dragon_studded_cap
+
+[SKILLMENU sm_studded_red_dragon]
+Studded Red Dragon Armour
+
+ON=i_red_dragon_studded_sleeves <name> (<resmake>)
+MAKEITEM=i_red_dragon_studded_sleeves
+
+ON=i_red_dragon_studded_gorget <name> (<resmake>)
+MAKEITEM=i_red_dragon_studded_gorget
+
+ON=i_red_dragon_studded_gloves <name> (<resmake>)
+MAKEITEM=i_red_dragon_studded_gloves
+
+ON=i_red_dragon_studded_leggings <name> (<resmake>)
+MAKEITEM=i_red_dragon_studded_leggings
+
+ON=i_red_dragon_studded_tunic <name> (<resmake>)
+MAKEITEM=i_red_dragon_studded_tunic
+
+ON=i_red_dragon_studded_cap <name> (<resmake>)
+MAKEITEM=i_red_dragon_studded_cap
+
+[SKILLMENU sm_studded_crystal_dragon]
+Studded Crystal Dragon Armour
+
+ON=i_crystal_dragon_studded_sleeves <name> (<resmake>)
+MAKEITEM=i_crystal_dragon_studded_sleeves
+
+ON=i_crystal_dragon_studded_gorget <name> (<resmake>)
+MAKEITEM=i_crystal_dragon_studded_gorget
+
+ON=i_crystal_dragon_studded_gloves <name> (<resmake>)
+MAKEITEM=i_crystal_dragon_studded_gloves
+
+ON=i_crystal_dragon_studded_leggings <name> (<resmake>)
+MAKEITEM=i_crystal_dragon_studded_leggings
+
+ON=i_crystal_dragon_studded_tunic <name> (<resmake>)
+MAKEITEM=i_crystal_dragon_studded_tunic
+
+ON=i_crystal_dragon_studded_cap <name> (<resmake>)
+MAKEITEM=i_crystal_dragon_studded_cap
+
+[SKILLMENU sm_studded_wyrm]
+Studded Wyrm Armour
+
+ON=i_wyrm_studded_sleeves <name> (<resmake>)
+MAKEITEM=i_wyrm_studded_sleeves
+
+ON=i_wyrm_studded_gorget <name> (<resmake>)
+MAKEITEM=i_wyrm_studded_gorget
+
+ON=i_wyrm_studded_gloves <name> (<resmake>)
+MAKEITEM=i_wyrm_studded_gloves
+
+ON=i_wyrm_studded_leggings <name> (<resmake>)
+MAKEITEM=i_wyrm_studded_leggings
+
+ON=i_wyrm_studded_tunic <name> (<resmake>)
+MAKEITEM=i_wyrm_studded_tunic
+
+ON=i_wyrm_studded_cap <name> (<resmake>)
+MAKEITEM=i_wyrm_studded_cap
+
+[SKILLMENU sm_studded_wyvern]
+Studded Wyvern Armour
+
+ON=i_wyvern_studded_sleeves <name> (<resmake>)
+MAKEITEM=i_wyvern_studded_sleeves
+
+ON=i_wyvern_studded_gorget <name> (<resmake>)
+MAKEITEM=i_wyvern_studded_gorget
+
+ON=i_wyvern_studded_gloves <name> (<resmake>)
+MAKEITEM=i_wyvern_studded_gloves
+
+ON=i_wyvern_studded_leggings <name> (<resmake>)
+MAKEITEM=i_wyvern_studded_leggings
+
+ON=i_wyvern_studded_tunic <name> (<resmake>)
+MAKEITEM=i_wyvern_studded_tunic
+
+ON=i_wyvern_studded_cap <name> (<resmake>)
+MAKEITEM=i_wyvern_studded_cap
+
+/////////////////////////////////////////////////WYRM//
+[ITEMDEF i_wyrm_studded_cap]
+NAME=wyrm studded cap
+ID=i_leather_cap
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=120
+
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+RESOURCES=8 i_wyrm_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyrm Studded Cap
+
+ON=@Create
+	COLOR=0755
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyrm_studded_sleeves]
+NAME=wyrm studded sleeves
+ID=i_studded_sleeves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=120
+
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+RESOURCES=4 i_wyrm_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyrm Studded Sleeves
+
+ON=@Create
+	COLOR=0755
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyrm_studded_Leggings]
+NAME=wyrm studded leggings
+ID=013d8
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=120
+
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+RESOURCES=10 i_wyrm_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyrm Studded Leggings
+
+ON=@Create
+	COLOR=0755
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyrm_studded_Tunic]
+NAME=wyrm studded tunic
+ID=i_studded_tunic
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=120
+
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+RESOURCES=12 i_wyrm_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyrm Studded Tunic
+
+ON=@Create
+	COLOR=0755
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyrm_studded_Gloves]
+NAME=wyrm studded gloves
+ID=i_leather_gloves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=120
+
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+RESOURCES=3 i_wyrm_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyrm Studded Gloves
+
+ON=@Create
+	COLOR=0755
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyrm_studded_gorget]
+NAME=wyrm studded gorget
+ID=i_studded_gorget
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=120
+
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+RESOURCES=3 i_wyrm_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyrm Studded Gorget
+
+ON=@Create
+	COLOR=0755
+	HITPOINTS={50 150}
+
+/////////////////////////////////////////////////WYVERN//
+[ITEMDEF i_wyvern_studded_cap]
+NAME=wyvern studded cap
+ID=i_leather_cap
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=110
+
+SKILLMAKE=TAILORING 95.0, t_sewing_kit
+RESOURCES=8 i_wyvern_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyvern Studded Cap
+
+ON=@Create
+	COLOR=05df
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyvern_studded_sleeves]
+NAME=wyvern studded sleeves
+ID=i_studded_sleeves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=110
+
+SKILLMAKE=TAILORING 95.0, t_sewing_kit
+RESOURCES=4 i_wyvern_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyvern Studded Sleeves
+
+ON=@Create
+	COLOR=05df
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyvern_studded_Leggings]
+NAME=wyvern studded leggings
+ID=013d8
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=110
+
+SKILLMAKE=TAILORING 95.0, t_sewing_kit
+RESOURCES=10 i_wyvern_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyvern Studded Leggings
+
+ON=@Create
+	COLOR=05df
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyvern_studded_Tunic]
+NAME=wyvern studded tunic
+ID=i_studded_tunic
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=110
+
+SKILLMAKE=TAILORING 95.0, t_sewing_kit
+RESOURCES=12 i_wyvern_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyvern Studded Tunic
+
+ON=@Create
+	COLOR=05df
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyvern_studded_Gloves]
+NAME=wyvern studded gloves
+ID=i_leather_gloves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=110
+
+SKILLMAKE=TAILORING 95.0, t_sewing_kit
+RESOURCES=3 i_wyvern_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyvern Studded Gloves
+
+ON=@Create
+	COLOR=05df
+	HITPOINTS={50 150}
+
+[ITEMDEF i_wyvern_studded_gorget]
+NAME=wyvern studded gorget
+ID=i_studded_gorget
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=110
+
+SKILLMAKE=TAILORING 95.0, t_sewing_kit
+RESOURCES=3 i_wyvern_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Wyvern Studded Gorget
+
+ON=@Create
+	COLOR=05df
+	HITPOINTS={50 150}
+
+/////////////////////////////////////////////////CRYSTAL DRAGON//
+[ITEMDEF i_crystal_dragon_studded_cap]
+NAME=crystal dragon studded cap
+ID=i_leather_cap
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=100
+
+SKILLMAKE=TAILORING 91.0, t_sewing_kit
+RESOURCES=8 i_crystal_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Crystal Dragon Studded Cap
+
+ON=@Create
+	COLOR=0482
+	HITPOINTS={50 150}
+
+[ITEMDEF i_crystal_dragon_studded_sleeves]
+NAME=crystal dragon studded sleeves
+ID=i_studded_sleeves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=100
+
+SKILLMAKE=TAILORING 91.0, t_sewing_kit
+RESOURCES=4 i_crystal_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Crystal Dragon Studded Sleeves
+
+ON=@Create
+	COLOR=0482
+	HITPOINTS={50 150}
+
+[ITEMDEF i_crystal_dragon_studded_Leggings]
+NAME=crystal dragon studded leggings
+ID=013d8
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=100
+
+SKILLMAKE=TAILORING 91.0, t_sewing_kit
+RESOURCES=10 i_crystal_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Crystal Dragon Studded Leggings
+
+ON=@Create
+	COLOR=0482
+	HITPOINTS={50 150}
+
+[ITEMDEF i_crystal_dragon_studded_Tunic]
+NAME=crystal dragon studded tunic
+ID=i_studded_tunic
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=100
+
+SKILLMAKE=TAILORING 91.0, t_sewing_kit
+RESOURCES=12 i_crystal_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Crystal Dragon Studded Tunic
+
+ON=@Create
+	COLOR=0482
+	HITPOINTS={50 150}
+
+[ITEMDEF i_crystal_dragon_studded_Gloves]
+NAME=crystal dragon studded gloves
+ID=i_leather_gloves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=100
+
+SKILLMAKE=TAILORING 91.0, t_sewing_kit
+RESOURCES=3 i_crystal_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Crystal Dragon Studded Gloves
+
+ON=@Create
+	COLOR=0482
+	HITPOINTS={50 150}
+
+[ITEMDEF i_crystal_Dragon_studded_gorget]
+NAME=crystal dragon studded gorget
+ID=i_studded_gorget
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=100
+
+SKILLMAKE=TAILORING 91.0, t_sewing_kit
+RESOURCES=3 i_crystal_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Crystal Dragon Studded Gorget
+
+ON=@Create
+	COLOR=0482
+	HITPOINTS={50 150}
+
+/////////////////////////////////////////////////RED DRAGON//
+[ITEMDEF i_red_dragon_studded_cap]
+NAME=red dragon studded cap
+ID=i_leather_cap
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=90
+
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=8 i_red_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Dragon Studded Cap
+
+ON=@Create
+	COLOR=0660
+	HITPOINTS={50 150}
+
+[ITEMDEF i_Red_dragon_studded_sleeves]
+NAME=red dragon studded sleeves
+ID=i_studded_sleeves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=90
+
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=4 i_red_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Dragon Studded Sleeves
+
+ON=@Create
+	COLOR=0660
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_dragon_studded_Leggings]
+NAME=red dragon studded leggings
+ID=013d8
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=90
+
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=10 i_red_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Dragon Studded Leggings
+
+ON=@Create
+	COLOR=0660
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_dragon_studded_Tunic]
+NAME=red dragon studded tunic
+ID=i_studded_tunic
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=90
+
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=12 i_red_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Dragon Studded Tunic
+
+ON=@Create
+	COLOR=0660
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_dragon_studded_Gloves]
+NAME=red dragon studded gloves
+ID=i_leather_gloves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=90
+
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=3 i_red_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Dragon Studded Gloves
+
+ON=@Create
+	COLOR=0660
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_Dragon_studded_gorget]
+NAME=red dragon studded gorget
+ID=i_studded_gorget
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=90
+
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=3 i_red_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Dragon Studded Gorget
+
+ON=@Create
+	COLOR=0660
+	HITPOINTS={50 150}
+
+/////////////////////////////////////////////////GREEN DRAGON//
+[ITEMDEF i_green_dragon_studded_cap]
+NAME=green dragon studded cap
+ID=i_leather_cap
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=88
+
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+RESOURCES=8 i_green_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Green Dragon Studded Cap
+
+ON=@Create
+	COLOR=058e
+	HITPOINTS={50 150}
+
+[ITEMDEF i_green_dragon_studded_sleeves]
+NAME=green dragon studded sleeves
+ID=i_studded_sleeves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=88
+
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+RESOURCES=4 i_green_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Green Dragon Studded Sleeves
+
+ON=@Create
+	COLOR=058e
+	HITPOINTS={50 150}
+
+[ITEMDEF i_green_dragon_studded_Leggings]
+NAME=green dragon studded leggings
+ID=013d8
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=88
+
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+RESOURCES=10 i_green_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Green Dragon Studded Leggings
+
+ON=@Create
+	COLOR=058e
+	HITPOINTS={50 150}
+
+[ITEMDEF i_green_dragon_studded_Tunic]
+NAME=green dragon studded tunic
+ID=i_studded_tunic
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=88
+
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+RESOURCES=12 i_green_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Green Dragon Studded Tunic
+
+ON=@Create
+	COLOR=058e
+	HITPOINTS={50 150}
+
+[ITEMDEF i_green_dragon_studded_Gloves]
+NAME=green dragon studded gloves
+ID=i_leather_gloves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=88
+
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+RESOURCES=3 i_green_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Green Dragon Studded Gloves
+
+ON=@Create
+	COLOR=058e
+	HITPOINTS={50 150}
+
+[ITEMDEF i_green_Dragon_studded_gorget]
+NAME=green dragon studded gorget
+ID=i_studded_gorget
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=88
+
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+RESOURCES=3 i_green_dragon_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Green Dragon Studded Gorget
+
+ON=@Create
+	COLOR=058e
+	HITPOINTS={50 150}
+
+/////////////////////////////////////////////////GRAY DRAKE//
+[ITEMDEF i_gray_drake_studded_cap]
+NAME=gray drake studded cap
+ID=i_leather_cap
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=70
+
+SKILLMAKE=TAILORING 75.0, t_sewing_kit
+RESOURCES=8 i_gray_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Gray Drake Studded Cap
+
+ON=@Create
+	COLOR=03c1
+	HITPOINTS={50 150}
+
+[ITEMDEF i_gray_drake_studded_sleeves]
+NAME=gray drake studded sleeves
+ID=i_studded_sleeves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=70
+
+SKILLMAKE=TAILORING 75.0, t_sewing_kit
+RESOURCES=4 i_gray_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Gray Drake Studded Sleeves
+
+ON=@Create
+	COLOR=03c1
+	HITPOINTS={50 150}
+
+[ITEMDEF i_gray_drake_studded_Leggings]
+NAME=gray drake studded leggings
+ID=013d8
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=70
+
+SKILLMAKE=TAILORING 75.0, t_sewing_kit
+RESOURCES=10 i_gray_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Gray Drake Studded Leggings
+
+ON=@Create
+	COLOR=03c1
+	HITPOINTS={50 150}
+
+[ITEMDEF i_gray_drake_studded_Tunic]
+NAME=gray drake studded tunic
+ID=i_studded_tunic
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=70
+
+SKILLMAKE=TAILORING 75.0, t_sewing_kit
+RESOURCES=12 i_gray_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Gray Drake Studded Tunic
+
+ON=@Create
+	COLOR=03c1
+	HITPOINTS={50 150}
+
+[ITEMDEF i_gray_drake_studded_Gloves]
+NAME=gray drake studded gloves
+ID=i_leather_gloves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=70
+
+SKILLMAKE=TAILORING 75.0, t_sewing_kit
+RESOURCES=3 i_gray_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Gray Drake Studded Gloves
+
+ON=@Create
+	COLOR=03c1
+	HITPOINTS={50 150}
+
+[ITEMDEF i_gray_drake_studded_gorget]
+NAME=gray drake studded gorget
+ID=i_studded_gorget
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=70
+
+SKILLMAKE=TAILORING 75.0, t_sewing_kit
+RESOURCES=3 i_gray_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Gray Drake Studded Gorget
+
+ON=@Create
+	COLOR=03c1
+	HITPOINTS={50 150}
+
+/////////////////////////////////////////////////RED DRAKE//
+[ITEMDEF i_red_drake_studded_cap]
+NAME=red drake studded cap
+ID=i_leather_cap
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=69
+
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+RESOURCES=8 i_red_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Drake Studded Cap
+
+ON=@Create
+	COLOR=0672
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_drake_studded_sleeves]
+NAME=red drake studded sleeves
+ID=i_studded_sleeves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=69
+
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+RESOURCES=4 i_red_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Drake Studded Sleeves
+
+ON=@Create
+	COLOR=0672
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_drake_studded_Leggings]
+NAME=red drake studded leggings
+ID=013d8
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=69
+
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+RESOURCES=10 i_red_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Drake Studded Leggings
+
+ON=@Create
+	COLOR=0672
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_drake_studded_Tunic]
+NAME=red drake studded tunic
+ID=i_studded_tunic
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=69
+
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+RESOURCES=12 i_red_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Drake Studded Tunic
+
+ON=@Create
+	COLOR=0672
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_drake_studded_Gloves]
+NAME=red drake studded gloves
+ID=i_leather_gloves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=69
+
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+RESOURCES=3 i_red_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Drake Studded Gloves
+
+ON=@Create
+	COLOR=0672
+	HITPOINTS={50 150}
+
+[ITEMDEF i_red_drake_studded_gorget]
+NAME=red drake studded gorget
+ID=i_studded_gorget
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=69
+
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+RESOURCES=3 i_red_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Red Drake Studded Gorget
+
+ON=@Create
+	COLOR=0672
+	HITPOINTS={50 150}
+
+/////////////////////////////////////////////////BLACK DRAKE//
+[ITEMDEF i_black_drake_studded_cap]
+NAME=black drake studded cap
+ID=i_leather_cap
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=68
+
+SKILLMAKE=TAILORING 73.0, t_sewing_kit
+RESOURCES=8 i_black_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Black Drake Studded Cap
+
+ON=@Create
+	COLOR=0455
+	HITPOINTS={50 150}
+
+[ITEMDEF i_black_drake_studded_sleeves]
+NAME=black drake studded sleeves
+ID=i_studded_sleeves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=68
+
+SKILLMAKE=TAILORING 73.0, t_sewing_kit
+RESOURCES=4 i_black_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Black Drake Studded Sleeves
+
+ON=@Create
+	COLOR=0455
+	HITPOINTS={50 150}
+
+[ITEMDEF i_black_drake_studded_Leggings]
+NAME=black drake studded leggings
+ID=013d8
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=68
+
+SKILLMAKE=TAILORING 73.0, t_sewing_kit
+RESOURCES=10 i_black_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Black Drake Studded Leggings
+
+ON=@Create
+	COLOR=0455
+	HITPOINTS={50 150}
+
+[ITEMDEF i_black_drake_studded_Tunic]
+NAME=black drake studded tunic
+ID=i_studded_tunic
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=68
+
+SKILLMAKE=TAILORING 73.0, t_sewing_kit
+RESOURCES=12 i_black_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Black Drake Studded Tunic
+
+ON=@Create
+	COLOR=0455
+	HITPOINTS={50 150}
+
+[ITEMDEF i_black_drake_studded_Gloves]
+NAME=black drake studded gloves
+ID=i_leather_gloves
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=68
+
+SKILLMAKE=TAILORING 73.0, t_sewing_kit
+RESOURCES=3 i_black_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Black Drake Studded Gloves
+
+ON=@Create
+	COLOR=0455
+	HITPOINTS={50 150}
+
+[ITEMDEF i_black_drake_studded_gorget]
+NAME=black drake studded gorget
+ID=i_studded_gorget
+TYPE=T_ARMOR
+WEIGHT=1
+ARMOR=68
+
+SKILLMAKE=TAILORING 73.0, t_sewing_kit
+RESOURCES=3 i_black_drake_Hide
+
+CATEGORY=Monster Stuff
+SUBSECTION=Tailored Armour
+DESCRIPTION=Black Drake Studded Gorget
+
+ON=@Create
+	COLOR=0455
+	HITPOINTS={50 150}
+
+////////////////////////////////////////////////////////////////HIDES
+[ITEMDEF i_crystal_dragon_Hide]
+NAME=crystal dragon hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0482
+
+CATEGORY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Dragon Hide (Crystal)
+
+[ITEMDEF i_red_dragon_Hide]
+NAME=red dragon hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0660
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Dragon Hide (Red)
+
+[ITEMDEF i_green_dragon_Hide]
+NAME=green dragon hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=058e
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Dragon Hide (Green)
+
+[ITEMDEF i_gray_drake_Hide]
+NAME=gray drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=03c1
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Gray)
+
+[ITEMDEF i_red_drake_Hide]
+NAME=red drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0672
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Red)
+
+[ITEMDEF i_black_drake_Hide]
+NAME=black drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0455
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Black)
+
+[ITEMDEF i_blue_drake_Hide]
+NAME=blue drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0534
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Blue)
+
+[ITEMDEF i_copper_drake_Hide]
+NAME=copper drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=091
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Copper)
+
+[ITEMDEF i_crystal_drake_Hide]
+NAME=crystal drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0482
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Crystal)
+
+[ITEMDEF i_gold_drake_Hide]
+NAME=gold drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=033
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Gold)
+
+[ITEMDEF i_green_drake_Hide]
+NAME=green drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0175
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Green)
+
+[ITEMDEF i_silver_drake_Hide]
+NAME=silver drake hide
+ID=4216
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=037a
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Hides
+DESCRIPTION=Drake Hide (Silver)
+
+[ITEMDEF i_ice_dragon_blood]
+NAME=ice dragon blood
+ID=i_reag_blood_vial
+TYPE=T_normal
+Value=3
+Pile=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0480
+
+CATEGOTY=Monster Stuff
+SUBSECTION=Blood
+DESCRIPTION=Dragon Blood (Ice)
+
+[ITEMDEF i_wyvern_hide]
+NAME=wyvern hide
+ID=4216
+TYPE=T_Normal
+VALUE=3
+PILE=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=05df
+
+CATEGORY=Monster Stuff
+SUBSECTION=Hide
+DESCRIPTION=Wyvern Hide
+
+[ITEMDEF i_wyrm_hide]
+NAME=wyrm hide
+ID=4216
+TYPE=T_Normal
+VALUE=3
+PILE=.1
+WEIGHT=1
+
+ON=@Create
+COLOR=0755
+
+CATEGORY=Monster Stuff
+SUBSECTION=Hide
+DESCRIPTION=Wyrm Hide
+
+[EOF]

@@ -1,0 +1,471 @@
+[ITEMDEF i_race_Shapeshifter_PolymorphStone]
+DEFNAME=i_race_Shapeshifter_PolymorphStone
+ID=i_crystal_green
+WEIGHT=1
+
+CATEGORY=Race Items
+SUBSECTION=Shapeshifter
+DESCRIPTION=Polymorph Stone
+
+ON=@Create
+	NAME=Shapeshifter Stone
+	ATTR=8010
+
+ON=@DCLICK
+	IF (! <SRC.TAG.Race>==RACE_Shapeshifter)
+		// Makrooh Note:
+		// we should turn them into a toad
+		// and then force them to seek out
+		// a shapewshifter enchanter to reverse the effect
+		SRC.MESSAGE You're not a Shapeshifter!
+		SRC.CONSUME 1 i_race_Shapeshifter_PolymorphStone
+		RETURN 1
+	ELSEIF <TIMER>>0
+		SRC.MESSAGE It's to soon to change!
+		RETURN 1
+	ELSEIF (! <SRC.TAG.Shapeshifter_Polymorph>)
+		// Preserve current stats
+		SRC.TAG.BODY=<SRC.BODY>
+		SRC.TAG.OBODY=<SRC.OBODY>
+		SRC.TAG.STR=<SRC.STR>
+		SRC.TAG.DEX=<SRC.DEX>
+		SRC.TAG.INT=<SRC.INT>
+		SRC.TAG.FAME=<SRC.FAME>
+
+		// eventually we'll change this so
+		// that the value depends on their
+		// exp level
+		SRC.TAG.Shapeshifter_Polymorph=1
+
+		IF <SRC.TAG.Shapeshifter_Polymorph>==1
+			VAR.X=timber wolf
+			SRC.BODY=c_wolf
+			SRC.STR=170
+			SRC.DEX=145
+			SRC.INT=25
+		ENDIF
+
+		// Get them ready and go
+		SRC.MANA=0
+		SRC.STAMINA=<SRC.DEX>
+		SRC.HITPOINTS=<SRC.STR>
+		SRC.FAME=<SRC.FAME>+500
+
+		SRC.SFX=00E6
+		TIMER=120
+		SRC.FIX
+		SRC.MESSAGE Your body flows into the form of a <VAR.X>!
+		RETURN 1
+	ELSEIF <SRC.TAG.Shapeshifter_Polymorph>
+		//set body to Human and restore original stats
+		IF <SRC.TAG.BODY>
+			SRC.BODY=<SRC.TAG.BODY>
+		ENDIF
+		IF <SRC.TAG.OBODY>
+			SRC.OBODY=<SRC.TAG.OBODY>
+		ENDIF
+		IF <SRC.TAG.STR>
+			SRC.STR=<SRC.TAG.STR>
+		ENDIF
+		IF <SRC.TAG.DEX>
+			SRC.DEX=<SRC.TAG.DEX>
+		ENDIF
+		IF <SRC.TAG.INT>
+			SRC.INT=<SRC.TAG.INT>
+		ENDIF
+		IF <SRC.TAG.FAME>
+			SRC.FAME=<SRC.TAG.FAME>
+		ENDIF
+
+		SRC.TAG.Shapeshifter_Polymorph=0
+		SRC.TAG.BODY=0
+		SRC.TAG.OBODY=0
+		SRC.TAG.STR=0
+		SRC.TAG.DEX=0
+		SRC.TAG.INT=0
+		SRC.TAG.FAME=0
+
+		SRC.SFX=015D
+		TIMER=120
+		SRC.FIX
+		SRC.MESSAGE Your body returns to its original form
+	ELSE
+		SRC.MESSAGE Nothing happens - strange...
+	ENDIF   
+	RETURN 0
+
+
+[ITEMDEF i_race_vampire_PolymorphStone]
+DEFNAME=i_race_vampire_PolymorphStone
+ID=i_crystal_red
+WEIGHT=1
+
+CATEGORY=Race Items
+SUBSECTION=Vampire
+DESCRIPTION=Polymorph Stone
+
+ON=@Create
+	NAME=Vampire Stone
+
+ON=@DCLICK
+	IF (<SRC.TAG.Race> != RACE_Vampire) && (<SRC.TAG.Vampire_Polymorph> != 99)
+		SRC.MESSAGE You're not a Vampire! Uh oh...
+
+		SRC.TAG.NAME=<SRC.NAME>
+		SRC.TAG.STR=<SRC.STR>
+		SRC.TAG.DEX=<SRC.DEX>
+		SRC.TAG.INT=<SRC.INT>
+		SRC.TAG.Vampire_Polymorph=99
+
+		SRC.BODY=c_bullfrog
+		SRC.COLOR=colors_green
+		SRC.FIX
+		SRC.NAME=warty toad
+		SRC.STR=15
+		SRC.DEX=15
+		SRC.INT=15
+
+		TIMER=120
+		RETURN 1
+	ENDIF
+
+	IF <TIMER>>0
+		IF <TIMER>>100
+			VAR.X=quite feebly
+		ELSEIF <TIMER>>80
+			VAR.X=wanly
+		ELSEIF <TIMER>>55
+			VAR.X=warmly
+		ELSEIF <TIMER>>30
+			VAR.X=strongly
+		ELSE
+			VAR.X=quite strongly
+		ENDIF
+		MESSAGE The crystal pulses <VAR.X> but appears to still be charging
+		RETURN 1
+	ENDIF
+
+	IF <SRC.MANA><11
+		TIMER=15
+		IF <SRC.MANA>>4
+			SRC.MANA=<SRC.MANA>+-3
+		ELSE
+			SRC.MANA=0
+		ENDIF
+		MESSAGE The crystal pulses quite strongly but you lack sufficient mana to trigger it
+		RETURN 1
+	ENDIF
+
+	SRC.MANA=<SRC.MANA>+-10
+	IF (! <SRC.TAG.Vampire_Polymorph>)
+		// Disable race events for the duration
+
+		//Backup current stats
+		SRC.TAG.STR=<SRC.STR>
+		SRC.TAG.DEX=<SRC.DEX>
+		SRC.TAG.INT=<SRC.INT>
+		SRC.TAG.FAME=<SRC.FAME>
+		SRC.TAG.KARMA=<SRC.KARMA>
+		SRC.TAG.NAME=<SRC.NAME>
+		SRC.TAG.TITLE=<SRC.TITLE>
+
+		//Backup current skills
+		SRC.TAG.WRESTLING=<SRC.WRESTLING>
+		SRC.TAG.TACTICS=<SRC.TACTICS>
+
+		// eventually we'll change this so
+		// that the value depends on their
+		// exp level
+		SRC.TAG.Vampire_Polymorph=1
+
+		IF <SRC.TAG.Vampire_Polymorph>==1
+			SRC.BODY=c_wolf
+			SRC.COLOR=color_Vampire_skin
+			SRC.FIX
+			VAR.X=dire wolf
+			SRC.STR=RACE__STRMAX
+			SRC.DEX=RACE_Vampire_DEXMAX
+			SRC.INT=25
+			SRC.WRESTLING=RACE_Good_SkillMAX
+			SRC.TACTICS=RACE_Good_SkillMAX
+		ENDIF
+
+		SRC.NAME=<VAR.X>
+		SRC.TITLE=
+
+		SRC.MANA=0
+		SRC.STAMINA=<SRC.DEX>
+		SRC.HITPOINTS=<SRC.STR>
+		SRC.KARMA=-3000
+		SRC.FAME=3000
+
+		SRC.SFX=00E6
+		TIMER=120
+		SRC.MESSAGE Your body flows into the form of a <VAR.X>!
+		RETURN 1
+	ENDIF
+
+	//restore body and original stats
+	SRC.BODY=<SRC.OBODY>
+	SRC.COLOR=<SRC.OSKIN>
+	SRC.FIX
+
+	SRC.NAME=<SRC.TAG.NAME>
+	SRC.STR=<SRC.TAG.STR>
+	SRC.DEX=<SRC.TAG.DEX>
+	SRC.INT=<SRC.TAG.INT>
+	SRC.TAG.NAME=0
+	SRC.TAG.STR=0
+	SRC.TAG.DEX=0
+	SRC.TAG.INT=0
+	SRC.TAG.Vampire_Polymorph=0
+
+	SRC.MESSAGE Your body returns to its original form
+
+	// Let the warty toads recover
+	IF (<SRC.TAG.Race> != RACE_Vampire)
+		RETURN 1
+	ENDIF
+
+	// The rest is recovery for Vampire
+	SRC.FAME=<SRC.TAG.FAME>
+	SRC.KARMA=<SRC.TAG.KARMA>
+	SRC.TITLE=<SRC.TAG.TITLE>
+
+	//Restore skills
+	SRC.WRESTLING=<SRC.TAG.WRESTLING>
+	SRC.TACTICS=<SRC.TAG.TACTICS>
+
+	IF <SRC.MANA>><SRC.INT>
+		SRC.MANA=<SRC.INT>
+	ENDIF
+	IF <SRC.STAMINA>><SRC.DEX>
+		SRC.STAMINA=<SRC.DEX>
+	ENDIF
+	IF <SRC.HITPOINTS>><SRC.STR>
+		SRC.HITPOINTS=<SRC.STR>
+	ENDIF
+
+	SRC.TAG.FAME=0
+	SRC.TAG.KARMA=0
+	SRC.TAG.TITLE=0
+
+	SRC.SFX=015D
+	TIMER=120
+	RETURN 1
+
+
+[ITEMDEF i_race_Werven_PolymorphStone]
+DEFNAME=i_race_Werven_PolymorphStone
+ID=i_crystal_red
+WEIGHT=1
+
+CATEGORY=Race Items
+SUBSECTION=Werven
+DESCRIPTION=Polymorph Stone
+
+ON=@Create
+	NAME=Werven Stone
+
+ON=@DCLICK
+	IF (<SRC.TAG.Race> != RACE_Werven) && (<SRC.TAG.Werven_Polymorph> != 99)
+		SRC.MESSAGE You're not a Werewolf! Uh oh...
+
+		SRC.TAG.NAME=<SRC.NAME>
+		SRC.TAG.STR=<SRC.STR>
+		SRC.TAG.DEX=<SRC.DEX>
+		SRC.TAG.INT=<SRC.INT>
+		SRC.TAG.Werven_Polymorph=99
+
+		SRC.BODY=c_bullfrog
+		SRC.COLOR=colors_green
+		SRC.FIX
+		SRC.NAME=warty toad
+		SRC.STR=15
+		SRC.DEX=15
+		SRC.INT=15
+
+		TIMER=120
+		RETURN 1
+	ENDIF
+
+	IF <TIMER>>0
+		IF <TIMER>>100
+			VAR.X=quite feebly
+		ELSEIF <TIMER>>80
+			VAR.X=wanly
+		ELSEIF <TIMER>>55
+			VAR.X=warmly
+		ELSEIF <TIMER>>30
+			VAR.X=strongly
+		ELSE
+			VAR.X=quite strongly
+		ENDIF
+		MESSAGE The crystal pulses <VAR.X> but appears to still be charging
+		RETURN 1
+	ENDIF
+
+	IF <SRC.MANA><11
+		TIMER=15
+		IF <SRC.MANA>>4
+			SRC.MANA=<SRC.MANA>+-3
+		ELSE
+			SRC.MANA=0
+		ENDIF
+		MESSAGE The crystal pulses quite strongly but you lack sufficient mana to trigger it
+		RETURN 1
+	ENDIF
+
+	SRC.MANA=<SRC.MANA>+-10
+	IF (! <SRC.TAG.Werven_Polymorph>)
+
+		//Backup current stats
+		SRC.TAG.STR=<SRC.STR>
+		SRC.TAG.DEX=<SRC.DEX>
+		SRC.TAG.INT=<SRC.INT>
+		SRC.TAG.FAME=<SRC.FAME>
+		SRC.TAG.KARMA=<SRC.KARMA>
+		SRC.TAG.NAME=<SRC.NAME>
+		SRC.TAG.TITLE=<SRC.TITLE>
+
+		//Backup current skills
+		SRC.TAG.WRESTLING=<SRC.WRESTLING>
+		SRC.TAG.TACTICS=<SRC.TACTICS>
+
+		// eventually we'll change this so
+		// that the value depends on their
+		// exp level
+		SRC.TAG.Werven_Polymorph=1
+
+		IF <SRC.TAG.Werven_Polymorph>==1
+			SRC.BODY=c_wolf
+			SRC.COLOR=color_Werven_skin
+			SRC.FIX
+			VAR.X=werewolf
+			SRC.STR=RACE_Werven_STRMAX
+			SRC.DEX=RACE_Werven_DEXMAX
+			SRC.INT=25
+			SRC.WRESTLING=RACE_Good_SkillMAX
+			SRC.TACTICS=RACE_Good_SkillMAX
+		ENDIF
+
+		SRC.NAME=<VAR.X>
+		SRC.TITLE=
+
+		SRC.MANA=0
+		SRC.STAMINA=<SRC.DEX>
+		SRC.HITPOINTS=<SRC.STR>
+		SRC.KARMA=-3000
+		SRC.FAME=3000
+
+		SRC.SFX=00E6
+		TIMER=120
+		SRC.MESSAGE Your body flows into the form of a <VAR.X>!
+		RETURN 1
+	ENDIF
+
+	//restore body and original stats
+	SRC.BODY=<SRC.OBODY>
+	SRC.COLOR=<SRC.OSKIN>
+	SRC.FIX
+
+	SRC.NAME=<SRC.TAG.NAME>
+	SRC.STR=<SRC.TAG.STR>
+	SRC.DEX=<SRC.TAG.DEX>
+	SRC.INT=<SRC.TAG.INT>
+	SRC.TAG.NAME=0
+	SRC.TAG.STR=0
+	SRC.TAG.DEX=0
+	SRC.TAG.INT=0
+	SRC.TAG.Werven_Polymorph=0
+
+	SRC.MESSAGE Your body returns to its original form
+
+	// Let the warty toads recover
+	IF (<SRC.TAG.Race> != RACE_Werven)
+		RETURN 1
+	ENDIF
+
+	// The rest is recovery for werven
+	SRC.FAME=<SRC.TAG.FAME>
+	SRC.KARMA=<SRC.TAG.KARMA>
+	SRC.TITLE=<SRC.TAG.TITLE>
+
+	//Restore skills
+	SRC.WRESTLING=<SRC.TAG.WRESTLING>
+	SRC.TACTICS=<SRC.TAG.TACTICS>
+
+	IF <SRC.MANA>><SRC.INT>
+		SRC.MANA=<SRC.INT>
+	ENDIF
+	IF <SRC.STAMINA>><SRC.DEX>
+		SRC.STAMINA=<SRC.DEX>
+	ENDIF
+	IF <SRC.HITPOINTS>><SRC.STR>
+		SRC.HITPOINTS=<SRC.STR>
+	ENDIF
+
+	SRC.TAG.FAME=0
+	SRC.TAG.KARMA=0
+	SRC.TAG.TITLE=0
+
+	SRC.SFX=015D
+	TIMER=120
+	RETURN 1
+
+[ITEMDEF i_werven_torc]
+DEFNAME=i_werven_torc
+ID=i_necklace_gold
+TYPE=t_jewelry
+NAME=Werven Torc
+
+CATEGORY=Race Items
+SUBSECTION=Werven
+DESCRIPTION=Werven Torc
+
+ON=@Timer
+	IF <LINK.TAG.Race> != RACE_Werven
+		LINK.MESSAGE The metal of the torc feels cold against your skin
+		TIMER=-1
+		RETURN 0
+	ENDIF
+
+	IF ! <LINK.FINDID.i_light_source.ID>
+		NAME=glowing Werven Torc
+		COLOR=color_red2
+		LINK.equiphalo
+	ENDIF
+
+	IF (<LINK.mana> >=4)
+		LINK.mana=<LINK.mana>+-3
+		VAR.X=2
+		IF (<LINK.stamina> < <LINK.dex>)
+			LINK.stamina=<LINK.stamina> + <VAR.X>
+			VAR.X=1
+		ENDIF
+		IF (<LINK.hitpoints> < <LINK.str>)
+			LINK.hitpoints=<LINK.hitpoints> + <VAR.X>
+		ENDIF
+	ENDIF
+
+	IF (<LINK.hitpoints> < <LINK.str>) || (<LINK.stamina> < <LINK.dex>)
+		TIMER=3
+	ELSE
+		NAME=Werven Torc
+		LINK.FINDID.i_light_source.REMOVE
+		COLOR=color_o_bronze
+		TIMER=-1
+	ENDIF
+ON=@DClick
+	TIMER=1
+ON=@Equip
+	LINK=<SRC.UID>
+	TIMER=1
+ON=@Unequip
+	LINK.FINDID.i_light_source.REMOVE
+	COLOR=color_o_bronze
+	NAME=Werven Torc
+	LINK=04FFFFFFFF
+	TIMER=-1
+ON=@Create
+	COLOR=color_o_bronze

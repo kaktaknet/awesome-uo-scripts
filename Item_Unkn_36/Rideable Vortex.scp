@@ -1,0 +1,78 @@
+[itemdef i_et_energy]  
+name=Ethereal EV  
+//id=c_pet_horse  
+TDATA3=c_ev  
+TYPE=T_EQ_HORSE  
+LAYER=layer_horse  
+  
+on=@create  
+DISPID=03ea7  
+COLOR=colors_all  
+  
+  
+on=@equip  
+link=<src.uid>  
+  
+on=@unequip  
+DISPID=c_elem_air  
+src.newitem i_et_ev  
+src.act.bounce  
+  
+  
+[itemdef i_et_ev]  
+NAME=Ethereal Vortex  
+id=i_pet_elem_air  
+type=t_normal  
+  
+on=@create  
+color=07ad  
+attr=04  
+  
+on=@dclick  
+if !(<src.findlayer.25.uid>)  
+src.newitem i_et_energy  
+src.act.more1=c_ev  
+src.act.equip  
+src.update  
+remove  
+return 1  
+else  
+src.message You are already mounted.  
+return 1  
+endif  
+  
+[ITEMDEF i_ride_vortex]  
+NAME=Ethereal Energy Vortex  
+ID=i_pet_elem_air  
+  
+ON=@DCLICK  
+if !(<src.findlayer.25.uid>)  
+src.newitem i_et_energy  
+src.act.more1=c_ev  
+src.act.equip  
+src.update  
+remove  
+return 1  
+else  
+src.message You are already mounted.  
+return 1  
+endif  
+  
+  
+[chardef c_ev]  
+name=Death Vortex  
+id=037cc  
+on=@create  
+color=2064  
+  
+on=@click  
+remove  
+return 1  
+  
+on=@npcrestock  
+remove  
+return 1  
+  
+on=@skillstart  
+remove  
+return 1  

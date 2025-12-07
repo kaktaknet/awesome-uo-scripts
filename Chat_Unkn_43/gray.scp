@@ -1,0 +1,25 @@
+//.GRAY command. Good alternative to the graystones
+//That you can find on some shards, but can be abused
+//By Rudenid, Version 1.0 of the script
+
+[FUNCTION gray]
+	if ( <FLAGS> & 002000000)
+		if ( <eval <TAG.USEDGRAY>> = 0)
+		MESSAGE You cannot remove a criminal flag this way
+		RETURN 1
+		else
+		CRIMINAL=0
+		TAG.USEDGRAY=
+		SYSMESSAGE=You are no longer gray
+		RETURN 1
+		endif
+	else
+		FLAGS=<FLAGS>|statf_criminal
+		TAG.USEDGRAY=1
+		SYSMESSAGE=You are now gray
+		RETURN 1
+	endif
+
+[FUNCTION grey]
+//Gray is the correct spelling, but too many people spell it this way
+GRAY

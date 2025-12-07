@@ -1,0 +1,144 @@
+[function amountfix]
+IF !<FINDID.I_FIXER>
+newitem i_fixer
+act.equip=<uid>
+ENDIF
+
+[itemdef i_fixer]
+id=i_deed
+type=t_eq_script
+
+on=@create
+timerd=1
+
+on=@timer
+CONT.TESTING
+TIMER=10
+RETURN 1
+
+
+[FUNCTION TESTING]
+FORCONT <findlayer(21).uid>
+IF (<AMOUNT>==0)
+FIXREMOVE
+ENDIF
+ENDFOR
+
+
+[FUNCTION FIXREMOVE]
+TOPOBJ.GO 298,763 // Jail Place
+TOPOBJ.FINDID.I_FIXER.REMOVE
+TOPOBJ.EVENTS +e_shakuzjail // Jail Event
+serv.log WARNING <TOPOBJ.name> [<TOPOBJ.account>] use dupe bug. Fucking TEOT !
+serv.allclients sysmessage @050 <TOPOBJ.name> was using dupe bug, he was jailed and blocked 
+
+
+[EVENTS E_TEOT_FIX]
+ON=@LOGIN
+amountfix
+
+ON=@LOGOUT
+argn1=11
+RETURN 1
+
+ON=@DEATH
+FORCONT <findlayer(21).uid>
+IF (<AMOUNT>==0)
+FIXREMOVE
+ENDIF
+ENDFOR
+
+
+ON=@ItemClick
+IF (<ACT.AMOUNT>==0) && (<ACT.TYPE>!=t_corpse)
+ACT.REMOVE
+ENDIF
+
+ON=@ItemDClick
+IF (<ACT.AMOUNT>==0) && (<ACT.TYPE>!=t_corpse)
+ACT.REMOVE
+ENDIF
+
+ON=@ItemEQUIP
+IF (<ACT.AMOUNT>==0) 
+ACT.REMOVE
+ENDIF
+
+ON=@ItemDropON_Ground 
+IF (<ACT.AMOUNT>==0) 
+ACT.REMOVE
+ENDIF
+
+ON=@ItemDropOn_Self
+IF (<ACT.AMOUNT>==0) 
+ACT.REMOVE
+ENDIF
+
+ON=@ItemDropOn_Pack
+IF (<ACT.AMOUNT>==0)
+ACT.REMOVE 
+ENDIF
+
+ON=@ITEMDROPON_CHAR
+IF (<ACT.AMOUNT>==0) 
+ACT.REMOVE 
+ENDIF
+
+ON=@DROPON_CHAR
+IF (<ACT.AMOUNT>==0) 
+ACT.REMOVE 
+ENDIF
+
+ON=@ItemPICKUP_GROUND
+
+IF (<ACT.AMOUNT>==0) 
+ACT.REMOVE
+ENDIF
+
+ON=@ItemPICKUP_PACK
+
+IF (<ACT.AMOUNT>==0) 
+ACT.REMOVE
+ENDIF
+
+
+ON=@ITEMTARGON_ITEM
+
+if (strmatch(t_weapon*,<act.type> ) 
+if (<targ.type>==t_corpse) && (<targ.link>==04FFFFFFF) 
+return 0
+elif (<targ.type>==t_fish)
+return 0
+else
+src.sysmessage you cant do that
+return 1
+endif 
+endif
+
+
+[TYPEDEF t_eq_vendor_box] 
+
+ON=@DROPON_SELF 
+OBJ <ARGO.UID> 
+IF <OBJ.AMOUNT>==0
+OBJ.REMOVE
+ENDIF
+IF <OBJ.TYPE>==T_GOLD
+SRC.SYSMESSAGE @026 You cant drop that in Vendor Box. 
+RETURN 1 
+ENDIF
+IF <OBJ.TYPE>==T_CONTAINER
+SRC.SYSMESSAGE @026 You cant drop that in Vendor Box. 
+RETURN 1 
+ENDIF
+IF <OBJ.VALUE>==0
+SRC.SYSMESSAGE @026 This item has no base value. Please report to a Staff Member. 
+RETURN 1 
+ENDIF
+[EOF]
+
+by OuTSiDeR
+
+|||||||||||||||||||||||
+|       Latvia        |                 
+|||||||||||||||||||||||

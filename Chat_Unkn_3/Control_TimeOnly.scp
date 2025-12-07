@@ -1,0 +1,372 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//The original idea for this script has been taken from Tanagar's weather script.
+//I didn't like the way he had coded it so I made my own, which became much bigger.
+
+//To use this script, put this file inside your Script folder, and then, run your server.
+//Once that this is done, use .add i_control_time  and place this object somewhere that your
+//players will never get.. Star Chamber as an example :)
+//Third step, is to retrieve the UID of the object by using .xshow uid.
+//Then, put the UID of the object inside the Worldsettings as time_control_uid
+//Next step, is to go back in-game (once that you saved the change)  and to dclick the
+//crystal.  You can now set the Hour and the Date as you wish.
+//All players can know the time by using .time
+//In this script, there is a temperature consideration.. If you don't like it, you can
+//disable it by setting the temperature_activated   value to 0.
+
+//The next step is to install some other scripts in other files...
+
+// ON=@LOGIN
+//**************************************************
+//**This part is used to have the Lighting effects**
+//**************************************************
+// SRC.EVENTS -e_weather
+// SRC.EVENTS +e_weather
+
+//This Trigger: @LOGIN can be added under the CHARDEFS of your players (Male:0190 and Female:0191),
+//under a general skillclass, or under an event that all of your players have set on them.
+//Remove the comment // so the scripts can work properly :)  I advise to leave the comments saying
+//what is doing each part to be able to remove one or another more easily if you ever wish to do so.
+
+//Please do not remove this header..
+
+//Enjoy!
+
+[DEFNAME Worldsettings]
+
+time_control_uid 040005fdd
+
+seconds_per_minute 6
+minutes_per_hour 60
+hours_per_day 24
+days_per_month 30
+months_per_year 12
+
+light_midnight 26
+light_night 20
+light_dawn 7
+light_dawn_2 15
+light_dusk 7
+light_dusk_2 15
+light_noon 0
+light_dungeon 26
+
+[ITEMDEF i_control_time]
+DEFNAME=i_control_time
+ID=i_crystal_green
+
+ON=@CREATE
+MOREX=0
+MOREY=0
+MOREZ=0
+
+ON=@DCLICK
+SRC.DIALOG d_weather
+RETURN 1
+
+ON=@TIMER
+MOREX=<MOREX>+1
+
+IF (<MOREX>==minutes_per_hour + 1)
+MOREX=1
+MOREY=<MOREY>+1
+ENDIF
+IF (<MOREY>==hours_per_day + 1)
+MOREY=1
+MOREZ=<MOREZ>+1
+ENDIF
+IF (<MOREZ>==days_per_month + 1)
+MOREZ=1
+MORE1=<MORE1>+1
+ENDIF
+IF (<MORE1>==months_per_year + 1)
+MORE1=1
+MORE2=<MORE2>+1
+ENDIF
+
+TIMER=seconds_per_minute
+
+RETURN 1
+
+[PLEVEL 1]
+time
+
+[FUNCTION time]
+
+VAR.MINUTES=<UID.time_control_uid.MOREX>
+VAR.HOURS=<UID.time_control_uid.MOREY>
+VAR.DAYS=<UID.time_control_uid.MOREZ>
+VAR.MONTH=<UID.time_control_uid.MORE1>
+VAR.YEAR=<UID.time_control_uid.MORE2>
+
+IF (<VAR.MINUTES><30)
+VAR.WHEN=1
+ELSEIF (<VAR.MINUTES>==60)
+VAR.WHEN=3
+ELSE
+VAR.WHEN=2
+ENDIF
+IF (<VAR.HOURS>==24)
+VAR.WHEN2=1
+ELSE
+VAR.WHEN2=0
+ENDIF
+
+IF (<VAR.MONTH>==1)
+VAR.MONTHNAME=Martel
+ELSEIF (<VAR.MONTH>==2)
+VAR.MONTHNAME=Alturiak
+ELSEIF (<VAR.MONTH>==3)
+VAR.MONTHNAME=Ches
+ELSEIF (<VAR.MONTH>==4)
+VAR.MONTHNAME=Tarsakh
+ELSEIF (<VAR.MONTH>==5)
+VAR.MONTHNAME=Mirtul
+ELSEIF (<VAR.MONTH>==6)
+VAR.MONTHNAME=Kythorn
+ELSEIF (<VAR.MONTH>==7)
+VAR.MONTHNAME=Flammerige
+ELSEIF (<VAR.MONTH>==8)
+VAR.MONTHNAME=Eleasias
+ELSEIF (<VAR.MONTH>==9)
+VAR.MONTHNAME=Eleinte
+ELSEIF (<VAR.MONTH>==10)
+VAR.MONTHNAME=Marpenoth
+ELSEIF (<VAR.MONTH>==11)
+VAR.MONTHNAME=Uktar
+ELSE
+VAR.MONTHNAME=Iylviernar
+ENDIF
+
+IF (<VAR.WHEN2>==0)
+IF (<VAR.WHEN>==1)
+SYSMESSAGE It is <EVAL <VAR.MINUTES>> minutes past <EVAL <VAR.HOURS>>o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ELSEIF (<VAR.WHEN>==2)
+SYSMESSAGE It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>+1>o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ELSEIF (<VAR.WHEN>==3)
+SYSMESSAGE It is <EVAL <VAR.HOURS>+1>o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ENDIF
+ELSE
+IF (<VAR.WHEN>==1)
+SYSMESSAGE It is <EVAL <VAR.MINUTES>> minutes past midnight.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ELSEIF (<VAR.WHEN>==2)
+SYSMESSAGE It is <EVAL 60-<VAR.MINUTES>> minutes before 1 o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ELSEIF (<VAR.WHEN>==3)
+SYSMESSAGE It is 1 o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ENDIF
+ENDIF
+
+[events e_weather]
+ON=@ENVIRONCHANGE
+IF (<UID.time_control_uid.COLOR>==0)
+IF (<SRC.P.X><4096)
+SRC.Weathercheck
+ELSE
+TRY UID.time_control_uid.COLOR=1
+SRC.SECTOR.LIGHT=26
+SRC.SECTOR.DRY
+TRY UID.time_control_uid.COLOR=0
+ENDIF
+ENDIF
+
+[FUNCTION weathercheck]
+TRY UID.time_control_uid.COLOR=1
+
+IF (<UID.time_control_uid.MOREY>==24)
+SECTOR.LIGHT light_midnight
+ELSEIF (<UID.time_control_uid.MOREY>==1)
+SECTOR.LIGHT light_midnight
+ELSEIF (<UID.time_control_uid.MOREY>==2)
+SECTOR.LIGHT light_midnight
+ELSEIF (<UID.time_control_uid.MOREY>==3)
+SECTOR.LIGHT light_midnight
+ELSEIF (<UID.time_control_uid.MOREY>==4)
+SECTOR.LIGHT light_dawn_2
+ELSEIF (<UID.time_control_uid.MOREY>==5)
+SECTOR.LIGHT light_dawn_2
+ELSEIF (<UID.time_control_uid.MOREY>==6)
+SECTOR.LIGHT light_dawn_2
+ELSEIF (<UID.time_control_uid.MOREY>==7)
+SECTOR.LIGHT light_dawn_2
+ELSEIF (<UID.time_control_uid.MOREY>==8)
+SECTOR.LIGHT light_dawn
+ELSEIF (<UID.time_control_uid.MOREY>==9)
+SECTOR.LIGHT light_dawn
+ELSEIF (<UID.time_control_uid.MOREY>==10)
+SECTOR.LIGHT light_dawn
+ELSEIF (<UID.time_control_uid.MOREY>==11)
+SECTOR.LIGHT light_noon
+ELSEIF (<UID.time_control_uid.MOREY>==12)
+SECTOR.LIGHT light_noon
+ELSEIF (<UID.time_control_uid.MOREY>==13)
+SECTOR.LIGHT light_noon
+ELSEIF (<UID.time_control_uid.MOREY>==14)
+SECTOR.LIGHT light_dusk_2
+ELSEIF (<UID.time_control_uid.MOREY>==15)
+SECTOR.LIGHT light_dusk_2
+ELSEIF (<UID.time_control_uid.MOREY>==16)
+SECTOR.LIGHT light_dusk_2
+ELSEIF (<UID.time_control_uid.MOREY>==17)
+SECTOR.LIGHT light_dusk
+ELSEIF (<UID.time_control_uid.MOREY>==18)
+SECTOR.LIGHT light_dusk
+ELSEIF (<UID.time_control_uid.MOREY>==19)
+SECTOR.LIGHT light_dusk
+ELSEIF (<UID.time_control_uid.MOREY>==20)
+SECTOR.LIGHT light_night
+ELSEIF (<UID.time_control_uid.MOREY>==21)
+SECTOR.LIGHT light_night
+ELSEIF (<UID.time_control_uid.MOREY>==22)
+SECTOR.LIGHT light_night
+ELSEIF (<UID.time_control_uid.MOREY>==23)
+SECTOR.LIGHT light_night
+ENDIF
+
+TRY UID.time_control_uid.COLOR=0
+
+[DIALOG d_weather]
+
+250, 125	
+resizepic 0 0 3600 250 210
+
+resizepic 20 20 3000 50 22
+textentry 20 20 50 25 0 1 0
+text 75 20 026 1
+
+resizepic 20 50 3000 50 22
+textentry 20 50 50 25 0 2 2
+text 75 50 026 3
+
+resizepic 20 80 3000 50 22
+textentry 20 80 50 25 0 3 4
+text 75 80 026 5
+
+resizepic 20 110 3000 50 22
+textentry 20 110 50 25 0 4 6
+text 75 110 026 7
+
+resizepic 20 140 3000 50 22
+textentry 20 140 50 25 0 5 8
+text 75 140 026 9
+
+button 170 18 239 238 1 0 1
+button 170 48 239 238 1 0 2
+button 170 78 239 238 1 0 3
+button 170 108 239 238 1 0 4
+button 170 138 239 238 1 0 5
+button 100 168 248 247 1 0 6
+
+[DIALOG d_weather TEXT]
+<EVAL <UID.time_control_uid.MOREX>>
+Minutes
+<EVAL <UID.time_control_uid.MOREY>>
+Hours
+<EVAL <UID.time_control_uid.MOREZ>>
+Days
+<EVAL <UID.time_control_uid.MORE1>>
+Month
+<EVAL <UID.time_control_uid.MORE2>>
+Year
+
+[DIALOG d_weather BUTTON]
+
+ONBUTTON=0
+SYSMESSAGE Time is unchanged.
+
+ONBUTTON=1
+IF (<ARGTXT[1]>>0) && (<ARGTXT[1]><<EVAL (minutes_per_hour)+1>)
+UID.time_control_uid.MOREX <ARGTXT[1]>
+SYSMESSAGE Minutes have been modified.
+ELSE
+SYSMESSAGE Minutes must be between 1 and <EVAL (minutes_per_hour)>.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=2
+IF (<ARGTXT[2]>>0) && (<ARGTXT[2]><<EVAL (hours_per_day)+1>)
+UID.time_control_uid.MOREY <ARGTXT[2]>
+SYSMESSAGE Hours have been modified.
+ELSE
+SYSMESSAGE Hours must be between 1 and <EVAL (hours_per_day)>.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=3
+IF (<ARGTXT[3]>>0) && (<ARGTXT[3]><<EVAL (days_per_month)+1>)
+UID.time_control_uid.MOREZ <ARGTXT[3]>
+SYSMESSAGE Days have been modified.
+ELSE
+SYSMESSAGE Days must be between 1 and <EVAL (days_per_month)>.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=4
+IF (<ARGTXT[4]>>0) && (<ARGTXT[4]><<EVAL (months_per_year)+1>)
+UID.time_control_uid.MORE1 <ARGTXT[4]>
+SYSMESSAGE Months have been modified.
+ELSE
+SYSMESSAGE Months must be between 1 and <EVAL (months_per_year)>.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=5
+IF (<ARGTXT[5]>>0)
+UID.time_control_uid.MORE2 <ARGTXT[5]>
+SYSMESSAGE Years have been modified.
+ELSE
+SYSMESSAGE Years can't be negative.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=6
+IF (<ARGTXT[1]>>0) && (<ARGTXT[1]><<EVAL (minutes_per_hour)+1>)
+UID.time_control_uid.MOREX <ARGTXT[1]>
+SYSMESSAGE Minutes have been modified.
+ELSE
+SYSMESSAGE Minutes must be between 1 and <EVAL (minutes_per_hour)>.
+ENDIF
+IF (<ARGTXT[2]>>0) && (<ARGTXT[2]><<EVAL (hours_per_day)+1>)
+UID.time_control_uid.MOREY <ARGTXT[2]>
+SYSMESSAGE Hours have been modified.
+ELSE
+SYSMESSAGE Hours must be between 1 and <EVAL (hours_per_day)>.
+ENDIF
+IF (<ARGTXT[3]>>0) && (<ARGTXT[3]><<EVAL (days_per_month)+1>)
+UID.time_control_uid.MOREZ <ARGTXT[3]>
+SYSMESSAGE Days have been modified.
+ELSE
+SYSMESSAGE Days must be between 1 and <EVAL (days_per_month)>.
+ENDIF
+IF (<ARGTXT[4]>>0) && (<ARGTXT[4]><<EVAL (months_per_year)+1>)
+UID.time_control_uid.MORE1 <ARGTXT[4]>
+SYSMESSAGE Months have been modified.
+ELSE
+SYSMESSAGE Months must be between 1 and <EVAL (months_per_year)>.
+ENDIF
+IF (<ARGTXT[5]>>0)
+UID.time_control_uid.MORE2 <ARGTXT[5]>
+SYSMESSAGE Years have been modified.
+ELSE
+SYSMESSAGE Years can't be negative.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+[ITEMDEF 0104b]
+ON=@DCLICK
+SRC.TIME
+RETURN 1
+
+[ITEMDEF 01810]
+ON=@DCLICK
+SRC.TIME
+RETURN 1
+
+[EOF]

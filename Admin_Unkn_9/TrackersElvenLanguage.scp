@@ -1,0 +1,119 @@
+//#################################################### 
+//#############Tracker's COLOR GUMP################### 
+//#################################################### 
+//By Tracker of Shattered Alliance 
+//http://gray-cat.com/alliance 
+//This is tested on version 55i
+// 
+//Use at your own risk, yada yada... 
+// 
+// 
+//INSTRUCTIONS!! 
+// 
+//This script is terribly easy to use. Put it in your Sphere folder in a .scp file 
+//that is in your spheretables under [RESOURCES], or make a new one and put it there. 
+// 
+//
+//Players type .elven Blah to say "Blah" in elven. Text
+//will appear above their head that looks elvenish...a bunch of gibberish.
+//Players with the skill high enough (or GMs) will get a sysmessage containing
+//what they actually said.
+//
+//To view their current skill in elven, players type .otherskills
+//
+//Their language skill is stored on the character in "tag.elven".
+//
+//As they hear the language more, they raise in skill, until they hit GM.
+//It is meant to be easy to raise in skill. We're enforced RP, so we punish the hell
+//out of people who macro this skill. I recommend the same.
+
+[PLEVEL 1] 
+elven
+otherskills
+
+[function otherskills]
+sysmessage "Your skill in Elven is: <eval <tag.elven>>"
+
+[function elven] 
+var.chance={1 799} 
+if (<eval <tag.elven>>><eval <var.chance>>) //chance to fail speaking 
+var.name=<name> 
+var.uid=<uid> 
+region.allclients sayelven <name> says: "<args>" in elven. 
+var.asd={4 9} 
+var.rand=<eval <var.asd>> 
+f_elven_syllable <eval <var.rand>> 
+var.sentence= 
+var.rand= 
+var.asd= 
+else 
+sayua 0106,0,0,eng,*says something that sounds elven, but is completely incomprehensible*. 
+endif 
+
+[function sayelven] 
+var.chance={1 999} 
+if <eval <var.uid>>!=<uid> //make sure you dont hear yourself 
+var.actuid=<act> 
+act=<var.uid> 
+if (<eval <distance>><15)||(<GM>==1) //GMs can always hear what you say 
+if (<eval <tag.elven>>><eval <var.chance>>)||(<GM>==1) 
+sysmessage <args> 
+else 
+sysmessage <var.name> says something that you don't understand in elven. 
+endif 
+if (<eval <tag.elven>><1000) 
+tag.elven=<eval <tag.elven>+1> 
+endif 
+endif 
+act=<var.actuid> //return act to what it was before this 
+endif 
+var.chance= 
+
+[function f_elven_syllable] 
+dorand 29 
+var.syl=tel 
+var.syl=in 
+var.syl=vis 
+var.syl=mith 
+var.syl=rin 
+var.syl=dui 
+var.syl=us 
+var.syl=ma 
+var.syl=he 
+var.syl=tal 
+var.syl=des 
+var.syl=de 
+var.syl=rea 
+var.syl=uea 
+var.syl=tiuy 
+var.syl=tea 
+var.syl=thea 
+var.syl=al 
+var.syl=und 
+var.syl=vor 
+var.syl=ir 
+var.syl=rean 
+var.syl=aest 
+var.syl=reath 
+var.syl=mir 
+var.syl=vas 
+var.syl=guir 
+var.syl=keir 
+var.syl=pel 
+enddo 
+var.rand={1 3} 
+if <eval <var.rand>>==2 
+var.sentence=<var.sentence> <var.syl> 
+else 
+var.rando={1 4} 
+if <eval <var.rando>>==2 
+var.sentence=<var.sentence>'<var.syl> 
+else 
+var.sentence=<var.sentence><var.syl> 
+endif 
+endif 
+if 0<args>>1 
+f_elven_syllable 0<ARGS>+(-1) //recurse 
+else 
+sayua 0106,0,0,eng,<var.sentence> 
+endif

@@ -1,0 +1,255 @@
+//Simples de instalar adicione essas duas linhas abaixo no sphereskill // It's simple to instal just put this lines above on the sphereskill.scp 
+//ON=i_keg_wood
+//SKILLMENU=sm_potion_kegs
+//Scriptado por Admin Night Walker //Crafted By admin Night Walker 
+//Use e abuse em seu shard mas nao remova meus creditos por favor // Plis does not remove this !
+
+//---------------------------Skill Menu----------------------------
+
+[SKILLMENU sm_potion_kegs]
+Kegs
+
+ON=i_totalmana_keg <name> (<resmake>)
+MAKEITEM=i_totalmana_keg
+
+ON=i_restoregreat_keg <name> (<resmake>)
+MAKEITEM=i_restoregreat_keg
+
+ON=i_particle_keg <name> (<resmake>)
+MAKEITEM=i_particle_keg
+
+ON=i_healgreat_keg <name> (<resmake>)
+MAKEITEM=i_healgreat_keg
+
+ON=i_explosiongreat_keg <name> (<resmake>)
+MAKEITEM=i_explosiongreat_keg
+
+ON=i_poisonless_Keg <name> (<resmake>)
+MAKEITEM=i_poisonless_keg
+
+ON=i_poisondeadly_keg <name> (<resmake>)
+MAKEITEM=i_poisondeadly_keg
+
+ON=i_invisibility_keg <name> (<resmake>)
+MAKEITEM=i_invisibility_keg
+
+
+//-------------------------- Kegs de potions -------------------------
+ 
+[ITEMDEF i_totalmana_keg]
+ID=i_keg_wood
+TYPE=t_script
+NAME=keg de Total Mana Refresh
+WEIGHT=10
+RESOURCES=500 i_reag_eye_of_newt,i_keg_small
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Items by Night Walker
+SUBSECTION=Kegs
+DESCRIPTION=Keg de Total Mana Refresh
+
+ON=@CREATE
+COLOR=058
+
+ON=@dclick
+IF (<src.restest 100 i_bottle_empty>)
+src.consume 100 i_bottle_empty
+sound 576
+src.newitem i_potion_ManaTotal,{100} 
+src.act.bounce
+remove
+ELSE
+SRC.SYSMESSAGE Voce nao tem 100 empty bottle na sua bag.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_restoregreat_keg]
+ID=i_keg_wood
+TYPE=t_script
+NAME=Keg de Great Restoration
+WEIGHT=10
+RESOURCES=200 i_reag_black_pearl,500 i_reag_mandrake_root,i_keg_small
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Items by Night Walker
+SUBSECTION=Kegs
+DESCRIPTION=Keg de Great Restoration
+
+ON=@CREATE
+COLOR=0F3
+
+ON=@dclick
+IF (<src.restest 100 i_bottle_empty>)
+src.consume 100 i_bottle_empty
+sound 576
+src.newitem i_potion_Restore_Great,{100} 
+src.act.bounce
+remove
+ELSE
+SRC.SYSMESSAGE Voce nao tem 100 empty bottle na sua bag.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_particle_keg]
+ID=i_Keg_wood
+NAME=Keg de Particle Form
+WEIGHT=10
+TYPE=t_script
+RESOURCES=300 i_reag_black_pearl,200 i_reag_worm_heart,i_keg_small
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Items by Night Walker
+SUBSECTION=Kegs
+DESCRIPTION=Keg de Particle Form
+
+ON=@CREATE
+COLOR=00482
+
+ON=@dclick
+IF (<src.restest 100 i_bottle_empty>)
+src.consume 100 i_bottle_empty
+sound 576
+src.newitem i_potion_particle,{100} 
+src.act.bounce
+remove
+ELSE
+SRC.SYSMESSAGE Voce nao tem 100 empty bottle na sua bag.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_healgreat_keg]
+ID=i_keg_wood
+TYPE=t_script
+NAME=Keg de Greather Heal
+WEIGHT=10
+RESOURCES=i_reag_ginseng 700,100 i_bottle_EMPTY,i_keg_small
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Items by Night Walker
+SUBSECTION=Kegs
+DESCRIPTION=Keg de Greather Heal
+
+ON=@CREATE
+COLOR=0fd
+
+ON=@dclick
+IF (<src.restest 100 i_bottle_empty>)
+src.consume 100 i_bottle_empty
+sound 576
+src.newitem i_potion_HealGreat,{100} 
+src.act.bounce
+remove
+ELSE
+SRC.SYSMESSAGE Voce nao tem 100 empty bottle na sua bag.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_explosiongreat_Keg]
+ID=i_keg_wood
+TYPE=t_script
+NAME=Keg de Greather Explosion
+WEIGHT=10
+RESOURCES=i_reag_sulfur_ash 1000,100 i_bottle_EMPTY,i_keg_small
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Items by Night Walker
+SUBSECTION=Kegs
+DESCRIPTION=Keg de Greather Explosion
+
+ON=@CREATE
+COLOR=081
+
+ON=@dclick
+IF (<src.restest 100 i_bottle_empty>)
+src.consume 100 i_bottle_empty
+sound 576
+src.newitem i_potion_ExplosionGreat,{100} 
+src.act.bounce
+remove
+ELSE
+SRC.SYSMESSAGE Voce nao tem 100 empty bottle na sua bag.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_poisonless_Keg]
+ID=i_keg_wood
+TYPE=t_script
+NAME=Keg de Lesser Poison
+WEIGHT=10
+RESOURCES=i_reag_nightshade 100,100 i_bottle_EMPTY,i_keg_small
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Items by Night Walker
+SUBSECTION=Kegs
+DESCRIPTION=Keg de Lesser Poison
+
+ON=@CREATE
+COLOR=0a8
+
+ON=@dclick
+IF (<src.restest 100 i_bottle_empty>)
+src.consume 100 i_bottle_empty
+sound 576
+src.newitem i_potion_PoisonLess,{100} 
+src.act.bounce
+remove
+ELSE
+SRC.SYSMESSAGE Voce nao tem 100 empty bottle na sua bag.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_poisondeadly_Keg]
+ID=i_keg_wood
+TYPE=t_script
+NAME=Keg de Deadly Poison
+WEIGHT=10
+RESOURCES=i_reag_nightshade 800,100 i_bottle_EMPTY,i_keg_small
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Items by Night Walker
+SUBSECTION=Kegs
+DESCRIPTION=Keg de Deadly Poison
+
+ON=@CREATE
+COLOR=0a8
+
+ON=@dclick
+IF (<src.restest 100 i_bottle_empty>)
+src.consume 100 i_bottle_empty
+sound 576
+src.newitem i_potion_Poisondeadly,{100} 
+src.act.bounce
+remove
+ELSE
+SRC.SYSMESSAGE Voce nao tem 100 empty bottle na sua bag.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_invisibility_Keg]
+ID=i_keg_wood
+TYPE=t_script
+NAME=Keg de Invisibility
+WEIGHT=10
+RESOURCES=i_reag_worm_heart 400,100 i_bottle_EMPTY,i_keg_small
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Items by Night Walker
+SUBSECTION=Kegs
+DESCRIPTION=Keg de Invisibility
+
+ON=@CREATE
+COLOR=017f
+
+ON=@dclick
+IF (<src.restest 100 i_bottle_empty>)
+src.consume 100 i_bottle_empty
+sound 576
+src.newitem i_potion_Invisibility,{100} 
+src.act.bounce
+remove
+ELSE
+SRC.SYSMESSAGE Voce nao tem 100 empty bottle na sua bag.
+ENDIF
+RETURN 1
+
+[EOF]

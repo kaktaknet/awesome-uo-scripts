@@ -1,0 +1,375 @@
+//////Runebook by ClouD_BR////////
+///please leave the credits ;)////
+
+[DEFNAME clouds_runebook]
+///messages
+runebook_nothingatthisslot @07ad There's nothing at this slot.
+runebook_alreadyusingmagic @07ad You're already using this magic.
+runebook_cantusethisbook @07a1 You can't use this book like that.
+runebook_cantcastthismagic @07a1 You can't cast this magic.
+runebook_placeblocked @07a1 Place blocked.
+runebook_cantusethishere @07a1 You can't use this book here.
+runebook_magicfails @07a1 Your magic fails.
+runebook_thatsnotarune @0ad That's not a rune!
+runebook_therunemustbewithyou @0ad The rune must be with you.
+runebook_runenotmarked @0ad That rune isn't marked.
+
+////settings
+RUNEBOOK_CANCELMAGIC_WARMODE 1 //will recall/gate be canceled when the player enters warmode? (1=yes, 0=no)
+RUNEBOOK_CANCELMAGIC_GETHIT 1 //will recall/gate be canceled when the player gets hit? (1=yes, 0=no)
+RUNEBOOK_CANCELMAGIC_HIT 1 //will recall/gate be canceled when the player hits another player? (1=yes, 0=no)
+
+[itemdef 8901]
+DEFNAME=i_runebook
+NAME=Livro de Runas
+TYPE=t_normal
+VALUE=90000
+RESOURCES=20 i_scroll_blank, 10 i_scroll_recall
+SKILLMAKE=SKILL_INSCRIPTION 80.0
+
+on=@create
+attr=attr_newbie
+
+on=@dclick
+IF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELSE
+src.sound 85
+sdialog d_runebook
+ENDIF
+return 1
+
+on=@targon_char
+src.sysmessage <def.runebook_thatsnotarune>
+return 1
+
+ON=@Click
+MESSAGE @07ad <NAME>
+RETURN 1
+
+on=@targon_item
+IF (<SRC.TARG.BASEID>!=i_rune_marker)
+SRC.SYSMESSAGE <def.runebook_thatsnotarune>
+ELIF (<src.targ.topobj.uid>!=<src>)
+src.sysmessage <def.runebook_therunemustbewithyou>
+ELIF !(<SRC.TARG.MOREP>)
+SRC.SYSMESSAGE <def.runebook_runenotmarked>
+ELSE
+FOR 14
+IF !(<tag0.runa<eval <local._for>>>)
+try tag.runa<eval <local._for>>=<src.targ.morep>
+try tag.runanome<eval <local._for>>=<src.targ.name>
+src.sysmessage @07a0 Rune added.
+src.targ.remove
+return 1
+ENDIF
+ENDFOR
+src.sysmessage @07a3 The book already has 14 runes.
+ENDIF
+return 1
+
+/////////////////////////////
+
+[DIALOG d_runebook]
+100, 0
+src.closealldialogs
+PAGE 0
+gumppic 72 115 500
+gumppic 460 350 028ac
+gumppic 460 200 028ab
+gumppic 460 50 028aa
+dtext 140 130 88 <NAME>
+dtext 220 130 33 by Cloud_BR
+FOR 1 7
+button 105 <EVAL (<LOCAL._FOR>*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>>
+button 125 <EVAL (<LOCAL._FOR>*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+14>
+dcroppedtext 145 <EVAL (<LOCAL._FOR>*20)+135> 100 20 1152 <QVAL <ISEMPTY <TAG.RUNA<EVAL <LOCAL._FOR>>>> ? Empty:<TAG0.RUNANOME<EVAL <LOCAL._FOR>>>>
+button 260 <EVAL (<LOCAL._FOR>*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+28>
+ENDFOR
+FOR 8 14
+button 305 <EVAL ((<LOCAL._FOR>-7)*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>>
+button 325 <EVAL ((<LOCAL._FOR>-7)*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+14>
+dcroppedtext 345 <EVAL ((<LOCAL._FOR>-7)*20)+135> 100 20 1152 <QVAL <ISEMPTY <TAG.RUNA<EVAL <LOCAL._FOR>>>> ? Empty:<TAG0.RUNANOME<EVAL <LOCAL._FOR>>>>
+button 450 <EVAL ((<LOCAL._FOR>-7)*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+28>
+ENDFOR
+button 312 122 01523 01523 1 0 43
+dtext 332 122 2010 Add Rune
+button 312 312 037 038 1 0 44
+dtext 328 310 2010 Change Name
+dtext 108 307 0 --Recall
+dtext 108 295 0 |
+dtext 128 295 0 |____Gate
+dtext 258 295 0 |
+dtext 226 310 0 Remove
+
+[DIALOG d_runebook BUTTON]
+ON=1 14
+IF !(<TAG0.RUNA<ARGN>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+ELIF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELIF (<src.tag0.event.id>)
+src.sysmessage @07a1 You can't use this book in an event.
+ELIF (<src.findid.i_pvp_time>)
+cont.sysmessage @07a1 You can't use this book in a pvp.
+ELIF !(<SRC.CANCAST s_recall>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+MOREP=<TAG0.RUNA<ARGN>>
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_recall.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_blood_moss
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_recall_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_recall.CAST_TIME>
+NEW.MOREP=<MOREP>
+src.sound snd_spell_recall
+src.say Kal Ort Por
+src.anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+ON=15 28
+IF !(<TAG0.RUNA<EVAL <ARGN>-14>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+ELIF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELIF (<src.tag0.event.id>)
+src.sysmessage @07a1 You can't use this book in an event.
+ELIF (<src.findid.i_pvp_time>)
+cont.sysmessage @07a1 You can't use this book in a pvp.
+ELIF !(<SRC.CANCAST s_gate_travel>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+MOREP=<TAG0.RUNA<EVAL <ARGN>-14>>
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_gate) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_gate_travel.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_sulfur_ash
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_gate_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_gate_travel.CAST_TIME>
+NEW.MOREP=<MOREP>
+src.sound snd_spell_recall
+src.say Vas Rel Por
+src.anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+ON=29 42
+IF !(<TAG0.RUNA<EVAL <ARGN>-28>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+ELSE
+serv.newitem=i_rune_marker
+new.name=<tag0.runanome<eval <argn>-28>>
+new.morep=<tag0.runa<eval <argn>-28>>
+new.more1=10
+try tag.runa<eval <argn>-28>
+try tag.runanome<eval <argn>-28>
+new.bounce
+sdialog d_runebook
+ENDIF
+
+ON=43
+IF (<TOPOBJ.UID>==<SRC>)
+target @07a1 Choose a rune.
+ELSE
+src.sysmessage @07a1 The book needs to be with you.
+ENDIF
+
+ON=44
+IF (<TOPOBJ.UID>==<SRC>)
+SDIALOG d_runebook_mudarnome
+ENDIF
+
+[ITEMDEF i_recall_timer]
+ID=i_memory
+NAME=Recall Timer
+TYPE=t_eq_script
+
+ON=@Timer
+SERV.NEWITEM i_gold
+NEW.ATTR=attr_invis
+NEW.P=<MOREP>
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+CONT.SYSMESSAGE <def.runebook_placeblocked>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<CONT.REGION.FLAGS>&region_antimagic_recall_out)
+CONT.SYSMESSAGE <def.runebook_cantusethishere>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.flags>&statf_freeze)
+cont.sysmessage <def.runebook_cantusethisbook>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.tag0.event.id>)
+cont.sysmessage @07a1 You can't use this book in an event.
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.findid.i_pvp_time>)
+cont.sysmessage @07a1 You can't use this book in a pvp.
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF !(<cont.CANCAST s_recall>)
+cont.sysmessage <def.runebook_cantcastthismagic>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELSE
+CONT.GO <MOREP>
+ENDIF
+CONT.EVENTS -e_runadano
+NEW.REMOVE
+REMOVE
+RETURN 1
+
+/////////////////////////////////
+
+[ITEMDEF i_gate_timer]
+ID=i_memory
+NAME=Gate Timer
+TYPE=t_eq_script
+
+ON=@Timer
+SERV.NEWITEM i_gold
+NEW.ATTR=attr_invis
+NEW.P=<MOREP>
+LOCAL.NAME=<NEW.REGION.NAME>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_gate) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+CONT.SYSMESSAGE <def.runebook_placeblocked>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<CONT.REGION.FLAGS>&region_antimagic_recall_out)
+CONT.SYSMESSAGE <def.runebook_cantusethishere>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.flags>&statf_freeze)
+cont.sysmessage <def.runebook_cantusethisbook>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.tag0.event.id>)
+cont.sysmessage @07a1 You can't use this book in an event.
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.findid.i_pvp_time>)
+cont.sysmessage @07a1 You can't use this book in a pvp.
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF !(<cont.CANCAST s_gate_travel>)
+cont.sysmessage <def.runebook_cantcastthismagic>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELSE
+serv.newitem=i_moongate_blue_fx
+new.p=<cont.p>
+new.type t_telepad
+new.morep=<morep>
+new.color={077a 07a9}
+new.name=<LOCAL.NAME> (<cont.name>)
+new.attr=attr_static|attr_decay
+new.timer=21
+new.fix
+serv.newitem=i_moongate_blue_fx
+new.p=<morep>
+new.type t_telepad
+new.morep=<cont.p>
+new.color={077a 07a9}
+new.name=<cont.region.name> (<cont.name>)
+new.attr=attr_static|attr_decay
+new.timer=21
+new.fix
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+CONT.EVENTS -e_runadano
+REMOVE
+RETURN 1
+
+/////////////////////////////////
+
+[EVENTS e_runadano]
+ON=@UserWarMode
+IF (<DEF.RUNEBOOK_CANCELMAGIC_WARMODE>)
+FINDID.i_recall_timer.REMOVE
+FINDID.i_gate_timer.REMOVE
+SYSMESSAGE <def.runebook_magicfails>
+EFFECT 3,i_fx_smoke,20,20
+EVENTS -e_runadano
+ENDIF
+
+ON=@GetHit
+IF (<DEF.RUNEBOOK_CANCELMAGIC_GETHIT>)
+FINDID.i_recall_timer.REMOVE
+FINDID.i_gate_timer.REMOVE
+SYSMESSAGE <def.runebook_magicfails>
+EFFECT 3,i_fx_smoke,20,20
+EVENTS -e_runadano
+ENDIF
+
+ON=@Hit
+IF (<DEF.RUNEBOOK_CANCELMAGIC_HIT>)
+FINDID.i_recall_timer.REMOVE
+FINDID.i_gate_timer.REMOVE
+SYSMESSAGE <def.runebook_magicfails>
+EFFECT 3,i_fx_smoke,20,20
+EVENTS -e_runadano
+ENDIF
+
+ON=@LogOut
+FINDID.i_recall_timer.REMOVE
+FINDID.i_gate_timer.REMOVE
+SYSMESSAGE <def.runebook_magicfails>
+EFFECT 3,i_fx_smoke,20,20
+EVENTS -e_runadano
+
+ON=@SpellCast
+IF (<ARGN>==s_recall) || (<ARGN>==s_gate_travel)
+ACTION -1
+RETURN 1
+ENDIF
+
+/////////////////////////////////
+
+[DIALOG d_runebook_mudarnome]
+10,30
+src.closealldialogs
+page 0
+resizepic 185 190 3600 340 140
+resizepic 195 200 3500 320 120
+dtext 230 210 0 Actual Name: <NAME>
+button 250 250 5224 5003 1 0 1
+dtextentry 270 250 300 25 55 0 1
+
+[DIALOG d_runebook_mudarnome BUTTON]
+on=0
+if (<topobj.uid>==<src>)
+sdialog d_runebook
+endif
+
+on=1
+IF (<topobj.uid>==<src>)
+IF !(<ISBADSTR <ARGTXT[0]>>)
+name=<strsub 0 15 <argtxt[0]>>
+ENDIF
+ENDIF
+
+[EOF]

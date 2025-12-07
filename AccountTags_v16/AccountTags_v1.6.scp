@@ -1,0 +1,372 @@
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//                          ACCOUNT TAGS & ICQ sharing v1.6                                 //
+//                           By: Cat, CoAdmin of Darkstone, cat@salemx.net                  //
+//  Some credits- Swindler, your paging system gave me the idea of how to do this           //
+//  and how to make it portable.  Taran's site which told me account.tags dont save kicked  //
+//  kicked me in the but enough to do this and provided some much need gump knowledge       //
+//  and of course Iz who set me stright on recursive funtions.                              //
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//I wanted to track house ownership, player rewards, player issue tracking, ICQ/AIM and jailings on
+//an account basis instead of on each character.  Looking in the accounts file I saw tag.comment
+//and tried account.tag.icq. after it failed I thought there had to be a way to do this.
+//I visited script sharing and a few other sites and didnt find anything.
+//So here it is, one memory object that ties together the account.
+//This is easy to install (much like swindlers paging system)
+//place this file in your scripts directory and load it.
+//In game Go to someplace players cant get to, (your admin office or staff area, if you dont have one, you should.
+//use .static 09ab (or additem 09ab) to make a metal chest. 
+//use .info on the chest and write down the serial number of the chest
+//change acctTag_CONT 0400030de to acctTag_CONT (the serial number of the chest you just made)
+//either add the e_accounttags event to all players or copy the login section to your allplayers event
+//We all have at least one...  Do not put this event on NPCs
+//thats it
+//it tracks information based on the account name.  More scripts that use this system are on the way
+//src.uid.<src.tag.acctmem>.tag.whatveryou want
+//Inclued is the .ICQ command 
+//By request- .aim was added (it simply calls the icq function)
+//to diable aim/icq change the plevel block at the end of this file
+//.ICQ checks if there already is an icq request open on the target and the src to prevent
+//lots of open dialogs. 
+//if you target yourself you can edit your icq/aim info
+//if a player targets staff it is rejected
+//you can set your icq to automaticly be given out (you will be told who got it)
+//never to be given out (you are told who wanted it)
+//or you can have it ask (default)...WARNING this pops up a box on the screen.
+//
+//these settings stay the same across all characters on the account.
+//feel free to email questions/comments
+//           Cat@salemx.net
+//V1.5 Fixes
+//now checks to see if you are dragging an item to fix a bug in some clients
+//where you are unable to click anything if dragging an item and a menu pops up
+//
+//Some people reported stumbling into the anti-run away script feature of sphere
+//causing accounts to have several memory objects (and defeating the point of accounttags)
+//set the useRecursion to 1 to use the old method or 0 to use the new one.
+ 
+
+[DEFNAME def_acctTag]
+//create a chest in the world and put its uid in this def.
+//acctTag_CONT 04000xxxx
+acctTag_CONT 0400030de
+useRecursion 0
+//useRecursion 1
+ 
+[Events e_accounttags]
+ON=@login
+if 0<src.tag.acctmem>==0
+//dont have the tag so get it
+ src.sysmessage Creating (or locating) Account memory, Use .ICQ to set you contact information!
+ src.getaccountmem
+else
+//have the tag, check if its missing....
+ if !<src.uid.<src.tag.acctmem>>
+  src.sysmessage Locating account memory, Use .ICQ to set you contact information!
+  src.tag.acctmem
+  src.getaccountmem
+ else
+  src.sysmessage Account memory is Ok.
+ endif
+endif
+ 
+[Function getAccountMem]
+if <var.useRecursion>
+ ACT <var.acctTag_CONT>
+ var.acctmem 0
+ var.acctNum <eval <ACT.RESCOUNT>+-1>
+ if ((<eval <var.acctNum>>) >= 0) 
+  acctOwnerCheck <eval <var.acctNum>>
+ endif
+ if !<eval <var.acctmem>>
+  //make a new account object
+  newitem m_account_tag
+  act.name=<account>
+  act.tag.EmailShare=0
+  act.cont <var.acctTag_CONT>
+ else
+  ACT <var.acctmem>
+ endif
+ tag.acctMem <act.uid>
+else
+ newitem i_accountTagLocator
+ sysmessage Searching...
+ act.equip
+endif
+ 
+[itemdef i_accountTagLocator]
+ 
+ID=i_memory
+TYPE=t_eq_script
+NAME=AccountMem
+ 
+CATEGORY=Darkstone Custom 
+SUBSECTION=AccountTags (DND)
+DESCRIPTION=AccountMemObject 
+ 
+on=@create
+ 
+on=@equip
+ tag.idex=<eval <uid.<var.acctTag_CONT>.RESCOUNT>+-1>
+ timer=1
+on=@timer
+ 
+if (STRMATCH(<uid.<var.acctTag_Cont>.FINDCONT.<eval <tag.idex>>.name>,<cont.account>))
+ cont.tag.acctMem <uid.<var.acctTag_Cont>.FINDCONT.<eval <tag.idex>>.uid>
+ cont.sysmessage Found
+ remove
+else
+ tag.idex=<eval <tag.idex>>+-1
+ if <eval <tag.idex>><0
+  cont.newitem m_account_tag
+  cont.act.name=<cont.account>
+  cont.act.tag.EmailShare=0
+  cont.act.cont <var.acctTag_CONT>
+  cont.tag.acctMem <ACT.uid>
+  cont.sysmessage Memory item created.
+  remove
+ else 
+  timer=2
+ endif
+endif
+return 1
+ 
+[Function acctOwnerCheck] 
+ACT <var.acctTag_CONT>
+if (STRMATCH(<ACT.FINDCONT.<ARGN>.name>,<account>))
+ var.acctmem <ACT.FINDCONT.<ARGN>.uid>
+ return 0
+endif
+IF ((<EVAL 0<var.acctNum> +- 1>) >= 0)
+var.acctNum <EVAL 0<var.acctNum> +- 1>
+ acctOwnerCheck <eval <var.acctNum>>
+else
+ return 0
+endif
+return 0
+ 
+[ITEMDEF m_account_tag]
+ID=i_memory
+TYPE=t_eq_script
+NAME=AccountMem
+ 
+
+CATEGORY=Darkstone Custom 
+SUBSECTION=AccountTags (DND)
+DESCRIPTION=AccountMemObject 
+ 
+On=@create
+ tag.aol None
+ tag.giveICQ 0
+ tag.icq 0
+ 
+[function aim]
+ icq
+[function icq]
+if !<restest m_ICQ> 
+ newitem m_icq
+ act.equip
+else
+ sysmessage you already have an ICQ request open.
+endif
+ 
+[itemdef m_ICQ_request]
+ID=i_memory
+TYPE=t_eq_script
+NAME=ICQ request
+on=@create
+ timer=60
+on=@timer
+ link.sysmessage <cont.name> did not respond in time to your ICQ request.
+ cont.Sysmessage <link.name>'s ICQ request has timed out (you took too long).
+ remove
+on=@equip
+ var.name <link.name>
+ menu menu_ICQ
+ 
+[menu menu_ICQ]
+<var.name> has requested your ICQ.  Would you like to give it to them?
+on=0 Yes
+  if !<src.restest m_ICQ_request>
+ src.sysmessage <var.name>'s ICQ request timed out before you responded
+  else
+ src.newitem m_ICQ_Approved
+ src.act.tag.name=<src.name>
+ src.act.tag.icq=<src.uid.<src.tag.acctmem>.tag.ICQ>
+ src.act.tag.aol=<src.uid.<src.tag.acctmem>.tag.aol>
+ src.findtype(m_ICQ_request).link.equip <src.act.uid>
+ //src.findtype(m_ICQ_request).link.sysmessage They have given you their ICQ
+ src.sysmessage You have given them your ICQ.
+ src.findtype(m_ICQ_request).remove
+  endif
+on=0 No
+  if !<src.restest m_ICQ_request>
+ src.sysmessage <var.name>'s ICQ request timed out before you responded
+  else
+ src.findtype(m_ICQ_request).link.sysmessage <src.name> has declined to give you their ICQ.  [Shard policy is to jail people who keep requesting (or go OOC for) ICQ]
+ src.findtype(m_ICQ_request).remove
+  endif
+ 
+[itemdef m_ICQ]
+ID=i_memory
+TYPE=t_eq_script
+NAME=ICQ target
+on=@timer
+ cont.Sysmessage The ICQ request has timed out (you took too long).
+ remove
+on=@equip
+ timer=60
+ target Whose ICQ would you like to request?
+ON=@TARGON_ITEM 
+ cont.sysmessage that is not a person
+ remove
+ return 1
+ON=@TARGON_CHAR
+ if !<src.TARG.BRAIN>
+  //if they dont have a memory obj link get one
+  if 0<src.targ.tag.acctmem>==0
+   src.targ.getaccountmem
+  endif
+  if <src.targ.uid>==<src.uid>
+   src.dialog myICQ
+  else
+   if (<src.targ.account.plevel> > 1)&&(<src.account.plevel>==1)
+    src.targ.sysmessage <src.name>'s [<src.account>] request for your ICQ was rejected because you are Staff (and they are not)
+    src.sysmessage You may not request <src.targ.name>'s ICQ [Shard policy prevents Staff from giving out ICQ information]
+   else
+    if <src.flags>& statf_war
+     src.sysmessage You may not request anyones ICQ now [War mode].
+     src.targ.sysmessage <src.name> tried to request your ICQ.  since they are in combat mode the request was denied.
+    else
+     doswitch 0<eval <src.uid.<src.targ.tag.acctmem>.tag.giveICQ>>
+      begin //0 ask
+       if <src.targ.restest m_ICQ_request>
+        src.sysmessage <src.targ.name> already currently an ICQ request.  Please try again in a few minutes.
+        src.targ.sysmessage <src.name> would like to request your ICQ but you already have a request open.
+       elseif <src.targ.flags>& statf_war
+        src.sysmessage They are busy fighting
+        src.targ.sysmessage <src.name> tried to request your ICQ.  since you are set to ask and in combat mode the request was denied.
+       elseif !<src.findlayer(layer_dragging)>
+        src.sysmessage They are currently moving an item
+        src.targ.sysmessage <src.name> tried to request your ICQ.  since you are set to ask and moving items the request was denied.         
+       else
+        src.newitem m_ICQ_request
+        src.act.link <src.uid>
+        src.targ.equip <src.act.uid>
+        src.sysmessage You have requested <src.targ.name>s ICQ
+       endif
+      end//0 ask
+      begin//1 always
+       src.sysmessage You get <src.targ.name>'s ICQ [They grant all ICQ requests]
+       src.targ.sysmessage <src.name>'s was given your ICQ. (use .icq and target yourself to change your settings)
+       var.name=<src.targ.name>
+       var.icq=<src.uid.<src.targ.tag.acctmem>.tag.ICQ>
+       var.aol=<src.uid.<src.targ.tag.acctmem>.tag.aol>
+       src.dialog theiricq
+      end //1 always
+      begin //2 never
+       src.sysmessage You may not request <src.targ.name>'s ICQ [They deny all ICQ requests]
+       src.targ.sysmessage <src.name>'s request for your ICQ was rejected. (use .icq and target yourself to change your settings)
+      end //2
+     enddo
+    endif //warmode
+   endif //player/staff check end
+  endif//target self check
+ else//target npc check
+  You may not request an NPCs ICQ.
+ endif
+ remove
+ return 1
+[itemdef m_ICQ_approved]
+ID=i_memory
+TYPE=t_eq_script
+NAME=ICQ Approved
+on=@equip
+ var.name=<tag.name>
+ var.icq=<tag.icq>
+ var.aol=<tag.aol>
+ cont.dialog theirICQ
+ remove
+[DIALOG myICQ]
+10,10
+page 0
+resizepic 0 0 5100 340 180
+resizepic 15 170 5100 175 40
+button 100 176 <eval g_btn_gray_apply> <eval g_btn_gray_apply_press> 1 0 901
+button 20 176 5200 5201 1 0 900
+text 15 10 085 0
+text 25 36 1152 1
+text 25 63 1152 2
+resizepic 155 30 2620 150 35
+textentry 165 36 150 20 1152 1 3 // 4 text fields now
+resizepic 155 57 2620 150 35
+textentry 165 63 150 20 1152 2 4
+text 25 95 1152 8
+text 60 115 1152 <eval 0<src.uid.<src.tag.acctmem>.tag.giveICQ> + 5>
+button 20 138 2472 2473 1 0 902
+button 120 138 2472 2473 1 0 903
+button 220 138 2472 2473 1 0 904
+text 50 142 1152 9
+text 150 142 1152 10
+text 250 142 1152 11
+[DIALOG myICQ text]
+MY ICQ controls
+My ICQ
+My AOL/AIM
+<eval <src.uid.<src.tag.acctmem>.tag.ICQ>>
+<src.uid.<src.tag.acctmem>.tag.AOL>
+Ask permission to give your ICQ
+Always give your ICQ
+Never give your ICQ
+Currently I:
+Ask
+Always
+Never
+ 
+
+[DIALOG myICQ button]
+on=901
+ tryp 0 src.uid.<src.tag.acctmem>.tag.ICQ <ARGTXT[1]>
+ tryp 0 src.uid.<src.tag.acctmem>.tag.AOL <ARGTXT[2]>
+on=902
+ tryp 0 src.uid.<src.tag.acctmem>.tag.giveICQ 0
+ tryp 0 src.uid.<src.tag.acctmem>.tag.ICQ <ARGTXT[1]>
+ tryp 0 src.uid.<src.tag.acctmem>.tag.AOL <ARGTXT[2]>
+on=903
+ tryp 0 src.uid.<src.tag.acctmem>.tag.giveICQ 1
+ tryp 0 src.uid.<src.tag.acctmem>.tag.ICQ <ARGTXT[1]>
+ tryp 0 src.uid.<src.tag.acctmem>.tag.AOL <ARGTXT[2]>
+on=904
+ tryp 0 src.uid.<src.tag.acctmem>.tag.giveICQ 2
+ tryp 0 src.uid.<src.tag.acctmem>.tag.ICQ <ARGTXT[1]>
+ tryp 0 src.uid.<src.tag.acctmem>.tag.AOL <ARGTXT[2]>
+ 
+[DIALOG theirICQ]
+10,10
+page 0
+resizepic 0 0 5100 340 100
+resizepic 15 90 5100 90 40
+button 20 96 5200 5201 1 0 900
+text 15 10 085 0
+text 25 36 1152 1
+text 25 63 1152 2
+resizepic 155 30 2620 150 35
+text 165 36 1152 3 // 4 text fields now
+resizepic 155 57 2620 150 35
+text 165 63 1152 4
+ 
+[DIALOG theirICQ text]
+<var.name>'s ICQ
+ICQ
+AOL/AIM
+<eval <var.icq>>
+<var.aol>
+ 
+[DIALOG theirICQ button]
+ 
+ 
+ 
+[PLEVEL 1]
+ICQ
+AIM

@@ -1,0 +1,1628 @@
+/////////////////////////////////////////////////////////////////////////
+// Socketed items 
+//
+// Developed by BaRBariaN
+// E-Mail: barbarian_on_road@yahoo.com , killers_inn@yahoo.com
+//
+//  Due to "Morem" can only take values from 0 to 255, only two 
+// sockets will be available. Script can hold 15 different items
+// to be placed into sockets, and 15 different functions for
+// these items.
+//
+// Based on script created by Belgar of 'A Virtual Paradise'.
+// www.virtual-paradise.org 
+/////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_axe_socketed]
+DEFNAME=i_axe_socketed
+id=i_axe
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=6
+SPEED=37
+SKILL=Swordsmanship
+REQSTR=35
+TWOHANDS=Y
+WEIGHT=4
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=Axe [Socketed]
+NAME=Axe [Socketed]
+
+ON=@Create
+	HITPOINTS={31 100}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_axe_battle_socketed]
+DEFNAME=i_axe_battle_socketed
+id=i_axe_battle
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=6
+SPEED=30
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=Y
+WEIGHT=6
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=Battle Axe [Socketed]
+NAME=Battle Axe [Socketed]
+
+ON=@Create
+	HITPOINTS={31 110}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_axe_double_socketed]
+DEFNAME=i_axe_double_socketed
+id=i_axe_double
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=5
+SPEED=37
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=8
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=Double Axe [Socketed]
+NAME=Double Axe [Socketed]
+
+ON=@Create
+	HITPOINTS={31 110}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_axe_exec_socketed]
+DEFNAME=i_axe_exec_socketed
+id=i_axe_exec
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=6
+SPEED=37
+SKILL=Swordsmanship
+REQSTR=35
+TWOHANDS=Y
+WEIGHT=8
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=Executioner's Axe [Socketed]
+NAME=Executioner's Axe [Socketed]
+
+ON=@Create
+	HITPOINTS={31 90}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_hatchet_socketed]
+DEFNAME=i_hatchet_socketed
+id=i_hatchet
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=2
+SPEED=40
+SKILL=Swordsmanship
+REQSTR=15
+TWOHANDS=N
+WEIGHT=5
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=Hatchet [Socketed]
+NAME=Hatchet [Socketed]
+
+ON=@Create
+	HITPOINTS={31 80}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_axe_battle_double_socketed]
+DEFNAME=i_axe_battle_double_socketed
+id=i_axe_battle_large
+WEIGHT=12
+TYPE=T_WEAPON_AXE
+FLIP=1
+DAM=6
+SPEED=30
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=Large Battle Axe [Socketed]
+NAME=Large Battle Axe [Socketed]
+
+ON=@Create
+	HITPOINTS={31 110}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_pickaxe_socketed]
+DEFNAME=i_pickaxe_socketed
+id=i_pickaxe
+TYPE=T_WEAPON_MACE_PICK
+FLIP=1
+DAM=1
+SPEED=35
+REQSTR=25
+TWOHANDS=N
+WEIGHT=11
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=PickAxe [Socketed]
+NAME=PickAxe [Socketed]
+
+ON=@Create
+	HITPOINTS={31 60}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_axe_two_hand_socketed]
+DEFNAME=i_axe_two_hand_socketed
+id=i_axe_two_hand
+WEIGHT=8
+TYPE=T_WEAPON_AXE
+FLIP=1
+DAM=5
+SPEED=30
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=Two Handed Axe [Socketed]
+NAME=Two Handed Axe [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_axe_war_socketed]
+DEFNAME=i_axe_war_socketed
+id=i_axe_war
+WEIGHT=8
+TYPE=T_WEAPON_MACE_SHARP
+FLIP=1
+DAM=9
+SPEED=40
+REQSTR=35
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Axes
+DESCRIPTION=War Axe [Socketed]
+NAME=War Axe [Socketed]
+
+ON=@Create
+	HITPOINTS={31 80}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_bow_socketed]
+DEFNAME=i_bow_socketed
+id=i_bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+WEIGHT=5
+DAM=9
+SPEED=20
+SKILL=Archery
+REQSTR=20
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Bows
+DESCRIPTION=Bow [Socketed]
+NAME=Bow [Socketed]
+
+TDATA3=i_arrow
+TDATA4=i_arrow_x
+
+ON=@Create
+	HITPOINTS={31 60}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_crossbow_socketed]
+DEFNAME=i_crossbow_socketed
+id=i_crossbow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+DAM=8
+SPEED=18
+SKILL=Archery
+REQSTR=30
+TWOHANDS=Y
+WEIGHT=15
+CATEGORY=Weapons - Socketed
+SUBSECTION=Bows
+DESCRIPTION=Crossbow [Socketed]
+NAME=Crossbow [Socketed]
+
+TDATA3=i_xbolt
+TDATA4=i_xbolt_x
+
+ON=@Create
+	HITPOINTS={31 80}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_crossbow_heavy_socketed]
+DEFNAME=i_crossbow_heavy_socketed
+id=i_crossbow_heavy
+TYPE=T_WEAPON_XBOW
+FLIP=1
+WEIGHT=10
+DAM=11
+SPEED=10
+SKILL=archery
+REQSTR=40
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Bows
+DESCRIPTION=Heavy Crossbow [Socketed]
+NAME=Heavy Crossbow [Socketed]
+
+TDATA3=i_xbolt
+TDATA4=i_xbolt_x
+
+ON=@Create
+	HITPOINTS={31 100}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_bow_elven_socketed]
+DEFNAME=i_bow_elven_socketed
+ID=i_bow
+DAM=10
+SPEED=33
+SKILL=Archery
+REQSTR=30
+TWOHANDS=Y
+WEIGHT=3
+CATEGORY=Weapons - Socketed
+SUBSECTION=Bows
+DESCRIPTION=Elven Bow [Socketed]
+NAME=Elven Bow [Socketed]
+
+TDATA3=i_arrow
+TDATA4=i_arrow_x
+
+ON=@Create
+	HITPOINTS={25 50}
+	COLOR=000a7
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@damage
+	f_socket_damage 
+ON=@Equip
+	SRC.TACTICS=(<SRC.TACTICS>+15.0)
+	SRC.ARCHERY=(<SRC.ARCHERY>+10.0)
+	link=<SRC.UID> 
+ON=@UnEquip
+	SRC.TACTICS=(<SRC.TACTICS>-(15.0))
+	SRC.ARCHERY=(<SRC.ARCHERY>-(10.0))
+
+[ITEMDEF i_knife_butcher_socketed]
+DEFNAME=i_knife_butcher_socketed
+id=i_knife_butcher
+WEIGHT=2
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=2
+SPEED=40
+SKILL=Swordsmanship
+REQSTR=5
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Knives & Daggers
+DESCRIPTION=Butchers Knife [Socketed]
+NAME=Butchers Knife [Socketed]
+
+ON=@Create
+	HITPOINTS={31 40}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_cleaver_meat_socketed]
+DEFNAME=i_cleaver_meat_socketed
+id=i_cleaver_meat
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=2
+SPEED=40
+SKILL=Swordsmanship
+REQSTR=10
+TWOHANDS=N
+WEIGHT=3
+CATEGORY=Weapons - Socketed
+SUBSECTION=Knives & Daggers
+DESCRIPTION=Cleaver [Socketed]
+NAME=Cleaver [Socketed]
+
+ON=@Create
+	HITPOINTS={31 50}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_dagger_socketed]
+DEFNAME=i_dagger_socketed
+id=i_dagger
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=3
+SPEED=55
+SKILL=Fencing
+REQSTR=1
+TWOHANDS=N
+WEIGHT=3
+CATEGORY=Weapons - Socketed
+SUBSECTION=Knives & Daggers
+DESCRIPTION=Dagger [Socketed]
+NAME=Dagger [Socketed]
+
+ON=@Create
+	HITPOINTS={31 40}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_kryss_socketed]
+DEFNAME=i_kryss_socketed
+id=i_kryss
+WEIGHT=2
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=3
+SPEED=53
+SKILL=Fencing
+REQSTR=10
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Knives & Daggers
+DESCRIPTION=Kryss [Socketed]
+NAME=Kryss [Socketed]
+
+ON=@Create
+	HITPOINTS={31 90}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_knife_skinning_socketed]
+DEFNAME=i_knife_skinning_socketed
+id=i_knife_skinning
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=1
+SPEED=40
+SKILL=Swordsmanship
+REQSTR=5
+TWOHANDS=N
+WEIGHT=1
+CATEGORY=Weapons - Socketed
+SUBSECTION=Knives & Daggers
+DESCRIPTION=Skinning Knife [Socketed]
+NAME=Skinning Knife [Socketed]
+
+ON=@Create
+	HITPOINTS={31 40}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_club_socketed]
+DEFNAME=i_club_socketed
+id=i_club
+WEIGHT=8
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=8
+SPEED=40
+SKILL=Mace Fighting
+REQSTR=10
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Maces & Hammers
+DESCRIPTION=Club [Socketed]
+NAME=Club [Socketed]
+
+ON=@Create
+	HITPOINTS={31 40}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	IF (<SRC.STAM>>15)
+	DORAND 5
+	SRC.STAM=<SRC.STAM>
+	SRC.STAM=<SRC.STAM>+-{1 5}
+	SRC.STAM=<SRC.STAM>+-{3 8}
+	SRC.STAM=<SRC.STAM>+-{5 11}
+	SRC.STAM=<SRC.STAM>+-{7 15}
+	ENDDO
+	RETURN 0
+	ELSE
+	SRC.STAM=5
+	RETURN 0
+	ENDIF
+	f_socket_damage 
+
+[ITEMDEF i_hammer_smith_socketed]
+DEFNAME=i_hammer_smith_socketed
+id=i_hammer_smith
+WEIGHT=6
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=6
+SPEED=30
+SKILL=Mace Fighting
+REQSTR=30
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Maces & Hammers
+DESCRIPTION=Smith's Hammer [Socketed]
+NAME=Smith's Hammer [Socketed]
+
+ON=@Create
+	HITPOINTS={31 60}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage 
+
+[ITEMDEF i_mace_war_socketed]
+DEFNAME=i_mace_war_socketed
+id=i_mace_war
+WEIGHT=11
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=10
+SPEED=32
+SKILL=Mace Fighting
+REQSTR=30
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Maces & Hammers
+DESCRIPTION=War Mace [Socketed]
+NAME=War Mace [Socketed]
+
+ON=@Create
+	HITPOINTS={31 110}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	IF (<SRC.STAM>>15)
+	DORAND 5
+	SRC.STAM=<SRC.STAM>
+	SRC.STAM=<SRC.STAM>+-{1 5}
+	SRC.STAM=<SRC.STAM>+-{3 8}
+	SRC.STAM=<SRC.STAM>+-{5 11}
+	SRC.STAM=<SRC.STAM>+-{7 15}
+	ENDDO
+	RETURN 0
+	ELSE
+	SRC.STAM=5
+	RETURN 0
+	ENDIF
+	f_socket_damage 
+
+[ITEMDEF i_hammer_war_socketed]
+DEFNAME=i_hammer_war_socketed
+id=i_hammer_war
+WEIGHT=7
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=8
+SPEED=31
+SKILL=Mace Fighting
+REQSTR=40
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Maces & Hammers
+DESCRIPTION=War Hammer [Socketed]
+NAME=War Hammer [Socketed]
+
+ON=@Create
+	HITPOINTS={31 110}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage 
+
+[ITEMDEF i_maul_socketed]
+DEFNAME=i_maul_socketed
+id=i_maul
+WEIGHT=9
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=10
+SPEED=30
+SKILL=Mace Fighting
+REQSTR=20
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Maces & Hammers
+DESCRIPTION=Maul [Socketed]
+NAME=Maul [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	IF (<SRC.STAM>>15)
+	DORAND 5
+	SRC.STAM=<SRC.STAM>
+	SRC.STAM=<SRC.STAM>+-{1 5}
+	SRC.STAM=<SRC.STAM>+-{3 8}
+	SRC.STAM=<SRC.STAM>+-{5 11}
+	SRC.STAM=<SRC.STAM>+-{7 15}
+	ENDDO
+	RETURN 0
+	ELSE
+	SRC.STAM=5
+	RETURN 0
+	ENDIF
+	f_socket_damage 
+
+[ITEMDEF i_hammer_pick_socketed]
+DEFNAME=i_hammer_pick_socketed
+id=i_hammer_pick
+WEIGHT=7
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=6
+SPEED=30
+SKILL=Mace Fighting
+REQSTR=35
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Maces & Hammers
+DESCRIPTION=Hammer Pick [Socketed]
+NAME=Hammer Pick [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	IF (<SRC.STAM>>15)
+	DORAND 5
+	SRC.STAM=<SRC.STAM>
+	SRC.STAM=<SRC.STAM>+-{1 5}
+	SRC.STAM=<SRC.STAM>+-{3 8}
+	SRC.STAM=<SRC.STAM>+-{5 11}
+	SRC.STAM=<SRC.STAM>+-{7 15}
+	ENDDO
+	RETURN 0
+	ELSE
+	SRC.STAM=5
+	RETURN 0
+	ENDIF
+	f_socket_damage 
+
+[ITEMDEF i_crook_thin_socketed]
+DEFNAME=i_crook_thin_socketed
+id=i_crook_thin
+TYPE=T_WEAPON_MACE_CROOK
+FLIP=1
+DAM=3
+SPEED=30
+REQSTR=10
+TWOHANDS=Y
+WEIGHT=2
+CATEGORY=Weapons - Socketed
+SUBSECTION=Maces & Hammers
+DESCRIPTION=Sheperds Crook [Socketed]
+NAME=Sheperds Crook [Socketed]
+
+ON=@Create
+	HITPOINTS={31 50}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage 
+
+[ITEMDEF i_mace_socketed]
+DEFNAME=i_mace_socketed
+id=i_mace
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=8
+SPEED=30
+SKILL=MaceFighting
+REQSTR=20
+TWOHANDS=N
+WEIGHT=10
+CATEGORY=Weapons - Socketed
+SUBSECTION=Maces & Hammers
+DESCRIPTION=Mace [Socketed]
+NAME=Mace [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	IF (<SRC.STAM>>15)
+	DORAND 5
+	SRC.STAM=<SRC.STAM>
+	SRC.STAM=<SRC.STAM>+-{1 5}
+	SRC.STAM=<SRC.STAM>+-{3 8}
+	SRC.STAM=<SRC.STAM>+-{5 11}
+	SRC.STAM=<SRC.STAM>+-{7 15}
+	ENDDO
+	RETURN 0
+	ELSE
+	SRC.STAM=5
+	RETURN 0
+	ENDIF
+	f_socket_damage 
+
+[ITEMDEF i_halberd_socketed]
+DEFNAME=i_halberd_socketed
+id=i_halberd
+WEIGHT=8
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=5
+SPEED=25
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Polearms
+DESCRIPTION=Halberd [Socketed]
+NAME=Halberd [Socketed]
+
+ON=@Create
+	HITPOINTS={31 80}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage 
+
+[ITEMDEF i_pitchfork_socketed]
+DEFNAME=i_pitchfork_socketed
+id=i_pitchfork
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=4
+SPEED=45
+SKILL=Fencing
+REQSTR=15
+TWOHANDS=Y
+WEIGHT=10
+CATEGORY=Weapons - Socketed
+SUBSECTION=Polearms
+DESCRIPTION=Pitchfork [Socketed]
+NAME=Pitchfork [Socketed]
+
+ON=@Create
+	HITPOINTS={31 60}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage 
+
+[ITEMDEF i_bardiche_socketed]
+DEFNAME=i_bardiche_socketed
+id=i_bardiche
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=5
+SPEED=26
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=Y
+WEIGHT=7
+CATEGORY=Weapons - Socketed
+SUBSECTION=Polearms
+DESCRIPTION=Bardiche [Socketed]
+NAME=Bardiche [Socketed]
+
+ON=@Create
+	HITPOINTS={31 100}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage 
+
+[ITEMDEF i_spear_socketed]
+DEFNAME=i_spear_socketed
+id=i_spear
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=2
+SPEED=46
+SKILL=Fencing
+REQSTR=30
+TWOHANDS=N
+WEIGHT=7
+CATEGORY=Weapons - Socketed
+SUBSECTION=Polearms
+DESCRIPTION=Spear [Socketed]
+NAME=Spear [Socketed]
+
+ON=@Create
+	HITPOINTS={31 80}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage
+
+[ITEMDEF i_spear_short_socketed]
+DEFNAME=i_spear_short_socketed
+id=i_spear_short
+WEIGHT=7
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=4
+SPEED=50
+SKILL=Fencing
+REQSTR=15
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Polearms
+DESCRIPTION=Short Spear [Socketed]
+NAME=Short Spear [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage
+
+[ITEMDEF i_war_fork_socketed]
+DEFNAME=i_war_fork_socketed
+id=i_war_fork
+WEIGHT=6
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=4
+SPEED=45
+SKILL=Fencing
+REQSTR=35
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Polearms
+DESCRIPTION=War Fork [Socketed]
+NAME=War Fork [Socketed]
+
+ON=@Create
+	HITPOINTS={31 110}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage
+
+[ITEMDEF i_shepherds_crook_socketed]
+DEFNAME=i_shepherds_crook_socketed
+id=i_shepherds_crook
+WEIGHT=5
+TYPE=T_WEAPON_MACE_CROOK
+FLIP=1
+DAM=3
+SPEED=30
+REQSTR=10
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Staves
+DESCRIPTION=Sheperd's Crook [Socketed]
+NAME=Sheperd's Crook [Socketed]
+
+ON=@Create
+	HITPOINTS={31 50}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	f_socket_damage
+
+[ITEMDEF i_staff_gnarled_socketed]
+DEFNAME=i_staff_gnarled_socketed
+id=i_staff_gnarled
+WEIGHT=5
+TYPE=T_WEAPON_MACE_STAFF
+FLIP=1
+DAM=10
+SPEED=33
+SKILL=Mace Fighting
+REQSTR=20
+TWOHANDS=Y
+CATEGORY=Weapons - Socketed
+SUBSECTION=Staves
+DESCRIPTION=Gnarled Staff [Socketed]
+NAME=Gnarled Staff [Socketed]
+
+ON=@Create
+	HITPOINTS={31 50}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	IF (<SRC.STAM>>15)
+	DORAND 5
+	SRC.STAM=<SRC.STAM>
+	SRC.STAM=<SRC.STAM>+-{1 5}
+	SRC.STAM=<SRC.STAM>+-{3 8}
+	SRC.STAM=<SRC.STAM>+-{5 11}
+	SRC.STAM=<SRC.STAM>+-{7 15}
+	ENDDO
+	RETURN 0
+	ELSE
+	SRC.STAM=5
+	RETURN 0
+	ENDIF
+	f_socket_damage
+
+[ITEMDEF i_staff_black_socketed]
+DEFNAME=i_staff_black_socketed
+id=i_staff_black
+TYPE=T_WEAPON_MACE_STAFF
+FLIP=1
+DAM=8
+SPEED=35
+SKILL=Macefighting
+REQSTR=35
+TWOHANDS=Y
+WEIGHT=6
+CATEGORY=Weapons - Socketed
+SUBSECTION=Staves
+DESCRIPTION=Black Staff [Socketed]
+NAME=Black Staff [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	IF (<SRC.STAM>>15)
+	DORAND 5
+	SRC.STAM=<SRC.STAM>
+	SRC.STAM=<SRC.STAM>+-{1 5}
+	SRC.STAM=<SRC.STAM>+-{3 8}
+	SRC.STAM=<SRC.STAM>+-{5 11}
+	SRC.STAM=<SRC.STAM>+-{7 15}
+	ENDDO
+	RETURN 0
+	ELSE
+	SRC.STAM=5
+	RETURN 0
+	ENDIF
+	f_socket_damage
+
+[ITEMDEF i_staff_quarter_socketed]
+DEFNAME=i_staff_quarter_socketed
+id=i_staff_quarter
+TYPE=T_WEAPON_MACE_STAFF
+FLIP=1
+DAM=8
+SPEED=48
+SKILL=MaceFighting
+REQSTR=30
+TWOHANDS=N
+WEIGHT=5
+CATEGORY=Weapons - Socketed
+SUBSECTION=Staves
+DESCRIPTION=Quarter Staff [Socketed]
+NAME=Quarter Staff [Socketed]
+
+ON=@Create
+	HITPOINTS={31 60}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+ON=@DAMAGE
+	IF (<SRC.STAM>>15)
+	DORAND 5
+	SRC.STAM=<SRC.STAM>
+	SRC.STAM=<SRC.STAM>+-{1 5}
+	SRC.STAM=<SRC.STAM>+-{3 8}
+	SRC.STAM=<SRC.STAM>+-{5 11}
+	SRC.STAM=<SRC.STAM>+-{7 15}
+	ENDDO
+	RETURN 0
+	ELSE
+	SRC.STAM=5
+	RETURN 0
+	ENDIF
+	f_socket_damage
+
+[ITEMDEF i_sword_broad_socketed]
+DEFNAME=i_sword_broad_socketed
+id=i_sword_broad
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=5
+SPEED=45
+SKILL=Swordsmanship
+REQSTR=25
+TWOHANDS=N
+WEIGHT=6
+CATEGORY=Weapons - Socketed
+SUBSECTION=Swords
+DESCRIPTION=Broadsword [Socketed]
+NAME=Broadsword [Socketed]
+
+ON=@Create
+	HITPOINTS={31 100}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_cutlass_socketed]
+DEFNAME=i_cutlass_socketed
+id=i_cutlass
+WEIGHT=8
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=6
+SPEED=45
+SKILL=Swordsmanship
+REQSTR=10
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Swords
+DESCRIPTION=Cutlass [Socketed]
+NAME=Cutlass [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_katana_socketed]
+DEFNAME=i_katana_socketed
+id=i_katana
+WEIGHT=3
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=5
+SPEED=58
+SKILL=Swordsmanship
+REQSTR=10
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Swords
+DESCRIPTION=Katana [Socketed]
+NAME=Katana [Socketed]
+
+ON=@Create
+	HITPOINTS={31 90}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_sword_long_b_socketed]
+DEFNAME=i_sword_long_b_socketed
+id=i_sword_long_b
+WEIGHT=5
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=5
+SPEED=35
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Swords
+DESCRIPTION=Long Sword [Socketed]
+NAME=Long Sword [Socketed]
+
+ON=@Create
+     HITPOINTS={31 90}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_sword_long_socketed]
+DEFNAME=i_sword_long_socketed
+id=i_sword_long
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=5
+SPEED=35
+SKILL=Swordsmanship
+REQSTR=25
+TWOHANDS=N
+WEIGHT=7
+CATEGORY=Weapons - Socketed
+SUBSECTION=Swords
+DESCRIPTION=Heavy Long Sword [Socketed]
+NAME=Heavy Long Sword [Socketed]
+
+ON=@Create
+     HITPOINTS={31 110}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_scimitar_socketed]
+DEFNAME=i_scimitar_socketed
+id=i_scimitar
+WEIGHT=4
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=4
+SPEED=43
+SKILL=Swordsmanship
+REQSTR=10
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Swords
+DESCRIPTION=Scimitar [Socketed]
+NAME=Scimitar [Socketed]
+
+ON=@Create
+	HITPOINTS={31 90}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_sword_viking_socketed]
+DEFNAME=i_sword_viking_socketed
+id=i_sword_viking
+WEIGHT=6
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=6
+SPEED=30
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=N
+CATEGORY=Weapons - Socketed
+SUBSECTION=Swords
+DESCRIPTION=Viking Sword [Socketed]
+NAME=Viking Sword [Socketed]
+
+ON=@Create
+	HITPOINTS={31 100}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_wand_1_socketed]
+DEFNAME=i_wand_1_socketed
+id=i_wand_1
+TYPE=T_WAND
+DAM=2
+SPEED=30
+REQSTR=1
+TWOHANDS=N
+WEIGHT=5
+CATEGORY=Weapons - Socketed
+SUBSECTION=Wands
+DESCRIPTION=Wand [Socketed]
+DESCRIPTION=Wand [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_wand_2_socketed]
+DEFNAME=i_wand_2_socketed
+id=i_wand_2
+TYPE=T_WAND
+DAM=2
+SPEED=30
+REQSTR=1
+TWOHANDS=N
+WEIGHT=5
+CATEGORY=Weapons - Socketed
+SUBSECTION=Wands
+DESCRIPTION=Wand [Socketed]
+DESCRIPTION=Wand [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_wand_3_socketed]
+DEFNAME=i_wand_3_socketed
+id=i_wand_3
+TYPE=T_WAND
+DAM=2
+SPEED=30
+REQSTR=1
+TWOHANDS=N
+WEIGHT=5
+CATEGORY=Weapons - Socketed
+SUBSECTION=Wands
+DESCRIPTION=Wand [Socketed]
+DESCRIPTION=Wand [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[ITEMDEF i_wand_4_socketed]
+DEFNAME=i_wand_4_socketed
+id=i_wand_4
+TYPE=T_WAND
+DAM=2
+SPEED=30
+REQSTR=1
+TWOHANDS=N
+WEIGHT=5
+CATEGORY=Weapons - Socketed
+SUBSECTION=Wands
+DESCRIPTION=Wand [Socketed]
+DESCRIPTION=Wand [Socketed]
+
+ON=@Create
+	HITPOINTS={31 70}
+	attr=020 
+	morem=0 
+on=@targon_item 
+	f_socket_newitem
+on=@UserDClick 
+	equip 
+	return 1 
+on=@UserClick
+	f_socket_display
+on=@equip 
+	link=<SRC.UID> 
+on=@damage
+	f_socket_damage 
+
+[EOF]

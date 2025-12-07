@@ -1,0 +1,35 @@
+// Scripted by Exercisto
+
+// Simple script, but 1337 apperently. Oh, and that means LEET.
+
+[ITEMDEF I_BOW_ENERGY]
+ID=I_BOW
+NAME=Energy Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+DAM=15,30
+SKILL=Archery
+WEIGHT=4
+
+TDATA3=
+TDATA4=I_FX_GLOW // Use 037ba if it lags too much.
+
+ON=@CREATE
+HITPOINTS={100 200}
+COLOR=0a7a
+
+ON=@EQUIP
+SRC.EVENTS +E_ENERGY_BOW
+
+ON=@UNEQUIP
+SRC.EVENTS -E_ENERGY_BOW
+
+[EVENTS E_ENERGY_BOW]
+ON=@HIT
+MANA=<MANA> - 3
+
+ON=@HITTRY
+IF (<MANA> < 3)
+SYSMESSAGE You need atleast 3 mana to use this.
+RETURN 1
+ENDIF

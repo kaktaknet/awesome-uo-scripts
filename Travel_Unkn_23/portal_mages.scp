@@ -1,0 +1,1159 @@
+//**********PORTAL MAGE'S*********\\
+
+//*****Original Header*****\\
+
+// This script has been made by -Ax- and belongs to sphere.
+// First of all, place the portal mage by using .add c_portal_mage or use Axis.
+// Then Approach him and Talk to him, A menu will appear. Each Travel costs 100gp.
+// Have fun, If you have ANY question. Private Message me on sphere. (UserName: alphanatix)
+
+//***************************************************************************************
+//*****This was Modified Greatly by adding a different gump menu system and some
+//*****other basic things.  The gump system was from "Bane's"(travel stone) script.
+//*****Added was the "portal" function that was inspired by "Nox", which actually creates a portal!
+//*****Added female version of the mage.
+//*****Added Emote's for more Roleplay. 
+//*****All modifications were done by Dev. Infinity on 11/24/03.
+//*****place by [.add c_male_portal_mage] or [.add c_female_portal_mage] without []'s or use Axis.
+//*****Enjoy!
+//****************************************************************************************
+
+//**********\\
+
+[CHARDEF c_male_portal_mage] 
+NAME=#NAMES_HUMANMALE the Realm Portal Mage
+ID=C_MAN
+CAN=MT_WALK
+DESIRES=i_gold,e_notoriety 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+
+CATEGORY=Custom NPC's
+SUBSECTION=Towns Folk
+DESCRIPTION=Male Portal Mage
+
+TSPEECH=spk_human_prime 
+TSPEECH=jobdope
+TSPEECH=spk_needs 
+TSPEECH=spk_rehello 
+TSPEECH=spk_human_default 
+
+TEVENTS=e_Human_HearUnk 
+TEVENTS=e_Human_Needs 
+TEVENTS=e_Human_ConvInit 
+TEVENTS=e_Human_Greet 
+TEVENTS=e_Human_Space 
+TEVENTS=e_Human_Refuse 
+TEVENTS=e_Human_Environ 
+
+ON=@Create 
+  COLOR=colors_skin 
+  STR={70 80} 
+  DEX={10 20} 
+  INT={150 200} 
+  NEED=i_gold
+
+MAGERY={150.0 270.0} 
+
+NPC=brain_human 
+
+ON=@NPCRestock
+  ITEMNEWBIE=i_hair_long
+  COLOR=00
+  ITEMNEWBIE=i_beard_goatee
+  COLOR=00
+  ITEMNEWBIE=i_robe 
+  COLOR=0498
+  ITEMNEWBIE=i_hat_wizards
+  COLOR=07a1 
+  ITEM=i_pants_short 
+  COLOR=0835
+  ITEM=i_shoes_plain 
+  COLOR=05F7
+  ITEMNEWBIE=i_cape 
+  COLOR=07a1
+  ITEMNEWBIE=i_spellbook
+  COLOR=07a1
+  NAME=Realm Travel Book
+
+[SPEECH jobdope]
+ 
+ON=*Hi* 
+SAY=Hi!  I'm a portal mage... where would you like to travel?
+EMOTE smile
+
+ON=*Hey* 
+SAY=Hey!!  How are ye doing??  Need to travel somewhere?
+EMOTE grin evilly
+
+ON=*Hello* 
+SAY=Hello, I'm a portal mage, ask me to travel and I'll see what I can do for you.
+EMOTE smile
+
+ON=*sell*
+EMOTE smile 
+SAY=I only sell my services as a portal mage for <serv.servname>... sorry.
+EMOTE take pride in his profession
+
+ON=*buy* 
+SAY=I'm sorry, I don't sell items, but I can send you somewhere... for a price!
+EMOTE grin
+
+ON=*Hail*
+SAY=Greetings... well met, how can I help ye?
+EMOTE smile warmly
+
+ON=*guards*
+EMOTE roll his eyes 
+SAY=Hmmm... Do you really think that I'm a criminal?
+EMOTE shake his head
+
+ON=*travel* 
+EMOTE excitedly turn the pages of his book
+DIALOG d_travel2
+MESSAGE=It costs 200 gold for my Services.
+Return 1
+
+ON=*teleport*
+EMOTE excitedly turn the pages of his book
+DIALOG d_travel2
+MESSAGE=It costs 200 gold for my Services.
+Return 1
+
+ON=*gate*
+EMOTE excitedly turn the pages of his book
+DIALOG d_travel2
+MESSAGE=It costs 200 gold for my Services.
+Return 1
+
+[DIALOG d_travel2]
+0, 0 //Coords for where gump opens!
+PAGE 0
+PAGE 1
+resizepic 0 0 3600 400 220
+resizepic 35 42 3500 330 140
+button 61 68 210 211 0 2 0
+text 89 68 1152 1
+button 61 98 210 211 0 3 0
+text 89 98 1152 2
+text 100 18 1152 0
+PAGE 2
+resizepic 0 0 5054 620 500
+gumppic 0 0 5500
+gumppic 55 50 5528
+text 480 90 1152 4
+text 480 110 1152 5
+button 450 130 210 211 1 0 1
+text 480 130 1152 6
+button 450 150 210 211 1 0 2
+text 480 150 1152 7
+button 450 170 210 211 1 0 3
+text 480 170 1152 8
+button 450 190 210 211 1 0 4
+text 480 190 1152 9
+button 450 210 210 211 1 0 5
+text 480 210 1152 10
+button 450 230 210 211 1 0 6
+text 480 230 1152 11
+button 450 250 210 211 1 0 7
+text 480 250 1152 12
+button 450 270 210 211 1 0 8
+text 480 270 1152 13
+button 450 290 210 211 1 0 9
+text 480 290 1152 14
+button 450 310 210 211 1 0 10
+text 480 310 1152 15
+button 450 330 210 211 1 0 11
+text 480 330 1152 16
+button 450 350 210 211 1 0 12
+text 480 350 1152 17
+button 450 370 210 211 1 0 13
+text 480 370 1152 18
+button 450 390 210 211 1 0 14
+text 480 390 1152 19
+button 450 410 210 211 1 0 15
+text 480 410 1152 20
+button 450 430 210 211 1 0 16
+text 480 430 1152 21
+button 450 450 210 211 1 0 17
+text 480 450 1152 22
+button 450 470 210 211 0 1 0
+text 480 470 1152 23
+PAGE 3
+resizepic 0 0 5054 620 500
+gumppic 0 0 5500
+gumppic 55 50 5528
+text 480 90 1152 24
+text 480 110 1152 25
+button 450 130 210 211 1 0 18
+text 480 130 1152 26
+button 450 150 210 211 1 0 19
+text 480 150 1152 27
+button 450 170 210 211 1 0 20
+text 480 170 1152 28
+button 450 190 210 211 1 0 21
+text 480 190 1152 29
+button 450 210 210 211 1 0 22
+text 480 210 1152 30
+button 450 230 210 211 1 0 23
+text 480 230 1152 31
+button 450 250 210 211 1 0 24
+text 480 250 1152 32
+button 450 270 210 211 1 0 25
+text 480 270 1152 33
+button 450 290 210 211 1 0 26
+text 480 290 1152 34
+button 450 310 210 211 1 0 27
+text 480 310 1152 35
+button 450 330 210 211 1 0 28
+text 480 330 1152 36
+button 450 350 210 211 1 0 29
+text 480 350 1152 37
+button 450 370 210 211 1 0 30
+text 480 370 1152 38
+button 450 390 210 211 1 0 31
+text 480 390 1152 39
+button 450 410 210 211 0 1 0
+text 480 410 1152 23
+
+[DIALOG d_travel2 TEXT]
+<serv.servname> Destinations
+Cities
+Dungeons
+By Bane
+*Travel Menu*
+*Cities*
+Britain
+Bucaneer's Den
+Cove
+Jhelom
+Magincia
+Minoc
+Moonglow
+Njuhelm
+Occlo
+Serpents Hold
+Skara Brae
+Trinsic
+Vesper
+Wind 
+Yew
+Delucia
+Papua
+Back
+*Travel Menu*
+*Dungeons*
+Covetous
+Deceit
+Despise
+Destard
+Hythloth
+Shame
+Wrong
+City of the Dead
+Cyclops Valley
+Delucia Orc Fort
+Fire Dungeon
+Ice Dungeon
+Ophidian Lair
+Terathan Keep
+
+
+[DIALOG d_travel2 BUTTON]
+on=0
+MESSAGE=You decide not to travel.
+EMOTE sigh
+on=1
+IF <SRC.RESTEST 200 i_gold>
+MESSAGE That will 200 gold.  Thank you.
+SRC.CONSUME=200 i_gold
+f_summon_portal 1495,1631,10
+Return 1
+  	ELSE
+ 	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+  	ENDIF
+on=2
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2691,2233,2
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=3
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2275,1210
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=4
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1383,3815
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=5
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 3714,2220,20
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=6
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2516,557
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=7
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 4442,1172
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=8
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 3756,1244,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=9
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 3650,2519
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=10
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 3021,3397,15
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=11
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 632,2233
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=12
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1867,2780
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=13
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2899,676
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=14
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1361,895,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=15
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 546,992
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=16
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5272,3995,37
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=17
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5729,3209,-1
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=18
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2499,922,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=19
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 4111,434,5
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=20
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1301,1080,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=21
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1176,2639,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=22
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 4722,3825,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=23
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 514,1561,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=24
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2044,238,10
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=25
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5219,3689,12
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=26
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5142,2904,51
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=27
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5210,3632,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=28
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2923,3406,8
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=29
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1998,81,7
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=30
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5767,2633,46
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+on=31
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5418,3148,-60
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake his head
+	ENDIF
+ 
+
+//**********\\
+
+[CHARDEF c_female_portal_mage] 
+NAME=#NAMES_HUMANFEMALE the Realm Portal Mage
+ID=C_WOMAN
+CAN=MT_WALK
+DESIRES=i_gold,e_notoriety 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+
+CATEGORY=Custom NPC's
+SUBSECTION=Towns Folk
+DESCRIPTION=Female Portal Mage
+
+TSPEECH=spk_human_prime 
+TSPEECH=jobdope
+TSPEECH=spk_needs 
+TSPEECH=spk_rehello 
+TSPEECH=spk_human_default 
+
+TEVENTS=e_Human_HearUnk 
+TEVENTS=e_Human_Needs 
+TEVENTS=e_Human_ConvInit 
+TEVENTS=e_Human_Greet 
+TEVENTS=e_Human_Space 
+TEVENTS=e_Human_Refuse 
+TEVENTS=e_Human_Environ 
+
+ON=@Create 
+  COLOR=colors_skin 
+  STR={70 80} 
+  DEX={10 20} 
+  INT={150 200} 
+  NEED=i_gold
+
+MAGERY={150.0 270.0} 
+
+NPC=brain_human 
+
+ON=@NPCRestock
+  ITEMNEWBIE=i_hair_long
+  COLOR=00
+  ITEMNEWBIE=i_dress_full 
+  COLOR=0498
+  ITEMNEWBIE=i_hat_wizards
+  COLOR=07a1 
+  ITEM=i_shoes_plain 
+  COLOR=05F7
+  ITEMNEWBIE=i_cape 
+  COLOR=07a1
+  ITEMNEWBIE=i_spellbook
+  COLOR=07a1
+  NAME=Realm Travel Book
+
+[SPEECH jobdope]
+ 
+ON=*Hi* 
+SAY=Hi!  I'm a portal mage... where would you like to travel?
+EMOTE smile
+
+ON=*Hey* 
+SAY=Hey!!  How are ye doing??  Need to travel somewhere?
+EMOTE smile warmly
+
+ON=*Hello* 
+SAY=Hello, I'm a portal mage, ask me to travel and I'll see what I can do for you.
+EMOTE wink
+
+ON=*sell*
+EMOTE smile 
+SAY=I only sell my services as a portal mage for <serv.servname>... sorry.
+EMOTE take pride in her profession
+
+ON=*buy* 
+SAY=I'm sorry, I don't sell items, but I can send you somewhere... for a price!
+EMOTE giggle
+
+ON=*Hail*
+SAY=Greetings... well met, how can I help ye?
+EMOTE smile warmly
+
+ON=*guards*
+EMOTE roll her eyes 
+SAY=Hmmm... Do you really think that I'm a criminal?
+EMOTE bats her eyes
+EMOTE laugh
+
+ON=*travel* 
+EMOTE excitedly turn the pages of her book
+SAY=Where would you like to go?
+DIALOG d_travel2
+MESSAGE=It costs 200 gold for my Services.
+Return 1
+
+ON=*teleport*
+EMOTE excitedly turn the pages of her book
+SAY=Where would you like to go?
+DIALOG d_travel2
+MESSAGE=It costs 200 gold for my Services.
+Return 1
+
+ON=*gate*
+EMOTE excitedly turn the pages of his book
+DIALOG d_travel2
+MESSAGE=It costs 200 gold for my Services.
+Return 1
+
+[DIALOG d_travel2]
+0, 0 //Coords for where gump opens!
+PAGE 0
+PAGE 1
+resizepic 0 0 3600 400 220
+resizepic 35 42 3500 330 140
+button 61 68 210 211 0 2 0
+text 89 68 1152 1
+button 61 98 210 211 0 3 0
+text 89 98 1152 2
+text 100 18 1152 0
+PAGE 2
+resizepic 0 0 5054 620 500
+gumppic 0 0 5500
+gumppic 55 50 5528
+text 480 90 1152 4
+text 480 110 1152 5
+button 450 130 210 211 1 0 1
+text 480 130 1152 6
+button 450 150 210 211 1 0 2
+text 480 150 1152 7
+button 450 170 210 211 1 0 3
+text 480 170 1152 8
+button 450 190 210 211 1 0 4
+text 480 190 1152 9
+button 450 210 210 211 1 0 5
+text 480 210 1152 10
+button 450 230 210 211 1 0 6
+text 480 230 1152 11
+button 450 250 210 211 1 0 7
+text 480 250 1152 12
+button 450 270 210 211 1 0 8
+text 480 270 1152 13
+button 450 290 210 211 1 0 9
+text 480 290 1152 14
+button 450 310 210 211 1 0 10
+text 480 310 1152 15
+button 450 330 210 211 1 0 11
+text 480 330 1152 16
+button 450 350 210 211 1 0 12
+text 480 350 1152 17
+button 450 370 210 211 1 0 13
+text 480 370 1152 18
+button 450 390 210 211 1 0 14
+text 480 390 1152 19
+button 450 410 210 211 1 0 15
+text 480 410 1152 20
+button 450 430 210 211 1 0 16
+text 480 430 1152 21
+button 450 450 210 211 1 0 17
+text 480 450 1152 22
+button 450 470 210 211 0 1 0
+text 480 470 1152 23
+PAGE 3
+resizepic 0 0 5054 620 500
+gumppic 0 0 5500
+gumppic 55 50 5528
+text 480 90 1152 24
+text 480 110 1152 25
+button 450 130 210 211 1 0 18
+text 480 130 1152 26
+button 450 150 210 211 1 0 19
+text 480 150 1152 27
+button 450 170 210 211 1 0 20
+text 480 170 1152 28
+button 450 190 210 211 1 0 21
+text 480 190 1152 29
+button 450 210 210 211 1 0 22
+text 480 210 1152 30
+button 450 230 210 211 1 0 23
+text 480 230 1152 31
+button 450 250 210 211 1 0 24
+text 480 250 1152 32
+button 450 270 210 211 1 0 25
+text 480 270 1152 33
+button 450 290 210 211 1 0 26
+text 480 290 1152 34
+button 450 310 210 211 1 0 27
+text 480 310 1152 35
+button 450 330 210 211 1 0 28
+text 480 330 1152 36
+button 450 350 210 211 1 0 29
+text 480 350 1152 37
+button 450 370 210 211 1 0 30
+text 480 370 1152 38
+button 450 390 210 211 1 0 31
+text 480 390 1152 39
+button 450 410 210 211 0 1 0
+text 480 410 1152 23
+
+[DIALOG d_travel2 TEXT]
+<serv.servname> Destinations
+Cities
+Dungeons
+By Bane
+*Travel Menu*
+*Cities*
+Britain
+Bucaneer's Den
+Cove
+Jhelom
+Magincia
+Minoc
+Moonglow
+Njuhelm
+Occlo
+Serpents Hold
+Skara Brae
+Trinsic
+Vesper
+Wind 
+Yew
+Delucia
+Papua
+Back
+*Travel Menu*
+*Dungeons*
+Covetous
+Deceit
+Despise
+Destard
+Hythloth
+Shame
+Wrong
+City of the Dead
+Cyclops Valley
+Delucia Orc Fort
+Fire Dungeon
+Ice Dungeon
+Ophidian Lair
+Terathan Keep
+
+
+[DIALOG d_travel2 BUTTON]
+on=0
+MESSAGE=You decide not to travel.
+EMOTE sigh
+on=1
+IF <SRC.RESTEST 200 i_gold>
+MESSAGE That will 200 gold.  Thank you.
+SRC.CONSUME=200 i_gold
+f_summon_portal 1495,1631,10
+Return 1
+  	ELSE
+ 	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+  	ENDIF
+on=2
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2691,2233,2
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=3
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2275,1210
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=4
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1383,3815
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=5
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 3714,2220
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=6
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2516,557
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=7
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 4442,1172
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=8
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 3756,1244,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=9
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 3650,2519
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=10
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 3021,3397,15
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=11
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 632,2233
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=12
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1867,2780
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=13
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2899,676
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=14
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1361,895,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=15
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 546,992
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=16
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5272,3995,37
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=17
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5729,3209,-1
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=18
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2499,922,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=19
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 4111,434,5
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=20
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1387,1113,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=21
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1176,2639,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=22
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 4722,3825,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=23
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 514,1561,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=24
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2044,238,10
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=25
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5219,3689,12
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=26
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5142,2904,51
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=27
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5210,3632,0
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=28
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 2923,3406,8
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=29
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 1998,81,7
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=30
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5767,2633,46
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+on=31
+IF <SRC.RESTEST 200 i_gold>
+SRC.CONSUME=200 i_gold
+f_summon_portal 5418,3148,-60
+MESSAGE=That will 200 gold.  Thank you.
+Return 1
+	ELSE
+	MESSAGE Your too poor for my services!
+	EMOTE shake her head
+	ENDIF
+
+//*****Portal Mage Gate*****\\
+
+[ITEMDEF i_portal_gate]
+ID=i_moongate_blue
+NAME=Portal
+
+CATEGORY=Custom Items
+SUBSECTION=Special
+DESCRIPTION=Portal Gate
+
+ON=@CREATE
+COLOR=0803
+TIMER 15
+ATTR=attr_move_never
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+//*****Portal Function*****\\
+
+[FUNCTION f_summon_portal]
+NEWITEM i_portal_gate
+ACT.P=<SRC.P>
+ACT.MOREP=<ARGS>
+
+
+
+[EOF]

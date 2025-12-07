@@ -1,0 +1,76 @@
+//Scripted by Admin Remedy
+//www.rebelnow.net
+//Install notes: Add to spheretables.scp eventsON=@SkillStart
+
+[EVENTS e_fix_snooping]
+ON=@ItemDClick
+IF (<SRC.ACT.CONT.ISCHAR>==1) && !(<SRC.ACT.CONT>==<SRC.UID>) && !(<SRC.ACT.CONT.ISNPC>==1)
+	IF (0<FINDID.i_snoop_delay>)
+		SYSMESSAGE You must wait to perform another action
+		RETURN 1
+	ELSE
+		FIX_SNOOP <SRC.ACT>
+		NEWITEM i_snoop_delay
+		ACT.EQUIP
+		ACTION = -1
+		RETURN 1
+	ENDIF
+ENDIF
+
+[Function FIX_SNOOP]
+KARMA <eval <KARMA> - 20>
+SYSMESSAGE You have lost a bit of karma.
+VAR.SNOOP <eval Rand(100)>
+
+IF (<VAR.SNOOP> < (<SNOOPING> / 10))
+	TRY SRC.ACT.OPEN
+	SNOOP_GAIN 60
+	DEX_GAIN
+ELSE
+	MESSAGE You fail to peek in the container.
+	//Random chance based on skill to warn player u are snooping and be revealed
+	IF (<VAR.SNOOP> > (<SNOOPING> / 10) + 10)
+		ACT.CONT.SYSMESSAGE You notice <NAME> attempting to peek into your pack
+		IF (<FLAGS> & statf_hidden)	
+			FLAGS <FLAGS> &~ statf_hidden
+			SYSMESSAGE You have been revealed
+			UPDATEX
+		ENDIF	
+	ENDIF
+	SNOOP_GAIN 20
+	DEX_GAIN
+ENDIF
+
+[FUNCTION DEX_GAIN]
+//Check Your Plate Loss / Stat Lock here
+
+		VAR.DEXGAIN <eval Rand(100)>
+		IF (<VAR.DEXGAIN> > 97) //2.5% chance to gain Dex
+			DEX <eval <DEX> + 1>
+		ENDIF
+
+
+[FUNCTION SNOOP_GAIN]
+IF (<SNOOPING> < 1000) && (<SRC.SKILLLOCK[28]>==0) 
+	TAG.Snoop_Fudge <EVAL 0<TAG.Snoop_Fudge> + <ARGN>> 
+	
+	IF (<TAG.Snoop_Fudge> > <SNOOPING>)
+		TAG.Snoop_Fudge
+		SNOOPING <SNOOPING> + 0.1 
+	ENDIF
+ENDIF 
+
+[ITEMDEF i_snoop_delay]
+id=i_worldgem_bit
+name=snoop delay
+TYPE=T_EQ_SCRIPT
+
+on=@create
+attr=attr_invis
+timer=2
+
+ON=@Timer
+REMOVE
+RETURN 1
+
+[EOF]

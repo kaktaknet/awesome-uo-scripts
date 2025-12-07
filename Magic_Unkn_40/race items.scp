@@ -1,0 +1,3986 @@
+//==============================================================//
+// Race System Script Files 2 of 3 By Samson (Aka Sanchezuk)	//
+//								//
+// To setup this race system, you need to put the 3 files in 	//
+// your scripts folder, add the stone in a room that no player 	//
+// can get too and set the new char login to that room. Then 	//
+// change the go co-ords to match your shard because this was	//
+// made for a custom map shard. Most race events are left empty //
+// so you can add your own later of you want.			//
+//								//
+// Feel free to change whatever you want, please dont remove	//
+// this header. Necromancy spells by Geist.			//
+//==============================================================//
+
+//======================================================== Daemon Stone
+
+[ITEMDEF i_daemon_stone]
+DEFNAME=i_daemon_stone
+ID=i_virtstone_6
+NAME=Daemon Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Daemon Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=004b9
+
+ON=@DCLICK
+SRC.MENU m_daemon
+RETURN 1
+
+[MENU m_daemon]
+Choose a special race ability.
+
+ON=0 Daemon Form (80 Stamina)
+IF (<SRC.STAMINA>>=80)
+IF (<SRC.FLAGS>&000000400)
+	SRC.SYSMESSAGE You cannot transform at this time.
+RETURN 1
+ELIF (<SRC.FINDID.i_d_timer>==1)
+	SRC.SYSMESSAGE You already transformed recently.
+RETURN 1
+ELIF (<SRC.FINDID.i_d_timer>==0)
+	SRC.f_d_d
+	SRC.NEWITEM=i_d_timer
+	SRC.ACT.CONT=<SRC.UID>
+	SRC.ACT.TIMER=240
+SRC.STAMINA=<SRC.STAMINA>+(-80)
+return 1
+ELSE 
+SRC.MESSAGE You are too tired to do this now.
+ENDIF
+ENDIF
+
+ON=0 Infravision (15 Mana)
+IF (<SRC.MANA>>=15) 
+SPELLEFFECT=s_night_sight 1000
+SRC.SYSMESSAGE Your eyes adjust easily to the gloom.
+TAG.NIGHTSIGHT_STATUS=1
+SRC.MANA=<SRC.MANA>+(-15) 
+return 1
+ELSE 
+SRC.MESSAGE You cant concentrate right now.
+ENDIF 
+
+
+[FUNCTION f_d_d]
+SRC.TAG.NEWBODY=<SRC.BODY>
+SRC.BODY=c_daemon_race
+SRC.SYSMESSAGE You feel Daemonic blood pulsing through your veins!
+SRC.BARK
+SRC.RESEND
+RETURN 1
+
+[ITEMDEF i_d_timer]
+ID= i_memory
+TYPE= t_eq_script
+NAME=timer
+ON = @Timer
+CONT.BODY=<CONT.TAG.NEWBODY>
+CONT.TAG.NEWBODY=
+SOUND=0175
+CONT.SYSMESSAGE You feel like you just woke up from a bad dream.
+CONT.RESEND
+REMOVE
+RETURN 1
+ENDIF
+
+[CHARDEF c_daemon_race]
+DEFNAME=c_daemon_race
+ID=c_daemon
+NAME=#NAMES_DAEMON the Half-Daemon
+SOUND=snd_MONSTER_DAEMON1
+DAM=5,15
+ARMOR=55
+
+//======================================================== Orc Stone
+
+[ITEMDEF i_Orc_Stone]
+DEFNAME=i_Orc_Stone
+ID=i_virtstone_6
+NAME=Orc Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Orc Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=05a6
+
+ON=@DCLICK
+SRC.MENU m_orc
+RETURN 1
+
+[MENU m_orc]
+Choose a special race ability.
+
+ON=0 Orc Form (80 Stamina)
+IF (<SRC.STAMINA>>=80)
+IF (<SRC.FLAGS>&000000400)
+	SRC.SYSMESSAGE You cant transform at this time
+RETURN 1
+ELIF (<SRC.FINDID.i_o_timer>==1)
+	SRC.SYSMESSAGE You already transformed recently..
+RETURN 1
+ELIF (<SRC.FINDID.i_o_timer>==0)
+	SRC.f_o_o
+	SRC.NEWITEM=i_o_timer
+	SRC.ACT.CONT=<SRC.UID>
+	SRC.ACT.TIMER=240
+SRC.STAMINA=<SRC.STAMINA>+(-80)
+return 1
+ELSE 
+SRC.MESSAGE You are too tired to do this now.
+ENDIF
+ENDIF
+
+ON=0 Leather Skin (25 HP)
+IF (<SRC.HITPOINTS>>=25)
+SRC.SPELLEFFECT 15,1000
+SRC.ANIM 20
+SRC.HITPOINTS=<SRC.HITPOINTS>+(-25) 
+return 1
+ELSE 
+SRC.MESSAGE You are too weak to do this now.
+ENDIF
+
+[FUNCTION f_o_o]
+SRC.TAG.NEWBODY=<SRC.BODY>
+SRC.BODY=c_orc_race
+
+SRC.SYSMESSAGE You feel allot of anger building up inside you, you like it!
+SRC.BARK
+SRC.RESEND
+RETURN 1
+
+[ITEMDEF i_o_timer]
+ID= i_memory
+TYPE= t_eq_script
+NAME=timer
+ON = @Timer
+CONT.BODY=<CONT.TAG.NEWBODY>
+CONT.TAG.NEWBODY=
+SOUND=0175
+CONT.SYSMESSAGE You feel a sudden calm about you.
+CONT.RESEND
+REMOVE
+RETURN 1
+ENDIF
+
+[CHARDEF c_orc_race]
+DEFNAME=c_orc_race
+NAME=#NAMES_DAEMON the Half-Orc
+ID=c_orc_lord
+DAM=5,10
+ARMOR=25
+TSPEECH=spk_orc
+
+//======================================================== Gnome Stone
+
+[ITEMDEF i_Gnome_Stone]
+DEFNAME=i_Gnome_Stone
+ID=i_virtstone_6
+NAME=Gnome Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Gnome Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=0035c
+
+ON=@DCLICK
+SRC.MENU m_gnome
+RETURN 1
+
+[MENU m_gnome]
+Choose a special race ability.
+
+ON=0 Infravision (15 Mana)
+IF (<SRC.MANA>>=15) 
+SPELLEFFECT=s_night_sight 1000
+SRC.SYSMESSAGE Your eyes adjust easily to the gloom.
+TAG.NIGHTSIGHT_STATUS=1
+SRC.MANA=<SRC.MANA>+(-15) 
+return 1
+ELSE 
+SRC.MESSAGE You cant concentrate right now.
+ENDIF
+
+ON=0 Gnome Teleport (20 Mana)
+SRC.MENU m_gnome_tele
+
+ON=0 Advanced Invisability (50 Mana)
+IF (<SRC.MANA>>=50) 
+src.say=Zan Wis Xen
+src.anim=17
+src.newitem=i_invis_spell
+src.act.equip
+SRC.MANA=<SRC.MANA>+(-50) 
+return 1
+ELSE 
+SRC.MESSAGE You lack the power to do this right now.
+ENDIF
+ 
+ON=0 Shrink (145 Mana)
+IF (<SRC.MANA>>=145) 
+SRC.NEWITEM=i_shrink
+SRC.ACT.P=<P>
+SRC.ACT.LINK = <SRC.UID>
+SRC.ACT.TRIGGER=@DCLICK
+SRC.MANA=<SRC.MANA>+(-145) 
+return 1
+ELSE 
+SRC.MESSAGE You lack the power to do this right now.
+ENDIF
+
+[MENU m_gnome_tele]
+Where do you want to go?
+
+ON=0 Fort Benden
+IF (<SRC.MANA>>=20)
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 1023,1583,2
+SRC.MANA=<SRC.MANA>+(-20)
+SRC.FIX
+return 1
+ELSE 
+SRC.MESSAGE You lack the power to do this right now.
+ENDIF 
+
+ON=0 Dulais Valley
+IF (<SRC.MANA>>=20)
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 1248,1091,2
+SRC.MANA=<SRC.MANA>+(-20)
+SRC.FIX
+return 1
+ELSE 
+SRC.MESSAGE You lack the power to do this right now.
+ENDIF 
+
+
+ON=0 Gypsy Camp
+IF (<SRC.MANA>>=20)
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 2671,2219,2
+SRC.MANA=<SRC.MANA>+(-20)
+SRC.FIX
+return 1
+ELSE 
+SRC.MESSAGE You lack the power to do this right now.
+ENDIF 
+
+ON=0 Gold Sands
+IF (<SRC.MANA>>=20)
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 2513,2801,2
+SRC.MANA=<SRC.MANA>+(-20)
+SRC.FIX
+return 1
+ELSE 
+SRC.MESSAGE You lack the power to do this right now.
+ENDIF 
+
+
+[ITEMDEF i_5_teleport_delay]
+// Create an object that just is an equipped timer.
+// src.newitem i_5_teleport_delay
+// src.act.equip		// We must equip this on the char we want to effect.
+// src.act.timer 200	// if we want to change the time
+//
+NAME=Delay Teleport
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	MORE1=5
+
+ON=@Equip
+	TIMER=1
+	SRC.EVENTS=+e_5_tele_dly
+	
+ON=@Unequip
+	SRC.EVENTS=-e_5_tele_dly
+
+ON=@Timer
+	// Take the effect we would like.
+	if ( <cont> )
+		if ( <more1> )
+			cont.message <EVAL(<more1>)> // put countdown above my head.
+			more1=<more1>-1
+			TIMER=1
+			return 1
+		else
+                        cont.GOPLACE <morep>
+
+		endif
+	endif
+	// normal timer fall through is to delete the item
+        remove
+        return 1
+
+[EVENTS e_5_tele_dly]
+ON=@GetHit
+CONSUME 1 i_10_teleport_delay
+EVENTS=-e_5_tele_dly
+SYSMESSAGE <SRC.NAME> interuppted the countdown!
+RETURN 0
+
+ON=@Hit
+CONSUME 1 i_5_teleport_delay
+EVENTS=-e_5_tele_dly
+SYSMESSAGE You interuppted the countdown!
+RETURN 0
+
+ON=@SkillStart
+CONSUME 1 i_5_teleport_delay
+EVENTS=-e_5_tele_dly
+SYSMESSAGE You interuppted the countdown!
+RETURN 0
+
+ON=@SpellEffect 
+CONSUME 1 i_5_teleport_delay 
+EVENTS=-e_5_tele_dly 
+SYSMESSAGE <SRC.NAME> Interuppted the countdown! 
+RETURN 0 
+
+ON=@SpellCast
+CONSUME 1 i_5_teleport_delay
+EVENTS=-e_5_tele_dly
+SYSMESSAGE You interuppted the countdown!
+RETURN 0
+ENDIF
+
+[ITEMDEF i_invis_spell]
+// Arcane Invis
+ID=i_memory
+NAME=Arcanic Invis
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+src.anim=17
+timer=30
+src.effect=1,15,15,15
+src.sfx=0222
+src.sound=snd_spell_lightning
+link=<src.uid>
+link.invis=1
+return 1
+
+
+on=@timer
+link.invis=0
+link.message=You reveal youself.
+remove
+return 1
+
+[ITEMDEF i_Shrink]
+ID=i_floor_blue
+DEFNAME=i_Shrink
+
+ON=@CREATE
+ATTR=082
+TIMER=60
+
+ON=@DCLICK
+TARGET Choose a target!
+RETURN 1
+
+ON=@TARGON_CHAR
+
+IF !(<SRC.TARG.CANSEELOS>)
+SRC.SYSMESSAGE Target isn't in your line of sight.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.TARG.NPC>==1)
+SRC.MESSAGE You must target an animal.
+RETURN 1
+ENDIF
+
+IF !(<SRC.TARG.MEMORYFINDTYPE(MEMORY_IPET).LINK.UID>==<SRC.UID>)
+SRC.MESSAGE You must target an animal you own!
+RETURN 1
+ENDIF
+
+IF
+SOUND=92
+SRC.SAY Des Xen
+REMOVE
+RETURN 1
+ENDIF
+
+SRC.ANIM 16
+SRC.SAY Des Mani Zan
+SRC.FIX
+SRC.SOUND=snd_SPELL_HARM
+SRC.TARG.SPELLEFFECT=72 1000
+REMOVE
+RETURN 1
+
+//======================================================== Elf Stone
+
+[ITEMDEF i_Elf_Stone]
+DEFNAME=i_Elf_Stone
+ID=i_virtstone_6
+NAME=Elf Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Elf Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=096e
+
+ON=@DCLICK
+SRC.MENU m_Elf
+RETURN 1
+
+[MENU m_Elf]
+Choose a special race ability.
+
+ON=0 Infravision (15 Mana)
+IF (<SRC.MANA>>=15) 
+SPELLEFFECT=s_night_sight 1000
+SRC.SYSMESSAGE Your eyes adjust easily to the gloom.
+TAG.NIGHTSIGHT_STATUS=1
+SRC.MANA=<SRC.MANA>+(-15) 
+return 1
+ELSE 
+SRC.MESSAGE You cant concentrate right now.
+ENDIF 
+
+ON=0 Forest Bounty (20 Mana)
+IF (<SRC.MANA>>=20) 
+SRC.SRC.NEWITEM=0993 
+SRC.ACT.BOUNCE
+SRC.SAY In An Ylem 
+SRC.ANIM 16 
+SRC.MANA=<SRC.MANA>+(-20) 
+ELSE 
+SRC.MESSAGE you lack magical power to call forth a bounty. 
+ENDIF 
+
+ON=0 Full Restore (85 Mana)
+IF (<SRC.MANA>>=85) 
+SRC.SAY Tym Uus Vas
+SRC.ANIM 16 
+SRC.MANA=<SRC.MANA>+(-85) 
+SRC.HITPOINTS=<SRC.STR> 
+SRC.STAMINA=<SRC.DEX> 
+SRC.SFX 0202 
+SRC.FIX 
+SRC.SYSMESSAGE=You feel much better.
+ELSE 
+SRC.MESSAGE You lack magical power to do this right now. 
+ENDIF 
+
+ON=0 Sacrifice Self
+src.say=Ex Corp Zan Por
+src.anim=16
+src.newitem=i_sacrifice_spell
+src.act.equip
+return 1
+
+[ITEMDEF i_sacrifice_spell]
+// Sacrifice
+ID=i_memory
+NAME=Sacrfice
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=15
+target
+src.sysmessage=Who will you Sacrifice yourself for?
+src.anim=17
+return 1
+
+
+on=@targon_char
+IF <SRC.TARG.CANSEELOS> && (<SRC.TARG.DISTANCE><=10)
+if (<src.hits> > 64 )&&(<src.targ.hits> < 1 )
+src.targ.spelleffect=s_resurrection 1000
+src.targ.hits=75
+src.targ.emote=was resurrected due to a sacrifice
+src.targ.sound=snd_spell_heal
+src.sound=snd_spell_lightning
+src.hits=0
+src.emote=was sacrificed for <src.targ.name>
+remove
+return 1
+else
+src.sysmessage=You must have atleast 65 hp, and your target must be dead.
+remove
+endif
+return 1
+else
+src.sysmessage=You must be able to see your target.
+remove
+return 1
+
+
+on=@targon_item
+remove
+src.sysmessage=You cant sacrifice yourself for an item!
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+//======================================================== Drow Stone
+
+[ITEMDEF i_Drow_Stone]
+DEFNAME=i_Drow_Stone
+ID=i_virtstone_6
+NAME=Drow Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Drow Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=0800e
+
+ON=@DCLICK
+SRC.MENU m_drow
+RETURN 1
+
+[MENU m_drow]
+Choose a special race ability.
+
+ON=0 Infravision (15 Mana)
+IF (<SRC.MANA>>=15) 
+SPELLEFFECT=s_night_sight 1000
+SRC.SYSMESSAGE Your eyes adjust easily to the gloom.
+TAG.NIGHTSIGHT_STATUS=1
+SRC.MANA=<SRC.MANA>+(-15) 
+return 1
+ELSE 
+SRC.MESSAGE You cant concentrate right now.
+ENDIF 
+
+ON=0 Hide (30 Stamina)
+IF (<SRC.STAMINA>>=30)
+src.say=In Ex Quas Wis
+src.bow
+src.newitem=i_underground_spell
+src.act.equip
+SRC.STAMINA=<SRC.STAMINA>+(-30)
+return 1
+ELSE 
+SRC.MESSAGE You lack the stamina to do this right now. 
+ENDIF
+
+ON=0 Magic Grasp (40 Mana)
+IF (<SRC.MANA>>=40)
+src.say=Flam Ort Grav Ex
+src.anim=16
+src.newitem=i_arcanehand_spell
+src.act.equip
+SRC.MANA=<SRC.MANA>+(-40)
+return 1
+ELSE 
+SRC.MESSAGE You lack magical power to do this right now. 
+ENDIF
+
+ON=0 Natural Restore (30 Stamina)
+IF (<SRC.STAMINA>>=30)
+SRC.NEWITEM=i_restore
+SRC.ACT.P=<P>
+SRC.ACT.LINK = <SRC.UID>
+SRC.ACT.TRIGGER=@DCLICK
+SRC.STAMINA=<SRC.STAMINA>+(-30)
+return 1
+ELSE 
+SRC.MESSAGE You lack magical power to do this right now. 
+ENDIF
+
+[ITEMDEF i_underground_spell]
+// Underground
+ID=i_memory
+NAME=Underground
+TYPE=t_eq_script
+
+on=@equip
+link=<src.uid>
+timer=30
+link.nudgedown 30
+link.act.p=<src.p>
+link.act.fix
+link.act.attr=attr_static | attr_decay
+src.anim=17
+link.act.timer=30
+link.sound=snd_spell_flamestrike
+link.tag.before=<src.p>
+return 1
+
+on=@timer
+link.go=<link.tag.before>
+link.fix
+link.emote=return
+link.tag.before=0
+remove
+return 1
+
+[ITEMDEF i_arcanehand_spell]
+// Arcane Hand
+ID=i_memory
+NAME=Arcane Hand
+TYPE=t_eq_script
+
+on=@create
+attr=attr_decay
+
+on=@equip
+timer=20
+target
+src.anim=16
+src.sysmessage=Who will you magically grab?
+return 1
+
+on=@targon_char
+IF <SRC.TARG.CANSEELOS> && (<SRC.TARG.DISTANCE><=10)
+src.targ.go=<src.p>
+src.anim=16
+src.targ.emote=was magically grabbed by <src.name>
+src.targ.stamina=0
+src.sound=snd_monster_liche1
+remove
+return 1
+else
+src.sysmessage=You must be able to see the target.
+remove
+return 1
+
+on=@targon_item
+src.sysmesage=You cant do that.
+remove
+return 1
+
+on=@timer
+remove
+return 1
+
+[ITEMDEF i_restore]
+ID=i_floor_blue
+DEFNAME=i_restore
+
+ON=@CREATE
+ATTR=082
+TIMER=60
+
+ON=@DCLICK
+TARGET Choose a target!
+RETURN 1
+TIMER=60
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.CANSEELOS>)
+SRC.SYSMESSAGE Target isn't in your line of sight.
+REMOVE
+RETURN 1
+ENDIF
+IF (<SRC.TARG.HITS>>=<SRC.TARG.STR>) && (<SRC.TARG.STAM>>=<SRC.TARG.DEX>)
+SRC.MESSAGE Target has nothing to restore!
+REMOVE
+RETURN 1
+ENDIF
+
+SRC.NEWITEM=i_necro_restore_rune
+SRC.ACT.LINK=<SRC.TARG.UID>
+SRC.ACT.EQUIP
+
+REMOVE
+RETURN 1
+
+[ITEMDEF i_necro_restore_rune]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Restore Rune
+
+ON=@EQUIP
+TIMER=1
+
+ON=@TIMER
+LINK.HITS=<EVAL <LINK.HITS>+(RAND(10)+15)>
+LINK.STAM=<EVAL <LINK.STAM>+(RAND(10)+10)>
+IF (<LINK.HITS>><LINK.STR>)
+LINK.HITS=<LINK.STR>
+ENDIF
+IF (<LINK.STAM>><LINK.DEX>)
+LINK.STAM=<LINK.DEX>
+ENDIF
+CONT.SOUND=01fd
+CONT.ANIM 17 
+CONT.FIX 
+REMOVE
+RETURN 1
+
+//======================================================== Half-Elf Stone
+
+[ITEMDEF i_Half_Elf_Stone]
+DEFNAME=i_Half_Elf_Stone
+ID=i_virtstone_6
+NAME=Half-Elf Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Half-Elf Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=02d
+
+ON=@DCLICK
+SRC.MENU m_half_elf
+RETURN 1
+
+[MENU m_half_elf]
+Choose a special race ability.
+
+ON=0 Infravision (15 Mana)
+IF (<SRC.MANA>>=15) 
+SPELLEFFECT=s_night_sight 1000
+SRC.SYSMESSAGE Your eyes adjust easily to the gloom.
+TAG.NIGHTSIGHT_STATUS=1
+SRC.MANA=<SRC.MANA>+(-15) 
+return 1
+ELSE 
+SRC.MESSAGE You cant concentrate right now.
+ENDIF
+
+ON=0 Tree Form (30 Mana)
+IF (<SRC.MANA>>=30) 
+SRC.NEWITEM=I_INVIS_TREE
+src.act.p=<src.p>
+SRC.SAY Ylem Jux Lor Xen
+SRC.MANA=<SRC.MANA>+(-30)
+SRC.NEWITEM=I_TREE_TIMER
+SRC.ACT.EQUIP
+SRC.INVIS
+SRC.FLAGS=<SRC.FLAGS>|STATF_Freeze
+SRC.ANIM 16 
+SRC.MESSAGE You become a tree! 
+ELSE 
+SRC.MESSAGE You lack the power to become a tree!
+ENDIF
+
+ON=0 Adrenalin Boost (25 HP)
+IF (<SRC.HITPOINTS>>=50)
+SRC.STAMINA=<SRC.STAMINA>+80 
+SRC.HITPOINTS=<SRC.HITPOINTS>+(-25)
+SRC.ANIM 30
+SRC.SOUND 050
+return 1
+ELSE 
+SRC.MESSAGE You are too weak to use this now.
+ENDIF
+
+ON=0 Adrenalin Heal (50 Stamina)
+IF (<SRC.STAMINA>>=50)
+SRC.SPELLEFFECT 29,1000
+SRC.ANIM 17
+SRC.STAMINA=<SRC.STAMINA>+(-50) 
+return 1
+ELSE 
+SRC.MESSAGE You are too tired to do this now.
+ENDIF
+
+[ITEMDEF I_INVIS_TREE]
+NAME=Apple Tree
+ID=0d9c
+
+ON=@CREATE
+ATTR=08010
+TIMER=60
+
+ON=@TIMER
+REMOVE
+
+[ITEMDEF I_TREE_TIMER] 
+NAME=TREE TIMER 
+ID=i_worldgem_bit 
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@Create 
+ATTR=04084
+MORE1=60
+
+ON=@Equip 
+TIMER=1 
+SRC.SPELLEFFECT s_paralyze 1000 
+ON=@Timer 
+if ( <cont> ) 
+if ( <more1> ) 
+cont.MESSAGE <VALSTR(<more1>)> 
+more1=<more1>-1 
+TIMER=1 
+return 1 
+else 
+CONT.MESSAGE You have been revealed. 
+CONT.INVIS
+CONT.FLAGS=<CONT.FLAGS>&~STATF_Freeze
+endif 
+endif 
+Remove 
+RETURN 1
+
+//======================================================== Halfling Stone
+
+[ITEMDEF i_Halfling_Stone]
+DEFNAME=i_Halfling_Stone
+ID=i_virtstone_6
+NAME=Halfling Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Halfling Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=0419
+
+ON=@DCLICK
+SRC.MENU m_halfling
+RETURN 1
+
+[MENU m_halfling]
+Choose a special race ability.
+
+ON=0 Make an Illusion Cake
+IF (<SRC.RESTEST 1 i_reag_eye_of_newt>) && (<SRC.RESTEST 1 i_sweet_dough>)
+SRC.CONSUME 1 i_reag_eye_of_newt
+SRC.CONSUME 1 i_sweet_dough
+SRC.SYSMESSAGE You mix the Sweet Dough and Eye of Newt and create an Illusion Cake Mix.
+src.newitem i_illusion_cake_mix
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You need Eye of Newt & Sweet Dough to make this.
+ENDIF
+
+ON=0 Make Nightsight Cookies
+IF (<SRC.RESTEST 1 i_cookie_mix>) && (<SRC.RESTEST 1 i_reag_spider_silk>)
+SRC.CONSUME 1 i_cookie_mix
+SRC.CONSUME 1 i_reag_spider_silk
+SRC.SYSMESSAGE You mix the Cookie Mix and Spiders Silk and create a Nightsight Cookie Mix.
+src.newitem i_nightsight_cookie_mix
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You need Cookie Mix & Spider Silk to make this.
+ENDIF
+
+ON=0 Make a Soup of Healing
+IF (<SRC.RESTEST 1 i_reag_ginseng>) && (<SRC.RESTEST 1 i_pitcher_water>)
+SRC.CONSUME 1 i_reag_ginseng
+SRC.CONSUME 1 i_pitcher_water
+SRC.SYSMESSAGE You brew the Water and Ginseng and create an Uncooked soup of healing.
+src.newitem i_heal_soup_uncooked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You need Ginseng & a Pitcher of Water to make this.
+ENDIF
+
+ON=0 Make an Invisability Cake
+IF (<SRC.RESTEST 1 i_reag_nightshade>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_reag_nightshade
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Nightshade and create an Unbaked Invisibility Pie.
+src.newitem i_invis_pie_unbaked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You need Nightshade & Dough to make this.
+ENDIF
+
+[ITEMDEF i_illusion_cake] 
+NAME=cake of illusions
+ID=i_cake
+TYPE=t_food 
+
+ON=@create 
+COLOR=0035 
+
+ON=@DCLICK 
+IF <SRC.FINDID.i_cake_high> 
+SRC.FINDID.i_cake_high.MORE2=<SRC.FINDID.i_cake_high.MORE2>+2 
+SRC.EMOTE=feeling stupid 
+REMOVE 
+RETURN 1 
+ELSE 
+SRC.EMOTE=feeling kinda stupid 
+SRC.ANIM 33 
+SRC.NEWITEM=i_cake_high
+SRC.ACT.EQUIP 
+SRC.ACT.TIMER 10 
+REMOVE 
+RETURN 1 
+ENDIF
+
+[ITEMDEF i_cake_high] 
+NAME=High Memory 
+ID=i_memory 
+TYPE=t_eq_script 
+LAYER=layer_special 
+
+ON=@equip 
+SRC.FLAGS=<SRC.FLAGS>+000400000 
+SRC.FIX 
+SRC.UPDATE 
+TIMER=10 
+MORE2=5 
+RETURN 1 
+
+ON=@Timer 
+IF <MORE2>=0 
+CONT.FLAGS=(<CONT.FLAGS>+(-000400000)) 
+CONT.FIX 
+CONT.UPDATE 
+CONT.MESSAGE=You no longer feel like a plumb. 
+REMOVE 
+Return 1 
+ELSEIF RAND(2)==1 
+DORAND 5
+CONT.SAY=Did you see that? 
+CONT.SAY=I don't feel so good... 
+CONT.SAY=Did you see the size of that chicken? 
+CONT.SAY=What was that? 
+CONT.SAY=The rocks are lovely this time of year. 
+ENDDO 
+MORE2=<MORE2>+-1 
+TIMER=10 
+Return 1 
+ELSE 
+CONT.SAY=*HICK* 
+MORE2=<MORE2>+-1 
+TIMER=10 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_illusion_cake_mix] 
+NAME=Illusion Cake Mix 
+ID=i_cookie_mix 
+TYPE=T_FOOD_RAW 
+TDATA1=i_illusion_cake 
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+[ITEMDEF i_nightsight_cookie_mix] 
+NAME=Nightsight Cookies Mix 
+ID=i_cookie_mix 
+TYPE=T_FOOD_RAW 
+TDATA1=i_nightsight_cookies
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+[ITEMDEF i_nightsight_cookies] 
+NAME=Pan of Nightsight Cookies
+ID=i_pan_cookies
+TYPE=T_FOOD
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR=0283
+
+ON=@DCLICK
+SRC.SPELLEFFECT s_night_sight 1000
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_heal_soup_uncooked] 
+NAME=Uncooked Soup of Healing
+ID=i_bowl_tomato_soup
+TYPE=T_FOOD_RAW 
+TDATA1=i_heal_soup
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR=0383
+
+[ITEMDEF i_heal_soup] 
+NAME=Soup of Healing
+ID=i_bowl_tomato_soup
+TYPE=T_FOOD
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR=0283
+
+ON=@DCLICK
+SRC.SPELLEFFECT s_greater_heal 1000
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_invis_pie_unbaked] 
+NAME=Unbaked Invisibility Pie
+ID=i_pie_unbaked
+TYPE=T_FOOD_RAW 
+TDATA1=i_invis_pie
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+[ITEMDEF i_invis_pie] 
+NAME=Invisibility Pie
+ID=i_pie_baked
+TYPE=T_FOOD
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR=0183
+
+ON=@DCLICK
+SRC.SPELLEFFECT s_invisibility 1000
+REMOVE 
+RETURN 1 
+
+//======================================================== Dwarf Stone
+
+[ITEMDEF i_Dwarf_Stone]
+DEFNAME=i_Dwarf_Stone
+ID=i_virtstone_6
+NAME=Dwarf Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Dwarf Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=07e2
+
+ON=@DCLICK
+SRC.MENU m_dwarf
+RETURN 1
+
+[MENU m_dwarf]
+Choose a special race ability.
+
+ON=0 Infravision (15 Mana)
+IF (<SRC.MANA>>=15) 
+SPELLEFFECT=s_night_sight 1000
+SRC.SYSMESSAGE Your eyes adjust easily to the gloom.
+TAG.NIGHTSIGHT_STATUS=1
+SRC.MANA=<SRC.MANA>+(-15) 
+return 1
+ELSE 
+SRC.MESSAGE You cant concentrate right now.
+ENDIF
+
+ON=0 Adrenalin Boost (25 HP)
+IF (<SRC.HITPOINTS>>=50)
+SRC.STAMINA=<SRC.STAMINA>+80 
+SRC.HITPOINTS=<SRC.HITPOINTS>+(-25)
+SRC.ANIM 30
+SRC.SOUND 050
+return 1
+ELSE 
+SRC.MESSAGE You are too weak to use this now.
+ENDIF
+
+ON=0 Natural Cure (50 Stamina)
+IF (<SRC.STAMINA>>=50)
+SRC.SPELLEFFECT 11,1000 
+SRC.SOUND 01e0 
+SRC.STAMINA=<SRC.STAMINA>+(-50) 
+return 1
+ELSE 
+SRC.MESSAGE You just dont have the energy to fight any poisons.
+ENDIF
+
+ON=0 Natural Magic Reflection (25 Stamina)
+IF (<SRC.STAMINA>>=25)
+SPELLEFFECT 36,1000  
+SRC.STAMINA=<SRC.STAMINA>+(-25) 
+return 1
+ELSE 
+SRC.MESSAGE You are too weak to use this now.
+ENDIF
+
+//======================================================== Necro Stone
+
+[ITEMDEF i_necro_stone]
+DEFNAME=i_necro_stone
+ID=i_virtstone_6
+NAME=Necromancer Stone
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Race Items
+DESCRIPTION=Necromancer Stone
+
+ON=@Create
+ATTR=attr_newbie|attr_move_never
+COLOR=0386
+
+ON=@DCLICK
+SRC.MENU m_necro
+RETURN 1
+
+[MENU m_necro]
+Choose a spell to cast. Your Necromancy skill is: <SRC.Necromancy>%
+
+ON=0 Infernal Light
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1)
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+SRC.infernal_light 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+SRC.infernal_light 
+RETURN 1 
+ELSE 
+SRC.infernal_light
+RETURN 1 
+ENDIF 
+
+ON=0 Bone Armor
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+SRC.bone_armor 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+SRC.bone_armor 
+RETURN 1 
+ELSE 
+SRC.bone_armor 
+RETURN 1 
+ENDIF 
+
+ON=0 Exoskeleton
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+SRC.exoskeleton 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+SRC.exoskeleton 
+RETURN 1 
+ELSE 
+SRC.exoskeleton 
+RETURN 1
+ENDIF
+
+ON=0 Harvest Dead
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.harvest_dead 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.harvest_dead 
+RETURN 1 
+ELSE 
+src.harvest_dead 
+RETURN 1 
+ENDIF
+
+ON=0 Firebolt - 60%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+SRC.firebolt 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+SRC.firebolt 
+RETURN 1 
+ELSE 
+SRC.firebolt 
+RETURN 1 
+ENDIF 
+
+ON=0 Corpse Explosion - 95%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+SRC.corpse_explo 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+SRC.corpse_explo 
+RETURN 1 
+ELSE 
+SRC.corpse_explo 
+RETURN 1 
+ENDIF
+
+ON=0 Hallucination - 65%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+SRC.halluc 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+SRC.halluc 
+RETURN 1 
+ELSE 
+SRC.halluc 
+RETURN 1 
+ENDIF
+
+ON=0 Turn Undead I - 55%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.t_undead1 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.t_undead1 
+RETURN 1 
+ELSE 
+src.t_undead1 
+RETURN 1 
+ENDIF  
+
+ON=0 Turn Undead II - 75%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.t_undead2 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.t_undead2 
+RETURN 1 
+ELSE 
+src.t_undead2 
+RETURN 1 
+ENDIF 
+
+//ON=0 Undead Form I - 60%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.undeadform1P1 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.undeadform1P1 
+RETURN 1 
+ELSE 
+src.undeadform1P1 
+RETURN 1 
+ENDIF
+
+//ON=0 Undead Form II - 90%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.undeadform1P2 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.undeadform1P2 
+RETURN 1 
+ELSE 
+src.undeadform1P2 
+RETURN 1 
+ENDIF 
+
+ON=0 Summon Undead I
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.sundead_1 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.sundead_1 
+RETURN 1 
+ELSE 
+src.sundead_1 
+RETURN 1 
+ENDIF 
+
+ON=0 Summon Undead II - 55%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.sundead_2 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.sundead_2 
+RETURN 1 
+ELSE 
+src.sundead_2 
+RETURN 1 
+ENDIF 
+
+ON=0 Summon Undead III - 80%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.sundead_3 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.sundead_3 
+RETURN 1 
+ELSE 
+src.sundead_3 
+RETURN 1 
+ENDIF 
+
+ON=0 Animate Dead - 85%
+IF (<SRC.FINDID.I_MEM_NECROSPELL>) && (<SRC.FINDID.I_MEM_NECROSPELL.MORE2>==1) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_ncast 
+src.animate_dead 
+RETURN 1 
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==0) 
+SRC.FINDID.i_mem_necropoly.remove 
+SRC.SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SRC.FINDID.I_mem_necrospell.REMOVE 
+SRC.SFX=005c 
+SRC.EVENTS -e_necropoly 
+SRC.EVENTS -e_ncast 
+src.animate_dead 
+RETURN 1 
+ELSE 
+src.animate_dead 
+RETURN 1 
+ENDIF
+
+[FUNCTION MANACONSUME10] 
+IF (<SRC.MANA>>=10) 
+SRC.MANA=<SRC.MANA>+(-10) 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[FUNCTION MANACONSUME20] 
+IF (<SRC.MANA>>=20) 
+SRC.MANA=<SRC.MANA>+(-20) 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[FUNCTION MANACONSUME30] 
+IF (<SRC.MANA>>=30) 
+SRC.MANA=<SRC.MANA>+(-30) 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[FUNCTION MANACONSUME40] 
+IF (<SRC.MANA>>=40) 
+SRC.MANA=<SRC.MANA>+(-40) 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[FUNCTION MANACONSUME50] 
+IF (<SRC.MANA>>=50) 
+SRC.MANA=<SRC.MANA>+(-50) 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[FUNCTION MANACONSUME60] 
+IF (<SRC.MANA>>=60) 
+SRC.MANA=<SRC.MANA>+(-60) 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[FUNCTION change_param] 
+FINDID.i_mem_necropoly.tag.change1=<body> 
+FINDID.i_mem_necropoly.tag.str1=<str> 
+FINDID.i_mem_necropoly.tag.int1=<int> 
+FINDID.i_mem_necropoly.tag.dex1=<dex> 
+FINDID.i_mem_necropoly.tag.color2=<color> 
+FINDID.i_mem_necropoly.timer=30 
+FINDID.i_mem_necropoly.MORE2=0 
+SAY Corp Ylem Rel 
+FONT 8 
+SAY Corp Ylem Rel 
+FONT 3 
+EVENTS +e_ncast 
+ANIM 17 
+
+[SKILLMENU sm_undeadform1] 
+Choose an undead 
+
+ON=i_pet_zombie Zombie 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=c_zombie 
+SRC.FINDID.i_mem_necropoly.tag.str2={46 70} 
+SRC.FINDID.i_mem_necropoly.tag.int2={26 40} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={31 50} 
+SRC.FINDID.i_mem_necropoly.tag.color1=00 
+SRC.manaconsume30 
+Return 0 
+
+ON=i_pet_zombie Ghoul 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=C_m_ghoul 
+SRC.FINDID.i_mem_necropoly.tag.str2={70 95} 
+SRC.FINDID.i_mem_necropoly.tag.int2={50 75} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={31 50} 
+SRC.FINDID.i_mem_necropoly.tag.color1=colors_gray 
+SRC.manaconsume30 
+Return 0 
+
+ON=i_pet_ghoul Spectre 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=c_spectre 
+SRC.FINDID.i_mem_necropoly.tag.str2={76 100} 
+SRC.FINDID.i_mem_necropoly.tag.int2={36 60} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={76 95} 
+SRC.FINDID.i_mem_necropoly.tag.color1=00 
+SRC.manaconsume30 
+Return 0 
+
+ON=i_pet_skeleton Skeleton 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=c_skeleton 
+SRC.FINDID.i_mem_necropoly.tag.str2={56 80} 
+SRC.FINDID.i_mem_necropoly.tag.int2={16 40} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={56 75} 
+SRC.FINDID.i_mem_necropoly.tag.color1=00 
+SRC.manaconsume30 
+Return 0 
+
+ON=i_pet_skeleton Skeleton w/sword 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=C_skeleton_w_sword 
+SRC.FINDID.i_mem_necropoly.tag.str2={56 80} 
+SRC.FINDID.i_mem_necropoly.tag.int2={16 40} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={56 75} 
+SRC.FINDID.i_mem_necropoly.tag.color1=00 
+SRC.manaconsume30 
+Return 0 
+
+ON=i_pet_skeleton Skeleton w/axe 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=C_skeleton_w_axe 
+SRC.FINDID.i_mem_necropoly.tag.str2={56 80} 
+SRC.FINDID.i_mem_necropoly.tag.int2={16 40} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={56 75} 
+SRC.FINDID.i_mem_necropoly.tag.color1=00 
+SRC.manaconsume30 
+Return 0 
+
+ON=i_pet_lich Liche 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=C_liche 
+SRC.FINDID.i_mem_necropoly.tag.str2={105 135} 
+SRC.FINDID.i_mem_necropoly.tag.int2={120 140} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={66 75} 
+SRC.FINDID.i_mem_necropoly.tag.color1=00 
+SRC.manaconsume30 
+Return 0 
+
+[SKILLMENU sm_undeadform2] 
+Choose an undead 
+
+ON=i_pet_ghoul Wraith 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=c_m_wraith 
+SRC.FINDID.i_mem_necropoly.tag.str2={100 125} 
+SRC.FINDID.i_mem_necropoly.tag.int2={60 70} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={90 120} 
+SRC.FINDID.i_mem_necropoly.tag.color1=colors_gray 
+SRC.manaconsume50 
+Return 0 
+
+ON=i_pet_skeleton Skeleton Knight 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=c_m_skeleton_knight 
+SRC.FINDID.i_mem_necropoly.tag.str2={125 150} 
+SRC.FINDID.i_mem_necropoly.tag.int2={36 60} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={82 85} 
+SRC.FINDID.i_mem_necropoly.tag.color1=00 
+SRC.manaconsume50 
+Return 0 
+
+ON=i_pet_wisp Grim Reaper 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=c_grim_reaper 
+SRC.FINDID.i_mem_necropoly.tag.str2={130 150} 
+SRC.FINDID.i_mem_necropoly.tag.int2={80 100} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={90 100} 
+SRC.FINDID.i_mem_necropoly.tag.color1=083a 
+SRC.manaconsume50 
+Return 0 
+
+ON=i_pet_lich Liche Lord 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=c_m_liche_lord 
+SRC.FINDID.i_mem_necropoly.tag.str2={220 250} 
+SRC.FINDID.i_mem_necropoly.tag.int2={130 150} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={100 105} 
+SRC.FINDID.i_mem_necropoly.tag.color1=00 
+SRC.manaconsume50 
+Return 0 
+
+ON=i_pet_zombie Mummy 
+CONSUME i_reag_blood_spawn, i_reag_worm_heart 
+FINDID.i_mem_Necrospell.timer=5 
+SRC.CHANGE_PARAM 
+SRC.FINDID.i_mem_necropoly.tag.change2=c_m_mummy 
+SRC.FINDID.i_mem_necropoly.tag.str2={200 230} 
+SRC.FINDID.i_mem_necropoly.tag.int2={35 36} 
+SRC.FINDID.i_mem_necropoly.tag.dex2={60 75} 
+SRC.FINDID.i_mem_necropoly.tag.color1=color_rock 
+SRC.manaconsume50 
+RETURN 0 
+
+[FUNCTION runecast] 
+
+NEWITEM=0e5c 
+ACT.TYPE=t_normal 
+ACT.COLOR=07a1 
+ACT.P=<P> 
+ACT.MOVE 2,2 
+ACT.ATTR=00002 
+ACT.TIMER=1 
+
+NEWITEM=0e5f 
+ACT.TYPE=t_normal 
+ACT.COLOR=07a1 
+ACT.P=<P> 
+ACT.MOVE -2,-2 
+ACT.ATTR=00002 
+ACT.TIMER=1 
+
+NEWITEM=0e62 
+ACT.TYPE=t_normal 
+ACT.COLOR=07a1 
+ACT.P=<P> 
+ACT.MOVE -2,2 
+ACT.ATTR=00002 
+ACT.TIMER=1 
+
+NEWITEM=0e65 
+ACT.TYPE=t_normal 
+ACT.COLOR=07a1 
+ACT.P=<P> 
+ACT.MOVE 2,-2 
+ACT.ATTR=00002 
+ACT.TIMER=1 
+RETURN 1 
+
+[FUNCTION emptyontop] 
+IF !(<RESCOUNT>) 
+RETURN 0 
+ENDIF 
+VAR.COUNT <RESCOUNT> 
+IF (<RESCOUNT> >= 50) 
+FINDCONT.0.P <P> 
+IF (<RESCOUNT> == <VAR.COUNT>) 
+RETURN 0 
+ENDIF 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+ELIF (<RESCOUNT> >= 25) 
+FINDCONT.0.P <P> 
+IF (<RESCOUNT> == <VAR.COUNT>) 
+RETURN 0 
+ENDIF 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+ELIF (<RESCOUNT> >= 12) 
+FINDCONT.0.P <P> 
+IF (<RESCOUNT> == <VAR.COUNT>) 
+RETURN 0 
+ENDIF 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+ELIF (<RESCOUNT> >= 6) 
+FINDCONT.0.P <P> 
+IF (<RESCOUNT> == <VAR.COUNT>) 
+RETURN 0 
+ENDIF 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+ELIF (<RESCOUNT> >= 3) 
+FINDCONT.0.P <P> 
+IF (<RESCOUNT> == <VAR.COUNT>) 
+RETURN 0 
+ENDIF 
+FINDCONT.0.P <P> 
+FINDCONT.0.P <P> 
+ELIF (<RESCOUNT>) 
+FINDCONT.0.P <P> 
+IF (<RESCOUNT>) 
+RETURN 0 
+ENDIF 
+ELSE 
+RETURN 1 
+ENDIF 
+emptyontop 
+RETURN 0 
+
+[ITEMDEF i_los] 
+ID=i_memory 
+TYPE=t_eq_script 
+
+ON=@Equip 
+VAR.RETURN <LINK.CANSEELOS> 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_los2] 
+ID=i_memory 
+TYPE=t_eq_script 
+
+ON=@Equip 
+LINK.EFFECT=0,i_fx_firesnake,1,25,2 
+LINK.DAMAGE {44 45} 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_los3] 
+ID=i_memory 
+TYPE=t_eq_script 
+
+ON=@Equip 
+LINK.SPELLEFFECT 29,1000 
+REMOVE 
+RETURN 1 
+
+[FUNCTION spell_fizzle] 
+SYSMESSAGE The spell fizzles. 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SFX=005c 
+EVENTS -e_ncast 
+FINDID.i_mem_necrospell.remove 
+RETURN 1 
+
+[FUNCTION spell_fizzle2] 
+SYSMESSAGE Target is not in line of sight 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+SFX=005c 
+EVENTS -e_ncast 
+FINDID.i_mem_necrospell.remove 
+RETURN 1 
+
+[ITEMDEF i_mem_lastchance] 
+ID=I_MEMORY 
+TYPE=T_EQ_SCRIPT 
+layer=layer_special 
+NAME=NMEMITEM101 
+
+ON=@Create 
+ATTR attr_decay 
+
+On=@TIMER 
+Cont.events -e_lastchance 
+cont.sysmessage Your protection has ended 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_mem_necrosum] 
+ID=I_MEMORY 
+TYPE=T_EQ_SCRIPT 
+layer=layer_special 
+NAME=NMEMITEM101 
+
+ON=@Create 
+ATTR attr_decay 
+TIMER 60*3 
+
+On=@TIMER 
+CONT.NEWITEM=i_fx_smoke 
+CONT.SFX 01fe 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+Cont.REMOVE 
+
+[ITEMDEF i_mem_halluc] 
+ID=I_MEMORY 
+TYPE=T_EQ_SCRIPT 
+layer=layer_special 
+NAME=halluc 
+
+ON=@Create 
+ATTR attr_decay 
+TIMER 300 
+
+On=@TIMER 
+CONT.EVENTS -e_hallucevent 
+CONT.flags=<CONT.flags>&~statf_hallucinating 
+CONT.FINDID.I_MEM_halluc.REMOVE 
+CONT.UPDATE 
+
+[ITEMDEF i_mem_necrolight] 
+ID=I_MEMORY 
+TYPE=T_EQ_SCRIPT 
+layer=layer_special 
+NAME=lightbooy 
+
+ON=@Create 
+ATTR attr_decay 
+TIMER 60*5 
+
+On=@TIMER 
+CONT.flags=<CONT.flags>&~statf_nightsight 
+CONT.FINDID.I_MEM_NECROLIGHT.REMOVE 
+REMOVE 
+CONT.UPDATE 
+
+[ITEMDEF i_mem_necroprot_ra] 
+ID=I_MEMORY 
+TYPE=T_armor 
+layer=35 
+NAME=prot-ra 
+ARMOR=100 
+
+ON=@Create 
+ATTR attr_decay|attr_invis 
+TIMER 60*5 
+
+On=@TIMER 
+CONT.EVENTS -e_necroprot 
+CONT.flags=<CONT.flags>&~statf_reactive 
+CONT.FINDID.i_mem_necroprot_ra.remove 
+CONT.UPDATE 
+
+[ITEMDEF i_mem_necropoly] 
+ID=I_MEMORY 
+TYPE=T_EQ_SCRIPT 
+layer=layer_special 
+NAME=NMEMITEM102 
+
+ON=@Create 
+ATTR attr_decay 
+MORE2=3 
+TIMER 30 
+
+On=@TIMER 
+CONT.NEWITEM=i_fx_smoke 
+CONT.SFX 01fe 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.BODY=<CONT.FINDID.i_mem_necropoly.tag.change1> 
+CONT.STR=<CONT.FINDID.i_mem_necropoly.tag.str1> 
+CONT.INT=<CONT.FINDID.i_mem_necropoly.tag.int1> 
+CONT.DEX=<CONT.FINDID.i_mem_necropoly.tag.dex1> 
+CONT.TAG.COLOR=<CONT.OSKIN> 
+CONT.COLOR=<CONT.TAG.COLOR> 
+CONT.EVENTS -e_necropoly 
+CONT.GO=<CONT.P>+1 
+CONT.GO=<CONT.P>-1 
+CONT.UPDATE 
+CONT.RESYNC 
+CONT.FINDID.i_mem_necropoly.remove 
+Return 1 
+
+[DEFNAME qval_html] 
+lt < 
+gt > 
+bb <b> 
+be </b> 
+fonte </basefont> 
+ae </a> 
+br <br> 
+
+[EVENTS e_lastchance] 
+
+on=@death
+IF (<SRC.KILLS><=2)
+Src.go Britain 
+SRC.EVENTS -e_lastchance 
+src.FINDID.i_mem_lastchance.remove 
+RETURN 1 
+ELSE
+Src.go 3010,3371,15
+SRC.EVENTS -e_lastchance 
+src.FINDID.i_mem_lastchance.remove 
+RETURN 1 
+
+
+[EVENTS e_ncast] 
+
+on=@logout 
+FINDID.I_mem_necrospell.REMOVE 
+EVENTS -e_ncast 
+RETURN 0 
+
+on=@gethit 
+FINDID.I_mem_necrospell.REMOVE 
+SYSMESSAGE The Spell Fizzles 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+EVENTS -e_ncast 
+SFX=005c 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+ON=@HitTry 
+FINDID.I_mem_necrospell.REMOVE 
+SYSMESSAGE The Spell Fizzles 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+EVENTS -e_ncast 
+SFX=005c 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+ON=@Death 
+FINDID.I_mem_necrospell.REMOVE 
+SYSMESSAGE The Spell Fizzles 
+EFFECT=3,i_fx_smoke_small,6,30,1 
+EVENTS -e_ncast 
+SFX=005c 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[EVENTS e_necroprot] 
+
+on=@gethit 
+sfx 01c6 
+hitpoints=<hitpoints>+2 
+return 0 
+
+[EVENTS e_tempinvul] 
+
+on=@gethit 
+events -e_tempinvul 
+return 1 
+
+
+[EVENTS e_necrosum] 
+
+on=@spelleffect 
+IF (<argn>==41) || (<argn>==54) 
+NEWITEM=i_fx_smoke 
+ACT.p=<p> 
+ACT.attr=00002 
+ACT.TIMER=1 
+EVENTS -e_necrosum 
+REMOVE 
+RETURN 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+on=@death 
+NEWITEM=i_fx_smoke 
+ACT.p=<p> 
+ACT.attr=00002 
+ACT.TIMER=1 
+EVENTS -e_necrosum 
+REMOVE 
+RETURN 1 
+
+[EVENTS e_hallucevent] 
+
+on=@spelleffect 
+IF (<argn>==41) || (<argn>==54) 
+flags=<flags>&~statf_hallucinating 
+FINDID.I_MEM_halluc.REMOVE 
+EVENTS -e_hallucevent 
+UPDATE 
+Return 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+on=@death 
+flags=<flags>&~statf_hallucinating 
+FINDID.I_MEM_halluc.REMOVE 
+EVENTS -e_hallucevent 
+UPDATE 
+Return 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[EVENTS e_necropoly] 
+
+on=@spelleffect 
+IF (<argn>==41) || (<argn>==54) 
+NEWITEM=i_fx_smoke 
+SFX 01fe 
+ACT.P=<CONT.P> 
+ACT.ATTR=00002 
+ACT.TIMER=1 
+BODY=<FINDID.i_mem_necropoly.tag.change1> 
+STR=<FINDID.i_mem_necropoly.tag.str1> 
+INT=<FINDID.i_mem_necropoly.tag.int1> 
+DEX=<FINDID.i_mem_necropoly.tag.dex1> 
+TAG.COLOR=<OSKIN> 
+COLOR=<TAG.COLOR> 
+FINDID.i_mem_necropoly.remove 
+EVENTS -e_necropoly 
+GO=<P>+1 
+GO=<P>-1 
+UPDATE 
+Return 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+on=@death 
+NEWITEM=i_fx_smoke 
+SFX 01fe 
+ACT.P=<CONT.P> 
+ACT.ATTR=00002 
+ACT.TIMER=1 
+BODY=<FINDID.i_mem_necropoly.tag.change1> 
+STR=<FINDID.i_mem_necropoly.tag.str1> 
+INT=<FINDID.i_mem_necropoly.tag.int1> 
+DEX=<FINDID.i_mem_necropoly.tag.dex1> 
+TAG.COLOR=<OSKIN> 
+COLOR=<TAG.COLOR> 
+FINDID.i_mem_necropoly.remove 
+EVENTS -e_necropoly 
+GO=<P>+1 
+GO=<P>-1 
+UPDATE 
+Return 0 
+
+[ITEMDEF i_mem_necrospell] 
+ID=I_MEMORY 
+TYPE=T_EQ_SCRIPT 
+LAYER=layer_special 
+NAME=NMEMITEM101 
+
+ON=@Create 
+ATTR attr_decay 
+TIMER=-1 
+
+ON=@TARGON_ITEM 
+
+IF (<MORE1>==2) // NUMBER OF SPELL SET IN SPELL FUNCTION SECTON 
+
+IF (<SRC.TARG.TYPE>==T_CORPSE) && (<SRC.TARG.CANSEELOS>) && (<SRC.TARG.LINK>==04fffffff) 
+SRC.manaconsume20 
+SRC.SAY Rel Corp Ylem 
+SRC.FONT 8 
+SRC.SAY Rel Corp Ylem 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=3 
+MORE2=1 
+RETURN 1 
+ELIF !(<SRC.TARG.TYPE>==T_CORPSE) 
+SRC.SYSMESSAGE You must target a corpse 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You cannot target a player's corpse 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==5) 
+
+IF (<SRC.TARG.TYPE>==T_CORPSE) && (<SRC.TARG.CANSEELOS>) && (<SRC.TARG.LINK>==04fffffff) 
+SRC.manaconsume20 
+SRC.SAY An Sanct Corp 
+SRC.FONT 8 
+SRC.SAY An Sanct Corp 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=2 
+MORE2=1 
+RETURN 1 
+ELIF !(<SRC.TARG.TYPE>==T_CORPSE) 
+SRC.SYSMESSAGE You must target a corpse 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You cannot target a player's corpse 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==11) 
+
+IF (<SRC.TARG.TYPE>==T_CORPSE) && (<SRC.TARG.CANSEELOS>) && (<SRC.TARG.LINK>==04fffffff) 
+SRC.manaconsume40 
+SRC.SAY Corp Nox Mani 
+SRC.FONT 8 
+SRC.SAY Corp Nox Mani 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=5 
+MORE2=1 
+RETURN 1 
+ELIF !(<SRC.TARG.TYPE>==T_CORPSE) 
+SRC.SYSMESSAGE You must target a corpse 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You cannot target a player's corpse 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==13) 
+
+IF (<SRC.TARG.TYPE>==T_CORPSE) && (<SRC.TARG.CANSEELOS>) && (<SRC.TARG.LINK>==04fffffff) 
+SRC.manaconsume60 
+SRC.SAY Kal Corp Flam 
+SRC.FONT 8 
+SRC.SAY Kal Corp Flam 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=3 
+MORE2=1 
+RETURN 1 
+ELIF !(<SRC.TARG.TYPE>==T_CORPSE) 
+SRC.SYSMESSAGE You must target a corpse 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You cannot target a player's corpse 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_CHAR 
+
+IF (<MORE1>==1) 
+
+IF (<SRC.TARG.CANSEELOS>) 
+SRC.manaconsume10 
+SRC.SAY In Corp Lor 
+SRC.FONT 8 
+SRC.SAY In Corp Lor 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=1 
+MORE2=1 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==2) 
+SRC.SYSMESSAGE Cast this on a fallen creature. 
+RETURN 1 
+
+ELIF (<MORE1>==3) 
+
+IF (<SRC.TARG.CANSEELOS>) 
+SRC.manaconsume10 
+SRC.SAY Ylem Rel Corp 
+SRC.FONT 8 
+SRC.SAY Ylem Rel Corp 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=3 
+MORE2=1 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==7) 
+
+IF (<SRC.TARG.CANSEELOS>) && (<SRC.TARG.STR><150) && (<SRC.TARG.BRAIN> == brain_undead) 
+SRC.manaconsume30 
+SRC.SAY In Corp Wis 
+SRC.FONT 8 
+SRC.SAY In Corp Wis 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=3 
+MORE2=1 
+RETURN 1 
+ELIF (<SRC.TARG.CANSEELOS>) && (<SRC.TARG.STR>>=150) && (<SRC.TARG.BRAIN> == brain_undead) 
+SRC.SYSMESSAGE The target seems too strong to turn with this spell. 
+Return 1 
+ELIF (<SRC.TARG.CANSEELOS>) 
+SRC.SYSMESSAGE This only works on the un-dead. 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==10) 
+
+IF (<SRC.TARG.CANSEELOS>) && (<SRC.TARG.BRAIN> == brain_undead) 
+SRC.manaconsume30 
+SRC.SAY In Corp Wis 
+SRC.FONT 8 
+SRC.SAY In Corp Wis 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=4 
+MORE2=1 
+SRC.FINDID.i_mem_necrospell.MORE1=7 
+RETURN 1 
+ELIF (<SRC.TARG.CANSEELOS>) 
+SRC.SYSMESSAGE This only works on the un-dead. 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==22) 
+
+IF (<SRC.TARG.CANSEELOS>) 
+SRC.manaconsume40 
+SRC.SAY Vas Flam Por 
+SRC.FONT 8 
+SRC.SAY Vas Flam Por 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=4 
+MORE2=1 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==23) 
+
+IF (<SRC.TARG.CANSEELOS>) 
+SRC.manaconsume40 
+SRC.SAY Wis Nox 
+SRC.FONT 8 
+SRC.SAY Wis Nox 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+LINK=<SRC.TARG.UID> 
+TIMER=3 
+MORE2=1 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_GROUND 
+
+IF (<MORE1>==4) 
+SRC.NEWITEM i_gold 
+SRC.ACT.P <SRC.TARGP> 
+SRC.ACT.ATTR=ATTR_DECAY 
+TAG.UPLACE=<SRC.TARGP> 
+
+IF (<SRC.ACT.CANSEELOS>) 
+SRC.ACT.REMOVE 
+SRC.manaconsume20 
+SRC.SAY Kal Nox Mani 
+SRC.FONT 8 
+SRC.SAY Kal Nox Mani 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+MOREP=<SRC.TARGP> 
+TIMER=4 
+MORE2=1 
+RETURN 1 
+ELSE 
+SRC.ACT.REMOVE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==6) 
+SRC.NEWITEM i_gold 
+SRC.ACT.P <SRC.TARGP> 
+SRC.ACT.ATTR=ATTR_DECAY 
+TAG.UPLACE=<SRC.TARGP> 
+
+IF (<SRC.ACT.CANSEELOS>) 
+SRC.ACT.REMOVE 
+SRC.manaconsume30 
+SRC.SAY Kal Nox Mani 
+SRC.FONT 8 
+SRC.SAY Kal Nox Mani 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+MOREP=<SRC.TARGP> 
+TIMER=4 
+MORE2=1 
+RETURN 1 
+ELSE 
+SRC.ACT.REMOVE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==9) 
+SRC.NEWITEM i_gold 
+SRC.ACT.P <SRC.TARGP> 
+SRC.ACT.ATTR=ATTR_DECAY 
+TAG.UPLACE=<SRC.TARGP> 
+
+IF (<SRC.ACT.CANSEELOS>) 
+SRC.ACT.REMOVE 
+SRC.manaconsume30 
+SRC.SAY Kal Nox Mani 
+SRC.FONT 8 
+SRC.SAY Kal Nox Mani 
+SRC.FONT 3 
+SRC.EVENTS +e_ncast 
+SRC.ANIM 17 
+MOREP=<SRC.TARGP> 
+TIMER=10 
+MORE2=1 
+RETURN 1 
+ELSE 
+SRC.ACT.REMOVE 
+SRC.SYSMESSAGE Target is not in line of sight 
+RETURN 1 
+ENDIF 
+
+ON=@TIMER 
+
+IF (<MORE1>==1) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(15)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+LINK.FINDID.i_mem_necrolight.remove 
+LINK.flags=<LINK.flags>|statf_nightsight 
+LINK.NEWITEM=i_mem_necrolight 
+LINK.ACT.CONT=<LINK.UID> 
+LINK.ACT.TIMER=600 
+LINK.UPDATE 
+CONT.RUNECAST 
+LINK.NEWITEM=0376a 
+LINK.ACT.TYPE=t_normal 
+LINK.ACT.COLOR=0835 
+LINK.ACT.P=<LINK.P> 
+LINK.ACT.ATTR=00002 
+LINK.ACT.TIMER=2 
+CONT.EVENTS -e_ncast 
+CONT.DAMAGE {1 3} 
+LINK.SFX=020c 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==2) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(8)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+LINK.FINDTYPE.t_hair.remove 
+LINK.FINDTYPE.t_beard.remove 
+CONT.RUNECAST 
+CONT.NEWITEM=i_fx_sparkle 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=083a 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+LINK.emptyontop 
+CONT.NEWITEM 0122f 
+CONT.ACT.P=<link.p> 
+CONT.ACT.ATTR=ATTR_DECAY 
+CONT.ACT.TIMER=60*2 
+CONT.NEWITEM 0122a 
+CONT.ACT.P=<link.p> 
+CONT.ACT.ATTR=ATTR_DECAY 
+CONT.ACT.TIMER=60*2 
+LINK.REMOVE 
+CONT.NEWITEM 0144e 
+CONT.ACT.CONT=<CONT> 
+CONT.ACT.COLOR=083a 
+CONT.ACT.EQUIP 
+CONT.NEWITEM 0144f 
+CONT.ACT.CONT=<CONT> 
+CONT.ACT.COLOR=083a 
+CONT.ACT.EQUIP 
+CONT.NEWITEM 01450 
+CONT.ACT.CONT=<CONT> 
+CONT.ACT.COLOR=083a 
+CONT.ACT.EQUIP 
+CONT.NEWITEM 01451 
+CONT.ACT.CONT=<CONT> 
+CONT.ACT.COLOR=083a 
+CONT.ACT.EQUIP 
+CONT.NEWITEM 01452 
+CONT.ACT.CONT=<CONT> 
+CONT.ACT.COLOR=083a 
+CONT.ACT.EQUIP 
+CONT.EVENTS -e_ncast 
+CONT.SFX=0103 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==3) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+LINK.FINDID.i_mem_necroprot_ra.remove 
+LINK.NEWITEM=i_mem_necroprot_ra 
+LINK.ACT.CONT=<LINK.UID> 
+LINK.ACT.TIMER=600//hotdate 
+LINK.flags=<LINK.flags>|statf_reactive 
+LINK.EVENTS +e_necroprot 
+LINK.NEWITEM=i_fx_sparkle 
+LINK.ACT.TYPE=t_normal 
+LINK.ACT.COLOR=00e8 
+LINK.ACT.P=<LINK.P> 
+LINK.ACT.ATTR=00002 
+LINK.ACT.TIMER=1 
+CONT.RUNECAST 
+LINK.ANIM 20 
+CONT.EVENTS -e_ncast 
+LINK.SFX=00fe 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==4) 
+CONT.NEWITEM i_gold 
+CONT.ACT.P=<TAG.UPLACE> 
+LINK=<CONT.ACT> 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+LINK.REMOVE 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+CONT.NEWNPC {01069 1 03ca 1 032 1 0900 1 03 1} 
+CONT.ACT.EVENTS +e_necrosum 
+CONT.ACT.P <MOREP> 
+CONT.ACT.UPDATE 
+LINK=<CONT.ACT> 
+LINK.FINDLAYER(layer_pack).remove 
+LINK.NEWITEM i_memory 
+LINK.ACT.COLOR memory_ipet 
+LINK.ACT.MORE1 04 
+LINK.ACT.LINK <CONT.UID> 
+LINK.ACT.MORE2 <SERV.TIME> 
+LINK.ACT.MOREP <LINK.P> 
+LINK.ACT.CONT <LINK.UID> 
+LINK.FOOD 50 
+LINK.NEWITEM i_mem_necrosum 
+LINK.ACT.CONT <LINK.UID> 
+LINK.NEWITEM=0376a 
+LINK.ACT.TYPE=t_normal 
+LINK.ACT.COLOR=00e8 
+LINK.ACT.P=<LINK.P> 
+LINK.ACT.ATTR=00002 
+LINK.ACT.TIMER=1 
+CONT.RUNECAST 
+CONT.SFX=01f6 
+CONT.EVENTS -e_ncast 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==5) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(10)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+LINK.FINDTYPE.t_hair.remove 
+LINK.FINDTYPE.t_beard.remove 
+LINK.emptyontop 
+CONT.ACT.P=<LINK.P> 
+CONT.ACT.ATTR=ATTR_DECAY 
+CONT.NEWITEM 0122a 
+CONT.ACT.P=<LINK.P> 
+CONT.ACT.ATTR=ATTR_DECAY 
+LINK.REMOVE 
+LINK=<CONT.UID> 
+CONT.NEWITEM i_los3 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+CONT.SFX=010b 
+CONT.RUNECAST 
+CONT.EVENTS -e_ncast 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==6) 
+CONT.NEWITEM i_gold 
+CONT.ACT.P=<TAG.UPLACE> 
+LINK=<CONT.ACT> 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+LINK.REMOVE 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+CONT.NEWNPC {018 1 01046 1 01068 1 01067 1 038 1} 
+CONT.ACT.EVENTS +e_necrosum 
+CONT.ACT.P <MOREP> 
+CONT.ACT.UPDATE 
+LINK=<CONT.ACT> 
+LINK.FINDLAYER(layer_pack).remove 
+LINK.NEWITEM i_memory 
+LINK.ACT.COLOR memory_ipet 
+LINK.ACT.MORE1 04 
+LINK.ACT.LINK <CONT.UID> 
+LINK.ACT.MORE2 <SERV.TIME> 
+LINK.ACT.MOREP <LINK.P> 
+LINK.ACT.CONT <LINK.UID> 
+LINK.FOOD 50 
+LINK.NEWITEM i_mem_necrosum 
+LINK.ACT.CONT <LINK.UID> 
+
+LINK.NEWITEM=0376a 
+LINK.ACT.TYPE=t_normal 
+LINK.ACT.COLOR=00e8 
+LINK.ACT.P=<LINK.P> 
+LINK.ACT.ATTR=00002 
+LINK.ACT.TIMER=1 
+CONT.RUNECAST 
+CONT.SFX=01f6 
+CONT.EVENTS -e_ncast 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==7) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+LINK.NEWITEM i_memory 
+LINK.ACT.CONT <LINK.UID> 
+LINK.ACT.COLOR memory_ipet 
+LINK.ACT.MORE1 04 
+LINK.ACT.LINK <CONT.UID> 
+LINK.ACT.MORE2 <SERV.TIME> 
+LINK.ACT.MOREP <LINK.P> 
+LINK.ACT.CONT <LINK.UID> 
+LINK.FOOD 50 
+CONT.SYSMESSAGE It appears to be under your control. 
+LINK.UPDATE 
+LINK.NEWITEM=0376a 
+LINK.ACT.TYPE=t_normal 
+LINK.ACT.COLOR=00e8 
+LINK.ACT.P=<LINK.P> 
+LINK.ACT.ATTR=00002 
+LINK.ACT.TIMER=1 
+CONT.RUNECAST 
+CONT.EVENTS -e_ncast 
+LINK.SFX=00f7 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==8) 
+
+IF (<eval (RAND(14)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+CONT.FINDLAYER(LAYER_SPELL_STATS).remove 
+CONT.FINDID.i_mem_necropoly.tag.str1=<cont.str> 
+CONT.FINDID.i_mem_necropoly.tag.dex1=<cont.dex> 
+CONT.FINDID.i_mem_necropoly.tag.int1=<cont.int> 
+CONT.BODY=<CONT.FINDID.i_mem_necropoly.tag.change2> 
+CONT.STR=<CONT.FINDID.i_mem_necropoly.tag.str2> 
+CONT.INT=<CONT.FINDID.i_mem_necropoly.tag.int2> 
+CONT.DEX=<CONT.FINDID.i_mem_necropoly.tag.dex2> 
+CONT.COLOR=<CONT.FINDID.i_mem_necropoly.tag.color1> 
+CONT.UPDATE 
+CONT.FINDID.i_mem_necropoly.timer=6*30 
+CONT.FINDID.i_mem_necropoly.MORE2=1 
+CONT.EVENTS +e_necropoly 
+CONT.NEWITEM=0376a 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=00e8 
+CONT.ACT.P=<LINK.P> 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.RUNECAST 
+CONT.EVENTS -e_ncast 
+CONT.SFX=0216 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==9) 
+CONT.NEWITEM i_gold 
+CONT.ACT.P=<TAG.UPLACE> 
+LINK=<CONT.ACT> 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+LINK.REMOVE 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+CONT.NEWNPC {01047 1 01022 1 01041 1} 
+CONT.ACT.EVENTS +e_necrosum 
+CONT.ACT.P <MOREP> 
+CONT.ACT.UPDATE 
+LINK=<CONT.ACT> 
+LINK.FINDLAYER(layer_pack).remove 
+LINK.NEWITEM i_memory 
+LINK.ACT.COLOR memory_ipet 
+LINK.ACT.MORE1 04 
+LINK.ACT.LINK <CONT.UID> 
+LINK.ACT.MORE2 <SERV.TIME> 
+LINK.ACT.MOREP <LINK.P> 
+LINK.ACT.CONT <LINK.UID> 
+LINK.FOOD 50 
+LINK.NEWITEM i_mem_necrosum 
+LINK.ACT.CONT <LINK.UID> 
+LINK.NEWITEM=0376a 
+LINK.ACT.TYPE=t_normal 
+LINK.ACT.COLOR=00e8 
+LINK.ACT.P=<LINK.P> 
+LINK.ACT.ATTR=00002 
+LINK.ACT.TIMER=1 
+CONT.RUNECAST 
+CONT.SFX=01f6 
+CONT.EVENTS -e_ncast 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==11) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+CONT.NEWNPC=<HVAL <LINK.MOREX>> 
+CONT.ACT.P=<LINK.P> 
+LINK.REMOVE 
+TAG.REZNAME=<LINK.NAME> 
+LINK=<CONT.ACT> 
+LINK.NAME=<TAG.REZNAME> 
+LINK.COLOR=0835 
+LINK.EVENTS +e_necrosum 
+LINK.NEWITEM i_mem_necrosum 
+LINK.ACT.CONT <LINK.UID> 
+LINK.NEWITEM i_memory 
+LINK.ACT.CONT <LINK.UID> 
+LINK.ACT.COLOR memory_ipet 
+LINK.ACT.MORE1 04 
+LINK.ACT.LINK <CONT.UID> 
+LINK.ACT.MORE2 <SERV.TIME> 
+LINK.ACT.MOREP <LINK.P> 
+LINK.ACT.CONT <LINK.UID> 
+LINK.FOOD 50 
+CONT.SYSMESSAGE It appears to be under your control. 
+LINK.UPDATE 
+LINK.NEWITEM=0376a 
+LINK.ACT.TYPE=t_normal 
+LINK.ACT.COLOR=00e8 
+LINK.ACT.P=<LINK.P> 
+LINK.ACT.ATTR=00002 
+LINK.ACT.TIMER=1 
+CONT.RUNECAST 
+LINK.RUNECAST 
+CONT.EVENTS -e_ncast 
+LINK.SFX=0217 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==12) 
+
+IF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE 
+CONT.EVENTS +e_tempinvul 
+CONT.NEWITEM=i_gold 
+CONT.act.p=<cont.p> 
+CONT.act.TYPE=T_EXPLOSION 
+CONT.act.ATTR=ATTR_MOVE_NEVER | ATTR_CAN_DECAY | ATTR_INVIS 
+CONT.act.morex=50 // damage 
+CONT.act.morey=090 // wFlags DAMAGE_GENERAL 
+CONT.act.morez=5 // iDist 
+CONT.act.TIMERD=1 // immediate decay 
+CONT.UPDATE 
+CONT.RUNECAST 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=2 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=2 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=2 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=2 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 6,6 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=2 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -6,-6 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=2 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -6,6 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=2 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 6,-6 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=2 
+CONT.EVENTS -e_ncast 
+CONT.SFX=0245 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==13) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(8)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+CONT.RUNECAST 
+CONT.NEWITEM=i_fx_sparkle 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=083a 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM 0122f 
+CONT.ACT.P=<link.p> 
+CONT.ACT.ATTR=ATTR_DECAY 
+CONT.ACT.TIMER=60*2 
+CONT.NEWITEM 0122a 
+CONT.ACT.P=<link.p> 
+CONT.ACT.ATTR=ATTR_DECAY 
+CONT.ACT.TIMER=60*2 
+LINK.FINDTYPE.t_hair.remove 
+LINK.FINDTYPE.t_beard.remove 
+LINK.emptyontop 
+CONT.NEWNPC=<HVAL <LINK.MOREX>> 
+CONT.ACT.P=<LINK.P> 
+LINK.REMOVE 
+LINK=<CONT.ACT> 
+VAR.CDAMAGE=<LINK.HITPOINTS> 
+CONT.NEWITEM=i_fx_explode 
+CONT.act.p=<link.p> 
+CONT.act.TYPE=T_EXPLOSION 
+CONT.act.ATTR=ATTR_MOVE_NEVER | ATTR_CAN_DECAY 
+CONT.act.morex=<EVAL <VAR.CDAMAGE>> // damage 
+CONT.act.morey=090 // wFlags DAMAGE_GENERAL 
+CONT.act.morez=4 // iDist 
+CONT.act.TIMERD=1 // immediate decay 
+CONT.NEWITEM=i_fx_explosion_2 
+CONT.act.p=<link.p> 
+CONT.act.TYPE=T_EXPLOSION 
+CONT.act.ATTR=ATTR_MOVE_NEVER | ATTR_CAN_DECAY 
+CONT.act.morex=1// damage 
+CONT.act.morey=090 // wFlags DAMAGE_GENERAL 
+CONT.act.morez=1 // iDist 
+CONT.act.TIMERD=1 // immediate decay 
+LINK.remove 
+CONT.UPDATE 
+CONT.EVENTS -e_ncast 
+CONT.SFX=011b 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==14) 
+
+IF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 2,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 0,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -2,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,2 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,0 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,-2 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -2,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 0,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 2,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,-2 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,0 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,2 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -2,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.FINDID.I_MEM_NECROSPELL.MORE1=15 
+CONT.FINDID.I_MEM_NECROSPELL.TIMERD=1 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==15) 
+
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 0,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,0 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 0,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,0 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.SFX=0245 
+CONT.FINDID.I_MEM_NECROSPELL.MORE1=16 
+CONT.FINDID.I_MEM_NECROSPELL.TIMERD=1 
+RETURN 1 
+
+ELIF (<MORE1>==16) 
+
+IF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE 
+CONT.INVIS 
+CONT.NEWNPC C_GREATER_DAEMON 
+CONT.ACT.EVENTS +e_necrosum 
+CONT.ACT.RUN E 
+CONT.ACT.MOVE 0,1 
+CONT.ACT.UPDATE 
+LINK=<CONT.ACT> 
+LINK.FINDLAYER(layer_pack).remove 
+LINK.FOOD 50 
+LINK.NEWITEM i_mem_necrosum 
+LINK.ACT.CONT <LINK.UID> 
+LINK.NEWITEM=0376a 
+LINK.ACT.TYPE=t_normal 
+LINK.ACT.COLOR=00e8 
+LINK.ACT.P=<LINK.P> 
+LINK.ACT.ATTR=00002 
+LINK.ACT.TIMER=1 
+LINK.RUNECAST 
+CONT.EVENTS -e_ncast 
+CONT.FINDID.I_MEM_NECROSPELL.MORE1=17 
+CONT.FINDID.I_MEM_NECROSPELL.TIMER=5 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==17) 
+
+CONT.INVIS 
+REMOVE 
+RETURN 1 
+
+ELIF (<MORE1>==18) 
+
+IF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 2,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 0,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -2,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,2 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,0 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,-2 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -4,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -2,4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 0,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 2,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5f 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e62 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,-2 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e65 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,0 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE 4,2 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.NEWITEM=0e5c 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.MOVE -2,-4 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+CONT.FINDID.I_MEM_NECROSPELL.MORE1=19 
+CONT.FINDID.I_MEM_NECROSPELL.TIMERD=1 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==19) 
+
+CONT.NEWITEM=0375a 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=07a1 
+CONT.ACT.P=<CONT.P> 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=3 
+CONT.FINDID.I_MEM_NECROSPELL.MORE1=20 
+CONT.FINDID.I_MEM_NECROSPELL.TIMERD=1 
+RETURN 1 
+
+ELIF (<MORE1>==20) 
+
+CONT.RUNECAST 
+CONT.FINDID.I_MEM_NECROSPELL.MORE1=21 
+CONT.FINDID.I_MEM_NECROSPELL.TIMERD=1 
+RETURN 1 
+
+ELIF (<MORE1>==21) 
+
+IF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE 
+CONT.FINDID.I_MEM_LASTCHANCE.REMOVE 
+CONT.EVENTS -e_ncast 
+CONT.DAMAGE {15 25} 
+CONT.EVENTS +e_lastchance 
+CONT.NEWITEM i_mem_lastchance 
+CONT.ACT.CONT=<CONT.UID> 
+CONT.FINDID.I_MEM_NECROSPELL.REMOVE 
+RETURN 1 
+ENDIF 
+
+ELIF (<MORE1>==23) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+CONT.NEWITEM=i_fx_sparkle 
+CONT.ACT.TYPE=t_normal 
+CONT.ACT.COLOR=083a 
+CONT.ACT.P=<LINK.P> 
+CONT.ACT.ATTR=00002 
+CONT.ACT.TIMER=1 
+
+LINK.FINDID.i_mem_halluc.remove 
+LINK.EVENTS +e_hallucevent 
+LINK.NEWITEM i_mem_halluc 
+LINK.ACT.CONT=<CONT.UID> 
+LINK.ACT.TIMER=300 
+LINK.flags=<LINK.flags>|statf_hallucinating 
+LINK.UPDATE 
+CONT.RUNECAST 
+CONT.EVENTS -e_ncast 
+CONT.SFX=0243 
+REMOVE 
+RETURN 1 
+
+ENDIF 
+
+ELIF (<MORE1>==22) 
+CONT.NEWITEM i_los 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+
+IF !(<VAR.RETURN>) 
+CONT.SPELL_FIZZLE2 
+RETURN 1 
+
+ELIF (<eval (RAND(12)>==1) 
+CONT.SPELL_FIZZLE 
+RETURN 1 
+
+ELSE
+CONT.NEWITEM i_los2 
+CONT.ACT.LINK <LINK.UID> 
+CONT.EQUIP <CONT.ACT.UID> 
+CONT.EVENTS -e_ncast 
+LINK.UPDATE 
+CONT.RUNECAST 
+CONT.EVENTS -e_ncast 
+CONT.SFX=015e 
+REMOVE 
+RETURN 1 
+
+ENDIF 
+ENDIF 
+
+
+
+[FUNCTION infernal_light] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=10.0) && (<SRC.RESTEST i_reag_obsidian, i_reag_brimstone>) && (<SRC.MANA> >=10) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=1 
+ACT.TARGET Who would you like to cast this on? 
+SRC.CONSUME i_reag_obsidian, i_reag_brimstone
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.0 5 0.0 5 0.0 4 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 }
+ELIF (<SRC.MANA><10) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+
+ELIF (<SRC.NECROMANCY> <10.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+
+ELSE 
+SRC.SYSMESSAGE You need Obsidian & Brimstone to cast this.
+RETURN 1 
+ENDIF 
+
+
+[FUNCTION bone_armor] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=20.0) && (<SRC.RESTEST i_reag_blood_spawn, i_reag_blackmoor>) && (<SRC.MANA>>=20) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=2 
+ACT.TARGET Which corpse would you like to cast this on? 
+SRC.CONSUME i_reag_blood_spawn, i_reag_blackmoor 
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 }
+ELIF (<SRC.MANA><20) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+
+ELIF (<SRC.NECROMANCY> <20.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+
+ELSE 
+SRC.SYSMESSAGE You need Bloodspawn & Blackmoor to cast this.
+RETURN 1 
+ENDIF 
+
+[FUNCTION exoskeleton] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=35.0) && (<SRC.RESTEST i_reag_bone, i_reag_pumice>) && (<SRC.MANA>>=20) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=3 
+ACT.TARGET Who would you like to cast this on? 
+SRC.CONSUME i_reag_bone, i_reag_pumice
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 }
+ELIF (<SRC.MANA><20) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+
+ELIF (<SRC.NECROMANCY> <35.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+
+ELSE 
+SRC.SYSMESSAGE You need a Bone & Pumice to cast this.  
+RETURN 1 
+ENDIF 
+
+[FUNCTION sundead_1] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=40.0) && (<SRC.RESTEST i_reag_worm_heart, i_reag_brimstone>) && (<SRC.MANA>>=30) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=4 
+ACT.TARGETG Where would you like to summon this creature? 
+SRC.CONSUME i_reag_worm_heart, i_reag_brimstone
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 } 
+ELIF (<SRC.MANA><30) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <40.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need a Worm Heart & Brimstone to cast this. 
+RETURN 1 
+ENDIF 
+
+[FUNCTION harvest_dead] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=40.0) && (<SRC.RESTEST i_reag_dead_wood, i_reag_executioners_cap>) && (<SRC.MANA>>=20) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=5 
+ACT.TARGET What corpse would you like to cast this on? 
+SRC.CONSUME i_reag_dead_wood, i_reag_executioners_cap
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 }
+ELIF (<SRC.MANA><20) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <40.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need  some Dead Wood & an Executioners Cap to cast this. 
+RETURN 1 
+ENDIF 
+
+[FUNCTION sundead_2] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=55.0) && (<SRC.RESTEST i_reag_obsidian, i_reag_brimstone>) && (<SRC.MANA>>=30) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=6 
+ACT.TARGETG Where would you like to summon this creature? 
+SRC.CONSUME i_reag_obsidian, i_reag_brimstone
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 } 
+ELIF (<SRC.MANA><30) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <55.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need some Obsidian & Brimstone to cast this. 
+RETURN 1 
+ENDIF 
+
+[FUNCTION t_undead1] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=55.0) && (<SRC.RESTEST i_reag_volcanic_ash, i_reag_dragon_blood>) && (<SRC.MANA>>=30) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=7 
+ACT.TARGET Which undead do you wish to turn? 
+SRC.CONSUME i_reag_volcanic_ash, i_reag_dragon_blood
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 }
+ELIF (<SRC.MANA><30) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <55.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need some Volcanic Ash & Dragons Blood to cast this. 
+RETURN 1 
+ENDIF 
+
+
+[FUNCTION undeadform1P1] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==1) 
+SRC.SYSMESSAGE You are already in the form of the undead 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=60.0) && (<SRC.RESTEST i_reag_blood_spawn, i_reag_worm_heart>) && (<SRC.MANA>>=30) 
+FINDID.I_mem_necrospell.REMOVE 
+FINDID.i_mem_necropoly.remove 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=8 
+NEWITEM i_mem_necropoly
+ACT.EQUIP
+SRC.CONSUME i_reag_worm_heart, i_reag_blood_spawn
+SRC.SKILLMENU sm_undeadform1 
+ELIF (<SRC.MANA><30)
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <60.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need a Worm Heart & Bllod Spawn to cast this. 
+RETURN 1 
+ENDIF 
+
+[FUNCTION sundead_3] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=80.0) && (<SRC.RESTEST i_reag_worm_heart, i_reag_brimstone>) && (<SRC.MANA>>=30) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=9 
+ACT.TARGETG Where would you like to summon this creature? 
+SRC.CONSUME i_reag_worm_heart, i_reag_brimstone
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 } 
+ELIF (<SRC.MANA><30) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <80.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need a Worm Heart & Brimstone to cast this. 
+RETURN 1 
+ENDIF 
+
+[FUNCTION t_undead2] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=75.0) && (<SRC.RESTEST i_reag_volcanic_ash, i_reag_dragon_blood>) && (<SRC.MANA>>=30) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=10 
+ACT.TARGET Which undead do you wish to turn? 
+SRC.CONSUME i_reag_volcanic_ash, i_reag_dragon_blood
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 } 
+ELIF (<SRC.MANA><30) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <75.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need some Volcanic Ash & Dragons Blood to cast this.
+RETURN 1 
+ENDIF 
+
+[FUNCTION animate_dead] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=85.0) && (<SRC.RESTEST i_reag_dragon_blood, i_reag_daemon_bone>) && (<SRC.MANA>>=40) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=11 
+ACT.TARGET Which corpse do you wish to animate? 
+SRC.CONSUME i_reag_dragon_blood, i_reag_daemon_bone
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 } 
+ELIF (<SRC.MANA><40) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <85.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need some Dragons Blood & a Daemon Bone to cast this.  
+RETURN 1 
+ENDIF 
+
+[FUNCTION undeadform1P2] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.FINDID.i_mem_necropoly>) && (<SRC.FINDID.i_mem_necropoly.MORE2>==1) 
+SRC.SYSMESSAGE You are already in the form of the undead 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=90.0) && (<SRC.RESTEST i_reag_blood_spawn, i_reag_worm_heart>) && (<SRC.MANA>>=50) 
+FINDID.I_mem_necrospell.REMOVE 
+FINDID.i_mem_necropoly.remove 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=8 
+NEWITEM i_mem_necropoly 
+ACT.EQUIP 
+SRC.SKILLMENU sm_undeadform2 
+ELIF (<SRC.MANA><50) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <90.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need some Blood Spawn & a Worm Heart to cast this. 
+RETURN 1 
+ENDIF 
+
+[FUNCTION corpse_explo] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+
+ELIF (<SRC.NECROMANCY> >=95.0) && (<SRC.RESTEST i_reag_blood_spawn, i_reag_blackmoor>) && (<SRC.MANA>>=60) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=13 
+ACT.TARGET Which corpse do you wish to cast this on? 
+SRC.CONSUME i_reag_blood_spawn, i_reag_blackmoor 
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 }
+
+ELIF (<SRC.MANA><60) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+
+ELIF (<SRC.NECROMANCY> <95.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+
+ELSE 
+SRC.SYSMESSAGE You need Bloodspawn & Blackmoor Cap to cast this. 
+RETURN 1 
+ENDIF 
+
+[FUNCTION firebolt] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=60.0) && (<SRC.RESTEST i_reag_brimstone, i_reag_pumice>) && (<SRC.MANA>>=40) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=22 
+ACT.TARGET Who do you wish to cast this on? 
+SRC.CONSUME i_reag_brimstone, i_reag_pumice
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 3 0.0 2 0.0 3 }
+ELIF (<SRC.MANA><40) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <60.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need a Pumice & a Brimstone to cast this. 
+RETURN 1 
+ENDIF 
+
+[FUNCTION HALLUC] 
+
+IF (<SRC.REGION.FLAGS>&region_antimagic_all) 
+src.sysmessage The anti-magic feild disturbs the spells 
+Return 1 
+
+ELIF (<SRC.NECROMANCY> >=65.0) && (<SRC.RESTEST i_reag_eye_of_newt, i_reag_batwing>) && (<SRC.MANA>>=40) 
+FINDID.I_mem_necrospell.REMOVE 
+SRC.NEWITEM i_mem_Necrospell 
+ACT.EQUIP 
+ACT.MORE1=23 
+ACT.TARGET Who do you wish to cast this on? 
+SRC.CONSUME i_reag_eye_of_newt, i_reag_batwing
+SRC.NECROMANCY=<SRC.NECROMANCY>+{ 0.0 5 0.0 5 0.0 4 0.1 3 0.0 2 0.0 3 0.0 3 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 0.0 2 0.0 3 0.0 5 0.0 5 0.0 4 }
+ELIF (<SRC.MANA><40) 
+SRC.SYSMESSAGE You do not have enough mana to cast that. 
+RETURN 1 
+ELIF (<SRC.NECROMANCY> <65.0) 
+SRC.SYSMESSAGE You do not have the skill to cast that. 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You need an Eye of Newt & Batwing to cast this.  
+RETURN 1 
+ENDIF
+
+[EOF]

@@ -1,0 +1,4713 @@
+//**************************************************
+//**Scripted By: Blade (lusitania.dvrdns.org,2593)**
+//****************      V0.1       *****************
+//**************************************************
+
+//Start Stone
+
+
+//Add this following event to ALL MONSTERS!
+
+
+
+
+//**NEXT PART**
+//-Find a way so every player has to use this stone
+
+[ITEMDEF i_stone_level]
+DEFNAME=i_stone_level
+ID=0ed5
+TYPE=t_normal
+NAME=Level Stone
+
+
+ON=@DCLICK
+src.events +e_exp_work
+SRC.TAG.LEVEL=1
+SRC.TAG.EXP=1
+SRC.TAG.EXPNEEDED=100
+SRC.EVENTS +e_level
+DIALOG d_NewbStone
+SRC.ALLSKILLS=000
+SRC.STR=40
+SRC.DEX=40
+SRC.INT=40
+src.EVENTS e_expsrc.tag.statpoints=0
+src.tag.skillpoints=0
+src.tag.statpoints=0
+//SRC.GO=???.???
+RETURN 1
+
+[EVENTS e_level]
+ON=@CLICK
+MESSAGE=(Nivel: <EVAL <TAG.LEVEL>>)
+
+[FUNCTION f_check]
+IF (<EVAL <TAG.EXP>> > <EVAL <TAG.EXPNEEDED>>)
+	IF (<EVAL <TAG.LEVEL>> > 50)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +25000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 40)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +12500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 30)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +10000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 25)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +9000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 20)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +8000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 18)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +7500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 16)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +7000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 14)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +6500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 12)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +6000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> >= 10)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +5500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==9)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +5000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==8)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +4500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==7)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +4000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==6)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +3500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==5)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +3000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==4)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +2500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==3)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +2000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==2)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +1000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==1)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +500
+		f_levelup
+	ENDIF
+ENDIF
+
+[FUNCTION f_levelup]
+//test
+IF (<EVAL <TAG.LEVEL>>==100)
+return 1
+else
+//fin test
+TAG.LEVEL=<EVAL <TAG.LEVEL>> +1
+tag.statpoints=<eval <tag.statpoints>>+3
+tag.rpoints=<eval <tag.rpoints>>+5
+tag.skillpoints=<eval <tag.skillpoints>>+{3 5}
+EFFECT=3,i_fx_heal_effect,15,15,1
+SOUND=SND_SPELL_LIGHTNING
+SYSMESSAGE=@00040 you have gained a level!
+SYSMESSAGE=@00040 you are at level <EVAL <TAG.LEVEL>>
+
+IF (<EVAL <TAG.EXP>> > <EVAL <TAG.EXPNEEDED>>)
+	f_check
+ENDIF
+
+[FUNCTION f_experience]
+IF !(<SRC.MEMORYFINDTYPE.(00008).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(00008).UID>)
+	SRC.MEMORYFINDTYPE.(00008).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF !(<SRC.MEMORYFINDTYPE.(00010).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(00010).UID>)
+	SRC.MEMORYFINDTYPE.(00010).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF !(<SRC.MEMORYFINDTYPE.(00020).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(00020).UID>)
+	SRC.MEMORYFINDTYPE.(00020).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF !(<SRC.MEMORYFINDTYPE.(00080).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(00080).UID>)
+	SRC.MEMORYFINDTYPE.(00080).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF !(<SRC.MEMORYFINDTYPE.(02000).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(02000).UID>)
+	SRC.MEMORYFINDTYPE.(02000).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(00008).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(00008).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(00008).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EXP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(00008).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(00008).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(00010).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(00010).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(00010).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EXP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(00010).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(00010).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(00020).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(00020).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(00020).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EXP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(00020).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(00020).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(00080).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(00080).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(00080).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EXP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(00080).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(00080).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(02000).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(02000).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(02000).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EXP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(02000).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(02000).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_experience_level] 
+DEFNAME=i_experience_level
+NAME=Experience
+ID=i_memory
+WEIGHT=0
+LAYER=30
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+ATTR=attr_invis|attr_move_never
+
+ON=@TIMER
+IF ( <CONT.FLAGS> & statf_dead )
+	REMOVE
+	RETURN 1
+ENDIF
+CONT.SYSMESSAGE @00040 You have gained <EVAL <TAG.EXP>> experience!
+CONT.TAG.EXP=<EVAL <CONT.TAG.EXP>> + <EVAL <TAG.EXP>>
+CONT.f_check
+REMOVE
+RETURN 1
+
+[PLEVEL 0]
+level
+
+[FUNCTION level]
+DIALOG d_elevel
+
+[FUNCTION level]
+dialog d_elevel
+
+[events e_exp_work]
+ON=@SkillSuccess
+IF (<action>==skill_mining)
+	VAR.X=<EVAL {1 30}>
+	tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	f_check
+	SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+//ElseIF (<action>==SKILL_Blacksmith)
+	//VAR.X=<EVAL {1 30}>
+	//tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	//f_check
+	//SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+ElseIF (<action>==SKILL_ALCHEMY)
+	VAR.X=<EVAL {1 30}>
+	tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	f_check
+	SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+ElseIF (<action>==Skill_Bowcraft)
+	VAR.X=<EVAL {1 30}>
+	tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	f_check
+	SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+ElseIF (<action>==Skill_Carpentry)
+	VAR.X=<EVAL {1 30}>
+	tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	f_check
+	SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+ElseIF (<action>==Skill_Fishing)
+	VAR.X=<EVAL {1 30}>
+	tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	f_check
+	SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+ElseIF (<action>==Skill_Tailoring)
+	VAR.X=<EVAL {1 30}>
+	tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	f_check
+	SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+ElseIF (<action>==Skill_Tinkering)
+	VAR.X=<EVAL {1 30}>
+	tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	f_check
+	SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+ElseIF (<action>==SKILL_LUMBERJACK)
+	VAR.X=<EVAL {1 30}>
+	tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+	f_check
+	SYSMESSAGE @00040 You have gained <EVAL <VAR0.X>> experience!
+ENDIF
+
+
+
+[FUNCTION CONVERT]
+SYSMESSAGE @5 Click on the item that you want to convert for experience points.
+sysmessage @5 Warning! This action will be definitive!
+target
+on=@targOn_item
+VAR.X=<EVAL {1 30}>
+tag.exp=<tag.exp> +<EVAL <VAR0.X>>
+f_check
+SYSMESSAGE @2974 You have gained <EVAL <VAR0.X>> experience!
+endif
+return 1
+
+
+[DIALOG d_elevel]
+0, 0
+PAGE 0
+resizepic 11 7 83 434 308
+text 163 27 1152 0
+text 40 94 1152 1
+text 39 55 1152 2
+text 41 115 1152 3
+text 41 136 1152 4
+text 189 56 1152 5
+text 189 139 1152 6
+text 189 95 1152 7
+text 189 116 1152 8
+text 137 172 1152 9
+text 39 74 1152 10
+text 189 74 1152 11
+
+button 250 173 5402 5402 1 0 1
+button 190 213 247 248 1 0 3
+
+[DIALOG d_elevel TEXT]
+Menu de Nivel
+Nivel:
+Nome:
+Exp:
+Exp needed:
+<SRC.NAME>
+<EVAL <TAG.EXPNEEDED>>
+<eval <tag.level>>
+<eval <TAG.EXP>>
+Skill Menu:
+Shard:
+Lusitania
+
+[dialog d_elevel BUTTON]
+ONBUTTON=1
+sysmessage Skill Points Menu Opened
+dialog d_skillpoints
+ONBUTTON=2
+sysmessage Reward Points Menu Opened
+dialog d_reward
+
+[DIALOG d_skillpoints] 
+77,77 
+resizepic 0 0 83 475 370//5120 
+text 65 10 32 0 
+button 16 35 2435 2435 1 0 2
+button 16 55 2435 2435 1 0 3
+button 16 75 2435 2435 1 0 4
+button 16 95 2435 2435 1 0 5
+button 16 115 2435 2435 1 0 6
+button 16 135 2435 2435 1 0 7
+button 16 155 2435 2435 1 0 8
+button 16 175 2435 2435 1 0 9
+button 16 195 2435 2435 1 0 10
+button 16 215 2435 2435 1 0 11
+button 16 235 2435 2435 1 0 12
+button 16 255 2435 2435 1 0 13
+button 16 275 2435 2435 1 0 14
+button 16 295 2435 2435 1 0 15
+button 148 35 2435 2435 1 0 16
+button 148 55 2435 2435 1 0 17
+button 148 75 2435 2435 1 0 18
+button 148 95 2435 2435 1 0 19
+button 148 115 2435 2435 1 0 20
+button 148 135 2435 2435 1 0 21
+button 148 155 2435 2435 1 0 22
+button 148 175 2435 2435 1 0 23
+button 148 195 2435 2435 1 0 24
+button 148 215 2435 2435 1 0 25
+button 148 235 2435 2435 1 0 26
+button 148  255 2435 2435 1 0 27
+button 148  275 2435 2435 1 0 28
+button 148  295 2435 2435 1 0 29
+button 289 35 2435 2435 1 0 30
+button 289 55 2435 2435 1 0 31
+button 289 75 2435 2435 1 0 32
+button 289 95 2435 2435 1 0 33
+button 289 115 2435 2435 1 0 34
+button 289 135 2435 2435 1 0 35
+button 289 155 2435 2435 1 0 36
+button 289 175 2435 2435 1 0 37
+button 289 195 2435 2435 1 0 38
+button 289 215 2435 2435 1 0 39
+button 289 235 2435 2435 1 0 40
+button 289 255 2435 2435 1 0 41
+button 289 275 2435 2435 1 0 42
+button 289 295 2435 2435 1 0 43
+button 140 320 2435 2435 1 0 44
+button 240 320 2435 2435 1 0 45
+button 340 320 2435 2435 1 0 46
+
+text 24 30 1153 1
+text 101 30 5 2 
+text 24 50 1153 3 
+text 101 50 5 4 
+text 24 70 1153 5 
+text 101 70 5 6 
+text 24 90 1153 7 
+text 101 90 5 8 
+text 24 110 1153 9 
+text 101 110 5 10 
+text 24 130 1153 11 
+text 101 130 5 12 
+text 24 150 1153 13 
+text 101 150 5 14 
+text 24 170 1153 15 
+text 101 170 5 16 
+text 24 190 1153 17 
+text 101 190 5 18 
+text 24 210 1153 19 
+text 101 210 5 20 
+text 24 230 1153 21 
+text 101 230 5 22 
+text 24 250 1153 23 
+text 101 250 5 24 
+text 24 270 1153 25 
+text 101 270 5 26 
+text 24 290 1153 27 
+text 101 290 5 28 
+button 20 310 1149 1148 1 0 1 
+text 20 345 366 29 
+//***************SIDE 2************** 
+text 158 30 1153 30 
+text 243 30 5 31 
+text 158 50 1153 32 
+text 243 50 5 33 
+text 158 70 1153 34 
+text 243 70 5 35 
+text 158 90 1153 36 
+text 243 90 5 37 
+text 158 110 1153 38 
+text 243 110 5 39 
+text 158 130 1153 40 
+text 243 130 5 41 
+text 158 150 1153 42 
+text 243 150 5 43 
+text 158 170 1153 44 
+text 243 170 5 45 
+text 158 190 1153 46 
+text 243 190 5 47 
+text 158 210 1153 48 
+text 243 210 5 49 
+text 158 230 1153 50 
+text 243 230 5 51 
+text 158 250 1153 52 
+text 243 250 5 53 
+text 158 270 1153 54 
+text 243 270 5 55 
+text 158 290 1153 56 
+text 243 290 5 57 
+//***************SIDE 3**************** 
+text 300 30 1153 58 
+text 400 30 5 59 
+text 300 50 1153 60 
+text 400 50 5 61 
+text 300 70 1153 62 
+text 400 70 5 63 
+text 300 90 1153 64 
+text 400 90 5 65 
+text 300 110 1153 66 
+text 400 110 5 67 
+text 300 130 1153 68 
+text 400 130 5 69 
+text 300 150 1153 70 
+text 400 150 5 71 
+text 300 170 1153 72 
+text 400 170 5 73 
+text 300 190 1153 74 
+text 400 190 5 75 
+text 300 210 1153 76 
+text 400 210 5 77 
+text 300 230 1153 78
+text 400 230 5 79 
+text 300 250 1153 80 
+text 400 250 5 81 
+text 300 270 1153 82 
+text 400 270 5 83 
+text 300 290 1153 84 
+text 400 290 5 85 
+//**************stats*********** 
+text 100 315 53 86 
+text 150 315 0085 87 
+text 200 315 53 88 
+text 250 315 0085 89 
+text 300 315 53 90 
+text 350 315 0085 91 
+text 400 315 32 92
+
+
+
+[DIALOG d_skillpoints TEXT] 
+Skill Points: <eval <tag.skillpoints>> (Each skill points worth 0.1%)
+Alchemy 
+<SRC.ALCHEMY> 
+Anatomy 
+<SRC.ANATOMY> 
+Anim Lore 
+<SRC.ANIMALLORE> 
+Archery 
+<SRC.ARCHERY> 
+Arms Lore 
+<SRC.ARMSLORE> 
+Begging 
+<SRC.BEGGING> 
+Blacksmith 
+<SRC.BLACKSMITHING> 
+Bow Craft 
+<SRC.BOWCRAFT> 
+Camping 
+<SRC.CAMPING> 
+Carpentry 
+<SRC.CARPENTRY> 
+Cartog 
+<SRC.Cartography> 
+Cooking 
+<SRC.Cooking> 
+Enticement 
+<SRC.Enticement> 
+Eval Int 
+<SRC.EVALUATINGINTEL> 
+-- Skill and Stat Menu ---
+Fencing 
+<SRC.FENCING> 
+Fishing 
+<SRC.FISHING> 
+Healing 
+<SRC.HEALING> 
+Herding 
+<SRC.HERDING> 
+Hiding 
+<SRC.HIDING> 
+Inscription 
+<SRC.Inscription> 
+Item ID 
+<SRC.ITEMID> 
+Lockpick 
+<SRC.LOCKPICKING> 
+Lumberjack 
+<SRC.LUMBERJACKING> 
+Mace Fight 
+<SRC.MACEFIGHTING> 
+Magery 
+<SRC.MAGERY> 
+Resisting 
+<SRC.MAGICRESISTANCE> 
+Meditation 
+<SRC.Meditation> 
+Mining 
+<SRC.MINING> 
+Music 
+<SRC.MUSICIANSHIP> 
+Parrying 
+<SRC.PARRYING> 
+Peacemake 
+<SRC.PEACEMAKING> 
+Poisoning 
+<SRC.Poisoning> 
+Provocation 
+<SRC.Provocation> 
+Snooping 
+<SRC.Snooping> 
+Spiritspeak 
+<SRC.Spiritspeak> 
+Stealing 
+<SRC.Stealing> 
+Stealth 
+<SRC.Stealth> 
+Swords 
+<SRC.SWORDSMANSHIP> 
+Tactics 
+<SRC.Tactics> 
+Tailoring 
+<SRC.Tailoring> 
+Taming 
+<SRC.Taming> 
+Wrestling 
+<SRC.Wrestling> 
+STR 
+<SRC.STR> 
+DEX 
+<SRC.DEX> 
+INT 
+<SRC.INT> 
+<eval <src.tag.statpoints>>
+
+[DIALOG d_skillpoints BUTTON] 
+ONBUTTON=0
+dialog d_elevel
+
+ONBUTTON=1
+dialog d_elevel
+
+ONBUTTON=2
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.alchemy>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.alchemy=<src.alchemy>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=3
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.anatomy>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.anatomy=<src.anatomy>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=4
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.animallore>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.animallore=<src.animallore>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=5
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.archery>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.archery=<src.archery>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+
+ONBUTTON=6
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.armslore>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.armslore=<src.armslore>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=7
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.begging>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.begging=<src.begging>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=8
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.blacksmithing>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.blacksmithing=<src.blacksmithing>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=9
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.bowcraft>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.bowcraft=<src.bowcraft
+>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=10
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.camping>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.camping=<src.camping>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+ONBUTTON=11
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.carpentry>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.carpentry=<src.carpentry>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=12
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.cartography>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.cartography=<src.cartography>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=13
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.cooking>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.cooking=<src.cooking>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=14
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.enticement>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.enticement=<src.enticement>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=15
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.evaluatingintel>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.evaluatingintel=<src.evaluatingintel>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=16
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.fencing>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.fencing=<src.fencing>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=17
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.fishing>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.fishing=<src.fishing>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=18
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.healing>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.healing=<src.healing>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=19
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.herding>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.herding=<src.herding>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=20
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.hiding>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.hiding=<src.hiding>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=21
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.inscription>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.inscription=<src.inscription>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=22
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.itemid>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.itemid=<src.itemid>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=23
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.lockpicking>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.lockpicking=<src.lockpicking>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=24
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.lumberjacking>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.lumberjacking=<src.lumberjacking>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=25
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.macefighting>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.macefighting=<src.macefighting>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=26
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.magery>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.magery=<src.magery>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=27
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.magicresistance>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.magicresistance=<src.magicresistance>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=28
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.meditation>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.meditation=<src.meditation>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=29
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.mining>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.mining=<src.mining>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=30
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.musicianship>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.musicianship=<src.musicianship>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=31
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.parrying>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.parrying=<src.parrying>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=32
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.peacemaking>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.peacemaking=<src.peacemaking>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=33
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.poisoning>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.poisoning=<src.poisoning>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=34
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.provocation>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.provocation=<src.provocation>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=35
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.snooping>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.snooping=<src.snooping>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+
+ONBUTTON=36
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.spiritspeak>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.spiritspeak=<src.spiritspeak>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=37
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.stealing>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.stealing=<src.stealing>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=38
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.stealth>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.stealth=<src.stealth>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=39
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.swordsmanship>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.swordsmanship=<src.swordsmanship>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=40
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.tactics>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.tactics=<src.tactics>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=41
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.tailoring>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.tailoring=<src.tailoring>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=42
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.taming>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.taming=<src.taming>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=43
+if <eval <tag.skillpoints>>=0
+sysmessage You don't have any skill points left.
+dialog d_skillpoints
+elseif <eval <src.wrestling>> > 999
+sysmessage You can't increase this skill. You are already to 100.0%!
+dialog d_skillpoints
+else
+src.wrestling=<src.wrestling>+1
+tag.skillpoints=<eval <tag.skillpoints>> -1
+dialog d_skillpoints
+
+ONBUTTON=44
+if <eval <tag.statpoints>>=0
+sysmessage You don't have any stat points left.
+dialog d_skillpoints
+elseif <eval <src.str>> > 124
+sysmessage You reached the stat cap for strength
+dialog d_skillpoints
+elseif (<src.dex> + <src.str> + <src.int>) > 299
+sysmessage You have reached the total skill cap of 300. Decrease a stat to increase this one.
+dialog d_skillpoints
+Else
+src.str=<src.str>+1
+tag.statpoints=<eval <tag.statpoints>> -1
+dialog d_skillpoints
+endif
+
+ONBUTTON=45
+if <eval <tag.statpoints>>=0
+sysmessage You don't have any stat points left.
+dialog d_skillpoints
+elseif <eval <src.dex>> > 124
+sysmessage You reached the stat cap for dexterity
+dialog d_skillpoints
+elseif (<src.dex> + <src.str> + <src.int>) > 299
+sysmessage You have reached the total skill cap of 300. Decrease a stat to increase this one.
+dialog d_skillpoints
+Else
+src.dex=<src.dex>+1
+tag.statpoints=<eval <tag.statpoints>> -1
+dialog d_skillpoints
+endif
+
+ONBUTTON=46
+if <eval <tag.statpoints>>=0
+sysmessage You don't have any stat points left.
+dialog d_skillpoints
+elseif <eval <src.int>> > 124
+sysmessage You reached the stat cap for intelligence
+dialog d_skillpoints
+elseif (<src.dex> + <src.str> + <src.int>) > 299
+sysmessage You have reached the total skill cap of 300. Decrease a stat to increase this one.
+dialog d_skillpoints
+Else
+src.int=<src.int>+1
+tag.statpoints=<eval <tag.statpoints>> -1
+dialog d_skillpoints
+endif
+
+[defname race]
+race_lusitanis=Lusitanis
+race_vampire=Vampire
+race_human=Human  
+race_elf=Elf
+
+
+[DIALOG d_NewbStone]
+0, 0
+PAGE 0
+noclose
+nomove
+resizepic 25 19 2620 456 324
+text 40 17 995 0
+text 40 57 1152 1
+text 40 77 1152 2
+text 40 97 1152 3
+text 40 117 1152 4
+button 20 60 2117 2118 1 0 1
+button 20 80 2117 2118 1 0 2
+button 20 100 2117 2118 1 0 3
+button 20 120 2117 2118 1 0 4
+
+[DIALOG d_NewbStone TEXT]
+Welcome <SRC.NAME>, choose your race: 
+Lusitanis
+Vampire
+Human 
+Elf
+
+[DIALOG d_NewbStone BUTTON]
+ONBUTTON=0
+	SRC.SAY=Dont you want to play this shard <SRC.NAME>
+ONBUTTON=1 //Lusitanis
+src.lusitanis
+src.tag.race1=Lusitanis
+DIALOG d_zero_stone
+ONBUTTON=2 //vampire
+src.vampire
+src.tag.race1=Vampire
+DIALOG d_zero_stone
+ONBUTTON=3 //Human
+src.tag.race1=Human
+src.human
+DIALOG d_zero_stone
+ONBUTTON=4 // Elf
+src.tag.race1=Elf
+src.elf
+DIALOG d_zero_stone
+
+[function lusitanis]
+tag.race = race_lusitanis
+events +e_race
+color 00b48
+oskin 00b48
+
+[function vampire]
+tag.race = race_vampire
+events +e_vampire
+color 0083a
+oskin 0083a
+
+[function human]
+tag.race = race_human
+events +e_human
+color 00749
+oskin 00749
+
+[function elf]
+tag.race = race_elf
+events +e_elf
+color 00170
+oskin 00170
+
+[EVENTS e_race]
+ON @CLICK
+MESSAGE @<eval 00b48> (Lusitanis)
+
+[EVENTS e_vampire]
+ON @CLICK
+MESSAGE @<eval 1100> (Vampire)
+
+on @itemdclick
+if (<src.act.type> == t_food) || (<src.act.type>==t_fruit) || (<src.act.type>==t_meat_raw)
+src.sysmessage @<eval 00ba3> Vampires don't eat regular food, fruit or body parts!
+return 1 
+
+elif (<src.act.type> == t_blood)
+src.sysmessage @<eval 00ba3> You drink the blood!
+src.food=<src.food>+rand(5) 
+if (<src.hits> < <src.str>) 
+ src.hits=<src.str>
+endif
+src.act.remove
+return 1
+
+[EVENTS e_human]
+ON @CLICK
+MESSAGE @<eval 003eb> (Human)
+
+[EVENTS e_elf]
+ON @CLICK
+MESSAGE @<eval 000a3> (Elf)
+
+
+[DIALOG d_zero_stone]
+0,0                                     // Position
+resizepic 50 90 2600 560 300           // Curved Grey background 
+Nomove
+Noclose
+
+////////////////////////////////////////////////////////////////////
+page 0                                  // Page 0
+resizepic 66 162 5100 528 25           // Square Grey box
+button 285 366 247 248 1 0 0            // 
+
+////Headings/////////////////////////////////////////////////////////
+text 200 120 455 0   // menu heading
+text 150 140 0 1
+
+text 80 165 0 2                        // Skills 1
+text 180 165 0 3                        // Skills 2
+text 280 165 0 4                        // Skills 3
+text 380 165 0 5                        // Skills 4
+text 480 165 0 6                        // Skills 5
+
+button 150 166 5209 5003 0 1 1          // Skills 1
+button 250 166 5209 5003 0 2 2          // Skills 2
+button 350 166 5209 5003 0 3 3          // Skills 3
+button 450 166 5209 5003 0 4 4          // Skills 4
+button 550 166 5209 5003 0 5 5          // Skills 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                  // Skills 1
+
+/////////menu text and screen location
+
+text 95 200 0 7
+croppedtext 250 200 110 17 455 8
+text 95 230 0 9
+croppedtext 250 230 110 17 455 10
+text 95 260 0 11
+croppedtext 250 260 110 17 455 12
+text 95 290 0 13
+croppedtext 250 290 110 17 455 14
+text 95 320 0 15
+croppedtext 250 320 110 17 455 16
+text 330 200 0 17
+croppedtext 485 200 110 17 455 18
+text 330 230 0 19
+croppedtext 485 230 110 17 455 20
+text 330 260 0 21
+croppedtext 485 260 110 17 455 22
+text 330 290 0 23
+croppedtext 485 290 110 17 455 24
+text 330 320 0 25
+croppedtext 485 320 110 17 455 26
+
+////////Targets skills//////////////////
+
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 6
+button 70 230 2714 2714 1 0 7   
+button 70 260 2714 2714 1 0 8
+button 70 290 2714 2714 1 0 9  
+button 70 320 2714 2714 1 0 10
+button 305 200 2714 2714 1 0 11  
+button 305 230 2714 2714 1 0 12
+button 305 260 2714 2714 1 0 13  
+button 305 290 2714 2714 1 0 14
+button 305 320 2714 2714 1 0 15  
+
+/////////////////////////////////////////////////////////////////////
+page 2                                  // Skills 2
+
+/////////menu text and screen location
+
+text 95 200 0 27
+croppedtext 250 200 110 17 455 28
+text 95 230 0 29
+croppedtext 250 230 110 17 455 30
+text 95 260 0 31
+croppedtext 250 260 110 17 455 32
+text 95 290 0 33
+croppedtext 250 290 110 17 455 34
+text 95 320 0 35
+croppedtext 250 320 110 17 455 36
+text 330 200 0 37
+croppedtext 485 200 110 17 455 38
+text 330 230 0 39
+croppedtext 485 230 110 17 455 40
+text 330 260 0 41
+croppedtext 485 260 110 17 455 42
+text 330 290 0 43
+croppedtext 485 290 110 17 455 44
+text 330 320 0 45
+croppedtext 485 320 110 17 455 46
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 16
+button 70 230 2714 2714 1 0 17   
+button 70 260 2714 2714 1 0 18
+button 70 290 2714 2714 1 0 19  
+button 70 320 2714 2714 1 0 20
+button 305 200 2714 2714 1 0 21  
+button 305 230 2714 2714 1 0 22
+button 305 260 2714 2714 1 0 23  
+button 305 290 2714 2714 1 0 24
+button 305 320 2714 2714 1 0 25  
+
+///////////////////////////////////////////////////////////////////////
+page 3                                  // Skills 3
+
+/////////menu text and screen location
+
+text 95 200 0 47
+croppedtext 250 200 110 17 455 48
+text 95 230 0 49
+croppedtext 250 230 110 17 455 50
+text 95 260 0 51
+croppedtext 250 260 110 17 455 52
+text 95 290 0 53
+croppedtext 250 290 110 17 455 54
+text 95 320 0 55
+croppedtext 250 320 110 17 455 56
+text 330 200 0 57
+croppedtext 485 200 110 17 455 58
+text 330 230 0 59
+croppedtext 485 230 110 17 455 60
+text 330 260 0 61
+croppedtext 485 260 110 17 455 62
+text 330 290 0 63
+croppedtext 485 290 110 17 455 64
+text 330 320 0 65
+croppedtext 485 320 110 17 455 66 
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 26
+button 70 230 2714 2714 1 0 27   
+button 70 260 2714 2714 1 0 28
+button 70 290 2714 2714 1 0 29  
+button 70 320 2714 2714 1 0 30
+button 305 200 2714 2714 1 0 31  
+button 305 230 2714 2714 1 0 32
+button 305 260 2714 2714 1 0 33  
+button 305 290 2714 2714 1 0 34
+button 305 320 2714 2714 1 0 35  
+
+///////////////////////////////////////////////////////////////////////
+page 4                                  // Skills 4
+
+/////////menu text and screen location
+
+text 95 200 0 67
+croppedtext 250 200 110 17 455 68
+text 95 230 0 69
+croppedtext 250 230 110 17 455 70
+text 95 260 0 71
+croppedtext 250 260 110 17 455 72
+text 95 290 0 73
+croppedtext 250 290 110 17 455 74
+text 95 320 0 75
+croppedtext 250 320 110 17 455 76
+text 330 200 0 77
+croppedtext 485 200 110 17 455 78
+text 330 230 0 79
+croppedtext 485 230 110 17 455 80
+text 330 260 0 81
+croppedtext 485 260 110 17 455 82
+text 330 290 0 83
+croppedtext 485 290 110 17 455 84
+text 330 320 0 85
+croppedtext 485 320 110 17 455 86   
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 36
+button 70 230 2714 2714 1 0 37   
+button 70 260 2714 2714 1 0 38
+button 70 290 2714 2714 1 0 39  
+button 70 320 2714 2714 1 0 40
+button 305 200 2714 2714 1 0 41  
+button 305 230 2714 2714 1 0 42
+button 305 260 2714 2714 1 0 43  
+button 305 290 2714 2714 1 0 44
+button 305 320 2714 2714 1 0 45  
+
+///////////////////////////////////////////////////////////////////////
+page 5                                  // Skills 5
+
+/////////menu text and screen location
+
+text 95 200 0 87
+croppedtext 250 200 110 17 455 88
+text 95 230 0 89
+croppedtext 250 230 110 17 455 90
+text 95 260 0 91
+croppedtext 250 260 110 17 455 92
+text 95 290 0 93
+croppedtext 250 290 110 17 455 94
+text 95 320 0 95
+croppedtext 250 320 110 17 455 96
+text 330 200 0 97
+croppedtext 485 200 110 17 455 98
+text 330 230 0 99
+croppedtext 485 230 110 17 455 100
+text 330 260 0 101
+croppedtext 485 260 110 17 455 102
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 46
+button 70 230 2714 2714 1 0 47   
+button 70 260 2714 2714 1 0 48
+button 70 290 2714 2714 1 0 49  
+button 70 320 2714 2714 1 0 50
+button 305 200 2714 2714 1 0 51  
+button 305 230 2714 2714 1 0 52
+button 305 260 2714 2714 1 0 53
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_ZERO_stone TEXT]
+Skill by Blade
+Choose Your First Skill (60%)
+
+Skills 1
+Skills 2
+Skills 3
+Skills 4
+Skills 5
+
+///page 1
+Alchemy     // Skills 1
+<SRC.Alchemy>
+Anatomy
+<SRC.Anatomy>
+Archery
+<SRC.Archery>
+ArmsLore
+<SRC.ArmsLore>
+Begging
+<SRC.Begging>
+Blacksmithing
+<SRC.Blacksmithing>
+Bowcraft
+<SRC.Bowcraft>
+Camping
+<SRC.Camping>
+Carpentry
+<SRC.Carpentry>
+Cartography
+<SRC.Cartography>
+
+
+///page 2
+Cooking     // Skills 2
+<SRC.Cooking>
+Detecting Hidden
+<SRC.DetectingHidden>
+Enticement
+<SRC.Enticement>
+Evaluating Intel
+<SRC.EvaluatingIntel>
+Fencing
+<SRC.Fencing>
+Fishing
+<SRC.Fishing>
+Forensics
+<SRC.Forensics>
+Healing
+<SRC.Healing>
+Herding
+<SRC.Herding>
+Hiding
+<SRC.Hiding>
+
+///page 3
+ItemID      // Skills 3
+<SRC.ItemID>
+Inscription
+<SRC.Inscription>
+Lock Picking
+<SRC.LockPicking>
+Lumber Jacking
+<SRC.Lumberjacking>
+Macefighting
+<SRC.Macefighting>
+Magery
+<SRC.Magery>
+Magic Resistance
+<SRC.MagicResistance>
+Meditation
+<SRC.Meditation>
+Mining
+<SRC.Mining>
+Musicianship
+<SRC.Musicianship>
+
+///page 4
+Parrying    // Skills 4
+<SRC.Parrying>
+Peacemaking
+<SRC.Peacemaking>
+Poisoning
+<SRC.Poisoning>
+Provocation
+<SRC.Provocation>
+Remove Trap
+<SRC.RemoveTrap>
+Snooping
+<SRC.Snooping>
+Spirit Speak
+<SRC.SpiritSpeak>
+Stealing
+<SRC.Stealing>
+Stealth
+<SRC.Stealth>
+Swordsmanship
+<SRC.Swordsmanship>
+
+///page 5
+Tactics     // Skills 5
+<SRC.Tactics>
+Tailoring
+<SRC.Tailoring>
+Taming
+<SRC.Taming>
+TasteID
+<SRC.TasteID>
+Tinkering
+<SRC.Tinkering>
+Tracking
+<SRC.Tracking>
+Veterinary
+<SRC.Veterinary>
+Wrestling
+<SRC.Wrestling>
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_zero_stone BUTTON]
+
+ONBUTTON=6
+SRC.Alchemy=600
+DIALOG d_zero_stone2  
+
+ONBUTTON=7
+SRC.Anatomy=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=8
+SRC.Archery=600
+DIALOG d_zero_stone2  
+
+ONBUTTON=9
+SRC.ArmsLore=600
+DIALOG d_zero_stone2  
+
+ONBUTTON=10
+SRC.Begging=600
+DIALOG d_zero_stone2
+
+ONBUTTON=11
+SRC.Blacksmithing=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=12
+SRC.Bowcraft=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=13
+SRC.Camping=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=14
+SRC.Carpentry=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=15
+SRC.Cartography=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=16
+SRC.Cooking=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=17
+SRC.DetectingHidden=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=18
+SRC.Enticement=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=19
+SRC.EvaluatingIntel=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=20
+SRC.Fencing=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=21
+SRC.Fishing=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=22
+SRC.Forensics=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=23
+SRC.Healing=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=24
+SRC.Herding=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=25
+SRC.Hiding=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=26
+SRC.ItemID=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=27
+SRC.Inscription=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=28
+SRC.LockPicking=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=29
+SRC.Lumberjacking=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=30
+SRC.Macefighting=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=31
+SRC.Magery=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=32
+SRC.MagicResistance=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=33
+SRC.Meditation=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=34
+SRC.Mining=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=35
+SRC.Musicianship=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=36
+SRC.Parrying=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=37
+SRC.Peacemaking=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=38
+SRC.Poisoning=600 
+DIALOG d_zero_stone2
+
+
+ONBUTTON=39
+SRC.Provocation=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=40
+SRC.RemoveTrap=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=41
+SRC.Snooping=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=42
+SRC.SpiritSpeak=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=43
+SRC.Stealing=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=44
+SRC.Stealth=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=45
+SRC.Swordsmanship=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=46
+SRC.Tactics=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=47
+SRC.Tailoring=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=48
+SRC.Taming=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=49
+SRC.TasteID=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=50
+SRC.Tinkering=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=51
+SRC.Tracking=600
+DIALOG d_zero_stone2 
+
+ONBUTTON=52
+SRC.Veterinary=600 
+DIALOG d_zero_stone2
+
+ONBUTTON=53
+SRC.Wrestling=600
+DIALOG d_zero_stone2
+
+
+
+[DIALOG d_zero_stone2]
+0,0                                     // Position
+resizepic 50 90 2600 560 300           // Curved Grey background 
+Nomove
+Noclose
+
+////////////////////////////////////////////////////////////////////
+page 0                                  // Page 0
+resizepic 66 162 5100 528 25           // Square Grey box
+button 285 366 247 248 1 0 0            // 
+
+////Headings/////////////////////////////////////////////////////////
+text 200 120 455 0   // menu heading
+text 150 140 0 1
+
+text 80 165 0 2                        // Skills 1
+text 180 165 0 3                        // Skills 2
+text 280 165 0 4                        // Skills 3
+text 380 165 0 5                        // Skills 4
+text 480 165 0 6                        // Skills 5
+
+button 150 166 5209 5003 0 1 1          // Skills 1
+button 250 166 5209 5003 0 2 2          // Skills 2
+button 350 166 5209 5003 0 3 3          // Skills 3
+button 450 166 5209 5003 0 4 4          // Skills 4
+button 550 166 5209 5003 0 5 5          // Skills 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                  // Skills 1
+
+/////////menu text and screen location
+
+text 95 200 0 7
+croppedtext 250 200 110 17 455 8
+text 95 230 0 9
+croppedtext 250 230 110 17 455 10
+text 95 260 0 11
+croppedtext 250 260 110 17 455 12
+text 95 290 0 13
+croppedtext 250 290 110 17 455 14
+text 95 320 0 15
+croppedtext 250 320 110 17 455 16
+text 330 200 0 17
+croppedtext 485 200 110 17 455 18
+text 330 230 0 19
+croppedtext 485 230 110 17 455 20
+text 330 260 0 21
+croppedtext 485 260 110 17 455 22
+text 330 290 0 23
+croppedtext 485 290 110 17 455 24
+text 330 320 0 25
+croppedtext 485 320 110 17 455 26
+
+////////Targets skills//////////////////
+
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 6
+button 70 230 2714 2714 1 0 7   
+button 70 260 2714 2714 1 0 8
+button 70 290 2714 2714 1 0 9  
+button 70 320 2714 2714 1 0 10
+button 305 200 2714 2714 1 0 11  
+button 305 230 2714 2714 1 0 12
+button 305 260 2714 2714 1 0 13  
+button 305 290 2714 2714 1 0 14
+button 305 320 2714 2714 1 0 15  
+
+/////////////////////////////////////////////////////////////////////
+page 2                                  // Skills 2
+
+/////////menu text and screen location
+
+text 95 200 0 27
+croppedtext 250 200 110 17 455 28
+text 95 230 0 29
+croppedtext 250 230 110 17 455 30
+text 95 260 0 31
+croppedtext 250 260 110 17 455 32
+text 95 290 0 33
+croppedtext 250 290 110 17 455 34
+text 95 320 0 35
+croppedtext 250 320 110 17 455 36
+text 330 200 0 37
+croppedtext 485 200 110 17 455 38
+text 330 230 0 39
+croppedtext 485 230 110 17 455 40
+text 330 260 0 41
+croppedtext 485 260 110 17 455 42
+text 330 290 0 43
+croppedtext 485 290 110 17 455 44
+text 330 320 0 45
+croppedtext 485 320 110 17 455 46
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 16
+button 70 230 2714 2714 1 0 17   
+button 70 260 2714 2714 1 0 18
+button 70 290 2714 2714 1 0 19  
+button 70 320 2714 2714 1 0 20
+button 305 200 2714 2714 1 0 21  
+button 305 230 2714 2714 1 0 22
+button 305 260 2714 2714 1 0 23  
+button 305 290 2714 2714 1 0 24
+button 305 320 2714 2714 1 0 25  
+
+///////////////////////////////////////////////////////////////////////
+page 3                                  // Skills 3
+
+/////////menu text and screen location
+
+text 95 200 0 47
+croppedtext 250 200 110 17 455 48
+text 95 230 0 49
+croppedtext 250 230 110 17 455 50
+text 95 260 0 51
+croppedtext 250 260 110 17 455 52
+text 95 290 0 53
+croppedtext 250 290 110 17 455 54
+text 95 320 0 55
+croppedtext 250 320 110 17 455 56
+text 330 200 0 57
+croppedtext 485 200 110 17 455 58
+text 330 230 0 59
+croppedtext 485 230 110 17 455 60
+text 330 260 0 61
+croppedtext 485 260 110 17 455 62
+text 330 290 0 63
+croppedtext 485 290 110 17 455 64
+text 330 320 0 65
+croppedtext 485 320 110 17 455 66 
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 26
+button 70 230 2714 2714 1 0 27   
+button 70 260 2714 2714 1 0 28
+button 70 290 2714 2714 1 0 29  
+button 70 320 2714 2714 1 0 30
+button 305 200 2714 2714 1 0 31  
+button 305 230 2714 2714 1 0 32
+button 305 260 2714 2714 1 0 33  
+button 305 290 2714 2714 1 0 34
+button 305 320 2714 2714 1 0 35  
+
+///////////////////////////////////////////////////////////////////////
+page 4                                  // Skills 4
+
+/////////menu text and screen location
+
+text 95 200 0 67
+croppedtext 250 200 110 17 455 68
+text 95 230 0 69
+croppedtext 250 230 110 17 455 70
+text 95 260 0 71
+croppedtext 250 260 110 17 455 72
+text 95 290 0 73
+croppedtext 250 290 110 17 455 74
+text 95 320 0 75
+croppedtext 250 320 110 17 455 76
+text 330 200 0 77
+croppedtext 485 200 110 17 455 78
+text 330 230 0 79
+croppedtext 485 230 110 17 455 80
+text 330 260 0 81
+croppedtext 485 260 110 17 455 82
+text 330 290 0 83
+croppedtext 485 290 110 17 455 84
+text 330 320 0 85
+croppedtext 485 320 110 17 455 86   
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 36
+button 70 230 2714 2714 1 0 37   
+button 70 260 2714 2714 1 0 38
+button 70 290 2714 2714 1 0 39  
+button 70 320 2714 2714 1 0 40
+button 305 200 2714 2714 1 0 41  
+button 305 230 2714 2714 1 0 42
+button 305 260 2714 2714 1 0 43  
+button 305 290 2714 2714 1 0 44
+button 305 320 2714 2714 1 0 45  
+
+///////////////////////////////////////////////////////////////////////
+page 5                                  // Skills 5
+
+/////////menu text and screen location
+
+text 95 200 0 87
+croppedtext 250 200 110 17 455 88
+text 95 230 0 89
+croppedtext 250 230 110 17 455 90
+text 95 260 0 91
+croppedtext 250 260 110 17 455 92
+text 95 290 0 93
+croppedtext 250 290 110 17 455 94
+text 95 320 0 95
+croppedtext 250 320 110 17 455 96
+text 330 200 0 97
+croppedtext 485 200 110 17 455 98
+text 330 230 0 99
+croppedtext 485 230 110 17 455 100
+text 330 260 0 101
+croppedtext 485 260 110 17 455 102
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 46
+button 70 230 2714 2714 1 0 47   
+button 70 260 2714 2714 1 0 48
+button 70 290 2714 2714 1 0 49  
+button 70 320 2714 2714 1 0 50
+button 305 200 2714 2714 1 0 51  
+button 305 230 2714 2714 1 0 52
+button 305 260 2714 2714 1 0 53
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_ZERO_stone2 TEXT]
+Skill by Blade
+Choose Your Second Skill (60%)
+
+Skills 1
+Skills 2
+Skills 3
+Skills 4
+Skills 5
+
+///page 1
+Alchemy     // Skills 1
+<SRC.Alchemy>
+Anatomy
+<SRC.Anatomy>
+Archery
+<SRC.Archery>
+ArmsLore
+<SRC.ArmsLore>
+Begging
+<SRC.Begging>
+Blacksmithing
+<SRC.Blacksmithing>
+Bowcraft
+<SRC.Bowcraft>
+Camping
+<SRC.Camping>
+Carpentry
+<SRC.Carpentry>
+Cartography
+<SRC.Cartography>
+
+
+///page 2
+Cooking     // Skills 2
+<SRC.Cooking>
+Detecting Hidden
+<SRC.DetectingHidden>
+Enticement
+<SRC.Enticement>
+Evaluating Intel
+<SRC.EvaluatingIntel>
+Fencing
+<SRC.Fencing>
+Fishing
+<SRC.Fishing>
+Forensics
+<SRC.Forensics>
+Healing
+<SRC.Healing>
+Herding
+<SRC.Herding>
+Hiding
+<SRC.Hiding>
+
+///page 3
+ItemID      // Skills 3
+<SRC.ItemID>
+Inscription
+<SRC.Inscription>
+Lock Picking
+<SRC.LockPicking>
+Lumber Jacking
+<SRC.Lumberjacking>
+Macefighting
+<SRC.Macefighting>
+Magery
+<SRC.Magery>
+Magic Resistance
+<SRC.MagicResistance>
+Meditation
+<SRC.Meditation>
+Mining
+<SRC.Mining>
+Musicianship
+<SRC.Musicianship>
+
+///page 4
+Parrying    // Skills 4
+<SRC.Parrying>
+Peacemaking
+<SRC.Peacemaking>
+Poisoning
+<SRC.Poisoning>
+Provocation
+<SRC.Provocation>
+Remove Trap
+<SRC.RemoveTrap>
+Snooping
+<SRC.Snooping>
+Spirit Speak
+<SRC.SpiritSpeak>
+Stealing
+<SRC.Stealing>
+Stealth
+<SRC.Stealth>
+Swordsmanship
+<SRC.Swordsmanship>
+
+///page 5
+Tactics     // Skills 5
+<SRC.Tactics>
+Tailoring
+<SRC.Tailoring>
+Taming
+<SRC.Taming>
+TasteID
+<SRC.TasteID>
+Tinkering
+<SRC.Tinkering>
+Tracking
+<SRC.Tracking>
+Veterinary
+<SRC.Veterinary>
+Wrestling
+<SRC.Wrestling>
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_zero_stone2 BUTTON]
+
+
+ONBUTTON=6
+SRC.Alchemy=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=7
+SRC.Anatomy=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=8
+SRC.Archery=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=9
+SRC.ArmsLore=600
+DIALOG d_zero_stone3
+
+ONBUTTON=10
+SRC.Begging=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=11
+SRC.Blacksmithing=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=12
+SRC.Bowcraft=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=13
+SRC.Camping=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=14
+SRC.Carpentry=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=15
+SRC.Cartography=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=16
+SRC.Cooking=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=17
+SRC.DetectingHidden=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=18
+SRC.Enticement=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=19
+SRC.EvaluatingIntel=600
+DIALOG d_zero_stone3 
+
+ONBUTTON=20
+SRC.Fencing=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=21
+SRC.Fishing=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=22
+SRC.Forensics=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=23
+SRC.Healing=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=24
+SRC.Herding=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=25
+SRC.Hiding=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=26
+SRC.ItemID=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=27
+SRC.Inscription=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=28
+SRC.LockPicking=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=29
+SRC.Lumberjacking=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=30
+SRC.Macefighting=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=31
+SRC.Magery=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=32
+SRC.MagicResistance=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=33
+SRC.Meditation=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=34
+SRC.Mining=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=35
+SRC.Musicianship=600
+DIALOG d_zero_stone2 
+
+
+ONBUTTON=36
+SRC.Parrying=600 
+DIALOG d_zero_stone3
+
+ONBUTTON=37
+SRC.Peacemaking=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=38
+SRC.Poisoning=600 
+DIALOG d_zero_stone3
+
+
+
+ONBUTTON=39
+SRC.Provocation=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=40
+SRC.RemoveTrap=600
+DIALOG d_zero_stone3
+ 
+
+ONBUTTON=41
+SRC.Snooping=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=42
+SRC.SpiritSpeak=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=43
+SRC.Stealing=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=44
+SRC.Stealth=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=45
+SRC.Swordsmanship=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=46
+SRC.Tactics=600
+DIALOG d_zero_stone3 
+
+
+ONBUTTON=47
+SRC.Tailoring=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=48
+SRC.Taming=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=49
+SRC.TasteID=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=50
+SRC.Tinkering=600
+DIALOG d_zero_stone3
+ 
+
+ONBUTTON=51
+SRC.Tracking=600
+DIALOG d_zero_stone3
+
+
+ONBUTTON=52
+SRC.Veterinary=600 
+DIALOG d_zero_stone3
+
+
+ONBUTTON=53
+SRC.Wrestling=600
+DIALOG d_zero_stone3
+
+[DIALOG d_zero_stone3]
+0,0                                     // Position
+resizepic 50 90 2600 560 300           // Curved Grey background 
+Nomove
+Noclose
+
+////////////////////////////////////////////////////////////////////
+page 0                                  // Page 0
+resizepic 66 162 5100 528 25           // Square Grey box
+button 285 366 247 248 1 0 0            // 
+
+////Headings/////////////////////////////////////////////////////////
+text 200 120 455 0   // menu heading
+text 150 140 0 1
+
+text 80 165 0 2                        // Skills 1
+text 180 165 0 3                        // Skills 2
+text 280 165 0 4                        // Skills 3
+text 380 165 0 5                        // Skills 4
+text 480 165 0 6                        // Skills 5
+
+button 150 166 5209 5003 0 1 1          // Skills 1
+button 250 166 5209 5003 0 2 2          // Skills 2
+button 350 166 5209 5003 0 3 3          // Skills 3
+button 450 166 5209 5003 0 4 4          // Skills 4
+button 550 166 5209 5003 0 5 5          // Skills 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                  // Skills 1
+
+/////////menu text and screen location
+
+text 95 200 0 7
+croppedtext 250 200 110 17 455 8
+text 95 230 0 9
+croppedtext 250 230 110 17 455 10
+text 95 260 0 11
+croppedtext 250 260 110 17 455 12
+text 95 290 0 13
+croppedtext 250 290 110 17 455 14
+text 95 320 0 15
+croppedtext 250 320 110 17 455 16
+text 330 200 0 17
+croppedtext 485 200 110 17 455 18
+text 330 230 0 19
+croppedtext 485 230 110 17 455 20
+text 330 260 0 21
+croppedtext 485 260 110 17 455 22
+text 330 290 0 23
+croppedtext 485 290 110 17 455 24
+text 330 320 0 25
+croppedtext 485 320 110 17 455 26
+
+////////Targets skills//////////////////
+
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 6
+button 70 230 2714 2714 1 0 7   
+button 70 260 2714 2714 1 0 8
+button 70 290 2714 2714 1 0 9  
+button 70 320 2714 2714 1 0 10
+button 305 200 2714 2714 1 0 11  
+button 305 230 2714 2714 1 0 12
+button 305 260 2714 2714 1 0 13  
+button 305 290 2714 2714 1 0 14
+button 305 320 2714 2714 1 0 15  
+
+/////////////////////////////////////////////////////////////////////
+page 2                                  // Skills 2
+
+/////////menu text and screen location
+
+text 95 200 0 27
+croppedtext 250 200 110 17 455 28
+text 95 230 0 29
+croppedtext 250 230 110 17 455 30
+text 95 260 0 31
+croppedtext 250 260 110 17 455 32
+text 95 290 0 33
+croppedtext 250 290 110 17 455 34
+text 95 320 0 35
+croppedtext 250 320 110 17 455 36
+text 330 200 0 37
+croppedtext 485 200 110 17 455 38
+text 330 230 0 39
+croppedtext 485 230 110 17 455 40
+text 330 260 0 41
+croppedtext 485 260 110 17 455 42
+text 330 290 0 43
+croppedtext 485 290 110 17 455 44
+text 330 320 0 45
+croppedtext 485 320 110 17 455 46
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 16
+button 70 230 2714 2714 1 0 17   
+button 70 260 2714 2714 1 0 18
+button 70 290 2714 2714 1 0 19  
+button 70 320 2714 2714 1 0 20
+button 305 200 2714 2714 1 0 21  
+button 305 230 2714 2714 1 0 22
+button 305 260 2714 2714 1 0 23  
+button 305 290 2714 2714 1 0 24
+button 305 320 2714 2714 1 0 25  
+
+///////////////////////////////////////////////////////////////////////
+page 3                                  // Skills 3
+
+/////////menu text and screen location
+
+text 95 200 0 47
+croppedtext 250 200 110 17 455 48
+text 95 230 0 49
+croppedtext 250 230 110 17 455 50
+text 95 260 0 51
+croppedtext 250 260 110 17 455 52
+text 95 290 0 53
+croppedtext 250 290 110 17 455 54
+text 95 320 0 55
+croppedtext 250 320 110 17 455 56
+text 330 200 0 57
+croppedtext 485 200 110 17 455 58
+text 330 230 0 59
+croppedtext 485 230 110 17 455 60
+text 330 260 0 61
+croppedtext 485 260 110 17 455 62
+text 330 290 0 63
+croppedtext 485 290 110 17 455 64
+text 330 320 0 65
+croppedtext 485 320 110 17 455 66 
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 26
+button 70 230 2714 2714 1 0 27   
+button 70 260 2714 2714 1 0 28
+button 70 290 2714 2714 1 0 29  
+button 70 320 2714 2714 1 0 30
+button 305 200 2714 2714 1 0 31  
+button 305 230 2714 2714 1 0 32
+button 305 260 2714 2714 1 0 33  
+button 305 290 2714 2714 1 0 34
+button 305 320 2714 2714 1 0 35  
+
+///////////////////////////////////////////////////////////////////////
+page 4                                  // Skills 4
+
+/////////menu text and screen location
+
+text 95 200 0 67
+croppedtext 250 200 110 17 455 68
+text 95 230 0 69
+croppedtext 250 230 110 17 455 70
+text 95 260 0 71
+croppedtext 250 260 110 17 455 72
+text 95 290 0 73
+croppedtext 250 290 110 17 455 74
+text 95 320 0 75
+croppedtext 250 320 110 17 455 76
+text 330 200 0 77
+croppedtext 485 200 110 17 455 78
+text 330 230 0 79
+croppedtext 485 230 110 17 455 80
+text 330 260 0 81
+croppedtext 485 260 110 17 455 82
+text 330 290 0 83
+croppedtext 485 290 110 17 455 84
+text 330 320 0 85
+croppedtext 485 320 110 17 455 86   
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 36
+button 70 230 2714 2714 1 0 37   
+button 70 260 2714 2714 1 0 38
+button 70 290 2714 2714 1 0 39  
+button 70 320 2714 2714 1 0 40
+button 305 200 2714 2714 1 0 41  
+button 305 230 2714 2714 1 0 42
+button 305 260 2714 2714 1 0 43  
+button 305 290 2714 2714 1 0 44
+button 305 320 2714 2714 1 0 45  
+
+///////////////////////////////////////////////////////////////////////
+page 5                                  // Skills 5
+
+/////////menu text and screen location
+
+text 95 200 0 87
+croppedtext 250 200 110 17 455 88
+text 95 230 0 89
+croppedtext 250 230 110 17 455 90
+text 95 260 0 91
+croppedtext 250 260 110 17 455 92
+text 95 290 0 93
+croppedtext 250 290 110 17 455 94
+text 95 320 0 95
+croppedtext 250 320 110 17 455 96
+text 330 200 0 97
+croppedtext 485 200 110 17 455 98
+text 330 230 0 99
+croppedtext 485 230 110 17 455 100
+text 330 260 0 101
+croppedtext 485 260 110 17 455 102
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 46
+button 70 230 2714 2714 1 0 47   
+button 70 260 2714 2714 1 0 48
+button 70 290 2714 2714 1 0 49  
+button 70 320 2714 2714 1 0 50
+button 305 200 2714 2714 1 0 51  
+button 305 230 2714 2714 1 0 52
+button 305 260 2714 2714 1 0 53
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_ZERO_stone3 TEXT]
+Skill by Blade
+Choose Your Second Skill (60%)
+
+Skills 1
+Skills 2
+Skills 3
+Skills 4
+Skills 5
+
+///page 1
+Alchemy     // Skills 1
+<SRC.Alchemy>
+Anatomy
+<SRC.Anatomy>
+Archery
+<SRC.Archery>
+ArmsLore
+<SRC.ArmsLore>
+Begging
+<SRC.Begging>
+Blacksmithing
+<SRC.Blacksmithing>
+Bowcraft
+<SRC.Bowcraft>
+Camping
+<SRC.Camping>
+Carpentry
+<SRC.Carpentry>
+Cartography
+<SRC.Cartography>
+
+
+///page 2
+Cooking     // Skills 2
+<SRC.Cooking>
+Detecting Hidden
+<SRC.DetectingHidden>
+Enticement
+<SRC.Enticement>
+Evaluating Intel
+<SRC.EvaluatingIntel>
+Fencing
+<SRC.Fencing>
+Fishing
+<SRC.Fishing>
+Forensics
+<SRC.Forensics>
+Healing
+<SRC.Healing>
+Herding
+<SRC.Herding>
+Hiding
+<SRC.Hiding>
+
+///page 3
+ItemID      // Skills 3
+<SRC.ItemID>
+Inscription
+<SRC.Inscription>
+Lock Picking
+<SRC.LockPicking>
+Lumber Jacking
+<SRC.Lumberjacking>
+Macefighting
+<SRC.Macefighting>
+Magery
+<SRC.Magery>
+Magic Resistance
+<SRC.MagicResistance>
+Meditation
+<SRC.Meditation>
+Mining
+<SRC.Mining>
+Musicianship
+<SRC.Musicianship>
+
+///page 4
+Parrying    // Skills 4
+<SRC.Parrying>
+Peacemaking
+<SRC.Peacemaking>
+Poisoning
+<SRC.Poisoning>
+Provocation
+<SRC.Provocation>
+Remove Trap
+<SRC.RemoveTrap>
+Snooping
+<SRC.Snooping>
+Spirit Speak
+<SRC.SpiritSpeak>
+Stealing
+<SRC.Stealing>
+Stealth
+<SRC.Stealth>
+Swordsmanship
+<SRC.Swordsmanship>
+
+///page 5
+Tactics     // Skills 5
+<SRC.Tactics>
+Tailoring
+<SRC.Tailoring>
+Taming
+<SRC.Taming>
+TasteID
+<SRC.TasteID>
+Tinkering
+<SRC.Tinkering>
+Tracking
+<SRC.Tracking>
+Veterinary
+<SRC.Veterinary>
+Wrestling
+<SRC.Wrestling>
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_zero_stone3 BUTTON]
+
+
+ONBUTTON=6
+SRC.Alchemy=400
+DIALOG d_zero_stone4 
+
+
+ONBUTTON=7
+SRC.Anatomy=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=8
+SRC.Archery=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=9
+SRC.ArmsLore=400
+DIALOG d_zero_stone4
+
+ONBUTTON=10
+SRC.Begging=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=11
+SRC.Blacksmithing=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=12
+SRC.Bowcraft=400
+DIALOG d_zero_stone4 
+
+
+ONBUTTON=13
+SRC.Camping=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=14
+SRC.Carpentry=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=15
+SRC.Cartography=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=16
+SRC.Cooking=400
+DIALOG d_zero_stone4 
+
+
+ONBUTTON=17
+SRC.DetectingHidden=400
+DIALOG d_zero_stone4 
+
+
+ONBUTTON=18
+SRC.Enticement=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=19
+SRC.EvaluatingIntel=400
+DIALOG d_zero_stone4 
+
+ONBUTTON=20
+SRC.Fencing=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=21
+SRC.Fishing=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=22
+SRC.Forensics=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=23
+SRC.Healing=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=24
+SRC.Herding=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=25
+SRC.Hiding=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=26
+SRC.ItemID=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=27
+SRC.Inscription=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=28
+SRC.LockPicking=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=29
+SRC.Lumberjacking=400
+DIALOG d_zero_stone4 
+
+
+ONBUTTON=30
+SRC.Macefighting=400
+DIALOG d_zero_stone4 
+
+
+ONBUTTON=31
+SRC.Magery=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=32
+SRC.MagicResistance=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=33
+SRC.Meditation=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=34
+SRC.Mining=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=35
+SRC.Musicianship=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=36
+SRC.Parrying=400 
+DIALOG d_zero_stone4
+
+ONBUTTON=37
+SRC.Peacemaking=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=38
+SRC.Poisoning=400 
+DIALOG d_zero_stone4
+
+
+
+ONBUTTON=39
+SRC.Provocation=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=40
+SRC.RemoveTrap=400
+DIALOG d_zero_stone4
+ 
+
+ONBUTTON=41
+SRC.Snooping=400
+DIALOG d_zero_stone4 
+
+
+ONBUTTON=42
+SRC.SpiritSpeak=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=43
+SRC.Stealing=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=44
+SRC.Stealth=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=45
+SRC.Swordsmanship=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=46
+SRC.Tactics=400
+DIALOG d_zero_stone4 
+
+
+ONBUTTON=47
+SRC.Tailoring=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=48
+SRC.Taming=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=49
+SRC.TasteID=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=50
+SRC.Tinkering=400
+DIALOG d_zero_stone4
+ 
+
+ONBUTTON=51
+SRC.Tracking=400
+DIALOG d_zero_stone4
+
+
+ONBUTTON=52
+SRC.Veterinary=400 
+DIALOG d_zero_stone4
+
+
+ONBUTTON=53
+SRC.Wrestling=400
+DIALOG d_zero_stone4
+
+[DIALOG d_zero_stone4]
+0,0                                     // Position
+resizepic 50 90 2600 560 300           // Curved Grey background 
+Nomove
+Noclose
+
+////////////////////////////////////////////////////////////////////
+page 0                                  // Page 0
+resizepic 66 162 5100 528 25           // Square Grey box
+button 285 366 247 248 1 0 0            // 
+
+////Headings/////////////////////////////////////////////////////////
+text 200 120 455 0   // menu heading
+text 150 140 0 1
+
+text 80 165 0 2                        // Skills 1
+text 180 165 0 3                        // Skills 2
+text 280 165 0 4                        // Skills 3
+text 380 165 0 5                        // Skills 4
+text 480 165 0 6                        // Skills 5
+
+button 150 166 5209 5003 0 1 1          // Skills 1
+button 250 166 5209 5003 0 2 2          // Skills 2
+button 350 166 5209 5003 0 3 3          // Skills 3
+button 450 166 5209 5003 0 4 4          // Skills 4
+button 550 166 5209 5003 0 5 5          // Skills 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                  // Skills 1
+
+/////////menu text and screen location
+
+text 95 200 0 7
+croppedtext 250 200 110 17 455 8
+text 95 230 0 9
+croppedtext 250 230 110 17 455 10
+text 95 260 0 11
+croppedtext 250 260 110 17 455 12
+text 95 290 0 13
+croppedtext 250 290 110 17 455 14
+text 95 320 0 15
+croppedtext 250 320 110 17 455 16
+text 330 200 0 17
+croppedtext 485 200 110 17 455 18
+text 330 230 0 19
+croppedtext 485 230 110 17 455 20
+text 330 260 0 21
+croppedtext 485 260 110 17 455 22
+text 330 290 0 23
+croppedtext 485 290 110 17 455 24
+text 330 320 0 25
+croppedtext 485 320 110 17 455 26
+
+////////Targets skills//////////////////
+
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 6
+button 70 230 2714 2714 1 0 7   
+button 70 260 2714 2714 1 0 8
+button 70 290 2714 2714 1 0 9  
+button 70 320 2714 2714 1 0 10
+button 305 200 2714 2714 1 0 11  
+button 305 230 2714 2714 1 0 12
+button 305 260 2714 2714 1 0 13  
+button 305 290 2714 2714 1 0 14
+button 305 320 2714 2714 1 0 15  
+
+/////////////////////////////////////////////////////////////////////
+page 2                                  // Skills 2
+
+/////////menu text and screen location
+
+text 95 200 0 27
+croppedtext 250 200 110 17 455 28
+text 95 230 0 29
+croppedtext 250 230 110 17 455 30
+text 95 260 0 31
+croppedtext 250 260 110 17 455 32
+text 95 290 0 33
+croppedtext 250 290 110 17 455 34
+text 95 320 0 35
+croppedtext 250 320 110 17 455 36
+text 330 200 0 37
+croppedtext 485 200 110 17 455 38
+text 330 230 0 39
+croppedtext 485 230 110 17 455 40
+text 330 260 0 41
+croppedtext 485 260 110 17 455 42
+text 330 290 0 43
+croppedtext 485 290 110 17 455 44
+text 330 320 0 45
+croppedtext 485 320 110 17 455 46
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 16
+button 70 230 2714 2714 1 0 17   
+button 70 260 2714 2714 1 0 18
+button 70 290 2714 2714 1 0 19  
+button 70 320 2714 2714 1 0 20
+button 305 200 2714 2714 1 0 21  
+button 305 230 2714 2714 1 0 22
+button 305 260 2714 2714 1 0 23  
+button 305 290 2714 2714 1 0 24
+button 305 320 2714 2714 1 0 25  
+
+///////////////////////////////////////////////////////////////////////
+page 3                                  // Skills 3
+
+/////////menu text and screen location
+
+text 95 200 0 47
+croppedtext 250 200 110 17 455 48
+text 95 230 0 49
+croppedtext 250 230 110 17 455 50
+text 95 260 0 51
+croppedtext 250 260 110 17 455 52
+text 95 290 0 53
+croppedtext 250 290 110 17 455 54
+text 95 320 0 55
+croppedtext 250 320 110 17 455 56
+text 330 200 0 57
+croppedtext 485 200 110 17 455 58
+text 330 230 0 59
+croppedtext 485 230 110 17 455 60
+text 330 260 0 61
+croppedtext 485 260 110 17 455 62
+text 330 290 0 63
+croppedtext 485 290 110 17 455 64
+text 330 320 0 65
+croppedtext 485 320 110 17 455 66 
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 26
+button 70 230 2714 2714 1 0 27   
+button 70 260 2714 2714 1 0 28
+button 70 290 2714 2714 1 0 29  
+button 70 320 2714 2714 1 0 30
+button 305 200 2714 2714 1 0 31  
+button 305 230 2714 2714 1 0 32
+button 305 260 2714 2714 1 0 33  
+button 305 290 2714 2714 1 0 34
+button 305 320 2714 2714 1 0 35  
+
+///////////////////////////////////////////////////////////////////////
+page 4                                  // Skills 4
+
+/////////menu text and screen location
+
+text 95 200 0 67
+croppedtext 250 200 110 17 455 68
+text 95 230 0 69
+croppedtext 250 230 110 17 455 70
+text 95 260 0 71
+croppedtext 250 260 110 17 455 72
+text 95 290 0 73
+croppedtext 250 290 110 17 455 74
+text 95 320 0 75
+croppedtext 250 320 110 17 455 76
+text 330 200 0 77
+croppedtext 485 200 110 17 455 78
+text 330 230 0 79
+croppedtext 485 230 110 17 455 80
+text 330 260 0 81
+croppedtext 485 260 110 17 455 82
+text 330 290 0 83
+croppedtext 485 290 110 17 455 84
+text 330 320 0 85
+croppedtext 485 320 110 17 455 86   
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 36
+button 70 230 2714 2714 1 0 37   
+button 70 260 2714 2714 1 0 38
+button 70 290 2714 2714 1 0 39  
+button 70 320 2714 2714 1 0 40
+button 305 200 2714 2714 1 0 41  
+button 305 230 2714 2714 1 0 42
+button 305 260 2714 2714 1 0 43  
+button 305 290 2714 2714 1 0 44
+button 305 320 2714 2714 1 0 45  
+
+///////////////////////////////////////////////////////////////////////
+page 5                                  // Skills 5
+
+/////////menu text and screen location
+
+text 95 200 0 87
+croppedtext 250 200 110 17 455 88
+text 95 230 0 89
+croppedtext 250 230 110 17 455 90
+text 95 260 0 91
+croppedtext 250 260 110 17 455 92
+text 95 290 0 93
+croppedtext 250 290 110 17 455 94
+text 95 320 0 95
+croppedtext 250 320 110 17 455 96
+text 330 200 0 97
+croppedtext 485 200 110 17 455 98
+text 330 230 0 99
+croppedtext 485 230 110 17 455 100
+text 330 260 0 101
+croppedtext 485 260 110 17 455 102
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 46
+button 70 230 2714 2714 1 0 47   
+button 70 260 2714 2714 1 0 48
+button 70 290 2714 2714 1 0 49  
+button 70 320 2714 2714 1 0 50
+button 305 200 2714 2714 1 0 51  
+button 305 230 2714 2714 1 0 52
+button 305 260 2714 2714 1 0 53
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_ZERO_stone4 TEXT]
+Skill by Blade
+Choose Your Second Skill (60%)
+
+Skills 1
+Skills 2
+Skills 3
+Skills 4
+Skills 5
+
+///page 1
+Alchemy     // Skills 1
+<SRC.Alchemy>
+Anatomy
+<SRC.Anatomy>
+Archery
+<SRC.Archery>
+ArmsLore
+<SRC.ArmsLore>
+Begging
+<SRC.Begging>
+Blacksmithing
+<SRC.Blacksmithing>
+Bowcraft
+<SRC.Bowcraft>
+Camping
+<SRC.Camping>
+Carpentry
+<SRC.Carpentry>
+Cartography
+<SRC.Cartography>
+
+
+///page 2
+Cooking     // Skills 2
+<SRC.Cooking>
+Detecting Hidden
+<SRC.DetectingHidden>
+Enticement
+<SRC.Enticement>
+Evaluating Intel
+<SRC.EvaluatingIntel>
+Fencing
+<SRC.Fencing>
+Fishing
+<SRC.Fishing>
+Forensics
+<SRC.Forensics>
+Healing
+<SRC.Healing>
+Herding
+<SRC.Herding>
+Hiding
+<SRC.Hiding>
+
+///page 3
+ItemID      // Skills 3
+<SRC.ItemID>
+Inscription
+<SRC.Inscription>
+Lock Picking
+<SRC.LockPicking>
+Lumber Jacking
+<SRC.Lumberjacking>
+Macefighting
+<SRC.Macefighting>
+Magery
+<SRC.Magery>
+Magic Resistance
+<SRC.MagicResistance>
+Meditation
+<SRC.Meditation>
+Mining
+<SRC.Mining>
+Musicianship
+<SRC.Musicianship>
+
+///page 4
+Parrying    // Skills 4
+<SRC.Parrying>
+Peacemaking
+<SRC.Peacemaking>
+Poisoning
+<SRC.Poisoning>
+Provocation
+<SRC.Provocation>
+Remove Trap
+<SRC.RemoveTrap>
+Snooping
+<SRC.Snooping>
+Spirit Speak
+<SRC.SpiritSpeak>
+Stealing
+<SRC.Stealing>
+Stealth
+<SRC.Stealth>
+Swordsmanship
+<SRC.Swordsmanship>
+
+///page 5
+Tactics     // Skills 5
+<SRC.Tactics>
+Tailoring
+<SRC.Tailoring>
+Taming
+<SRC.Taming>
+TasteID
+<SRC.TasteID>
+Tinkering
+<SRC.Tinkering>
+Tracking
+<SRC.Tracking>
+Veterinary
+<SRC.Veterinary>
+Wrestling
+<SRC.Wrestling>
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_zero_stone4 BUTTON]
+
+
+ONBUTTON=6
+SRC.Alchemy=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=7
+SRC.Anatomy=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=8
+SRC.Archery=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=9
+SRC.ArmsLore=400
+DIALOG d_zero_stone5
+
+ONBUTTON=10
+SRC.Begging=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=11
+SRC.Blacksmithing=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=12
+SRC.Bowcraft=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=13
+SRC.Camping=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=14
+SRC.Carpentry=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=15
+SRC.Cartography=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=16
+SRC.Cooking=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=17
+SRC.DetectingHidden=400
+DIALOG d_zero_stone5 
+
+
+ONBUTTON=18
+SRC.Enticement=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=19
+SRC.EvaluatingIntel=400
+DIALOG d_zero_stone5
+
+ONBUTTON=20
+SRC.Fencing=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=21
+SRC.Fishing=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=22
+SRC.Forensics=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=23
+SRC.Healing=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=24
+SRC.Herding=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=25
+SRC.Hiding=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=26
+SRC.ItemID=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=27
+SRC.Inscription=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=28
+SRC.LockPicking=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=29
+SRC.Lumberjacking=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=30
+SRC.Macefighting=400
+DIALOG d_zero_stone5 
+
+
+ONBUTTON=31
+SRC.Magery=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=32
+SRC.MagicResistance=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=33
+SRC.Meditation=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=34
+SRC.Mining=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=35
+SRC.Musicianship=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=36
+SRC.Parrying=400 
+DIALOG d_zero_stone5
+
+ONBUTTON=37
+SRC.Peacemaking=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=38
+SRC.Poisoning=400 
+DIALOG d_zero_stone5
+
+
+
+ONBUTTON=39
+SRC.Provocation=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=40
+SRC.RemoveTrap=400
+DIALOG d_zero_stone5
+ 
+
+ONBUTTON=41
+SRC.Snooping=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=42
+SRC.SpiritSpeak=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=43
+SRC.Stealing=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=44
+SRC.Stealth=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=45
+SRC.Swordsmanship=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=46
+SRC.Tactics=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=47
+SRC.Tailoring=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=48
+SRC.Taming=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=49
+SRC.TasteID=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=50
+SRC.Tinkering=400
+DIALOG d_zero_stone5
+ 
+
+ONBUTTON=51
+SRC.Tracking=400
+DIALOG d_zero_stone5
+
+
+ONBUTTON=52
+SRC.Veterinary=400 
+DIALOG d_zero_stone5
+
+
+ONBUTTON=53
+SRC.Wrestling=400
+DIALOG d_zero_stone5
+
+
+[DIALOG d_zero_stone5]
+0,0                                     // Position
+resizepic 50 90 2600 560 300           // Curved Grey background 
+Nomove
+Noclose
+
+////////////////////////////////////////////////////////////////////
+page 0                                  // Page 0
+resizepic 66 162 5100 528 25           // Square Grey box
+button 285 366 247 248 1 0 0            // 
+
+////Headings/////////////////////////////////////////////////////////
+text 200 120 455 0   // menu heading
+text 150 140 0 1
+
+text 80 165 0 2                        // Skills 1
+text 180 165 0 3                        // Skills 2
+text 280 165 0 4                        // Skills 3
+text 380 165 0 5                        // Skills 4
+text 480 165 0 6                        // Skills 5
+
+button 150 166 5209 5003 0 1 1          // Skills 1
+button 250 166 5209 5003 0 2 2          // Skills 2
+button 350 166 5209 5003 0 3 3          // Skills 3
+button 450 166 5209 5003 0 4 4          // Skills 4
+button 550 166 5209 5003 0 5 5          // Skills 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                  // Skills 1
+
+/////////menu text and screen location
+
+text 95 200 0 7
+croppedtext 250 200 110 17 455 8
+text 95 230 0 9
+croppedtext 250 230 110 17 455 10
+text 95 260 0 11
+croppedtext 250 260 110 17 455 12
+text 95 290 0 13
+croppedtext 250 290 110 17 455 14
+text 95 320 0 15
+croppedtext 250 320 110 17 455 16
+text 330 200 0 17
+croppedtext 485 200 110 17 455 18
+text 330 230 0 19
+croppedtext 485 230 110 17 455 20
+text 330 260 0 21
+croppedtext 485 260 110 17 455 22
+text 330 290 0 23
+croppedtext 485 290 110 17 455 24
+text 330 320 0 25
+croppedtext 485 320 110 17 455 26
+
+////////Targets skills//////////////////
+
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 6
+button 70 230 2714 2714 1 0 7   
+button 70 260 2714 2714 1 0 8
+button 70 290 2714 2714 1 0 9  
+button 70 320 2714 2714 1 0 10
+button 305 200 2714 2714 1 0 11  
+button 305 230 2714 2714 1 0 12
+button 305 260 2714 2714 1 0 13  
+button 305 290 2714 2714 1 0 14
+button 305 320 2714 2714 1 0 15  
+
+/////////////////////////////////////////////////////////////////////
+page 2                                  // Skills 2
+
+/////////menu text and screen location
+
+text 95 200 0 27
+croppedtext 250 200 110 17 455 28
+text 95 230 0 29
+croppedtext 250 230 110 17 455 30
+text 95 260 0 31
+croppedtext 250 260 110 17 455 32
+text 95 290 0 33
+croppedtext 250 290 110 17 455 34
+text 95 320 0 35
+croppedtext 250 320 110 17 455 36
+text 330 200 0 37
+croppedtext 485 200 110 17 455 38
+text 330 230 0 39
+croppedtext 485 230 110 17 455 40
+text 330 260 0 41
+croppedtext 485 260 110 17 455 42
+text 330 290 0 43
+croppedtext 485 290 110 17 455 44
+text 330 320 0 45
+croppedtext 485 320 110 17 455 46
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 16
+button 70 230 2714 2714 1 0 17   
+button 70 260 2714 2714 1 0 18
+button 70 290 2714 2714 1 0 19  
+button 70 320 2714 2714 1 0 20
+button 305 200 2714 2714 1 0 21  
+button 305 230 2714 2714 1 0 22
+button 305 260 2714 2714 1 0 23  
+button 305 290 2714 2714 1 0 24
+button 305 320 2714 2714 1 0 25  
+
+///////////////////////////////////////////////////////////////////////
+page 3                                  // Skills 3
+
+/////////menu text and screen location
+
+text 95 200 0 47
+croppedtext 250 200 110 17 455 48
+text 95 230 0 49
+croppedtext 250 230 110 17 455 50
+text 95 260 0 51
+croppedtext 250 260 110 17 455 52
+text 95 290 0 53
+croppedtext 250 290 110 17 455 54
+text 95 320 0 55
+croppedtext 250 320 110 17 455 56
+text 330 200 0 57
+croppedtext 485 200 110 17 455 58
+text 330 230 0 59
+croppedtext 485 230 110 17 455 60
+text 330 260 0 61
+croppedtext 485 260 110 17 455 62
+text 330 290 0 63
+croppedtext 485 290 110 17 455 64
+text 330 320 0 65
+croppedtext 485 320 110 17 455 66 
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 26
+button 70 230 2714 2714 1 0 27   
+button 70 260 2714 2714 1 0 28
+button 70 290 2714 2714 1 0 29  
+button 70 320 2714 2714 1 0 30
+button 305 200 2714 2714 1 0 31  
+button 305 230 2714 2714 1 0 32
+button 305 260 2714 2714 1 0 33  
+button 305 290 2714 2714 1 0 34
+button 305 320 2714 2714 1 0 35  
+
+///////////////////////////////////////////////////////////////////////
+page 4                                  // Skills 4
+
+/////////menu text and screen location
+
+text 95 200 0 67
+croppedtext 250 200 110 17 455 68
+text 95 230 0 69
+croppedtext 250 230 110 17 455 70
+text 95 260 0 71
+croppedtext 250 260 110 17 455 72
+text 95 290 0 73
+croppedtext 250 290 110 17 455 74
+text 95 320 0 75
+croppedtext 250 320 110 17 455 76
+text 330 200 0 77
+croppedtext 485 200 110 17 455 78
+text 330 230 0 79
+croppedtext 485 230 110 17 455 80
+text 330 260 0 81
+croppedtext 485 260 110 17 455 82
+text 330 290 0 83
+croppedtext 485 290 110 17 455 84
+text 330 320 0 85
+croppedtext 485 320 110 17 455 86   
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 36
+button 70 230 2714 2714 1 0 37   
+button 70 260 2714 2714 1 0 38
+button 70 290 2714 2714 1 0 39  
+button 70 320 2714 2714 1 0 40
+button 305 200 2714 2714 1 0 41  
+button 305 230 2714 2714 1 0 42
+button 305 260 2714 2714 1 0 43  
+button 305 290 2714 2714 1 0 44
+button 305 320 2714 2714 1 0 45  
+
+///////////////////////////////////////////////////////////////////////
+page 5                                  // Skills 5
+
+/////////menu text and screen location
+
+text 95 200 0 87
+croppedtext 250 200 110 17 455 88
+text 95 230 0 89
+croppedtext 250 230 110 17 455 90
+text 95 260 0 91
+croppedtext 250 260 110 17 455 92
+text 95 290 0 93
+croppedtext 250 290 110 17 455 94
+text 95 320 0 95
+croppedtext 250 320 110 17 455 96
+text 330 200 0 97
+croppedtext 485 200 110 17 455 98
+text 330 230 0 99
+croppedtext 485 230 110 17 455 100
+text 330 260 0 101
+croppedtext 485 260 110 17 455 102
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 46
+button 70 230 2714 2714 1 0 47   
+button 70 260 2714 2714 1 0 48
+button 70 290 2714 2714 1 0 49  
+button 70 320 2714 2714 1 0 50
+button 305 200 2714 2714 1 0 51  
+button 305 230 2714 2714 1 0 52
+button 305 260 2714 2714 1 0 53
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_ZERO_stone5 TEXT]
+Skill by Blade
+Choose Your Second Skill (60%)
+
+Skills 1
+Skills 2
+Skills 3
+Skills 4
+Skills 5
+
+///page 1
+Alchemy     // Skills 1
+<SRC.Alchemy>
+Anatomy
+<SRC.Anatomy>
+Archery
+<SRC.Archery>
+ArmsLore
+<SRC.ArmsLore>
+Begging
+<SRC.Begging>
+Blacksmithing
+<SRC.Blacksmithing>
+Bowcraft
+<SRC.Bowcraft>
+Camping
+<SRC.Camping>
+Carpentry
+<SRC.Carpentry>
+Cartography
+<SRC.Cartography>
+
+
+///page 2
+Cooking     // Skills 2
+<SRC.Cooking>
+Detecting Hidden
+<SRC.DetectingHidden>
+Enticement
+<SRC.Enticement>
+Evaluating Intel
+<SRC.EvaluatingIntel>
+Fencing
+<SRC.Fencing>
+Fishing
+<SRC.Fishing>
+Forensics
+<SRC.Forensics>
+Healing
+<SRC.Healing>
+Herding
+<SRC.Herding>
+Hiding
+<SRC.Hiding>
+
+///page 3
+ItemID      // Skills 3
+<SRC.ItemID>
+Inscription
+<SRC.Inscription>
+Lock Picking
+<SRC.LockPicking>
+Lumber Jacking
+<SRC.Lumberjacking>
+Macefighting
+<SRC.Macefighting>
+Magery
+<SRC.Magery>
+Magic Resistance
+<SRC.MagicResistance>
+Meditation
+<SRC.Meditation>
+Mining
+<SRC.Mining>
+Musicianship
+<SRC.Musicianship>
+
+///page 4
+Parrying    // Skills 4
+<SRC.Parrying>
+Peacemaking
+<SRC.Peacemaking>
+Poisoning
+<SRC.Poisoning>
+Provocation
+<SRC.Provocation>
+Remove Trap
+<SRC.RemoveTrap>
+Snooping
+<SRC.Snooping>
+Spirit Speak
+<SRC.SpiritSpeak>
+Stealing
+<SRC.Stealing>
+Stealth
+<SRC.Stealth>
+Swordsmanship
+<SRC.Swordsmanship>
+
+///page 5
+Tactics     // Skills 5
+<SRC.Tactics>
+Tailoring
+<SRC.Tailoring>
+Taming
+<SRC.Taming>
+TasteID
+<SRC.TasteID>
+Tinkering
+<SRC.Tinkering>
+Tracking
+<SRC.Tracking>
+Veterinary
+<SRC.Veterinary>
+Wrestling
+<SRC.Wrestling>
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_zero_stone5 BUTTON]
+
+
+ONBUTTON=6
+SRC.Alchemy=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=7
+SRC.Anatomy=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=8
+SRC.Archery=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=9
+SRC.ArmsLore=200
+DIALOG d_zero_stone6
+
+ONBUTTON=10
+SRC.Begging=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=11
+SRC.Blacksmithing=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=12
+SRC.Bowcraft=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=13
+SRC.Camping=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=14
+SRC.Carpentry=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=15
+SRC.Cartography=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=16
+SRC.Cooking=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=17
+SRC.DetectingHidden=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=18
+SRC.Enticement=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=19
+SRC.EvaluatingIntel=200
+DIALOG d_zero_stone6
+
+ONBUTTON=20
+SRC.Fencing=200 
+DIALOG d_zero_stone6
+
+
+ONBUTTON=21
+SRC.Fishing=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=22
+SRC.Forensics=200 
+DIALOG d_zero_stone6
+
+
+ONBUTTON=23
+SRC.Healing=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=24
+SRC.Herding=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=25
+SRC.Hiding=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=26
+SRC.ItemID=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=27
+SRC.Inscription=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=28
+SRC.LockPicking=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=29
+SRC.Lumberjacking=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=30
+SRC.Macefighting=200
+DIALOG d_zero_stone6 
+
+
+ONBUTTON=31
+SRC.Magery=200 
+DIALOG d_zero_stone6
+
+
+ONBUTTON=32
+SRC.MagicResistance=200 
+DIALOG d_zero_stone6
+
+
+ONBUTTON=33
+SRC.Meditation=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=34
+SRC.Mining=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=35
+SRC.Musicianship=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=36
+SRC.Parrying=200 
+DIALOG d_zero_stone6
+
+ONBUTTON=37
+SRC.Peacemaking=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=38
+SRC.Poisoning=200 
+DIALOG d_zero_stone6
+
+
+
+ONBUTTON=39
+SRC.Provocation=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=40
+SRC.RemoveTrap=200
+DIALOG d_zero_stone6
+ 
+
+ONBUTTON=41
+SRC.Snooping=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=42
+SRC.SpiritSpeak=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=43
+SRC.Stealing=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=44
+SRC.Stealth=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=45
+SRC.Swordsmanship=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=46
+SRC.Tactics=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=47
+SRC.Tailoring=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=48
+SRC.Taming=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=49
+SRC.TasteID=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=50
+SRC.Tinkering=200
+DIALOG d_zero_stone6
+ 
+
+ONBUTTON=51
+SRC.Tracking=200
+DIALOG d_zero_stone6
+
+
+ONBUTTON=52
+SRC.Veterinary=200 
+DIALOG d_zero_stone6
+
+
+ONBUTTON=53
+SRC.Wrestling=200
+DIALOG d_zero_stone6
+
+
+[DIALOG d_zero_stone6]
+0,0                                     // Position
+resizepic 50 90 2600 560 300           // Curved Grey background 
+Nomove
+Noclose
+
+////////////////////////////////////////////////////////////////////
+page 0                                  // Page 0
+resizepic 66 162 5100 528 25           // Square Grey box
+button 285 366 247 248 1 0 0            // 
+
+////Headings/////////////////////////////////////////////////////////
+text 200 120 455 0   // menu heading
+text 150 140 0 1
+
+text 80 165 0 2                        // Skills 1
+text 180 165 0 3                        // Skills 2
+text 280 165 0 4                        // Skills 3
+text 380 165 0 5                        // Skills 4
+text 480 165 0 6                        // Skills 5
+
+button 150 166 5209 5003 0 1 1          // Skills 1
+button 250 166 5209 5003 0 2 2          // Skills 2
+button 350 166 5209 5003 0 3 3          // Skills 3
+button 450 166 5209 5003 0 4 4          // Skills 4
+button 550 166 5209 5003 0 5 5          // Skills 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                  // Skills 1
+
+/////////menu text and screen location
+
+text 95 200 0 7
+croppedtext 250 200 110 17 455 8
+text 95 230 0 9
+croppedtext 250 230 110 17 455 10
+text 95 260 0 11
+croppedtext 250 260 110 17 455 12
+text 95 290 0 13
+croppedtext 250 290 110 17 455 14
+text 95 320 0 15
+croppedtext 250 320 110 17 455 16
+text 330 200 0 17
+croppedtext 485 200 110 17 455 18
+text 330 230 0 19
+croppedtext 485 230 110 17 455 20
+text 330 260 0 21
+croppedtext 485 260 110 17 455 22
+text 330 290 0 23
+croppedtext 485 290 110 17 455 24
+text 330 320 0 25
+croppedtext 485 320 110 17 455 26
+
+////////Targets skills//////////////////
+
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 6
+button 70 230 2714 2714 1 0 7   
+button 70 260 2714 2714 1 0 8
+button 70 290 2714 2714 1 0 9  
+button 70 320 2714 2714 1 0 10
+button 305 200 2714 2714 1 0 11  
+button 305 230 2714 2714 1 0 12
+button 305 260 2714 2714 1 0 13  
+button 305 290 2714 2714 1 0 14
+button 305 320 2714 2714 1 0 15  
+
+/////////////////////////////////////////////////////////////////////
+page 2                                  // Skills 2
+
+/////////menu text and screen location
+
+text 95 200 0 27
+croppedtext 250 200 110 17 455 28
+text 95 230 0 29
+croppedtext 250 230 110 17 455 30
+text 95 260 0 31
+croppedtext 250 260 110 17 455 32
+text 95 290 0 33
+croppedtext 250 290 110 17 455 34
+text 95 320 0 35
+croppedtext 250 320 110 17 455 36
+text 330 200 0 37
+croppedtext 485 200 110 17 455 38
+text 330 230 0 39
+croppedtext 485 230 110 17 455 40
+text 330 260 0 41
+croppedtext 485 260 110 17 455 42
+text 330 290 0 43
+croppedtext 485 290 110 17 455 44
+text 330 320 0 45
+croppedtext 485 320 110 17 455 46
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 16
+button 70 230 2714 2714 1 0 17   
+button 70 260 2714 2714 1 0 18
+button 70 290 2714 2714 1 0 19  
+button 70 320 2714 2714 1 0 20
+button 305 200 2714 2714 1 0 21  
+button 305 230 2714 2714 1 0 22
+button 305 260 2714 2714 1 0 23  
+button 305 290 2714 2714 1 0 24
+button 305 320 2714 2714 1 0 25  
+
+///////////////////////////////////////////////////////////////////////
+page 3                                  // Skills 3
+
+/////////menu text and screen location
+
+text 95 200 0 47
+croppedtext 250 200 110 17 455 48
+text 95 230 0 49
+croppedtext 250 230 110 17 455 50
+text 95 260 0 51
+croppedtext 250 260 110 17 455 52
+text 95 290 0 53
+croppedtext 250 290 110 17 455 54
+text 95 320 0 55
+croppedtext 250 320 110 17 455 56
+text 330 200 0 57
+croppedtext 485 200 110 17 455 58
+text 330 230 0 59
+croppedtext 485 230 110 17 455 60
+text 330 260 0 61
+croppedtext 485 260 110 17 455 62
+text 330 290 0 63
+croppedtext 485 290 110 17 455 64
+text 330 320 0 65
+croppedtext 485 320 110 17 455 66 
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 26
+button 70 230 2714 2714 1 0 27   
+button 70 260 2714 2714 1 0 28
+button 70 290 2714 2714 1 0 29  
+button 70 320 2714 2714 1 0 30
+button 305 200 2714 2714 1 0 31  
+button 305 230 2714 2714 1 0 32
+button 305 260 2714 2714 1 0 33  
+button 305 290 2714 2714 1 0 34
+button 305 320 2714 2714 1 0 35  
+
+///////////////////////////////////////////////////////////////////////
+page 4                                  // Skills 4
+
+/////////menu text and screen location
+
+text 95 200 0 67
+croppedtext 250 200 110 17 455 68
+text 95 230 0 69
+croppedtext 250 230 110 17 455 70
+text 95 260 0 71
+croppedtext 250 260 110 17 455 72
+text 95 290 0 73
+croppedtext 250 290 110 17 455 74
+text 95 320 0 75
+croppedtext 250 320 110 17 455 76
+text 330 200 0 77
+croppedtext 485 200 110 17 455 78
+text 330 230 0 79
+croppedtext 485 230 110 17 455 80
+text 330 260 0 81
+croppedtext 485 260 110 17 455 82
+text 330 290 0 83
+croppedtext 485 290 110 17 455 84
+text 330 320 0 85
+croppedtext 485 320 110 17 455 86   
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 36
+button 70 230 2714 2714 1 0 37   
+button 70 260 2714 2714 1 0 38
+button 70 290 2714 2714 1 0 39  
+button 70 320 2714 2714 1 0 40
+button 305 200 2714 2714 1 0 41  
+button 305 230 2714 2714 1 0 42
+button 305 260 2714 2714 1 0 43  
+button 305 290 2714 2714 1 0 44
+button 305 320 2714 2714 1 0 45  
+
+///////////////////////////////////////////////////////////////////////
+page 5                                  // Skills 5
+
+/////////menu text and screen location
+
+text 95 200 0 87
+croppedtext 250 200 110 17 455 88
+text 95 230 0 89
+croppedtext 250 230 110 17 455 90
+text 95 260 0 91
+croppedtext 250 260 110 17 455 92
+text 95 290 0 93
+croppedtext 250 290 110 17 455 94
+text 95 320 0 95
+croppedtext 250 320 110 17 455 96
+text 330 200 0 97
+croppedtext 485 200 110 17 455 98
+text 330 230 0 99
+croppedtext 485 230 110 17 455 100
+text 330 260 0 101
+croppedtext 485 260 110 17 455 102
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 46
+button 70 230 2714 2714 1 0 47   
+button 70 260 2714 2714 1 0 48
+button 70 290 2714 2714 1 0 49  
+button 70 320 2714 2714 1 0 50
+button 305 200 2714 2714 1 0 51  
+button 305 230 2714 2714 1 0 52
+button 305 260 2714 2714 1 0 53
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_ZERO_stone6 TEXT]
+Skill by Blade
+Choose Your Second Skill (60%)
+
+Skills 1
+Skills 2
+Skills 3
+Skills 4
+Skills 5
+
+///page 1
+Alchemy     // Skills 1
+<SRC.Alchemy>
+Anatomy
+<SRC.Anatomy>
+Archery
+<SRC.Archery>
+ArmsLore
+<SRC.ArmsLore>
+Begging
+<SRC.Begging>
+Blacksmithing
+<SRC.Blacksmithing>
+Bowcraft
+<SRC.Bowcraft>
+Camping
+<SRC.Camping>
+Carpentry
+<SRC.Carpentry>
+Cartography
+<SRC.Cartography>
+
+
+///page 2
+Cooking     // Skills 2
+<SRC.Cooking>
+Detecting Hidden
+<SRC.DetectingHidden>
+Enticement
+<SRC.Enticement>
+Evaluating Intel
+<SRC.EvaluatingIntel>
+Fencing
+<SRC.Fencing>
+Fishing
+<SRC.Fishing>
+Forensics
+<SRC.Forensics>
+Healing
+<SRC.Healing>
+Herding
+<SRC.Herding>
+Hiding
+<SRC.Hiding>
+
+///page 3
+ItemID      // Skills 3
+<SRC.ItemID>
+Inscription
+<SRC.Inscription>
+Lock Picking
+<SRC.LockPicking>
+Lumber Jacking
+<SRC.Lumberjacking>
+Macefighting
+<SRC.Macefighting>
+Magery
+<SRC.Magery>
+Magic Resistance
+<SRC.MagicResistance>
+Meditation
+<SRC.Meditation>
+Mining
+<SRC.Mining>
+Musicianship
+<SRC.Musicianship>
+
+///page 4
+Parrying    // Skills 4
+<SRC.Parrying>
+Peacemaking
+<SRC.Peacemaking>
+Poisoning
+<SRC.Poisoning>
+Provocation
+<SRC.Provocation>
+Remove Trap
+<SRC.RemoveTrap>
+Snooping
+<SRC.Snooping>
+Spirit Speak
+<SRC.SpiritSpeak>
+Stealing
+<SRC.Stealing>
+Stealth
+<SRC.Stealth>
+Swordsmanship
+<SRC.Swordsmanship>
+
+///page 5
+Tactics     // Skills 5
+<SRC.Tactics>
+Tailoring
+<SRC.Tailoring>
+Taming
+<SRC.Taming>
+TasteID
+<SRC.TasteID>
+Tinkering
+<SRC.Tinkering>
+Tracking
+<SRC.Tracking>
+Veterinary
+<SRC.Veterinary>
+Wrestling
+<SRC.Wrestling>
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_zero_stone6 BUTTON]
+
+
+ONBUTTON=6
+SRC.Alchemy=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=7
+SRC.Anatomy=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=8
+SRC.Archery=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=9
+SRC.ArmsLore=200
+SRC.GO=1495,1630,10
+
+ONBUTTON=10
+SRC.Begging=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=11
+SRC.Blacksmithing=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=12
+SRC.Bowcraft=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=13
+SRC.Camping=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=14
+SRC.Carpentry=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=15
+SRC.Cartography=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=16
+SRC.Cooking=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=17
+SRC.DetectingHidden=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=18
+SRC.Enticement=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=19
+SRC.EvaluatingIntel=200
+SRC.GO=1495,1630,10
+
+ONBUTTON=20
+SRC.Fencing=200 
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=21
+SRC.Fishing=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=22
+SRC.Forensics=200 
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=23
+SRC.Healing=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=24
+SRC.Herding=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=25
+SRC.Hiding=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=26
+SRC.ItemID=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=27
+SRC.Inscription=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=28
+SRC.LockPicking=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=29
+SRC.Lumberjacking=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=30
+SRC.Macefighting=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=31
+SRC.Magery=200 
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=32
+SRC.MagicResistance=200 
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=33
+SRC.Meditation=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=34
+SRC.Mining=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=35
+SRC.Musicianship=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=36
+SRC.Parrying=200 
+SRC.GO=1495,1630,10
+
+ONBUTTON=37
+SRC.Peacemaking=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=38
+SRC.Poisoning=200 
+SRC.GO=1495,1630,10
+
+
+
+ONBUTTON=39
+SRC.Provocation=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=40
+SRC.RemoveTrap=200
+SRC.GO=1495,1630,10
+ 
+
+ONBUTTON=41
+SRC.Snooping=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=42
+SRC.SpiritSpeak=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=43
+SRC.Stealing=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=44
+SRC.Stealth=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=45
+SRC.Swordsmanship=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=46
+SRC.Tactics=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=47
+SRC.Tailoring=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=48
+SRC.Taming=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=49
+SRC.TasteID=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=50
+SRC.Tinkering=200
+SRC.GO=1495,1630,10
+ 
+
+ONBUTTON=51
+SRC.Tracking=200
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=52
+SRC.Veterinary=200 
+SRC.GO=1495,1630,10
+
+
+ONBUTTON=53
+SRC.Wrestling=200
+SRC.GO=1495,1630,10
+
+
+
+
+
+
+
+
+
+
+
+[EoF]

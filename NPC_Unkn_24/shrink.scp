@@ -1,0 +1,56 @@
+[ITEMDEF i_potion_shrink_fix]
+DEFNAME=i_potion_shrink_fix
+ID=0f0e
+NAME=Shrink Potion
+VALUE=1000
+TYPE=t_normal
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_spider_silk 10, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+CATEGORY=Provisioners - Alchemy
+SUBSECTION=Potions
+DESCRIPTION=Potion of Shrink
+
+ON=CREATE
+	COLOR=00482
+
+ON=@DROPON_CHAR
+SAY Double click the potion to shrink a pet
+
+ON=@DCLICK
+IF <CONT.UID>!=<SRC.FINDLAYER(21).UID>
+SRC.MESSAGE The potion is not at hand!
+RETURN 1
+ENDIF
+IF <AMOUNT>>1
+SRC.MESSAGE You have to seperate this from the stack to use it
+RETURN 1
+ENDIF
+
+TARGET What do you want to shrink? Make sure it is a pet.
+return 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE Items can not be shrunk!
+return 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) || (<SRC.TARG.NPC>==0)
+src.sysmessage You can not shrink a human!
+return 1
+elseif <src.targ.flags>&statf_conjured
+src.sysmessage You cannot shrink summoned pets!
+return 1
+elseif <src.targ.flags>&statf_war
+src.sysmessage Your pet is too angry to shrink.
+return 1
+elseif <src.targ.ismypet>
+src.targ.shrink
+src.sysmessage Your pet, <src.targ.name>, has been shrunk.
+remove
+return 0
+else
+src.sysmessage <src.targ.name>, This is not your pet
+return 1
+endif

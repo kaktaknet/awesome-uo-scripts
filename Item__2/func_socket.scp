@@ -1,0 +1,142 @@
+// #######################################################################################
+// ################################ AGE OF DARKNESS SHARD ################################
+// ######################## FUNCTIONS SCRIPT OF THE SOCKET SYSTEM ########################
+// ######################### Script by Admin DevNull - AoD Shard #########################
+// #################################### Sphere 0.55i #####################################
+// #######################################################################################
+
+// [EVENTS E_ARMOR_MAGIC_RES]
+// ON=@SpellEffect
+// IF <argn>==59
+// RETURN 0
+// ELSEIF !(RAND(10))
+// EMOTE resisting magic
+// RETURN 1
+// ELSE
+// RETURN 0
+// ENDIF
+
+[EVENTS E_ARMOR_FIRE]
+ON=@SpellEffect
+IF (<ARGN>==18)&&(<eval(RAND(10))><=3) 
+EMOTE resisting fire
+RETURN 1
+ELSEIF (<ARGN>==28)&&(<eval(RAND(10))><=3)
+EMOTE resisting fire
+RETURN 1
+ELSEIF (<ARGN>==51)&&(<eval(RAND(10))><=3)
+EMOTE resisting fire
+RETURN 1
+ELSEIF (<ARGN>==47)&&(<eval(RAND(10))><=3)
+EMOTE resisting fire
+RETURN 1
+ELSEIF (<ARGN>==5)&&(<eval(RAND(10))><=3)
+EMOTE resisting fire
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+[EVENTS E_ARMOR_POISON]
+ON=@SpellEffect
+IF (<ARGN>==20)&&(<eval(RAND(10))><=3) 
+EMOTE repels the poison
+RETURN 1
+ELSEIF (<ARGN>==39)&&(<eval(RAND(10))><=3) 
+EMOTE repels the poison
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+[EVENTS E_ARMOR_PARA]
+ON=@SpellEffect
+IF (<ARGN>==38)&&(<eval(RAND(10))><=3) 
+EMOTE resisting paralyzing
+RETURN 1
+ELSEIF (<ARGN>==47)&&(<eval(RAND(10))><=3) 
+EMOTE resisting paralyzing
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+
+[ITEMDEF i_mem_burning_fire]
+ID=i_handr_1
+TYPE=t_eq_script
+WEIGHT=0 
+NAME=Gema Fogo
+LAYER=layer_special 
+
+ON=@CREATE 
+ATTR=attr_invis|attr_decay
+
+ON=@EQUIP
+TIMER=15
+TAG.DANOS=4
+
+ON=@TIMER
+TAG.DANOS=(<TAG.DANOS> - 1)
+IF <TAG.DANOS>==-1
+SRC.SYSMESSAGE The flame extinguishes!
+TIMER=-1
+REMOVE
+RETURN 1
+ENDIF
+TIMER=15
+SRC.SFX=0113
+SRC.HITS=(<SRC.HITS> - 3)
+
+[ITEMDEF i_mem_gem_poisoned]
+ID=i_handr_1
+TYPE=t_eq_script
+WEIGHT=0 
+NAME=Gema Veneno
+LAYER=layer_special 
+
+ON=@CREATE 
+ATTR=attr_invis|attr_decay
+
+ON=@EQUIP
+TIMER=15
+TAG.DANOS=8
+
+ON=@TIMER
+TAG.DANOS=(<TAG.DANOS> - 1)
+IF <TAG.DANOS>==-1
+SRC.SYSMESSAGE The poison becomes weaker and stops making effect!
+TIMER=-1
+REMOVE
+RETURN 1
+ENDIF
+TIMER=15
+SRC.SFX=01de
+SRC.HITS=(<SRC.HITS> - 3)
+
+[ITEMDEF i_mem_gem_paralyzed]
+ID=i_handr_1
+TYPE=t_eq_script
+WEIGHT=0
+NAME=Gema Paralizado
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=attr_invis|attr_decay
+
+ON=@EQUIP
+TIMER=30
+ATTR=080
+P=<SRC.P>
+LINK=<SRC.UID>
+SRC.SOUND=snd_SPELL_FLAMESTRIKE
+SRC.SPELLEFFECT=71 1000
+SRC.FIX
+
+ON=@TIMER
+LINK.STONE
+LINK.FIX
+REMOVE
+RETURN 1
+
+[EOF]

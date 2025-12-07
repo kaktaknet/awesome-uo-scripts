@@ -1,0 +1,269 @@
+[ITEMDEF i_race_stone]
+
+ID=0ed6
+
+TYPE=t_script
+
+NAME=Race Stone
+
+
+
+ON=@CREATE
+
+TAG.R_NAME "TAG.R_NAME - change this to race name"
+
+TAG.R_COLOR 01 // BOOL - 00 = do not change color, 01 = change color to stone color
+
+TAG.R_KARMA 0 // Starting karma
+
+// TAG.R_TAG  //set this to desired tag name...or blank to use race name
+
+
+
+ON=@CLICK
+
+IF <SRC.isGM>
+
+MESSAGE GM HELP: TAG.R_NAME - race name (string), TAG.R_TAG - Override race name as tag name (string), TAG.R_COLOR - change skin color (bool), TAG.R_KARMA - starting karma ( -10000 to 10000 )
+
+ENDIF
+
+MESSAGE <TAG.R_NAME> Race Stone (One use only)
+
+RETURN 1
+
+
+
+ON=@DCLICK
+
+SRC.TAG.RACE= <TAG.R_NAME>
+
+IF !(0<TAG.R_TAG>)
+
+SRC.TAG.<TAG.R_NAME> 01
+
+ELSE
+
+SRC.TAG.<TAG.R_TAG> 01
+
+ENDIF
+
+IF <TAG.R_COLOR>
+
+SRC.COLOR <COLOR>
+
+SRC.OSKIN <COLOR>
+
+ENDIF
+
+SRC.KARMA <TAG.R_KARMA>
+
+SRC.FIX 
+
+SRC.SYSMESSAGE You are now a <TAG.R_NAME>. Go forth and join thy people.
+
+DIALOG d_travel_map
+
+return 1
+
+
+
+CATEGORY=Skill System
+
+SUBSECTION=Stones
+
+DESCRIPTION=Race Stone
+
+
+
+// ******************************************************************************************
+
+// *********************************** TRAVEL MAP DIALOG ************************************
+
+// ******************************************************************************************
+
+
+
+[dialog d_travel_map]
+
+70,70
+
+NOCLOSE
+
+gumppic 10 10 5528 
+
+page 0
+
+button 120 164 2103 2104 1 0 1 // Britain
+
+text 100 170 1152 1 
+
+button 213 202 2103 2104 1 0 2 // Buc's Den
+
+text 190 209 1152 2
+
+button 174 123 2103 2104 1 0 3 // Cove
+
+text 162 130 1152 3
+
+button 110 355 2103 2104 1 0 4 // Jhelom
+
+text 95 362 1152 4
+
+button 197 55 2103 2104 1 0 5 // Minoc
+
+text 175 61 1152 5
+
+button 345 122 2103 2104 1 0 6 // Moonglow
+
+text 315 105 1152 6
+
+button 287 126 2103 2104 1 0 7 // Njuhlem
+
+text 265 134 1152 7
+
+button 280 240 2103 2104 1 0 8 // Occlo
+
+text 270 248 1152 8
+
+button 230 325 2103 2104 1 0 9 // Serpent's Hold
+
+text 180 333 1152 9
+
+button 54 210 2103 2104 1 0 10 // Skara Brae
+
+text 25 218 1152 10
+
+button 150 268 2103 2104 1 0 11 // Trinsic
+
+text 135 276 1152 11
+
+button 226 82 2103 2104 1 0 12 // Vesper
+
+text 206 90 1152 12
+
+button 50 100 2103 2104 1 0 13 // Yew
+
+text 38 108 1152 13
+
+
+
+[dialog d_travel_map text]
+
+---------
+
+Britain
+
+Buc's Den
+
+Cove
+
+Jhelom
+
+Minoc
+
+Moonglow
+
+Njuhelm
+
+Occlo
+
+Serpent's Hold
+
+Skara Brae
+
+Trinsic
+
+Vesper
+
+Yew
+
+
+
+
+
+[dialog d_travel_map button]
+
+on=0
+
+src.stats
+
+return 1
+
+on=1 
+
+SRC.GO Britain
+
+RETURN 1
+
+on=2
+
+SRC.GO 2736 2166
+
+RETURN 1
+
+on=3
+
+SRC.GO Cove
+
+RETURN 1
+
+on=4
+
+SRC.GO Jhelom
+
+RETURN 1
+
+on=5
+
+SRC.GO Minoc
+
+RETURN 1
+
+on=6
+
+SRC.GO Moonglow
+
+RETURN 1
+
+on=7
+
+SRC.GO 3756 1244
+
+RETURN 1
+
+on=8
+
+SRC.GO 3686 2519
+
+RETURN 1
+
+on=9
+
+SRC.GO 2980 3387 15
+
+RETURN 1
+
+on=10
+
+SRC.GO 591 2147
+
+RETURN 1
+
+on=11
+
+SRC.GO Trinsic
+
+RETURN 1
+
+on=12
+
+SRC.GO Vesper
+
+RETURN 1
+
+on=13
+
+SRC.GO Yew
+
+RETURN 1

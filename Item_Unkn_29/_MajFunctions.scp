@@ -1,0 +1,92 @@
+//***********************************************************************************
+//WIPE ITEM FUNCTION - V0.1 Majesty
+//DO NOT REMOVE THIS HEADER
+//TO USE - Type: .WIPEITEM
+//DISCRIPTION - Completely Removes A Specified Item From The Server In seconds
+//Note - This Function Will Remove Up to 1500 Items Each Session
+//Note (Pt2) - Sometimes You May Disconnect(Rarely), But Will Not Effect The Function
+//Note (Pt3) - Items Will Not Be Removed If Its In The Pack Of The Function Caller
+//***********************************************************************************
+
+[plevel 6] //6 = Admin Only Command
+wipeitem
+
+[function wipeitem]
+dialog d_maj_itemwiper
+
+[DIALOG d_maj_itemwiper]
+0, 0
+PAGE 0
+resizepic 120 45 3600 210 250
+resizepic 140 147 3500 170 50
+text 162 125 1152 0
+text 161 198 32 1
+text 184 24 1345 2
+text 176 294 1345 3
+textentry 175 162 140 247 10 1 4
+button 198 246 2311 2312 1 0 1
+
+[DIALOG d_maj_itemwiper TEXT]
+Item To Remove
+( Input BaseID )
+Item Wiper
+v1.0 Majesty
+<tag.lastwiped>
+
+[DIALOG d_maj_itemwiper BUTTON]
+on=1
+tag.lastwiped=<argtxt[1]>
+newitem=<argtxt[1]>
+act.p=<p>
+var.itemtoremove=<act.name>
+var.times=<act.instances>
+if (<eval <var.times>> > 1499 )
+var.times=1500
+endif
+var.itemamount=<var.times>
+act.remove
+newitem i_maj_wiper
+act.p=<p>
+act.tag.itemtoremove=<argtxt[1]>
+act.timer=1
+act.link=<uid>
+serv.b Item Wipe Initiated By <name>.
+return 1
+
+[itemdef i_maj_wiper]
+id=i_gold
+type=t_script
+name=Item Wiper (!do not remove!)
+
+on=@create
+attr=attr_invis|attr_static
+tag.repeats=0
+
+on=@pickup_ground
+src.sysmessage=Picking Up This Item Will Cuase Errors!
+return 1
+
+on=@timer
+if (strmatch(<var.itemtoremove>,00))
+link.sysmessage=!! Unknown Item Specified !!
+remove
+return 1
+endif
+link.removeall <tag.itemtoremove>
+serv.b <eval <var.itemamount>-1> <var.itemtoremove>s have been removed from <serv.name>.
+serv.allclients sfx=011c
+remove
+return 1
+
+[function removeall]
+if (<eval <var.times>> < 1 )
+return 1
+else
+goitemid <args>
+act.remove
+var.times=<eval <var.times>>+-1
+removeall <args>
+return 1
+endif
+
+[eof]

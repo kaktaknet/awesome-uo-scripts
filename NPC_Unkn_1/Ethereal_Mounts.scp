@@ -1,0 +1,193 @@
+// true osi eathereal pets 
+//
+// version 1.0 by Belgar
+// upgraded and expanded to version 1.1 by Darkraven
+// enjoy!
+
+[itemdef i_et_horse] 
+name=Ethereal horse 
+id=i_mt_horse_gray 
+TDATA3=c_et 
+layer=25 
+
+on=@create 
+color=0ffff 
+
+on=@equip 
+link=<src.uid> 
+
+on=@unequip 
+src.newitem i_et_eh 
+src.act.bounce 
+
+
+[chardef c_et] 
+id=c_horse_gray 
+
+on=@create 
+color=12 
+
+on=@click 
+remove 
+return 1 
+
+on=@npcrestock 
+remove 
+return 1 
+
+on=@skillstart 
+remove 
+return 1 
+
+[itemdef i_et_eh] 
+NAME=Ethereal Horse 
+id=i_pet_horse 
+type=t_normal 
+CATEGORY=Ethereal 
+SUBSECTION= Ethereal pets 
+DESCRIPTION=Ethereal Horse 
+
+on=@create 
+color=03a1 // never make this a 'SHADOW' color, you will crash !!!! 
+attr=14 
+
+on=@dclick 
+if !(<src.findlayer.25.uid>) 
+src.newitem i_et_horse 
+src.act.more1=c_et 
+src.act.equip 
+src.update 
+remove 
+return 1 
+else 
+src.message you are already mounted 
+return 1 
+endif 
+
+
+// ethereal Llama 
+// by belgar modified by darkraven 
+
+[itemdef i_et_Llama] 
+name=Ethereal Llama 
+id=i_mt_llama 
+TDATA3=c_etl 
+layer=25 
+
+on=@create 
+color=0ffff 
+
+on=@equip 
+link=<src.uid> 
+
+on=@unequip 
+src.newitem i_et_el 
+src.act.bounce 
+
+
+[chardef c_etl] 
+id=c_llama 
+
+on=@create 
+color=0ffff 
+
+on=@click 
+remove 
+return 1 
+
+on=@npcrestock 
+remove 
+return 1 
+
+on=@skillstart 
+remove 
+return 1 
+
+[itemdef i_et_el] 
+NAME=Ethereal llama 
+id=i_pet_llama 
+type=t_normal 
+CATEGORY=Ethereal 
+SUBSECTION= Ethereal pets 
+DESCRIPTION=Ethereal Llama 
+
+on=@create 
+color=03a1 // never make this a 'SHADOW' color, you will crash !!!! 
+attr=14 
+
+on=@dclick 
+if !(<src.findlayer.25.uid>) 
+src.newitem i_et_llama 
+src.act.more1=c_etl 
+src.act.equip 
+src.update 
+remove 
+return 1 
+else 
+src.message you are already mounted 
+return 1 
+endif 
+
+// ethereal ostie 
+// by belgar modified by dark raven 
+
+[itemdef i_et_ostie] 
+name=Ethereal ostie 
+id=i_mt_OSTARD_Zostrich 
+TDATA3=c_eto 
+layer=25 
+
+on=@create 
+color=0ffff 
+
+on=@equip 
+link=<src.uid> 
+
+on=@unequip 
+src.newitem i_et_eo 
+src.act.bounce 
+
+
+[chardef c_eto] 
+id=c_OSTARD_Zostrich 
+
+on=@create 
+color=0ffff 
+
+on=@click 
+remove 
+return 1 
+
+on=@npcrestock 
+remove 
+return 1 
+
+on=@skillstart 
+remove 
+return 1 
+
+[itemdef i_et_eo] 
+NAME=Ethereal Ostie 
+id=i_pet_ostard_zostrich 
+type=t_normal 
+
+CATEGORY=Ethereal 
+SUBSECTION= Ethereal pets 
+DESCRIPTION=Ethereal ostie 
+
+on=@create 
+color=03a1 // never make this a 'SHADOW' color, you will crash !!!! 
+attr=14 
+
+on=@dclick 
+if !(<src.findlayer.25.uid>) 
+src.newitem i_et_ostie 
+src.act.more1=c_eto 
+src.act.equip 
+src.update 
+remove 
+return 1 
+else 
+src.message you are already mounted 
+return 1 
+endif 

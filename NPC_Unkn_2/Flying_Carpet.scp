@@ -1,0 +1,95 @@
+[itemdef i_flying_carpet] 
+
+ID=0ac6 
+
+NAME=Flying Carpet 
+
+TYPE=T_SHIP 
+
+VALUE=200000 
+
+CATEGORY=GM Items
+
+SUBSECTION=Stuff
+
+DESCRIPTION=Flying Carpet 
+
+MULTIREGION=-7,-2,7,2 
+
+COMPONENT=0ac6,0,1 
+
+COMPONENT=0ac6,1,0 
+
+COMPONENT=0ac6,1,1 
+
+COMPONENT=0ac6,2,0 
+
+COMPONENT=0ac6,2,1 
+
+COMPONENT=0ac9,3,2 
+
+COMPONENT=0aca,-1,-1 
+
+COMPONENT=0acb,-1,2 
+
+COMPONENT=0acc,3,-1 
+
+COMPONENT=0acd,-1,0 
+
+COMPONENT=0acd,-1,1 
+
+COMPONENT=0ace,0,-1 
+
+COMPONENT=0ace,1,-1 
+
+COMPONENT=0ace,2,-1 
+
+COMPONENT=0acf,3,0 
+
+COMPONENT=0acf,3,1 
+
+COMPONENT=0ad0,0,2 
+
+COMPONENT=0ad0,1,2 
+
+COMPONENT=0ad0,2,2 
+
+TSPEECH spk_ship_cmds 
+
+on=@dclick 
+
+if <src.uid>==<more> 
+
+src.newitem i_deed_flying_carpet 
+
+src.act.bounce 
+
+remove 
+
+return 1 
+
+else 
+
+say Only the owner can roll up the flying carpet. 
+
+return 1 
+
+endif 
+
+
+
+[itemdef i_deed_flying_carpet] 
+
+NAME=Flying Carpet 
+
+ID=i_bedroll_2 
+
+type=t_deed 
+
+on=@create 
+
+MORE=i_flying_carpet 
+
+COLOR=025 
+
+ATTR=02c

@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+ <META http-equiv="refresh" content="60">
+ <TITLE>Terrania News Ticker</TITLE>
+</HEAD>
+
+<BODY topmargin=0 leftmargin=0 marginwidth=0 marginheight=0>
+
+<marquee behavior="scroll" direction="up" width="140" height="150" scrollamount=1 scrolldelay=60 onmouseover="this.stop()" onmouseout="this.start()">
+
+
+<B><CENTER>Terrania News</CENTER></B><BR>
+<small>
+
+<CENTER>
+
+<SCRIPT>
+
+
+//document.write("This is a test");
+
+
+var titlear = new Array(10);
+var linkar=new Array(10);
+
+titlear[0]='<?var.n0t?>';
+titlear[1]='<?var.n1t?>';
+titlear[2]='<?var.n2t?>';
+titlear[3]='<?var.n3t?>';
+titlear[4]='<?var.n4t?>';
+titlear[5]='<?var.n5t?>';
+titlear[6]='<?var.n6t?>';
+titlear[7]='<?var.n7t?>';
+titlear[8]='<?var.n8t?>';
+titlear[9]='<?var.n9t?>';
+
+linkar[0]="<?var.n0l?>";
+linkar[1]="<?var.n1l?>";
+linkar[2]="<?var.n2l?>";
+linkar[3]="<?var.n3l?>";
+linkar[4]="<?var.n4l?>";
+linkar[5]="<?var.n5l?>";
+linkar[6]="<?var.n6l?>";
+linkar[7]="<?var.n7l?>";
+linkar[8]="<?var.n8l?>";
+linkar[9]="<?var.n9l?>";
+
+var ln = <?var.nupto?>+1;
+var pc = 0;
+
+while (pc < 10)
+{
+ pc++; ln--;
+ if (ln==-1)
+ {
+  ln=9;
+ }
+
+ if (titlear[ln]!="&nbsp")
+ {
+  document.write("<P>");
+  if (linkar[ln].charAt(0)=="/")
+  {
+   document.write("<A HREF=\"http://192.168.0.4"+linkar[ln]+"\">");
+  }
+  document.write(titlear[ln].split(",").join(" "));
+
+  if (linkar[ln].charAt(0)=="/")
+  {
+   document.write("</A>");
+  }
+  
+  document.write("</P>\n");
+ }
+}
+
+</SCRIPT>
+
+</CENTER>
+
+<PRE>
+<?serv.RTIMETEXT?>
+Chars:<?serv.StatChars?>
+Clien:<?serv.STATCLIENTS?>
+T Mem:<?serv.STATMEMORY?>
+Items:<?serv.STATITEMS?></PRE>
+
+</small>
+
+</marquee>
+
+</BODY>
+<HTML>

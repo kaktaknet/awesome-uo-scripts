@@ -1,0 +1,653 @@
+[FUNCTION randspells]
+
+
+IF (<TYPE> == t_spellbook)
+
+
+MORE1 0
+
+
+MORE2 0
+
+
+randspells_rec 64
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION randspells_rec]
+
+
+IF (<ARGN>)
+
+
+IF !(RAND(3))
+
+
+ADDSPELL <ARGN>
+
+
+ENDIF
+
+
+randspells_rec <ARGN> +- 1
+
+
+ENDIF
+
+
+
+It would probably be a lot better to have a function that just gave it random MORE values, but I like things to be complicated? Just call the function randspells on a spellbook, and it will remove all it's current spells, and re-add a third of the total existing spells. (You can change this by changing the RAND(3) to say, RAND(4) for a fourth of the total spells. ) By calling it on the spellbook I mean: '.xrandspells' and targetting a spellbook or SRC.NEWITEM i_spellbook SRC.ACT.randspells SRC.ACT.BOUNCE This next function for counting the total spells in a spellbook uses the long, but practical way. I could have used recursion here too, but it's not worth the risk.
+
+code:
+
+
+
+[FUNCTION spellcount]
+
+
+IF (<TYPE> != t_spellbook)
+
+
+RETURN 0
+
+
+ENDIF
+
+
+
+
+
+VAR.SPELLCOUNT 0
+
+
+
+
+
+IF (<MORE1> & 01)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 02)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 04)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 08)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 010)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 020)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 040)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 080)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 0100)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 0200)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 0400)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 0800)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 01000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 02000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 04000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 08000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 010000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 020000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 040000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 080000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 0100000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 0200000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 0400000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 0800000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 01000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 02000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 04000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 08000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 010000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 020000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 040000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE1> & 080000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+
+
+
+IF (<MORE2> & 01)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 02)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 04)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 08)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 010)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 020)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 040)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 080)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 0100)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 0200)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 0400)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 0800)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 01000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 02000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 04000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 08000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 010000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 020000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 040000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 080000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 0100000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 0200000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 0400000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 0800000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 01000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 02000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 04000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 08000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 010000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 020000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 040000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+IF (<MORE2> & 080000000)
+
+
+VAR.SPELLCOUNT <VAR.SPELLCOUNT> + 1
+
+
+ENDIF
+
+
+
+
+
+RETURN <VAR.SPELLCOUNT>

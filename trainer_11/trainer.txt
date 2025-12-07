@@ -1,0 +1,200 @@
+///////////////////////////////////////trainer information//////////////////////////////////////////////
+//////////////////////////BY JOHILLIAN ARTS  ALL RIGHTS RESERVED  /////////////////////////////////////
+
+
+  The trainer will train someone up to 71 swordsmanship
+  stop training if player obtains it while sparring
+  stop training if player runs out of gold
+  wont train if over 70 swords
+  will kill you if you attack him
+
+
+  to set up...
+
+  place the char info in scripts spherechar human
+  place the swordofgiving in sphereitems beers
+  place the speech into spherespeech..not the folder, the notepad file (copy and paste)
+
+  where you deside to place the trainer make sure it is not in city limits or someone can call
+  the guards on him and so ends him.
+
+  adjust the src.go command in the speech file ( on stop ) to like 10 steps away from where you set him.
+
+
+//////////////////////////////////////////////CHAR JOHILLIAN + TRAINER +//////////////////////////////////
+[CHARDEF C_trainer]
+DEFNAME=C_trainer
+NAME=Conceited The Trainer
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=
+TSPEECH=jobtrainer              ///// REQUIRED SPEECH FILE
+TSPEECH=
+TSPEECH=
+TSPEECH=
+
+TEVENTS=
+TEVENTS=
+TEVENTS=
+TEVENTS=
+TEVENTS=
+TEVENTS=
+TEVENTS=
+
+on=@death                         /// this removes the trainsword so in case he gets killed no one
+consume 1 i_trainsword            /// will get his sword.  
+on=@hittry                      ///// this heals him everytime he is hit, and also keeps someone 
+   if 0<src.tag.fighting>==1    ////  from just attacking him to force gain over 71, or just plain
+   VAR.TEMP = <STR>              //   being a jerk...they die.
+   HITPOINTS = <VAR.TEMP>
+   return 0
+   else
+   src.damage={200 300}
+   endif
+   return 1
+
+ON=@Create
+
+COLOR=colors_skin
+STR={50 55}
+DEX={65 75}
+INT={61 75}
+
+FENCING={50.0 70.0}
+PARRYING={50.0 70.0}
+SWORDSMANSHIP={50.0 70.0}
+WRESTLING={50.0 70.0}
+MACEFIGHTING={50.0 70.0}
+TACTICS={50.0 70.0}
+
+NPC=brain_human
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRestock
+ITEM=RANDOM_LIGHT
+ITEM=i_ringmail_tunic
+ITEM=i_ringmail_leggings
+ITEM=i_ringmail_sleeves
+ITEM=i_ringmail_gloves
+ITEM=i_chainmail_coif
+ITEM=i_leather_gorget
+ITEM=i_shield_wood
+ITEM=i_TrainSword
+ITEM=i_boots_calf
+
+ITEM=random_coin_purse
+
+  
+
+CATEGORY=Civilized
+SUBSECTION=Fighters
+DESCRIPTION=Fighter (male)
+
+///////////////////////////////////////SPEECH JOHILLIAN +  TRAINER  + //////////////////////////////
+[SPEECH jobtrainer]
+
+ON=Hi
+ON=Hello
+ON=Greet
+ON=Hail
+SAY Hail <src.name>,  I am a trainer of swords, do you require training?
+on=Yes
+say Here is how it works, I attack you and we spar, I take 100 gold at random, I give you 1 point swords at random. Ok?
+on=no
+say Very well then <src.name>, be carefull out there.
+on=*ok*
+say PAY CLOSE ATTENTION, To begin sparring just say "ready", to stop say "stop" then TAB OUT. If you dont tab out you will auto attack me and you will be flagged a criminal.If you get in trouble just say heal and I will heal you all the way up.
+on=ready
+      if (<src.swordsmanship> < 70.0)
+      src.tag.fighting=1
+      say Death to you <src.name>!......jk
+      attack
+      else
+      say You are quite a swordsman already <src.name>, I cannot help you any further.
+      
+      endif
+on=stop
+src.tag.fighting=             ////removes the tag
+remove
+
+src.newnpc c_trainer          /// moves you away from battle so you can tab out
+src.go 1359, 1750, 20
+src.tag.fighting=
+
+on=heal
+   If 0<src.tag.fighting>==1  // full heals trainee by saying heal
+     VAR.TEMP = <SRC.STR>
+
+SRC.HITPOINTS = <VAR.TEMP>
+
+SOUND=snd_spell_heal
+
+say There you go <src.name>.
+
+else
+say We are not sparring <src.name>.
+endif
+return 1
+
+ON=Bye
+ON=Goodbye
+ON=Hail
+	SAY=Farewell.
+	BYE
+	return 1
+
+//////////////////////////////////////////ITEM JOHILLIAN + SWORD OF TRAINING +/////////////////////
+
+[itemdef i_TrainSword ]
+
+id=i_sword_viking
+name=Sword of Giving
+TYPE=T_WEAPON_SWORD
+FLIP=1                  ////not usable outside the trainer script
+DAM=1,2                
+//SPEED=20
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=n
+//MATERIAL=20
+WEIGHT=0
+//SKILLMAKE=BLACKSMITHING 56.1    
+DUPELIST=0f48
+
+ON=@Create
+HITPOINTS={1000 2000}
+
+on=@damage
+ 
+     if !<src.restest 100 i_gold >
+     cont.say Your lesson is over <src.name>, you cannot pay any longer, I wont give you any gain.
+     elif (<src.swordsmanship> > 70.0)
+     cont.say Your swordsmanship is <src.swordsmanship>, I cannot train higher than that.
+     else
+ 
+
+     Dorand 8
+           cont.say Yeah!!! This is real fighting
+           cont.say Keep your head up!
+           cont.run n
+           src.swordsmanship=<src.swordsmanship> + 10
+           cont.say Hey, good hit
+           cont.say Watch how I move.
+           src.consume=100 i_gold 
+           cont.run s 
+     Enddo
+     endif
+
+
+return 1
+
+
+
+
+  

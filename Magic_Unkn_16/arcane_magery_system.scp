@@ -1,0 +1,1921 @@
+//////////////////////////////////////////////////////
+//ARCANE MAGERY SYSTEM v2.0, BY MAJESTY
+//PLEASE DO NOT REMOVE THIS HEADER
+//////////////////////////////////////////////////////
+//spellbook: i_arcane_spellbook
+
+
+[itemdef i_scroll_strike]
+id=i_map_rolled
+name=Arcane Scroll(Strike)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 45.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Strike
+src.anim=17
+src.newitem=i_strike_spell
+src.act.equip
+remove
+endif
+return 1
+
+
+[itemdef i_scroll_flamewall]
+id=i_map_rolled
+name=Arcane Scroll(FlameWall)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 55.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: FlameWall
+src.anim=17
+src.newitem=i_flamewall_spell
+src.act.equip
+remove
+endif
+return 1
+
+
+[itemdef i_scroll_engulf]
+id=i_map_rolled
+name=Arcane Scroll(Engulf)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 60.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Engulf
+src.anim=16
+src.newitem=i_engulf_spell
+src.act.equip
+remove
+return 1
+
+
+[itemdef i_scroll_arcanic_protect]
+id=i_map_rolled
+name=Arcane Scroll(Arcanic Protection)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 65.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Arcanic Protection
+src.anim=17
+src.newitem=i_arcane_protection
+src.act.equip
+remove
+return 1
+
+
+
+[itemdef i_scroll_arcanic_invis]
+id=i_map_rolled
+name=Arcane Scroll(Arcanic Invis)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 75.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Arcanic Invisibility
+src.anim=17
+src.newitem=i_invis_spell
+src.act.equip
+remove
+return 1
+
+
+[itemdef i_scroll_barrier]
+id=i_map_rolled
+name=Arcane Scroll(Barrier)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 20.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Barrier
+src.anim=17
+src.newitem=i_barrier_spell
+src.act.equip
+remove
+return 1
+
+
+[itemdef i_scroll_magic_landmine]
+id=i_map_rolled
+name=Arcane Scroll(Mag. Landmine)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 80.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Magic Landmine
+src.newitem=i_landmine_spell
+src.act.equip
+remove
+return 1
+
+
+[itemdef i_scroll_selfdestruct]
+name=Arcane Scroll(Self Destruct)
+id=i_map_rolled
+
+
+on=@dclick
+if (<src.evaluatingintel> < 50.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Self Destruct
+src.anim=17
+src.newitem=i_selfdestruct_spell
+src.act.equip
+remove
+return 1
+
+
+[itemdef i_scroll_flamering]
+id=i_map_rolled
+name=Arcane Scroll(Flamering)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 75.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Arcane Flamering
+src.anim=16
+src.newitem=i_flamering_spell
+src.act.equip
+remove
+return 1
+
+
+
+[itemdef i_scroll_expdecoy]
+id=i_map_rolled
+name=Arcane Scroll(Exp.Decoy)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 25.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Explosive Decoy
+src.newitem=i_decoy_spell
+src.act.equip
+remove
+return 1
+
+
+
+[itemdef i_scroll_arcanehand]
+id=i_map_rolled
+name=Arcane Scroll(ArcaneHand)
+
+
+if (<src.evaluatingintel> < 85.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Arcane Hand
+src.anim=16
+src.newitem=i_arcanehand_spell
+src.act.equip
+remove
+return 1
+
+
+[itemdef i_scroll_arcane_timebomb]
+id=i_map_rolled
+name=Arcane Scroll(Arcane Timebomb)
+
+
+on=@dclick
+if (<src.evaluatingintel> < 90.0 )
+src.sysmessage=Your evaluating intellegence is too low to comprehend this spell.
+return 1
+else
+src.say=Spell: Arcane Timebomb
+src.newitem=i_bombplant_spell
+src.act.equip
+remove
+return 1
+
+
+///////////////////
+[TEMPLATE arcane_loot]
+DEFNAME=arcane_loot
+CATEGORY=Item Templates
+SUBSECTION=Majesty Loot Templates
+DESCRIPTION=Arcane Loot
+CONTAINER=i_backpack
+ITEM={ i_scroll_strike 1 i_scroll_flamewall 1 i_scroll_engulf 1 i_scroll_arcanic_protect 1 i_scroll_arcanic_invis 1 i_scroll_barrier 1 i_scroll_magic_landmine 1 i_scroll_selfdestruct 1 i_scroll_flamering 1 i_scroll_expdecoy 1 i_scroll_arcanehand 1 i_scroll_arcane_timebomb 1 i_arcane_spellbook 1 }
+ITEM={ random_bottle 1 0 4 },{ 1 3 }
+ITEM={ i_torch 1 0 4 },{ 1 3 }
+ITEM=i_gold,{ 1500 2800 }
+
+
+
+//////
+
+
+//ARCANE SPELLBOOK V1.0 MAJESTY
+//ALL YOU NEED TO DO IS ADD THIS SCRIPT IN ITS OWN FILE
+
+
+
+
+
+[itemdef i_strike_spell]
+defname=i_strike_spell
+id=i_memory
+name=Arcane Strike
+type=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=15
+target
+src.sysmessage=Select the victim.
+return 1
+
+
+on=@targon_char
+IF !(<src.targ.region> = 021bf ) && !(<src.targ.region.guarded> = 1 ) && (<src.targ.region.magic> = 1 )
+IF <SRC.TARG.CANSEELOS> && (<SRC.TARG.DISTANCE><=10)
+if (<src.mana> > 39 )
+src.anim=17
+src.targ.damage={30 45}
+src.mana=<src.mana>+-40
+src.targ.effect=1,15,15,15
+src.targ.sound=snd_spell_fire_field
+src.targ.effect=3,i_fx_explosion_2,16,16,16
+src.targ.sfx 011d
+src.targ.sfx 0222
+src.targ.effect=3,i_fire_column,16,16,16
+src.targ.anim 21
+src.targ.newitem=i_fire
+src.targ.act.p=<src.targ.p>
+src.targ.act.timer=4
+src.targ.act.move=sw
+SRC.targ.ACT.ATTR=attr_static|attr_decay
+src.targ.act.nudgeup=5
+src.targ.newitem=i_fire
+src.targ.act.p=<src.targ.p>
+src.targ.act.timer=2
+src.targ.act.move=se
+SRC.targ.ACT.ATTR=attr_static|attr_decay
+src.targ.newitem=i_fire
+src.targ.act.p=<src.targ.p>
+src.targ.act.timer=2
+src.targ.act.move=nw
+SRC.targ.ACT.ATTR=attr_static|attr_decay
+src.targ.act.nudgeup=5
+src.targ.newitem=i_fire
+src.targ.act.p=<src.targ.p>
+src.targ.act.timer=3
+src.targ.act.move=e
+SRC.targ.ACT.ATTR=attr_static|attr_decay
+src.targ.act.nudgeup=5
+src.targ.newitem=i_fire
+src.targ.act.p=<src.targ.p>
+src.targ.act.timer=2
+src.targ.act.move=ne
+SRC.targ.ACT.ATTR=attr_static|attr_decay
+src.targ.act.nudgeup=5
+src.targ.newitem=i_fire
+src.targ.act.p=<src.targ.p>
+src.targ.act.timer=8
+src.targ.act.move=n
+SRC.targ.ACT.ATTR=attr_static|attr_decay
+src.targ.act.nudgeup=5
+src.targ.newitem=i_fire
+src.targ.act.p=<src.targ.p>
+src.targ.act.timer=10
+src.targ.act.move=s
+SRC.targ.ACT.ATTR=attr_static|attr_decay
+src.targ.act.nudgeup=5
+src.targ.newitem=i_fire
+src.targ.act.p=<src.targ.p>
+src.targ.act.timer=11
+src.targ.act.move=w
+SRC.targ.ACT.ATTR=attr_static|attr_decay
+remove
+return 1
+else
+src.sysmessage=You need 40 mana to do this.
+endif
+remove
+return 1
+else
+src.sysmessage=You are too far or you cant see the target.
+remove
+endif
+return 1
+else
+src.sysmessage=You cant cast this here.
+remove
+return 1
+
+
+on=@targon_item
+src.sysmessage=You cant do that.
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+/////////
+
+
+[ITEMDEF i_sacrifice_spell]
+// Sacrifice
+ID=i_memory
+NAME=Sacrfice
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=15
+target
+src.sysmessage=Who will you Sacrifice yourself for?
+src.anim=17
+return 1
+
+
+on=@targon_char
+IF <SRC.TARG.CANSEELOS> && (<SRC.TARG.DISTANCE><=10)
+if (<src.hits> > 64 )&&(<src.targ.hits> < 1 )
+src.targ.spelleffect=s_resurrection 1000
+src.targ.hits=75
+src.targ.emote=was resurrected due to sacrifice
+src.targ.sound=snd_spell_heal
+src.sound=snd_spell_lightning
+src.hits=0
+src.emote=was sacrificed for <src.targ.name>
+remove
+return 1
+else
+src.sysmessage=You must have atleast 65 hp, and your target must be dead.
+remove
+endif
+return 1
+else
+src.sysmessage=You must be able to see your target.
+remove
+return 1
+
+
+on=@targon_item
+remove
+src.sysmessage=You cant sacrifice yourself for an item!
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+[ITEMDEF i_escape_spell]
+// Water Bomb/Ragnorak Escape
+ID=i_memory
+NAME=Water Bomb/Ragnorak Escape
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.mana> > 24 )
+src.fix
+src.damage=1
+src.sfx=011e
+src.mana=<src.mana>+-25
+remove
+return 1
+else
+src.sysmessage=You must have 25 mana to do this.
+remove
+return 1
+
+
+
+[ITEMDEF i_barrier_spell]
+// Barrier Drop
+ID=i_memory
+NAME=Barrier Drop
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.mana> > 49 )
+src.mana=<src.mana>+-50
+src.sound=snd_spell_mass_dispel
+timer=1
+link=<src.uid>
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move nw
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move n
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move ne
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move e
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move w
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move s
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move se
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move sw
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+return 1
+else
+remove
+src.sysmessage=You must have 50 mana to do this.
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+[itemdef i_barrier]
+id=01367
+name=Magic Barrier
+
+
+on=@create
+color=0891
+
+
+on=@click
+src.damage={30 45}
+src.say=Ouch!!
+
+
+on=@dclick
+src.damage={60 70}
+remove
+src.sfx=011d
+src.emote=destroy one of the <name>s
+remove
+return 1
+
+
+
+[ITEMDEF i_selfdestruct_spell]
+// Self Distruct
+ID=i_memory
+NAME=Self Destruct
+TYPE=t_eq_script
+
+
+on=@equip
+timer=2
+if (<src.mana> > 84 )&&(<src.stamina> > 84 ) && !(<src.region.flags> = 021bf ) && !(<src.region.guarded> = 1 ) && !(<src.restest 1 i_arcane_protection >) && !(<src.findlayer(1).dispid> = i_spellbook ) && (<src.hits> > 34 )
+src.effect=3,i_fx_explosion_2,16,16,16
+src.stamina=1
+src.newitem=i_selfdestruct
+src.act.name=Combustable Arcanic Flame
+src.act.color=022
+src.act.timer=15
+src.act.bounce
+src.act.attr=attr_static|attr_decay
+src.act.p=<src.p>
+src.act.damage={75 150}
+src.damage={3000 5000}
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx 011d
+src.sfx 0222
+src.effect=3,i_fire_column,16,16,16
+src.anim 21
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=4
+src.act.move=sw
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=se
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=nw
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=3
+src.act.move=e
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=ne
+SRC.ACT.ATTR=attr_static|attr_decay
+src.act.nudgeup=5
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=8
+src.act.move=n
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=10
+src.act.move=s
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=11
+src.act.move=w
+SRC.ACT.ATTR=attr_static|attr_decay
+remove
+return 1
+else
+src.sysmessage=You must have 35 hitpoints 85 mana and 85 stamina and not be in this area to do this.(make sure you are not wearing Arcane Protection)
+remove
+return 1
+
+
+
+on=@timer
+remove
+return 1
+
+
+
+[itemdef i_selfdestruct]
+id=i_fire_column
+dam={100 399}
+type=t_normal
+
+
+on=@create
+attr=attr_static|attr_decay
+morey=1500
+
+
+on=@step
+src.fix
+fix
+src.p=<p>
+src.damage={85 115}
+src.effect=3,i_fx_explosion_2,16,16,16
+src.newitem=i_fx_explosion_2
+src.act.timer=3
+src.act.bounce
+src.act.attr=attr_static|attr_decay
+src.act.p=<src.p>
+src.act.damage={75 150}
+src.damage={300 500}
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx 011d
+src.sfx 0222
+src.effect=3,i_fire_column,16,16,16
+src.anim 21
+src.newitem=i_fire
+src.act.p=<src.p>
+src.act.timer=4
+src.act.move=sw
+SRC.ACT.ATTR=attr_static|attr_decay
+src.act.nudgeup=5
+src.newitem=i_fire
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=se
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_fire
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=nw
+SRC.ACT.ATTR=attr_static|attr_decay
+src.act.nudgeup=5
+src.newitem=i_fire
+src.act.p=<src.p>
+src.act.timer=3
+src.act.move=e
+SRC.ACT.ATTR=attr_static|attr_decay
+src.act.nudgeup=5
+src.newitem=i_fire
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=ne
+SRC.ACT.ATTR=attr_static|attr_decay
+src.act.nudgeup=5
+src.newitem=i_fire
+src.act.p=<src.p>
+src.act.timer=8
+src.act.move=n
+SRC.ACT.ATTR=attr_static|attr_decay
+src.act.nudgeup=5
+src.newitem=i_fire
+src.act.p=<src.p>
+src.act.timer=10
+src.act.move=s
+SRC.ACT.ATTR=attr_static|attr_decay
+src.act.nudgeup=5
+src.newitem=i_fire
+src.act.p=<src.p>
+src.act.timer=11
+src.act.move=w
+SRC.ACT.ATTR=attr_static|attr_decay
+return 1
+
+
+
+[ITEMDEF i_flamewall_spell]
+// Flame Wall
+ID=i_memory
+NAME=Flame Wall
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+
+on=@equip
+timer=1
+if !(<src.region.flags> = 021bf ) && !(<src.region.guarded> = 1 )
+if (<src.mana> > 54 )
+link=<src.uid>
+src.anim=17
+link.sfx=0222
+link.sfx=011c
+link.sound=snd_spell_flamestrike
+link.mana=<src.mana>+-55
+link.newitem=i_flamewall
+link.act.timer=20
+link.act.link=<src.uid>
+link.act.p=<src.p>
+link.act.attr=08010
+link.act.move=n
+link.newitem=i_flamewall
+link.act.timer=20
+link.act.attr=08010
+link.act.link=<src.uid>
+link.act.p=<src.p>
+link.act.move=n 2
+link.newitem=i_flamewall
+link.act.timer=20
+link.act.attr=08010
+link.act.link=<src.uid>
+link.act.p=<src.p>
+link.act.move=s
+link.newitem=i_flamewall
+link.act.timer=20
+link.act.attr=08010
+link.act.link=<src.uid>
+link.act.p=<src.p>
+link.act.move=s 2
+link.newitem=i_flamewall
+link.act.timer=20
+link.act.attr=08010
+link.act.link=<src.uid>
+link.act.p=<src.p>
+link.act.move=e
+link.newitem=i_flamewall
+link.act.timer=20
+link.act.attr=08010
+link.act.link=<src.uid>
+link.act.p=<src.p>
+link.act.move=e 2
+link.newitem=i_flamewall
+link.act.timer=20
+link.act.attr=08010
+link.act.link=<src.uid>
+link.act.p=<src.p>
+link.act.move=w
+link.newitem=i_flamewall
+link.act.attr=08010
+link.act.link=<src.uid>
+link.act.p=<src.p>
+link.act.move=w 2
+link.act.timer=20
+remove
+return 1
+else
+src.sysmessage=you need 55 mana to do this.
+remove
+endif
+else
+src.sysmessage=you cant do this here.
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+[itemdef i_flamewall]
+id=i_fire_column
+name=Arcanic Flame
+
+
+on=@create
+attr=08002
+color=097f
+timer=25
+
+
+on=@step
+if (<link> = <src.uid>)
+return 1
+else
+src.damage={70 80}
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+
+[ITEMDEF i_arcane_protection]
+// Arcane Protection
+ID=i_memory
+NAME=Arcane Protection
+TYPE=t_eq_script
+
+
+on=@equip
+link=<src.uid>
+if (<src.mana> > 59 )
+src.anim=17
+src.mana=<src.mana>+-60
+timer=150
+link.sfx=011d
+link.events +e_arcane_protection
+return 1
+else
+remove
+src.sysmessage=You need 60 mana and must not already have this on to do this.
+return 1
+
+
+on=@timer
+remove
+link.events -e_arcane_protection
+return 1
+
+
+[events e_arcane_protection]
+on=@gethit
+consume=500 i_arcane_protection
+src.damage={45 57}
+src.sfx=011d
+src.effect=3,i_fx_explosion_2,15,2,15
+events -e_arcane_protection
+src.emote=hit was reflected from Arcane Protection
+return 0
+
+
+on=@hit
+events -e_arcane_protection
+message=You disrupted the magic flow, your protection is gone.
+emote arcane protection is gone
+consume=500 i_arcane_protection
+return 0
+
+
+on=@death
+events -e_arcane_protection
+consume=500 i_arcane_protection
+return 0
+
+
+
+[ITEMDEF i_invis_spell]
+// Arcane Invis
+ID=i_memory
+NAME=Arcanic Invis
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.mana> > 79 )&&(<src.stamina> > 80 )
+src.anim=17
+src.mana=<src.mana>+-80
+src.stamina=<src.stamina>+-80
+timer=45
+src.effect=1,15,15,15
+src.sfx=0222
+src.sound=snd_spell_lightning
+link=<src.uid>
+link.invis=1
+return 1
+else
+src.sysmessage=You must have 80 mana and 85 stamina to do this.
+remove
+return 1
+
+
+on=@timer
+link.invis=0
+link.message=You reveal youself.
+remove
+return 1
+
+
+
+
+[ITEMDEF i_dismount_spell]
+// Dismount
+ID=i_memory
+NAME=Dismount
+TYPE=t_eq_script
+
+
+on=@equip
+src.sysmessage=!!!DISABLED!!!
+remove
+return 1
+
+
+
+[ITEMDEF i_landmine_spell]
+// Magic Land mine
+ID=i_memory
+NAME=Magic Land Mine
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=5
+if !(<src.region.flags> = 021bf )(<src.mana> > 94 )&&(<src.region.magic>) && !(<src.region.guarded> = 1 )
+src.mana=<src.mana>+-95
+link=<src.uid>
+link.newitem=i_magic_landmine
+link.act.link=<src.uid>
+link.act.timer=75
+link.act.p=<src.p>
+src.bow
+src.sysmessage=You put the magic landmine under your feet.
+src.sound=snd_spell_curse
+remove
+return 1
+else
+src.sysmessage=You need 95 mana and you must be in a region that allows magic.
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+[itemdef i_magic_landmine]
+id=0aec
+name=Magic Land Mine
+type=t_normal
+
+
+on=@create
+attr=attr_decay | attr_invis
+timer=50
+
+
+on=@step
+if (<link> = <src.uid> )||(<src.restest 1 i_anti_landmine >)||(<src.isgm>)
+src.message=This landmine cannot hurt you.
+return 1
+else
+src.damage={65 70}
+src.effect=3,i_fire_column,16,16,16
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx=011d
+src.message=You step on the <name> without protection and set it off!
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+[ITEMDEF i_anti_landmine]
+// Landmine Protection
+ID=i_memory
+NAME=Magic Landmine Protection
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+timer=100
+
+
+on=@equip
+if (<src.mana> > 34 )
+src.mana=<src.mana>+-35
+src.anim=17
+src.message=You will be protected from Magic Landmines for 100 seconds.
+src.sound=snd_spell_protection
+timer=100
+return 1
+else
+src.sysmessage=You need 35 mana to do this.
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+
+[ITEMDEF i_decoy_spell]
+// Explosive Decoy
+ID=i_memory
+NAME=Explosive Decoy
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.mana> > 74 ) && !(<src.region.guarded> = 1 ) && !(<src.region.flags> = 021bf )
+src.sound=snd_monster_liche1
+src.mana=<src.mana>+-75
+src.bow
+timer=45
+link=<src.uid>
+link.invis=1
+link.newitem=i_decoy_sword
+link.act.p=<src.p>
+link.act.timer=45
+link.act.attr=attr_decay
+link.act.link=<src.uid>
+return 1
+else
+src.sysmessage=You must have 75 mana and be in an unguarded region to do this.
+remove
+return 1
+
+
+on=@timer
+link.invis=0
+remove
+return 1
+
+
+
+[itemdef i_decoy_sword]
+id=i_sword_long
+name=Long Sword Of Vanquishing
+type=t_normal
+
+
+on=@create
+attr=attr_decay
+
+
+on=@pickup_ground
+src.damage={55 70}
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx=011d
+link.invis=0
+remove
+src.message=This was a trap!
+src.stamina=0
+return 1
+
+
+on=@pickup_pack
+src.damage={55 70}
+link.invis=0
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx=011d
+remove
+src.message=This was a trap!
+src.stamina=0
+return 1
+
+
+on=@dclick
+src.damage={55 70}
+link.invis=0
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx=011d
+remove
+src.message=This was a trap!
+src.stamina=0
+return 1
+
+
+on=@equip
+src.damage={55 70}
+link.invis=0
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx=011d
+remove
+src.message=This was a trap!
+src.stamina=0
+return 1
+
+
+on=@unequip
+link.invis=0
+src.damage={55 70}
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx=011d
+remove
+src.message=This was a trap!
+src.stamina=0
+return 1
+
+
+on=@timer
+link.invis=0
+remove
+return 1
+
+
+
+[ITEMDEF i_underground_spell]
+// Underground
+ID=i_memory
+NAME=Underground
+TYPE=t_eq_script
+
+
+on=@equip
+if (<src.mana> > 54 )
+link=<src.uid>
+timer=15
+link.nudgedown 30
+link.newitem=i_fire_column
+link.act.color=01
+link.act.name=<src.name> is underground
+link.act.p=<src.p>
+link.act.fix
+link.act.attr=attr_static | attr_decay
+src.anim=17
+link.act.timer=15
+link.sound=snd_spell_flamestrike
+link.tag.before=<src.p>
+link.mana=<src.mana>+-55
+link.emote=goes underground
+return 1
+else
+src.sysmessage=You need 55 mana to do this.
+remove
+return 1
+
+
+on=@timer
+link.go=<link.tag.before>
+link.fix
+link.emote=return
+link.tag.before=0
+remove
+return 1
+
+
+
+
+[ITEMDEF i_barriercap_spell]
+// Barrier Drop (capture)
+ID=i_memory
+NAME=Barrier Drop (capture)
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.mana> > 54 )
+src.mana=<src.mana>+-55
+src.sound=snd_spell_mass_dispel
+src.anim=17
+timer=1
+link=<src.uid>
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move nw
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move n 2
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move ne
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move e 2
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move w 2
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move s 2
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move se
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+link.newitem=i_barrier
+link.act.p=<src.p>
+link.act.move sw
+link.act.attr=attr_static|attr_decay
+link.act.timer=30
+return 1
+else
+remove
+src.sysmessage=You must have 55 mana to do this.
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+
+[ITEMDEF i_arcanehand_spell]
+// Arcane Hand
+ID=i_memory
+NAME=Arcane Hand
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=20
+if (<src.mana> > 59 ) && !(<src.restest 1 i_underground_spell>)
+target
+src.anim=16
+src.sysmessage=Who will you magically grab?
+return 1
+else
+src.sysmessage=You need 60 mana to do this.
+remove
+return 1
+
+
+on=@targon_char
+IF <SRC.TARG.CANSEELOS> && (<SRC.TARG.DISTANCE><=10)
+src.mana=<src.mana>+-60
+src.targ.go=<src.p>
+src.anim=16
+src.targ.emote=was magically grabbed by <src.name>
+src.targ.stamina=0
+src.sound=snd_monster_liche1
+remove
+return 1
+else
+src.sysmessage=You must be able to see the target.
+remove
+return 1
+
+
+on=@targon_item
+src.sysmesage=You cant do that.
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+
+[ITEMDEF i_bombplant]
+// Arcane Timebomb
+ID=i_ring_gold
+NAME=Arcane Timebomb
+
+
+on=@create
+attr=attr_decay | attr_invis
+
+
+on=@step
+equip
+
+
+on=@equip
+timer=45
+link=<src.uid>
+link.emote=have <timer> seconds before the <name> explodes
+link.sfx=248
+link.say=*gets scared*
+
+
+
+on=@timer
+link.effect=3,i_fire_column,15,15,15
+link.effect=3,i_fx_explosion_2,15,15,15
+link.sfx=011d
+link.sfx=0222
+link.damage={85 97}
+src.say=*the <name> explodes*
+remove
+return 1
+
+
+
+[ITEMDEF i_bombplant_spell]
+// Plant Arcane Timebomb
+ID=i_memory
+NAME=Plant Arcane Timebomb
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay | attr_invis
+
+
+
+on=@equip
+timer=20
+link=<src.uid>
+if (<src.mana> > 94 ) && (<src.stamina> > 94 )
+target
+src.sysmessage=Who will you plant the Arcane Timebomb Inside?
+return 1
+else
+src.sysmessage=You need 95 mana and 95 stamina to do this.
+remove
+return 1
+
+
+on=@targon_char
+IF (<SRC.TARG.DISTANCE><=2) && (<src.region.guarded> = 0 ) && !(<src.region.flags> = 021bf )
+link.newitem=i_bombplant
+link.act.bounce
+link.act.drop
+link.act.p=<src.targ.p>
+src.anim=19
+link.targ.stamina=0
+link.mana=<src.mana>+-95
+link.stamina=<src.stamina>+-95
+src.emote=put the Arcane Timebomb inside of <src.targ.name>'s skull
+remove
+return 1
+else
+src.sysmessage=You are either too far or you cant do this here.
+remove
+return 1
+
+
+on=@targon_item
+src.sysmessage=You must plant this bomb on living beings.
+remove
+return 1
+
+
+[ITEMDEF i_bombdefuse_spell]
+// Arcane Timebomb Defuse
+ID=i_memory
+NAME=Arcane Timebomb Defuse
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.restest 1 i_bombplant>) && (<src.mana> > 49 )
+src.consume=500 i_bombplant
+src.emote=defuse the Arcane Timebomb(s) planted within
+src.sfx=011e
+src.anim=17
+src.mana=<src.mana>+-50
+remove
+return 1
+else
+src.sysmessage=you either dont have a bomb planted in you or dont have 60 mana to do this.
+remove
+endif
+return 1
+
+
+
+[ITEMDEF i_rage_spell]
+// Arcane Rage
+ID=i_memory
+NAME=Arcane Rage
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=15
+if (<src.mana> > 99 ) && (<src.stamina> > 99 )
+link=<src.uid>
+link.mana=<src.mana>+-100
+timer=40
+link.stamina=1
+src.sfx=0222
+src.emote=go into Rage
+link.str=250
+link.hits=250
+src.anim=17
+link.dex=250
+link.events +e_rage_spell
+return 1
+else
+src.sysmessage=You need 100 mana and 100 stamina to do this.
+remove
+return 1
+
+
+on=@timer
+link.str=100
+link.dex=100
+link.hits=15
+link.emote=gets extremely weak after the rage
+link.events -e_rage_spell
+remove
+return 1
+
+
+[events e_rage_spell]
+on=@hit
+src.effect=1,15,15,15
+src.sound=snd_spell_lightning
+src.sfx=011d
+return 0
+
+
+[ITEMDEF i_wisdom_spell]
+// Arcane Wisdom
+ID=i_memory
+NAME=Arcane Wisdom
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=15
+if (<src.mana> > 99 ) && (<src.stamina> > 99 )
+link=<src.uid>
+link.int=300
+link.mana=300
+src.anim=17
+link.sound=snd_spell_cunning
+link.sfx=0222
+link.emote=suddenly get Arcanic Wisdom
+timer=40
+return 1
+else
+src.sysmessage=You need 100 mana and 100 stamina to do this.
+remove
+return 1
+
+
+on=@timer
+link.mana=0
+link.stamina=-1
+link.int=100
+link.emote=lose the power of Arcane Wisdom
+remove
+return 1
+
+
+
+[ITEMDEF i_engulf_spell]
+// Engulf
+ID=i_memory
+NAME=Engulf
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=25
+if (<src.mana> > 64 )
+target
+src.sysmessage=Target your victim.
+return 1
+else
+src.sysmessage=You must have 65 mana to do this.
+remove
+return 1
+
+
+on=@targon_char
+IF <SRC.TARG.CANSEELOS> && (<SRC.TARG.DISTANCE><=9) && !(<src.region.guarded> = 1 ) && !(<src.region.flags> = 021bf )
+src.targ.damage={35 55}
+src.anim=16
+src.mana=<src.mana>+-65
+src.targ.effect=3,i_fire_column,20,20,20
+src.targ.effect=0,i_fire,12,1,0
+src.targ.sound=snd_spell_flamestrike
+src.targ.sfx=011c
+src.sound=snd_spell_flamestrike
+remove
+return 1
+else
+src.sysmessage=You either cant see your target or you cant do this here.
+remove
+return 1
+
+
+on=@targon_item
+src.sysmessage=You cant do that.
+remove
+return 1
+
+
+
+[ITEMDEF i_flamering_spell]
+// Flame Ring
+ID=i_memory
+NAME=Flame Ring
+TYPE=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+timer=15
+if (<src.mana> > 64 )
+link=<src.uid>
+target
+src.sysmessage=Target your victim.
+return 1
+else
+src.sysmessage=You need 65 mana to do this.
+remove
+return 1
+
+
+on=@targon_char
+IF <SRC.TARG.CANSEELOS> && (<SRC.TARG.DISTANCE><=9) && !(<src.region.guarded> = 1 ) && !(<src.region.flags> = 021bf )
+src.targ.damage={40 50}
+src.anim=16
+src.targ.stamina=0
+src.mana=<src.mana>+-90
+src.targ.effect=1,15,15,15
+src.targ.sound=snd_spell_lightning
+src.targ.sound=snd_spell_flamestrike
+link.newitem=i_flamering
+link.act.p=<src.targ.p>
+link.act.move=n 1
+link.act.attr=attr_static | attr_decay
+link.act.timer=10
+link.newitem=i_flamering
+link.act.p=<src.targ.p>
+link.act.move=s 1
+link.act.attr=attr_static | attr_decay
+link.act.timer=10
+link.newitem=i_flamering
+link.act.p=<src.targ.p>
+link.act.move=e 1
+link.act.attr=attr_static | attr_decay
+link.act.timer=10
+link.newitem=i_flamering
+link.act.p=<src.targ.p>
+link.act.move=w 1
+link.act.attr=attr_static | attr_decay
+link.act.timer=10
+link.newitem=i_flamering
+link.act.p=<src.targ.p>
+link.act.move=ne 1
+link.act.attr=attr_static | attr_decay
+link.act.timer=10
+link.newitem=i_flamering
+link.act.p=<src.targ.p>
+link.act.move=nw 1
+link.act.attr=attr_static | attr_decay
+link.act.timer=10
+link.newitem=i_flamering
+link.act.p=<src.targ.p>
+link.act.move=se 1
+link.act.attr=attr_static | attr_decay
+link.act.timer=10
+link.newitem=i_flamering
+link.act.p=<src.targ.p>
+link.act.move=sw 1
+link.act.attr=attr_static | attr_decay
+link.act.timer=10
+remove
+return 1
+else
+src.sysmessage=You either cant see your target or you cant do this here.
+remove
+return 1
+
+
+on=@targon_item
+src.sysmessage=you cant do that.
+remove
+return 1
+
+
+[itemdef i_flamering]
+id=i_fire_column
+name=Flamering
+
+
+on=@create
+attr=attr_static | attr_decay
+timer=10
+color=022
+
+
+on=@step
+src.damage={30 45}
+remove
+src.sfx=011d
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+
+[itemdef i_arcane_spellbook]
+id=i_book_open
+name=Arcane Spellbook
+
+
+on=@create
+attr=attr_newbie
+color=0888
+morex=5
+
+
+on=@dclick
+if (<eval <morex>> = 0 )
+remove
+src.sysmessage=You have used up all the charges...
+return 1
+endif
+
+
+dialog d_arcane_spells
+src.emote=open the arcane spellbook
+src.sound=snd_spell_cunning
+morex=<eval <morex>>+-1
+return 1
+
+
+on=@click
+message=You have <eval <morex>> Charges for this book.
+
+
+
+[itemdef i_arcane_stone]
+id=i_gravestone_17
+name=Arcane Spellbook Stone
+
+
+on=@create
+color=0480
+attr=attr_static
+
+
+on=@dclick
+if (<src.restest 15000 i_gold >)
+src.newitem=i_arcane_spellbook
+src.act.bounce
+src.consume=15000 i_gold
+src.emote=feel the power of the arcane spellbook
+src.sound=snd_spell_cunning
+return 1
+else
+src.sysmessage=You need 15000 gold to get this.
+endif
+return 1
+
+
+
+
+[DIALOG d_arcane_spells]
+0, 0
+noclose
+PAGE 0
+PAGE 1
+gumppic 63 63 2200
+button 90 74 210 211 1 0 1
+text 116 72 1101 0
+button 90 100 210 211 1 0 2
+text 117 99 1101 1
+button 90 126 210 211 1 0 3
+text 117 126 1101 2
+button 90 153 210 211 1 0 4
+text 117 153 1101 3
+button 90 180 210 211 1 0 5
+text 116 180 1101 4
+button 90 207 210 211 1 0 6
+text 115 207 1101 5
+button 90 234 210 211 1 0 7
+text 115 234 1101 6
+button 247 73 210 211 1 0 8
+text 270 72 1101 7
+button 247 99 210 211 1 0 9
+text 271 99 1101 8
+button 248 126 210 211 1 0 10
+text 271 126 1101 9
+button 248 153 210 211 1 0 11
+text 272 152 1101 10
+button 249 180 210 211 1 0 12
+text 273 180 1101 11
+button 249 209 210 211 1 0 13
+text 274 209 1101 12
+button 250 238 210 211 1 0 14
+text 275 238 1101 13
+text 146 42 301 14
+button 232 290 2117 2118 1 0 0
+text 222 301 1250 15
+button 361 69 4005 4006 0 2 0
+PAGE 2
+gumppic 70 63 2200
+text 120 106 1101 16
+button 98 135 210 211 1 0 15
+text 121 135 1101 17
+button 98 108 210 211 1 0 16
+button 98 164 210 211 1 0 17
+text 120 164 1101 18
+button 98 194 210 211 1 0 18
+text 119 193 1101 19
+button 98 223 210 211 1 0 19
+text 122 222 1101 20
+button 260 109 210 211 1 0 20
+text 285 107 1101 21
+button 261 140 210 211 1 0 21
+text 284 138 1101 22
+text 154 42 301 23
+text 311 282 1250 24
+button 239 290 2117 2118 1 0 0
+text 229 301 1250 25
+button 99 71 4014 4015 0 1 0
+
+
+[DIALOG d_arcane_spells TEXT]
+Arcane Strike
+Flamewall
+Escape
+Engulf
+Arcanic Protect
+Arcanic Invis
+Magic Dismount
+Barrier
+Capture
+Magic Landmine
+Anti Landmine
+Self Destruct
+Sacrifice
+Flame Ring
+Book of Arcane Magery
+Close
+Explos. Decoy
+Underground
+Arcane Hand
+Arcane Timebomb
+Bomb Defuse
+Arcanic Rage
+Arcanic Wisdom
+Book of Arcane Magery
+v1.0 Majesty
+Close
+
+
+
+[DIALOG d_arcane_spells BUTTON]
+on=1
+src.say=Spell: Strike
+src.anim=17
+src.newitem=i_strike_spell
+src.act.equip
+return 1
+on=2
+src.say=Spell: FlameWall
+src.anim=17
+src.newitem=i_flamewall_spell
+src.act.equip
+return 1
+on=3
+src.say=Spell: Escape
+src.anim=16
+src.newitem=i_escape_spell
+src.act.equip
+return 1
+on=4
+src.say=Spell: Engulf
+src.anim=16
+src.newitem=i_engulf_spell
+src.act.equip
+return 1
+on=5
+src.say=Spell: Arcanic Protection
+src.anim=17
+src.newitem=i_arcane_protection
+src.act.equip
+return 1
+on=6
+src.say=Spell: Arcanic Invisibility
+src.anim=17
+src.newitem=i_invis_spell
+src.act.equip
+return 1
+on=7
+src.say=Spell: Magic Dismount
+src.anim=16
+src.newitem=i_dismount_spell
+src.act.equip
+return 1
+on=8
+src.say=Spell: Barrier
+src.anim=17
+src.newitem=i_barrier_spell
+src.act.equip
+return 1
+on=9
+src.say=Spell: Capture
+src.anim=17
+src.newitem=i_barriercap_spell
+src.act.equip
+return 1
+on=10
+src.say=Spell: Magic Landmine
+src.newitem=i_landmine_spell
+src.act.equip
+return 1
+on=11
+src.say=Spell: Anti Landmine
+src.anim=17
+src.newitem=i_anti_landmine
+src.act.equip
+return 1
+on=12
+src.say=Spell: Self Destruct
+src.anim=17
+src.newitem=i_selfdestruct_spell
+src.act.equip
+return 1
+on=13
+src.say=Spell: Sacrifice
+src.anim=16
+src.newitem=i_sacrifice_spell
+src.act.equip
+return 1
+on=14
+src.say=Spell: Arcane Flamering
+src.anim=16
+src.newitem=i_flamering_spell
+src.act.equip
+return 1
+on=15
+src.say=Spell: Underground
+src.bow
+src.newitem=i_underground_spell
+src.act.equip
+return 1
+on=16
+src.say=Spell: Explosive Decoy
+src.newitem=i_decoy_spell
+src.act.equip
+return 1
+on=17
+src.say=Spell: Arcane Hand
+src.anim=16
+src.newitem=i_arcanehand_spell
+src.act.equip
+return 1
+on=18
+src.say=Spell: Arcane Timebomb
+src.newitem=i_bombplant_spell
+src.act.equip
+return 1
+on=19
+src.say=Spell: Defuse Timebomb
+src.newitem=i_bombdefuse_spell
+src.act.equip
+return 1
+on=20
+src.say=Spell: Arcanic Rage
+src.newitem=i_rage_spell
+src.act.equip
+return 1
+on=21
+src.say=Spell: Arcanic Wisdom
+src.newitem=i_wisdom_spell
+src.act.equip
+return 1

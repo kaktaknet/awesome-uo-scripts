@@ -1,0 +1,124 @@
+//////////////////////////////////////////////////////////////////////////////// 
+//############################################################################// 
+//#                              Player Pack                                 #// 
+//#                           Crafted by Silver Ghost                        #// 
+//# Version: Beta 0.5     						     #// 
+//# E-Mail: sg@ablogic.com                            		             #// 
+//# ICQ: 553410                                                              #// 
+//# Date: 1/24/02                                                            #// 
+//# If you change this file, please leave your name and changes below...     #// 
+//# 1.Silver Ghost: Added smiles					     #// 
+//# 2.Silver Ghost: Added healing potion drinking			     #//
+//# 3.Silver Ghost: Added mana potion drining				     #//
+//# 4.Silver Ghost: Added invisibility potion drinking			     #//
+//#									     #//
+//############################################################################// 
+//////////////////////////////////////////////////////////////////////////////// 
+//.heal = Dclicks bandages in your backpack
+//.smile = 1,2,3,4 - different smiles (for fun :))
+//.hp or .healing_potion = 1 - Drinks the worst potion, 0 or anything else - the best potion.
+//.mp or .mana_potion = 1 --||--
+//.ip or .invisibility_potion = Drinks invis potion.
+[PLEVEL 1]
+heal
+smile
+hp
+healing_potion
+mp
+mana_potion
+ip
+invisibility_potion
+
+
+[FUNCTION heal]
+IF <SRC.RESTEST 1 i_bandage>
+	SRC.FINDLAYER(21).FINDID.i_bandage.DCLICK
+ELSE
+	VAR.SUA_COLOR=162
+	SRC.SYSMESSAGEUA You don't have any clean bandages in your backpack!
+ENDIF
+
+[FUNCTION smile]
+IF (0<ARGN>==1)
+	SRC.SAY O  O
+	SRC.SAY  l
+	SRC.SAY \__/
+ELSEIF (0<ARGN>==2)
+	SRC.SAY  O  O
+	SRC.SAY   l
+	SRC.SAY /---\
+ELSEIF (0<ARGN>==3)
+	SRC.SAY  O  O
+	SRC.SAY   l
+	SRC.SAY lZZZZl
+ELSEIF (0<ARGN>==4)
+	SRC.SAY  O  O
+	SRC.SAY   _l_
+	SRC.SAY  /__\
+ELSE
+	SMILE 1
+ENDIF
+
+[FUNCTION hp]
+healing_potion <ARGN>
+
+[FUNCTION healing_potion]
+IF (0<ARGN>==1)
+	IF <SRC.RESTEST 1 i_potion_healless>
+		SRC.FINDLAYER(21).FINDID.i_potion_healless.DCLICK
+	ELSEIF <SRC.RESTEST 1 i_potion_heal>
+		SRC.FINDLAYER(21).FINDID.i_potion_heal.DCLICK
+	ELSEIF <SRC.RESTEST 1 i_potion_healgreat>
+		SRC.FINDLAYER(21).FINDID.i_potion_healgreat.DCLICK
+	ELSE
+		VAR.SUA_COLOR=162
+		SRC.SYSMESSAGEUA You don't have any healing potions in your backpack!
+	ENDIF
+ELSE
+	IF <SRC.RESTEST 1 i_potion_healgreat>
+		SRC.FINDLAYER(21).FINDID.i_potion_healgreat.DCLICK
+	ELSEIF <SRC.RESTEST 1 i_potion_heal>
+		SRC.FINDLAYER(21).FINDID.i_potion_heal.DCLICK
+	ELSEIF <SRC.RESTEST 1 i_potion_healless>
+		SRC.FINDLAYER(21).FINDID.i_potion_healless.DCLICK
+	ELSE
+		VAR.SUA_COLOR=162
+		SRC.SYSMESSAGEUA You don't have any healing potions in your backpack!
+	ENDIF
+ENDIF
+
+[FUNCTION mp]
+mana_potion <ARGN>
+
+[FUNCTION mana_potion]
+IF (0<ARGN>==1)
+	IF <SRC.RESTEST 1 i_potion_mana>
+		SRC.FINDLAYER(21).FINDID.i_potion_mana.DCLICK
+	ELSEIF <SRC.RESTEST 1 i_potion_manatotal>
+		SRC.FINDLAYER(21).FINDID.i_potion_manatotal.DCLICK
+	ELSE
+		VAR.SUA_COLOR=162
+		SRC.SYSMESSAGEUA You don't have any mana potions in your backpack!
+	ENDIF
+ELSE
+	IF <SRC.RESTEST 1 i_potion_manatotal>
+		SRC.FINDLAYER(21).FINDID.i_potion_manatotal.DCLICK
+	ELSEIF <SRC.RESTEST 1 i_potion_mana>
+		SRC.FINDLAYER(21).FINDID.i_potion_mana.DCLICK
+	ELSE
+		VAR.SUA_COLOR=162
+		SRC.SYSMESSAGEUA You don't have any mana potions in your backpack!
+	ENDIF
+ENDIF
+
+[FUNCTION ip]
+invisibility_potion <ARGN>
+
+[FUNCTION invisibility_potion]
+IF <SRC.RESTEST 1 i_potion_invisibility>
+	SRC.FINDLAYER(21).FINDID.i_potion_invisibility.DCLICK
+ELSE
+	VAR.SUA_COLOR=162
+	SRC.SYSMESSAGEUA You don't have any invisibility potions in your backpack!
+ENDIF
+

@@ -1,0 +1,593 @@
+//Elemental Forging System
+//by Admin Imperius
+//tja@boredalot.com  (email me if you have any problems/questions)
+
+[ITEMDEF i_elem_forger]
+name=Elemental Forger
+id=i_brazier_2
+type=t_script
+
+on=@create
+COLOR=00788
+
+
+on=@dclick
+SAY I am only here to serve you, master.
+SRC.ITEMMENU m_elem_forger
+RETURN 1
+
+[menu m_elem_forger]
+What do you wish, master?
+
+on=0 Elemental Weapons
+SRC.ITEMMENU m_elem_weps
+on=0 Elemental Armor
+SRC.ITEMMENU m_elem_arms
+on=0 Elemental Information
+SRC.ITEMMENU m_elem_info
+
+[menu m_elem_weps]
+Which element do you wish to possess, master?
+
+on=0 Lightning
+SRC.ITEMMENU m_elem_lightningweps
+on=0 Venom
+SRC.ITEMMENU m_elem_venomweps
+on=0 Lava
+SRC.ITEMMENU m_elem_lavaweps
+on=0 Death
+SRC.ITEMMENU m_elem_deathweps
+//on=0 Plant
+//SRC.ITEMMENU m_elem_plantweps
+
+[menu m_elem_arms]
+Which element do you wish to possess, master?
+
+on=0 Lightning
+SRC.ITEMMENU m_elem_lightningarms
+on=0 Venom
+SRC.ITEMMENU m_elem_venomarms
+on=0 Lava
+SRC.ITEMMENU m_elem_lavaarms
+on=0 Death
+SRC.ITEMMENU m_elem_Deatharms
+on=0 Plant
+SRC.ITEMMENU m_elem_plantarms
+
+[menu m_elem_info]
+Which elemental do you what information on, master?
+
+on=0 General
+SRC.ITEMMENU m_elem_general
+on=0 Lightning
+SRC.ITEMMENU m_elem_lightning
+on=0 Venom
+SRC.ITEMMENU m_elem_venom
+on=0 Lava
+SRC.ITEMMENU m_elem_lava
+on=0 Death
+SRC.ITEMMENU m_elem_Death
+on=0 Plant
+SRC.ITEMMENU m_elem_plant
+
+[menu m_elem_general]
+One can ONLY possess the powers of the 5 super elementals.  The weaker elements are not strong enough to generate elemental shards.  Legends tells that the shards can be found somewhere deep in Halix.  
+
+on=0 More
+SRC.ITEMMENU m_elem_general2
+
+[menu m_elem_general2]
+This powerful forger was created by High Mage Jaxis.  It's magic was so powerful that it corrupted Jaxis with greed and anger.  Be wary, the power of the super elements are not to be taken lightly.
+
+on=0 Done
+SRC.ITEMMENU m_elem_forger
+
+[menu m_elem_lightning]
+Lightning is an extremely powerful element.  It's electric power flows through everything it touches; devouring its foes and protecting its master.
+
+on=0 Done
+SRC.ITEMMENU m_elem_forger
+
+[menu m_elem_venom]
+Venom is a corrosive and toxic element.  It's able to destroy the smallest orc or the biggest dragon with its powerful toxin.
+
+on=0 Done
+SRC.ITEMMENU m_elem_forger
+
+[menu m_elem_lava]
+Lava is a slow, but powerful, fiery element.  It's extremely destructive, covering everything in blazing, molten rock.
+
+on=0 Done
+SRC.ITEMMENU m_elem_forger
+
+[menu m_elem_Death]
+Not very much is known about Death.  One can possess the power of darkness and stealth, along with deceit and greed if death is their master.  
+
+on=0 Done
+SRC.ITEMMENU m_elem_forger
+
+[menu m_elem_plant]
+Plant is the very power that holds the Earth together.  Plant is mainly defensive, protecting its master with the power of the Earth.
+
+on=0 Done
+SRC.ITEMMENU m_elem_forger
+
+
+
+[menu m_elem_deathweps]
+Which type of weapon do you desire, master?
+
+on=0 Death Sword (35 shards)
+IF (<SRC.RESTEST 35 i_death_shard>)
+SRC.CONSUME=35 i_death_shard
+SRC.NEWITEM=i_death_sword
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Death Sword.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Death Shards.
+return 1
+endif
+
+
+[menu m_elem_lavaweps]
+Which type of weapon do you desire, master?
+
+on=0 Lava Sword (35 shards)
+IF (<SRC.RESTEST 25 i_lava_shard>)
+SRC.CONSUME=25 i_lava_shard
+SRC.NEWITEM=i_lava_sword
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lava Sword.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lava Shards.
+return 1
+endif
+on=0 Lava Fork (45 shards)
+IF (<SRC.RESTEST 35 i_lava_shard>)
+SRC.CONSUME=35 i_lava_shard
+SRC.NEWITEM=i_lava_fork
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lava Fork.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lava Shards.
+return 1
+endif
+
+[menu m_elem_venomweps]
+Which type of weapon do you desire, master?
+
+on=0 Venom Sword (15 shards)
+IF (<SRC.RESTEST 15 i_venom_shard>)
+SRC.CONSUME=15 i_venom_shard
+SRC.NEWITEM=i_venom_sword
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Venom Sword.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+on=0 Venom Spear (25 shards)
+IF (<SRC.RESTEST 25 i_venom_shard>)
+SRC.CONSUME=25 i_venom_shard
+SRC.NEWITEM=i_venom_spear
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Venom Spear.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+on=0 Venom Hammer (35 shards)
+IF (<SRC.RESTEST 35 i_venom_shard>)
+SRC.CONSUME=35 i_venom_shard
+SRC.NEWITEM=i_venom_hammer
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Venom Hammer.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+[menu m_elem_lightningweps]
+Which type of weapon do you desire, master?
+
+on=0 Lightning Sword (15 shards)
+IF (<SRC.RESTEST 15 i_lightning_shard>)
+SRC.CONSUME=15 i_lightning_shard
+SRC.NEWITEM=i_lightning_sword
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lightning Sword.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+on=0 Lightning Staff  (30 shards)
+IF (<SRC.RESTEST 30 i_lightning_shard>)
+SRC.CONSUME=30 i_lightning_shard
+SRC.NEWITEM=i_lightning_staff
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lightning Staff.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+on=0 Lightning Bow   (50 shards)
+IF (<SRC.RESTEST 50 i_lightning_shard>)
+SRC.CONSUME=50 i_lightning_shard
+SRC.NEWITEM=i_lightning_bow
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lightning Bow.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+on=0 Lightning Scythe (75 shards)  
+IF (<SRC.RESTEST 75 i_lightning_shard>)
+SRC.CONSUME=75 i_lightning_shard
+SRC.NEWITEM=i_lightning_scythe
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lightning Scythe.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+
+[menu m_elem_lightningarms]
+What type of armor do you want, master?
+
+on=0 Lightning Gloves     (5 shards)
+IF (<SRC.RESTEST 5 i_lightning_shard>)
+SRC.CONSUME=5 i_lightning_shard
+SRC.NEWITEM=i_lightning_PLATEMAIL_GAUNTLETS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Lightning Gloves.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+on=0 Lightning Gorget     (10 shards)
+IF (<SRC.RESTEST 10 i_lightning_shard>)
+SRC.CONSUME=10 i_lightning_shard
+SRC.NEWITEM=i_lightning_PLATEMAIL_GORGET
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lightning Gorget.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+on=0 Lightning Arms      (15 shards)
+IF (<SRC.RESTEST 15 i_lightning_shard>)
+SRC.CONSUME=15 i_lightning_shard
+SRC.NEWITEM=i_lightning_PLATEMAIL_ARMS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Lightning Arms.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+on=0 Lightning Leggings   (20 shards)
+IF (<SRC.RESTEST 20 i_lightning_shard>)
+SRC.CONSUME=20 i_lightning_shard
+SRC.NEWITEM=i_lightning_PLATEMAIL_leggings
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Lightning Leggings.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+on=0 Lightning Chestplate (25 shards)
+IF (<SRC.RESTEST 25 i_lightning_shard>)
+SRC.CONSUME=25 i_lightning_shard
+SRC.NEWITEM=i_lightning_PLATEMAIL
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lightning Platemail Chest.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+on=0 Lightning Helmet     (30 shards)
+IF (<SRC.RESTEST 30 i_lightning_shard>)
+SRC.CONSUME=30 i_lightning_shard
+SRC.NEWITEM=i_lightning_CLOSED_HELM
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lightning Helmet.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lightning Shards.
+return 1
+endif
+
+[menu m_elem_venomarms]
+What type of armor do you want, master?
+
+on=0 Venom Gloves     (5 shards)
+IF (<SRC.RESTEST 5 i_Venom_shard>)
+SRC.CONSUME=5 i_Venom_shard
+SRC.NEWITEM=i_Venom_PLATEMAIL_GAUNTLETS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Venom Gloves.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+on=0 Venom Gorget     (10 shards)
+IF (<SRC.RESTEST 10 i_Venom_shard>)
+SRC.CONSUME=10 i_Venom_shard
+SRC.NEWITEM=i_Venom_PLATEMAIL_GORGET
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Venom Gorget.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+on=0 Venom Arms      (15 shards)
+IF (<SRC.RESTEST 15 i_Venom_shard>)
+SRC.CONSUME=15 i_Venom_shard
+SRC.NEWITEM=i_Venom_PLATEMAIL_ARMS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Venom Arms.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+on=0 Venom Leggings   (20 shards)
+IF (<SRC.RESTEST 20 i_Venom_shard>)
+SRC.CONSUME=20 i_Venom_shard
+SRC.NEWITEM=i_Venom_PLATEMAIL_leggings
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Venom Leggings.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+on=0 Venom Chestplate (25 shards)
+IF (<SRC.RESTEST 25 i_Venom_shard>)
+SRC.CONSUME=25 i_Venom_shard
+SRC.NEWITEM=i_Venom_PLATEMAIL
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Venom Platemail Chest.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+on=0 Venom Helmet     (30 shards)
+IF (<SRC.RESTEST 30 i_Venom_shard>)
+SRC.CONSUME=30 i_Venom_shard
+SRC.NEWITEM=i_Venom_CLOSED_HELM
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Venom Helmet.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Venom Shards.
+return 1
+endif
+
+
+[menu m_elem_lavaarms]
+What type of armor do you want, master?
+
+on=0 Lava Gloves     (5 shards)
+IF (<SRC.RESTEST 5 i_Lava_shard>)
+SRC.CONSUME=5 i_Lava_shard
+SRC.NEWITEM=i_Lava_PLATEMAIL_GAUNTLETS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Lava Gloves.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lava Shards.
+return 1
+endif
+on=0 Lava Gorget     (10 shards)
+IF (<SRC.RESTEST 10 i_Lava_shard>)
+SRC.CONSUME=10 i_Lava_shard
+SRC.NEWITEM=i_Lava_PLATEMAIL_GORGET
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lava Gorget.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lava Shards.
+return 1
+endif
+on=0 Lava Arms      (15 shards)
+IF (<SRC.RESTEST 15 i_Lava_shard>)
+SRC.CONSUME=15 i_Lava_shard
+SRC.NEWITEM=i_Lava_PLATEMAIL_ARMS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Lava Arms.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lava Shards.
+return 1
+endif
+on=0 Lava Leggings   (20 shards)
+IF (<SRC.RESTEST 20 i_Lava_shard>)
+SRC.CONSUME=20 i_Lava_shard
+SRC.NEWITEM=i_Lava_PLATEMAIL_leggings
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Lava Leggings.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lava Shards.
+return 1
+endif
+on=0 Lava Chestplate (25 shards)
+IF (<SRC.RESTEST 25 i_Lava_shard>)
+SRC.CONSUME=25 i_Lava_shard
+SRC.NEWITEM=i_Lava_PLATEMAIL
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lava Platemail Chest.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lava Shards.
+return 1
+endif
+on=0 Lava Helmet     (30 shards)
+IF (<SRC.RESTEST 30 i_Lava_shard>)
+SRC.CONSUME=30 i_Lava_shard
+SRC.NEWITEM=i_Lava_CLOSED_HELM
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Lava Helmet.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Lava Shards.
+return 1
+endif
+
+
+[menu m_elem_Deatharms]
+What type of armor do you want, master?
+
+on=0 Death Gloves     (5 shards)
+IF (<SRC.RESTEST 5 i_Death_shard>)
+SRC.CONSUME=5 i_Death_shard
+SRC.NEWITEM=i_Death_PLATEMAIL_GAUNTLETS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Death Gloves.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Death Shards.
+return 1
+endif
+on=0 Death Gorget     (10 shards)
+IF (<SRC.RESTEST 10 i_Death_shard>)
+SRC.CONSUME=10 i_Death_shard
+SRC.NEWITEM=i_Death_PLATEMAIL_GORGET
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Death Gorget.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Death Shards.
+return 1
+endif
+on=0 Death Arms      (15 shards)
+IF (<SRC.RESTEST 15 i_Death_shard>)
+SRC.CONSUME=15 i_Death_shard
+SRC.NEWITEM=i_Death_PLATEMAIL_ARMS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Death Arms.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Death Shards.
+return 1
+endif
+on=0 Death Leggings   (20 shards)
+IF (<SRC.RESTEST 20 i_Death_shard>)
+SRC.CONSUME=20 i_Death_shard
+SRC.NEWITEM=i_Death_PLATEMAIL_leggings
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Death Leggings.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Death Shards.
+return 1
+endif
+on=0 Death Chestplate (25 shards)
+IF (<SRC.RESTEST 25 i_Death_shard>)
+SRC.CONSUME=25 i_Death_shard
+SRC.NEWITEM=i_Death_PLATEMAIL
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Death Platemail Chest.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Death Shards.
+return 1
+endif
+on=0 Death Helmet     (30 shards)
+IF (<SRC.RESTEST 30 i_Death_shard>)
+SRC.CONSUME=30 i_Death_shard
+SRC.NEWITEM=i_Death_CLOSED_HELM
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Death Helmet.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Death Shards.
+return 1
+endif
+
+[menu m_elem_plantarms]
+What type of armor do you want, master?
+
+on=0 Plant Gloves     (5 shards)
+IF (<SRC.RESTEST 5 i_Plant_shard>)
+SRC.CONSUME=5 i_Plant_shard
+SRC.NEWITEM=i_Plant_PLATEMAIL_GAUNTLETS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Plant Gloves.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Plant Shards.
+return 1
+endif
+on=0 Plant Gorget     (10 shards)
+IF (<SRC.RESTEST 10 i_Plant_shard>)
+SRC.CONSUME=10 i_Plant_shard
+SRC.NEWITEM=i_Plant_PLATEMAIL_GORGET
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Plant Gorget.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Plant Shards.
+return 1
+endif
+on=0 Plant Arms      (15 shards)
+IF (<SRC.RESTEST 15 i_Plant_shard>)
+SRC.CONSUME=15 i_Plant_shard
+SRC.NEWITEM=i_Plant_PLATEMAIL_ARMS
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Plant Arms.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Plant Shards.
+return 1
+endif
+on=0 Plant Leggings   (20 shards)
+IF (<SRC.RESTEST 20 i_Plant_shard>)
+SRC.CONSUME=20 i_Plant_shard
+SRC.NEWITEM=i_Plant_PLATEMAIL_leggings
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted Plant Leggings.  Use them wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Plant Shards.
+return 1
+endif
+on=0 Plant Chestplate (25 shards)
+IF (<SRC.RESTEST 25 i_Plant_shard>)
+SRC.CONSUME=25 i_Plant_shard
+SRC.NEWITEM=i_Plant_PLATEMAIL
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Plant Platemail Chest.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Plant Shards.
+return 1
+endif
+on=0 Plant Helmet     (30 shards)
+IF (<SRC.RESTEST 30 i_Plant_shard>)
+SRC.CONSUME=30 i_Plant_shard
+SRC.NEWITEM=i_Plant_CLOSED_HELM
+SRC.ACT.BOUNCE
+SRC.MESSAGE You are granted a Plant Helmet.  Use it wisely.
+return 1
+ELSE
+SRC.SYSMESSAGE You need more Plant Shards.
+return 1
+endif

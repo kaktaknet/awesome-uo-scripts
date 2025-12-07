@@ -1,0 +1,1753 @@
+[DIALOG house_menu] 
+0,0 
+resizepic 0 0 2600 500 400 
+gumppic 175 20 100 
+text 190 60 955 0 
+text 20 40 955 1 
+text 20 60 955 2 
+text 20 80 955 3 
+text 20 100 955 4 
+text 170 120 955 5 
+text 260 120 955 6 
+text 50 160 955 8 
+button 30 165 2104 2103 1 0 2 
+text 50 180 955 9 
+button 30 185 2104 2103 1 0 3 
+text 50 200 955 10 
+button 30 205 2104 2103 1 0 4 
+text 50 220 955 11 
+button 30 225 2104 2103 1 0 5 
+text 50 240 955 12 
+button 30 245 2104 2103 1 0 6 
+text 50 260 955 13 
+button 30 265 2104 2103 1 0 7 
+text 250 260 955 14 
+button 230 265 2104 2103 1 0 8 
+text 50 300 955 15 
+button 30 305 2104 2103 1 0 9 
+text 50 320 955 16 
+button 30 325 2104 2103 1 0 10 
+text 290 120 955 17 
+text 50 340 955 18 
+button 30 345 2104 2103 1 0 11 
+text 100 360 955 7 
+button 250 360 210 211 1 0 1 
+text 50 280 955 19
+button 30 285 2104 2103 1 0 12 
+
+[DIALOG house_menu TEXT] 
+<NAME> 
+Besitzer: 
+<TAG.OWNERNAME> 
+Mitbewohner: 
+<TAG.COOWNERNAME> 
+Einsturz in: 
+<EVAL (<TIMER>/(24*60*60))> 
+Haus restaurieren
+Fertige einen neuen Schluessel an 
+Setze neue Schloesser ein
+Aendere den Hausnamen 
+Entferne die Hauskristalle aus deiner Tasche 
+Transferiere das Haus 
+Setze den Tresor 
+Entferne den Tresor 
+Mitbewohner & Freunde Menue 
+Re-Deed (kosten 25k) 
+Tagen 
+Aendere das Hausschild 
+Oeffne dein Bankfach
+
+[DIALOG house_menu BUTTON] 
+ON=1 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.UID>==<SRC.TAG.COOWNER>) || (<SRC.NAME>==<SRC.TAG.FRIEND1NAME>) || (<SRC.NAME>==<SRC.TAG.FRIEND2NAME>) || (<SRC.NAME>==<SRC.TAG.FRIEND3NAME>) || (<SRC.NAME>==<SRC.TAG.FRIEND4NAME>) || (<SRC.NAME>==<SRC.TAG.FRIEND5NAME>) || (<SRC.ISGM>) 
+TIMER=<EVAL ((50*24*60*60)+60)> 
+DIALOG HOUSE_MENU 
+ELSE 
+SRC.MESSAGE Dies ist nicht dein Haus ! 
+ENDIF 
+
+ON=2 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.UID>==<SRC.TAG.COOWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_key_todoor 
+src.ACT.BOUNCE 
+SRC.ACT.ATTR=06 
+SRC.ACT.LINK=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+ELSE 
+SRC.MESSAGE Nur Besitzer & Mitbewohner koennen neue Schluessel erstellen . 
+ENDIF 
+
+ON=3 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_selectdoor 
+src.ACT.BOUNCE 
+SRC.ACT.ATTR=06 
+src.ACT.LINK=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+ELSE 
+SRC.MESSAGE Nur Besitzer & Mitbewohner koennen neue Schloesser erstellen . 
+ENDIF 
+
+ON=4 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+//SRC.NEWITEM=i_housename 
+//SRC.ACT.BOUNCE 
+//SRC.ACT.ATTR=010 
+//SRC.ACT.LINK=<SRC.TAG.MYHOUSE> 
+//SRC.TAG.HOUSENAME= 
+//SRC.ACT.TRIGGER=@DCLICK 
+DIALOG d_house_rename 
+ELSE 
+SRC.MESSAGE Nur Besitzer koennen den Hausnamen aendern . 
+ENDIF 
+
+ON=5 
+SRC.FINDLAYER(layer_pack).FINDID(i_housename).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_newowner).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_ejecthouse).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_place_securechest).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_remove_securechest).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_house_co_owner).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_removecoowner).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_friend1).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_removefriend1).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_friend2).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_removefriend2).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_friend3).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_removefriend3).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_friend4).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_removefriend4).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_friend5).REMOVE 
+SRC.FINDLAYER(layer_pack).FINDID(i_removefriend5).REMOVE 
+
+ON=6 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_newowner 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+ELSE 
+SRC.MESSAGE Nur Besitzer koennen Haeuser ueberschreiben !
+ENDIF 
+
+ON=7 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_place_securechest 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+ELSE 
+SRC.MESSAGE Nur Besitzer koennen einen Tresor erstellen . 
+ENDIF 
+
+ON=8 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_remove_securechest 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.TRIGGER=@DCLICK 
+ELSE 
+SRC.MESSAGE Nur Besitzer koennen einen Tresor entfernen . 
+ENDIF 
+
+ON=9 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+DIALOG HOUSE_MENU_2 
+ELSE 
+SRC.MESSAGE Nur Besitzer koennen Mitbewohner & Freunde bestimmen . 
+ENDIF 
+
+ON=10 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+VAR.TOTALGOLD=<SRC.findlayer(layer_bankbox).rescount i_gold>+<SRC.findlayer(layer_pack).rescount i_gold> 
+if (<var.totalgold><25000) 
+SRC.MESSAGE Du hast nicht genuegent Gold . 
+return 1 
+else 
+SRC.consumebank 25000 i_gold 
+SRC.NEWITEM=i_deed 
+SRC.ACT.MORE=<LINK.BASEID> 
+SRC.ACT.NAME=a deed to a <LINK.NAME> 
+SRC.ACT.BOUNCE 
+SRC.NEWITEM=i_redeed 
+SRC.ACT.LINK=<UID> 
+SRC.ACT.BOUNCE 
+SRC.ACT.TRIGGER=@DCLICK 
+ENDIF 
+ELSE 
+SRC.MESSAGE Nur Besitzer koennen mit ihrem Haus umziehen . 
+ENDIF 
+
+ON=11 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+DIALOG HOUSE_MENU_SIGN_1 
+ELSE 
+SRC.MESSAGE Nur Besitzer koennen das Hausschild aendern .
+ENDIF 
+
+ON=12 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+SRC.BANK 
+ELSE 
+SRC.MESSAGE Nur Besitzer koennen ihr Bankfach oeffnen .
+ENDIF 
+
+[DIALOG house_menu_2] 
+0,0 
+resizepic 0 0 2600 500 400 
+gumppic 175 20 100 
+text 190 60 955 0 
+text 20 40 955 1 
+text 20 60 955 2 
+text 20 80 955 3 
+text 20 100 955 4 
+text 170 120 955 5 
+text 260 120 955 6  
+text 50 160 955 8 
+button 30 165 2104 2103 1 0 2 
+text 300 160 955 9 
+button 460 165 2104 2103 1 0 3 
+text 50 180 955 10 
+button 30 185 2104 2103 1 0 4 
+text 300 180 955 15 
+button 460 185 2104 2103 1 0 5 
+text 50 200 955 11 
+button 30 205 2104 2103 1 0 6 
+text 300 200 955 16 
+button 460 205 2104 2103 1 0 7 
+text 50 220 955 12 
+button 30 225 2104 2103 1 0 8 
+text 300 220 955 17 
+button 460 223 2104 2103 1 0 9 
+text 50 240 955 13 
+button 30 245 2104 2103 1 0 10 
+text 300 240 955 18 
+button 460 245 2104 2103 1 0 11 
+text 50 260 955 14 
+button 30 265 2104 2103 1 0 12 
+text 300 260 955 19 
+button 460 265 2104 2103 1 0 13 
+text 185 280 955 20 
+button 165 285 2104 2103 1 0 14 
+text 210 300 955 21 
+button 190 305 2104 2103 1 0 15 
+text 100 360 955 7 
+button 250 360 210 211 1 0 1
+text 290 120 955 22
+
+[DIALOG house_menu_2 TEXT] 
+<NAME> 
+Besitzer: 
+<TAG.OWNERNAME> 
+Mitbewohner: 
+<TAG.COOWNERNAME> 
+Einsturz in: 
+<EVAL (<TIMER>/(24*60*60))> 
+Haus restaurieren
+Waehle Mitbewohner 
+Entferne Mitbewohner  
+Waehle Freund #1! 
+Waehle Freund #2! 
+Waehle Freund #3! 
+Waehle Freund #4! 
+Waehle Freund #5! 
+Entferne Freund #1! 
+Entferne Freund #2! 
+Entferne Freund #3! 
+Entferne Freund #4! 
+Entferne Freund #5! 
+Zeige die momentanen Freunde an 
+Hauptmenue 
+Tagen
+
+[DIALOG house_menu_2 BUTTON] 
+ON=1 
+TIMER=<EVAL ((50*24*60*60)+60)> 
+DIALOG HOUSE_MENU_2 
+
+ON=2 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_house_co_owner 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+ELSE 
+SRC.MESSAGE Nur der Besitzer kann einen Mitbewohner aufnehmen. 
+ENDIF 
+
+ON=3 
+SRC.NEWITEM=i_removecoowner 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=4 
+SRC.NEWITEM=i_friend1 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=5 
+SRC.NEWITEM=i_removefriend1 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=6 
+SRC.NEWITEM=i_friend2 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=7 
+SRC.NEWITEM=i_removefriend2 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=8 
+SRC.NEWITEM=i_friend3 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=9 
+SRC.NEWITEM=i_removefriend3 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=10 
+SRC.NEWITEM=i_friend4 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=11 
+SRC.NEWITEM=i_removefriend4 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=12 
+SRC.NEWITEM=i_friend5 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=13 
+SRC.NEWITEM=i_removefriend5 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.ATTR=010 
+SRC.ACT.LINK=<SRC.TAG.MYSIGN> 
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE> 
+SRC.ACT.TRIGGER=@DCLICK 
+
+ON=14 
+DIALOG HOUSE_MENU_3 
+
+ON=15 
+DIALOG HOUSE_MENU 
+
+[DIALOG house_menu_3] 
+0,0 
+resizepic 0 0 2600 500 400 
+gumppic 175 20 100 
+text 190 60 955 0 
+text 20 40 955 1 
+text 20 60 955 2 
+text 20 80 955 3 
+text 20 100 955 4 
+text 170 120 955 5 
+text 260 120 955 6 
+text 20 160 955 8 
+text 80 160 955 9 
+text 20 180 955 10 
+text 80 180 955 11 
+text 20 200 955 12 
+text 80 200 955 13 
+text 20 220 955 14 
+text 80 220 955 15 
+text 20 240 955 16 
+text 80 240 955 17 
+text 210 260 955 18 
+button 190 265 2104 2103 1 0 2 
+text 100 360 955 7 
+button 250 360 210 211 1 0 1 
+text 290 120 955 19
+
+[DIALOG house_menu_3 TEXT] 
+<NAME> 
+Besitzer: 
+<TAG.OWNERNAME> 
+Mitbewohner: 
+<TAG.COOWNERNAME> 
+Einsturz in: 
+<EVAL (<TIMER>/(24*60*60))> 
+Haus restaurieren
+Freund1: 
+<SRC.TAG.FRIEND1NAME> 
+Freund2: 
+<SRC.TAG.FRIEND2NAME> 
+Freund3: 
+<SRC.TAG.FRIEND3NAME> 
+Freund4: 
+<SRC.TAG.FRIEND4NAME> 
+Freund5: 
+<SRC.TAG.FRIEND5NAME> 
+Vorheriges Menue
+Tagen 
+
+[DIALOG house_menu_3 BUTTON] 
+ON=1 
+TIMER=<EVAL ((50*24*60*60)+60)> 
+DIALOG HOUSE_MENU_3 
+
+ON=2 
+DIALOG HOUSE_MENU_2 
+
+[DIALOG HOUSE_MENU_SIGN_1] 
+0,0 
+resizepic 0 0 2600 500 400 
+gumppic 175 20 100 
+text 190 60 955 0 
+text 20 40 955 1 
+text 20 60 955 2 
+text 20 80 955 3 
+text 20 100 955 4 
+text 170 120 955 5 
+text 260 120 955 6 
+button 40 155 2103 2104 1 0 2 
+tilepic 50 150 2979 
+button 40 180 2103 2104 1 0 3 
+tilepic 50 175 2981 
+button 40 205 2103 2104 1 0 4 
+tilepic 50 200 2983 
+button 40 230 2103 2104 1 0 5 
+tilepic 50 225 2985 
+button 40 255 2103 2104 1 0 6 
+tilepic 50 250 2987 
+button 40 280 2103 2104 1 0 7 
+tilepic 50 275 2989 
+button 40 305 2103 2104 1 0 8 
+tilepic 50 300 2991 
+button 115 155 2103 2104 1 0 9 
+tilepic 75 150 2980 
+button 115 180 2103 2104 1 0 10 
+tilepic 75 175 2982 
+button 115 205 2103 2104 1 0 11 
+tilepic 75 200 2984 
+button 115 230 2103 2104 1 0 12 
+tilepic 75 225 2986 
+button 115 255 2103 2104 1 0 13 
+tilepic 75 250 2988 
+button 115 280 2103 2104 1 0 14 
+tilepic 75 275 2990 
+button 115 305 2103 2104 1 0 15 
+tilepic 75 300 2992 
+button 210 155 2103 2104 1 0 16 
+tilepic 220 150 2993 
+button 210 180 2103 2104 1 0 17 
+tilepic 220 175 2995 
+button 210 205 2103 2104 1 0 18 
+tilepic 220 200 2997 
+button 210 230 2103 2104 1 0 19 
+tilepic 220 225 2999 
+button 210 255 2103 2104 1 0 20 
+tilepic 220 250 3001 
+button 210 280 2103 2104 1 0 21 
+tilepic 220 275 3003 
+button 210 305 2103 2104 1 0 22 
+tilepic 220 300 3005 
+button 285 155 2103 2104 1 0 23 
+tilepic 245 150 2994 
+button 285 180 2103 2104 1 0 24 
+tilepic 245 175 2996 
+button 285 205 2103 2104 1 0 25 
+tilepic 245 200 2998 
+button 285 230 2103 2104 1 0 26 
+tilepic 245 225 3000 
+button 285 255 2103 2104 1 0 27 
+tilepic 245 250 3002 
+button 285 280 2103 2104 1 0 28 
+tilepic 245 275 3004 
+button 285 305 2103 2104 1 0 29 
+tilepic 245 300 3006 
+button 380 155 2103 2104 1 0 30 
+tilepic 390 150 3007 
+button 380 180 2103 2104 1 0 31 
+tilepic 390 175 3009 
+button 380 205 2103 2104 1 0 32 
+tilepic 390 200 3011 
+button 380 230 2103 2104 1 0 33 
+tilepic 390 225 3013 
+button 380 255 2103 2104 1 0 34 
+tilepic 390 250 3015 
+button 380 280 2103 2104 1 0 35 
+tilepic 390 275 3017 
+button 380 305 2103 2104 1 0 36 
+tilepic 390 300 3019 
+button 455 155 2103 2104 1 0 37 
+tilepic 415 150 3008 
+button 455 180 2103 2104 1 0 38 
+tilepic 415 175 3010 
+button 455 205 2103 2104 1 0 39 
+tilepic 415 200 3012 
+button 455 230 2103 2104 1 0 40 
+tilepic 415 225 3014 
+button 455 255 2103 2104 1 0 41 
+tilepic 415 250 3016 
+button 455 280 2103 2104 1 0 42 
+tilepic 415 275 3018 
+button 455 305 2103 2104 1 0 43 
+tilepic 415 300 3020 
+button 175 340 2466 2467 1 0 44 
+button 260 340 2469 2470 1 0 45 
+text 100 360 955 7 
+button 250 360 210 211 1 0 1
+text 290 120 955 8
+
+[DIALOG HOUSE_MENU_SIGN_1 TEXT] 
+<NAME> 
+Besitzer: 
+<TAG.OWNERNAME> 
+Mitbewohner: 
+<TAG.COOWNERNAME> 
+Einsturz in: 
+<EVAL (<TIMER>/(24*60*60))> 
+Haus restaurieren
+Tagen
+
+[DIALOG HOUSE_MENU_SIGN_1 BUTTON] 
+ON=1 
+TIMER=<EVAL ((50*24*60*60)+60)> 
+DIALOG HOUSE_MENU_SIGN_1 
+
+ON=2 
+DISPID=0BA3 
+SRC.FIX 
+
+ON=3 
+DISPID=0BA5 
+SRC.FIX 
+
+ON=4 
+DISPID=0BA7 
+SRC.FIX 
+
+ON=5 
+DISPID=0BA9 
+SRC.FIX 
+
+ON=6 
+DISPID=0BAB 
+SRC.FIX 
+
+ON=7 
+DISPID=0BAD 
+SRC.FIX 
+
+ON=8 
+DISPID=0BAF 
+SRC.FIX 
+
+ON=9 
+DISPID=0BA4 
+SRC.FIX 
+
+ON=10 
+DISPID=0BA6 
+SRC.FIX 
+
+ON=11 
+DISPID=0BA8 
+SRC.FIX 
+
+ON=12 
+DISPID=0BAA 
+SRC.FIX 
+
+ON=13 
+DISPID=0BAC 
+SRC.FIX 
+
+ON=14 
+DISPID=0BAE 
+SRC.FIX 
+
+ON=15 
+DISPID=0BB0 
+SRC.FIX 
+
+ON=16 
+DISPID=0BB1 
+SRC.FIX 
+
+ON=17 
+DISPID=0BB3 
+SRC.FIX 
+
+ON=18 
+DISPID=0BB5 
+SRC.FIX 
+
+ON=19 
+DISPID=0BB7 
+SRC.FIX 
+
+ON=20 
+DISPID=0BB9 
+SRC.FIX 
+
+ON=21 
+DISPID=0BBB 
+SRC.FIX 
+
+ON=22 
+DISPID=0BBD 
+SRC.FIX 
+
+ON=23 
+DISPID=0BB2 
+SRC.FIX 
+
+ON=24 
+DISPID=0BB4 
+SRC.FIX 
+
+ON=25 
+DISPID=0BB6 
+SRC.FIX 
+
+ON=26 
+DISPID=0BB8 
+SRC.FIX 
+
+ON=27 
+DISPID=0BBA 
+SRC.FIX 
+
+ON=28 
+DISPID=0BBC 
+SRC.FIX 
+
+ON=29 
+DISPID=0BBE 
+SRC.FIX 
+
+ON=30 
+DISPID=0BBF 
+SRC.FIX 
+
+ON=31 
+DISPID=0BC1 
+SRC.FIX 
+
+ON=32 
+DISPID=0BC3 
+SRC.FIX 
+
+ON=33 
+DISPID=0BC5 
+SRC.FIX 
+
+ON=34 
+DISPID=0BC7 
+SRC.FIX 
+
+ON=35 
+DISPID=0BC9 
+SRC.FIX 
+
+ON=36 
+DISPID=0BCB 
+SRC.FIX 
+
+ON=37 
+DISPID=0BC0 
+SRC.FIX 
+
+ON=38 
+DISPID=0BC2 
+SRC.FIX 
+
+ON=39 
+DISPID=0BC4 
+SRC.FIX 
+
+ON=40 
+DISPID=0BC6 
+SRC.FIX 
+
+ON=41 
+DISPID=0BC8 
+SRC.FIX 
+
+ON=42 
+DISPID=0BCA 
+SRC.FIX 
+
+ON=43 
+DISPID=0BCC 
+SRC.FIX 
+
+ON=44 
+DIALOG HOUSE_MENU 
+
+ON=45 
+DIALOG HOUSE_MENU_SIGN_2 
+
+[DIALOG HOUSE_MENU_SIGN_2] 
+0,0 
+resizepic 0 0 2600 500 400 
+gumppic 175 20 100 
+text 190 60 955 0 
+text 20 40 955 1 
+text 20 60 955 2 
+text 20 80 955 3 
+text 20 100 955 4 
+text 170 120 955 5 
+text 260 120 955 6 
+button 40 155 2103 2104 1 0 2 
+tilepic 50 150 3021 
+button 40 180 2103 2104 1 0 3 
+tilepic 50 175 3023 
+button 40 205 2103 2104 1 0 4 
+tilepic 50 200 3025 
+button 40 230 2103 2104 1 0 5 
+tilepic 50 225 3027 
+button 40 255 2103 2104 1 0 6 
+tilepic 50 250 3029 
+button 40 280 2103 2104 1 0 7 
+tilepic 50 275 3031 
+button 40 305 2103 2104 1 0 8 
+tilepic 50 300 3033 
+button 115 155 2103 2104 1 0 9 
+tilepic 75 150 3022 
+button 115 180 2103 2104 1 0 10 
+tilepic 75 175 3024 
+button 115 205 2103 2104 1 0 11 
+tilepic 75 200 3026 
+button 115 230 2103 2104 1 0 12 
+tilepic 75 225 3028 
+button 115 255 2103 2104 1 0 13 
+tilepic 75 250 3030 
+button 115 280 2103 2104 1 0 14 
+tilepic 75 275 3032 
+button 115 305 2103 2104 1 0 15 
+tilepic 75 300 3034 
+button 210 155 2103 2104 1 0 16 
+tilepic 220 150 3035 
+button 210 180 2103 2104 1 0 17 
+tilepic 220 175 3037 
+button 210 205 2103 2104 1 0 18 
+tilepic 220 200 3039 
+button 210 230 2103 2104 1 0 19 
+tilepic 220 225 3041 
+button 210 255 2103 2104 1 0 20 
+tilepic 220 250 3043 
+button 210 280 2103 2104 1 0 21 
+tilepic 220 275 3045 
+button 210 305 2103 2104 1 0 22 
+tilepic 220 300 3047 
+button 285 155 2103 2104 1 0 23 
+tilepic 245 150 3036 
+button 285 180 2103 2104 1 0 24 
+tilepic 245 175 3038 
+button 285 205 2103 2104 1 0 25 
+tilepic 245 200 3040 
+button 285 230 2103 2104 1 0 26 
+tilepic 245 225 3042 
+button 285 255 2103 2104 1 0 27 
+tilepic 245 250 3044 
+button 285 280 2103 2104 1 0 28 
+tilepic 245 275 3046 
+button 285 305 2103 2104 1 0 29 
+tilepic 245 300 3048 
+button 380 155 2103 2104 1 0 30 
+tilepic 390 150 3049 
+button 380 180 2103 2104 1 0 31 
+tilepic 390 175 3051 
+button 380 205 2103 2104 1 0 32 
+tilepic 390 200 3053 
+button 380 230 2103 2104 1 0 33 
+tilepic 390 225 3055 
+button 380 255 2103 2104 1 0 34 
+tilepic 390 250 3057 
+button 380 280 2103 2104 1 0 35 
+tilepic 390 275 3059 
+button 380 305 2103 2104 1 0 36 
+tilepic 390 300 3061 
+button 455 155 2103 2104 1 0 37 
+tilepic 415 150 3050 
+button 455 180 2103 2104 1 0 38 
+tilepic 415 175 3052 
+button 455 205 2103 2104 1 0 39 
+tilepic 415 200 3054 
+button 455 230 2103 2104 1 0 40 
+tilepic 415 225 3056 
+button 455 255 2103 2104 1 0 41 
+tilepic 415 250 3058 
+button 455 280 2103 2104 1 0 42 
+tilepic 415 275 3060 
+button 455 305 2103 2104 1 0 43 
+tilepic 415 300 3062 
+button 175 340 2466 2467 1 0 44 
+button 260 340 2469 2470 1 0 45 
+text 100 360 955 7 
+button 250 360 210 211 1 0 1 
+text 290 120 955 8
+
+[DIALOG house_menu_sign_2 TEXT] 
+<NAME> 
+Besitzer: 
+<TAG.OWNERNAME> 
+Mitbewohner: 
+<TAG.COOWNERNAME> 
+Einsturz in: 
+<EVAL (<TIMER>/(24*60*60))> 
+Haus restaurieren
+Tagen
+
+[DIALOG house_menu_sign_2 BUTTON] 
+ON=1 
+TIMER=<EVAL ((50*24*60*60)+60)> 
+DIALOG HOUSE_MENU_SIGN_2 
+
+ON=2 
+DISPID=0BCD 
+SRC.FIX 
+
+ON=3 
+DISPID=0BCF 
+SRC.FIX 
+
+ON=4 
+DISPID=0BD1 
+SRC.FIX 
+
+ON=5 
+DISPID=0BD3 
+SRC.FIX 
+
+ON=6 
+DISPID=0BD5 
+SRC.FIX 
+
+ON=7 
+DISPID=0BD7 
+SRC.FIX 
+
+ON=8 
+DISPID=0BD9 
+SRC.FIX 
+
+ON=9 
+DISPID=0BCE 
+SRC.FIX 
+
+ON=10 
+DISPID=0BD0 
+SRC.FIX 
+
+ON=11 
+DISPID=0BD2 
+SRC.FIX 
+
+ON=12 
+DISPID=0BD4 
+SRC.FIX 
+
+ON=13 
+DISPID=0BD6 
+SRC.FIX 
+
+ON=14 
+DISPID=0BD8 
+SRC.FIX 
+
+ON=15 
+DISPID=0BDA 
+SRC.FIX 
+
+ON=16 
+DISPID=0BDB 
+SRC.FIX 
+
+ON=17 
+DISPID=0BDD 
+SRC.FIX 
+
+ON=18 
+DISPID=0BDF 
+SRC.FIX 
+
+ON=19 
+DISPID=0BE1 
+SRC.FIX 
+
+ON=20 
+DISPID=0BE3 
+SRC.FIX 
+
+ON=21 
+DISPID=0BE5 
+SRC.FIX 
+
+ON=22 
+DISPID=0BE7 
+SRC.FIX 
+
+ON=23 
+DISPID=0BDC 
+SRC.FIX 
+
+ON=24 
+DISPID=0BDE 
+SRC.FIX 
+
+ON=25 
+DISPID=0BE0 
+SRC.FIX 
+
+ON=26 
+DISPID=0BE2 
+SRC.FIX 
+
+ON=27 
+DISPID=0BE4 
+SRC.FIX 
+
+ON=28 
+DISPID=0BE6 
+SRC.FIX 
+
+ON=29 
+DISPID=0BE8 
+SRC.FIX 
+
+ON=30 
+DISPID=0BE9 
+SRC.FIX 
+
+ON=31 
+DISPID=0BEB 
+SRC.FIX 
+
+ON=32 
+DISPID=0BED 
+SRC.FIX 
+
+ON=33 
+DISPID=0BEF 
+SRC.FIX 
+
+ON=34 
+DISPID=0BF1 
+SRC.FIX 
+
+ON=35 
+DISPID=0BF3 
+SRC.FIX 
+
+ON=36 
+DISPID=0BF5 
+SRC.FIX 
+
+ON=37 
+DISPID=0BEA 
+SRC.FIX 
+
+ON=38 
+DISPID=0BEC 
+SRC.FIX 
+
+ON=39 
+DISPID=0BEE 
+SRC.FIX 
+
+ON=40 
+DISPID=0BF0 
+SRC.FIX 
+
+ON=41 
+DISPID=0BF2 
+SRC.FIX 
+
+ON=42 
+DISPID=0BF4 
+SRC.FIX 
+
+ON=43 
+DISPID=0BF6 
+SRC.FIX 
+
+ON=44 
+DIALOG HOUSE_MENU_SIGN_1 
+
+ON=45 
+DIALOG HOUSE_MENU_SIGN_3 
+
+[DIALOG HOUSE_MENU_SIGN_3] 
+0,0 
+resizepic 0 0 2600 500 400 
+gumppic 175 20 100 
+text 190 60 955 0 
+text 20 40 955 1 
+text 20 60 955 2 
+text 20 80 955 3 
+text 20 100 955 4 
+text 170 120 955 5 
+text 260 120 955 6 
+button 40 155 2103 2104 1 0 2 
+tilepic 50 150 3063 
+button 40 180 2103 2104 1 0 3 
+tilepic 50 175 3065 
+button 40 205 2103 2104 1 0 4 
+tilepic 50 200 3067 
+button 40 230 2103 2104 1 0 5 
+tilepic 50 225 3069 
+button 40 255 2103 2104 1 0 6 
+tilepic 50 250 3071 
+button 40 280 2103 2104 1 0 7 
+tilepic 50 275 3073 
+button 115 155 2103 2104 1 0 8 
+tilepic 75 150 3064 
+button 115 180 2103 2104 1 0 9 
+tilepic 75 175 3066 
+button 115 205 2103 2104 1 0 10 
+tilepic 75 200 3068 
+button 115 230 2103 2104 1 0 11 
+tilepic 75 225 3070 
+button 115 255 2103 2104 1 0 12 
+tilepic 75 250 3072 
+button 115 280 2103 2104 1 0 13 
+tilepic 75 275 3074 
+button 380 155 2103 2104 1 0 14 
+tilepic 390 150 3075 
+button 380 180 2103 2104 1 0 15 
+tilepic 390 175 3077 
+button 380 205 2103 2104 1 0 16 
+tilepic 390 200 3079 
+button 380 230 2103 2104 1 0 17 
+tilepic 390 225 3081 
+button 380 255 2103 2104 1 0 18 
+tilepic 390 250 3083 
+button 380 280 2103 2104 1 0 19 
+tilepic 390 275 3085 
+button 455 155 2103 2104 1 0 20 
+tilepic 415 150 3076 
+button 455 180 2103 2104 1 0 21 
+tilepic 415 175 3078 
+button 455 205 2103 2104 1 0 22 
+tilepic 415 200 3080 
+button 455 230 2103 2104 1 0 23 
+tilepic 415 225 3082 
+button 455 255 2103 2104 1 0 24 
+tilepic 415 250 3084 
+button 455 280 2103 2104 1 0 25 
+tilepic 415 275 3086 
+button 175 340 2466 2467 1 0 26 
+button 260 340 2469 2470 1 0 27 
+text 100 360 955 7 
+button 250 360 210 211 1 0 1 
+text 290 120 955 8
+
+[DIALOG house_menu_sign_3 TEXT] 
+<NAME> 
+Besitzer: 
+<TAG.OWNERNAME> 
+Mitbewohner: 
+<TAG.COOWNERNAME> 
+Einsturz in: 
+<EVAL (<TIMER>/(24*60*60))> 
+Haus restaurieren
+Tagen
+
+[DIALOG house_menu_sign_3 BUTTON] 
+ON=1 
+TIMER=<EVAL ((50*24*60*60)+60)> 
+DIALOG HOUSE_MENU_SIGN_3 
+
+ON=2 
+DISPID=0BF7 
+SRC.FIX 
+
+ON=3 
+DISPID=0BF9 
+SRC.FIX 
+
+ON=4 
+DISPID=0BFB 
+SRC.FIX 
+
+ON=5 
+DISPID=0BFD 
+SRC.FIX 
+
+ON=6 
+DISPID=0BFF 
+SRC.FIX 
+
+ON=7 
+DISPID=0C01 
+SRC.FIX 
+
+ON=8 
+DISPID=0BF8 
+SRC.FIX 
+
+ON=9 
+DISPID=0BFA 
+SRC.FIX 
+
+ON=10 
+DISPID=0BFC 
+SRC.FIX 
+
+ON=11 
+DISPID=0BFE 
+SRC.FIX 
+
+ON=12 
+DISPID=0C00 
+SRC.FIX 
+
+ON=13 
+DISPID=0C02 
+SRC.FIX 
+
+ON=14 
+DISPID=0C03 
+SRC.FIX 
+
+ON=15 
+DISPID=0C05 
+SRC.FIX 
+
+ON=16 
+DISPID=0C07 
+SRC.FIX 
+
+ON=17 
+DISPID=0C09 
+SRC.FIX 
+
+ON=18 
+DISPID=0C0B 
+SRC.FIX 
+
+ON=19 
+DISPID=0C0D 
+SRC.FIX 
+
+ON=20 
+DISPID=0C04 
+SRC.FIX 
+
+ON=21 
+DISPID=0C06 
+SRC.FIX 
+
+ON=22 
+DISPID=0C08 
+SRC.FIX 
+
+ON=23 
+DISPID=0C0A 
+SRC.FIX 
+
+ON=24 
+DISPID=0C0C 
+SRC.FIX 
+
+ON=25 
+DISPID=0C0E 
+SRC.FIX 
+
+ON=26 
+DIALOG HOUSE_MENU_SIGN_2 
+
+ON=27 
+DIALOG HOUSE_MENU_SIGN_3 
+
+[DIALOG d_house_rename] // Main 
+0,0 // Position 
+resizepic 190 175 2600 335 150 // Curved Grey background 
+resizepic 220 235 3000 270 22 // Curved White background 
+text 215 215 995 0 // Place House Text 
+text 255 275 0000 1 // Continue Text 
+button 240 280 2104 2103 1 0 1 // Opens Continue 
+text 435 275 0000 2 // Cancel Text 
+button 420 280 2104 2103 1 0 0 // Opens Cancel 
+textentry 225 237 253 25 0 0 3 // Text Input 
+
+[DIALOG d_house_rename TEXT] 
+Welchen Namen soll das Haus tragen ? 
+Weiter 
+Abbruch 
+<NAME> 
+
+[DIALOG d_house_rename BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE Der Hausname hat sich nicht geaendert . 
+ONBUTTON=1 
+NAME <ARGTXT[0]> 
+RETURN 1 
+
+[ITEMDEF i_key_todoor] 
+DEFNAME=i_locks 
+TYPE=t_key 
+ID=i_key_copper 
+
+ON=@DCLICK 
+TARGET Welche Tuer wollt ihr aufschliessen ? 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+IF (<MORE1>==0) 
+IF (<SRC.TARG.TYPE>==t_door_locked) && (<SRC.TARG.REGION.TYPE>==<LINK>) 
+MORE1=<SRC.TARG.MORE1> 
+RETURN 1 
+ELSEIF (<SRC.TARG.BASEID>==i_sign_brass) && (<SRC.TARG.REGION.TYPE>==<LINK>) 
+MORE1=<SRC.TARG.LINK.UID> 
+RETURN 1 
+ELSE 
+SRC.MESSAGE Das ist keine Tuer 
+RETURN 1 
+ENDIF 
+ENDIF 
+
+[ITEMDEF i_selectdoor] 
+DEFNAME=i_locks 
+TYPE=t_key 
+ID=i_key_copper 
+
+ON=@DCLICK 
+IF (<MORE1>==0) 
+TARGET Klicke auf eine Tuer um die Schloesser zu wechseln . 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_ITEM 
+IF (<MORE1>==0) 
+IF (<SRC.TARG.TYPE>==t_door_locked) && (<SRC.TARG.REGION.TYPE>==<LINK>) 
+SRC.TARG.MORE1=<UID> 
+MORE1=<UID> 
+MORE2=1 
+ELSEIF (<SRC.TARG.TYPE>==t_key) 
+MORE1=<SRC.TARG.MORE1> 
+MORE2=1 
+ELSE 
+SRC.MESSAGE Das ist keine Tuer 
+ENDIF 
+RETURN 1 
+ENDIF 
+
+[ITEMDEF i_housename] 
+DEFNAME=i_housename 
+ID=i_crystal_green 
+NAME=Hausnamenkristall 
+
+ON=@DCLICK 
+IF (<MORE2>==0) 
+TRYP 1 INPDLG=NAME 30 
+MORE2=1 
+ELSE 
+TARGET Klicke auf das Hausschild . 
+ENDIF 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.BASEID>=i_sign_brass) && (<SRC.TARG.REGION.TYPE>==<LINK>) 
+SRC.TARG.NAME=<NAME> 
+REMOVE 
+ELSE 
+SRC.MESSAGE Das ist nicht euer Hausschild . 
+ENDIF 
+RETURN 1 
+
+[ITEMDEF i_newowner] 
+DEFNAME=i_newowner 
+ID=i_crystal_green 
+NAME=Besitzerkristall 
+
+ON=@DCLICK 
+TARGET Waehle den neuen Besitzer . 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+LINK.MORE2=<SRC.TARG.UID> 
+LINK.TAG.OWNERNAME=<SRC.TARG.NAME> 
+LINK.MORE1=0 
+LINK.TAG.FRIEND1=0 
+LINK.TAG.FRIEND2=0 
+LINK.TAG.FRIEND3=0 
+LINK.TAG.FRIEND4=0 
+LINK.TAG.FRIEND5=0 
+LINK.TAG.FRIEND1NAME= 
+LINK.TAG.FRIEND2NAME= 
+LINK.TAG.FRIEND3NAME= 
+LINK.TAG.FRIEND4NAME= 
+LINK.TAG.FRIEND5NAME= 
+LINK=<MORE1> 
+LINK.TAG.OWNER=<SRC.TARG.UID> 
+LINK.TAG.COOWNER=0 
+LINK.TAG.FRIEND1=0 
+LINK.TAG.FRIEND2=0 
+LINK.TAG.FRIEND3=0 
+LINK.TAG.FRIEND4=0 
+LINK.TAG.FRIEND5=0 
+REMOVE 
+
+[ITEMDEF i_house_co_owner] 
+DEFNAME=i_house_co_owner 
+ID=i_crystal_green 
+NAME=Mitbewohnerkristall 
+
+ON=@DCLICK 
+IF !(<LINK.MORE1>==0) 
+SRC.MESSAGE Du hast schon einen Mitbewohner, du musst ihn erst rauswerfen... 
+REMOVE 
+RETURN 1 
+ELSE 
+TARGET Waehle den neuen Mitbewohner . 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_CHAR 
+LINK.MORE1=<SRC.TARG.UID> 
+LINK.TAG.COOWNERNAME=<SRC.TARG.NAME> 
+LINK=<MORE1> 
+LINK.TAG.COOWNER=<SRC.TARG.UID> 
+REMOVE 
+
+[ITEMDEF i_removecoowner] 
+DEFNAME=i_removecoowner 
+ID=i_crystal_green 
+NAME=Entferne Mitbewohner Kristall 
+
+ON=@DCLICK 
+LINK.MORE1=0 
+LINK.TAG.COOWNERNAME= 
+LINK=<MORE1> 
+LINK.TAG.COOWNER=0 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_ejecthouse] 
+DEFNAME=i_ejecthouse 
+ID=i_crystal_green 
+NAME=Auswurfkristall 
+
+ON=@DCLICK 
+TARGET Wen willst du rauswerfen ? 
+SRC.SAY Verschwinde hier ! 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.REGION.TYPE>==<MORE1>) && !(<SRC.TARG.UID>==<SRC.TAG.OWNER>) 
+SRC.TARG.P=<SRC.TAG.EJECT> 
+SRC.FIX 
+SRC.TARG.FIX 
+REMOVE 
+ELSE 
+SRC.MESSAGE Er ist nicht in deinem Haus ! 
+REMOVE 
+ENDIF 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.REGION.TYPE>==<MORE1>) 
+SRC.TARG.P=<SRC.TAG.EJECT> 
+SRC.FIX 
+SRC.TARG.FIX 
+REMOVE 
+ELSE 
+SRC.MESSAGE Das ist nicht in deinem Haus ! 
+REMOVE 
+ENDIF 
+RETURN 1 
+
+[ITEMDEF i_place_securechest] 
+DEFNAME=i_place_securechest 
+ID=i_crystal_green 
+NAME=Tresorkristall
+
+ON=@DCLICK 
+TARGET Wo wollt ihr den Tresor aufstellen ? (target yourself on that location) 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+IF (<LINK.TAG.SECURE>==1) 
+SRC.MESSAGE Ihr habt bereits einen Tresor ! 
+REMOVE 
+ELSEIF (<SRC.REGION.TYPE>==<SRC.TAG.MYHOUSE>) && (<link.tag.secure>!=5) 
+SRC.NEWITEM=i_SecureChest 
+SRC.ACT.P=<SRC.TARG.P> 
+SRC.ACT.MORE1=<MORE1> 
+SRC.ACT.LINK=<MORE1> 
+LINK.TAG.SECURE=<LINK.TAG.SECURE>+01 
+REMOVE 
+ELSEIF !(<SRC.REGION.TYPE>==<SRC.TAG.MYHOUSE>) 
+SRC.MESSAGE Du kannst den Tresor nur in dein Haus stellen ! 
+REMOVE 
+ENDIF 
+RETURN 1 
+
+[ITEMDEF i_SecureChest] 
+DEFNAME=i_Secure_Chest 
+ID=0a51 
+DUPELIST=0a4d 
+NAME=Tresor 
+
+ON=@CREATE 
+COLOR=05a5
+TYPE=t_container 
+
+ON=@DCLICK 
+IF (<SRC.UID>==<LINK.TAG.OWNER>) 
+RETURN 0 
+ELSEIF (<SRC.UID>==<LINK.TAG.COOWNER>) 
+RETURN 0 
+ELSEIF (<SRC.UID>==<LINK.TAG.FRIEND1>) 
+RETURN 0 
+ELSEIF (<SRC.UID>==<LINK.TAG.FRIEND2>) 
+RETURN 0 
+ELSEIF (<SRC.UID>==<LINK.TAG.FRIEND3>) 
+RETURN 0 
+ELSEIF (<SRC.UID>==<LINK.TAG.FRIEND4>) 
+RETURN 0 
+ELSEIF (<SRC.UID>==<LINK.TAG.FRIEND5>) 
+RETURN 0 
+ELSEIF (<SRC.ISGM>) 
+RETURN 0 
+ELSE 
+RETURN 1 
+ENDIF
+
+[ITEMDEF i_remove_securechest] 
+DEFNAME=i_remove_securechest 
+ID=i_crystal_green 
+NAME=Entferne Tresor Kristall 
+
+ON=@DLCICK 
+TARGET Klicke auf den Trsor den ihr loeschen wollt . 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG.MYHOUSE>) && (<SRC.TARG.BASEID>==i_SecureChest) 
+SRC.TARG.REMOVE 
+LINK.TAG.SECURE=<LINK.TAG.SECURE>+-01 
+REMOVE 
+ELSE 
+SRC.MESSAGE Das ist kein Tresor ! 
+REMOVE 
+ENDIF 
+
+[ITEMDEF i_friend1] 
+DEFNAME=i_friend1 
+ID=i_crystal_green 
+NAME=Friend1 Crystal 
+
+ON=@DCLICK 
+IF !(<LINK.TAG.FRIEND1>==0) 
+SRC.MESSAGE You already chose friend #1, try removing him before having a new one. 
+REMOVE 
+ELSE 
+TARGET Target the person who will be Friend #1! 
+ENDIF 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+LINK.TAG.FRIEND1=<SRC.TARG.UID> 
+LINK.TAG.FRIEND1NAME=<SRC.TARG.NAME> 
+LINK=<MORE1> 
+LINK.TAG.FRIEND1=<SRC.TARG.UID> 
+REMOVE 
+
+[ITEMDEF i_removefriend1] 
+DEFNAME=i_removefriend1 
+ID=i_crystal_green 
+NAME=Remove Friend1 Crystal 
+
+ON=@DCLICK 
+LINK.TAG.FRIEND1=0 
+LINK.TAG.FRIEND1NAME= 
+LINK=<MORE1> 
+LINK.TAG.FRIEND1=0 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_friend2] 
+DEFNAME=i_friend2 
+ID=i_crystal_green 
+NAME=Friend2 Crystal 
+
+ON=@DCLICK 
+IF !(<LINK.TAG.FRIEND2>==0) 
+SRC.MESSAGE You already chose friend #1, try removing him before having a new one. 
+REMOVE 
+ELSE 
+TARGET Target the person who will be Friend #2! 
+ENDIF 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+LINK.TAG.FRIEND2=<SRC.TARG.UID> 
+LINK.TAG.FRIEND2NAME=<SRC.TARG.NAME> 
+LINK=<MORE1> 
+LINK.TAG.FRIEND2=<SRC.TARG.UID> 
+REMOVE 
+
+[ITEMDEF i_removefriend2] 
+DEFNAME=i_removefriend2 
+ID=i_crystal_green 
+NAME=Remove Friend1 Crystal 
+
+ON=@DCLICK 
+SRC.TAG.REMOVEF2=<LINK.TAG.FRIEND2> 
+LINK.TAG.FRIEND2=0 
+LINK.TAG.FRIEND2NAME= 
+LINK=<MORE1> 
+LINK.TAG.FRIEND2=0 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_friend3] 
+DEFNAME=i_friend3 
+ID=i_crystal_green 
+NAME=Friend3 Crystal 
+
+ON=@DCLICK 
+IF !(<LINK.TAG.FRIEND3>==0) 
+SRC.MESSAGE You already chose friend #1, try removing him before having a new one. 
+REMOVE 
+ELSE 
+TARGET Target the person who will be Friend #3! 
+ENDIF 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+LINK.TAG.FRIEND3=<SRC.TARG.UID> 
+LINK.TAG.FRIEND3NAME=<SRC.TARG.NAME> 
+LINK=<MORE1> 
+LINK.TAG.FRIEND3=<SRC.TARG.UID> 
+REMOVE 
+
+[ITEMDEF i_removefriend3] 
+DEFNAME=i_removefriend3 
+ID=i_crystal_green 
+NAME=Remove Friend3 Crystal 
+
+ON=@DCLICK 
+SRC.TAG.REMOVEF3=<LINK.TAG.FRIEND3> 
+LINK.TAG.FRIEND3=0 
+LINK.TAG.FRIEND3NAME= 
+LINK=<MORE1> 
+LINK.TAG.FRIEND3=0 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_friend4] 
+DEFNAME=i_friend4 
+ID=i_crystal_green 
+NAME=Friend4 Crystal 
+
+ON=@DCLICK 
+IF !(<LINK.TAG.FRIEND4>==0) 
+SRC.MESSAGE You already chose friend #1, try removing him before having a new one. 
+REMOVE 
+ELSE 
+TARGET Target the person who will be Friend #4! 
+ENDIF 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+LINK.TAG.FRIEND4=<SRC.TARG.UID> 
+LINK.TAG.FRIEND4NAME=<SRC.TARG.NAME> 
+LINK=<MORE1> 
+LINK.TAG.FRIEND4=<SRC.TARG.UID> 
+REMOVE 
+
+[ITEMDEF i_removefriend4] 
+DEFNAME=i_removefriend4 
+ID=i_crystal_green 
+NAME=Remove Friend4 Crystal 
+
+ON=@DCLICK 
+SRC.TAG.REMOVEF4=<LINK.TAG.FRIEND4> 
+LINK.TAG.FRIEND4=0 
+LINK.TAG.FRIEND4NAME= 
+LINK=<MORE1> 
+LINK.TAG.FRIEND4=0 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_friend5] 
+DEFNAME=i_friend5 
+ID=i_crystal_green 
+NAME=Friend5 Crystal 
+
+ON=@DCLICK 
+IF !(<LINK.TAG.FRIEND5>==0) 
+SRC.MESSAGE You already chose friend #1, try removing him before having a new one. 
+ELSE 
+TARGET Target the person who will be Friend #5! 
+ENDIF 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+LINK.TAG.FRIEND5=<SRC.TARG.UID> 
+LINK.TAG.FRIEND5NAME=<SRC.TARG.NAME> 
+LINK=<MORE1> 
+LINK.TAG.FRIEND5=<SRC.TARG.UID> 
+REMOVE 
+
+[ITEMDEF i_removefriend5] 
+DEFNAME=i_removefriend5 
+ID=i_crystal_green 
+NAME=Remove Friend5 Crystal 
+
+ON=@DCLICK 
+SRC.TAG.REMOVEF5=<LINK.TAG.FRIEND5> 
+LINK.TAG.FRIEND5=0 
+LINK.TAG.FRIEND5NAME= 
+LINK=<MORE1> 
+LINK.TAG.FRIEND5=0 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_redeed] 
+DEFNAME=i_redeed 
+ID=i_crystal_green 
+NAME=Re-Deed Crystal 
+
+ON=@DCLICK 
+LINK.TIMER=1 
+REMOVE 
+RETURN 1 
+
+[ITEMDEF i_changesign] 
+ID=i_crystal_green 
+DEFNAME=i_changesign 
+
+ON=@CREATE 
+ATTR=04 
+
+ON=@DCLICK 
+TARGET Target the sign to change. 
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.BASEID>==i_sign_brass) && (<SRC.TARG.UID>==<SRC.TAG.MYSIGN>) 
+SRC.TARG.DISPID=<ARGS> 
+ELSE 
+SRC.MESSAGE You must target your house sign! 
+ENDIF 
+REMOVE 
+
+[ITEMDEF 0bd1] 
+//brass sign 
+DEFNAME=i_sign_brass 
+TYPE=t_script 
+CATEGORY=Decoration - Signs 
+SUBSECTION=Blank 
+DESCRIPTION=Brass Blank 
+DUPELIST=0bd2 
+
+ON=@CREATE 
+TAG.FRIEND1=0 
+TAG.FRIEND2=0 
+TAG.FRIEND3=0 
+TAG.FRIEND4=0 
+TAG.FRIEND5=0 
+TAG.SECURE=0 
+
+ON=@DCLICK 
+IF !(<LINK>==04FFFFFFF) 
+IF (<MORE2>==0) 
+MORE2=<SRC.UID> 
+TIMER=50*24*60*60 
+SRC.MESSAGE This is now your house! 
+SRC.TAG.MYHOUSE=<LINK> 
+SRC.TAG.MYSIGN=<UID> 
+SRC.TAG.OWNER=<MORE2> 
+SRC.TAG.COOWNER=<MORE1> 
+SRC.TAG.EJECT=<P> 
+SRC.TAG.NAME=<NAME> 
+TAG.OWNERNAME=<SRC.NAME> 
+SRC.TAG.OWNERNAME=<SRC.NAME> 
+SRC.TAG.HOUSETYPE=<LINK.NAME> 
+LINK.TAG.OWNER=<SRC.UID> 
+DIALOG HOUSE_MENU 
+RETURN 1 
+ELSE 
+SRC.TAG.MYHOUSE=<LINK> 
+SRC.TAG.MYSIGN=<UID> 
+SRC.TAG.OWNER=<MORE2> 
+SRC.TAG.OWNERNAME=<TAG.OWNERNAME> 
+SRC.TAG.COOWNER=<MORE1> 
+SRC.TAG.COOWNERNAME=<TAG.COOWNERNAME> 
+SRC.TAG.FRIEND1=<TAG.FRIEND1> 
+SRC.TAG.FRIEND1NAME=<TAG.FRIEND1NAME> 
+SRC.TAG.FRIEND2=<TAG.FRIEND2> 
+SRC.TAG.FRIEND2NAME=<TAG.FRIEND2NAME> 
+SRC.TAG.FRIEND3=<TAG.FRIEND3> 
+SRC.TAG.FRIEND3NAME=<TAG.FRIEND3NAME> 
+SRC.TAG.FRIEND4=<TAG.FRIEND4> 
+SRC.TAG.FRIEND4NAME=<TAG.FRIEND4NAME> 
+SRC.TAG.FRIEND5=<TAG.FRIEND5> 
+SRC.TAG.FRIEND5NAME=<TAG.FRIEND5NAME> 
+SRC.TAG.EJECT=<P> 
+SRC.TAG.NAME=<NAME> 
+SRC.TAG.HOUSETYPE=<LINK.NAME> 
+DIALOG HOUSE_MENU 
+RETURN 1 
+ELSE 
+
+RETURN 1 
+ENDIF 
+ENDIF 
+
+ON=@TIMER 
+LINK.REMOVE 
+
+[FUNCTION consumebank] 
+act=<SRC.FINDLAYER(layer_bankbox).uid> 
+act.layer=layer_pack 
+act.type=t_container 
+act.equip 
+
+src.consume <args> 
+
+act.layer=layer_bankbox 
+act.type=t_eq_bank_box 
+act.equip
+
+[EOF]

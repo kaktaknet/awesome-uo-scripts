@@ -1,0 +1,377 @@
+////////////////////////////////////////////////////////////
+///Scripted By:
+///Lord Techno
+///Script Version 1.55b
+///Sphere Server Ver 55i
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+///Mailboxes
+////////////////////////////////////////////////////////////
+///***********
+///***ITEMS***
+///***********
+////////////////////////////////////////////////////////////
+[PLEVEL 1]
+mailsent
+
+[ITEMDEF i_mailbox_deed_N]
+NAME=Mailbox Deed N/S
+ID=i_deed
+VALUE=300
+WEIGHT=40
+CATEGORY=AAA
+SUBSECTION=Mailbox
+DESCRIPTION=Mailbox Deed
+
+
+on=@create 
+ATTR=00004
+ON=@DCLICK
+REMOVE
+SRC.NEWITEM i_mailbox_brass
+src.act.NAME=<src.name>'s Mailbox
+src.act.DISPID=0e80
+src.act.more2=<src.uid>
+src.act.mailbox
+src.act.p=<src.p>
+src.act.move=0 0 5
+SRC.NEWITEM 0865
+src.act.p=<src.p>
+src.act.move=0 0 0
+SRC.ACT.ATTR=08014
+
+[ITEMDEF i_mailbox_deed_E]
+NAME=Mailbox Deed E/W
+ID=i_deed
+VALUE=300
+WEIGHT=40
+CATEGORY=AAA
+SUBSECTION=Mailbox
+DESCRIPTION=Mailbox Deed
+
+
+on=@create 
+ATTR=00004
+ON=@DCLICK
+REMOVE
+SRC.NEWITEM i_mailbox_brass
+src.act.NAME=<src.name>'s Mailbox
+//src.act.bounce
+src.act.more2=<src.uid>
+src.act.mailbox
+src.act.p=<src.p>
+src.act.move=0 0 5
+SRC.NEWITEM 0865
+src.act.p=<src.p>
+src.act.move=0 0 0
+SRC.ACT.ATTR=08014
+
+[ITEMDEF i_mailbox_brass]
+ID=i_box_brass
+CATEGORY=AAA
+SUBSECTION=Mailbox
+DESCRIPTION=Mailbox
+
+on=@create 
+ATTR=08014
+TYPE=2	
+
+
+
+on=@dclick 
+if <more2>==<src.UID>
+type=1
+dialog d_mbox_1 
+else
+type=2
+src.sysmessage This is not your mailbox. Begone with thyself.
+
+on=@TARGON_ITEM
+if (<src.targ.cont.cont>==<src.uid>) 
+if (<src.targ.BASEID>==i_mail_scroll) 
+src.targ.AUTHOR=<src.name> 
+var.x=<src.act.tag.select> 
+src.act=<src.targ> 
+src.act.cont=<var.x> 
+src.update 
+return 1 
+else 
+src.message that is not a message!! 
+return 1 
+endif 
+else 
+src.message the message must be in your possession 
+return 1 
+endif 
+
+ON=@TARGON_CHAR
+IF (<src.tag.member1>==<SRC.TARG.UID>) || (<src.tag.member2>==<SRC.TARG.UID>) || (<src.tag.member3>==<SRC.TARG.UID>) || (<src.tag.member4>==<SRC.TARG.UID>) || (<src.tag.member5>==<SRC.TARG.UID>) || (<src.tag.member6>==<SRC.TARG.UID>) || (<src.tag.member7>==<SRC.TARG.UID>) || (<src.tag.member8>==<SRC.TARG.UID>) || (<src.tag.member9>==<SRC.TARG.UID>) || (<src.tag.member10>==<SRC.TARG.UID>) || (<src.tag.member11>==<SRC.TARG.UID>) || (<src.tag.member12>==<SRC.TARG.UID>) || (<src.tag.member13>==<SRC.TARG.UID>) || (<src.tag.member14>==<SRC.TARG.UID>) || (<src.tag.member15>==<SRC.TARG.UID>) || (<src.tag.member16>==<SRC.TARG.UID>) || (<src.tag.member17>==<SRC.TARG.UID>) || (<src.tag.member18>==<SRC.TARG.UID>) || (<src.tag.member19>==<SRC.TARG.UID>) || (<src.tag.member20>==<SRC.TARG.UID>) || (<src.tag.member21>==<SRC.TARG.UID>) || (<src.tag.member22>==<SRC.TARG.UID>) || (<src.tag.member23>==<SRC.TARG.UID>) || (<src.tag.member24>==<SRC.TARG.UID>)
+SRC.SYSMESSAGE <SRC.TARG.NAME> is already in your addressbook!
+RETURN 1
+ELSEIF (<src.tag.member1>=0)
+src.tag.member1=<SRC.TARG.UID>
+src.tag.member1n=<SRC.TARG.NAME>
+src.tag.member1b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member2>=0)
+src.tag.member2=<SRC.TARG.UID>
+src.tag.member2n=<SRC.TARG.NAME>
+src.tag.member2b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member3>=0)
+src.tag.member3=<SRC.TARG.UID>
+src.tag.member3n=<SRC.TARG.NAME>
+src.tag.member3b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member4>=0)
+src.tag.member4=<SRC.TARG.UID>
+src.tag.member4n=<SRC.TARG.NAME>
+src.tag.member4b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member5>=0)
+src.tag.member5=<SRC.TARG.UID>
+src.tag.member5n=<SRC.TARG.NAME>
+src.tag.member5b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member6>=0)
+src.tag.member6=<SRC.TARG.UID>
+src.tag.member6n=<SRC.TARG.NAME>
+src.tag.member6b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member7>=0)
+src.tag.member7=<SRC.TARG.UID>
+src.tag.member7n=<SRC.TARG.NAME>
+src.tag.member7b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member8>=0)
+src.tag.member8=<SRC.TARG.UID>
+src.tag.member8n=<SRC.TARG.NAME>
+src.tag.member8b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member9>=0)
+src.tag.member9=<SRC.TARG.UID>
+src.tag.member9n=<SRC.TARG.NAME>
+src.tag.member9b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member10>=0)
+src.tag.member10=<SRC.TARG.UID>
+src.tag.member10n=<SRC.TARG.NAME>
+src.tag.member10b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member11>=0)
+src.tag.member11=<SRC.TARG.UID>
+src.tag.member11n=<SRC.TARG.NAME>
+src.tag.member11b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member12>=0)
+src.tag.member12=<SRC.TARG.UID>
+src.tag.member12n=<SRC.TARG.NAME>
+src.tag.member12b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member13>=0)
+src.tag.member13=<SRC.TARG.UID>
+src.tag.member13n=<SRC.TARG.NAME>
+src.tag.member13b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member14>=0)
+src.tag.member14=<SRC.TARG.UID>
+src.tag.member14n=<SRC.TARG.NAME>
+src.tag.member14b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member15>=0)
+src.tag.member15=<SRC.TARG.UID>
+src.tag.member15n=<SRC.TARG.NAME>
+src.tag.member15b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member16>=0)
+src.tag.member16=<SRC.TARG.UID>
+src.tag.member16n=<SRC.TARG.NAME>
+src.tag.member16b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member17>=0)
+src.tag.member17=<SRC.TARG.UID>
+src.tag.member17n=<SRC.TARG.NAME>
+src.tag.member17b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member18>=0)
+src.tag.member18=<SRC.TARG.UID>
+src.tag.member18n=<SRC.TARG.NAME>
+src.tag.member18b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member19>=0)
+src.tag.member19=<SRC.TARG.UID>
+src.tag.member19n=<SRC.TARG.NAME>
+src.tag.member19b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member20>=0)
+src.tag.member20=<SRC.TARG.UID>
+src.tag.member20n=<SRC.TARG.NAME>
+src.tag.member20b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member21>=0)
+src.tag.member21=<SRC.TARG.UID>
+src.tag.member21n=<SRC.TARG.NAME>
+src.tag.member21b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member22>=0)
+src.tag.member22=<SRC.TARG.UID>
+src.tag.member22n=<SRC.TARG.NAME>
+src.tag.member22b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member23>=0)
+src.tag.member23=<SRC.TARG.UID>
+src.tag.member23n=<SRC.TARG.NAME>
+src.tag.member23b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSEIF (<src.tag.member24>=0)
+src.tag.member24=<SRC.TARG.UID>
+src.tag.member24n=<SRC.TARG.NAME>
+src.tag.member24b=<SRC.TARG.TAG.mbox>
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been added to your addressbook!
+SRC.TARG.SYSMESSAGE You have been added on <src.name>'s addressbook!
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You cannot add anymore names to your address book.
+RETURN 1
+ENDIF
+
+
+[ITEMDEF i_mail_scroll]
+NAME=Mail Scroll 
+ID=i_BOOK_LG_PUB
+WEIGHT=0
+
+ON=@CREATE
+DISPID=014ee
+TYPE=19
+	
+
+CATEGORY=AAA
+SUBSECTION=Mailbox
+DESCRIPTION=Mailbox Scroll
+
+[function mailbox] //set tags
+src.tag.mbox=<serial>
+src.tag.member1=0
+src.tag.member2=0
+src.tag.member3=0
+src.tag.member4=0
+src.tag.member5=0
+src.tag.member6=0
+src.tag.member7=0
+src.tag.member8=0
+src.tag.member9=0
+src.tag.member10=0
+src.tag.member11=0
+src.tag.member12=0
+src.tag.member13=0
+src.tag.member14=0
+src.tag.member15=0
+src.tag.member16=0
+src.tag.member17=0
+src.tag.member18=0
+src.tag.member19=0
+src.tag.member20=0
+src.tag.member21=0
+src.tag.member22=0
+src.tag.member23=0
+src.tag.member24=0
+src.tag.member1n=Empty
+src.tag.member2n=Empty
+src.tag.member3n=Empty
+src.tag.member4n=Empty
+src.tag.member5n=Empty
+src.tag.member6n=Empty
+src.tag.member7n=Empty
+src.tag.member8n=Empty
+src.tag.member9n=Empty
+src.tag.member10n=Empty
+src.tag.member11n=Empty
+src.tag.member12n=Empty
+src.tag.member13n=Empty
+src.tag.member14n=Empty
+src.tag.member15n=Empty
+src.tag.member16n=Empty
+src.tag.member17n=Empty
+src.tag.member18n=Empty
+src.tag.member19n=Empty
+src.tag.member20n=Empty
+src.tag.member21n=Empty
+src.tag.member22n=Empty
+src.tag.member23n=Empty
+src.tag.member24n=Empty
+src.tag.member1b=
+src.tag.member2b=
+src.tag.member3b=
+src.tag.member4b=
+src.tag.member5b=
+src.tag.member6b=
+src.tag.member7b=
+src.tag.member8b=
+src.tag.member9b=
+src.tag.member10b=
+src.tag.member11b=
+src.tag.member12b=
+src.tag.member13b=
+src.tag.member14b=
+src.tag.member15b=
+src.tag.member16b=
+src.tag.member17b=
+src.tag.member18b=
+src.tag.member19b=
+src.tag.member20b=
+src.tag.member21b=
+src.tag.member22b=
+src.tag.member23b=
+src.tag.member24b=
+
+[function mailsent]
+Dialog d_mail_mes
+[EOF]

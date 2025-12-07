@@ -1,0 +1,145 @@
+//Scripted By Admin Remedy
+//OSI Repair FIX
+//Install Notes:
+//Open sphere_skillmenus.scp
+//Replace repair option with this one:
+//
+//	ON=i_ANVIL Repair	
+//	TEST=BLACKSMITHING 1.0
+//	REPAIRFIX
+//
+//
+//TODO: Avoid Repairing Bone Armor 
+
+[Function REPAIRFIX]
+SRC.NEWITEM i_f_repair
+SRC.ACT.EQUIP
+
+[itemdef i_f_repair]
+name=repair fix
+ID=i_worldgem_bit 
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0
+LAYER=layer_special 
+
+on=@create 
+COLOR=021 
+ATTR=attr_invis|attr_decay 
+
+ON=@EQUIP
+TARGET What item do you want to repair?
+TIMER 60
+RETURN 1
+
+on=@timer
+IF (0<VAR.REPAIRING> == 1)
+	CONT.SYSMESSAGE You repair the item.
+	REMOVE
+ELSEIF (0<VAR.REPAIRING> == 2)
+	CONT.SYSMESSAGE You fail to repair the item.
+	CONT.SFX 43
+	REMOVE
+ELSEIF (0<VAR.REPAIRING> == 3)
+	CONT.SFX 43
+	CONT.SYSMESSAGE You destroyed the item.
+	REMOVE
+ELSE
+	REMOVE
+	VAR.REPAIRING //Time out
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+//make sure in pack
+IF !(<CONT.RESTEST 3 i_ingot_iron>)
+	SRC.SYSMESSAGE You dont have enough ingots
+	RETURN 1
+ENDIF
+
+IF (<CONT.TARG.TOPOBJ.DISTANCE>>=2) || (<SRC.TARG.CanSeeLos>!=1)
+	CONT.SYSMESSAGE That is too far away.
+	RETURN 1
+ENDIF
+
+//make sure item is armor/swords etc
+IF !(<CONT.TARG.TYPE>==t_weapon_mace_smith) && !(<CONT.TARG.TYPE>==t_weapon_sword) && !(<CONT.TARG.TYPE>==t_weapon_fence) && !(<CONT.TARG.TYPE>==t_armor) && !(<CONT.TARG.TYPE>==t_weapon_axe) && !(<CONT.TARG.TYPE> == t_weapon_mace_pick) && !(<CONT.TARG.TYPE> == t_weapon_mace_sharp) 
+	CONT.SYSMESSAGE The item is not repairable
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (0<CONT.TARG.MORE1h>)
+	IF (<CONT.TARG.MORE1h> == <CONT.TARG.HITPOINTS>)
+		SRC.SYSMESSAGE The item is already in full repair.	
+		REMOVE
+		RETURN 1
+	ENDIF
+ENDIF
+
+// Get Percentage Factors
+IF (<CONT.BLACKSMITHING> < 51.5)
+	VAR.Rpercent <eval (rand(10)) + 15>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 80 - 90%
+	var.RWeaken 4
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 51.5)
+	VAR.Rpercent <eval (rand(10)) + 10>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 80 - 90%
+	var.RWeaken 3
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 61.5)
+	VAR.Rpercent <eval (rand(3)) + 7>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 90 - 93% 
+	var.RWeaken 3
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 71.5)
+	VAR.Rpercent <eval (rand(3)) + 4>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 93 - 96% 
+	var.RWeaken 2
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 81.5)
+	VAR.Rpercent <eval (rand(2)) + 2>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 96 - 98% 
+	var.RWeaken 1
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 91.5)
+	VAR.Rpercent <eval (rand(1)) + 1>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 98 - 99% 
+	var.RWeaken 1
+ENDIF
+
+IF (<CONT.BLACKSMITHING> == 100.0)
+	VAR.RSuccess 99
+	var.RWeaken 1
+ENDIF
+
+
+IF ((rand(100)) < <VAR.RSuccess>) //Success
+	CONT.TARG.HITPOINTS <eval <CONT.TARG.MORE1h> - 1> //fill up hitpoints 
+	VAR.REPAIRING 1
+ELSE //Failed - do percent chance, later, on breaking item completely?
+
+	IF ((<eval <CONT.TARG.HITPOINTS> - <VAR.RWEAKEN>>) < 1)
+		CONT.TARG.REMOVE
+		VAR.REPAIRING 3
+		CONT.CONSUME 3 i_ingot_iron
+	ELSE
+		VAR.BakMore1h <CONT.TARG.MORE1h> //back up max hp
+		CONT.TARG.HITPOINTS <eval <CONT.TARG.HITPOINTS>> - <VAR.RWEAKEN>>//Weaken Hitpoints
+		CONT.TARG.MORE1h <eval <VAR.BakMore1h> - <VAR.RWEAKEN>>  //restore more1h and Weaken Max Hitpoints
+		VAR.REPAIRING 2
+		CONT.CONSUME 1 i_ingot_iron
+	ENDIF
+ENDIF
+
+CONT.ANIM 11
+CONT.SFX 42
+TIMER = 2
+RETURN 1
+
+[EOF]

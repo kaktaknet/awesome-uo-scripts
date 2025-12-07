@@ -1,0 +1,589 @@
+////////////////////////////////////////////////////////////////////////////////////////////
+//			   SANCTUS AEVUM PROJECT : HEALING SYSTEM
+//				      Scripted by Marox
+//
+//
+//This healing system is a bit different from other healing systems out there.
+//It heals normally, cures poison for humanoid-like creatures, it uses anatomy and healing (Anatomy is required
+//for curing poison, healing broken limbs and a little for amount healed. Healing is 
+//straight for success rates and amount healed.). For anything thats not humanoid-like, it 
+//uses veterinary AND healing. Veterinary here replaces anatomy in the previous phase, but
+//it does however aid a lot for amount healed .
+//(Healing skill on non-humanoids is less important than veterinary, as far as it goes 
+//foramount healed.)
+//
+//Your probably wondering whats the limb thing, well, its basically useless to you since I haven't included the
+//limb breaker events, if you wish to, you can write them on your own.. somehow. But anyway, I just left it there
+//and haven't bothered removing it, it won't affect anything though, will simply be ignored.
+//
+//And last.. installation shouldn't be that hard, just go into your sphereitemb3 and 
+//remove the default bandage, leave the bloody one..
+//
+//*Note : This system is NOT intended to work with my Poison System, if required however, send me a e-mail or PM.*
+//
+//Enjoy..
+//
+//
+////////////////////////////////////////////////////////////////////////////////////////////
+//	SKILLGAIN
+//
+//Healing : SUPPORTED
+//Anatomy : SUPPORTED
+//Veterinary : SUPPORTED
+////////////////////////////////////////////////////////////////////////////////////////////
+
+//Skillgain functions
+
+
+//Veterinary skillgain
+
+[FUNCTION VETGHC] 
+IF (<VETERINARY><=150) && ((RAND(2)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>150) && (<VETERINARY><=225) && (rand(5)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>225) && (<VETERINARY><=325) && (rand(6)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>325) && (<VETERINARY><=425) && (rand(8)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>425) && (<VETERINARY><=525) && (rand(9)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>525) && (<VETERINARY><=625) && (rand(14)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>625) && (<VETERINARY><=725) && (rand(24)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>725) && (<VETERINARY><=825) && (rand(34)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>825) && (<VETERINARY><=925) && (rand(45)==1) 
+VETAKS
+RETURN 1
+ELSEIF (<VETERINARY>>925) && (<VETERINARY><=1000) (rand(54)==1) 
+VETAKS
+RETURN 1
+
+
+[FUNCTION VETAKS]
+VETERINARY = <VETERINARY>+0.1 
+
+
+//Anatomy skillgain
+
+[FUNCTION ANATGHC] 
+IF (<ANATOMY><=150) && ((RAND(2)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>150) && (<ANATOMY><=225) && (rand(5)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>225) && (<ANATOMY><=325) && (rand(6)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>325) && (<ANATOMY><=425) && (rand(8)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>425) && (<ANATOMY><=525) && (rand(9)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>525) && (<ANATOMY><=625) && (rand(14)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>625) && (<ANATOMY><=725) && (rand(24)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>725) && (<ANATOMY><=825) && (rand(34)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>825) && (<ANATOMY><=925) && (rand(45)==1) 
+ANATAKS
+RETURN 1
+ELSEIF (<ANATOMY>>925) && (<ANATOMY><=1000) && (rand(54)==1) 
+ANATAKS
+RETURN 1
+ENDIF
+
+
+[FUNCTION ANATAKS]
+ANATOMY = <ANATOMY>+0.1 
+
+//Healing skillgain
+
+[FUNCTION HEALGHC] 
+IF (<HEALING><=150) && ((RAND(2)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>150) && (<HEALING><=225) && (rand(5)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>225) && (<HEALING><=325) && (rand(6)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>325) && (<HEALING><=425) && (rand(8)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>425) && (<HEALING><=525) && (rand(9)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>525) && (<HEALING><=625) && (rand(14)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>625) && (<HEALING><=725) && (rand(24)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>725) && (<HEALING><=825) && (rand(34)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>825) && (<HEALING><=925) && (rand(45)==1) 
+HEALAKS
+RETURN 1
+ELSEIF (<HEALING>>925) && (<HEALING><=1000) && (rand(54)==1) 
+HEALAKS
+RETURN 1
+ENDIF
+
+
+[FUNCTION HEALAKS]
+HEALING = <HEALING>+0.1 
+
+
+//Function to produce bloody bandages
+
+[FUNCTION PRODUCEBANDAGE]
+NEWITEM=i_bandage_bloody
+ACT.BOUNCE
+
+//Function to equip the healing memory timer
+
+[FUNCTION HTIMER]
+NEWITEM=i_bandage_wait_timer
+ACT.EQUIP
+
+
+//Healing fail-check function
+
+
+[FUNCTION HEALCHECK]
+IF (<HEALING> <= 100)
+VAR.HEALRESULT=<EVAL RAND(2)>
+
+ELSEIF (<HEALING> <= 200)
+VAR.HEALRESULT=<EVAL RAND(3)>
+
+ELSEIF (<HEALING> <= 300)
+VAR.HEALRESULT=<EVAL RAND(4)>
+
+ELSEIF (<HEALING> <= 400)
+VAR.HEALRESULT=<EVAL RAND(5)>
+
+ELSEIF (<HEALING> <= 500)
+VAR.HEALRESULT=<EVAL RAND(6)>
+
+ELSEIF (<HEALING> <= 600)
+VAR.HEALRESULT=<EVAL RAND(7)>
+
+ELSEIF (<HEALING> <= 700)
+VAR.HEALRESULT=<EVAL RAND(8)>
+
+ELSEIF (<HEALING> <= 800)
+VAR.HEALRESULT=<EVAL RAND(9)>
+
+ELSEIF (<HEALING> <= 900)
+VAR.HEALRESULT=<EVAL RAND(10)>
+
+ELSEIF (<HEALING> <= 1000)
+VAR.HEALRESULT=<EVAL RAND(15)>
+
+ELSEIF (<HEALING> <= 1100)
+VAR.HEALRESULT=<EVAL RAND(30)>
+
+ELSEIF (<HEALING> <= 1200)
+VAR.HEALRESULT=<EVAL RAND(60)>
+
+
+//Veterinary fail-check
+
+[FUNCTION VETCHECK]
+IF (<VETERINARY> <= 100)
+VAR.VETRESULT=<EVAL RAND(2)>
+
+ELSEIF (<VETERINARY> <= 200)
+VAR.VETRESULT=<EVAL RAND(3)>
+
+ELSEIF (<VETERINARY> <= 300)
+VAR.VETRESULT=<EVAL RAND(4)>
+
+ELSEIF (<VETERINARY> <= 400)
+VAR.VETRESULT=<EVAL RAND(5)>
+
+ELSEIF (<VETERINARY> <= 500)
+VAR.VETRESULT=<EVAL RAND(6)>
+
+ELSEIF (<VETERINARY> <= 600)
+VAR.VETRESULT=<EVAL RAND(7)>
+
+ELSEIF (<VETERINARY> <= 700)
+VAR.VETRESULT=<EVAL RAND(8)>
+
+ELSEIF (<VETERINARY> <= 800)
+VAR.VETRESULT=<EVAL RAND(9)>
+
+ELSEIF (<VETERINARY> <= 900)
+VAR.VETRESULT=<EVAL RAND(10)>
+
+ELSEIF (<VETERINARY> <= 1000)
+VAR.VETRESULT=<EVAL RAND(15)>
+
+ELSEIF (<VETERINARY> <= 1100)
+VAR.VETRESULT=<EVAL RAND(30)>
+
+ELSEIF (<VETERINARY> <= 1200)
+VAR.VETRESULT=<EVAL RAND(60)>
+
+
+
+//Bandage halt timer
+
+[ITEMDEF i_bandage_wait_timer]
+DEFNAME=i_bandage_wait_timer
+ID=i_memory
+TYPE=t_eq_script
+NAME=Healing System Memory [Stop Timer]
+LAYER=118
+
+ON=@EQUIP
+TIMER=5
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+//Default bandage script override
+
+[ITEMDEF 0e21]
+DEFNAME=i_bandage
+RESOURCES=i_cloth
+TYPE=T_SCRIPT
+WEIGHT=.3
+DUPELIST=0ee9
+CATEGORY=Items by Professions
+SUBSECTION=Healer
+DESCRIPTION=Clean Bandages
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE The bandages must be in your backpack in order to use them!
+RETURN 1
+ELSEIF (<SRC.FINDLAYER(118).BASEID> == i_bandage_wait_timer)
+SRC.SYSMESSAGE You must wait before using this again!
+RETURN 1
+
+ELSE
+TARGET What do you wish to use this on?
+RETURN 1
+ENDIF
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE> > 2)
+SRC.SYSMESSAGE You are too far away!
+RETURN 1
+ENDIF
+
+IF ((<SRC.FINDLAYER(01)>) || (<SRC.FINDLAYER(02)>))
+SRC.SYSMESSAGE Your hands must be free in order to heal someone!
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.BRAIN> == 0) && (<SRC.TARG.FLAGS>&statf_dead)
+IF (<SRC.ANATOMY> >= 1000) && (<SRC.HEALING> >= 1000)
+IF (<SRC.RESTEST 10 i_Bandage>)
+SRC.HEALCHECK
+IF (<SRC.VAR.HEALRESULT> == 1)
+SRC.SYSMESSAGE You attempt to resurrect <SRC.TARG.NAME>, but fail!.
+SRC.TARG.SYSMESSAGE <SRC.NAME> attempts to resurrect you.
+SRC.ANIM=19
+SRC.CONSUME 10 i_bandage
+SRC.HEALGHC
+SRC.ANATGHC
+SRC.HTIMER
+SRC.VAR.HEALRESULT=
+RETURN 1
+ELSE
+SRC.TARG.SPELLEFFECT s_resurrection,1000
+SRC.TARG.EFFECT 3,i_fx_heal_effect,6,15,1
+SRC.SYSMESSAGE You resurrect <SRC.TARG.NAME>!
+SRC.TARG.SYSMESSAGE <SRC.NAME> resurrects you!
+SRC.ANIM=19
+SRC.CONSUME 10 i_Bandage
+SRC.HEALGHC
+SRC.ANATGHC
+SRC.HTIMER
+SRC.VAR.HEALRESULT=
+RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You lack bandages in order to resurrect <SRC.TARG.NAME>!
+RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You are not skilled enough to resurrect <SRC.TARG.NAME>!
+RETURN 1
+ENDIF
+
+
+ELSEIF ((<SRC.TARG.BODY> == c_man) || (<SRC.TARG.BODY> == c_woman)) && (<SRC.TARG.FLAGS>&statf_poisoned)
+IF (<SRC.ANATOMY> >= 400) && (<SRC.HEALING> >= 350)
+IF (<SRC.RESTEST 1 i_bandage>)
+SRC.HEALCHECK
+IF (<SRC.VAR.HEALRESULT> == 1)
+SRC.SYSMESSAGE You apply the bandage poorly.
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals you poorly.
+SRC.ANIM=19
+SRC.CONSUME 1 i_bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.ANATGHC
+SRC.HTIMER
+SRC.VAR.HEALRESULT=
+RETURN 1
+ELSE
+SRC.TARG.SPELLEFFECT s_cure,1000
+SRC.TARG.EFFECT 3,i_fx_heal_effect,6,15,1
+SRC.TARG.SYSMESSAGE <SRC.NAME> has cured you of poisons.
+SRC.SYSMESSAGE You cure <SRC.TARG.NAME> of poisons.
+SRC.ANIM=19
+SRC.CONSUME 1 i_bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.ANATGHC
+SRC.HTIMER
+SRC.VAR.HEALRESULT=
+RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You lack bandages to cure <SRC.TARG.NAME>!
+RETURN 1
+ENDIF
+
+ELSE
+SRC.SYSMESSAGE You notice that <SRC.TARG.NAME> is poisoned, but you are not skilled enough to cure the poison!
+RETURN 1
+ENDIF
+
+
+ELSEIF ((<SRC.TARG.BODY> == c_man) || (<SRC.TARG.BODY> == c_woman)) && (<SRC.TARG.HITS> < <SRC.TARG.STR>)
+IF (<SRC.RESTEST 1 i_Bandage>)
+SRC.HEALCHECK
+IF (<SRC.VAR.HEALRESULT> == 1)
+SRC.SYSMESSAGE You apply the bandage poorly.
+SRC.ANIM=19
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals you poorly.
+SRC.CONSUME 1 i_bandage
+SRC.HEALGHC
+SRC.ANATGHC
+SRC.HTIMER
+SRC.PRODUCEBANDAGE
+SRC.VAR.HEALRESULT=
+RETURN 1
+ELSE
+SRC.TARG.HITS=<SRC.TARG.HITS> + (((<SRC.HEALING> / 10) + (<SRC.ANATOMY> / 25)) / 4)
+IF (<SRC.TARG.HITS> > <SRC.TARG.STR>)
+SRC.TARG.HITS=<SRC.TARG.STR>
+ENDIF
+SRC.TARG.EFFECT 3,i_fx_heal_effect,6,15,1
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals you.
+SRC.SYSMESSAGE You heal <SRC.TARG.NAME>.
+SRC.ANIM=19
+SRC.CONSUME 1 i_bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.HTIMER
+SRC.ANATGHC
+SRC.VAR.HEALRESULT=
+RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You lack bandages to heal <SRC.NAME>!
+RETURN 1
+ENDIF
+
+ELSEIF ((<SRC.TARG.BODY> == c_man) || (<SRC.TARG.BODY> == c_woman)) && (<SRC.TARG.EVENTS> == e_broken_limb)
+IF (<SRC.ANATOMY> >= 800) && (<SRC.HEALING> >= 700)
+IF (<SRC.RESTEST 1 i_bandage>)
+SRC.HEALCHECK
+IF (<SRC.VAR.HEALRESULT> == 1)
+SRC.SYSMESSAGE You apply the bandage poorly.
+SRC.ANIM=19
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals you poorly.
+SRC.CONSUME 1 i_bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.ANATGHC
+SRC.HTIMER
+SRC.VAR.HEALRESULT=
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You heal <SRC.TARG.NAME>'s <SRC.TARG.TAG.BROKENLIMB>.
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals your broken <SRC.TAG.BROKENLIMB>.
+SRC.ANIM=19
+SRC.TARG.FIXLIMB
+SRC.CONSUME 1 i_Bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.ANATGHC
+SRC.HTIMER
+SRC.VAR.HEALRESULT=
+RETURN 1
+ENDIF
+
+ELSE
+SRC.SYSMESSAGE You notice that <SRC.TARG.NAME> has a broken limb, but you lack bandages to heal it!
+RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You notice that <SRC.TARG.NAME> has a broken limb, but you are not skilled enough to heal it!
+RETURN 1
+ENDIF
+
+//Monsters, animals.. Using veterinary skill.
+
+
+ELSEIF ((<SRC.TARG.BODY> != c_man) || (<SRC.TARG.BODY> != c_woman)) && (<SRC.TARG.FLAGS>&statf_poisoned)
+IF (<SRC.VETERINARY> >= 400) && (<SRC.HEALING> >= 350)
+IF (<SRC.RESTEST 1 i_bandage>)
+SRC.VETCHECK
+IF (<SRC.VAR.VETRESULT> == 1)
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals you poorly.
+SRC.SYSMESSAGE You apply the bandage poorly.
+SRC.ANIM=19
+SRC.CONSUME 1 i_bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.VETGHC
+SRC.HTIMER
+SRC.VAR.VETRESULT=
+RETURN 1
+ELSE
+SRC.TARG.SPELLEFFECT s_cure,1000
+SRC.TARG.EFFECT 3,i_fx_heal_effect,6,15,1
+SRC.TARG.SYSMESSAGE <SRC.NAME> cures you of poisons.
+SRC.SYSMESSAGE You cure <SRC.TARG.NAME> of poisons.
+SRC.ANIM=19
+SRC.CONSUME 1 i_bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.VETGHC
+SRC.HTIMER
+SRC.VAR.VETRESULT=
+RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You lack bandages to cure <SRC.TARG.NAME>!
+RETURN 1
+ENDIF
+
+ELSE
+SRC.SYSMESSAGE You notice that <SRC.TARG.NAME> is poisoned, but you are not skilled enough to cure the poison!
+RETURN 1
+ENDIF
+
+
+
+
+
+ELSEIF ((<SRC.TARG.BODY> != c_man) || (<SRC.TARG.BODY> != c_woman)) && (<SRC.TARG.HITS> < <SRC.TARG.STR>)
+IF (<SRC.RESTEST 1 i_Bandage>)
+SRC.VETCHECK
+IF (<SRC.VAR.VETRESULT> == 1)
+SRC.SYSMESSAGE You apply the bandage poorly.
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals you poorly.
+SRC.ANIM=19
+SRC.CONSUME 1 i_bandage
+SRC.HEALGHC
+SRC.VETGHC
+SRC.HTIMER
+SRC.PRODUCEBANDAGE
+SRC.VAR.VETRESULT=
+RETURN 1
+ELSE
+SRC.TARG.HITS=<SRC.TARG.HITS> + (((<SRC.VETERINARY> / 10) + (<SRC.HEALING> / 25)) / 4)
+IF (<SRC.TARG.HITS> > <SRC.TARG.STR>)
+SRC.TARG.HITS=<SRC.TARG.STR>
+ENDIF
+SRC.TARG.EFFECT 3,i_fx_heal_effect,6,15,1
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals you.
+SRC.SYSMESSAGE You heal <SRC.TARG.NAME>.
+SRC.ANIM=19
+SRC.CONSUME 1 i_bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.HTIMER
+SRC.VETGHC
+SRC.VAR.VETRESULT=
+ENDIF
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You lack bandages to heal <SRC.NAME>!
+RETURN 1
+ENDIF
+
+
+
+ELSEIF ((<SRC.TARG.BODY> != c_man) || (<SRC.TARG.BODY> != c_woman)) && (<SRC.TARG.EVENTS> == e_broken_limb)
+IF (<SRC.VETERINARY> >= 800) && (<SRC.HEALING> >= 700)
+IF (<SRC.RESTEST 1 i_bandage>)
+SRC.VETCHECK
+IF (<SRC.VAR.VETRESULT> == 1)
+SRC.ANIM=19
+SRC.SYSMESSAGE You apply the bandage poorly.
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals you poorly.
+SRC.CONSUME 1 i_bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.VETGHC
+SRC.HTIMER
+SRC.VAR.VETRESULT=
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You heal <SRC.TARG.NAME>'s <SRC.TARG.TAG.BROKENLIMB>.
+SRC.TARG.SYSMESSAGE <SRC.NAME> heals your broken <SRC.TARG.TAG.BROKENLIMB>.
+SRC.ANIM=19
+SRC.TARG.FIXLIMB
+SRC.CONSUME 1 i_Bandage
+SRC.PRODUCEBANDAGE
+SRC.HEALGHC
+SRC.VETGHC
+SRC.HTIMER
+SRC.VAR.VETRESULT=
+RETURN 1
+ENDIF
+
+ELSE
+SRC.SYSMESSAGE You notice that <SRC.TARG.NAME> has a broken limb, but you lack bandages to heal it!
+RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You notice that <SRC.TARG.NAME> has a broken limb, but you are not skilled enough to heal it!
+RETURN 1
+ENDIF
+
+
+ELSE
+
+SRC.SYSMESSAGE <SRC.TARG.NAME> looks unhurt.
+RETURN 1
+ENDIF
+
+
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_ITEM
+RETURN 1

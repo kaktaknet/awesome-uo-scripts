@@ -1,0 +1,128 @@
+//********************************************************************
+// This script provides a list implemantation.
+// Following functions can be used to handle the lists.
+//
+// list_new 		creates a new list
+// list_length 		returns the length of a list
+// list_add     	adds an element to the end of the list
+// list_delete_last     deletes the last element
+// list_delete		deletes element at the given position
+// list_head		returns the first element of a list
+// list_tail		returns the last element of a list
+// list_get 		returns element on the given position
+// list_destroy		deletes the whole list
+//
+// Lists are stored in tags.
+// The elements are stored in tag.listname.x (x =  1..n)
+// Length of the list is stored in tag.listname.length
+//
+// last update 22/09/04
+// scripted for 55r4.0.2
+// by Dagoth
+//********************************************************************
+
+// Creates a new list on a char
+// Usage: list_new LISTNAME
+[FUNCTION list_new]
+if <isempty <args>>				//no name specified
+   return 1
+elseif !<isempty <tag.<strarg <args>>.length>>  //list exists
+   return 1
+else
+   try tag.<strarg <args>>.length 0
+endif
+
+
+// Returns the length of a list.
+// Usage: list_length LISTNAME
+// returns: -1 if list not exists, else the length of the list
+[FUNCTION list_length]
+if <isempty <tag.<strarg <args>>.length>>
+   return -1
+else 
+   return <tag.<strarg <args>>.length>
+endif
+
+
+// Returns the first element of a list
+// Usage: list_head LISTNAME
+[FUNCTION list_head]
+if <list_length <strarg <args>>> > 0
+   return <tag.<strarg <args>>.1>
+endif
+
+// Returns the last element of a list
+// Usage: list_tail LISTNAME
+[FUNCTION list_tail]
+if <list_length <strarg <args>>> > 0
+   return <tag.<strarg <args>>.<eval <list_length <strarg <args>>>>>
+endif
+
+
+// Returns the element on the given position
+// Usage: list_get LISTNAME POSITION
+[FUNCTION list_get]
+local.name = <strarg <args>>
+local.pos = <streat <args>>
+if !<isempty <local.name>> && !<isempty <local.pos>>
+   return <tag.<local.name>.<eval <local.pos>>>
+endif
+
+
+// Adds a new Element to the end of the list.
+// Usage: list_add LISTNAME ELEM
+[FUNCTION list_add]
+local.name = <strarg <args>>
+local.elem = <streat <args>>
+if <isempty <local.name>> || <isempty <local.elem>> 
+   return 1
+elseif <list_length <local.name>> > -1
+   try tag.<local.name>.<eval <tag.<local.name>.length> + 1> <local.elem>
+   try tag.<local.name>.length <eval <tag.<local.name>.length> + 1>
+endif
+
+
+// Deletes the last node of a list.
+// Usage: list_delete_last LISTNAME
+[FUNCTION list_delete_last]    
+local.name = <strarg <args>>
+if <isempty <local.name>>     			//no name specified
+   return 1
+elseif <tag.<local.name>.length>		//list not empty
+   local.last = <tag.<local.name>.length>
+   try tag.<local.name>.<eval <local.last>>
+   try tag.<local.name>.length <eval <tag.<local.name>.length> +- 1>
+endif
+
+
+// Deletes the element on the given position
+// Usage: list_delete LISTNAME POSITION
+[FUNCTION list_delete]
+local.name = <strarg <args>>
+local.pos = <streat <args>>
+if <isempty <local.name>> || <isempty <local.pos>>
+   return 1
+//position must be between 0 and length of list
+elseif (<eval <local.pos>> > 0) && (<eval <local.pos>> <= <eval <list_length <local.name>>>)
+   //shift other elements
+   for <eval <local.pos>> <eval <list_length <local.name>>>
+      try tag.<local.name>.<eval <local._for>> <tag.<local.name>.<eval <local._for> + 1>>
+   endfor
+   //delete last element
+   try tag.<local.name>.<eval <list_length <local.name>>>   
+   try tag.<local.name>.length <eval <tag.<local.name>.length> +- 1>
+endif
+
+
+// Delete the whole list
+// Usage: list_destroy LISTNAME
+[FUNCTION list_destroy]
+local.name = <strarg <args>>
+while (<list_length <local.name>> > 0)
+   try tag.<local.name>.<eval <tag.<local.name>.length>>
+   try tag.<local.name>.length <eval <tag.<local.name>.length> +- 1>
+endwhile
+try tag.<local.name>.length
+
+
+[eof]

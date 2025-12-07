@@ -1,0 +1,149 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Friday, April 28, 2000
+// COPYRIGHT NOTICE: All files and content are copyright 1997-1999 Menasoft & Partners. All
+// donations and contributions become the property of Menasoft.
+
+// Purpose: Britannia Alchemist Script
+// Notes:  This is used for general information pertaining to all Britannian alchemist's
+// Current Keyword List:
+//	job, what*do*do, profession,  occupation, alchem, secret, magic, mage, skill,
+//	mortar, pestle, vial, potion, black pearl, red potion, refresh, garlic,
+//	black potion, blind, ginsing, yellow potion, heal, bloodmoss, blue potion
+//	agility, nightshade, green potion, poison, mandrake, white potion, strength,
+//	ash, purple potion, explode, explosion, spider silk, orange potion, sleep,
+//	reagents
+//
+
+[SPEECH jobALCHEMIST]
+
+ON=*job*
+ON=*work*
+ON=*what*do*do*
+ON=*profession*
+ON=*occupation*
+ON=*aufgabe*
+ON=*arbeit*
+ON=*was*mach*
+	// SAY=Ich mische Traenke von großem Wert!
+
+	IF ( <SRC.KARMA.WICKED> || <SRC.KARMA.BELLIGERANT> )
+		IF ( <COMPLEXITY.HIGH> )
+			DORAND 3
+				SAY Ich bin ein Alchemist
+				SAY Ich bin ein Student der Alchemie.
+				SAY Ich praktiziere die Alchemie.
+			ENDDO
+		ELSE
+			DORAND 2
+				SAY Ich bin ein Alchemist
+				SAY Ich bin ein Student der Alchemie.
+			ENDDO
+		ENDIF
+	ELIF ( <SRC.KARMA.NEUTRAL> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY Ich bin ein Alchemist
+				SAY Ich studiere die antike Kunst der Alchemie
+			ENDDO
+		ELSE
+			DORAND 2
+				SAY Alchemy. Ich mache Alchemie.
+				SAY Ich studiere Alchemie.
+			ENDDO
+		ENDIF
+	ELSE
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY I am a practitioner of alchemy.
+				SAY I have devoted my life to the alchemical arts.
+			ENDDO
+		ELSE
+			DORAND 2
+				SAY I do alchemy.
+				SAY I practice alchemy.
+			ENDDO
+		ENDIF
+	ENDIF
+ON=*magic*
+ON=*mage*
+ON=*magie*
+	IF ( <SRC.KARMA.WICKED> || <SRC.KARMA.BELLIGERANT> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY Ich bin kein Magier, Dummkopf! Ich bin Alchemist
+				SAY Du denkst an Magie? Idiot! Alchemie ist weitaus interessanter
+			ENDDO
+		ELSE
+			SAY Ich bin kein Magier sondern Alchemist!
+		ENDIF
+	ELIF ( <SRC.KARMA.NEUTRAL> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY Mhh Magie? Ich interessiere mich fuer hoehere Kuenste
+				SAY Magie? Ich interessiere mich nicht fuer soetwas.
+			ENDDO
+		ELSE
+			SAY Mhh Magie? Ich interessiere mich fuer hoehere Kuenste
+		ENDIF
+	ELSE
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			SAY Alchemie und Magie sind zwei ganz unterschiedliche Dinge.
+		ELSE
+			SAY Alchemie und Magie sind so unterschiedlich wie zwei Menschen es sein koennten!
+		ENDIF
+	ENDIF
+
+ON=*mortar*
+ON=*pestle*
+ON=*vial*
+on=*moerser*
+on*stoessel*
+	IF ( <SRC.KARMA.WICKED> || <SRC.KARMA.BELLIGERANT> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY Ich kann euch Mörser und Stössel verkaufen, oder wie wäre es mit leeren Flaschen?
+				SAY Ich kann euch etwas verkaufen! Zum Beispiel leere Flaschen? Oder einen Mörser?
+			ENDDO
+		ELSE
+			SAY Ich kann euch Mörser und Stössel verkaufen, oder wie wäre es mit leeren Flaschen?
+		ENDIF
+	ELIF ( <SRC.KARMA.NEUTRAL> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY Ich haette da einen unbenutzen Moerser den ich euch geben koennte
+				SAY Ich kann euch meine Arbeitsgeraete verkaufen!
+			ENDDO
+		ELSE
+			SAY Ich kann euch Moerser und Stoessel und leere Flaschen verkaufen
+		ENDIF
+	ELSE
+		SAY Ich verkaufe normalerweise keine Arbeitsgeraete, aber vielleicht hab ich einen Moerser und ein paar leere Flaschen die ich euch verkaufen kann
+	ENDIF
+
+
+
+ON=Hail
+ON=Hi
+ON=Greet
+ON=Hello
+ON=Gruesse
+	SAY=Gruess euch <src.sex mein Herr/meine Dame>!
+
+ON=Bye
+ON=Goodbye
+ON=Farewell
+ON=Auf Bald
+	SAY=Auf Bald.
+	BYE
+	return 1
+
+DEFAULT=Ich verstehe nicht
+[EOF]

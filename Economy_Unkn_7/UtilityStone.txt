@@ -1,0 +1,86 @@
+// This script has been made by -Ax- and belongs to sphere.
+// First of all,place this stone wherever you want. ( cimetary, Dungeons, Towns... )
+// Keep in mind that when you click once on it, It resurrects.
+// Have fun, If you have ANY question. Private Message me on sphere. (UserName: alphanatix)
+
+[ITEMDEF i_stone_utility]
+ID=i_guildstone
+NAME=Stone of donations
+TYPE=t_normal
+ATTR=08010
+
+ON=@CREATE
+COLOR=color_o_valorite
+
+ON=@CLICK
+SRC.RESURRECT
+
+ON=@DCLICK
+DIALOG d_stoneutility
+Return 1
+
+[DIALOG d_stoneutility] 
+0, 0 
+resizepic 75 100 2620 400 250 
+text 151 130 1153 0 
+text 170 175 1153 1
+text 170 200 1153 2 
+text 170 225 1153 3 
+text 170 250 1153 4 
+text 170 275 1153 5
+text 151 135 1153 6
+button 150 179 1209 1210 1 0 1 
+button 150 202 1209 1210 1 0 2 
+button 150 227 1209 1210 1 0 3 
+button 150 252 1209 1210 1 0 4 
+button 150 277 1209 1210 1 0 5 
+
+[DIALOG d_stoneutility TEXT] 
+Give and recieve.
+Protection  (50po)
+Healing   (25po)
+Greater Healing  (75po)
+Reactive Armor  (75po)
+Magic Reflection  (75po)
+_____________
+
+[DIALOG d_stoneutility BUTTON] 
+ONBUTTON=0 
+src.sysmessage=Menu of donations closed.
+ONBUTTON=1 
+IF (<SRC.RESTEST 50 i_GOLD> ) 
+SRC.CONSUME=50 i_gold 
+SRC.SPELLEFFECT 15, 800
+SRC.SAY Gods are happy of your donation.
+ELSE
+SRC.SAY You don't have enough money to do this donation.
+ONBUTTON=2 
+IF (<SRC.RESTEST 25 i_GOLD> ) 
+SRC.CONSUME=25 i_gold 
+SRC.SPELLEFFECT 4, 800
+SRC.SAY Gods are happy of your donation.
+ELSE
+SRC.SAY You don't have enough money to do this donation.
+ONBUTTON=3 
+IF (<SRC.RESTEST 75 i_GOLD> ) 
+SRC.CONSUME=75 i_gold 
+SRC.SPELLEFFECT 29, 800
+SRC.SAY Gods are happy of your donation.
+ELSE
+SRC.SAY You don't have enough money to do this donation.
+ONBUTTON=4
+IF (<SRC.RESTEST 75 i_GOLD> ) 
+SRC.CONSUME=75 i_gold 
+SRC.SPELLEFFECT 7, 800
+SRC.SAY Gods are happy of your donation.
+ELSE
+SRC.SAY You don't have enough money to do this donation.
+ONBUTTON=5 
+IF (<SRC.RESTEST 75 i_GOLD> ) 
+SRC.CONSUME=75 i_gold 
+SRC.SPELLEFFECT 36, 800
+SRC.SAY Gods are happy of your donation.
+ELSE
+SRC.SAY You don't have enough money to do this donation.
+
+[EOF]

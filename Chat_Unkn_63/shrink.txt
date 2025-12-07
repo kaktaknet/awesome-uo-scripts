@@ -1,0 +1,56 @@
+[itemdef i_potion_Shrink] 
+ID=0f0e 
+NAME=Shrink 
+TYPE=T_script 
+WEIGHT=0 
+ON=@Create 
+NAME=Shrink 
+COLOR=0b76 
+
+ON=@DROPON_CHAR 
+SAY Use with 2 clicks 
+return 1 
+
+ON=@DCLICK 
+IF <CONT.UID>!=<SRC.FINDLAYER(21).UID> 
+RETURN 1 
+ENDIF 
+IF !(<SRC.RESTEST 1 i_potion_shrink>) 
+RETURN 1 
+ENDIF 
+
+TARGET @54 Which pet do you want to shrink? 
+return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE @54 You cant shrink a item 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.NPC>==0) || (<SRC.TARG.isPLAYER>==1) 
+SRC.SYSMESSAGE @54 You cant shrink a human. 
+RETURN 1 
+ELSEIF <src.targ.flags>&statf_conjured 
+src.sysmessage @54 You cant shrinked summoned creatures. 
+return 1 
+ELSEIF (<SRC.TARG.DISTANCE>>5) 
+src.sysmessage @54 You are to far to shrink the creture. 
+return 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+if <src.targ.hits>!=<src.targ.str> 
+src.sysmessage @54 <src.targ.name> isnt with the full life 
+return 1 
+endif 
+SRC.NEWITEM=<SRC.TARG.ICON> 
+SRC.ACT.NAME=<SRC.TARG.NAME> 
+SRC.ACT.COLOR=<SRC.TARG.COLOR> 
+SRC.ACT.MORE1=<SRC.TARG.BASEID> 
+SRC.ACT.BOUNCE 
+SRC.ACT.TYPE=t_figurine 
+SRC.TARG.REMOVE 
+SRC.CONSUME 1 i_potion_shrink 
+return 1 
+ELSE 
+src.message @54 That pet is not your. 
+return 1 
+ENDIF 

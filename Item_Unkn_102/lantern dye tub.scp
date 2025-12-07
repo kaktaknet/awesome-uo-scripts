@@ -1,0 +1,71 @@
+// OSI Lantern & Candel Dye Tub By Kenton 
+// This is the same as the NEW OSI Lantern/Candel Dye tubs as on OSI 
+// I play OSI alot so i get to see how there stuff works first hand 
+// I know I know alot of you think OSI sucks.. but its funny how alot of 
+// You guys want OSI stuff.. haha anyways so here it is! Enjoy 
+// Give there away as prizes or sell them on NPC, or loot you decide 
+// On OSI they are craftable by GM carps. 
+// This script was tested with Vats House System debuged "still full of bug" 
+// and it works fine... So have fun with it! 
+// Please leave this header if you use this script.. 
+// It does not matter to be if you do or you do not everyone knows 
+// Who made it.. Me Kenton! 
+
+[ITEMDEF i_Lantern_dye_tub] 
+ID=i_dye_tub 
+NAME=Lantern/Candel Dye Tub 
+TYPE=T_DYE_VAT 
+WEIGHT=10 
+DYE=0 
+CATEGORY=Items by Professions 
+SUBSECTION=Kentons 
+DESCRIPTION=OSI lantern/Candel Dying Tub 
+
+RESOURCES=5 i_log 
+SKILLMAKE=CARPENTRY 50.0, t_carpentry 
+RESOURCES2=10 i_board 
+
+ON=@CLICK 
+MESSAGE=<NAME> 
+Return 1 
+
+ON=@DCLICK 
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1) 
+SRC.MESSAGE=You can't reach that. 
+Return 1 
+ELSE 
+TARGET Select the Lantern or Candel to dye. 
+Return 1 
+ENDIF 
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1) 
+SRC.SYSMESSAGE=That is not accessible. 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE=That is not a lantern or Candel. 
+Return 1 
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>) 
+Return 1 
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4) 
+SRC.SYSMESSAGE=That is not accessible. 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>!=t_light_out) && (<SRC.TARG.TYPE>!=t_light_lit) 
+SRC.SYSMESSAGE=That is not a lantern or Candel 
+RETURN 1 
+ELSEIF !(<SRC.TARG.ATTR>&attr_move_never) || (<SRC.TARG.REGION.FLAGS>!=01092) && 
+
+(<SRC.TARG.REGION.FLAGS>!=01192) 
+SRC.SYSMESSAGE=The Lantern or Candel must be locked down in your house dye it. 
+Return 1 
+ELSEIF (<EVAL <SRC.UID>>!=<EVAL <SRC.REGION.TAG.NAME>>) 
+SRC.SYSMESSAGE=You must be the owner of the house to use this item. 
+Return 1 
+ELSE 
+SRC.TARG.COLOR=<color> 
+SRC.TARG.UPDATE 
+SRC.SOUND 023e 
+RETURN 1 
+ENDIF

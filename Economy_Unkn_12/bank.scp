@@ -1,0 +1,113 @@
+*/////////////////////////////////////////////*
+// IIII  II  I  IIII IIIII  IIIII   II  II   //
+// II    II  I   \\    II   II  I  II II II  //
+// IIII  IIIII  IIII   II   IIIII II  II   II//
+//    BANK                                   //
+//                                           //
+//    Made by Jevon                          //
+// First you must put 'i_bank_mem' somehow   //
+// on the player for example in skillclass:  //
+// ON=@LOGIN                                 //
+// IF !<findid(i_bank_mem)>                  //
+// NEWITEM i_bank_mem                        //
+// SRC.ACT.EQUIP                             //
+// ENDIF                                     //
+// Add speech spk_bank_custom to a NPC you   //
+// want to be the banker and say 'bank' to   //
+// get the dialog.                           //
+//                                           //
+*/////////////////////////////////////////////*
+
+
+[ITEMDEF i_bank_mem]
+ID=i_memory
+NAME=custom bank
+TYPE=T_EQ_SCRIPT
+LAYER=30
+
+ON=@CREATE
+MORE=//Gold amount stores here (in case You want to put starting money or other)
+MOREY=//Last amount taken from the bank
+MOREX=//Last amount deposited to the bank
+MORE2=//The highest amount been in the bank
+
+
+[FUNCTION withdraw]
+SRC.ACT=<findid(i_bank_mem).uid>
+IF <ARGS> > <SRC.ACT.MORE>
+SRC.MESSAGE You don't have that much money!
+ELSE
+SRC.ACT.MORE=<SRC.ACT.MORE>+-<ARGS>
+SRC.ACT.MOREY=<ARGS>
+SRC.NEWITEM i_gold
+NEW.AMOUNT <ARGS>
+NEW.BOUNCE
+IF <ARGS> <= 1
+SRC.MESSAGE You withdraw <ARGS> gp from the bank
+ELSE
+SRC.MESSAGE You withdraw <ARGS> gps from the bank
+ENDIF
+ENDIF
+
+[FUNCTION deposite]
+SRC.ACT=<findid(i_bank_mem).uid>
+IF !(<RESTEST i_gold <ARGS>>)
+SRC.MESSAGE You don't have that much money!
+ELSE
+IF <ARGS>+<SRC.ACT.MORE> > <SRC.ACT.MORE2>
+SRC.TAG.MOST=<ARGS>+<SRC.ACT.MORE>
+SRC.ACT.MORE2=<SRC.TAG.MOST>
+SRC.TAG.MOST=
+ENDIF
+SRC.ACT.MORE=<SRC.ACT.MORE>+<ARGS>
+SRC.ACT.MOREX=<ARGS>
+SRC.CONSUME i_gold <ARGS>
+SRC.SOUND 50
+IF <ARGS> <= 1
+SRC.MESSAGE You deposite <ARGS> gp to the bank
+ELSE
+SRC.MESSAGE You deposite <ARGS> gps to the bank
+ENDIF
+ENDIF
+
+
+[DIALOG d_bank]
+0,0
+PAGE 0
+RESIZEPIC 200 200 3500 500 300
+PAGE 1
+GUMPPIC 380 370 0988
+GUMPPIC 380 400 0988
+DTEXT 250 220 03f <var.blankline>
+DTEXT 250 220 03f <SRC.NAME>s bank
+DTEXT 300 270 03f Gold In Bank: <eval(<src.findid(i_bank_mem).more>)>
+DTEXT 300 290 03f Gold Taken From Bank Last Time: <eval(<src.findid(i_bank_mem).morey>)>
+DTEXT 300 310 03f Gold Deposited In Bank Last Time: <eval(<src.findid(i_bank_mem).morex>)>
+DTEXT 300 330 03f Most Gold In Bank: <eval(<src.findid(i_bank_mem).more2>)>
+DTEXT 300 370 03f Withdraw:
+TEXTENTRY 400 373 600 20 1152 1 0
+DTEXT 300 400 03f Deposite:
+TEXTENTRY 400 403 600 20 1152 2 0
+BUTTON 600 450 047f 0480 1 0 0
+BUTTON 550 375 04b9 04ba 1 0 1
+BUTTON 550 405 04b9 04ba 1 0 2
+DTEXT 535 220 03f Custom bank V 1.0
+DTEXT 550 240 03f by Admin Jevon
+
+[DIALOG d_bank TEXT]
+
+
+
+[DIALOG d_bank BUTTON]
+ONBUTTON=1
+SRC.WITHDRAW <ARGTXT[1]>
+ONBUTTON=2
+SRC.DEPOSITE <ARGTXT[2]>
+
+
+[SPEECH SPK_BANK_CUSTOM]
+ON=*Bank*
+SAY Here are yer bank ratings
+SRC.DIALOG D_BANK
+
+[EOF]

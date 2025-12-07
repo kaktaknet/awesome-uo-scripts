@@ -1,0 +1,78 @@
+/////////////////////////////////////////////////////////////////////////////
+//Anti PK Script v2.0 By Mordaunt for Legends Of Albion
+//Thanks goes out to ClouD_BR for helping me with this script in my time of
+//complete brainlessness. 
+////////////////////////////////////////////////////////////////////////////
+//Installation: This script is for 56b or higher!
+//In sphere.ini enable the TIMERCALL=0 line.
+//This will set how often the script is run: TIMERCALL=15 minutes should be adequate
+//unless you have other scripts also running on that function, in which case set
+//accordingly.
+////////////////////////////////////////////////////////////////////////////
+
+[FUNCTION f_onserver_timer]
+serv.allclients pk
+
+[Function pk]
+//IF !(<ISGM>)
+IF <KILLS>>3 //change for kill limitations
+CTAG.PKP=<P>
+events +e_pkjail
+newitem i_pkjail
+equip <new>
+Kills=1
+Jail
+SERV.ALLCLIENTS SYSMESSAGE SERVER MESSAGE: <NAME> has been jailed on PK charges.
+SERV.WRITEFILE c:\sphere\logs\speciallogs\pklogs_<rtime.day><EVAL <rtime.month>>.txt <SERV.RTIME> :: <NAME> was jailed for an excessive kill count (kills 3+)
+SYSMESSAGE You have been jailed on PK charges.
+SYSMESSAGE You MUST be online to serve out this sentence!
+ENDIF
+//ENDIF
+
+[itemdef i_pkjail]
+id=i_memory
+type=t_eq_script
+on=@Equip
+more1=60*60*12 //Jail sentence timer
+timer=1
+on=@timer
+more1 -= 1
+if !(<more1>)
+cont.forgive
+cont.events -e_pkjail
+cont.go <cont.CTAG.PKP>
+cont.CTAG.PKP=
+SERV.WRITEFILE c:\sphere\logs\speciallogs\pklogs_<rtime.day><EVAL <rtime.month>>.txt <SERV.RTIME> :: <CONT.NAME>'s jail term has been completed (PK)
+cont.SYSMESSAGE You have served your time, but we will be watching...
+cont.update
+remove
+else
+cont.update
+timer=1
+endif
+return 1
+
+[FUNCTION free]
+SYSMESSAGE WHo do you wish to free?
+TARGETF f_free
+
+
+[FUNCTION f_free]
+OBJ=<argo.uid>
+IF (<obj.isplayer>) 
+IF (<OBJ.FINDID.i_pkjail>)
+OBJ.FINDID.i_pkjail.REMOVE
+OBJ.EVENTS -e_pkjail
+OBJ.FORGIVE
+OBJ.GO <OBJ.CTAG.PKP>
+OBJ.CTAG.PKP=
+SERV.WRITEFILE c:\sphere\logs\speciallogs\pklogs_<rtime.day><EVAL <rtime.month>>.txt <SERV.RTIME> :: <OBJ.NAME> Was release from jail (PK) by (NAME)
+ENDIF
+ENDIF
+
+[events e_pkjail]
+on=@clienttooltip
+LOCAL.JHOURS=<eval (<SRC.FINDID.i_pkjail.MORE1>/3600)>
+LOCAL.JMINS=<eval ((<SRC.FINDID.i_pkjail.MORE1>/60)-(<LOCAL.JHOURS>*60))>
+LOCAL.JSECS=<EVAL (((<SRC.FINDID.i_pkjail.MORE1>-(<LOCAL.JHOURS>*3600))-(<LOCAL.JMINS>*60))>
+SRC.ADDCLILOC 1042971,[Jailed PK;<eval <LOCAL.JHOURS>>:<eval <LOCAL.JMINS>>:<eval <LOCAL.JSECS>> remaining]

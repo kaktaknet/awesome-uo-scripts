@@ -1,0 +1,294 @@
+//Blacksheeps healing script
+//black.sheep@totalise.co.uk
+//
+//1)replace type=t_bandage for type=t_bandage_apply for item(s) i_bandage 
+//2)remove reference to f_bandage_targon_char (depending on version)
+//3)include this script
+//
+//if you improve or modify this script please send me a copy
+
+VERSION=0.99x //(will run on 99z)
+
+[TYPEDEF t_bandage_apply]
+ON=@UserDclick
+	target Who do you want to use this on?
+	return 1
+ON=@timer
+	return 0
+
+ON=@targon_ground
+	src.emote="You cannot apply these bandages here"
+	return 1
+
+ON=@targon_item
+	src.emote="You cannot apply these bandages here"
+	return 1
+
+ON=@targon_char
+	if src.targ.isplayer
+		if (src.targ.distance <= 3)
+			if (src.targ.isdead) 
+				src.sysmessage="You attempt to resurrect <src.targ.name>"
+				src.targ.sysmessage="<src.name> is attempting to resurrect You"
+				src.tag.bandage="f_bandage_resurrect"
+			   	src.events=+e_bandage
+				src.newitem=i_bandage_timer
+				lastnew.equip
+				lastnew.timer={8 10}
+				lastnew.link=<src.uid>
+				src.consume(20 i_bandage)
+			elif (src.targ.ispoisoned) 
+				src.sysmessage="You apply the bandages"
+				if (src.uid==src.targ.uid)
+					if (src.isnewbie)
+						src.tag.bandage="f_bandage_poison=1"
+					else
+						src.tag.bandage="f_bandage_poison=2"
+					endif
+				else
+					src.tag.bandage="f_bandage_poison=3"
+				endif
+			   	src.events=+e_bandage
+				src.newitem=i_bandage_timer
+				lastnew.equip
+				lastnew.timer={4 6}
+				lastnew.link=<src.uid>
+				src.consume(1 i_bandage)		
+			elif (src.targ.hits < src.targ.maxhits) 
+				src.sysmessage="You apply the bandages"
+				if (src.uid==src.targ.uid)
+					src.tag.bandage="f_bandage_heal=1"
+				else
+					src.tag.bandage="f_bandage_heal=2"
+				endif
+			   	src.events=+e_bandage
+				src.newitem=i_bandage_timer
+				lastnew.equip
+				lastnew.timer={4 6}
+				lastnew.link=<src.uid>
+				src.consume(1 i_bandage)
+			else
+				if (src.uid==src.targ.uid)
+					src.sysmessage="You are healthy"
+				else
+					src.sysmessage="they do not require healing"
+				endif
+			endif				
+		else
+			src.sysmessage="You are too far away to apply bandages."
+		endif
+	else
+		src.emote="You cannot apply these bandages here"
+	endif
+	return 1
+
+[ITEMDEF i_bandage_timer]
+	name="heal timer"
+	ID=i_pet_wisp
+	TYPE=t_eq_script
+	WEIGHT=0
+	LAYER=layer_special
+ON=@Create
+   	ATTR=attr_decay|attr_move_never
+ON=@Timer
+	<link.tag.bandage>
+	return 0
+
+[FUNCTION f_bandage_resurrect]
+	if (link.skillcheck(healing,90))
+		link.targ.resurrect
+		link.sound=snd_spell_resurrection
+		link.targ.sysmessage="<link.name> grants You life"
+		link.sysmessage="You grant <link.targ.name> life"
+		link.targ.update
+		f_heal_gain
+	else
+		link.sysmessage="You failed to resurrect <link.targ.name>."
+		f_heal_fail
+	endif
+   	link.events=-e_bandage
+
+[FUNCTION f_bandage_heal]
+	if !(link.targ.isdead)
+		if !(link.targ.ispoisoned)
+			f_heal_amount
+			if (link.skillcheck(healing,50))
+				if (<args>==1)
+					link.hits=<eval(<link.hits> + <link.tag.bandage>)>
+					if (link.hits > link.maxhits)
+						link.hits=<link.maxhits>
+					endif
+  					link.sound=snd_spell_heal
+					link.sysmessage="You heal some (<link.tag.bandage>) damage"
+					link.update
+				elif (<args>==2)
+					link.targ.hits=<eval(<link.targ.hits> + <link.tag.bandage>)>
+					if (link.targ.hits > link.targ.maxhits)
+						link.targ.hits=<link.targ.maxhits>
+					endif
+		  			link.targ.sound=snd_spell_heal
+					link.targ.sysmessage="<link.name> heals some (<link.tag.bandage>) damage"
+					link.sysmessage="You heal <link.targ.name> of some (<link.tag.bandage>) damage"
+					link.targ.update
+				endif
+				f_heal_gain
+				link.newitem=0e20	//bloody bandages
+				lastnew.cont=<link.findlayer(layer_pack)>
+				link.sysmessage="You put the bloodied bandage in your pack"
+			else
+				link.sysmessage="You apply the bandages,but they hardly help"
+				f_heal_fail
+			endif
+		else
+			if (<args>==1)
+				if (link.isnewbie)
+					f_bandage_poison=1
+				else			
+					f_bandage_poison=2
+				endif
+			else
+				f_bandage_poison=3
+			endif			
+		endif
+	else
+		if (<args>==1)
+			link.sysmessage="You have passed from this world"
+		else
+			link.sysmessage="<link.targ.name> has passed from this world"
+		endif
+	endif	
+	link.events=-e_bandage
+
+[FUNCTION f_bandage_poison]
+	if !(link.targ.isdead)
+		if (link.targ.ispoisoned)
+			f_heal_amount
+			if (<args>==1)
+				if (link.skillcheck(healing,50))
+					link.spelleffect=s_cure 50.0
+  					link.sound=snd_spell_heal
+					link.sysmessage="You cure yourself of all poison"
+					link.hits=<eval(<link.hits> + (<link.tag.bandage>/2))>
+					if (link.hits > link.maxhits)
+						link.hits=<link.maxhits>
+					endif
+					link.update
+					f_heal_gain
+				else
+					link.sysmessage="You apply the bandages,but they hardly help"
+					f_heal_fail
+				endif
+			elif (link.skillcheck(healing,70))
+				if (<args>==2)
+					link.spelleffect=s_archcure 85.0
+		  			link.sound=snd_spell_heal
+					link.sysmessage="You cure yourself of all poison"
+					link.hits=<eval(<link.hits> + (<link.tag.bandage>/2))>
+					if (link.hits > link.maxhits)
+						link.hits=<link.maxhits>
+					endif
+					link.update
+				elif (<args>==3)
+					link.targ.spelleffect=s_archcure 85.0
+  					link.targ.sound=snd_spell_heal
+					link.sysmessage="You cure <link.targ.name> of all poison"
+					link.targ.sysmessage="<link.name> has cured You of all poison"
+					link.targ.hits=<eval(<link.targ.hits> + (<link.tag.bandage>/2))>
+					if (link.targ.hits > link.targ.maxhits)
+						link.targ.hits=<link.targ.maxhits>
+					endif
+					link.targ.update
+				endif
+			else
+				link.sysmessage="You apply the bandages,but they hardly help"
+				f_heal_fail
+			endif
+		else
+			if (<args>==1) || (<args>==2)
+				f_bandage_heal=1
+			else
+				f_bandage_heal=2
+			endif
+		endif
+	else
+		if (<args>==1) || (<args>==2)
+			link.sysmessage="You have passed from this world"
+		else
+			link.sysmessage="<link.targ.name> has passed from this world"
+		endif
+	endif	
+	link.events=-e_bandage
+
+[FUNCTION f_heal_amount]
+	link.tag.bandage=<eval(<link.healing> /20)>
+	link.tag.bandage=<eval(<link.tag.bandage>+<rand(<link.tag.bandage>)>)>
+
+[FUNCTION f_heal_gain] 
+	if   (link.healing <=20.0)
+		link.tag.heal_gain=1
+		link.tag.stat_gain=50
+	elif (link.healing <=30.0)
+		link.tag.heal_gain=2
+		link.tag.stat_gain=100
+ 	elif (link.healing <=50.0)
+		link.tag.heal_gain=3
+		link.tag.stat_gain=200
+	elif (link.healing <=70.0)
+		link.tag.heal_gain=5
+		link.tag.stat_gain=400
+	elif (link.healing <=80.0)
+		link.tag.heal_gain=8
+		link.tag.stat_gain=800
+	elif (link.healing <=95.0)
+		link.tag.heal_gain=16
+		link.tag.stat_gain=1600
+	else
+		link.tag.heal_gain=32	
+		link.tag.stat_gain=3200
+	endif
+	link.say=<link.tag.heal_gain>
+	if !(rand(<link.tag.heal_gain>))
+		link.healing=<link.healing> + 0.1
+	elif !(rand(<link.tag.stat_gain>))
+		dorand 3
+		link.int=<link.int> + 1
+		link.int=<link.int> + 1
+		link.dex=<link.dex> + 1
+		enddo
+	endif
+	link.tag.heal_gain=
+	link.tag.stat_gain=
+
+[FUNCTION f_heal_fail] 
+	if link.healing <=20.0
+		link.tag.heal_gain=2
+	elif link.healing <=30.0
+		link.tag.heal_gain=4
+	elif link.healing <=40.0
+		link.tag.heal_gain=7
+ 	elif link.healing <=50.0
+		link.tag.heal_gain=10
+	elif link.healing <=70.0
+		link.tag.heal_gain=20
+	elif link.healing <=80.0
+		link.tag.heal_gain=40
+	elif link.healing <=95.0
+		link.tag.heal_gain=80
+	else
+		link.tag.heal_gain=160
+	endif
+	if !(rand(<link.tag.heal_gain>))
+		link.healing=<link.healing> + 0.1
+	endif
+	link.tag.heal_gain=
+
+[EVENTS e_bandage]
+ON=@Death
+	findlayer(layer_special).findid(i_bandage_timer).remove
+	return 0
+ON=@GetHit
+	sysmessage="...... your fingers slip ......"
+ON=@SpellEffect
+	sysmessage="...... your fingers slip ......"
+
+[EOF]

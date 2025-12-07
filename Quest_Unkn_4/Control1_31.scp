@@ -1,0 +1,1250 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//The original idea for this script has been taken from Tanagar's weather script.
+//I didn't like the way he had coded it so I made my own, which became much bigger.
+
+//To use this script, put this file inside your Script folder, and then, run your server.
+//Once that this is done, use .add i_control_time  and place this object somewhere that your
+//players will never get.. Star Chamber as an example :)
+//Third step, is to retrieve the UID of the object by using .xshow uid.
+//Then, put the UID of the object inside the Worldsettings as time_control_uid
+//Next step, is to go back in-game (once that you saved the change)  and to dclick the
+//crystal.  You can now set the Hour and the Date as you wish.
+//All players can know the time by using .time
+//In this script, there is a temperature consideration.. If you don't like it, you can
+//disable it by setting the temperature_activated   value to 0.
+
+//The next step is to install some other scripts in other files...
+
+// ON=@LOGIN
+//*************************************************
+//**This part is used to activate the Temperature**
+//*************************************************
+// IF !(<SRC.RESTEST 1 i_temperature>)
+// SRC.NEWITEM=i_temperature
+// SRC.ACT.EQUIP
+// ENDIF
+//**************************************************************
+//**This part is used to have the Lighting And Weather effects**
+//**************************************************************
+// SRC.EVENTS -e_weather
+// SRC.EVENTS +e_weather
+//******************************************
+//**This part will activate the Age System**
+//******************************************
+//VAR.AGEACTIVATED=<EVAL (age_activated)>
+//IF (<VAR.AGEACTIVATED>==1)
+//IF !(<SRC.TAG.AGE>)
+//SRC.TAG.AGE=<EVAL {16 25}>
+//SRC.TAG.BIRTHDAY=<UID.time_control_uid.MOREZ>
+//SRC.TAG.BIRTHMONTH=<UID.time_control_uid.MORE1>
+//SRC.TAG.BIRTHYEAR=<UID.time_control_uid.MORE2>
+//ENDIF
+//*********************************************************
+//**This part will activate the Hair/Beard growing system**
+//*********************************************************
+//IF !(<SRC.RESTEST 1 i_hair_grow>)
+//SRC.NEWITEM=i_hair_grow
+//SRC.ACT.EQUIP
+//ENDIF
+
+//This Trigger: @LOGIN can be added under the CHARDEFS of your players (Male:0190 and Female:0191),
+//under a general skillclass, or under an event that all of your players have set on them.
+//Remove the comment // so the scripts can work properly :)  I advise to leave the comments saying
+//what is doing each part to be able to remove one or another more easily if you ever wish to do so.
+
+
+//*****Version 1.1!*****
+
+//Temperature system has been improved.
+//And there is a new age system!
+//If you wish to use this system, just leave the variable age_activated set to 1, if you don't wish to
+//have it, set it to 0.
+//At the moment, the age allows you to know your age (basically says for how long your char exists) and
+//at each end of month, your hair will grow :)
+//Having the age allows you to build, depending on your Race system, some modifications to the characters
+//depending on their race/age :)
+//Always more complex!
+
+
+//*****Version 1.2!*****
+
+//The Hair Growing system has been modified to be more realist.  Now, beard will grow also
+//and the script is now a lot more detailed.
+
+
+//*****Version 1.3!*****
+
+//Now, when it rains, water will be left on the ground!  And when it snows, snow will be left
+//on the ground!  And this snow can even be throwed at other people ;)  No new modifications
+//are needed to activate this!  Only having the script is enough ;)
+
+//Please do not remove this header..
+
+//Enjoy!
+
+[DEFNAME Worldsettings]
+
+time_control_uid 040005fef
+
+temperature_activated 1
+age_activated 1
+
+seconds_per_minute 6
+minutes_per_hour 60
+hours_per_day 24
+days_per_month 30
+months_per_year 12
+
+light_midnight 26
+light_night 20
+light_dawn 7
+light_dawn_2 15
+light_dusk 7
+light_dusk_2 15
+light_noon 0
+light_dungeon 26
+
+light_effect_moon 6
+light_effect_rain 4
+light_effect_snow (-3)
+
+weather_rain_spring 40
+weather_rain_summer 20
+weather_rain_fall 30
+
+weather_snow_winter 40
+weather_snow_spring 50
+weather_snow_fall 50
+
+temperature_midnight {-10 0}
+temperature_dawn_2 {-7 3}
+temperature_dawn {-3 7}
+temperature_noon {0 10}
+temperature_dusk_2 {-2 8}
+temperature_dusk {-5 5}
+temperature_night {-7 3}
+
+[ITEMDEF i_control_time]
+DEFNAME=i_control_time
+ID=i_crystal_green
+
+ON=@CREATE
+MOREX=0
+MOREY=0
+MOREZ=0
+
+ON=@DCLICK
+SRC.DIALOG d_weather
+RETURN 1
+
+ON=@TIMER
+MOREX=<MOREX>+1
+
+IF (<MOREX>==minutes_per_hour + 1)
+MOREX=1
+MOREY=<MOREY>+1
+ENDIF
+IF (<MOREY>==hours_per_day + 1)
+MOREY=1
+MOREZ=<MOREZ>+1
+ENDIF
+IF (<MOREZ>==days_per_month + 1)
+MOREZ=1
+MORE1=<MORE1>+1
+ENDIF
+IF (<MORE1>==months_per_year + 1)
+MORE1=1
+MORE2=<MORE2>+1
+ENDIF
+
+TIMER=seconds_per_minute
+
+RETURN 1
+
+[PLEVEL 1]
+time
+age
+
+[FUNCTION time]
+
+VAR.MINUTES=<UID.time_control_uid.MOREX>
+VAR.HOURS=<UID.time_control_uid.MOREY>
+VAR.DAYS=<UID.time_control_uid.MOREZ>
+VAR.MONTH=<UID.time_control_uid.MORE1>
+VAR.YEAR=<UID.time_control_uid.MORE2>
+
+IF (<VAR.MINUTES><30)
+VAR.WHEN=1
+ELSEIF (<VAR.MINUTES>==60)
+VAR.WHEN=3
+ELSE
+VAR.WHEN=2
+ENDIF
+IF (<VAR.HOURS>==24)
+VAR.WHEN2=1
+ELSE
+VAR.WHEN2=0
+ENDIF
+
+IF (<VAR.MONTH>==1)
+VAR.MONTHNAME=Martel
+ELSEIF (<VAR.MONTH>==2)
+VAR.MONTHNAME=Alturiak
+ELSEIF (<VAR.MONTH>==3)
+VAR.MONTHNAME=Ches
+ELSEIF (<VAR.MONTH>==4)
+VAR.MONTHNAME=Tarsakh
+ELSEIF (<VAR.MONTH>==5)
+VAR.MONTHNAME=Mirtul
+ELSEIF (<VAR.MONTH>==6)
+VAR.MONTHNAME=Kythorn
+ELSEIF (<VAR.MONTH>==7)
+VAR.MONTHNAME=Flammerige
+ELSEIF (<VAR.MONTH>==8)
+VAR.MONTHNAME=Eleasias
+ELSEIF (<VAR.MONTH>==9)
+VAR.MONTHNAME=Eleinte
+ELSEIF (<VAR.MONTH>==10)
+VAR.MONTHNAME=Marpenoth
+ELSEIF (<VAR.MONTH>==11)
+VAR.MONTHNAME=Uktar
+ELSE
+VAR.MONTHNAME=Iylviernar
+ENDIF
+
+IF (<VAR.WHEN2>==0)
+IF (<VAR.WHEN>==1)
+SYSMESSAGE It is <EVAL <VAR.MINUTES>> minutes past <EVAL <VAR.HOURS>>o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ELSEIF (<VAR.WHEN>==2)
+SYSMESSAGE It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>+1>o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ELSEIF (<VAR.WHEN>==3)
+SYSMESSAGE It is <EVAL <VAR.HOURS>+1>o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ENDIF
+ELSE
+IF (<VAR.WHEN>==1)
+SYSMESSAGE It is <EVAL <VAR.MINUTES>> minutes past midnight.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ELSEIF (<VAR.WHEN>==2)
+SYSMESSAGE It is <EVAL 60-<VAR.MINUTES>> minutes before 1 o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ELSEIF (<VAR.WHEN>==3)
+SYSMESSAGE It is 1 o'clock.
+SYSMESSAGE <VAR.MONTHNAME> <EVAL <VAR.DAYS>>.
+ENDIF
+ENDIF
+
+[events e_weather]
+ON=@ENVIRONCHANGE
+IF (<UID.time_control_uid.COLOR>==0)
+IF (<SRC.P.X><4096)
+SRC.Weathercheck
+ELSE
+TRY UID.time_control_uid.COLOR=1
+SRC.SECTOR.LIGHT=26
+SRC.SECTOR.DRY
+TRY UID.time_control_uid.COLOR=0
+ENDIF
+ENDIF
+
+[FUNCTION weathercheck]
+TRY UID.time_control_uid.COLOR=1
+VAR.WeatherCHANCE=<EVAL {1 100}>
+
+IF (<UID.time_control_uid.MORE1>==12)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_snow_winter)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==1)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_snow_winter)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==2)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_snow_winter)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==3)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_spring)>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSEIF (<VAR.WeatherCHANCE><<EVAL (weather_snow_spring)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==4)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_spring)>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSEIF (<VAR.WeatherCHANCE><<EVAL (weather_snow_spring)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==5)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_spring)>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSEIF (<VAR.WeatherCHANCE><<EVAL (weather_snow_spring)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==6)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_summer)>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==7)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_summer)>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==8)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_summer)>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==9)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_fall>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSEIF (<VAR.WeatherCHANCE><<EVAL (weather_snow_fall)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==10)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_fall>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSEIF (<VAR.WeatherCHANCE><<EVAL (weather_snow_fall)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==11)
+IF (<VAR.WeatherCHANCE><<EVAL (weather_rain_fall>)
+SECTOR.RAIN
+SRC.WeatherDry
+SRC.WeatherRain
+ELSEIF (<VAR.WeatherCHANCE><<EVAL (weather_snow_fall)>)
+SECTOR.SNOW
+SRC.WeatherDry
+SRC.WeatherSnow
+ELSE
+SECTOR.DRY
+SRC.WeatherDry
+ENDIF
+ENDIF
+
+IF (<UID.time_control_uid.MOREY>==24)
+SECTOR.LIGHT light_midnight
+ELSEIF (<UID.time_control_uid.MOREY>==1)
+SECTOR.LIGHT light_midnight
+ELSEIF (<UID.time_control_uid.MOREY>==2)
+SECTOR.LIGHT light_midnight
+ELSEIF (<UID.time_control_uid.MOREY>==3)
+SECTOR.LIGHT light_midnight
+ELSEIF (<UID.time_control_uid.MOREY>==4)
+SECTOR.LIGHT light_dawn_2
+ELSEIF (<UID.time_control_uid.MOREY>==5)
+SECTOR.LIGHT light_dawn_2
+ELSEIF (<UID.time_control_uid.MOREY>==6)
+SECTOR.LIGHT light_dawn_2
+ELSEIF (<UID.time_control_uid.MOREY>==7)
+SECTOR.LIGHT light_dawn_2
+ELSEIF (<UID.time_control_uid.MOREY>==8)
+SECTOR.LIGHT light_dawn
+ELSEIF (<UID.time_control_uid.MOREY>==9)
+SECTOR.LIGHT light_dawn
+ELSEIF (<UID.time_control_uid.MOREY>==10)
+SECTOR.LIGHT light_dawn
+ELSEIF (<UID.time_control_uid.MOREY>==11)
+SECTOR.LIGHT light_noon
+ELSEIF (<UID.time_control_uid.MOREY>==12)
+SECTOR.LIGHT light_noon
+ELSEIF (<UID.time_control_uid.MOREY>==13)
+SECTOR.LIGHT light_noon
+ELSEIF (<UID.time_control_uid.MOREY>==14)
+SECTOR.LIGHT light_dusk_2
+ELSEIF (<UID.time_control_uid.MOREY>==15)
+SECTOR.LIGHT light_dusk_2
+ELSEIF (<UID.time_control_uid.MOREY>==16)
+SECTOR.LIGHT light_dusk_2
+ELSEIF (<UID.time_control_uid.MOREY>==17)
+SECTOR.LIGHT light_dusk
+ELSEIF (<UID.time_control_uid.MOREY>==18)
+SECTOR.LIGHT light_dusk
+ELSEIF (<UID.time_control_uid.MOREY>==19)
+SECTOR.LIGHT light_dusk
+ELSEIF (<UID.time_control_uid.MOREY>==20)
+SECTOR.LIGHT light_night
+ELSEIF (<UID.time_control_uid.MOREY>==21)
+SECTOR.LIGHT light_night
+ELSEIF (<UID.time_control_uid.MOREY>==22)
+SECTOR.LIGHT light_night
+ELSEIF (<UID.time_control_uid.MOREY>==23)
+SECTOR.LIGHT light_night
+ENDIF
+
+TRY UID.time_control_uid.COLOR=0
+
+[ITEMDEF i_temperature]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Temperature
+
+ON=@EQUIP
+TIMER=1
+
+ON=@TIMER
+CONT.temperaturecheck
+TIMER=30
+RETURN 1
+
+[FUNCTION temperaturecheck]
+IF (<UID.time_control_uid.MORE1>==1)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(-20)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==2)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(-12)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==3)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(-4)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==4)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(4)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==5)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(12)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==6)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(20)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==7)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(20)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==8)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(12)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==9)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(4)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==10)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(-4)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(-4)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==11)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(-12)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(-12)>
+ENDIF
+ENDIF
+IF (<UID.time_control_uid.MORE1>==12)
+IF (<SECTOR.LIGHT>==light_midnight)
+VAR.TEMP=<EVAL (temperature_midnight)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn_2)
+VAR.TEMP=<EVAL (temperature_dawn_2)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dawn)
+VAR.TEMP=<EVAL (temperature_dawn)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_noon)
+VAR.TEMP=<EVAL (temperature_noon)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk_2)
+VAR.TEMP=<EVAL (temperature_dusk_2)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_dusk)
+VAR.TEMP=<EVAL (temperature_dusk)+(-20)>
+ENDIF
+IF (<SECTOR.LIGHT>==light_night)
+VAR.TEMP=<EVAL (temperature_night)+(-20)>
+ENDIF
+ENDIF
+VAR.CLOTHING=0
+IF (<FINDLAYER(22)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(17)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(5)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(23)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(4)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(3)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(6)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(20)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(7)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+VAR.ACTIVATED=<EVAL (temperature_activated)>
+IF (<VAR.ACTIVATED>==1)
+IF (<ACCOUNT.PLEVEL><2)
+
+IF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==0)
+ELSEIF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==1)
+ELSEIF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==2)
+ELSEIF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==3)
+STAM=<STAM>+(-1)
+ELSEIF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==4)
+STAM=<STAM>+(-2)
+ELSEIF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==5)
+STAM=<STAM>+(-3)
+ELSEIF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==6)
+STAM=<STAM>+(-4)
+HITS=<HITS>+(-1)
+ELSEIF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==7)
+STAM=<STAM>+(-5)
+HITS=<HITS>+(-2)
+ELSEIF (<VAR.TEMP>>20) && (<VAR.CLOTHING>==8)
+STAM=<STAM>+(-6)
+HITS=<HITS>+(-3)
+ENDIF
+
+IF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==0)
+STAM=<STAM>+(-2)
+ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==1)
+STAM=<STAM>+(-1)
+ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==2)
+ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==3)
+ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==4)
+ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==5)
+STAM=<STAM>+(-1)
+ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==6)
+STAM=<STAM>+(-2)
+ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==7)
+STAM=<STAM>+(-3)
+ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><21) && (<VAR.CLOTHING>==8)
+STAM=<STAM>+(-4)
+HITS=<HITS>+(-1)
+ENDIF
+
+IF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==0)
+STAM=<STAM>+(-3)
+ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==1)
+STAM=<STAM>+(-2)
+ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==2)
+STAM=<STAM>+(-1)
+ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==3)
+ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==4)
+ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==5)
+ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==6)
+STAM=<STAM>+(-1)
+ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==7)
+STAM=<STAM>+(-2)
+ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==8)
+STAM=<STAM>+(-3)
+ENDIF
+
+IF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==0)
+STAM=<STAM>+(-4)
+HITS=<HITS>+(-1)
+ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==1)
+STAM=<STAM>+(-3)
+ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==2)
+STAM=<STAM>+(-2)
+ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==3)
+STAM=<STAM>+(-1)
+ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==4)
+ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==5)
+ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==6)
+ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==7)
+ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==8)
+STAM=<STAM>+(-1)
+ENDIF
+
+IF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==0)
+STAM=<STAM>+(-6)
+HITS=<HITS>+(-3)
+ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==1)
+STAM=<STAM>+(-5)
+HITS=<HITS>+(-2)
+ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==2)
+STAM=<STAM>+(-4)
+HITS=<HITS>+(-1)
+ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==3)
+STAM=<STAM>+(-3)
+ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==4)
+STAM=<STAM>+(-2)
+ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==5)
+STAM=<STAM>+(-1)
+ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==6)
+ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==7)
+ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==8)
+STAM=<STAM>+(-1)
+ENDIF
+
+IF (<VAR.TEMP><-19) && (<VAR.CLOTHING>==0)
+STAM=<STAM>+(-7)
+HITS=<HITS>+(-4)
+ELSEIF (<VAR.TEMP><-9) && (<VAR.CLOTHING>==1)
+STAM=<STAM>+(-6)
+HITS=<HITS>+(-3)
+ELSEIF (<VAR.TEMP><-9) && (<VAR.CLOTHING>==2)
+STAM=<STAM>+(-5)
+HITS=<HITS>+(-2)
+ELSEIF (<VAR.TEMP><-9) && (<VAR.CLOTHING>==3)
+STAM=<STAM>+(-4)
+HITS=<HITS>+(-1)
+ELSEIF (<VAR.TEMP><-9) && (<VAR.CLOTHING>==4)
+STAM=<STAM>+(-3)
+ELSEIF (<VAR.TEMP><-9) && (<VAR.CLOTHING>==5)
+STAM=<STAM>+(-2)
+ELSEIF (<VAR.TEMP><-9) && (<VAR.CLOTHING>==6)
+STAM=<STAM>+(-1)
+ELSEIF (<VAR.TEMP><-9) && (<VAR.CLOTHING>==7)
+ELSEIF (<VAR.TEMP><-9) && (<VAR.CLOTHING>==8)
+STAM=<STAM>+(-1)
+ENDIF
+
+ENDIF
+ENDIF
+
+[FUNCTION age]
+VAR.AGEACTIVATED=<EVAL (age_activated)>
+IF (<VAR.AGEACTIVATED>==1)
+VAR.SHOWAGE=<EVAL (<UID.time_control_uid.MORE2>-<SRC.TAG.BIRTHYEAR>)+<SRC.TAG.AGE>>
+SRC.SYSMESSAGE You are <EVAL <VAR.SHOWAGE>> years old!
+ENDIF
+
+[DIALOG d_weather]
+
+250, 125	
+resizepic 0 0 3600 250 210
+
+resizepic 20 20 3000 50 22
+textentry 20 20 50 25 0 1 0
+text 75 20 026 1
+
+resizepic 20 50 3000 50 22
+textentry 20 50 50 25 0 2 2
+text 75 50 026 3
+
+resizepic 20 80 3000 50 22
+textentry 20 80 50 25 0 3 4
+text 75 80 026 5
+
+resizepic 20 110 3000 50 22
+textentry 20 110 50 25 0 4 6
+text 75 110 026 7
+
+resizepic 20 140 3000 50 22
+textentry 20 140 50 25 0 5 8
+text 75 140 026 9
+
+button 170 18 239 238 1 0 1
+button 170 48 239 238 1 0 2
+button 170 78 239 238 1 0 3
+button 170 108 239 238 1 0 4
+button 170 138 239 238 1 0 5
+button 100 168 248 247 1 0 6
+
+[DIALOG d_weather TEXT]
+<EVAL <UID.time_control_uid.MOREX>>
+Minutes
+<EVAL <UID.time_control_uid.MOREY>>
+Hours
+<EVAL <UID.time_control_uid.MOREZ>>
+Days
+<EVAL <UID.time_control_uid.MORE1>>
+Month
+<EVAL <UID.time_control_uid.MORE2>>
+Year
+
+[DIALOG d_weather BUTTON]
+
+ONBUTTON=0
+SYSMESSAGE Time is unchanged.
+
+ONBUTTON=1
+IF (<ARGTXT[1]>>0) && (<ARGTXT[1]><<EVAL (minutes_per_hour)+1>)
+UID.time_control_uid.MOREX <ARGTXT[1]>
+SYSMESSAGE Minutes have been modified.
+ELSE
+SYSMESSAGE Minutes must be between 1 and <EVAL (minutes_per_hour)>.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=2
+IF (<ARGTXT[2]>>0) && (<ARGTXT[2]><<EVAL (hours_per_day)+1>)
+UID.time_control_uid.MOREY <ARGTXT[2]>
+SYSMESSAGE Hours have been modified.
+ELSE
+SYSMESSAGE Hours must be between 1 and <EVAL (hours_per_day)>.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=3
+IF (<ARGTXT[3]>>0) && (<ARGTXT[3]><<EVAL (days_per_month)+1>)
+UID.time_control_uid.MOREZ <ARGTXT[3]>
+SYSMESSAGE Days have been modified.
+ELSE
+SYSMESSAGE Days must be between 1 and <EVAL (days_per_month)>.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=4
+IF (<ARGTXT[4]>>0) && (<ARGTXT[4]><<EVAL (months_per_year)+1>)
+UID.time_control_uid.MORE1 <ARGTXT[4]>
+SYSMESSAGE Months have been modified.
+ELSE
+SYSMESSAGE Months must be between 1 and <EVAL (months_per_year)>.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=5
+IF (<ARGTXT[5]>>0)
+UID.time_control_uid.MORE2 <ARGTXT[5]>
+SYSMESSAGE Years have been modified.
+ELSE
+SYSMESSAGE Years can't be negative.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=6
+IF (<ARGTXT[1]>>0) && (<ARGTXT[1]><<EVAL (minutes_per_hour)+1>)
+UID.time_control_uid.MOREX <ARGTXT[1]>
+SYSMESSAGE Minutes have been modified.
+ELSE
+SYSMESSAGE Minutes must be between 1 and <EVAL (minutes_per_hour)>.
+ENDIF
+IF (<ARGTXT[2]>>0) && (<ARGTXT[2]><<EVAL (hours_per_day)+1>)
+UID.time_control_uid.MOREY <ARGTXT[2]>
+SYSMESSAGE Hours have been modified.
+ELSE
+SYSMESSAGE Hours must be between 1 and <EVAL (hours_per_day)>.
+ENDIF
+IF (<ARGTXT[3]>>0) && (<ARGTXT[3]><<EVAL (days_per_month)+1>)
+UID.time_control_uid.MOREZ <ARGTXT[3]>
+SYSMESSAGE Days have been modified.
+ELSE
+SYSMESSAGE Days must be between 1 and <EVAL (days_per_month)>.
+ENDIF
+IF (<ARGTXT[4]>>0) && (<ARGTXT[4]><<EVAL (months_per_year)+1>)
+UID.time_control_uid.MORE1 <ARGTXT[4]>
+SYSMESSAGE Months have been modified.
+ELSE
+SYSMESSAGE Months must be between 1 and <EVAL (months_per_year)>.
+ENDIF
+IF (<ARGTXT[5]>>0)
+UID.time_control_uid.MORE2 <ARGTXT[5]>
+SYSMESSAGE Years have been modified.
+ELSE
+SYSMESSAGE Years can't be negative.
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+[ITEMDEF i_hair_grow]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Hair Grow
+
+ON=@CREATE
+TIMER=24*3600
+
+ON=@TIMER
+SRC.HAIRGROW
+TIMER=24*3600
+RETURN 1
+
+[FUNCTION HAIRGROW]
+IF (<SRC.FINDLAYER(11).BASEID>==i_hair_pageboy)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_long
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(11).BASEID>==i_hair_krisna)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_short
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(11).BASEID>==i_hair_afro)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_long
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(11).BASEID>==i_hair_mohawk)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_short
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(11).BASEID>==i_hair_2_pigtails)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_long
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(11).BASEID>==i_hair_buns)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_long
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(11).BASEID>==i_hair_receding)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_short
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(11).BASEID>==i_hair_short)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_long
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(11).BASEID>==i_hair_long)
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_hair_long
+SRC.ACT.EQUIP
+ELSE
+SRC.NEWITEM=i_hair_short
+SRC.ACT.EQUIP
+ENDIF
+IF (<SRC.BODY>==c_man)
+IF (<SRC.FINDLAYER(16).BASEID>==i_beard_short)
+SRC.FINDLAYER(16).REMOVE
+SRC.NEWITEM=i_beard_long_med
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(16).BASEID>==i_beard_long)
+SRC.FINDLAYER(16).REMOVE
+SRC.NEWITEM=i_beard_long_med
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(16).BASEID>==i_beard_short_med)
+SRC.FINDLAYER(16).REMOVE
+SRC.NEWITEM=i_beard_long_med
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(16).BASEID>==i_beard_long_med)
+SRC.FINDLAYER(16).REMOVE
+SRC.NEWITEM=i_beard_long_med
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(16).BASEID>==i_beard_goatee)
+SRC.FINDLAYER(16).REMOVE
+SRC.NEWITEM=i_beard_vandyke
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(16).BASEID>==i_beard_vandyke)
+SRC.FINDLAYER(16).REMOVE
+SRC.NEWITEM=i_beard_short_med
+SRC.ACT.EQUIP
+ELSEIF (<SRC.FINDLAYER(16).BASEID>==i_beard_mustache)
+SRC.FINDLAYER(16).REMOVE
+SRC.NEWITEM=i_beard_vandyke
+SRC.ACT.EQUIP
+ELSE
+SRC.NEWITEM=i_beard_goatee
+SRC.ACT.EQUIP
+ENDIF
+ENDIF
+
+[FUNCTION WeatherSnow]
+NEWITEM=i_control_snow
+ACT.EQUIP
+
+[ITEMDEF i_control_snow]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Snow
+
+ON=@EQUIP
+TIMER=1
+
+ON=@TIMER
+VAR.X=<EVAL {-10 10}>
+VAR.Y=<EVAL {-10 10}>
+CONT.NEWNPC c_man
+CONT.ACT.P=<EVAL <CONT.P.X>+<VAR.X>>,<EVAL <CONT.P.Y>+<VAR.Y>>,<CONT.P.Z>
+CONT.ACT.FIX
+CONT.ACT.RUN N
+IF !(<CONT.ACT.FLAGS>&01000000)
+CONT.ACT.REMOVE
+CONT.NEWITEM=i_weather_snow
+CONT.ACT.P=<EVAL <CONT.P.X>+<VAR.X>>,<EVAL <CONT.P.Y>+<VAR.Y>>,<CONT.P.Z>
+CONT.ACT.FIX
+ELSE
+CONT.ACT.REMOVE
+ENDIF
+VAR.X=<EVAL {-10 10}>
+VAR.Y=<EVAL {-10 10}>
+CONT.NEWNPC c_man
+CONT.ACT.P=<EVAL <CONT.P.X>+<VAR.X>>,<EVAL <CONT.P.Y>+<VAR.Y>>,<CONT.P.Z>
+CONT.ACT.FIX
+CONT.ACT.RUN N
+IF !(<CONT.ACT.FLAGS>&01000000)
+CONT.ACT.REMOVE
+CONT.NEWITEM=i_weather_snow
+CONT.ACT.P=<EVAL <CONT.P.X>+<VAR.X>>,<EVAL <CONT.P.Y>+<VAR.Y>>,<CONT.P.Z>
+CONT.ACT.FIX
+ELSE
+CONT.ACT.REMOVE
+ENDIF
+TIMER=2
+RETURN 1
+
+[ITEMDEF i_weather_snow]
+ID=020E8
+NAME=Snow
+
+ON=@CREATE
+COLOR=07A1
+ATTR=012
+TIMER=30
+
+ON=@DCLICK
+TARGET You take up the snow and prepare a ball with it.  Who do you wish to throw it at?
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.TARG.EFFECT 0,0E73,1,30,0
+SRC.TARG.SYSMESSAGE You receive a snow ball from <SRC.NAME>
+REMOVE
+RETURN 1
+
+[FUNCTION WeatherRain]
+SRC.NEWITEM=i_control_rain
+SRC.ACT.EQUIP
+
+[ITEMDEF i_control_rain]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Rain
+
+ON=@EQUIP
+TIMER=1
+
+ON=@TIMER
+VAR.X=<EVAL {-10 10}>
+VAR.Y=<EVAL {-10 10}>
+CONT.NEWNPC c_man
+CONT.ACT.P=<EVAL <CONT.P.X>+<VAR.X>>,<EVAL <CONT.P.Y>+<VAR.Y>>,<CONT.P.Z>
+CONT.ACT.FIX
+CONT.ACT.RUN N
+IF !(<CONT.ACT.FLAGS>&01000000)
+CONT.ACT.REMOVE
+CONT.NEWITEM=i_weather_rain
+CONT.ACT.P=<EVAL <CONT.P.X>+<VAR.X>>,<EVAL <CONT.P.Y>+<VAR.Y>>,<CONT.P.Z>
+CONT.ACT.FIX
+ELSE
+CONT.ACT.REMOVE
+ENDIF
+VAR.X=<EVAL {-10 10}>
+VAR.Y=<EVAL {-10 10}>
+CONT.NEWNPC c_man
+CONT.ACT.P=<EVAL <CONT.P.X>+<VAR.X>>,<EVAL <CONT.P.Y>+<VAR.Y>>,<CONT.P.Z>
+CONT.ACT.FIX
+CONT.ACT.RUN N
+IF !(<CONT.ACT.FLAGS>&01000000)
+CONT.ACT.REMOVE
+CONT.NEWITEM=i_weather_rain
+CONT.ACT.P=<EVAL <CONT.P.X>+<VAR.X>>,<EVAL <CONT.P.Y>+<VAR.Y>>,<CONT.P.Z>
+CONT.ACT.FIX
+ELSE
+CONT.ACT.REMOVE
+ENDIF
+TIMER=2
+RETURN 1
+
+[ITEMDEF i_weather_rain]
+ID=0122A
+NAME=Water
+
+ON=@CREATE
+COLOR=07A0
+ATTR=012
+TIMER=30
+
+[FUNCTION WeatherDry]
+FINDID(i_control_snow).REMOVE
+FINDID(i_control_rain).REMOVE
+
+[ITEMDEF 0104b]
+ON=@DCLICK
+SRC.TIME
+RETURN 1
+
+[ITEMDEF 01810]
+ON=@DCLICK
+SRC.TIME
+RETURN 1
+
+[EOF]

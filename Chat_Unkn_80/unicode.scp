@@ -1,0 +1,112 @@
+[comment on this script...]
+made for Sphere 55R4.0.1 by Moe
+The packet function is based on Furios SendMessage. Strlength is by SephDragoon.
+This enables unicode support. It was written for german unicode characters (üöäß) but may work for some other characters on the same character table too. I don't fully understand how the client or Sphere handles unicode chars. The script should work for unicode strings sent from client as well as strings from script.
+
+[function sayUC]
+if (<strpos 0 ® <args>>!=-1)
+	args=<strsub 0 <strpos 0 ® <args>> <args>>
+endif
+call f_asc_to_ucs <args>
+local.uid = <uid>
+local.type = 0
+local.color = <speechcolor>
+if !<local.color>
+	local.color=946
+endif
+local.font = <font>
+local.message = <local.ucs>
+call f_packetUC
+call f_sayUC
+
+[function messageUC]
+if (<strpos 0 ® <args>>!=-1)
+	args=<strsub 0 <strpos 0 ® <args>> <args>>
+endif
+call f_asc_to_ucs <args>
+local.uid = <uid>
+local.type = 06
+local.color=946
+local.font = 3
+local.message = <local.ucs>
+call f_packetUC
+call f_messageUC
+
+
+
+[function f_asc_to_ucs] //transforms ASCii to UniCodeStream
+local.ucs=" "
+local.ucslength=0
+for X 0 <eval <strlength <args>>-1>
+	if (<asc <strsub <local.x> 1 <args>>> < 0)
+		if (<asc <strsub <eval <local.x>+-1> 1 <args>>> == 0ffffffc3)
+			local.ucs=<local.ucs> 00 <hval (<asc <strsub <local.x> 1 <args>>>&0ff)+040>
+			local.ucslength=<eval <local.ucslength>+1>
+		elseif (<asc <strsub <local.x> 1 <args>>> != 0ffffffc3)
+			local.ucs=<local.ucs> 00 <hval <asc <strsub <local.x> 1 <args>>>&0ff>
+			local.ucslength=<eval <local.ucslength>+1>
+		endif
+	else
+		if (<asc <strsub <eval <local.x>+-1> 1 <args>>> == 0ffffffc3)
+			local.ucs=<local.ucs> 00 <hval (<asc <strsub <local.x> 1 <args>>>&0ff)+040>
+		elseif (<eval <asc <strsub <local.x> 1 <args>>>> == 0)
+			local.ucs=<local.ucs> 00 020
+		else
+			local.ucs=<local.ucs> 00 <asc <strsub <local.x> 1 <args>>>
+		endif
+		local.ucslength=<eval <local.ucslength>+1>
+	endif
+endfor
+
+
+[FUNCTION f_packetUC]
+// ----------------------------
+LOCAL.NAME = <QVAL <LOCAL.UID>?<UID.<LOCAL.UID>.NAME>:System>
+LOCAL.MODEL = 0FF 0FF
+IF (<LOCAL.UID>)
+	IF (<UID.<LOCAL.UID>.ISCHAR>)
+		LOCAL.MODEL = <HVAL (<EVAL <UID.<LOCAL.UID>.OBODY>> & 00000ffff)>
+	ELSE
+		LOCAL.MODEL = <EVAL <UID.<LOCAL.UID>.DISPID>>
+	ENDIF
+ELSE
+	LOCAL.UID = 0FF 0FF 0FF 0FF
+ENDIF
+IF (<strlength <LOCAL.NAME>> > 30)
+	LOCAL.NAME = <STRSUB 0 30 <LOCAL.NAME>>
+ENDIF
+// ----------------------------
+LOCAL.P = 0AE
+LOCAL.P = <LOCAL.P> W<hval (<local.ucslength>*2) + 50>
+LOCAL.P = <LOCAL.P> D<LOCAL.UID>
+LOCAL.P = <LOCAL.P> W<LOCAL.MODEL>
+LOCAL.P = <LOCAL.P> B<LOCAL.TYPE>
+LOCAL.P = <LOCAL.P> W<LOCAL.COLOR>
+LOCAL.P = <LOCAL.P> W<LOCAL.FONT>
+LOCAL.P = <LOCAL.P> 00 00 00 00 //4 Byte LANG
+LOCAL.P = <LOCAL.P> <ASC <LOCAL.NAME>>
+IF (<strlength <LOCAL.NAME>> < 30)
+	FOR X 1 <EVAL 30 - <strlength <LOCAL.NAME>>>
+		LOCAL.P = <LOCAL.P> 00
+	ENDFOR
+ENDIF
+local.Q=<local.first> <local.second>
+local.R=<local.second>+1
+for x 1 50
+	local.Q=<local.Q> <local.first> <local.R>
+	local.R=<eval <local.R>+1>
+endfor
+LOCAL.P = <LOCAL.P> <LOCAL.MESSAGE>
+LOCAL.P = <LOCAL.P> 00 00
+
+
+[function f_sayUC]
+forclients 18
+	sendpacket <local.p> 
+endfor
+
+[function f_messageUC]
+src.sendpacket <local.p>
+
+[function strlength]
+return <strpos 0 ® <args>®>

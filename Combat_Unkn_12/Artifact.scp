@@ -1,0 +1,1148 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            Order Armagedon                                                   //
+//                                             Admin OuTSiDeR                                                     //
+//                                                 2005                                                           //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+[ITEMDEF i_egis_HEATER_SHIELD]
+DEFNAME=i_egis_HEATER_SHIELD
+NAME=Egis Shield
+ID=I_SHIELD_HEATER
+VALUE=50000
+ARMOR=38
+REQSTR=50
+WEIGHT=8
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=04ed
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+if <src.parrying><100.0
+SRC.SYSMESSAGE You skill parrying is low.
+src.findlayer(layer_hand2).cont=<SRC.FINDLAYER.layer_pack.UID>
+else
+SRC.events +e_shield_edis
+RETURN 0
+
+ON=@Unequip
+SRC.events -e_shield_edis
+RETURN 0
+
+[EVENTS e_shield_edis]
+
+ON=@GetHit
+DORAND (2)
+f_egis
+MESSAGE 
+ENDDO
+
+[FUNCTION f_egis]
+if ( <findlayer.2.baseid> == i_egis_HEATER_SHIELD )
+	SRC.effect 1,1,1
+	SRC.damage 50
+	SRC.sfx snd_SPELL_LIGHTNING 	
+endif
+RETURN 0
+
+[ITEMDEF i_arcane_shield]
+DEFNAME=i_arcane_shield
+NAME=Arcane Shield
+ID=I_SHIELD_kite_wood
+VALUE=50000
+ARMOR=27
+REQSTR=50
+WEIGHT=8
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=0485
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.parrying = (<SRC.parrying>+10.0)
+
+
+ON=@UNEQUIP
+SRC.parrying = (<SRC.parrying>-(10.0))
+
+
+[ITEMDEF i_fortune_armor]
+DEFNAME=i_fortune_armor
+NAME=Tunic of Fortune
+ID=i_studded_tunic_decoration
+VALUE=50000
+ARMOR=130
+REQSTR=100
+WEIGHT=10
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=2
+
+ON=@Create
+COLOR=0445
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@Equip
+f_armor_light_equip
+
+ON=@Unequip
+f_armor_light_unequip
+
+[FUNCTION f_armor_light_equip]
+// Make glow
+	SRC.equiphalo
+// Give nightsight
+	SRC.newitem i_armor_light_nightsight
+	SRC.equip <SRC.ACT.UID>
+endif
+
+[FUNCTION f_armor_light_unequip]
+// Remove glow
+	if ( <CONT.findid.i_light_source> )
+		CONT.findid.i_light_source.remove
+	endif
+// Remove nightsight
+	if ( <CONT.findid.i_armor_light_nightsight> )
+		CONT.findid.i_armor_light_nightsight.remove
+	endif
+	if ( <CONT.findid.i_rune_night_sight> )
+		CONT.findid.i_rune_night_sight.remove
+	endif
+endif
+
+[ITEMDEF i_armor_light_nightsight]
+ID=i_memory
+TYPE=t_eq_script
+NAME=nightsight
+
+ON=@Equip
+SRC.spelleffect 6,100.0
+ATTR=attr_newbie|attr_move_never|attr_static
+TIMER=1
+
+ON=@Timer
+	CONT.spelleffect 6,100.0
+	TIMER=1
+else
+	if ( <CONT.findid.i_rune_night_sight> )
+		CONT.findid.i_rune_night_sight.remove
+	endif
+	remove
+endif
+RETURN 1
+
+[ITEMDEF i_Heavens_axe]
+DEFNAME=i_Heavens_axe
+ID=i_axe_double
+NAME=Axe of the Heavens
+VALUE=50000
+WEIGHT=9
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=39
+SKILL=Swordsmanship
+REQSTR=100
+TWOHANDS=Y
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+HITPOINTS={31 80}
+COLOR=0918
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@Equip
+SRC.MESSAGE Welcome to Heaven Seer <src.name>!
+SOUND=0206
+SRC.EFFECT=1,03709,6,15,1 
+
+On=@Damage
+SOUND=0206
+SRC.EFFECT=1,03709,6,15,1
+RETURN 0
+
+[ITEMDEF i_Insanity_katana]
+DEFNAME=i_Insanity_katana
+ID=i_katana
+NAME=Blade of Insanity
+VALUE=50000
+WEIGHT=6
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=36
+SKILL=Swordsmanship
+REQSTR=10
+TWOHANDS=N
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+HITPOINTS={31 90}
+COLOR=0833
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@Equip
+SRC.MESSAGE Now I am crazy!
+
+[ITEMDEF i_Righteous_sword]
+DEFNAME=i_Righteous_sword
+ID=i_sword_broad
+NAME=Blade of the Righteous
+TYPE=T_WEAPON_SWORD
+VALUE=50000
+FLIP=1
+DAM=34
+SKILL=Swordsmanship
+REQSTR=25
+TWOHANDS=N
+WEIGHT=4
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //Swords
+DESCRIPTION=Broadsword
+
+ON=@Create
+HITPOINTS={50 150}
+COLOR=07bd
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@DAMAGE
+SRC.SFX=0117
+SRC.EFFECT=3,01FA3,6,15,1 
+RETURN 0
+
+[ITEMDEF i_bone_mace]
+DEFNAME=i_bone_mace
+ID=i_mace_war
+NAME=Bone Crusher
+WEIGHT=7
+TYPE=T_WEAPON_MACE_SMITH
+VALUE=50000
+FLIP=1
+DAM=37
+SKILL=Mace Fighting
+REQSTR=30
+TWOHANDS=N
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //Maces & Hammers
+DESCRIPTION=War Mace
+
+ON=@Create
+HITPOINTS={50 150}
+COLOR=08fc
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.macefighting = (<SRC.macefighting>+10.0)
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.macefighting = (<SRC.macefighting>-(10.0))
+RETURN 0
+
+
+[ITEMDEF i_Divine_HELM]
+DEFNAME=i_Divine_HELM
+NAME=Divine Countenance
+VALUE=50000
+ID=i_mask_blue
+ARMOR=130
+REQSTR=50
+WEIGHT=5
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=090f
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name> [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.tactics = (<SRC.tactics>+10.0)
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.tactics = (<SRC.tactics>-(10.0))
+RETURN 0
+
+[ITEMDEF i_bow_Frostbringer]
+DEFNAME=i_bow_Frostbringer
+ID=013b2
+NAME=Frostbringer
+TYPE=T_WEAPON_BOW
+VALUE=50000
+FLIP=1
+WEIGHT=3
+DAM=60
+SKILL=Archery
+REQSTR=100
+TWOHANDS=Y
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //Bows
+DESCRIPTION=Bow
+
+TDATA3=i_arrow
+TDATA4=i_arrow_x
+
+ON=@Create
+HITPOINTS={31 60}
+color=07e4
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+if <src.archery><80.0
+SRC.SYSMESSAGE You skill archery is low.
+src.findlayer(layer_hand1).cont=<SRC.FINDLAYER.layer_pack.UID>
+else
+RETURN 0
+
+[ITEMDEF i_Nobility_GAUNTLETS]
+DEFNAME=i_Nobility_GAUNTLETS
+NAME=Gauntlets of Nobility
+ID=i_studded_gloves
+VALUE=50000
+ARMOR=130
+REQSTR=50
+WEIGHT=2
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //Angeles
+DESCRIPTION=Platemail Gauntlets
+
+ON=@Create
+COLOR=07ff
+HITPOINTS={ 40 50 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.wrestling = (<SRC.wrestling>+10.0)
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.wrestling = (<SRC.wrestling>-(10.0))
+RETURN 0
+
+[ITEMDEF i_Magi_HELM]
+DEFNAME=i_Magi_HELM
+NAME=Hat of the Magi
+ID=i_hat_wizards
+VALUE=50000
+ARMOR=130
+REQSTR=50
+WEIGHT=5
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=0775
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.magery = (<SRC.magery>+15.0)
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.magery = (<SRC.magery>-(15.0))
+RETURN 0
+
+[ITEMDEF i_Insight_HELM]
+DEFNAME=i_Insight_HELM
+NAME=Helm of Insight
+ID=i_platemail_helm
+VALUE=50000
+ARMOR=130
+REQSTR=50
+WEIGHT=5
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=04ab
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.events +e_harm_immune
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.events -e_harm_immune
+RETURN 0
+
+[EVENTS e_harm_immune]
+
+on=@spelleffect
+IF     (<ARGN>==1) 
+emote Resist Clumsy!
+        RETURN 1
+ELSEIF (<ARGN>==3)   
+emote Resist Feeblemind!
+        RETURN 1
+ELSEIF (<ARGN>==8)   
+emote Resist Weaken!
+        RETURN 1
+ELSEIF (<ARGN>==27)   
+emote Resist Curse!
+        RETURN 1
+ELSEIF (<ARGN>==46)   
+emote Resist Mass Curse!
+        RETURN 1
+return 0
+endif
+
+[ITEMDEF i_holy_PLATEMAIL]
+DEFNAME=i_holy_PLATEMAIL
+NAME=Holy Knight's Breastplate
+ID=i_platemail_chest
+VALUE=50000
+ARMOR=130
+REQSTR=100
+WEIGHT=10
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //Angeles
+DESCRIPTION=Platemail
+
+ON=@Create
+COLOR=077e
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.MESSAGE How you are holy
+SRC.TAG.HOLY_KILLS=<SRC.KILLS> 
+SRC.KILLS=0
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.MESSAGE You loose your holy
+SRC.KILLS=<SRC.TAG.HOLY_KILLS>
+
+[ITEMDEF i_hunter_HELM]
+DEFNAME=i_hunter_HELM
+NAME=Hunter's Headdress
+ID=i_mask_deer
+VALUE=50000
+ARMOR=130
+REQSTR=50
+WEIGHT=5
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=0515
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.archery = (<SRC.archery>+15.0)
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.archery = (<SRC.archery>-(15.0))
+RETURN 0
+
+[ITEMDEF i_Collar_GORGET]
+DEFNAME=i_Collar_GORGET
+NAME=Jackal's Collar
+ID=i_studded_gorget
+VALUE=50000
+ARMOR=130
+REQSTR=50
+WEIGHT=2
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //Angeles
+DESCRIPTION=Platemail Gorget
+
+ON=@Create
+COLOR=0981
+HITPOINTS={ 40 50 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.TAG.Collar=<SRC.KARMA>
+SRC.KARMA=-3000
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.KARMA=<SRC.TAG.Collar>
+RETURN 0 
+
+
+[ITEMDEF i_Legacy_bardiche]
+DEFNAME=i_Legacy_bardiche
+ID=i_bardiche
+NAME=Legacy of the Dread Lord
+TYPE=T_WEAPON_SWORD
+VALUE=50000
+FLIP=1
+DAM=39
+SKILL=Swordsmanship
+REQSTR=100
+TWOHANDS=Y
+WEIGHT=9
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //Polearms
+DESCRIPTION=Bardiche
+
+ON=@Create
+HITPOINTS={31 100}
+COLOR=0447
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.TAG.Legacy=<SRC.KARMA>
+SRC.KARMA=+10000
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.KARMA=<SRC.TAG.Legacy>
+RETURN 0 
+
+[ITEMDEF i_Bane_leggings]
+DEFNAME=i_Bane_leggings
+ID=i_chainmail_leggings_decoration
+NAME=Leggings of Bane
+TYPE=t_armor
+VALUE=50000
+WEIGHT=0
+ARMOR=130
+
+CATEGORY=Artefacts //Provisions - Armor
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+HITPOINTS={31 100}
+COLOR=08e2
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.events +e_poison_immune
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.events -e_poison_immune
+RETURN 0
+
+[EVENTS e_poison_immune]
+
+on=@skillstart
+src.poison_immune
+
+ON=@EnvironChange
+Src.poison_immune
+
+On=@spellcast
+Src.poison_immune
+
+On=@hit
+Src.poison_immune
+
+on=@spelleffect
+IF     (<ARGN>==20)  // poison
+emote Resist posion!
+        RETURN 1
+ELSEIF (<ARGN>==39)    //Poison Field
+emote Resist posion!
+        RETURN 1
+return 0
+endif
+
+[function poison_immune]
+    IF ((<SRC.FLAGS>&STATF_Poisoned)==STATF_Poisoned)
+            SRC.FLAGS=<SRC.FLAGS>&~STATF_Poisoned
+            SRC.SPELLEFFECT=s_cure 1000
+            SRC.EMOTE=Resist poison!
+    ENDIF
+
+[ITEMDEF i_Midnight_ARMS]
+DEFNAME=i_Midnight_ARMS
+NAME=Midnight Bracers
+ID=i_bone_arms
+VALUE=50000
+ARMOR=130
+REQSTR=50
+WEIGHT=5
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=0488
+HITPOINTS={ 50 150 }   
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+[ITEMDEF i_Crown_HELM]
+DEFNAME=i_Crown_HELM
+NAME=Ornate Crown of the Harrower
+ID=i_bone_helmet
+ARMOR=130
+VALUE=50000
+REQSTR=50
+WEIGHT=5
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=04ea
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.events +e_lighting_immune
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.events -e_lighting_immune
+RETURN 0
+
+[EVENTS e_lighting_immune]
+
+on=@spelleffect
+IF     (<ARGN>==30) 
+emote Resist Lighting!
+        RETURN 1
+ELSEIF (<ARGN>==49)   
+emote Resist Lighting!
+        RETURN 1
+return 0
+endif
+
+[ITEMDEF i_Serpent_kryss]
+DEFNAME=i_Serpent_kryss
+ID=i_kryss
+NAME=Serpent's Fang
+WEIGHT=4
+TYPE=T_WEAPON_FENCE
+VALUE=50000
+FLIP=1
+DAM=34
+SKILL=Fencing
+REQSTR=10
+TWOHANDS=N
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //Knives & Daggers
+DESCRIPTION=Kryss
+
+ON=@Create
+HITPOINTS={50 150}
+COLOR=08e1
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+[ITEMDEF i_dancer_leggings]
+DEFNAME=i_dancer_leggings
+NAME=Shadow Dancer Leggings
+ID=i_studded_leggings
+VALUE=50000
+ARMOR=130
+REQSTR=50
+WEIGHT=15
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //Angeles
+DESCRIPTION=Platemail Legs
+
+ON=@Create
+COLOR=color_o_shadow
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+[ITEMDEF i_staff_magi]
+DEFNAME=i_staff_magi
+ID=i_staff_black
+NAME=Staff of the Magi
+VALUE=50000
+WEIGHT=10
+TYPE=T_WEAPON_MACE_STAFF
+FLIP=1
+DAM=40
+SKILL=Swordsmanship
+REQSTR=100
+TWOHANDS=Y
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+HITPOINTS={50 150}
+COLOR=0776
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+[ITEMDEF i_berseker_maul]
+DEFNAME=i_berseker_maul
+ID=i_maul
+NAME=The Beserker's Maul
+WEIGHT=6
+TYPE=T_WEAPON_MACE_SMITH
+VALUE=50000
+FLIP=1
+DAM=36
+SKILL=Mace Fighting
+REQSTR=20
+TWOHANDS=N
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+HITPOINTS={50 150}
+COLOR=04ad
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.EMOTE is Berseker!!!
+RETURN 0 
+
+[ITEMDEF i_Inquisitor_GAUNTLETS]
+DEFNAME=i_Inquisitor_GAUNTLETS
+NAME=The Inquisitor's Resolution
+ID=i_platemail_gloves
+VALUE=50000
+ARMOR=130
+REQSTR=50
+WEIGHT=2
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=0798
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.swordsmanship = (<SRC.swordsmanship>+15.0)
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.swordsmanship = (<SRC.swordsmanship>-(15.0))
+RETURN 0
+
+[ITEMDEF i_Taskmaster_war_fork]
+DEFNAME=i_Taskmaster_war_fork
+ID=i_war_fork
+NAME=The Taskmaster
+VALUE=50000
+WEIGHT=4
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=29
+SKILL=Fencing
+REQSTR=35
+TWOHANDS=N
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+HITPOINTS={50 150}
+COLOR=08e2
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.fencing = (<SRC.fencing>+15.0)
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.fencing = (<SRC.fencing>-(15.0))
+RETURN 0
+
+
+[ITEMDEF i_FIRE_TUNIC]
+DEFNAME=i_FIRE_TUNIC
+NAME=Tunic of Fire
+ID=i_chainmail_tunic_decoration
+VALUE=50000
+ARMOR=130
+REQSTR=100
+WEIGHT=10
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //Angeles
+DESCRIPTION=Platemail
+
+ON=@Create
+COLOR=06e8
+HITPOINTS={ 50 150 }  
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+ON=@EQUIP
+SRC.events +e_fire_immune
+RETURN 0 
+
+ON=@UNEQUIP
+SRC.events -e_fire_immune
+RETURN 0
+
+[EVENTS e_fire_immune]
+
+on=@spelleffect
+IF     (<ARGN>==5) 
+emote Resist Fire!
+        RETURN 1
+ELSEIF (<ARGN>==18)   
+emote Resist Fire!
+        RETURN 1
+ELSEIF (<ARGN>==28)   
+emote Resist Fire!
+        RETURN 1
+ELSEIF (<ARGN>==43)   
+emote Resist Fire!
+        RETURN 1
+ELSEIF (<ARGN>==51)   
+emote Resist Fire!
+        RETURN 1
+ELSEIF (<ARGN>==55)   
+emote Resist Fire!
+        RETURN 1
+return 0
+endif
+
+[ITEMDEF i_VOICE_GORGET]
+DEFNAME=i_VOICE_GORGET
+NAME=Voice of the Fallen King
+VALUE=50000
+ID=i_studded_gorget
+ARMOR=130
+REQSTR=50
+WEIGHT=2
+
+CATEGORY=Artefacts //Provisions - Armor - Colored
+SUBSECTION=Artefacts //@
+DESCRIPTION=@
+
+ON=@Create
+COLOR=0835
+HITPOINTS={ 50 150 }
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+[ITEMDEF i_Zyronic_axe]
+DEFNAME=i_Zyronic_axe
+ID=i_axe_exec
+NAME=Zyronic Claw
+WEIGHT=9
+TYPE=T_WEAPON_AXE
+VALUE=50000
+FLIP=1
+DAM=39
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=Y
+CATEGORY=Artefacts //Provisions - Weapons
+SUBSECTION=Artefacts //Axes
+DESCRIPTION=Two Handed Axe
+
+ON=@Create
+HITPOINTS={50 150}
+COLOR=0447
+
+ON=@Click
+MESSAGE <name>
+MESSAGE [Durability: <HITPOINTS>]
+return 1
+
+
+
+[TEMPLATE loot_artifact]
+DEFNAME=loot_artifact
+CATEGORY=Item Templates
+SUBSECTION=Monster Loot Templates
+DESCRIPTION=@
+CONTAINER=i_backpack
+ITEM=i_egis_HEATER_SHIELD
+ITEM=i_arcane_shield
+ITEM=i_fortune_armor
+ITEM=i_Heavens_axe
+ITEM=i_Insanity_katana
+ITEM=i_Righteous_sword
+ITEM=i_bone_mace
+ITEM=i_Divine_HELM
+ITEM=i_bow_Frostbringer
+ITEM=i_Nobility_GAUNTLETS
+ITEM=i_Magi_HELM
+ITEM=i_Insight_HELM
+ITEM=i_holy_PLATEMAIL
+ITEM=i_hunter_HELM
+ITEM=i_Collar_GORGET
+ITEM=i_Legacy_bardiche
+ITEM=i_Bane_leggings
+ITEM=i_Midnight_ARMS
+ITEM=i_Serpent_kryss
+ITEM=i_dancer_leggings
+ITEM=i_staff_magi
+ITEM=i_berseker_maul
+ITEM=i_Inquisitor_GAUNTLETS
+ITEM=i_Taskmaster_war_fork
+ITEM=i_FIRE_TUNIC
+ITEM=i_VOICE_GORGET
+ITEM=i_Zyronic_axe
+ITEM=i_Crown_HELM
+
+[CHARDEF C_H_ARTEFACT] 
+DEFNAME=C_H_ARTEFACT
+NAME=#NAMES_HUMANMALE the Artefacter
+TEVENTS=e_fame_karma_gain 
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=jobBlacksmith
+TSPEECH=spk_shopkeep
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+NPC=brain_vendor
+COLOR=colors_skin
+STR={86 100}
+DEX={66 80}
+INT={61 75}
+
+MINING={35.0 55.0}
+ARMSLORE={65.0 88.0}
+BLACKSMITHING={55.0 78.0}
+FENCING={35.0 55.0}
+PARRYING={35.0 50.0}
+SWORDSMANSHIP={35.0 50.0}
+WRESTLING={45.0 68.0}
+MACEFIGHTING={35.0 50.0}
+TACTICS={35.0 55.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRestock
+ITEM=RANDOM_LIGHT
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_pants
+COLOR=colors_all
+ITEM=i_apron_full
+COLOR=colors_all
+ITEM=i_boots_calf
+COLOR=colors_neutral
+ITEM=random_weapon
+ITEM=random_coin_purse
+
+SELL=VENDOR_S_ARTEFACT
+BUY=VENDOR_B_ARTEFACT
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=@ (male)
+
+[TEMPLATE 102190]
+DEFNAME=VENDOR_S_ARTEFACT
+CATEGORY=Vendor Templates
+SUBSECTION=Sell Templates
+DESCRIPTION=ARTEFACT
+SELL=i_egis_HEATER_SHIELD
+SELL=i_arcane_shield
+SELL=i_fortune_armor
+SELL=i_Heavens_axe
+SELL=i_Insanity_katana
+SELL=i_Righteous_sword
+SELL=i_bone_mace
+SELL=i_Divine_HELM
+SELL=i_bow_Frostbringer
+SELL=i_Nobility_GAUNTLETS
+SELL=i_Magi_HELM
+SELL=i_Insight_HELM
+SELL=i_holy_PLATEMAIL
+SELL=i_hunter_HELM
+SELL=i_Collar_GORGET
+SELL=i_Legacy_bardiche
+SELL=i_Bane_leggings
+SELL=i_Midnight_ARMS
+SELL=i_Serpent_kryss
+SELL=i_dancer_leggings
+SELL=i_staff_magi
+SELL=i_berseker_maul
+SELL=i_Inquisitor_GAUNTLETS
+SELL=i_Taskmaster_war_fork
+SELL=i_FIRE_TUNIC
+SELL=i_VOICE_GORGET
+SELL=i_Zyronic_axe
+SELL=i_Crown_HELM
+
+[TEMPLATE 102191]
+DEFNAME=VENDOR_B_ARTEFACT
+CATEGORY=Vendor Templates
+SUBSECTION=Buy Templates
+DESCRIPTION=ARTEFACT
+BUY=i_egis_HEATER_SHIELD
+BUY=i_arcane_shield
+BUY=i_fortune_armor
+BUY=i_Heavens_axe
+BUY=i_Insanity_katana
+BUY=i_Righteous_sword
+BUY=i_bone_mace
+BUY=i_Divine_HELM
+BUY=i_bow_Frostbringer
+BUY=i_Nobility_GAUNTLETS
+BUY=i_Magi_HELM
+BUY=i_Insight_HELM
+BUY=i_holy_PLATEMAIL
+BUY=i_hunter_HELM
+BUY=i_Collar_GORGET
+BUY=i_Legacy_bardiche
+BUY=i_Bane_leggings
+BUY=i_Midnight_ARMS
+BUY=i_Serpent_kryss
+BUY=i_dancer_leggings
+BUY=i_staff_magi
+BUY=i_berseker_maul
+BUY=i_Inquisitor_GAUNTLETS
+BUY=i_Taskmaster_war_fork
+BUY=i_FIRE_TUNIC
+BUY=i_VOICE_GORGET
+BUY=i_Zyronic_axe
+BUY=i_Crown_HELM

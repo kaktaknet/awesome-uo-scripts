@@ -1,0 +1,777 @@
+////////////////////////////////////////////////////////////////////////////////////////////
+//			          SANCTUS AEVUM PROJECT : COOKING SYSTEM
+//					      Scripted by Marox
+//
+//To install this, isn't too hard, just make i_rolling_pin obtainable somehow, as this item
+//is used to open the "skillmenus". Theres some normal food, and theres some magical food,
+//even body/armor/weapon paints which paint body/armor/weapon..
+//
+//However, players will still be able to simply dclick raw food and cook it on a fire,
+//if you dont want players to be able to do that, simply change all
+// t_food_raw and t_meat_raw to t_script (found in various sphere default script files)
+// I think thats all..
+//
+//Skillgain : SUPPORTED
+//
+//
+//
+// Contact :
+// Email : marox_gm@hotmail.com
+// AIM : C1vilian
+//
+//
+// -Marox
+////////////////////////////////////////////////////////////////////////////////////////////
+
+//Skillgain functions
+
+[FUNCTION COKGHC] 
+IF (<COOKING><=150) && ((RAND(2)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>150) && (<COOKING><=225) && (rand(5)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>225) && (<COOKING><=325) && (rand(6)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>325) && (<COOKING><=425) && (rand(8)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>425) && (<COOKING><=525) && (rand(10)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>525) && (<COOKING><=625) && (rand(15)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>625) && (<COOKING><=725) && (rand(25)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>725) && (<COOKING><=825) && (rand(35)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>825) && (<COOKING><=925) && (rand(45)==1) 
+COKAKS
+RETURN 1
+ELSEIF (<COOKING>>925) && (<COOKING><=1000) && (rand(55)==1) 
+COKAKS
+RETURN 1
+ENDIF
+
+
+[FUNCTION COKAKS]
+COOKING = <COOKING>+0.1 
+
+
+[ITEMDEF i_cooking_wait]
+ID=i_memory
+
+ON=@EQUIP
+LINK=<SRC.UID>
+TIMER=3
+
+ON=@TIMER
+LINK.CONSUME 20 i_cooking_wait
+REMOVE
+RETURN 1
+
+
+[FUNCTION COOKINGMAKE]
+IF (<RESTEST 1 i_cooking_wait>)
+MESSAGE Cooking failed!
+RETURN 1
+ELSE
+ANIM=9
+COKGHC
+NEWITEM=<ARGS>
+ACT.BOUNCE
+NEWITEM=i_cooking_wait
+ACT.EQUIP
+
+
+
+//Item needed to open the skillmenu (Skill Item)
+
+[TYPEDEF t_cookery]
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE The item is not in your backpack!
+RETURN 1
+ELSE
+SRC.SKILLMENU SM_COOKING_MAIN
+RETURN 1
+
+[ITEMDEF 01043]
+DEFNAME=i_rolling_pin
+NAME=Rolling Pin
+TYPE=t_cookery
+RESOURCES=1 i_BOARD, 1 i_ingot_iron
+SKILLMAKE=TINKERING 40.5
+VALUE=200
+WEIGHT=2
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Rolling Pin
+
+
+
+
+
+
+//Skillmenus
+
+[SKILLMENU SM_COOKING_MAIN]
+Cooking
+
+ON=i_bread_loaf Baked Goods
+SKILLMENU=sm_cooking_1
+
+ON=i_dough Raw Materials
+SKILLMENU=sm_cooking_2
+
+ON=i_chicken_leg Cooked Goods
+SKILLMENU=sm_cooking_3
+
+ON=i_crystal_green_big Magical Food
+SKILLMENU=sm_cooking_4
+
+ON=i_tub_dye Paint
+SKILLMENU=sm_cooking_5
+
+[SKILLMENU sm_cooking_5]
+Paint
+
+ON=i_body_paint <name> (<resmake>)
+IF (<COOKING> >= 700) && (<RESTEST 1 i_tub_dye, 10 i_gem_ruby, 1 i_dyes>)
+SRC.COOKINGMAKE=i_body_paint
+SRC.CONSUME 1 i_tub_dye, 10 i_gem_ruby, 1 i_dyes
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_weapon_paint <name> (<resmake>)
+IF (<COOKING> >= 800) && (<RESTEST 1 i_tub_dye, 15 i_gem_ruby, 1 i_dyes>)
+SRC.COOKINGMAKE=i_weapon_paint
+SRC.CONSUME 1 i_tub_dye, 15 i_gem_ruby, 1 i_dyes
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_armor_paint <name> (<resmake>)
+IF (<COOKING> >= 900) && (<RESTEST 1 i_tub_dye, 20 i_gem_ruby, 1 i_dyes>)
+SRC.COOKINGMAKE=i_armor_paint
+SRC.CONSUME 1 i_tub_dye, 20 i_gem_ruby, 1 i_dyes
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+[SKILLMENU sm_cooking_4]
+Magical Goods
+
+ON=i_nightsight_cookie <name> (<resmake>)
+IF (<COOKING> >= 700) && (<RESTEST 1 i_dough, 1 i_cooking_sugar>)
+SRC.COOKINGMAKE=i_nightsight_cookie
+SRC.CONSUME 1 i_dough, 1 i_cooking_sugar
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_refreshment_pizza <name> (<resmake>)
+IF (<COOKING> >= 600) && (<RESTEST 3 i_FLOUR_SACK, 2 i_EGG>)
+SRC.COOKINGMAKE=i_refreshment_pizza
+SRC.CONSUME 3 i_FLOUR_SACK, 2 i_EGG
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_invisibility_cake <name> (<resmake>)
+IF (<COOKING> >= 700) && (<RESTEST 2 i_FLOUR_SACK, 1 i_cookie_mix, 2 i_cooking_sugar>)
+SRC.COOKINGMAKE=i_invisibility_cake
+SRC.CONSUME 2 i_FLOUR_SACK, 1 i_cookie_mix, 2 i_cooking_sugar
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+[SKILLMENU sm_cooking_3]
+Cooked Goods
+
+ON=i_ribs_cooked <name> (<resmake>)
+IF (<COOKING> >= 100) && (<RESTEST 1 i_ribs_raw>)
+SRC.COOKINGMAKE=i_ribs_cooked
+SRC.CONSUME 1 i_ribs_raw
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+ON=i_bird_cooked <name> (<resmake>)
+IF (<COOKING> >= 100) && (<RESTEST 1 i_bird_raw>)
+SRC.COOKINGMAKE=i_bird_cooked
+SRC.CONSUME 1 i_bird_raw
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_chicken_leg <name> (<resmake>)
+IF (<COOKING> >= 150) && (<RESTEST 1 i_chicken_leg_raw>)
+SRC.COOKINGMAKE=i_chicken_leg
+SRC.CONSUME 1 i_chicken_leg_raw
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_bacon_slice <name> (<resmake>)
+IF (<COOKING> >= 150) && (<RESTEST 1 I_HAM>)
+SRC.COOKINGMAKE=i_bacon_slice
+SRC.CONSUME 1 I_HAM
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_fish_cut_cooked <name> (<resmake>)
+IF (<COOKING> >= 50) && (<RESTEST 1 I_FISH_SMALL>)
+SRC.COOKINGMAKE=i_fish_cut_cooked
+SRC.CONSUME 1 I_FISH_SMALL
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_eggs_fried <name> (<resmake>)
+IF (<COOKING> >= 50) && (<RESTEST 1 i_EGG>)
+SRC.COOKINGMAKE=i_eggs_fried
+SRC.CONSUME 1 i_EGG
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+[SKILLMENU sm_cooking_2]
+Raw Materials
+
+ON=i_dough <name> (<resmake>)
+IF (<COOKING> >= 150) && (<RESTEST 1 i_EGG, 2 i_FLOUR_SACK>)
+SRC.COOKINGMAKE=i_dough
+SRC.CONSUME 1 i_EGG, 2 i_FLOUR_SACK
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_cookie_mix <name> (<resmake>)
+IF (<COOKING> >= 150) && (<RESTEST 1 i_dough, 1 i_cooking_sugar>)
+SRC.COOKINGMAKE=i_cookie_mix
+SRC.CONSUME 1 i_dough, 1 i_cooking_sugar
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+[SKILLMENU sm_cooking_1]
+Baked Goods
+
+ON=i_bread_loaf <name> (<resmake>)
+IF (<COOKING> >= 200) && (<RESTEST 1 i_dough, 1 i_EGG>)
+SRC.COOKINGMAKE=i_bread_loaf
+SRC.CONSUME 1 i_dough, 1 i_EGG
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_muffin <name> (<resmake>)
+IF (<COOKING> >= 150) && (<RESTEST 1 i_dough, 1 i_cooking_sugar>)
+SRC.COOKINGMAKE=i_muffin
+SRC.CONSUME 1 i_dough, 1 i_cooking_sugar
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_donuts <name> (<resmake>)
+IF (<COOKING> >= 200) && (<RESTEST 1 i_dough>)
+SRC.COOKINGMAKE=i_donuts
+SRC.CONSUME 1 i_dough
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_bread_french <name> (<resmake>)
+IF (<COOKING> >= 300) && (<RESTEST 1 i_FLOUR_SACK, 1 i_dough>)
+SRC.COOKINGMAKE=i_bread_french
+SRC.CONSUME 1 i_FLOUR_SACK, 1 i_dough
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_pan_cookies <name> (<resmake>)
+IF (<COOKING> >= 100) && (<RESTEST 1 i_cookie_mix>)
+SRC.COOKINGMAKE=i_pan_cookies
+SRC.CONSUME 1 i_cookie_mix
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_pie_baked <name> (<resmake>)
+IF (<COOKING> >= 250) && (<RESTEST 3 i_FLOUR_SACK, 3 i_cooking_sugar, 1 i_egg>)
+SRC.COOKINGMAKE=i_pie_baked
+SRC.CONSUME 3 i_FLOUR_SACK, 3 i_cooking_sugar, 1 i_egg
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_pizza <name> (<resmake>)
+IF (<COOKING> >= 250) && (<RESTEST 3 i_FLOUR_SACK, 2 i_EGG>)
+SRC.COOKINGMAKE=i_pizza
+SRC.CONSUME 3 i_FLOUR_SACK, 2 i_EGG
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_cake <name> (<resmake>)
+IF (<COOKING> >= 300) && (<RESTEST 2 i_FLOUR_SACK, 1 i_cookie_mix, 2 i_cooking_sugar>)
+SRC.COOKINGMAKE=i_cake
+SRC.CONSUME 2 i_FLOUR_SACK, 1 i_cookie_mix, 2 i_cooking_sugar
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_spam <name> (<resmake>)
+IF (<COOKING> >= 50) && (<RESTEST 1 i_HAM>)
+SRC.COOKINGMAKE=i_spam
+SRC.CONSUME 1 i_HAM
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+
+
+
+
+
+// Third section - Magical Food
+
+[ITEMDEF i_nightsight_cookie]
+DEFNAME=i_nightsight_cookie
+RESOURCES=1 i_dough, 1 i_cooking_sugar
+NAME=Nightsight Cookie%s
+ID=i_muffin
+TYPE=T_SCRIPT
+SKILLMAKE=TINKERING 0 //70
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Magic Food
+DESCRIPTION=Nightsight Cookie
+
+ON=@CREATE
+COLOR=002f2
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE The item is not in your backpack!
+RETURN 1
+
+ELSE
+
+IF (<SRC.FOOD> < 15)
+SRC.EMOTE eat a <NAME>.
+SRC.FOOD=<SRC.FOOD> + 1
+SRC.SPELLEFFECT=s_night_sight 1000
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are stuffed.
+RETURN 1
+
+
+
+[ITEMDEF i_refreshment_pizza]
+DEFNAME=i_refreshment_pizza
+RESOURCES=3 i_FLOUR_SACK, 2 i_EGG
+NAME=Pizza of Refreshment
+ID=i_pizza
+TYPE=T_SCRIPT
+SKILLMAKE=TINKERING 0 //60
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Magic Food
+DESCRIPTION=Pizza of Refreshment
+
+ON=@CREATE
+COLOR=001b8
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE The item is not in your backpack!
+RETURN 1
+
+ELSE
+
+IF (<SRC.FOOD> < 15)
+SRC.EMOTE eat a <NAME>.
+SRC.FOOD=<SRC.FOOD> + 1
+SRC.SPELLEFFECT=s_refresh 1000
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are stuffed.
+RETURN 1
+
+
+[ITEMDEF i_invisibility_cake]
+DEFNAME=i_invisibility_cake
+RESOURCES=2 i_FLOUR_SACK, 1 i_cookie_mix, 2 i_cooking_sugar
+NAME=Cake of Invisibility
+ID=i_cake
+TYPE=T_SCRIPT
+SKILLMAKE=TINKERING 0 //70
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Magic Food
+DESCRIPTION=Cake of Invisbility
+
+ON=@CREATE
+COLOR=0031a
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE The item is not in your backpack!
+RETURN 1
+
+ELSE
+
+IF (<SRC.FOOD> < 15)
+SRC.EMOTE eat a <NAME>.
+SRC.FOOD=<SRC.FOOD> + 1
+SRC.SPELLEFFECT=s_invisibility 1000
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are stuffed.
+RETURN 1
+
+
+//Resources re-defined
+
+//First section - Baked goods
+
+[ITEMDEF 0160b]
+DEFNAME=i_pan_cookies
+WEIGHT=1
+TYPE=T_FOOD
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Pan of Cookies
+SKILLMAKE=TINKERING 0 //10
+RESOURCES=1 i_cookie_mix
+
+
+[ITEMDEF 01ad3]
+DEFNAME=i_donuts
+RESOURCES=1 i_dough
+SKILLMAKE=TINKERING 0 //20
+WEIGHT=1
+TYPE=T_FOOD
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Donuts
+
+
+[ITEMDEF 0103b]
+// Has a bite ?
+DEFNAME=i_bread_loaf
+TYPE=T_FOOD
+SKILLMAKE=TINKERING 0 //20
+RESOURCES=1 i_dough, 1 i_EGG
+WEIGHT=1
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Bread Loaf
+
+
+[ITEMDEF 0103d]
+DEFNAME=i_dough
+SKILLMAKE=TINKERING 0 //15
+RESOURCES=1 i_EGG, 2 i_FLOUR_SACK
+TYPE=t_script
+WEIGHT=1
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Dough
+
+
+[ITEMDEF 0103f]
+DEFNAME=i_cookie_mix
+TYPE=t_script
+SKILLMAKE=TINKERING 0 //10
+RESOURCES=1 i_dough, 1 i_cooking_sugar
+WEIGHT=1
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Cookie Mix
+
+
+[ITEMDEF i_cooking_sugar]
+DEFNAME=i_cooking_sugar
+NAME=sugar
+TYPE=t_script
+ID=i_reag_volcanic_ash
+WEIGHT=1
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Sugar
+
+
+[ITEMDEF 01040]
+DEFNAME=i_pizza
+RESOURCES=3 i_FLOUR_SACK, 2 i_EGG
+WEIGHT=1
+TYPE=T_FOOD
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Pizza
+SKILLMAKE=TINKERING 0 //25
+
+
+[ITEMDEF 01041]
+DEFNAME=i_pie_baked
+RESOURCES=3 i_FLOUR_SACK, 3 i_cooking_sugar, 1 i_egg
+WEIGHT=1
+TYPE=T_FOOD
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Baked Pie
+SKILLMAKE=TINKERING 0 //25
+
+[ITEMDEF 01044]
+DEFNAME=i_spam
+RESOURCES=1 i_HAM
+SKILLMAKE=TINKERING 0 //5
+WEIGHT=1
+TYPE=T_FOOD
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Spam
+
+
+[ITEMDEF 098c]
+DEFNAME=i_bread_french
+TYPE=T_FOOD
+WEIGHT=0.5
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=French Bread
+
+SKILLMAKE=TINKERING 0 //30
+RESOURCES=1 i_FLOUR_SACK, 1 i_dough
+
+
+[ITEMDEF 09e9]
+DEFNAME=i_cake
+TYPE=T_FOOD
+WEIGHT=1
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Cake
+
+SKILLMAKE=TINKERING 0 //30
+RESOURCES=2 i_FLOUR_SACK, 1 i_cookie_mix, 2 i_cooking_sugar
+
+
+[ITEMDEF 09ea]
+DEFNAME=i_muffin
+RESOURCES=1 i_dough, 1 i_cooking_sugar
+TYPE=T_FOOD
+SKILLMAKE=TINKERING 0 //15
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Baker
+DESCRIPTION=Muffin
+
+
+
+
+
+
+
+// Second section - Cooked goods
+
+
+
+[ITEMDEF 0978]
+DEFNAME=i_bacon_slice
+TYPE=T_FOOD
+RESOURCES=1 I_HAM
+SKILLMAKE=TINKERING 0 //15
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Cook
+DESCRIPTION=Slice of Bacon
+DUPELIST=0979
+
+
+[ITEMDEF 097b]
+DEFNAME=i_fish_cut_cooked
+SKILLMAKE=TINKERING 0 //5
+RESOURCES=1 I_FISH_SMALL
+TYPE=T_FOOD
+VALUE=3
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Cook
+DESCRIPTION=Fish Steak (Cooked)
+
+
+[ITEMDEF 09b6]
+DEFNAME=i_eggs_fried
+RESOURCES=1 i_EGG
+SKILLMAKE=TINKERING 0 //5
+TYPE=T_FOOD
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Cook
+DESCRIPTION=Fried Eggs
+
+
+[ITEMDEF 09b7]
+DEFNAME=i_bird_cooked
+RESOURCES=1 I_BIRD_RAW
+SKILLMAKE=TINKERING 0 //10
+TYPE=T_FOOD
+WEIGHT=0.5
+CATEGORY=Items by Professions
+SUBSECTION=Cook
+DESCRIPTION=Cooked Bird
+DUPELIST=09b8
+
+
+[ITEMDEF 09f2]
+DEFNAME=i_ribs_cooked
+RESOURCES=1 i_ribs_raw
+SKILLMAKE=TINKERING 0 //5
+TYPE=T_FOOD
+WEIGHT=1
+CATEGORY=Items by Professions
+SUBSECTION=Cook
+DESCRIPTION=Ribs (Cooked)
+
+
+[ITEMDEF 01608]
+DEFNAME=i_chicken_leg
+RESOURCES=I_CHICKEN_LEG_RAW
+SKILLMAKE=TINKERING 0 //15
+WEIGHT=1
+TYPE=T_FOOD
+CATEGORY=Items by Professions
+SUBSECTION=Cook
+DESCRIPTION=Chicken Leg (Cooked)
+
+
+
+// Other cooking craftables
+
+
+[ITEMDEF i_Body_paint]
+DEFNAME=i_body_paint
+NAME=Body Paint
+TYPE=t_script
+RESOURCES=1 i_tub_dye, 10 i_gem_ruby, 1 i_dyes
+SKILLMAKE=TINKERING 0 //700
+ID=i_dye_tub
+DYE=1
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+SRC.COLOR=<COLOR>
+SRC.EMOTE use the body paint.
+REMOVE
+RETURN 1
+
+ELSE
+SRC.SYSMESSAGE You must be carrying the item to use!
+RETURN 1
+
+[ITEMDEF i_weapon_paint]
+DEFNAME=i_weapon_paint
+NAME=Weapon Paint
+RESOURCES=1 i_tub_dye, 15 i_gem_ruby, 1 i_dyes
+SKILLMAKE=TINKERING 0 //800
+TYPE=t_script
+ID=i_dye_tub
+DYE=1
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+TARGET Select item to dye
+RETURN 1
+
+ELSE
+SRC.SYSMESSAGE You must be carrying the item to use!
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying the item you wish to dye!
+RETURN 1
+ELSE
+IF ((<SRC.TARG.TYPE> == t_weapon_sword) || (<SRC.TARG.TYPE> == t_weapon_mace_smith) || (<SRC.TARG.TYPE> == t_weapon_mace_sharp) || (<SRC.TARG.TYPE> == t_weapon_fence) || (<SRC.TARG.TYPE> == t_weapon_axe)  || (<SRC.TARG.TYPE> == t_weapon_bow) || (<SRC.TARG.TYPE> == t_weapon_xbow) || (<SRC.TARG.TYPE> == t_weapon_mace_staff))
+SRC.TARG.COLOR=<COLOR>
+SRC.EMOTE use the weapon paint.
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You cannot dye that!
+RETURN 1
+
+
+[ITEMDEF i_armor_paint]
+DEFNAME=i_armor_paint
+NAME=Armor Paint
+TYPE=t_script
+RESOURCES=1 i_tub_dye, 20 i_gem_ruby, 1 i_dyes
+SKILLMAKE=TINKERING 0 //900
+ID=i_dye_tub
+DYE=1
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+TARGET Select item to dye
+RETURN 1
+
+ELSE
+SRC.SYSMESSAGE You must be carrying the item to use!
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying the item you wish to dye!
+RETURN 1
+ELSE
+IF ((<SRC.TARG.TYPE> == t_armor) || (<SRC.TARG.TYPE> == t_armor_leather))
+SRC.TARG.COLOR=<COLOR>
+SRC.EMOTE use the armor paint.
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You cannot dye that!
+RETURN 1

@@ -1,0 +1,1064 @@
+TEMPLATE l_raredye]
+DEFNAME=l_raredye
+CATEGORY=Item Templates
+SUBSECTION=Loot Templates
+DESCRIPTION=Dye Tubs
+CONTAINER=i_pouch
+NAME=Mysterious Pouch
+ITEM={i_black_tub 1 i_tentra_tub 1 i_marine_tub 1 i_vein_tub 1 i_sanctum_tub 1 i_venom_tub 1 i_flareon_tub 1 i_bloody_tub 1 i_faint_tub 1 i_jackal_tub 1 i_electrum_tub 1 i_befriendly_tub 1 i_latishush_tub 1 i_battlestar_tub 1 i_podge_tub 1 i_slapgod_tub 1 i_forlate_tub 1 i_hellinion_tub 1 i_dark_tub 1 i_hellish_tub 1 i_runic_tub 1 i_fare_tub 1}
+ 
+[ITEMDEF i_black_tub]
+DEFNAME=i_black_tub
+ID=i_dye_tub
+NAME=Black Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=01
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Black Dye Tub
+ 
+[ITEMDEF i_fare_tub]
+DEFNAME=i_fare_tub
+ID=i_dye_tub
+NAME=Fare Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=0079d
+ 
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Fare Dye Tub
+ 
+[ITEMDEF i_runic_tub]
+DEFNAME=i_runic_tub
+ID=i_dye_tub
+NAME=Runic Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=00ba8
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Runic 
+ 
+
+[ITEMDEF i_hellish_tub]
+DEFNAME=i_hellish_tub
+ID=i_dye_tub
+NAME=Hellish Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=007e6
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+ 
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Hellish
+ 
+//Created by Admin Me of the Brutal Force Shard
+//www.krapf.net/uo
+[ITEMDEF i_dark_tub]
+DEFNAME=i_dark_tub
+ID=i_dye_tub
+NAME=Dark Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=0081f
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Dark
+ 
+[ITEMDEF i_hellinion_tub]
+DEFNAME=i_hellinion_tub
+ID=i_dye_tub
+NAME=Hellinion Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=00b9e
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Hellinion
+ 
+
+[ITEMDEF i_forlate_tub]
+DEFNAME=i_forlate_tub
+ID=i_dye_tub
+NAME=Forlate Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=00baf
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Forlate
+ 
+
+[ITEMDEF i_slapgod_tub]
+DEFNAME=i_slapgod_tub
+ID=i_dye_tub
+NAME=Slapgod Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=0081c
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Slapgod
+ 
+
+[ITEMDEF i_podge_tub]
+DEFNAME=i_podge_tub
+ID=i_dye_tub
+NAME=Podge Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=00bb2
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Podge Tub
+ 
+
+[ITEMDEF i_battlestar_tub]
+DEFNAME=i_battlestar_tub
+ID=i_dye_tub
+NAME=Battlestar Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=00812
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Battlestar
+ 
+
+[ITEMDEF i_latishush_tub]
+DEFNAME=i_latishush_tub
+ID=i_dye_tub
+NAME=Latishush Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=007f9
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Custom Items
+SUBSECTION=misc
+DESCRIPTION=Rare Tub10
+ 
+[ITEMDEF i_befriendly_tub]
+DEFNAME=i_befriendly_tub
+ID=i_dye_tub
+NAME=Befriendly Dye Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=00797
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Befriendly
+ 
+
+[ITEMDEF i_electrum_tub]
+DEFNAME=i_electrum_tub
+ID=i_dye_tub
+NAME=Electrum Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=08e6
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Electrum
+ 
+
+[ITEMDEF i_jackal_tub]
+DEFNAME=i_jackal_tub
+ID=i_dye_tub
+NAME=Jackal Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=07F2
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Jackal
+ 
+
+[ITEMDEF i_faint_tub]
+DEFNAME=i_faint_tub
+ID=i_dye_tub
+NAME=Faint Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=077B
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Faint
+ 
+
+[ITEMDEF i_bloody_tub]
+DEFNAME=i_bloody_tub
+ID=i_dye_tub
+NAME=Bloody Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=07C7
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Bloody
+ 
+
+[ITEMDEF i_flareon_tub]
+DEFNAME=i_flareon_tub
+ID=i_dye_tub
+NAME=Flareon Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=07F4
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Flareon
+ 
+
+[ITEMDEF i_venom_tub]
+DEFNAME=i_venom_tub
+ID=i_dye_tub
+NAME=Venom Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=07FB
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Venom
+ 
+
+[ITEMDEF i_Sanctum_tub]
+DEFNAME=i_Sanctum_tub
+ID=i_dye_tub
+NAME=Sanctum Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=07FC
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Sanctum
+ 
+
+[ITEMDEF i_vein_tub]
+DEFNAME=i_vein_tub
+ID=i_dye_tub
+NAME=Vein Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=07CD
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Vein
+ 
+
+[ITEMDEF i_marine_tub]
+DEFNAME=i_marine_tub
+ID=i_dye_tub
+NAME= Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=0790
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Marine
+ 
+
+[ITEMDEF i_tentra_tub]
+DEFNAME=i_tentra_tub
+ID=i_dye_tub
+NAME=Tentra Tub
+DYE=0
+ON=@CREATE
+ ATTR=attr_newbie
+ COLOR=078D
+ON=@DCLICK
+IF (<SRC.TARG.TOPOBJ.DISTANCE>>=3) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.MESSAGE=You can't reach that.
+ RETURN 1
+ELSE
+ TARGET Select the clothing to dye.
+ RETURN 1
+ENDIF
+ON=@TARGON_CHAR
+IF (<SRC.TARG.DISTANCE>>=5) || (<SRC.TARG.CanSeeLos>!=1)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSE
+ RETURN 1
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.BODY>) && (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+ RETURN 1
+ELSEIF (<SRC.TARG.CanSeeLos>!=1) || (<SRC.TARG.TOPOBJ.DISTANCE>>=4)
+ SRC.SYSMESSAGE=That is not accessible.
+ RETURN 1
+ELSEIF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.REGION.FLAGS>==01092) || (<SRC.TARG.REGION.FLAGS>==01192)
+ SRC.SYSMESSAGE=You may not dye items which are locked down.
+ RETURN 1
+ELSEIF (<SRC.TARG.CONT.UID>==<SRC.UID>)
+ SRC.SYSMESSAGE=Can't Dye clothing that is being worn.
+ RETURN 1
+ELSEIF (<SRC.TARG.ID>==01549) || (<SRC.TARG.ID>==0170d) || (<SRC.TARG.ID>==0141b) || (<SRC.TARG.ID>==01545) || (<SRC.TARG.ID>==01547)
+ RETURN 1
+ELSEIF (<SRC.TARG.DYE>==1)
+ SRC.TARG.COLOR=<COLOR>
+ SOUND=023e
+ RETURN 1
+ELSE
+ RETURN 1
+ENDIF
+CATEGORY=Shard Specific
+SUBSECTION=Dye Tubs
+DESCRIPTION=Tentra
+ 
+[EOF]

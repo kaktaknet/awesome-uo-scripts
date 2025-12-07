@@ -1,0 +1,174 @@
+Worldforging is easy- Especially for us Sphere users. I'll spare
+the technicalities and get right down to it-
+
+You need:
+
+Worldforge, 
+The TUS to UOX Converter, 
+The "items.zip" (on my site) 
+and obviously, your worldfile.
+InsideUO (optional, but recommended)
+
+A suggestion from the start- make backups of your worldfile, and
+the three primary files modified in this operation- (these reside
+your UO main directory)
+
+They are:
+
+staidx0.mul
+statics0.mul
+map0.mul
+
+The last one (map0.mul) wont be used/modified UNLESS you decide 
+to start using worldforge to alter the actual geography. I 
+recommend getting used to the statics operations first.
+(In this case we are just converting all those nifty town/dungeon
+decorations to static items, technically merging them with the
+already present statics files)
+
+Ok. First thing to do ( I recommend this, but its not nessecary)
+is decide a few things about what you want and dont want as static.
+Read the enclosed help files provided with worldforge AND 
+Itemconvert.
+
+The operation involves FIRST converting your worldfile's SELECTED
+items into a UOX friendly format. The converter will leave behind
+everything else left over. How is this determined? The converter
+uses a file called "items.txt" to tell it which items to pull out
+of the worldfile- its setup using the id# of the art (as seen 
+in insideuo, item number 1 in the artwork list is 0000) listed
+in ORDER. Each item must be on its own line, no spaces, and must
+alos have a [EOF] tag at the end of it. The converter allows you
+to specify the file using any name you wish, I chose the default
+just to keep things easy.
+
+The file I included on my site items.txt is a listing of
+practically everything in UO's artwork. A couple items I left
+out purposely were doors, building signs, and the gold metal
+boxes commonly found in most merchant shops. If I missed anything
+else I'd be surprised, as I hand indexed these myself. You can thank
+me later, as this indexing only took 2 evenings and way too many
+cigarettes. :)
+
+When you fire up the converter, its going to ask you for the full
+path and filenames of:
+
+Your "tus" worldfile (sphere works perfectly with it as the formats
+are the same)
+
+The name of the UOX file you wish to convert the items TO, (I suggest
+naming it items.wsc, but anything.wsc is fine but you'll have
+to rename it to items.wsc anyways) This file neednt exist
+as it will be created.
+
+The name of the NEW tus worldfile, which will be your new, trimmed
+down version after these items are removed. You want to keep this
+file and treat it as you would your paycheck- it will become your
+sphereworld.scp after this whole operation with the converter and
+worldforge is done with. Without it, your npc's and everything else
+that you didnt choose to convert will be LOST.
+
+And Finally, the name and path of the "item list" (in this case, I 
+used my "items.txt" as mentioned above.
+
+Did you remember to use the full path and name? Good. Do it, and let
+the converter go. It'll take awhile (a 18 meg worldfile took my
+system a couple hours) Whatever you do, do not stop the process.
+Have a beer or watch a movie, or both.
+
+Well, the converter did its work, you now have a items.wsc, (the uox
+format that worldforge will convert to the statics files) a very much
+smaller "new sphereworld.scp" (whatever you named it to) and your old
+worldfile. Set your old worldfile aside (back it up!) as the worldforge
+operation will not require it.
+
+On to Worldforging Operation!
+
+In case worldforge starts in "simple" mode, check the selection over to
+"normal".
+
+Worldforge will want:
+
+The locations of your "original" staidx0.mul, statics0.mul and 
+map0.mul files- these should be on your hard drive somewhere. People
+claim to have done it off the cd but it is SLOW. What I did was create
+two seperate directories, one for the original OSI files, and another for
+the new "modified" mul files. Put/copy those 3 files into a directory.
+When you type the full path and filename of these files in, and
+worldforge finds them, the box will turn green. Its also going
+to ask for the uox "items.wsc" full path and filename. It's box will
+also turn green when the information is correct.
+
+Ok, all your filenames/paths are in. Good. Theres a button up top/right
+that says "GetStaticIndex" - select that. It will take a few seconds
+and will tell you when its done.
+
+Next, select "type 255 method" and select "Freeze" (Thats what we are
+doing, "freezing items" into the statics files.) This is the lengthy 
+portion of the operation. Rent another movie... :) The reason we
+use the "type 255" method is because we chose which items to remove
+from our worldfile to begin with in the itemconvert operation-
+I also have a FULL "autoselect.txt" which can also be used for the
+"autoselect" METHOD. I've done both. The advantage to the auto-method
+is the indexing file has "descriptions" for each item in there- easier
+to quickly determine which items you want to work with. I decided it
+was easier to just let itemconvert do all the work since I already
+determined on a item-by item basis which things were being pulled and
+set to "type 255".
+
+Ok, when you are done, you'll have some NEW modified staidx0.mul,
+statics0.mul and map0.mul files, your originals. 
+Note the size difference. Dont move them just yet though!
+
+The last step is to create the "patch" file that players will need
+to download and apply in order to see the new items/map.
+
+I suggest rebooting, and fire up worldforge again- notice it 
+remembered where you have everything. (If you didnt jump the 
+gun and move stuff!) Select WF/DIF and IF you didnt mess with the
+geography (edit the map files) you can deselect the map0.mul box.
+(We didnt in this case) Leaving it selected merely takes longer 
+because worldforge will still check to see if there are any 
+differences- hey, we burned a 12 pack already, so lets save as much
+time as we can eh? If for some reason the path statements are red,
+refill them in (I had mine forget a couple times seemingly on its
+own) If all is "green" once again select "Generate dif", specify a
+patchfilename (whatever.wf2) and let it go.
+
+The "whatever.wf2" file is what players must download. They will
+also have to download worldforge, fill in the paths, and "apply 
+dif". -its that simple.
+
+For the server end, to USE these new files, they must reside in
+the directory that you have specified in your sphere.ini, 
+(mul files) and ALSO in the  directory you run your client from
+(if you also run a client on that machine) Any client you log
+in with will either have to have the statics files copied to it,
+or download and apply the "dif" patch using worldforge.
+
+Some notes:
+
+Itemconcvert:
+I decorated with everything, but some items like edible/growing
+plants, some crates/treasure chests, trash barrels, ect you may
+wish to leave out of the "items.txt". I have practically everything
+except the few items I mentioned earlier in there, so I warn you,
+use my file at your own risk- I glued everything down :)
+
+Modifying the file is easy- grab insideUO and sit down for a hour-
+it goes fast once you get the hang of it and the results are superb.
+I trimmed a 20 meg worldfile down to 3 meg. The user download
+was only a meg and a half, since these files zip nicely if you
+compress the snot out of them. Nice huh?
+
+Worldforge:
+I suggest again using the 255 method- the "autoselect" method seemed
+to take alot longer and I suspect (gut feeling) there might be a 
+periodic error (I had a chesspiece or two "forgotten") I didnt test
+my worldfile much after that, but it ran fine. Im just paranoid :)
+
+Any questions can be directed to me at: fctavern@hotmail.com
+
+Enjoy! -Thadius, FCT
+ 
+ 

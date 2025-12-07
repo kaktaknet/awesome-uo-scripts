@@ -1,0 +1,69 @@
+// Incredible Hulk Pants 1.0
+// ~~~~~~~~~~~~~~~~~~~~~~~~~
+// by Blueflame
+
+// when equiped makes you look like the incredible hulk, including increased stats ...
+
+[ITEMDEF i_hulk]
+ID=i_pants_short
+NAME=Incredible Hulk's Pants
+TYPE=t_eq_script
+
+CATEGORY=God's Playground (GPG)
+SUBSECTION=GM Items
+DESCRIPTION=Incredible Hulk's Pants
+
+ARMOR=50
+
+ON=@Create
+ATTR attr_decay
+COLOR=0005e
+
+
+
+ON=@DClick
+EQUIP
+RETURN 1
+
+
+
+ON=@Equip
+TAG.HULK_STR=<SRC.STR>
+SRC.STR=400
+
+TAG.HULK_HIT=<SRC.HITPOINTS>
+SRC.HITPOINTS=400
+
+TAG.HULK_DEX=<SRC.DEX>
+SRC.DEX=400
+
+TAG.HULK_STAM=<SRC.STAMINA>
+SRC.STAMINA=400
+
+TAG.HULK_INT=<SRC.INT>
+SRC.INT=0
+
+TAG.HULK_MANA=<SRC.MANA>
+SRC.MANA=0
+
+TAG.HULK_NAME = <SRC.NAME>
+SRC.NAME = "The Incredible Hulk"
+
+TAG.HULK_TITLE = <SRC.TITLE>
+SRC.TITLE = alias <TAG.HULK_NAME>
+
+TAG.HULK_COLOR = <SRC.COLOR>
+SRC.COLOR=007d3
+
+
+
+ON=@UnEquip
+SRC.STR = <TAG.HULK_STR>
+SRC.HITPOINTS = <TAG.HULK_HIT>
+SRC.DEX = <TAG.HULK_DEX>
+SRC.STAMINA = <TAG.HULK_STAM>
+SRC.INT = <TAG.HULK_INT>
+SRC.MANA = <TAG.HULK_MANA>
+SRC.NAME = <TAG.HULK_NAME>
+SRC.TITLE = <TAG.HULK_TITLE>
+SRC.COLOR = <TAG.HULK_COLOR>

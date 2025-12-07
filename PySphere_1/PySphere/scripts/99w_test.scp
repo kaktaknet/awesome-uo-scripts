@@ -1,0 +1,42 @@
+//99w_test.scp compiled by PySphere Release 17 from 99w_test.py.
+//#sphere-99w
+//#prefix-local
+//#omit-original-code
+[function f_argv_test]
+ARG(arg__val,0)
+ARG(arg,<argv[<ARG(arg__val)>]>)
+WHILE (<ARG(arg__val)><<argv.GetCount>)
+say(arg # <ARG(arg__val)> is <ARG(arg)>)
+ARG(arg__val,#+1)
+ARG(arg,<argv[<ARG(arg__val)>]>)
+ENDWHILE
+tag.testarr[0]=asdf
+tag.testarr[1]=zxcv
+tag.testarr[2]=qwerxx
+tag.testarr[3]=dfgha
+tag.testarr[4]=
+tag.testarr[5]=zzz
+ARG(arg__val,0)
+ARG(arg,<tag.testarr[<ARG(arg__val)>]>)
+WHILE (<ARG(arg__val)><<tag.testarr.GetCount>)
+say(arg # <ARG(arg__val)> is <ARG(arg)>)
+ARG(arg__val,#+1)
+ARG(arg,<tag.testarr[<ARG(arg__val)>]>)
+ENDWHILE
+newitem(i_pickaxe)
+act.bounce
+say(act is <act>)
+say(src.act is <src.act>)
+say(act.uid is <act.uid>)
+say(src.act.uid is <src.act.uid>)
+newitem(i_gold)
+act.bounce
+act.say(act saying name is <name>)
+act.say(act saying act.name is <act.name>)
+act.say(act saying this.name is <this.name>)
+act.say(act saying i.name is <i.name>)
+[function f_test_tart]
+newitem(i_bag)
+act.cont(uid)
+newitem(i_gold)
+act.cont(i.uid)

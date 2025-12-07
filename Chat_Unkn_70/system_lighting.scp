@@ -1,0 +1,219 @@
+[defname light_settings]
+gamehour		1 //game hour length in real time seconds.
+
+[itemdef i_sun]
+id i_fx_explode_ball
+name Sun
+type T_normal
+
+on=@create
+attr 090
+more1 1
+timer 1
+
+on=@click
+message it is <tag0.time> on <serv.servname> Currently.
+
+on=@dclick
+timer 1
+src.sysmessage timer reset
+return 1
+
+on=@timer
+p 1 1 0 0
+
+
+if <more2>=1
+more2=<more2>+1
+serv.allclients sysmessage It is summer in <region.name> 
+region.dry
+region.season 1
+timer 1
+return 1
+endif
+
+if <more2>=25
+more2=<more2>+1
+serv.allclients sysmessage It is fall in <region.name> 
+region.dry
+region.season 2
+timer 1
+return 1
+endif
+
+if <more2>=50
+more2=<more2>+1
+serv.allclients sysmessage It is winter in <region.name> 
+region.snow
+region.season=3
+timer 1
+return 1
+endif
+
+if <more2>=75
+more2=<more2>+1
+serv.allclients sysmessage It is spring in <region.name> 
+regionrain
+region.season.5
+timer 1
+return 1
+endif
+
+if <more2>>=100
+more2=1
+timer 1
+return 1
+endif
+
+
+
+if <more1>=1
+tag0.time=1 o'clock pm
+more1 2
+timer <def.gamehour>
+region.light=0
+return 1
+elseif <more1>=2
+tag0.time=2 o'clock pm
+more1 3
+timer <def.gamehour>
+region.light=0
+return 1
+elseif <more1>=3
+more1 4
+tag0.time=3 o'clock pm
+timer <def.gamehour>
+region.light=1
+return 1
+elseif <more1>=4
+more1 5
+tag0.time=4 o'clock pm
+timer <def.gamehour>
+region.light=2
+return 1
+elseif <more1>=5
+more1 6
+tag0.time=5 o'clock pm
+timer <def.gamehour>
+region.light=3
+return 1
+elseif <more1>=6
+more1 7
+tag0.time=6 o'clock pm
+timer <def.gamehour>
+region.light=4
+return 1
+elseif <more1>=7
+more1 8
+tag0.time=7 o'clock pm
+timer <def.gamehour>
+region.light=5
+return 1
+elseif <more1>=8
+more1 9
+tag0.time=8 o'clock pm
+timer <def.gamehour>
+region.light=16
+return 1
+elseif <more1>=9
+more1 10
+tag0.time=9 o'clock pm
+serv.allclients sysmessage The sun has set
+timer <def.gamehour>
+region.light=18
+return 1
+elseif <more1>=10
+more1 11
+tag0.time=10 o'clock pm
+timer <def.gamehour>
+region.light=20
+return 1
+elseif <more1>=11
+more1 12
+tag0.time=11 o'clock pm
+timer <def.gamehour>
+region.light=24
+return 1
+elseif <more1>=12
+more1 13
+tag0.time=Midnight
+timer <def.gamehour>
+region.light=25
+return 1
+elseif <more1>=13
+more1 14
+tag0.time=1 o'clock am
+region.light=26
+timer <def.gamehour>
+return 1
+elseif <more1>=14
+more1 15
+tag0.time=2 o'clock am
+timer <def.gamehour>
+region.light=25
+return 1
+elseif <more1>=15
+more1 16
+tag0.time=3 o'clock am
+timer <def.gamehour>
+region.light=24
+return 1
+elseif <more1>=16
+more1 17
+tag0.time=4 o'clock am
+timer <def.gamehour>
+region.light=23
+return 1
+elseif <more1>=17
+more1 18
+tag0.time=5 o'clock am
+timer <def.gamehour>
+region.light=20
+return 1
+elseif <more1>=18
+more1 19
+tag0.time=6 o'clock am
+timer <def.gamehour>
+region.light=17
+return 1
+elseif <more1>=19
+more1 20
+tag0.time=7 o'clock am
+timer <def.gamehour>
+region.light=14
+return 1
+elseif <more1>=20
+more1 21
+tag0.time=8 o'clock am
+timer <def.gamehour>
+region.light=6
+return 1
+elseif <more1>=21
+more1 22
+tag0.time=9 o'clock am
+serv.allclients sysmessage The sun has risen
+timer <def.gamehour>
+region.light=3
+return 1
+elseif <more1>=22
+more1 23
+tag0.time=10 o'clock am
+timer <def.gamehour>
+region.light=1
+return 1
+elseif <more1>=23
+more1 24
+tag0.time=11 o'clock am
+timer <def.gamehour>
+region.light=0
+return 1
+elseif <more1>=24
+more1 1
+tag0.time=Noon
+timer <def.gamehour>
+region.light=0
+more2=<more2>+1
+return 1
+endif
+
+[eof]

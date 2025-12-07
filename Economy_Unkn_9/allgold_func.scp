@@ -1,0 +1,38 @@
+//By ClouD_BR
+//leave the credits, plz, thx.
+
+[function allgold]
+local.player=<eval <rescount i_gold>+<findlayer.29.rescount i_gold>>
+local.tmp=<obj>
+var.gold_house=0
+obj=<uid>
+FORCHARMEMORYTYPE 0100
+IF (<LINK.TYPE>==t_multi) || (<LINK.TYPE>==t_ship)
+LINK.TOTALGOLD_HOUSE
+ENDIF
+ENDFOR
+LOCAL.GOLD_HOUSE=<VAR.GOLD_HOUSE>
+VAR.GOLD_HOUSE=
+OBJ=<LOCAL.TMP>
+RETURN <EVAL <LOCAL.PLAYER>+<LOCAL.GOLD_HOUSE>>
+
+[function TOTALGOLD_HOUSE]
+LOCAL.TMP2=<OBJ>
+OBJ=<UID>
+FORITEMS 60
+IF (<REGION.UID>==<OBJ>) && (<BASEID>!=i_gold) && (<TYPE>==t_container)
+var.gold_house += <rescount i_gold>
+ELIF (<REGION.UID>==<OBJ>) && (<BASEID>=i_gold)
+var.gold_house += <amount>
+ENDIF
+ENDFOR
+OBJ=<LOCAL.TMP2>
+
+
+//Usage: [obj].allgold
+
+//ex.:
+
+//IF (<ALLGOLD> < 10000)
+//SAY I'm poor!
+//ENDIF

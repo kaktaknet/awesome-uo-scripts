@@ -1,0 +1,146 @@
+[ITEMDEF i_loot]
+DEFNAME=i_loot
+name=Loot Rapido
+ID=4484
+TYPE=t_eq_script
+CATEGORY=Stones
+SUBSECTION=Stones
+DESCRIPTION=Armas
+
+on=@create 
+attr=010
+COLOR=0b94
+
+ON=@DCLICK
+SRC.DIALOG d_loot
+RETURN 01
+
+ON=@CLICK
+MESSAGE @0481 <name>
+RETURN 01
+
+
+[DIALOG d_loot] 
+0,0 
+resizepic 150 45 3500 390 200
+nomove
+
+text 200 80 20 0 
+text 200 100 20 1
+text 200 120 20 2
+text 280 60 0 3
+text 180 160 20 4
+text 180 180 20 5
+text 180 200 20 6
+
+tilepic 370 100 4655
+tilepic 380 80 7398
+tilepic 351 93 7403
+tilepic 380 120 4653
+
+
+button 180 85 2362 2360 1 0 1
+button 180 105 2362 2360 1 0 2
+button 180 125 2362 2360 1 0 3
+
+
+[DIALOG d_loot TEXT] 
+Loot 1
+Loot 2
+Loot 3
+Loot Rapido
+Loot 1 - Itens em geral + bloodrock, mask deer.
+Loot 2 - Itens em geral + blackrock, mask orc.
+Loot 3 - Itens em geral + mytheril, mask bear.
+
+[DIALOG d_loot BUTTON] 
+
+ONBUTTON=2
+SRC.NEWITEM i_blackrock_platemail
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_blackrock_platemail_leggings
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_blackrock_platemail_arms
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_blackrock_platemail_gauntlets
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_blackrock_platemail_gorget
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM I_MASk_orc
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+src.newitem i_robe
+new.ATTR 04
+new.bounce
+src.act.dclick
+src.newitem i_bandage, 200
+new.bounce
+SRC.NEWITEM i_scroll_flamestrike , { 150 }
+NEW.BOUNCE
+return 01
+
+
+ONBUTTON=1
+SRC.NEWITEM i_bloodrock_platemail
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_bloodrock_platemail_leggings
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_bloodrock_platemail_arms
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_bloodrock_platemail_gauntlets
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_bloodrock_platemail_gorget
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM I_MASk_deer
+SRC.ACT.ATTR 04
+SRC.ACT.equip
+src.newitem i_robe
+new.ATTR 04
+new.bounce
+src.act.dclick
+src.newitem i_bandage, 200
+new.bounce
+SRC.NEWITEM i_scroll_flamestrike , { 150 }
+NEW.BOUNCE
+return 01
+
+
+ONBUTTON=3
+SRC.NEWITEM i_mytheril_platemail
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_mytheril_platemail_leggings
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_mytheril_platemail_arms
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_mytheril_platemail_gauntlets
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM i_mytheril_platemail_gorget
+SRC.ACT.ATTR 04
+SRC.ACT.EQUIP
+SRC.NEWITEM I_MASk_bear
+SRC.ACT.ATTR 04
+SRC.ACT.equip
+src.newitem i_robe
+new.ATTR 04
+new.bounce
+src.act.dclick
+src.newitem i_bandage, 200
+new.bounce
+SRC.NEWITEM i_scroll_flamestrike , { 150 }
+NEW.BOUNCE
+ONBUTTON=0
+RETURN 01

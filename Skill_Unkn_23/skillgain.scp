@@ -1,0 +1,28 @@
+[FUNCTION skill_gain]
+// Usage: skill_gain <GAINDIFFICULTY> <SKILLNAME>
+// IE: skill_gain 100 SWORDSMANSHIP
+// 
+// The higher the GAINDIFFICULTY number is, the easier it is to gain.
+// Recommended difficulty: 100
+// Needs to be changed to allow for gains over 100.0%.
+
+LOCAL.SKILL=<streat <ARGS>>
+IF (<<LOCAL.SKILL>>==1000)
+	RETURN 1
+ENDIF
+IF (<EVAL(RAND(<<LOCAL.SKILL>>))> < <ARGN1>)
+	IF (<<LOCAL.SKILL>> < 300)
+		LOCAL.GAIN=<EVAL({1 9 2 1})>
+	ELSE
+		LOCAL.GAIN=1
+	ENDIF
+
+	TRY <LOCAL.SKILL>=<<LOCAL.SKILL>> + <LOCAL.GAIN>
+ENDIF
+
+IF (<ARGN1> > 1000)
+	TRY <ARGN1>=1000
+ENDIF
+
+LOCAL.GAIN=
+LOCAL.SKILL=

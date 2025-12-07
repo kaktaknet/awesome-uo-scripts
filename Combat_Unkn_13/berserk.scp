@@ -1,0 +1,103 @@
+//////////////////////////////////////////////////////////////////////////////// 
+//############################################################################// 
+//#                                  BERSERK                                 #// 
+//#                           Crafted by Silver Ghost                        #// 
+//# Version: Beta 0.4     						     #// 
+//# E-Mail: sg@ablogic.com                            		             #// 
+//# ICQ: 146200278                                                           #// 
+//# Date: 2/12/02                                                            #// 
+//# If you change this file, please leave your name and changes below...     #// 
+//# 1.Silver Ghost: No spell casting when berserked.			     #//
+//# 2.Silver Ghost: No skill usage when berserked.			     #//
+//# 3.Silver Ghost: Can't be used if other skill is beeing used		     #//
+//#									     #//
+//############################################################################//
+////////////////////////////////////////////////////////////////////////////////
+[PLEVEL 1]
+berserk
+
+[FUNCTION BERSERK]
+IF (<SRC.ACTION>==-1)
+	IF (<EVAL <SRC.TAG.BERSERK_TIMER>>==0)
+		IF (<SRC.MANA>>=<SRC.INT>)&&(<SRC.STAMINA>>=<SRC.DEX>)
+			SRC.NEWITEM=i_skill_BERSERK
+			SRC.ACT.EQUIP
+			VAR.SUA_COLOR=32
+			SRC.SYSMESSAGEUA *RELEASE THE FURY!*
+			SRC.f_BERSERK_skillgain
+			SRC.FLAGS=<SRC.FLAGS>&~000800000
+			SRC.UPDATE
+			SRC.EMOTE Roar
+			SRC.SOUND=178
+			IF (<SRC.KARMA>>-4000)
+				SRC.TAG.KARMACHECK=1
+				SRC.TAG.OLDKARMA=<SRC.KARMA>
+				SRC.KARMA=-4000
+			ELSE
+				SRC.TAG.KARMACHECK=0
+			ENDIF
+			SRC.STAMINA=<EVAL (<SRC.STAMINA>)+-((<SRC.DEX>*9)/10)>
+			SRC.MANA=<EVAL (<SRC.MANA>)+-((<SRC.INT>*9)/10)>
+		ELSE
+			SRC.MESSAGE You are too weak to do it now!
+		ENDIF
+	ELSE
+		SRC.MESSAGE You're still berserked! keep KILLING!
+	ENDIF
+ELSE
+	SRC.MESSAGE You must concentrate first!
+ENDIF
+
+[ITEMDEF i_skill_BERSERK]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+SRC.TAG.BERSERK_TIMER=1
+SRC.EVENTS +e_BERSERK
+TIMER=<EVAL (0<SRC.TAG.BERSERK>/2)+10>
+
+ON=@TIMER
+CONT.EVENTS -e_BERSERK
+IF (0<CONT.TAG.KARMACHECK>==1)
+	CONT.KARMA=<CONT.OLDKARMA>
+ENDIF
+CONT.KARMA=<CONT.TAG.OLDKARMA>
+CONT.TAG.BERSERK_TIMER=0
+VAR.SUA_COLOR=32
+CONT.SYSMESSAGEUA You feel weakened and empty...
+REMOVE
+RETURN 1
+
+[EVENTS e_BERSERK]
+ON=@HIT
+f_BERSERK_skillgain
+SRC.DAMAGE=<EVAL <EVAL <STR>/10>+<EVAL 0<TAG.BERSERK>/9>+<EVAL {5 10}>>
+RETURN 0
+
+ON=@skillstart
+IF (<SRC.FINDLAYER(2).ID>==01BC4)||(<SRC.FINDLAYER(2).ID>==01BC3)||(<SRC.FINDLAYER(2).ID>==01B72)||(<SRC.FINDLAYER(2).ID>==01B73)||(<SRC.FINDLAYER(2).ID>==01B74)||(<SRC.FINDLAYER(2).ID>==01B76)||(<SRC.FINDLAYER(2).ID>==01B78)||(<SRC.FINDLAYER(2).ID>==01B7A)||(<SRC.FINDLAYER(2).ID>==01B7B)||(<SRC.FINDLAYER(2).ID>==013B1)||(<SRC.FINDLAYER(2).ID>==013FC)||(<SRC.FINDLAYER(2).ID>==0F4F)
+SRC.FINDLAYER(2).DROP
+SRC.EMOTE want more blood!
+ENDIF
+IF (<SRC.ACTION>!=SKILL_MACEFIGHTING)&&(<SRC.ACTION>!=SKILL_WRESTLING)&&(<SRC.ACTION>!=SKILL_SWORDSMANSHIP)&&(<SRC.ACTION>!=SKILL_FENCING)
+MESSAGE You're too mad to do it now!
+ACTION=-1
+RETURN 1
+ENDIF
+
+
+
+[FUNCTION f_BERSERK_skillgain]
+IF (<EVAL {1 1 0 <EVAL ((0<TAG.BERSERK>*11)/7)+3>}>==1)
+	IF (<EVAL 0<TAG.BERSERK>><100)
+		TAG.BERSERK=<EVAL <TAG.BERSERK>>+1
+		VAR.SUA_COLOR=95
+		SYSMESSAGEUA Your skill in berserk has increased by 1! It's now <EVAL <TAG.BERSERK>>.
+	ELSE
+		RETURN 1
+	ENDIF
+ENDIF
+
+
+[EOF]

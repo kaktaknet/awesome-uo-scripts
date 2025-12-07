@@ -1,0 +1,599 @@
+////////////////////////////////////////////////////////////////////////////////////////////
+//Name : Magical Staves
+//Author : Marox
+//Contact : marox_gm@hotmail.com
+//Description : This script contains Magical Staves which can be enchanted using the 
+//Enchantment scrolls (Both, staves and scrolls included.)
+//Installation : You probably will want these craftable (staves and scrolls) so heres what 
+//you need to put in the skillmenus (without the // ofcourse)
+
+//Scrolls - put for inscription skill
+
+//ON=i_scroll_enchant_fire <name> (<resmake>)
+//MAKEITEM=i_scroll_enchant_fire
+//ON=i_scroll_enchant_water <name> (<resmake>)
+//MAKEITEM=i_scroll_enchant_water
+//ON=i_scroll_enchant_earth <name> (<resmake>)
+//MAKEITEM=i_scroll_enchant_earth
+//ON=i_scroll_enchant_lightning <name> (<resmake>)
+//MAKEITEM=i_scroll_enchant_lightning
+
+
+//Staves - put for carpentry skill
+
+
+//ON=i_staff_magery_gnarled <name> (<resmake>)
+//MAKEITEM=i_staff_magery_gnarled
+//ON=i_staff_magery_quarter <name> (<resmake>)
+//MAKEITEM=i_staff_magery_quarter
+//ON=i_staff_magery_black <name> (<resmake>)
+//MAKEITEM=i_staff_magery_black
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+//first section-effects
+
+
+[ITEMDEF i_wait_timer_f]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Must Wait Timer
+
+ON=@EQUIP
+SRC.TAG.MASTAFF=1
+TIMER=2
+LINK=<SRC.UID>
+
+ON=@TIMER
+LINK.TAG.MASTAFF = 0
+REMOVE
+RETURN 1
+
+[ITEMDEF i_magery_staff_fire]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+TARGET Who do you wish to cast this on?
+
+ON=@TARGON_CHAR
+IF (!<SRC.TARG.CANSEELOS>) || (<SRC.TARG.UID> == <SRC.UID>) || (<SRC.FINDLAYER(2).MORE2>==0) || (<SRC.TAG.MASTAFF> == 1)
+SRC.MESSAGE *The staff does not appear to be working..*
+SRC.SOUND 01f6
+REMOVE
+RETURN 1
+
+ELSE
+SRC.MESSAGE *The staff begins to glow..*
+SRC.EFFECT=3,i_fx_sparkle_2,6,15,1
+SRC.ANIM 19
+SRC.TARG.DAMAGE=40
+SRC.SOUND 015e
+SRC.TARG.EFFECT=3,i_fire_column,6,15,1
+SRC.FINDLAYER(2).MORE2=<SRC.FINDLAYER(2).MORE2> - 1
+SRC.NEWITEM=i_wait_timer_f
+SRC.ACT.EQUIP
+SRC.CONSUME 50 i_magery_staff_fire
+RETURN 1
+
+[ITEMDEF i_magery_staff_water]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+TARGET Who do you wish to cast this on?
+
+ON=@TARGON_CHAR
+IF (!<SRC.TARG.CANSEELOS>) || (<SRC.TARG.UID> == <SRC.UID>) || (<SRC.FINDLAYER(2).MORE2>==0) || (<SRC.TAG.MASTAFF> == 1)
+SRC.MESSAGE *The staff does not appear to be working..*
+SRC.SOUND 01f6
+REMOVE
+RETURN 1
+
+ELSE
+SRC.MESSAGE *The staff begins to glow..*
+SRC.EFFECT=3,i_fx_sparkle_2,6,15,1
+SRC.ANIM 19
+SRC.TARG.DAMAGE=40
+SRC.SOUND 0118
+SRC.TARG.EFFECT=0,01fc8,24
+SRC.FINDLAYER(2).MORE2=<SRC.FINDLAYER(2).MORE2> - 1
+SRC.NEWITEM=i_wait_timer_f
+SRC.ACT.EQUIP
+SRC.CONSUME 50 i_magery_staff_water
+RETURN 1
+
+
+
+[ITEMDEF i_magery_staff_earth]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+TARGET Who do you wish to cast this on?
+
+ON=@TARGON_CHAR
+IF (!<SRC.TARG.CANSEELOS>) || (<SRC.TARG.UID> == <SRC.UID>) || (<SRC.FINDLAYER(2).MORE2>==0) || (<SRC.TAG.MASTAFF> == 1)
+SRC.MESSAGE *The staff does not appear to be working..*
+SRC.SOUND 01f6
+REMOVE
+RETURN 1
+
+ELSE
+SRC.MESSAGE *The staff begins to glow..*
+SRC.EFFECT=3,i_fx_sparkle_2,6,15,1
+SRC.ANIM 19
+SRC.TARG.DAMAGE=40
+SRC.SOUND 0221
+SRC.TARG.SAY *The earthquake damages <SRC.TARG.NAME>*
+SRC.FINDLAYER(2).MORE2=<SRC.FINDLAYER(2).MORE2> - 1
+SRC.NEWITEM=i_wait_timer_f
+SRC.ACT.EQUIP
+SRC.CONSUME 50 i_magery_staff_earth
+RETURN 1
+
+
+[ITEMDEF i_magery_staff_water]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+TARGET Who do you wish to cast this on?
+
+ON=@TARGON_CHAR
+IF (!<SRC.TARG.CANSEELOS>) || (<SRC.TARG.UID> == <SRC.UID>) || (<SRC.FINDLAYER(2).MORE2>==0) || (<SRC.TAG.MASTAFF> == 1)
+SRC.MESSAGE *The staff does not appear to be working..*
+SRC.SOUND 01f6
+REMOVE
+RETURN 1
+
+ELSE
+SRC.MESSAGE *The staff begins to glow..*
+SRC.EFFECT=3,i_fx_sparkle_2,6,15,1
+SRC.ANIM 19
+SRC.TARG.DAMAGE=40
+SRC.SOUND 0118
+SRC.FINDLAYER(2).MORE2=<SRC.FINDLAYER(2).MORE2> - 1
+SRC.NEWITEM=i_wait_timer_f
+SRC.ACT.EQUIP
+SRC.CONSUME 50 i_magery_staff_water
+RETURN 1
+
+
+
+
+[ITEMDEF i_magery_staff_lightning]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+TARGET Who do you wish to cast this on?
+
+ON=@TARGON_CHAR
+IF (!<SRC.TARG.CANSEELOS>) || (<SRC.TARG.UID> == <SRC.UID>) || (<SRC.FINDLAYER(2).MORE2>==0) || (<SRC.TAG.MASTAFF> == 1)
+SRC.MESSAGE *The staff does not appear to be working..*
+SRC.SOUND 01f6
+REMOVE
+RETURN 1
+
+ELSE
+SRC.MESSAGE *The staff begins to glow..*
+SRC.EFFECT=3,i_fx_sparkle_2,6,15,1
+SRC.ANIM 19
+SRC.TARG.DAMAGE=40
+SRC.SOUND 0207
+SRC.TARG.EFFECT=1,1,1,1
+SRC.FINDLAYER(2).MORE2=<SRC.FINDLAYER(2).MORE2> - 1
+SRC.NEWITEM=i_wait_timer_f
+SRC.ACT.EQUIP
+SRC.CONSUME 50 i_magery_staff_lightning
+RETURN 1
+
+
+
+
+
+
+// second section - staves
+
+
+
+
+
+
+
+
+
+[ITEMDEF i_staff_magery_gnarled]
+DEFNAME=i_staff_magery_gnarled
+ID=i_staff_gnarled
+NAME=Magic Gnarled Staff
+TYPE=t_weapon_mace_staff
+RESOURCES=10 I_SCROLL_BLANK,50 i_reag_daemon_bone
+SKILLMAKE=CARPENTRY 98.7, t_carpentry
+DAM=14,39
+WEIGHT=5
+
+
+ON=@CREATE
+HITPOINTS=999
+MOREM=0
+MORE2=30
+
+
+ON=@CLICK
+
+IF (<MOREM>==0)
+MESSAGE [Not Imbued]
+ELSEIF (<MOREM> == 1)
+MESSAGE [Fire - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 2)
+MESSAGE [Water - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 3)
+MESSAGE [Earth - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 4)
+MESSAGE [Lightning - <EVAL <MORE2> > Charges]
+
+ELSE
+MESSAGE [Error in Script, page a GM]
+
+ON=@DCLICK
+IF (<SRC.TAG.FCLASS> == 5)
+
+IF (<MOREM> == 0)
+SRC.MESSAGE This staff is not imbued with any magic!
+RETURN 1
+
+ELSEIF (<MOREM> == 1)
+SRC.NEWITEM=i_magery_staff_fire
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 2)
+SRC.NEWITEM=i_magery_staff_water
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 3)
+SRC.NEWITEM=i_magery_staff_earth
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 4)
+SRC.NEWITEM=i_magery_staff_lightning
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSE
+SRC.MESSAGE ERROR In magerystaff script, page for a GM.
+RETURN 1
+
+ENDIF
+
+ELSE
+
+SRC.MESSAGE You are not a mage and cannot use this!
+RETURN 1
+
+
+[ITEMDEF i_staff_magery_quarter]
+DEFNAME=i_staff_magery_quarter
+ID=i_staff_quarter
+NAME=Magic Quarter Staff
+TYPE=t_weapon_mace_staff
+RESOURCES=10 I_SCROLL_BLANK,50 i_reag_daemon_bone
+SKILLMAKE=CARPENTRY 98.7, t_carpentry
+DAM=14,39
+WEIGHT=5
+
+
+ON=@CREATE
+MOREM=0
+MORE2=30
+HITPOINTS=999
+
+
+ON=@CLICK
+
+IF (<MOREM>==0)
+MESSAGE [Not Imbued]
+ELSEIF (<MOREM> == 1)
+MESSAGE [Fire - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 2)
+MESSAGE [Water - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 3)
+MESSAGE [Earth - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 4)
+MESSAGE [Lightning - <EVAL <MORE2> > Charges]
+
+ELSE
+MESSAGE [Error in Script, page a GM]
+
+ON=@DCLICK
+IF (<SRC.TAG.FCLASS> == 5)
+
+IF (<MOREM> == 0)
+SRC.MESSAGE This staff is not imbued with any magic!
+RETURN 1
+
+ELSEIF (<MOREM> == 1)
+SRC.NEWITEM=i_magery_staff_fire
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 2)
+SRC.NEWITEM=i_magery_staff_water
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 3)
+SRC.NEWITEM=i_magery_staff_earth
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 4)
+SRC.NEWITEM=i_magery_staff_lightning
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSE
+SRC.MESSAGE ERROR In magerystaff script, page for a GM.
+RETURN 1
+
+
+ENDIF
+
+ELSE
+
+SRC.MESSAGE You are not a mage and cannot use this!
+RETURN 1
+
+
+
+[ITEMDEF i_staff_magery_black]
+DEFNAME=i_staff_magery_black
+ID=i_staff_black
+NAME=Magic Black Staff
+TYPE=t_weapon_mace_staff
+RESOURCES=10 I_SCROLL_BLANK,50 i_reag_daemon_bone
+SKILLMAKE=CARPENTRY 98.7, t_carpentry
+DAM=14,39
+WEIGHT=5
+
+ON=@CREATE
+MOREM=0
+MORE2=30
+HITPOINTS=999
+
+
+ON=@CLICK
+
+IF (<MOREM>==0)
+MESSAGE [Not Imbued]
+ELSEIF (<MOREM> == 1)
+MESSAGE [Fire - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 2)
+MESSAGE [Water - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 3)
+MESSAGE [Earth - <EVAL <MORE2> > Charges]
+
+ELSEIF (<MOREM> == 4)
+MESSAGE [Lightning - <EVAL <MORE2> > Charges]
+
+ELSE
+MESSAGE [Error in Script, page a GM]
+
+ON=@DCLICK
+IF (<SRC.TAG.FCLASS> == 5)
+
+IF (<MOREM> == 0)
+SRC.MESSAGE This staff is not imbued with any magic!
+RETURN 1
+
+ELSEIF (<MOREM> == 1)
+SRC.NEWITEM=i_magery_staff_fire
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 2)
+SRC.NEWITEM=i_magery_staff_water
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 3)
+SRC.NEWITEM=i_magery_staff_earth
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSEIF (<MOREM> == 4)
+SRC.NEWITEM=i_magery_staff_lightning
+SRC.ACT.EQUIP
+RETURN 1
+
+ELSE
+SRC.MESSAGE ERROR In magerystaff script, page for a GM.
+RETURN 1
+
+
+
+ENDIF
+
+ELSE
+
+SRC.MESSAGE You are not a mage and cannot use this!
+RETURN 1
+
+
+
+
+
+
+
+
+
+
+// Third section scrolls (custom pics - mf verdata)
+
+
+
+
+
+
+
+
+[ITEMDEF i_scroll_enchant_fire]
+DEFNAME=i_scroll_enchant_fire
+ID=1112
+TYPE=t_script
+NAME=Scroll of Enchantment [Fire]
+RESOURCES=10 I_SCROLL_BLANK,50 i_reag_daemon_bone
+SKILLMAKE=INSCRIPTION 95.0
+
+
+
+ON=@CREATE
+COLOR=0002b
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_scroll_enchant_fire>)
+TARGET What do you wish to use this on?
+RETURN 1
+ELSE
+SRC.MESSAGE You must be carrying it in order to use!
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID> == i_staff_magery_black) || (<SRC.TARG.BASEID> == i_staff_magery_gnarled) || (<SRC.TARG.BASEID> == i_staff_magery_quarter)
+SRC.TARG.MOREM=1
+SRC.TARG.MORE2=<SRC.MAGERY> / 34
+SRC.EFFECT=3,i_fx_sparkle,6,15,1
+SRC.EMOTE enchant the staff
+SRC.SOUND 01ed
+SRC.CONSUME 1 i_scroll_enchant_fire
+RETURN 1
+ELSE
+SRC.MESSAGE That cannot be enchanted!
+RETURN 1
+
+
+
+[ITEMDEF i_scroll_enchant_water]
+DEFNAME=i_scroll_enchant_water
+ID=1112
+TYPE=t_script
+NAME=Scroll of Enchantment [Water]
+RESOURCES=10 I_SCROLL_BLANK,50 i_reag_daemon_bone
+SKILLMAKE=INSCRIPTION 95.0
+
+ON=@CREATE
+COLOR=0018b
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_scroll_enchant_water>)
+TARGET What do you wish to use this on?
+RETURN 1
+ELSE
+SRC.MESSAGE You must be carrying it in order to use!
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID> == i_staff_magery_black) || (<SRC.TARG.BASEID> == i_staff_magery_gnarled) || (<SRC.TARG.BASEID> == i_staff_magery_quarter)
+SRC.TARG.MOREM=2
+SRC.TARG.MORE2=<SRC.MAGERY> / 34
+SRC.EFFECT=3,i_fx_sparkle,6,15,1
+SRC.EMOTE enchant the staff
+SRC.SOUND 01ed
+SRC.CONSUME 1 i_scroll_enchant_water
+RETURN 1
+ELSE
+SRC.MESSAGE That cannot be enchanted!
+RETURN 1
+
+
+
+
+[ITEMDEF i_scroll_enchant_earth]
+DEFNAME=i_scroll_enchant_earth
+ID=1112
+TYPE=t_script
+NAME=Scroll of Enchantment [Earth]
+RESOURCES=10 I_SCROLL_BLANK,50 i_reag_daemon_bone
+SKILLMAKE=INSCRIPTION 95.0
+
+ON=@CREATE
+COLOR=00794
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_scroll_enchant_earth>)
+TARGET What do you wish to use this on?
+RETURN 1
+ELSE
+SRC.MESSAGE You must be carrying it in order to use!
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID> == i_staff_magery_black) || (<SRC.TARG.BASEID> == i_staff_magery_gnarled) || (<SRC.TARG.BASEID> == i_staff_magery_quarter)
+SRC.TARG.MOREM=3
+SRC.TARG.MORE2=<SRC.MAGERY> / 34
+SRC.EFFECT=3,i_fx_sparkle,6,15,1
+SRC.EMOTE enchant the staff
+SRC.SOUND 01ed
+SRC.CONSUME 1 i_scroll_enchant_earth
+RETURN 1
+ELSE
+SRC.MESSAGE That cannot be enchanted!
+RETURN 1
+
+
+
+
+
+[ITEMDEF i_scroll_enchant_lightning]
+DEFNAME=i_scroll_enchant_lightning
+ID=1112
+TYPE=t_script
+NAME=Scroll of Enchantment [Lightning]
+RESOURCES=1 I_SCROLL_BLANK,5 i_reag_daemon_bone,1 i_flesh_heart
+SKILLMAKE=INSCRIPTION 95.0
+
+ON=@CREATE
+COLOR=00835
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_scroll_enchant_lightning>)
+TARGET What do you wish to use this on?
+RETURN 1
+ELSE
+SRC.MESSAGE You must be carrying it in order to use!
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID> == i_staff_magery_black) || (<SRC.TARG.BASEID> == i_staff_magery_gnarled) || (<SRC.TARG.BASEID> == i_staff_magery_quarter)
+SRC.TARG.MOREM=4
+SRC.TARG.MORE2=<SRC.MAGERY> / 34
+SRC.EFFECT=3,i_fx_sparkle,6,15,1
+SRC.EMOTE enchant the staff
+SRC.SOUND 01ed
+SRC.CONSUME 1 i_scroll_enchant_lightning
+RETURN 1
+ELSE
+SRC.MESSAGE That cannot be enchanted!
+RETURN 1
+

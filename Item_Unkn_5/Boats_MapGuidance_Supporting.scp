@@ -1,0 +1,248 @@
+//Sven's Course Plotting System - V1.0
+//Created 7-24-03
+//Please Read Instructions.txt
+
+
+[SPEECH spk_ship_cmds]
+ON=Set name *
+// Changes Ship's name, where *=name.
+// NAME=<strmid(<args>,8,64)>
+
+ON=Furl sail	// Stop
+ON=Stop	// Stops current ship movement.
+IF (0<REGION.TAG.TUID>=0)
+	SHIPSTOP
+ELSE
+	shipguidestop
+ENDIF
+
+ON=Turn Left
+ON=Port			// Turn Left
+IF (0<REGION.TAG.TUID>=0)
+	SHIPTURNLEFT
+ENDIF
+
+ON=Turn Right
+ON=Starboard	// Turn Right
+IF (0<REGION.TAG.TUID>=0)
+	SHIPTURNRIGHT
+ENDIF
+
+ON=Left			// Move ship in desired direction.
+ON=Drift Left
+IF (0<REGION.TAG.TUID>=0)
+	SHIPDRIFTLEFT
+ENDIF
+
+ON=Right		// Move ship in desired direction.
+ON=Drift Right
+IF (0<REGION.TAG.TUID>=0)
+	SHIPDRIFTRIGHT
+ENDIF
+
+ON=Back			// Move ship backwards
+ON=Backward		// Move ship backwards
+ON=Backwards	// Move ship backwards
+IF (0<REGION.TAG.TUID>=0)
+	SHIPBACK
+ENDIF
+
+ON=Forward
+ON=Foreward		// Moves ship forward.
+ON=Unfurl sail	// Moves ship forward.
+IF (0<REGION.TAG.TUID>=0)
+	SHIPFORE
+ENDIF
+
+ON=Forward left
+IF (0<REGION.TAG.TUID>=0)
+	SHIPFORELEFT
+ENDIF
+
+ON=forward right
+IF (0<REGION.TAG.TUID>=0)
+	SHIPFORERIGHT
+ENDIF
+
+ON=backward left
+ON=back left
+IF (0<REGION.TAG.TUID>=0)
+	SHIPBACKLEFT
+ENDIF
+
+ON=backward right
+ON=back right
+IF (0<REGION.TAG.TUID>=0)
+	SHIPBACKRIGHT
+ENDIF
+
+ON=Raise Anchor
+IF (0<REGION.TAG.TUID>=0)
+	SHIPANCHORRAISE
+ENDIF
+
+ON=Drop Anchor
+IF (0<REGION.TAG.TUID>=0)
+	SHIPANCHORDROP
+ENDIF
+
+ON=Turn around	// Turns ship around and proceeds.
+ON=Come about	// Turns ship around and proceeds.
+IF (0<REGION.TAG.TUID>=0)	
+	SHIPTURN
+ENDIF
+
+ON=Up
+IF (0<REGION.TAG.TUID>=0)
+	SHIPUP
+ENDIF
+
+ON=Down
+IF (0<REGION.TAG.TUID>=0)
+	SHIPDOWN
+ENDIF
+
+ON=Land
+IF (0<REGION.TAG.TUID>=0)
+	SHIPLAND
+ENDIF
+
+ON=Next Pin
+IF !(0<REGION.TAG.TUID>=0)
+	TRY UID.<REGION.TAG.TUID>.TIMER=-1
+	PINCYCLE (<EVAL (<REGION.TAG.PINSTAT> + 1)>)
+ENDIF
+
+ON=*
+SRC.REGION.ALLCLIENTS SYSMESSAGE <SRC.NAME>: <ARGS>
+
+[ITEMDEF i_mapbypin_trigger]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+NAME=MapByPin Trigger
+
+ON=@CREATE
+ATTR=attr_decay | attr_invis | attr_move_never
+TIMER=10
+
+ON=@EQUIP
+TARGET
+RETURN 0
+
+ON=@TARGON_ITEM
+MapTargon <MORE1>
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[Function GotoPin]
+IF (0<SRC.REGION.TAG.TUID>=0)
+IF (<SRC.UID.<SRC.REGION.UID>.TYPE> == t_ship)				//Is the player in the boat?
+	SRC.SYSMESSAGE Which map do you wish to follow?
+	SRC.NEWITEM i_mapbypin_trigger
+	SRC.ACT.EQUIP
+	SRC.ACT.MORE1 = <ARGN>
+ELSE
+	SRC.SYSMESSAGE You must be on a boat to use this.			//If not, tell the player to get in a boat.
+ENDIF
+ELSE
+	SRC.SYSMESSAGE The ship is already following a map!
+	SRC.SYSMESSAGE Say "Stop" and then try again.
+ENDIF
+RETURN 1
+
+[FUNCTION MapTargon]
+IF (<SRC.TARG.TYPE> == t_map)				//Maps only.
+	IF (<SRC.UID.<SRC.REGION.UID>.TYPE> == t_ship)				//Is the player in the boat?
+		SRC.TARG.ATTR=attr_static | attr_move_never | attr_invis 
+		SRC.TARG.P = <SRC.REGION.P>
+		SRC.TARG.LINK=<SRC.REGION.UID>
+		SRC.TARG.TIMER = -1
+		SRC.REGION.TAG.MUID=<SRC.TARG.UID>
+		SRC.REGION.TAG.MINX=<SRC.TARG.MORE1H>
+		SRC.REGION.TAG.MAXX=<SRC.TARG.MORE2H>
+		SRC.REGION.TAG.MINY=<SRC.TARG.MORE1L>
+		SRC.REGION.TAG.MAXY=<SRC.TARG.MORE2L>
+		SRC.REGION.TAG.PUID=<SRC.UID>
+		SRC.REGION.TAG.TUID=
+		SRC.REGION.TAG.GEMREM=
+		SRC.SYSMESSAGE Ship Guiding Initated, Say "Stop" to stop the voyage.
+		TRY UID.<SRC.REGION.UID>.PINCYCLE <ARGN>				//Have the ship execute the PINCYCLE function
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE You must be on a boat to do this!
+	ENDIF
+ELSE
+	SRC.SYSMESSAGE You must target a map.
+ENDIF
+
+[Function TillermanDclick]
+IF (0<REGION.TAG.TUID>=0)
+IF (<SRC.UID.<SRC.REGION.UID>.TYPE> == t_ship)				//Is the player in the boat?
+	SAY Captain! Which map do you want me to follow?
+	TARGET														//if so, Target cursor
+ELSE
+	SRC.SYSMESSAGE You must be on a boat to use this.			//If not, tell the player to get in a boat.
+ENDIF
+ELSE
+	SRC.SYSMESSAGE The ship is already following a map!
+	SRC.SYSMESSAGE Say "Stop" and then try again.
+ENDIF
+RETURN 1
+
+[FUNCTION Shipguidestop]
+REGION.TAG.GEMREM=1											//Removes the mover GEM
+REGION.TAG.TUID=											//Clears TUID TAG
+REGION.TAG.MINX=											//Clears Minimum X
+REGION.TAG.MAXX=											//Clears Maximum X
+REGION.TAG.MINY=											//Clears Minimum Y
+REGION.TAG.MAXY=											//Clears Maximum Y
+REGION.TAG.MOVEDX=0
+REGION.TAG.MOVEDY=0
+VAR.TLINK=<LINK.UID>
+LINK=<REGION.TAG.MUID>
+LINK.ATTR=0
+LINK=<REGION.TAG.PUID>
+LINK.BOUNCE <REGION.TAG.MUID>
+LINK=<VAR.TLINK>
+LINK.SAY Captain, We've Stopped!
+REGION.TAG.PUID=
+REGION.TAG.MUID=
+RETURN 0
+
+[FUNCTION Shipisowner]
+IF <SRC.UID.<SRC.REGION.UID>.MORE1> == <SRC.UID>
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You must be the owner of the ship.
+	RETURN 0
+ENDIF
+
+[FUNCTION PINFIND]											//Called from PINCYCLE and executed by the map to determine if PIN exists, if so it stores it into VAR.PINC
+IF <PIN.<ARGN>>											//Checks if the current PIN# exists as a PIN on the map.
+	VAR.PINC=<PIN.<ARGN>>								//If true, sets VAR.PINC to the coords stored to the PIN on the map.
+	VAR.PINEXIST=1											//Sets VAR.PINEXIST to true, for use in PINCYCLE in determining if the PIN exists.
+	RETURN 1
+ELSE
+	VAR.PINEXIST=0											//Sets VAR.PINEXIST to false, for use in PINCYCLE in determining if the PIN exists.
+	RETURN 1
+ENDIF
+
+[FUNCTION SHIPXDECIDE]									//Called by the ship from PINCYCLE - Determines West or East.
+IF <MOREX> < <P.X>
+	REGION.TAG.DETERMINEDX=W
+ELSE
+	REGION.TAG.DETERMINEDX=E
+ENDIF
+RETURN 1
+
+[FUNCTION SHIPYDECIDE]									//Called by the ship from PINCYCLE - Determines West or East.
+IF <MOREY> < <P.Y>
+	REGION.TAG.DETERMINEDY=N
+ELSE
+	REGION.TAG.DETERMINEDY=S
+ENDIF
+RETURN 1

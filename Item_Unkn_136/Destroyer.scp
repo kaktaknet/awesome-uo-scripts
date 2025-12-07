@@ -1,0 +1,95 @@
+
+*****************Created by Abaddon**************
+
+[CHARDEF c_m_destroyer]
+DEFNAME=c_m_destroyer
+ID=c_man
+NAME=The Destroyer
+CAN=MT_WALK|MT_RUN|MT_USEHANDS|MT_MALE
+DESIRES=i_gold, e_notoriety, i_gem_soul_isis
+AVERSIONS=t_trap, t_eerie_stuff, t_spell
+
+TSPEECH=spk_human_prime
+TSPEECH=jobMageEvil
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+ON=@Create
+COLOR=0407
+STR={1250 1500}
+DEX={475 500}
+INT={600 750}
+MAXHITS={13500 14000}
+MAXSTAM={1000 1250}
+
+SWORDSMANSHIP={600.0 650.0}
+ARCHERY={400.0 450.0}
+PARRYING={550.0 600.0}
+TACTICS={450.0 500.0}
+ANATOMY={125.0 150.0}
+MAGICRESISTANCE={210.0 220.0}
+WRESTLING={300.0 350.0}
+
+NPC=brain_monster
+FAME=8001
+KARMA=-10000
+
+ITEMNEWBIE=i_hair_long
+COLOR=00
+
+ITEMNEWBIE=i_chainmail_tunic
+COLOR=0b3d
+ITEMNEWBIE=i_chainmail_leggings
+COLOR=0b3d
+ITEMNEWBIE=i_ringmail_gloves
+COLOR=0b3d
+ITEMNEWBIE=i_shield_heater
+COLOR=0b3d
+ITEMNEWBIE=i_helm_nose
+COLOR=0b3d
+ITEMNEWBIE=i_sickle
+COLOR=0b3d
+ITEMNEWBIE=i_bow
+ATTR=attr_magic|attr_newbie
+MOREY=35.0
+NAME=Bow of Vanquishing
+ITEM=i_shoes_plain
+
+CATEGORY=custom
+SUBSECTION=monsters
+DESCRIPTION=Destroyer
+
+ON=@NPCRESTOCK
+ITEM=tm_bag_of_magic
+ITEM=tm_bag_of_magic
+ITEM=random_magic_wands
+ITEM=random_food,{4 9}
+ITEM=random_scroll,{2 5}
+ITEM=random_magic_loot
+ITEM=random_magic_goodie
+ITEM=random_magic_sword,R6
+ITEM={ i_gem_soul_destroyer 1 0 5 }
+
+ON=@GETHIT
+IF (<DISTANCE> > 3)
+	IF !(<FINDTYPE.t_weapon_bow.CONT>==<UID>)
+		IF (<FINDTYPE.t_weapon_bow.UID>)
+			EQUIP=<FINDTYPE.t_weapon_bow.UID>
+		ENDIF
+	ENDIF
+ELSE
+	IF !(<FINDTYPE.t_weapon_sword.CONT>==<UID>)
+		IF (<FINDTYPE.t_weapon_sword.UID>)
+			IF !(<FINDTYPE.t_weapon_sword.TWOHANDS>)
+				IF (<FINDTYPE.t_shield.UID>)
+					EQUIP=<FINDTYPE.t_shield.UID>
+				ENDIF
+			ENDIF
+			EQUIP=<FINDLAYER.21.FINDTYPE.t_weapon_sword.UID>
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 0
+
+[EOF]

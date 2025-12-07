@@ -1,0 +1,50 @@
+Changelog for the MultiList UO Shard Tool
+
+Release 5
+	Support for including port in registerServer= line.
+	Registerserver IP/URL and port can be separated by , ; or :.
+	
+	Comments can now be placed in the middle of lines, and are parsed
+	correctly. Previously, comments were only considered comments 
+	if the // was at the very beginning of the line.
+	Note that if a :// is in a line, then that line is considered
+	to be comment-free unless the first 2 characters are //. Thus,
+	lines with any variant on http://, ftp://, and so forth,
+	are treated properly (unless you try to put a comment later in
+	the line).
+	
+	Example: ShardName=MyShardsName //This is the name of my shard
+	
+	The default registerservers.ini which is created when the program
+	is first run now contains an entry for the OnlineUO shard list.
+
+	The registerservers.ini is written in the 2-character endline format
+	now, since more people use Windows than Unix, and since Windows Notepad
+	doesn't display the endlines correctly if they're in the 1-character format.
+	
+	Changelog.txt added.
+	
+	Blank lines in registerservers.ini no longer cause MultiList to exit.
+
+Release 4
+	The program correctly reads registerservers.ini if it is written with the
+	2-character endline format rather than the 1-character endline format.
+
+Release 3
+	You can now run MultiList on a different computer than your shard and it 
+	will work fine, if you set the DynIP option in registerservers.ini 
+	to the IP of your shard (or it's dynamic IP if it has one.).
+
+ 	(Note that the regpass ensures that nobody can overwrite your shard's
+ 	entry in the list server by using MultiList like this.)
+
+Release 2
+	MultiList starts a thread for each registerserver, but now waits 20
+	seconds in between starting each one. Since it waits 10 seconds a
+	thread starts to send the secondary information, the effect is of it
+	sending the initial information to one shard, pausing 10 seconds,
+	sending the secondary information to that shard, pausing 10 seconds,
+	sending the initial information the the second shard, etc...
+
+Release 1
+	Initial Release

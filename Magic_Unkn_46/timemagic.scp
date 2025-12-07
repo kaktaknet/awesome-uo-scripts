@@ -1,0 +1,228 @@
+//Time Magic v1.7
+//By Rudenid
+//Thanks to Acratia for pointing out how a TIMER works on an NPC
+//These will work on players. But will work betetr on NPCs
+//Because they will influence the NPCs' walking speed as well
+//As skill execution speed.
+
+[ITEMDEF i_scroll_haste]
+ID=i_scroll_earthquake
+NAME=Haste Scroll
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=020
+
+ON=@DClick
+IF (<SRC.MANA> < 55)
+SRC.SYSMESSAGE You do not have enough mana to cast this spell
+RETURN 1
+ENDIF
+
+TARGET Select Target
+RETURN 1
+
+ON=@Targon_Char
+IF (<SRC.MANA> < 55)
+SRC.SYSMESSAGE You do not have enough mana to cast this spell
+RETURN 1
+ENDIF
+
+IF (<SRC.GM> == 0)
+SRC.MANA=<SRC.MANA> + {-55 -35}
+SRC.SAY Uus Tym
+SRC.ANIM 17
+ENDIF
+
+TAG.OLDAMOUNT=<AMOUNT>
+AMOUNT=1
+ATTR=<ATTR>|attr_move_never|attr_invis
+P=<SRC.TARG.P>
+LINK=<SRC.TARG.UID>
+MORE1=0
+TIMER=1
+
+IF (<eval <TAG.OLDAMOUNT>> > 1)
+SRC.NEWITEM i_scroll_haste
+SRC.ACT.AMOUNT=<eval <TAG.OLDAMOUNT>> +(-1)
+SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+TAG.OLDAMOUNT=
+ENDIF
+
+RETURN 1
+
+ON=@Timer
+
+IF !(<LINK.ISCHAR>)
+LINK.TAG.HASTESCROLL=
+REMOVE
+ENDIF
+
+P=<LINK.P>
+
+IF (<MORE1>=0)
+
+//LINK.EFFECT 3,i_fx_sparkle_2,20,15
+//LINK.SFX 486
+MORE1={100 200}
+TIMERd=2
+ELSEIF <MORE1>=1
+LINK.TAG.HASTESCROLL=
+REMOVE
+ELSE
+MORE1 = <MORE1> - 1
+LINK.TIMERd=0
+TIMERd=1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_scroll_slow]
+ID=i_scroll_earthquake
+NAME=Slow Scroll
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=020
+
+ON=@DClick
+IF (<SRC.MANA> < 55)
+SRC.SYSMESSAGE You do not have enough mana to cast this spell
+RETURN 1
+ENDIF
+
+TARGET Select Target
+RETURN 1
+
+ON=@Targon_Char
+IF (<SRC.MANA> < 55)
+	SRC.SYSMESSAGE You do not have enough mana to cast this spell
+	RETURN 1
+ELSE
+	SRC.MANA=<SRC.MANA> + {-55 -35}
+	SRC.SAY Des Tym
+	SRC.ANIM 17
+
+	TAG.OLDAMOUNT=<AMOUNT>
+	AMOUNT=1
+	ATTR=<ATTR>|attr_move_never|attr_invis
+	P=<SRC.TARG.P>
+	LINK=<SRC.TARG.UID>
+	MORE1=0
+	TIMER=1
+
+	IF !(<SRC.TARG.FLAGS>&statf_criminal)
+		IF !(<SRC.TARG.KILLS> > <SERV.MURDERMINCOUNT>)
+			IF !(<SRC.TARG.KARMA> < -2999)
+				SRC.CRIMINAL 1
+			ENDIF
+		ENDIF
+	ENDIF
+
+	IF (<eval <TAG.OLDAMOUNT>> > 1)
+		SRC.NEWITEM i_scroll_slow
+		SRC.ACT.AMOUNT=<eval <TAG.OLDAMOUNT>> +(-1)
+		SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+		TAG.OLDAMOUNT=
+	ENDIF
+
+	RETURN 1
+ENDIF
+
+ON=@Timer
+
+IF !(<LINK.ID>)
+REMOVE
+ENDIF
+
+P=<LINK.P>
+
+IF <MORE1>=0
+LINK.EFFECT 3,i_fx_glow2,1,35
+LINK.SFX 470
+MORE1={40 80}
+TIMERd=2
+ELSEIF <MORE1>=1
+REMOVE
+ELSE
+MORE1 = <MORE1> - 1
+LINK.TIMER=2
+TIMER=3
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_scroll_stop]
+ID=i_scroll_earthquake
+NAME=Stop Scroll
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=020
+
+ON=@DClick
+IF (<SRC.MANA> < 55)
+SRC.SYSMESSAGE You do not have enough mana to cast this spell
+RETURN 1
+ENDIF
+
+TARGET Select Target
+RETURN 1
+
+ON=@Targon_Char
+IF (<SRC.MANA> < 55)
+SRC.SYSMESSAGE You do not have enough mana to cast this spell
+RETURN 1
+ENDIF
+
+SRC.MANA=<SRC.MANA> + {-55 -35}
+SRC.SAY An Tym
+SRC.ANIM 17
+
+TAG.OLDAMOUNT=<AMOUNT>
+AMOUNT=1
+ATTR=<ATTR>|attr_move_never|attr_invis
+P=<SRC.TARG.P>
+LINK=<SRC.TARG.UID>
+MORE1=0
+TIMER=1
+
+IF !(<SRC.TARG.FLAGS>&statf_criminal)
+IF !(<SRC.TARG.KILLS> > <SERV.MURDERMINCOUNT>)
+IF !(<SRC.TARG.KARMA> < -2999)
+SRC.CRIMINAL 1
+ENDIF
+ENDIF
+ENDIF
+
+IF (<eval <TAG.OLDAMOUNT>> > 1)
+SRC.NEWITEM i_scroll_stop
+SRC.ACT.AMOUNT=<eval <TAG.OLDAMOUNT>> +(-1)
+SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+TAG.OLDAMOUNT=
+ENDIF
+
+RETURN 1
+
+ON=@Timer
+
+IF !(<LINK.ID>)
+REMOVE
+ENDIF
+
+P=<LINK.P>
+
+IF <MORE1>=0
+LINK.EFFECT 3,i_fx_glow2,1,35
+LINK.SFX 470
+MORE1={75 90}
+TIMERd=2
+ELSEIF <MORE1>=1
+REMOVE
+ELSE
+MORE1 = <MORE1> - 1
+LINK.TIMER=2
+TIMERd=2
+ENDIF
+
+RETURN 1

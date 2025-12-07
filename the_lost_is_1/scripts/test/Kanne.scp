@@ -1,0 +1,63 @@
+//**********************************************************************//
+//                           UO-Sphere-Skripts                          //
+//                                                                      //
+//                 URL   http://www.uo-sphere-skripts.de                //
+//                 Mail  info@uo-sphere-skripts.de                      //
+//                                                                      //
+//                                                                      //
+// Kanne by Zarki                                                       //
+//                                                                      //
+//                   Copyright 2002 by UO Sphere Skripts                //
+//**********************************************************************//
+
+//Überschreibt bitte das original item
+
+[ITEMDEF 09a7]
+DEFNAME=i_pitcher_glass
+TYPE=T_PITCHER_EMPTY
+TDATA1=i_pitcher_glass
+FLIP=1
+RESOURCES=2 i_ingot_iron
+SKILLMAKE=TINKERING 5.4,t_tinker_tools
+VALUE=50
+WEIGHT=2
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Empty Glass Pitcher
+DUPELIST=0ff6,0ff7
+
+on=@dclick
+target Was willst Du in die Kanne einfuellen?
+return 1
+
+on=@targon_char
+if (<src.targ.id>==c_cow_bw) || (<SRC.TARG.ID>==c_cow_brown) || (<SRC.TARG.ID>==c_sheep_woolly) || (<SRC.TARG.ID>==c_sheep_shorn) || (<SRC.TARG.ID>==c_goat) || (<SRC.TARG.ID>==c_a_mountain_goat)
+remove
+src.newitem=i_pitcher_milk
+src.act.bounce
+src.message Du hast das Tier gemolken.
+return 1
+else
+src.message Dieses Tier wurde erst gemolken!
+return 1
+endif
+else
+src.message Das ist kein Tier zum melken!
+return 1
+endif
+
+on=@targon_item
+if (<src.targ.baseid>==i_barrel_water)
+src.newitem=i_pitcher_water
+src.act.bounce
+src.message Du hast etwas Wasser aus dem Fass genommen.
+remove
+return 1
+else
+src.message Das Fass ist leer!
+return 1
+endif
+else
+src.message Das ist kein Wasserfass!
+return 1
+endif

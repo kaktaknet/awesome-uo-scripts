@@ -1,0 +1,461 @@
+The way you use this script is ultimately up to you, the application is very simple however. 
+To use it simply drop it in, resync and away you go. 
+
+The original version of this script was not by me, but i have expanded greatly upon it. 
+Unfortunately, I do not remember the name of whom the original scripter was.
+
+NOTE: THE STRIPFULL AND ALL ARTEST COMMANDS ARE SET TO BE USEABLE BY PRIVSETS OF COUSELERS (PRIVSET 02) OR HIGHER
+BE SURE TO CHANGE THIS IF YOU WISH THE FUNCTIONS TO BE USED ONLY BY HIGHER PRIVSETS.
+
+What I have added since last "release" on message board:
+-I gave up on having all swords go into your pack, and just changed it to a single weapon of the weapon type which is most commonly used.
+-Updated the .STRIPFULL command which deletes everything on your body, excluding hair and what's in your pack. 
+MAKE SURE YOU TAKE ANYTHING OFF YOUR CHARACTER THAT YOU DON'T MIND LOOSING BEFORE USING THIS COMMAND
+-Added a Help Command which brings up a scroll text window with all the functions useable for this function.
+	-For armor   .ARTEST_HELP_ARMOR
+	-For weapons   .ARTEST_HELP_WEAPON
+	-Or to bring both in one window   .ARTEST_HELP 
+
+The commands are:
+artest_p (Platemail armor test) 
+artest_c (Chainmail armor test) 
+artest_r (Ringmail armor test) 
+artest_l (Leather armor test) 
+artest_s (Studded armor test)
+artest_b (Bone armor test)
+artest_buckler (Buckler shield test)
+artest_kite (Wooden Kite shield test)
+artest_mkite (Metal Kite shield test)
+artest_bronze (Bronze shield test)
+artest_heater (Heater shield)
+artest_metal (Metal shield)
+artest_wood (Wooden shield)
+artest_chaos (Chaos shield)
+artest_order (Order shield)
+artest_sword (Viking Sword)
+artest_axe (Double Axe)
+artest_bow (Bow)
+artest_xbow (Crossbow)
+artest_xbowh (Heavy Crossbow)
+artest_mace (War Mace)
+artest_halberd (Halberd)
+artest_bardiche (Bardiche)
+artest_fenc (Kryss)
+artest_warfork (Warfork)
+artest_help (Brings up scroll help window with functions for both weapons and armor)
+artest_help_armor (Bring up scroll help window with functions for armor)
+artest_help_weapon (Bring up scroll help window with functions for weapons)
+stripfull (strips all layers which holds only clothing, armor, and shields on your character)
+
+
+Type .artest_p #### 
+
+#### is the color you want the suit or shield to be 
+
+example: .artest_p 0455 would equip a full suit of platemail armor on your character which is the color of 0455
+it will equip a full suit of whatever armour (or a shield) you have specified in whatever color you used ase argument after the command, if you dont put in an argument, no armour. 
+
+
+//Code: 
+
+[FUNCTION ARTEST_HELP]
+SCROLL= SCROLL_HELP
+
+[SCROLL SCROLL_HELP]
+HELP MENU
+-ARMOR-
+Platemail - artest_p 
+Chainmail - artest_c
+Ringmail - artest_r 
+Leather - artest_l 
+Studded - artest_s 
+Bone - artest_b 
+Buckler - artest_buckler 
+Wooden Kite - artest_kite 
+Metal Kite - artest_mkite 
+Bronze shield - artest_bronze 
+Heater - artest_heater 
+Metal shield - artest_metal 
+Wooden shield - artest_wood 
+Chaos shield - artest_chaos 
+Order shield - artest_order 
+-WEAPON-
+Viking Sword - artest_sword 
+Double Axe - artest_axe 
+Bow - artest_bow 
+Crossbow - artest_xbow 
+Heavy Crossbow - artest_xbowh 
+War Mace - artest_mace 
+Halberd - artest_halberd 
+Bardiche - artest_bardiche 
+Kryss - artest_fenc 
+Warfork - artest_warfork 
+
+To remove all - stripfull
+
+[FUNCTION ARTEST_HELP_ARMOR]
+SCROLL= SCROLL_HELP_ARMOR
+
+[FUNCTION ARTEST_HELP_WEAPON]
+SCROLL= SCROLL_HELP_WEAPON
+
+[SCROLL SCROLL_HELP_WEAPON]
+WEAPON ARTEST HELP MENU
+Viking Sword - artest_sword 
+Double Axe - artest_axe 
+Bow - artest_bow 
+Crossbow - artest_xbow 
+Heavy Crossbow - artest_xbowh 
+War Mace - artest_mace 
+Halberd - artest_halberd 
+Bardiche - artest_bardiche 
+Kryss - artest_fenc 
+Warfork - artest_warfork 
+
+To remove all  - stripfull
+
+[SCROLL SCROLL_HELP_ARMOR]
+ARMOR ARTEST HELP MENU
+Platemail - artest_p 
+Chainmail - artest_c
+Ringmail - artest_r 
+Leather - artest_l 
+Studded - artest_s 
+Bone - artest_b 
+Buckler - artest_buckler 
+Wooden Kite - artest_kite 
+Metal Kite - artest_mkite 
+Bronze shield - artest_bronze 
+Heater - artest_heater 
+Metal shield - artest_metal 
+Wooden shield - artest_wood 
+Chaos shield - artest_chaos 
+Order shield - artest_order 
+
+To remove all - stripfull
+
+[FUNCTION STRIPFULL]
+FINDLAYER(1).remove
+FINDLAYER(2).remove
+FINDLAYER(3).remove
+FINDLAYER(4).remove
+FINDLAYER(5).remove
+FINDLAYER(6).remove
+FINDLAYER(7).remove 
+FINDLAYER(8).remove 
+FINDLAYER(10).remove  
+FINDLAYER(12).remove 
+FINDLAYER(13).remove 
+FINDLAYER(14).remove  
+FINDLAYER(17).remove 
+FINDLAYER(18).remove  
+FINDLAYER(19).remove 
+FINDLAYER(20).remove  
+FINDLAYER(22).remove  
+FINDLAYER(23).remove  
+FINDLAYER(24).remove
+FIX 
+RETURN 1 
+
+[PLEVEL 02 ]
+STRIPFULL
+FUNCTION ARTEST_HELP
+FUNCTION ARTEST_HELP_ARMOR
+FUNCTION ARTEST_HELP_WEAPON
+
+[function artest_p] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_platemail_arms 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_platemail_leggings 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_platemail_helm 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_platemail_gorget 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_platemail_gloves 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_platemail_chest 
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_c] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_chainmail_coif 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_chainmail_leggings 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_chainmail_tunic 
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_r] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_ringmail_gloves 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_ringmail_tunic 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_ringmail_sleeves 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_ringmail_leggings 
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_l] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_leather_sleeves 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_leather_gloves 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_leather_gorget 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_leather_leggings 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_leather_tunic 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_leather_cap 
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_s] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_studded_sleeves 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_studded_gloves 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_studded_gorget 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_studded_leggings 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_studded_tunic 
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_b] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_bone_arms
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_bone_gloves 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_bone_helmet 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_bone_leggings 
+src.act.color=<args> 
+src.act.equip 
+src.newitem I_bone_chest
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_buckler] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_buckler
+src.act.color=<args> 
+src.act.equip
+
+[function artest_kite] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_kite_wood
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_mkite] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_kite_metal
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_bronze] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_round_bronze
+src.act.color=<args> 
+src.act.equip
+
+[function artest_heater] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_heater 
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_metal] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_round_metal
+src.act.color=<args> 
+src.act.equip
+
+[function artest_wood] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_wood 
+src.act.color=<args> 
+src.act.equip
+
+[function artest_chaos] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_chaos
+src.act.color=<args> 
+src.act.equip
+
+[function artest_order] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_shield_order 
+src.act.color=<args> 
+src.act.equip 
+
+[function artest_sword] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem=I_sword_viking 
+src.act.color=<args> 
+src.act.equip
+
+[function artest_axe] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_axe_double
+src.act.color=<args>
+src.act.equip
+
+[function artest_bow] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_bow
+src.act.color=<args> 
+src.act.equip
+
+[function artest_xbow] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_crossbow
+src.act.color=<args> 
+src.act.equip
+
+[function artest_xbowh] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_crossbow_heavy
+src.act.color=<args> 
+src.act.equip
+
+[function artest_mace] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_mace_war
+src.act.color=<args> 
+src.act.equip
+
+[function artest_halberd] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_halberd
+src.act.color=<args> 
+src.act.equip
+
+[function artest_bardiche] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_bardiche
+src.act.color=<args> 
+src.act.equip
+
+[function artest_fenc] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_kryss
+src.act.color=<args> 
+src.act.equip
+
+[function artest_warfork] 
+IF !0<ARGS> 
+RETURN 0 
+ELSE 
+src.newitem I_war_fork
+src.act.color=<args> 
+src.act.equip
+
+[PLEVEL 02] 
+ARTEST_P 
+ARTEST_C 
+ARTEST_R 
+ARTEST_L 
+ARTEST_S
+ARTEST_B
+ARTEST_BUCK
+ARTEST_KITE
+ARTEST_MKITE
+ARTEST_BRONZE
+ARTEST_HEATER
+ARTEST_METAL
+ARTEST_WOOD
+ARTEST_CHAOS
+ARTEST_ORDER
+ARTEST_SWORD
+ARTEST_AXE
+ARTEST_BOW
+ARTEST_XBOW
+ARTEST_XBOWH
+ARTEST_MACE
+ARTEST_HALBERD
+ARTEST_BARDICHE
+ARTEST_FENC
+ARTEST_WARFORK
+

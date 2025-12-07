@@ -1,0 +1,340 @@
+[FUNCTION dupeskills]
+
+
+IF (<ARGN> < 50)
+
+
+TRYP 0 SRC.<ARGN> <<ARGN>>
+
+
+dupeskills <ARGN> + 1
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION layerremove]
+
+
+IF (<FINDLAYER.<ARGS>>)
+
+
+TRYP 0 FINDLAYER.<ARGS>.REMOVE
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION dupelayer]
+
+
+IF (<FINDLAYER.<ARGS>>)
+
+
+TRYP 0 NEWITEM<FINDLAYER.<ARGS>.BASEID>
+
+
+TRYP 0 ACT.DISPID<FINDLAYER.<ARGS>.DISPID>
+
+
+TRYP 0 ACT.COLOR<FINDLAYER.<ARGS>.COLOR>
+
+
+ACT.CONT<SRC.UID>
+
+
+ACT.UPDATE
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION iamyou]
+
+
+IF (<ISITEM>)
+
+
+SRC.SYSMESSAGE This only works on characters.
+
+
+RETURN 1
+
+
+ELIF (<UID> == <SRC.UID>)
+
+
+SRC.SYSMESSAGE You can\'t use this on yourself.
+
+
+RETURN 1
+
+
+ENDIF
+
+
+
+
+
+SRC.NAME<NAME>
+
+
+SRC.TITLE<TITLE>
+
+
+SRC.BODY<BODY>
+
+
+SRC.OBODY<OBODY>
+
+
+SRC.COLOR<COLOR>
+
+
+SRC.OSKIN<OSKIN>
+
+
+SRC.KARMA<KARMA>
+
+
+SRC.FAME<FAME>
+
+
+SRC.KILLS<KILLS>
+
+
+SRC.STR<STR>
+
+
+SRC.DEX<DEX>
+
+
+SRC.INT<INT>
+
+
+SRC.HITS<HITS>
+
+
+SRC.STAM<STAM>
+
+
+SRC.MANA<MANA>
+
+
+SRC.UPDATE
+
+
+
+
+
+IF (<SRC.MEMORYFINDTYPE.memory_guild>)
+
+
+SRC.MEMORYFINDTYPE.memory_guild.REMOVE
+
+
+ENDIF
+
+
+
+
+
+IF (<MEMORYFINDTYPE.memory_guild>)
+
+
+SRC.NEWITEM<MEMORYFINDTYPE.memory_guild.BASEID>
+
+
+SRC.ACT.ATTR<MEMORYFINDTYPE.memory_guild.ATTR>
+
+
+SRC.ACT.NAME<MEMORYFINDTYPE.memory_guild.NAME>
+
+
+SRC.ACT.COLOR<MEMORYFINDTYPE.memory_guild.COLOR>
+
+
+SRC.ACT.TYPE<MEMORYFINDTYPE.memory_guild.TYPE>
+
+
+SRC.ACT.MORE2<MEMORYFINDTYPE.memory_guild.MORE2>
+
+
+SRC.ACT.MOREP<MEMORYFINDTYPE.memory_guild.MOREP>
+
+
+SRC.ACT.LINK<MEMORYFINDTYPE.memory_guild.LINK>
+
+
+SRC.ACT.CONT<SRC.UID>
+
+
+ENDIF
+
+
+
+
+
+dupeskills 0
+
+
+SRC.PRIVSHOW 0
+
+
+SRC.EVENTS -0
+
+
+SRC.EVENTS <EVENTS>
+
+
+
+
+
+SRC.LAYERREMOVE layer_hand1
+
+
+SRC.LAYERREMOVE layer_hand2
+
+
+SRC.LAYERREMOVE layer_shoes
+
+
+SRC.LAYERREMOVE layer_pants
+
+
+SRC.LAYERREMOVE layer_shirt
+
+
+SRC.LAYERREMOVE layer_helm
+
+
+SRC.LAYERREMOVE layer_gloves
+
+
+SRC.LAYERREMOVE layer_ring
+
+
+SRC.LAYERREMOVE layer_light
+
+
+SRC.LAYERREMOVE layer_collar
+
+
+SRC.LAYERREMOVE layer_hair
+
+
+SRC.LAYERREMOVE layer_half_apron
+
+
+SRC.LAYERREMOVE layer_chest
+
+
+SRC.LAYERREMOVE layer_wrist
+
+
+SRC.LAYERREMOVE layer_beard
+
+
+SRC.LAYERREMOVE layer_tunic
+
+
+SRC.LAYERREMOVE layer_ears
+
+
+SRC.LAYERREMOVE layer_arms
+
+
+SRC.LAYERREMOVE layer_cape
+
+
+SRC.LAYERREMOVE layer_robe
+
+
+SRC.LAYERREMOVE layer_skirt
+
+
+SRC.LAYERREMOVE layer_legs
+
+
+SRC.LAYERREMOVE layer_horse
+
+
+
+
+
+DUPELAYER layer_hand1
+
+
+DUPELAYER layer_hand2
+
+
+DUPELAYER layer_shoes
+
+
+DUPELAYER layer_pants
+
+
+DUPELAYER layer_shirt
+
+
+DUPELAYER layer_helm
+
+
+DUPELAYER layer_gloves
+
+
+DUPELAYER layer_ring
+
+
+DUPELAYER layer_light
+
+
+DUPELAYER layer_collar
+
+
+DUPELAYER layer_hair
+
+
+DUPELAYER layer_half_apron
+
+
+DUPELAYER layer_chest
+
+
+DUPELAYER layer_wrist
+
+
+DUPELAYER layer_beard
+
+
+DUPELAYER layer_tunic
+
+
+DUPELAYER layer_ears
+
+
+DUPELAYER layer_arms
+
+
+DUPELAYER layer_cape
+
+
+DUPELAYER layer_robe
+
+
+DUPELAYER layer_skirt
+
+
+DUPELAYER layer_legs
+
+
+DUPELAYER layer_horse

@@ -1,0 +1,74 @@
+////////////////////////////////////////////////////////////////////////////////////////
+
+[itemdef i_self_use_potion] // check on re-using potions
+NAME=poison use check
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=108
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+
+ON=@Equip
+	TIMER=15
+
+ON=@Timer
+	remove
+	RETURN 1
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+[plevel 1]
+drinkheal
+
+[function drinkheal]
+IF <SRC.RESTEST i_potion_HealGreat>
+	if <SRC.RESTEST i_self_use_potion>
+		src.message I am not ready to use another potion yet.
+		return 1
+	else
+		src.consume i_potion_HealGreat
+		src.NEWITEM=i_bottle_empty
+		SRC.ACT.BOUNCE	
+		src.newitem i_self_use_potion
+		src.act.equip		
+//		ANIM 17
+		SRC.SPELLEFFECT=s_greater_heal 100.0
+		SRC.SOUND=snd_SPELL_HEAL
+		return 1
+	endif
+ELSE
+	SRC.MESSAGE You lack the required potion.
+	RETURN 1
+ENDIF
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+drinkcure
+
+[function drinkcure]
+IF <SRC.RESTEST i_potion_CureGreat>
+	if <SRC.RESTEST i_self_use_potion>
+		src.message I am not ready to use another potion yet.
+		return 1
+	else
+		src.consume i_potion_CureGreat
+		src.NEWITEM=i_bottle_empty
+		SRC.ACT.BOUNCE
+		src.newitem i_self_use_potion
+		src.act.equip
+//		ANIM 17
+		SRC.SPELLEFFECT=s_archcure 100.0
+		SRC.SOUND=snd_SPELL_CURE
+		return 1
+	endif
+ELSE
+	SRC.MESSAGE You lack the required potion.
+	RETURN 1
+ENDIF
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+[eof]

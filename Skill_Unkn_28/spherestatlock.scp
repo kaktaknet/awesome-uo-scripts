@@ -1,0 +1,71 @@
+//**********************************************************
+//* Please observe copyright. Do not claim it as your own. *
+//* Copyright © Magistrator                                * 
+//**********************************************************
+
+
+//*** Stat Locking Feature ***
+
+//With help of this dialog, the stats locking feature is available
+//Characters, use StatLock feature for the first time wont experience any problems
+
+//Example of use:
+//1. In spheretables.scp for all skills define the STAT_STR, STAT_INT, STAT_DEX at 
+//certain level (prereferable zero (0)). That means, players are not able to rise
+//stats during normal usage of stats.
+//2. Place the scripts from statlock.txt file to spheretables.scp to make statlock 
+//feature work correctly.
+
+
+[DIALOG d_stats_gump]
+150,180
+page 0
+//3500 - in decimal (background)
+resizepic 0 0 3500 200 130
+page 1
+//Parts of the dialog
+text 25 20 1152 1
+text 25 40 1152 2
+text 25 60 1152 3
+checkbox 150 24 2435 2092 0<SRC.TAG.STRLOCK> 1001
+checkbox 150 44 2435 2092 0<SRC.TAG.DEXLOCK> 1002
+checkbox 150 64 2435 2092 0<SRC.TAG.INTLOCK> 1003
+//Okey and Cancel buttons
+button 35 90 247 248 1 0 1004
+button 105 90 242 241 1 0 1005
+
+[DIALOG d_stats_gump TEXT]
+<VAR.BLANKLINE>
+//Stats
+Strength
+Dexterity
+Intelligence
+
+[DIALOG d_stats_gump BUTTON]
+ONBUTTON=1005
+//After pressing th OK button, 0 or 1 are written to the three variables,
+//needed to further control of rising stats.
+ONBUTTON=1004
+IF <ARGCHK[1001]> == 0 THEN
+SRC.TAG.STRLOCK=0
+ELSE
+SRC.TAG.STRLOCK=1
+ENDIF
+IF <ARGCHK[1002]> == 0 THEN
+SRC.TAG.DEXLOCK=0
+ELSE
+SRC.TAG.DEXLOCK=1
+ENDIF
+IF <ARGCHK[1003]> == 0 THEN
+SRC.TAG.INTLOCK=0
+ELSE
+SRC.TAG.INTLOCK=1
+ENDIF
+
+//Statlock command
+//Do not forget to place this command to [PLEVEL 1] part in spheretables.scp.
+[FUNCTION statlock]
+SRC.DIALOG d_stats_gump
+
+
+[EOF]

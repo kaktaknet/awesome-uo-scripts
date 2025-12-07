@@ -1,0 +1,139 @@
+//--------------------------------------------------------------------------------------------
+//RaceGate Template												
+//By Sven and Tested/debugged by Ironclaw	
+//Last Edited: 11:40 PM, July 1st 2003
+//Created under the guiding whip of Bamboo Bunny for Revelstone	
+//--------------------------------------------------------------------------------------------
+
+//-----------------------Setup Instructions--------------------------------------------
+//This script merely supplies supporting functions, all you have to do is add to your scripts dir.
+//-------------------------------------------------------------------------------------------
+
+//---------------------Script Details----------------------------------------------------
+//All Race Data is stored in the i_racetoken in layer_special
+//Name = Name of the race.
+//Color = Color of the race.
+//MORE1 = raceshift
+//MORE2 = raceuid
+//-------------------------------------------------------------------------------------------
+
+//---------------------Additional Functions------------------------------------------
+//IsShifted = Returns 1 if shifted.
+//Racename ARGS = Checks to see if the racename matches the ARGS. Returns 1 if true.
+//RaceUID ARGN = Checks to see if the RaceUID matches the ARGN. Returns 1 if true.
+//RaceShiftID = What ID the player becomes when shifted - Returned in VAR.ShiftID - Returns 0 as value for no shift.
+//------------------------------------------------------------------------------------------
+
+//---------------------START OF : RaceGate Functions--------------------------
+[FUNCTION Hasrace]
+IF <SRC.FINDid.i_racetoken.UID>
+	RETURN 1
+ELSE
+	SRC.NEWITEM i_racetoken
+	SRC.ACT.EQUIP
+	RETURN 1
+ENDIF
+
+[FUNCTION Canshift]
+IF <SRC.HASRACE>
+	SRC.ACT=<SRC.FINDid.i_racetoken.UID>
+	IF (<SRC.ACT.MORE1> == 0)
+		RETURN 0
+	ELSE
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 0
+
+[FUNCTION RaceShiftID]
+IF <SRC.HASRACE>
+	IF <SRC.CANSHIFT> //Canshift sets ACT to UID of token.
+		VAR.ShiftID=<SRC.ACT.MORE1>
+		RETURN 1
+	ENDIF
+ENDIF
+VAR.ShiftID=0
+RETURN 1
+
+[FUNCTION IsShifted]
+IF <SRC.HASRACE>
+	IF <SRC.CANSHIFT> //Canshift sets ACT to UID of token.
+		IF (<SRC.ACT.MORE1> == <SRC.BODY>)
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 0
+
+[FUNCTION Racename]
+IF <SRC.HASRACE>
+	SRC.ACT=<SRC.FINDid.i_racetoken.UID>
+	IF STRMATCH (<SRC.ACT.NAME>, <ARGS>)
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 0
+
+[FUNCTION RaceUID]
+IF <SRC.HASRACE>
+	SRC.ACT=<SRC.FINDid.i_racetoken.UID>
+	IF  (<SRC.ACT.MORE2> == <ARGN>)
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 0
+
+[FUNCTION Racechange]
+IF <SRC.HASRACE>
+	SRC.ACT=<SRC.FINDid.i_racetoken.UID>
+	SRC.COLOR=<SRC.ACT.COLOR>
+	src.oskin=<src.act.color>
+	SRC.SYSMESSAGE You are now a <SRC.ACT.NAME>.
+	IF <SRC.CANSHIFT>
+		SRC.BODY=<SRC.ACT.MORE1>
+		SRC.SYSMESSAGE To change between various forms, press .shift.
+	ENDIF
+	SRC.UPDATE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION SHIFT]
+IF <SRC.CANSHIFT> //Canshift sets ACT to UID of Race token.
+	if !(<src.hits> > 0)
+		src.message Dead men can't shapeshift!
+		return 0
+	endif
+	if <findid.i_rune_polymorph.uid>
+		src.message You cannot do that while polymorphed!
+		return 0
+	endif
+	IF (<SRC.BODY> == c_man) || (<src.body>==c_woman)
+		SRC.BODY=<SRC.ACT.MORE1>
+		SRC.COLOR=<SRC.ACT.COLOR>
+	ELSE
+		SRC.BODY=<SRC.OBODY>
+	ENDIF
+	SRC.UPDATE
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE Your race cannot shapeshift.
+	RETURN 1
+ENDIF
+//-------------------END OF : RaceGate Functions-----------------------------------
+
+//----------------------START OF: Race Gate Supporting Items----------------
+[ITEMDEF i_racetoken]
+TYPE=t_eq_script
+NAME=Human
+ID=I_memory
+LAYER=layer_special
+
+ON=@CREATE
+TYPE=T_EQ_SCRIPT
+LAYER=LAYER_SPECIAL
+ATTR=ATTR_INVIS|ATTR_DECAY|ATTR_NEWBIE|ATTR_STATIC
+COLOR=colors_skin
+MORE1=0
+MORE2=1
+//---------------------END OF: Race Gate Supporting Items--------------------

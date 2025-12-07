@@ -1,0 +1,56 @@
+///////SCRIPT BY ABBADON OF ACHERON/////////
+///////THANX TO ELRIC AND DARK ON WWW.SCRIPTSHARING.ORG FOR THEIR ASSISTANCE/////
+
+
+//This Script will allow your players to use the //ticket to rename an item. On my server I put //this on a reward stone. If you have any //questions or comments, email me at //ownerabbadon@gmail.com
+
+
+[ITEMDEF i_ticket_item_rename]
+DEFNAME=i_ticket_item_rename
+ID=i_scroll_X_red
+Name=Item Rename Ticket
+
+ON=@DClick
+SRC.SYSMESSAGE Which item do you wish to rename?
+TARGET
+Return 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE You are not a GM, thus you cannot rename <SRC.NAME>.
+Return 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.CONT.CONT.UID> != <SRC.UID> )
+SRC.SYSMESSAGE That doesn't belong to you silly. You can only rename an item in your posession.
+Return 1
+ELSE
+dialog d_rename_item 
+return 1 
+endif 
+
+[DIALOG d_rename_item] 
+0,0 
+nomove 
+resizepic 190 175 5054 335 150 
+resizepic 200 185 3000 315 130 
+resizepic 220 235 3000 270 22 
+text 215 200 995 0 
+text 255 275 0000 1 
+button 220 275 4005 4006 1 0 1 
+text 435 275 0000 2 
+button 400 275 4005 4006 1 0 0 
+textentry 225 237 253 25 0 0 3 
+
+[DIALOG d_rename_item TEXT] 
+How would you like to name this Item? 
+Continue 
+Cancel 
+<src.targ.name> 
+
+[DIALOG d_rename_item BUTTON] 
+ON=0 
+ON=1 
+src.message You renamed <SRC.TARG.NAME> to <ARGTXT[0]>! 
+SRC.TARG.NAME <ARGTXT[0]>
+REMOVE 
+RETURN 1 

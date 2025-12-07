@@ -1,0 +1,118 @@
+///////////////////////////////////////////////////////////////////////////////////////
+//Name : Lockable Chests
+//Author : Marox
+//Contact : marox_gm@hotmail.com
+//Installation : Just .add them in-game.
+//Notes : If you wish them craftable, put this into sphereskill.scp, WITHOUT the //
+// Ofcourse, put i_lockable_box to carpentry, i_lockable_chest to tinkering.
+//
+//
+//
+//ON=i_lockable_box <name> (<resmake>)
+//MAKEITEM=i_lockable_box
+//
+//
+//ON=i_lockable_chest <name> (<resmake>)
+//MAKEITEM=i_lockable_chest
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+
+[ITEMDEF i_lockable_box]
+DEFNAME=i_lockable_box
+RESOURCES=15 i_board, 15 i_ingot_iron
+TYPE=T_CONTAINER
+NAME=Lockable Wooden Box
+TDATA2=040
+ID=i_box_wood
+FLIP=1
+WEIGHT=4
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Lockable Wooden Box (W)
+SKILLMAKE=CARPENTRY 50.0, TINKERING 60.0, t_carpentry
+DUPELIST=0e7d
+
+ON=@CREATE
+MORE2=0
+
+ON=@CLICK
+IF (<MORE1> == 0)
+MESSAGE [No key assigned]
+ELSE
+MESSAGE [Key assigned]
+
+ON=@DCLICK
+IF (<MORE1> == 0)
+TARGET Which key do you wish to assign to this container?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_key)
+IF (<SRC.TARG.MORE1> != 0)
+SRC.SYSMESSAGE That key is not blank!
+RETURN 1
+ELSE
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE The key must be in your pack!
+RETURN 1
+ELSE
+SRC.TARG.MORE1=<UID>
+SRC.TARG.LINK=<UID>
+LINK=<SRC.TARG.UID>
+MORE1=<UID>
+SRC.MESSAGE You assign the key to this container!
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only assign keys to a container!
+RETURN 1
+
+
+
+[ITEMDEF i_lockable_chest]
+DEFNAME=i_lockable_chest
+RESOURCES=40 i_ingot_iron
+TYPE=T_CONTAINER
+NAME=Lockable Chest
+TDATA2=040
+ID=i_chest_metal
+FLIP=1
+WEIGHT=4
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Lockable Chest
+SKILLMAKE=TINKERING 75.0, t_tinker_tools
+
+ON=@CREATE
+MORE2=0
+
+ON=@CLICK
+IF (<MORE1> == 0)
+MESSAGE [No key assigned]
+ELSE
+MESSAGE [Key assigned]
+
+ON=@DCLICK
+IF (<MORE1> == 0)
+TARGET Which key do you wish to assign to this container?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_key)
+IF (<SRC.TARG.MORE1> != 0)
+SRC.SYSMESSAGE That key is not blank!
+RETURN 1
+ELSE
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE The key must be in your pack!
+RETURN 1
+ELSE
+SRC.TARG.MORE1=<UID>
+SRC.TARG.LINK=<UID>
+LINK=<SRC.TARG.UID>
+MORE1=<UID>
+SRC.MESSAGE You assign the key to this container!
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only assign keys to a container!
+RETURN 1

@@ -1,0 +1,371 @@
+//////////////////////////////////////////
+//Reagents Book Made By Night Walker    //
+//Made to sphere R4.0.2			//
+//************Change Log*************** //
+//09/09/2004 --> First version completed//
+//10/09/2004 --> Fixed a bug where 0 in //
+//maxreags wasn't desabling limit	//
+//10/09/2004 --> Finally added a 	//
+//feature to suport having more than	//
+// 65000 reags   			//
+//************************************* //
+//Hope it is bugless. 			//
+//If find a bug tell me			//
+//Later i'll add pagan reags suport     //
+//You can easily edit 			//
+//by using the defnames  		//
+//Added in the end ben's defval func    //
+//If you already have it remove it 	//
+//from here.				//
+//Install:				//
+//All you need to do is add this script //
+//to your scripts folder and add	//
+//EF_RET_STRINGS to experimental flags  //
+//only if you haven't added yet  	//
+//////////////////////////////////////////
+
+[defname reagsbook]
+maxreags 65000 // 0 = no limit | DON'T PUT HERE NEGATIVE NUMBER
+targmsg "What reagent do you wanna add"
+targcmsg "Use this on a reagent"
+addmsg "You have added"
+limitmsg "You already have the maximum amount of reags that can be stored here"
+noreagsenough "You don't have enought reagents"
+2muchmsg "You can't remove that amount of reagents"
+qntsmsg "How many reags do you want to take"
+dialogtxt1 "Reags Book"
+dialogtxt2 "Add"
+dialogtxt3 "Remove"
+dialogtxt4 "Max Reags:"
+
+
+[itemdef i_reags_book]
+name=Reags Book
+id = 0efa
+weight = 2
+dye = 1
+value = 2700
+type = t_normal
+
+on @create
+color 021
+
+on @dclick
+sdialog d_reags_book
+return 1
+
+on @targon_char
+src.sysmessage @99 <defval <def.targcmsg>>
+return 1
+
+on @targon_ground
+src.sysmessage @99 <defval <def.targcmsg>>
+return 1
+
+on @targon_item
+
+local.reag = <src.targ.reagname>
+local.ramount= <eval (<src.targ.amount> + <tag0.<local.reag>>)>
+
+if (<tag0.<local.reag>> >= <eval <def.maxreags>>) && (<eval <def.maxreags>> != 0)
+	src.sysmessage @99 <defval <def.limitmsg>>
+	return 1
+elseif (<local.ramount> > <eval <def.maxreags>>) && (<eval <def.maxreags>> != 0)
+	local.oldamount = <src.targ.amount>
+	local.newamount = <eval (<local.ramount> - <def.maxreags>)>
+	if (strmatch(<local.reag>,nightshade))
+		tag0.nightshade  <def.maxreags>
+	elseif (strmatch(<local.reag>,sulfurousash))
+		tag0.sulfurousash  <def.maxreags>
+	elseif (strmatch(<local.reag>,spidersilk))
+		tag0.spidersilk  <def.maxreags>
+	elseif (strmatch(<local.reag>,bloodmoss))
+		tag0.bloodmoss  <def.maxreags>
+	elseif (strmatch(<local.reag>,garlic))
+		tag0.garlic  <def.maxreags>
+	elseif (strmatch(<local.reag>,mandrakeroot))
+		tag0.mandrakeroot  <def.maxreags>
+	elseif (strmatch(<local.reag>,blackpear))
+		tag0.blackpear  <def.maxreags>
+	elseif (strmatch(<local.reag>,ginseng))
+		tag0.ginseng  <def.maxreags>
+	endif
+	src.targ.amount = <local.newamount>
+	local.oldamount -= <local.newamount>
+	src.targ.update
+	src.sysmessage @45 <defval <def.addmsg>> <eval <local.oldamount>> <local.reag>
+	return 1
+else
+	local.oldamount = <src.targ.amount>
+	src.sysmessage @45 <defval <def.addmsg>> <eval <local.oldamount>> <local.reag>
+	if (strmatch(<local.reag>,nightshade))
+		tag0.nightshade += <src.targ.amount>
+	elseif (strmatch(<local.reag>,sulfurousash))
+		tag0.sulfurousash += <src.targ.amount>
+	elseif (strmatch(<local.reag>,spidersilk))
+		tag0.spidersilk += <src.targ.amount>
+	elseif (strmatch(<local.reag>,bloodmoss))
+		tag0.bloodmoss += <src.targ.amount>
+	elseif (strmatch(<local.reag>,garlic))
+		tag0.garlic += <src.targ.amount>
+	elseif (strmatch(<local.reag>,mandrakeroot))
+		tag0.mandrakeroot += <src.targ.amount>
+	elseif (strmatch(<local.reag>,blackpear))
+		tag0.blackpear += <src.targ.amount>
+	elseif (strmatch(<local.reag>,ginseng))
+		tag0.ginseng += <src.targ.amount>
+	endif
+	src.targ.remove
+	return 1
+endif
+
+	
+
+[dialog d_reags_book]
+50,50
+gumppic 0 0 500
+resizepic 35 10 3000 170 207
+resizepic 220 10 3000 170 207
+dtext 115 10 88 <defva <def.dialogtxt1>>
+dtext 40 10 99 <defval<def.dialogtxt2>>
+dtext 60 30 99 <defval<def.dialogtxt3>>
+dtext 68 50 99 |
+dtext 48 50 99 |
+dtext 48 30 99 |
+if (<eval <def.maxreags>> != 0)
+dcroppedtext 225 20 300 20 99 <defval<def.dialogtxt4>> <eval <def.maxreags>>
+endif
+tilepic 70 70 3976 //Nightshade
+tilepic 70 110 3980 //Sulfurous Ash
+tilepic 70 150 3981 //Spider Silk
+tilepic 70 190 3963 //Blood Moss
+tilepic 270 70 3972 //Garlic
+tilepic 270 110 3974 //Mandrake Root
+tilepic 270 150 3962 // Black Pear
+tilepic 270 190 3973 // Ginseng
+dtext 120 68 45 <eval <tag0.nightshade>>
+dtext 120 108 45 <eval <tag0.sulfurousash>>
+dtext 120 148 45 <eval <tag0.spidersilk>>
+dtext 120 188 45 <eval <tag0.bloodmoss>>
+dtext 320 68 45 <eval <tag0.garlic>>
+dtext 320 108 45 <eval <tag0.mandrakeroot>>
+dtext 320 148 45 <eval <tag0.blackpear>>
+dtext 320 188 45 <eval <tag0.ginseng>>
+button 40 70 1209 1210 1 0 1
+button 40 110 1209 1210 1 0 2
+button 40 150 1209 1210 1 0 3
+button 40 190 1209 1210 1 0 4
+button 240 70 1209 1210 1 0 5
+button 240 110 1209 1210 1 0 6
+button 240 150 1209 1210 1 0 7
+button 240 190 1209 1210 1 0 8
+button 60 70 1209 1210 1 0 9
+button 60 110 1209 1210 1 0 10
+button 60 150 1209 1210 1 0 11
+button 60 190 1209 1210 1 0 12
+button 260 70 1209 1210 1 0 13
+button 260 110 1209 1210 1 0 14
+button 260 150 1209 1210 1 0 15
+button 260 190 1209 1210 1 0 16
+
+[dialog d_reags_book button]
+on 1 8
+target 
+src.sysmessage @88 <defval <def.targmsg>>
+var.argn1 = <argn1>
+return 1
+
+on 9 16
+doswitch <eval <getreagn <argn1>>>
+var.reag = nightshade
+var.reag = sulfurousash
+var.reag = spidersilk
+var.reag = bloodmoss
+var.reag = garlic
+var.reag = mandrakeroot
+var.reag = blackpear
+var.reag = ginseng
+enddo
+sdialog d_remove_reag
+return 1
+
+[dialog d_remove_reag]
+50,50
+resizepic 303 257 3600 314 145
+resizepic 318 275 3000 280 112
+gumppic 323 315 1141
+dtext 319 279 54 <defva <def.qntsmsg>>
+dtextentry 338 316 200 50 54 0 0
+button 467 351 1153 1154 1 0 1
+button 418 351 1150 1151 1 0 2
+
+[dialog d_remove_reag button]
+on 1
+local.reag = <var.reag> 
+var.reag =
+if (<argtxt[0]> <= <def.maxreags>) || (<eval <def.maxreags>> == 0)
+	if (strmatch(<local.reag>,nightshade))
+		if (<tag0.nightshade> >= <argtxt[0]>)
+			tag0.nightshade -= <argtxt[0]>
+			src.reagsadd i_reag_nightshade <argtxt[0]>
+			return 1
+		else
+			src.sysmessage @70 <defval <def.noreagsenough>>
+			return 1
+		endif
+	elseif (strmatch(<local.reag>,sulfurousash))
+		if (<tag0.sulfurousash> >= <argtxt[0]>)
+			tag0.sulfurousash -= <argtxt[0]>
+			src.reagsadd i_reag_sulfur_ash <argtxt[0]>
+			return 1
+		else
+			src.sysmessage @70 <defval <def.noreagsenough>>
+			return 1
+		endif
+	elseif (strmatch(<local.reag>,spidersilk))
+		if (<tag0.spidersilk> >= <argtxt[0]>)
+			tag0.spidersilk -= <argtxt[0]>
+			src.reagsadd i_reag_spider_silk <argtxt[0]>
+			return 1
+		else
+			src.sysmessage @70 <defval <def.noreagsenough>>
+			return 1
+		endif
+	elseif (strmatch(<local.reag>,bloodmoss))
+		if (<tag0.bloodmoss> >= <argtxt[0]>)
+			tag0.bloodmoss -= <argtxt[0]>
+			src.reagsadd i_reag_blood_moss <argtxt[0]>
+			return 1
+		else
+			src.sysmessage @70 <defval <def.noreagsenough>>
+			return 1
+		endif
+	elseif (strmatch(<local.reag>,garlic))
+		if (<tag0.garlic> >= <argtxt[0]>)
+			tag0.garlic -= <argtxt[0]>
+			src.reagsadd i_reag_garlic <argtxt[0]>
+			return 1
+		else
+			src.sysmessage @70 <defval <def.noreagsenough>>
+			return 1
+		endif
+	elseif (strmatch(<local.reag>,mandrakeroot))
+		if (<tag0.mandrakeroot> >= <argtxt[0]>)
+			tag0.mandrakeroot -= <argtxt[0]>
+			src.reagsadd i_reag_mandrake_root <argtxt[0]>
+			return 1
+		else
+			src.sysmessage @70 <defval <def.noreagsenough>>
+			return 1
+		endif
+	elseif (strmatch(<local.reag>,blackpear))
+		if (<tag0.blackpear> >= <argtxt[0]>)
+			tag0.blackpear -= <argtxt[0]>
+			src.reagsadd i_reag_black_pearl <argtxt[0]>
+			return 1
+		else
+			src.sysmessage @70 <defval <def.noreagsenough>>
+			return 1
+		endif
+	elseif (strmatch(<local.reag>,ginseng))
+		if (<tag0.ginseng> >= <argtxt[0]>)
+			tag0.ginseng -= <argtxt[0]>
+			src.reagsadd i_reag_ginseng <argtxt[0]>
+			return 1
+		else
+			src.sysmessage @70 <defval <def.noreagsenough>>
+			return 1
+		endif
+	endif
+else
+	src.sysmessage @75 <defval <def.2muchmsg>>
+	return 1
+endif
+
+on 2
+var.reag = 
+
+[function getreagn]
+if (<argn1> == 9)
+	return 0
+elseif (<argn1> == 10)
+	return 1
+elseif (<argn1> == 11)
+	return 2
+elseif (<argn1> == 12)
+	return 3
+elseif (<argn1> == 13)
+	return 4
+elseif (<argn1> == 14)
+	return 5
+elseif (<argn1> == 15)
+	return 6
+elseif (<argn1> == 16)
+	return 7
+endif
+
+[function reagname]
+if (<id> == 0f88)
+	return nightshade
+elseif (<id> ==0f8c)
+	return sulfurousash
+elseif (<id> == 0f8d)
+	return spidersilk
+elseif (<id> == 0f7b)
+	return bloodmoss
+elseif (<id> == 0f84)
+	return garlic
+elseif (<id> == 0f86)
+	return mandrakeroot
+elseif (<id> == 0f7a)
+	return blackpear
+elseif (<id> == 0f85)
+	return ginseng
+endif
+
+[function reagsadd]
+if (<streat <args>> <= 65000)
+	serv.newitem <strarg <args>>
+	new.amount <streat <args>>
+	new.bounce
+else
+	local.okie = <streat <args>>
+	while (<local.okie> > 65000)
+		serv.newitem <strarg <args>>
+		new.amount 65000
+		new.bounce
+		local.okie -= 65000
+	endwhile
+	if (<local.okie> > 0)
+		serv.newitem <strarg <args>>
+		new.amount <local.okie>
+		new.bounce
+	endif
+endif
+		
+
+
+//Ben's defval function
+[FUNCTION DEFVAL] 
+LOCAL.STRING Ð<ARGS> 
+WHILE (<STRPOS 0 60 <LOCAL.STRING>> > -1) 
+LOCAL.STRING <STRSUB 0 <STRLASTPOS <LOCAL.STRING>> <LOCAL.STRING>><<STRSUB <EVAL <STRLASTPOS <LOCAL.STRING>>+1> <STRNEXTPOS <LOCAL.STRING>> <LOCAL.STRING>>><STRSUB <EVAL <STRLASTPOS <LOCAL.STRING>>+<STRNEXTPOS <LOCAL.STRING>>+2> 0 <LOCAL.STRING>> 
+ENDWHILE 
+LOCAL.STRING <STRSUB 1 0 <LOCAL.STRING>> 
+RETURN <LOCAL.STRING> 
+
+[FUNCTION STRLASTPOS] 
+LOCAL.STRING <ARGS> 
+WHILE (<STRPOS 0 60 <LOCAL.STRING>> > -1) 
+LOCAL.LAST <EVAL <STRPOS 0 60 <LOCAL.STRING>>> 
+LOCAL.STRING <STRSUB 0 <STRPOS 0 60 <LOCAL.STRING>> <LOCAL.STRING>>#<STRSUB <EVAL <STRPOS 0 60 <LOCAL.STRING>>+1> 0 <LOCAL.STRING>> 
+ENDWHILE 
+RETURN <EVAL <LOCAL.LAST>> 
+
+[FUNCTION STRNEXTPOS] 
+LOCAL.STRING <ARGS> 
+LOCAL.STRING <STRSUB <EVAL <STRLASTPOS <LOCAL.STRING>>+1> 0 <LOCAL.STRING>> 
+LOCAL.NEXT <EVAL <STRPOS 0 62 <LOCAL.STRING>>> 
+RETURN <EVAL <LOCAL.NEXT>>
+
+[eof]

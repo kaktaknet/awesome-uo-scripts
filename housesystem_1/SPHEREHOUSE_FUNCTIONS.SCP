@@ -1,0 +1,618 @@
+//The Deus Ovis House Menu.
+//Compleatly revamped by Kzazy Zack
+//http://www3.sympatico.ca/technomancer
+//http://uowizzard.phorums.net/
+
+//House decay is enabled. This is initially set on=@create, in the timer=. Using the //housemenu refreshes the house. To alter the decay rate, edit the multi timer AND the //wooden signs. To disable decay, change the timers to -1. 
+
+[ITEMDEF I_UNSECURE_THIS]
+ID=i_worldgem_bit
+DEFNAME=I_UNSECURE_THIS
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message What do you want to unsecure ? 
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be unsecured by a player!
+REMOVE
+RETURN 1
+ELSEIF (<src.TARG.TYPE>==t_secure)
+SRC.TARG.MORE2=
+SRC.TARG.TYPE=t_container
+SRC.TARG.ATTR=<SRC.TARG.ATTR>&~attr_move_never
+SRC.TARG.ATTR=<SRC.TARG.ATTR>|attr_move_always
+src.targ.message Released!
+REMOVE
+RETURN 1
+ELSEIF (<src.TARG.TYPE>==T_CONTAINER_LOCKED)
+src.targ.message You cant unsecure locked containers!
+REMOVE
+RETURN 1
+ELSE
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_SECURE_THIS]
+ID=i_worldgem_bit
+DEFNAME=I_SECURE_THIS
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message What do you want to secure ? 
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be secured by a player!
+REMOVE
+RETURN 1
+ELSEIF (<src.TARG.TYPE>==T_CONTAINER)
+SRC.TARG.MORE2=<SRC.UID>
+SRC.TARG.TYPE=t_secure
+SRC.TARG.ATTR=<SRC.TARG.ATTR>&~attr_move_always
+src.targ.attr=<SRC.TARG.ATTR>|attr_move_never
+src.targ.message Locked down and secure!
+REMOVE
+RETURN 1
+ELSEIF (<src.TARG.TYPE>==T_CONTAINER_LOCKED)
+src.targ.message You cant secure locked containers!
+REMOVE
+RETURN 1
+ELSE
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF I_transfer]
+ID=i_worldgem_bit
+DEFNAME=I_transfer
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Target the new owner.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+src.targ.message Items cant be ownwers of houses!
+remove
+RETURN 1
+
+ON=@TARGON_char
+IF (<SRC.TARG.brain>) 
+src.targ.message NPC's can't be owners of houses!
+REMOVE
+RETURN 1
+ELSE
+link.more=<src.targ.uid>
+src.targ.message=<src.uid.<src.targ.uid>.name> is the new owner!
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_move_west]
+ID=i_worldgem_bit
+DEFNAME=I_move_west
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to move west.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.move -1,0
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_move_up]
+ID=i_worldgem_bit
+DEFNAME=I_move_up
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to move up.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.move 0,0,1
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF I_move_down]
+ID=i_worldgem_bit
+DEFNAME=I_move_down
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to move down.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.move 0,0,-1
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_move_north]
+ID=i_worldgem_bit
+DEFNAME=I_move_north
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to move north.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.move 0,-1
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_move_south]
+ID=i_worldgem_bit
+DEFNAME=I_move_south
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to move south.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.move 0,1
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF I_FLIP]
+ID=i_worldgem_bit
+DEFNAME=I_FLIP
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to flip.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.FLIP
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF I_MOVE_east]
+ID=i_worldgem_bit
+DEFNAME=I_MOVE_east
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to move east.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.move 1,0
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_MOVE_south]
+ID=i_worldgem_bit
+DEFNAME=I_MOVE_south
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to move south.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.move 0,1
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_MOVE_NORTH]
+ID=i_worldgem_bit
+DEFNAME=I_MOVE_NORTH
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to move north.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSE
+src.targ.move 0,-1
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_remove_this]
+ID=i_worldgem_bit
+DEFNAME=I_remove_this
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to remove.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+src.targ.message Item must not be in your pack!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_sign_gump)
+src.targ.message This cannot be moved by a player!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.region.flags>==01192) || (<src.targ.region.flags>==01092)
+src.targ.remove
+REMOVE
+RETURN 1
+ELSE
+src.targ.message You may only remove items in a house!
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF I_lock_this_down]
+ID=i_worldgem_bit
+DEFNAME=I_lock_this_down
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to lock down.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF ((<SRC.TARG.P.X>==0) && (<SRC.TARG.P.Y>==0))
+src.targ.message You cannot lock down items you are wearing
+REMOVE
+RETURN 1
+ELSEIF (<src.TARG.TYPE>==t_secure)
+src.targ.message This is allready secure!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.attr>&010)
+src.targ.message That is allready locked down!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.region.flags>==01192) ||(<src.targ.region.flags>==01092)
+SRC.TARG.ATTR=<SRC.TARG.ATTR>&~attr_move_always
+src.targ.attr=<SRC.TARG.ATTR>|attr_move_never
+src.targ.message Locked Down!
+REMOVE
+RETURN 1
+ELSE
+src.targ.message You can only lockdown in a house!
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF I_release_this]
+ID=i_worldgem_bit
+DEFNAME=I_release_this
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Choose the item you want to release.
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<src.targ.region.uid>==<region.uid>)
+src.targ.message That item is not in the house!
+REMOVE
+RETURN 1
+ELSEIF ((<SRC.TARG.P.X>==0) && (<SRC.TARG.P.Y>==0))
+src.targ.message You cannot release items you are wearing
+REMOVE
+RETURN 1
+ELSEIF (<src.TARG.TYPE>==t_secure)
+src.targ.message You have to unsecure this!
+REMOVE
+RETURN 1
+ELSEIF !(<src.targ.attr>&010)
+src.targ.message That is not locked down!
+REMOVE
+RETURN 1
+ELSEIF (<src.targ.region.flags>==01192) || (<src.targ.region.flags>==01092)
+SRC.TARG.ATTR=<SRC.TARG.ATTR>&~attr_move_never
+src.targ.attr=<SRC.TARG.ATTR>|attr_move_always
+src.targ.message Released!
+REMOVE
+RETURN 1
+ELSE
+src.targ.message You can only release in a house!
+REMOVE
+RETURN 1	
+ENDIF
+
+[ITEMDEF I_TRASH_CAN]
+ID=i_worldgem_bit
+DEFNAME=I_TRASH_CAN
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE
+ATTR=082
+
+ON=@Equip
+src.message Where do you want to place the garbage can?
+TARGET
+RETURN 1
+
+ON=@TARGON_GROUND 
+if !(<src.tag.garbagecan>=1)
+src.newitem=i_garbage_can
+SRC.ACT.P=<SRC.TARGP>
+SRC.ACT.ATTR=attr_static|attr_move_never
+src.targ.message placed!
+REMOVE
+RETURN 1
+ELSE
+src.targ.message This house already has a garbage can!
+REMOVE
+RETURN 1
+ENDIF
+
+
+[TYPEDEF t_secure]
+
+ON=@Click
+MESSAGE [locked down & secure] 
+RETURN 0
+
+ON=@DCLICK
+IF (<MORE2>=<SRC.UID>) || (<src.isgm>)
+TYPE t_container
+USE
+TYPE t_secure
+RETURN 1
+ELSE
+MESSAGE This container is secure.
+RETURN 1
+ENDIF
+
+[EOF]

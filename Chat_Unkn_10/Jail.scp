@@ -1,0 +1,531 @@
+//If you have any problems with this script or find a bug with it or just want to say thanks (hehe)contact me on aim as NycroDot or on icq 65937336 
+//
+//Hope you enjoy it 
+//(tested on 55i on 99f) 
+
+[ITEMDEF i_Bail_Door] 
+//---Nycro's Jail System ver 1 
+DEFNAME=i_Bail_Door 
+name=Bail Stone 
+ID=i_gravestone_18 
+TYPE=0 
+CATEGORY=Nycro's Jail System 
+SUBSECTION=Jail Items 
+DESCRIPTION=Bail door 
+
+on=@create 
+color=00025 
+attr=8000 
+
+on=@dclick 
+if <SRC.RESTEST i_mem_timer> 
+SRC.DIALOG d_timer_info 
+elseif <SRC.RESTEST i_mem_timer2> 
+SRC.CONSUME i_mem_timer2 
+SRC.DIALOG where_to 
+elseif <SRC.RESTEST i_mem_timer3> 
+SRC.CONSUME i_mem_timer3 
+SRC.DIALOG where_to 
+elseif <SRC.RESTEST i_mem_timer4> 
+SRC.CONSUME i_mem_timer4 
+SRC.DIALOG where_to 
+elseif <SRC.RESTEST i_mem_timer5> 
+SRC.CONSUME i_mem_timer5 
+SRC.DIALOG where_to 
+elseif <SRC.RESTEST i_mem_timer6> 
+SRC.CONSUME i_mem_timer6 
+SRC.DIALOG where_to 
+elseif <SRC.RESTEST i_mem_timer7> 
+SRC.CONSUME i_mem_timer7 
+SRC.DIALOG where_to 
+else 
+SRC.DIALOG d_bail_door 
+ENDIF 
+
+[DIALOG d_timer_info] 
+100, 100 
+page 0 
+resizepic 100 100 2620 400 125 
+
+//BUTTONS 
+button 125 155 2362 2361 1 0 1 
+button 125 180 2362 2361 1 0 2 
+
+//TEXT 
+text 150 110 137 0 
+text 150 125 137 1 
+text 150 150 268 2 
+text 150 175 268 3 
+
+[DIALOG d_timer_info TEXT] 
+<SRC.NAME> you have <SRC.findlayer.30.Timer> seconds remaing before 
+your time is up or would you like to 
+Cancel timer and chose another option? 
+Remain here until timer expires 
+
+[DIALOG d_timer_info BUTTON] 
+
+ONBUTTON=1 
+SRC.CONSUME i_mem_timer 
+SRC.DIALOG d_bail_door 
+
+ONBUTTON=2 
+return 0 
+[DIALOG d_bail_door] 
+100, 100 
+page 0 
+resizepic 100 100 2620 400 145 
+//BUTTONS 
+button 125 155 2362 2361 1 0 1 
+button 125 172 2362 2361 1 0 2 
+button 125 189 2362 2361 1 0 3 
+button 125 206 2362 2361 1 0 4 
+
+//TEXT 
+text 140 110 137 0 
+text 140 150 268 1 
+text 140 167 268 2 
+text 140 184 268 3 
+text 140 201 268 4 
+
+[DIALOG d_bail_door TEXT] 
+Please make a choice from the folowing options 
+Pay your way out (2500 gp) 
+Remain here for 15 min 
+-2 to all stats 
+Use get out of jail free pass 
+
+[DIALOG d_bail_door BUTTON] 
+
+ONBUTTON=1 
+VAR.TOTALGOLD=<SRC.findlayer(layer_bankbox).rescount i_gold>+<SRC.findlayer(layer_pack).rescount i_gold> 
+if (<var.totalgold><2500) 
+SRC.MESSAGE You do not have enough gold to make bail! 
+return 1 
+else 
+SRC.consumebank 2500 i_gold 
+SRC.MESSAGE Thank You! 
+SRC.DIALOG where_to 
+RETURN 0 
+ENDIF 
+
+ONBUTTON=2 
+src.newitem i_mem_timer 
+src.act.equip 
+src.act.link = <src.uid> 
+SRC.MESSAGE To see how much time is remaing please click the bail stone 
+SRC.MESSAGE After your time is up you will be prompted 
+
+ONBUTTON=3 
+src.str <src.str> + (-2) 
+src.dex <src.dex> + (-2) 
+src.int <src.int> + (-2) 
+SRC.DIALOG where_to 
+
+ONBUTTON=4 
+
+return 1 
+
+[DIALOG where_to] 
+100, 100 
+page 0 
+resizepic 100 100 2620 400 165 
+
+//BUTTONS 
+button 125 155 2362 2361 1 0 1 //Britain 
+button 125 172 2362 2361 1 0 2 //Sherwood 
+button 125 189 2362 2361 1 0 3 //Trinsic 
+button 125 206 2362 2361 1 0 4 //Vesper 
+button 125 223 2362 2361 1 0 5 //Yew 
+
+//Text 
+text 150 110 137 0 
+text 150 150 168 1 
+text 150 168 268 2 
+text 150 185 268 3 
+text 150 203 268 4 
+text 150 220 268 5 
+
+[DIALOG where_to TEXT] 
+<SRC.NAME> please chose your destination 
+Britain 
+Sherwood 
+Trinsic 
+Vesper 
+Yew 
+
+[DIALOG where_to BUTTON] 
+ONBUTTON=1 
+SRC.GO 1495,1630,10 
+SOUND 00Ff 
+Return 0 
+
+ONBUTTON=2 
+SRC.GO 1825,846,-1 
+SOUND 00Ff 
+Return 0 
+
+ONBUTTON=3 
+SRC.GO 1846,2780,0 
+SOUND 00Ff 
+
+ONBUTTON=4 
+SRC.GO 2871,703,0 
+SOUND 00Ff 
+
+ONBUTTON=5 
+SRC.GO 550,1004,0 
+SOUND 00Ff 
+
+[itemdef i_mem_timer] 
+name=The_timer 
+type=t_eq_script 
+
+on=@create 
+attr=attr_decay|attr_invis 
+on=@equip 
+timer=900 
+
+on=@timer 
+cont.message Your time is up you have 5 minutes to click the bail stone before you are 
+cont.message Dissconected 
+LINK.NEWITEM i_mem_timer2 
+LINK.ACT.CONT = <LINK.UID> 
+LINK.ACT.LINK=<LINK> 
+link.act.equip 
+sound 00Ff 
+remove 
+
+[itemdef i_mem_timer2] 
+name=time_up 
+type=t_eq_script 
+LAYER=layer_special 
+
+on=@create 
+attr=attr_decay|attr_invis 
+timer 60 
+
+on=@timer 
+cont.message Your time is up you have 4 minutes to click the bail stone before you are 
+cont.message Dissconected 
+LINK.NEWITEM i_mem_timer3 
+LINK.ACT.CONT = <LINK.UID> 
+LINK.ACT.LINK=<LINK> 
+link.act.equip 
+remove 
+
+[itemdef i_mem_timer3] 
+name=time_up 
+type=t_eq_script 
+LAYER=layer_special 
+
+on=@create 
+attr=attr_decay|attr_invis 
+timer 60 
+
+on=@timer 
+cont.message Your time is up you have 3 minutes to click the bail stone before you are 
+cont.message Dissconected 
+LINK.NEWITEM i_mem_timer4 
+LINK.ACT.CONT = <LINK.UID> 
+LINK.ACT.LINK=<LINK> 
+link.act.equip 
+remove 
+
+[itemdef i_mem_timer4] 
+name=time_up 
+type=t_eq_script 
+LAYER=layer_special 
+
+on=@create 
+attr=attr_decay|attr_invis 
+timer 60 
+
+on=@timer 
+cont.message Your time is up you have 2 minutes to click the bail stone before you are 
+cont.message Dissconected 
+LINK.NEWITEM i_mem_timer5 
+LINK.ACT.CONT = <LINK.UID> 
+LINK.ACT.LINK=<LINK> 
+link.act.equip 
+remove 
+
+[itemdef i_mem_timer5] 
+name=time_up 
+type=t_eq_script 
+LAYER=layer_special 
+
+on=@create 
+attr=attr_decay|attr_invis 
+timer 60 
+
+on=@timer 
+cont.message Your time is up you have 1 minute to click the bail stone before you are 
+cont.message Dissconected 
+LINK.NEWITEM i_mem_timer6 
+LINK.ACT.CONT = <LINK.UID> 
+LINK.ACT.LINK=<LINK> 
+link.act.equip 
+remove 
+
+[itemdef i_mem_timer6] 
+name=time_up 
+type=t_eq_script 
+LAYER=layer_special 
+
+on=@create 
+attr=attr_decay|attr_invis 
+timer 60 
+
+on=@timer 
+cont.message Your time is up you have 30 seconds to click the bail stone before you are 
+cont.message Dissconected this is your final warning 
+LINK.NEWITEM i_mem_timer7 
+LINK.ACT.CONT = <LINK.UID> 
+LINK.ACT.LINK=<LINK> 
+link.act.equip 
+remove 
+
+[itemdef i_mem_timer7] 
+name=time_up 
+type=t_eq_script 
+LAYER=layer_special 
+
+on=@create 
+attr=attr_decay|attr_invis 
+timer 30 
+
+on=@timer 
+cont.message Dissconnected for being idle 
+CONT.DISCONNECT 
+remove 
+
+[FUNCTION consumebank] 
+act=<SRC.FINDLAYER(layer_bankbox).uid> 
+act.layer=layer_pack 
+act.type=t_container 
+act.equip 
+
+src.consume <args> 
+
+act.layer=layer_bankbox 
+act.type=t_eq_bank_box 
+act.equip 
+[eof] 
+
+
+Place that in the area's where the people are sent to jail 
+
+
+[ITEMDEF i_jail_bow] 
+//----Nycro's Jail System ver 1 
+NAME=Midnight Bow 
+ID=i_bow 
+SKILL=ARCHERY 
+TWOHANDS=Y 
+DAM=0 
+WEIGHT=6 
+REQSTR=100 
+SPEED=900 
+TDATA3=0 
+
+CATEGORY=Nycro's Jail System 
+SUBSECTION=Midnight 
+DESCRIPTION=Midnight Bow 
+
+ON=@create 
+COLOR=0020 
+HITPOINTS=1000 
+ATTR=attr_newbie 
+
+ON=@equip 
+SRC.ARCHERY= (<SRC.ARCHERY>+100.0) 
+SRC.KARMA= (<SRC.KARMA>+2000) 
+
+ON=@DAMAGE 
+IF (<SRC.KILLS>>9) 
+SRC.KILL 
+RETURN 1 
+ELSEIF (<SRC.OBODY>==c_man) 
+SRC.SOUND=snd_SPELL_TELEPORT 
+SRC.GO 5275 1163 0 
+SRC.FLAGS 0 
+src.message=You Have Been Jailed 
+RETURN 1 
+ELSEIF (<SRC.OBODY>==c_woman) 
+SRC.SOUND=snd_SPELL_TELEPORT 
+SRC.GO 5275 1163 0 
+SRC.FLAGS 0 
+src.message=You Have Been Jailed 
+ELSE 
+SRC.KILL 
+
+This is what the guards will use to jail people now one final step edit the guards in spherechar_human.scp with the folowing 
+
+[CHARDEF 0438] 
+//Male GUARD 
+DEFNAME=C_H_GUARD 
+NAME=#NAMES_HUMANMALE the Guard 
+ID=C_MAN 
+DAM=15,20 
+ARMOR=20 
+DESIRES=i_gold 
+SHELTER=r_civilization,r_GUARDPOST 
+//AVERSIONS=ANYONE WITH NEGATIVITY (SHOWS AGGRESION) 
+
+TSPEECH=spk_human_prime 
+TSPEECH=jobGuard 
+TSPEECH=spk_needs 
+TSPEECH=spk_rehello 
+TSPEECH=spk_human_default 
+
+TEVENTS=e_Human_HearUnk 
+TEVENTS=e_Human_Needs 
+TEVENTS=e_Human_ConvInit 
+TEVENTS=e_Human_Greet 
+TEVENTS=e_Human_Space 
+TEVENTS=e_Human_Refuse 
+
+CATEGORY=Civilized 
+SUBSECTION=Guards & Law 
+DESCRIPTION=Guard (male) 
+
+ON=@Create 
+NPC=brain_guard 
+//ALIGNMENT=GOOD 
+COLOR=colors_skin 
+STR={151 165} 
+DEX={151 165} 
+INT={151 165} 
+
+DETECTINGHIDDEN={90.0 100.0} 
+FORENSICS={90.0 100.0} 
+FENCING={90.0 100.0} 
+PARRYING={90.0 100.0} 
+SWORDSMANSHIP={90.0 100.0} 
+WRESTLING={90.0 100.0} 
+MACEFIGHTING={90.0 100.0} 
+MAGICRESISTANCE={90.0 100.0} 
+TACTICS={90.0 100.0} 
+ARCHERY={110.0 128) 
+//STANDARD GUARD EQUIPMENT=PLATE ARMOR,i_jail_bow 
+//BLACKTHORN GUARD EQUIPMENT=PLATE ARMOR,RED OVER-ARMOR,DOUBLE BATTLE AXE,CHAOS SHIELD 
+//LORDBRITISH GUARD EQUIPMENT=PLATE ARMOR,BLUE OVER-ARMOR,VIKING SWORD,ORDER SHIELD 
+
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_shirt_plain 
+COLOR=colors_all 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=i_platemail_chest 
+ITEM=i_platemail_leggings 
+ITEM=i_platemail_arms 
+ITEM=random_over_armor 
+COLOR=colors_all 
+ITEM=i_jail_bow 
+ITEM=random_coin_purse 
+ITEM=i_mt_horse_gray // on horse. 
+
+ON=@NPCRefuseItem 
+SAY I cannot be bribed. be gone. 
+return 1 
+
+ON=@SEENEWPLAYER 
+IF (<SRC.FLAGS>&02000000|&02010000)//CRIMINAL 
+ATTACK 
+DONRAND 3 
+SAY=Evil does not pay, die ! 
+SAY=I will cut your head off and hang it on the highest place in <REGION.NAME> 
+SAY=Argh, I hate follower's of the dark side, die! 
+ENDDO 
+ENDIF 
+
+
+[CHARDEF 0439] 
+//Female GUARD 
+DEFNAME=c_h_guard_f 
+NAME=#NAMES_HUMANFEMALE the Guard 
+ID=C_WOMAN 
+DAM=15,20 
+ARMOR=20 
+DESIRES=i_gold 
+SHELTER=r_civilization,r_GUARDPOST 
+//AVERSIONS=ANYONE WITH NEGATIVITY (SHOWS AGGRESION) 
+
+TSPEECH=spk_human_prime 
+TSPEECH=jobGuard 
+TSPEECH=spk_needs 
+TSPEECH=spk_rehello 
+TSPEECH=spk_human_default 
+
+TEVENTS=e_Human_HearUnk 
+TEVENTS=e_Human_Needs 
+TEVENTS=e_Human_ConvInit 
+TEVENTS=e_Human_Greet 
+TEVENTS=e_Human_Space 
+TEVENTS=e_Human_Refuse 
+
+CATEGORY=Civilized 
+SUBSECTION=Guards & Law 
+DESCRIPTION=Guard (female) 
+
+ON=@Create 
+NPC=brain_guard 
+//ALIGNMENT=GOOD 
+COLOR=colors_skin 
+STR={151 165} 
+DEX={151 165} 
+INT={151 165} 
+
+DETECTINGHIDDEN={90.0 100.0} 
+FORENSICS={90.0 100.0} 
+FENCING={90.0 100.0} 
+PARRYING={90.0 100.0} 
+SWORDSMANSHIP={90.0 100.0} 
+WRESTLING={90.0 100.0} 
+MACEFIGHTING={90.0 100.0} 
+MAGICRESISTANCE={90.0 100.0} 
+TACTICS={90.0 100.0} 
+ARCHERY={110.0 128) 
+
+//STANDARD GUARD EQUIPMENT=PLATE ARMOR,i_jail_bow 
+//BLACKTHORN GUARD EQUIPMENT=PLATE ARMOR,RED OVER-ARMOR,DOUBLE BATTLE AXE,CHAOS SHIELD 
+//LORDBRITISH GUARD EQUIPMENT=PLATE ARMOR,BLUE OVER-ARMOR,VIKING SWORD,ORDER SHIELD 
+
+
+ITEMNEWBIE=random_female_hair 
+COLOR=colors_hair 
+
+ON=@NPCRestock 
+ITEM=i_shirt_plain 
+COLOR=colors_all 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=i_platemail_chest 
+ITEM=i_platemail_leggings 
+ITEM=i_platemail_arms 
+ITEM=random_over_armor 
+COLOR=colors_all 
+ITEM=i_jail_bow 
+ITEM=random_coin_purse 
+// ITEM=03EA0 // on horse. 
+
+ON=@NPCRefuseItem 
+SAY I cannot be bribed. be gone. 
+return 1 
+
+ON=@SEENEWPLAYER 
+IF (<SRC.FLAGS>&02000000|&02010000)//CRIMINAL 
+ATTACK 
+DONRAND 3 
+SAY=Evil does not pay, die ! 
+SAY=I will cut your head off and hang it on the highest place in <REGION.NAME> 
+SAY=Argh, I hate follower's of the dark side, die! 
+ENDDO 
+ENDIF 

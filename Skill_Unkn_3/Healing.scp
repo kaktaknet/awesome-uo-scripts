@@ -1,0 +1,116 @@
+// Bandage Fix for Sphere 55i by Admin Ice
+// Visit www.alternate-pk.de
+
+[ITEMDEF 0e21] 
+DEFNAME=i_bandage 
+RESOURCES=i_cloth 
+TYPE=T_eq_script 
+WEIGHT=.1 
+DUPELIST=0ee9 
+CATEGORY=Items by Professions 
+SUBSECTION=Healer 
+DESCRIPTION=Clean Bandages 
+
+ON=@DClick
+IF (<TYPE>==t_eq_script) //Bandages need to be converted?
+IF (<SRC.FINDLAYER.75.BASEID>==i_heal_timer) //Can I use them again?
+	SRC.SYSMESSAGE You can't use this again now.
+	RETURN 1
+ELSE
+	IF (<CONT> != <SRC.FINDLAYER(21).UID>) //Are the Bandages in my Backpack?
+		SRC.SYSMESSAGE Bandages must be on your Person to use.
+		RETURN 1
+	ELSE
+		TARGET Who do you want to Heal? //Everything OK, now normal Healing
+		SRC.TAG.HEALMIN <eval <SRC.HEALING>/40>
+		SRC.TAG.HEALMAX <eval <SRC.HEALING>/20>
+		RETURN 1
+	ENDIF
+ENDIF
+ELSE
+	TYPE t_eq_script //Converting Bandages to use them.
+	SRC.SYSMESSAGE <AMOUNT> Bandages have been fixed.
+ENDIF
+
+ON=@TIMER
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.NEWITEM i_heal_timer //Create Delay Timer Object
+SRC.ACT.TIMER 3 //How much should the Delay be?
+SRC.ACT.CONT <SRC.UID>
+
+IF ((<SRC.TARG.HITS> < <SRC.TARG.STR>) || (<SRC.TARG.FLAGS>&statf_dead) || (<SRC.TARG.FLAGS>&statf_poisoned)) //Skillgain?
+IF (<SRC.HEALING> <99.9) //Skillgain?
+IF (<SRC.HEALING> < 30.0) 
+	IF (<EVAL RAND(7)>==1)
+		SRC.HEALING=<SRC.HEALING> + 1
+	ENDIF
+ELSE
+	IF (<SRC.HEALING> < 50.0) 
+		IF (<EVAL RAND(50)>==1) 
+			SRC.HEALING=<SRC.HEALING> + 1 
+		ENDIF
+	ELSE
+		IF (<EVAL RAND(100)>==1)
+			SRC.HEALING=<SRC.HEALING> + 1 
+		ENDIF
+	ENDIF
+ENDIF
+ENDIF
+ENDIF
+
+IF (<SRC.TARG.FLAGS>&statf_dead) //Target Dead, am I able to Ressurect?
+	IF (<SRC.HEALING><90.0) 
+		SRC.SYSMESSAGE You are not a good enough healer to resurrect <SRC.TARG.NAME>
+		RETURN 1 
+	ELSE 
+		SRC.EMOTE ressurect <SRC.TARG.NAME>
+		SRC.SYSMESSAGE You Ressurect <SRC.TARG.NAME>
+		SRC.CONSUME i_bandage
+		SRC.TARG.RESURRECT
+		SRC.TARG.CONSUME i_deathshroud
+		RETURN 1 
+	ENDIF
+ENDIF
+
+IF (<SRC.TARG.FLAGS> & statf_poisoned) //If the Target is not Dead...Is it Poisoned? Am i able to Cure?
+	IF (<SRC.HEALING>>799)
+		SRC.TARG.FINDLAYER(42).REMOVE
+		SRC.TARG.FLAGS <SRC.TARG.FLAGS>&~statf_poisoned)
+		SRC.SYSMESSAGE You heal <SRC.TARG.NAME>'s Poison.
+		SRC.CONSUME i_bandage
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE You aren't a good enough Healer to heal Poison.
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF ((<SRC.TARG.HITS>==<SRC.TARG.STR>) || (<SRC.TARG.HITS>><SRC.TARG.STR>)) //If Target not Dead or Poisoned, is the Target at full Health?
+	SRC.SYSMESSAGE The Target is at full Health.
+	RETURN 1
+ELSE
+	SRC.TARG.HITS=<SRC.TARG.HITS> + { <eval <SRC.TAG.HEALMIN>> <eval <SRC.TAG.HEALMAX>> } //Target is not at full Health, now Heal it.
+	SRC.CONSUME i_bandage
+	SRC.SYSMESSAGE You heal <SRC.TARG.NAME>
+ 	SRC.NEWITEM i_bandage_bloody 
+	SRC.ACT.CONT=<SRC.UID>
+	RETURN 1
+ENDIF
+
+[Itemdef i_heal_timer] //This is the Delay Timer Object
+DEFNAME=i_heal_timer
+ID=I_Gold
+NAME=Healing Timer
+LAYER=75
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=0c
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[EOF]

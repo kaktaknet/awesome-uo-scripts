@@ -1,0 +1,175 @@
+[PLEVEL 4] 
+SLAP 
+
+[FUNCTION SLAP] 
+SRC.NEWITEM i_slap_coin 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.DCLICK 
+RETURN 1 
+
+[ITEMDEF i_slap_coin] 
+DEFNAME i_slap_coin 
+ID i_rune_alchem_1 
+name slap 
+
+ON=@CREATE 
+ATTR 08082 
+TIMER 5 
+
+ON=@DCLICK 
+TARGET Who you wanna slap? 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE Why would you want to slap that? 
+REMOVE 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE Why would you want to slap that? 
+REMOVE 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.BODY> === c_woman) 
+SFX 014b 
+SRC.MOREX={1 10} 
+VAR.MOREY{1 10} 
+SRC.TARG.MOVE=-4+RAND(9),-4+RAND(9) 
+SRC.TARG.HITS=<SRC.TARG.HITS> +-5 
+SRC.TARG.SYSMESSAGE You have been slapped by <SRC.NAME>! 
+SRC.TARG.SAY <SRC.NAME> has slapped <SRC.TARG.NAME>! 
+SRC.TARG.ANIM=20 
+REMOVE 
+RETURN 1 
+ELSEIF (<SRC.TARG.BODY> === c_man) 
+SFX 0154 
+SRC.MOREX={1 10} 
+VAR.MOREY{1 10} 
+SRC.TARG.MOVE=-4+RAND(9),-4+RAND(9) 
+SRC.TARG.HITS=<SRC.TARG.HITS> +-5 
+SRC.TARG.SYSMESSAGE You have been slapped by <SRC.NAME>! 
+SRC.TARG.ANIM=20 
+SRC.TARG.SAY <SRC.NAME> has slapped <SRC.TARG.NAME>! 
+REMOVE 
+RETURN 1 
+
+//Punch Script by Zaroba 
+//This is an alteration of the Slap script made by unknown. 
+//To use it in-game, just type .punch and select a target 
+
+[PLEVEL 4] 
+punch 
+
+[FUNCTION punch] 
+SRC.NEWITEM i_punch_coin 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.DCLICK 
+RETURN 1 
+
+[ITEMDEF i_punch_coin] 
+DEFNAME i_punch_coin 
+ID i_rune_alchem_1 
+name punch 
+
+ON=@CREATE 
+ATTR 08082 
+TIMER 5 
+
+ON=@DCLICK 
+TARGET Who you wanna punch? 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE Why would you want to punch that? 
+REMOVE 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE Why would you want to punch that? 
+REMOVE 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.BODY> === c_woman) 
+SFX 014b 
+SRC.MOREX={1 10} 
+VAR.MOREY{1 10} 
+SRC.TARG.MOVE=-4+RAND(9),-4+RAND(9) 
+SRC.TARG.HITS=<SRC.TARG.HITS> +-5 
+SRC.TARG.SYSMESSAGE You have been punched by <SRC.NAME>! 
+SRC.TARG.SAY <SRC.NAME> has punched <SRC.TARG.NAME>! 
+SRC.TARG.ANIM=20 
+REMOVE 
+RETURN 1 
+ELSEIF (<SRC.TARG.BODY> === c_man) 
+SFX 0154 
+SRC.MOREX={1 10} 
+VAR.MOREY{1 10} 
+SRC.TARG.MOVE=-4+RAND(9),-4+RAND(9) 
+SRC.TARG.HITS=<SRC.TARG.HITS> +-5 
+SRC.TARG.SYSMESSAGE You have been punched by <SRC.NAME>! 
+SRC.TARG.ANIM=20 
+SRC.TARG.SAY <SRC.NAME> has punched <SRC.TARG.NAME>! 
+REMOVE 
+RETURN 1 
+ 
+//Spit Script by Zaroba 
+//This is an alteration of the Slap script made by unknown. 
+//To use it in-game, just type .spit and select a target. 
+
+[PLEVEL 4] 
+spit 
+
+[FUNCTION Spit] 
+SRC.NEWITEM i_spit_coin 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.DCLICK 
+RETURN 1 
+
+[ITEMDEF i_spit_coin] 
+DEFNAME i_spit_coin 
+ID i_rune_alchem_1 
+name spit 
+
+ON=@CREATE 
+ATTR 08082 
+TIMER 5 
+
+ON=@DCLICK 
+TARGET Who you wanna spit on? 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE Why would you want to spit on that? 
+REMOVE 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE Why would you want to spit on that? 
+REMOVE 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.BODY> === c_woman) 
+SFX 014b 
+SRC.MOREX={1 10} 
+VAR.MOREY{1 10} 
+SRC.TARG.MOVE=-4+RAND(9),-4+RAND(9) 
+SRC.TARG.HITS=<SRC.TARG.HITS> +-5 
+SRC.TARG.SYSMESSAGE You have been spat on by <SRC.NAME>! 
+SRC.TARG.SAY <SRC.NAME> has spat on <SRC.TARG.NAME>! 
+SRC.TARG.ANIM=20 
+REMOVE 
+RETURN 1 
+ELSEIF (<SRC.TARG.BODY> === c_man) 
+SFX 0154 
+SRC.MOREX={1 10} 
+VAR.MOREY{1 10} 
+SRC.TARG.MOVE=-4+RAND(9),-4+RAND(9) 
+SRC.TARG.HITS=<SRC.TARG.HITS> +-5 
+SRC.TARG.SYSMESSAGE You have been spat on by <SRC.NAME>! 
+SRC.TARG.ANIM=20 
+SRC.TARG.SAY <SRC.NAME> has spat on <SRC.TARG.NAME>! 
+REMOVE 
+RETURN 1 

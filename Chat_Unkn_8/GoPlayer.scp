@@ -1,0 +1,154 @@
+[FUNCTION goplayer]
+
+
+IF (<FINDID.i_goplayer>)
+
+
+P <FINDID.i_goplayer.MOREP>
+
+
+FINDID.i_goplayer.REMOVE
+
+
+UPDATE
+
+
+ELSE
+
+
+INVIS 1
+
+
+NEWITEM i_goplayer
+
+
+ACT.CONT <UID>
+
+
+ACT.MOREP <P>
+
+
+ACT.TAG.NAME <ARGS>
+
+
+ENDIF
+
+
+
+
+
+[ITEMDEF i_goplayer]
+
+
+ID=i_memory
+
+
+TYPE=t_eq_script
+
+
+NAME=Go Player
+
+
+
+
+
+ON=@Create
+
+
+ATTR attr_decay
+
+
+TIMER 1
+
+
+
+
+
+ON=@Timer
+
+
+CONT.GONAME <TAG.NAME>
+
+
+
+
+
+IF STRMATCH(<CONT.ACT.TOPOBJ.NAME>,<TAG.NAME>)
+
+
+IF ! STRMATCH(<CONT.ACT.TOPOBJ.ACCOUNT>,)
+
+
+CONT.SYSMESSAGE <TAG.NAME> is here in <CONT.REGION.NAME>.
+
+
+REMOVE
+
+
+ENDIF
+
+
+ELIF (<CONT.ACT.TYPE> == t_eq_memory_obj)
+
+
+IF STRMATCH(<CONT.ACT.LINK.NAME>,<TAG.NAME>) && ! STRMATCH(<CONT.ACT.LINK.ACCOUNT>,)
+
+
+CONT.P <CONT.ACT.LINK.P>
+
+
+CONT.UPDATE
+
+
+CONT.SYSMESSAGE <TAG.NAME> is here in <CONT.REGION.NAME>.
+
+
+REMOVE
+
+
+ENDIF
+
+
+ENDIF
+
+
+
+
+
+IF (<CONT.ACT.UID> == 0<TAG.FIRST>)
+
+
+CONT.P <MOREP>
+
+
+CONT.UPDATE
+
+
+CONT.SYSMESSAGE No player named <TAG.NAME>.
+
+
+REMOVE
+
+
+ENDIF
+
+
+
+
+
+IF !(0<TAG.FIRST>)
+
+
+TAG.FIRST <CONT.ACT.UID>
+
+
+ENDIF
+
+
+
+
+
+TIMER 1
+
+
+RETURN 1

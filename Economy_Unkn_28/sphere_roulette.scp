@@ -1,0 +1,743 @@
+//********************************************************************************************
+//* Roulette style betting game v0.9                                                         *
+//* By GM Iz - Oblivion Shard                                                                *
+//* Help from GM Rumpwhistle of Oblivion                                                     *
+//* www.oblivion2.com                                                                        *
+//* ON=@STEP memory object idea from Kell, http://www.mpz.co.uk/sphere                       *
+//* Please leave the header in so everyone gets the credit they deserve                      *
+//* If you add to it, share with the community and post your changes!                        *
+//* This is kinda complex, if you have any questions email me at GMIzOblivion@hotmail.com    *
+//* And most of all, enjoy!  :)                                                              *
+//*
+//* Change manifest:
+//*  7/24/02 - Fixed 0 and 00
+//********************************************************************************************
+
+[ITEMDEF i_roulette_wheel]
+ID=097e
+TYPE=0
+
+ON=@CREATE
+   COLOR=025
+   NAME="Roulette Wheel (Used 0 times.)"
+
+ON=@DCLICK
+   IF <DISTANCE>>3
+      SRC.SYSMESSAGE="You are too far away to play the game."
+   ELSE
+      MORE=<MORE>+1
+      NAME="Roulette Wheel (Used <MORE> times.)"
+      SRC.DIALOG d_roulette_main
+   ENDIF
+RETURN 1
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Roulette
+DESCRIPTION=Roulette Wheel
+
+//Function to create the Memory object to trigger the win gump
+//This also calculates the winnings and puts them in the players pack
+[FUNCTION f_roulette_win]
+   //Give proper gold
+   VAR.MULTIPLIER=<ARGS>
+   //Calc the gold
+   VAR.NEWGOLD=<ARGS>*<LINK.TAG.WAGER>
+   VAR.TOTALGOLD=<VAR.NEWGOLD>+<LINK.TAG.WAGER>
+   //Tell them what they won
+   LINK.SYSMESSAGE="You recieve <EVAL <VAR.TOTALGOLD>> gold coins!!!"
+   //Create it and put it in your pack
+   LINK.NEWITEM i_gold
+   LINK.ACT.AMOUNT=<EVAL <VAR.TOTALGOLD>>
+   LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+   //Now create the item that shows the gump
+   LINK.NEWITEM i_roulette_win
+   LINK.ACT.CONT=<LINK.UID>
+RETURN 1
+
+//Memory object that is created, steped on right away, and destroyed.
+//First it shows the WIN dialog
+[ITEMDEF i_roulette_win]
+ID = i_memory
+TYPE = t_eq_script
+LAYER = layer_special
+
+ON = @CREATE
+   TIMER = 1 // 10 seconds
+ON = @TIMER
+   LINK = <CONT.UID>
+   P = <CONT.P>
+   RETURN 1
+ON = @STEP
+  IF ( <SRC.UID> == <LINK.UID> )
+      SRC.DIALOG d_roulette_win
+      REMOVE
+   ENDIF
+CATEGORY=Memory Objects
+SUBSECTION=Roulette
+DESCRIPTION=Win
+
+//Function to create the Memory object to trigger the lose gump
+[FUNCTION f_roulette_lost]
+   LINK.NEWITEM i_roulette_lost
+   LINK.ACT.CONT=<LINK.UID>
+RETURN 1
+
+//Memory object that is created, steped on right away, and destroyed.
+//First it shows the LOST dialog
+[ITEMDEF i_roulette_lost]
+ID = i_memory
+TYPE = t_eq_script
+LAYER = layer_special
+
+ON = @CREATE
+   TIMER = 1 // 10 seconds
+ON = @TIMER
+   LINK = <CONT.UID>
+   P = <CONT.P>
+   RETURN 1
+ON = @STEP
+  IF ( <SRC.UID> == <LINK.UID> )
+      SRC.DIALOG d_roulette_lost
+      REMOVE
+   ENDIF
+CATEGORY=Memory Objects
+SUBSECTION=Roulette
+DESCRIPTION=Lose
+
+//Memory object that deals with delay, and calculates everything.
+[ITEMDEF i_memory_roulette]
+ID=i_memory
+TYPE=t_eq_script
+NAME="Roulette Wheel Spinning"
+LAYER=30
+
+ON=@CREATE
+   ATTR=00002 // DECAY ATTR
+
+//On equipt set link properly, and set the timer while playing the sound
+ON=@EQUIP
+   LINK=<SRC.UID>
+   TIMER=4
+   SRC.SYSMESSAGE="The wheel is spinning...."
+   SOUND 537
+   RETURN 0
+
+//On timer do the logic of winning, showing them the dialog,
+//figuring out the winnings multiplier, and then call the win or lose function....
+ON=@TIMER
+   //Play the sound that makes it stop
+   SOUND 52
+
+   //Set variables and release the tags
+   VAR.BETFLAG=<EVAL <LINK.TAG.BETFLAG>>
+   VAR.BET=<EVAL <LINK.TAG.BET>>
+   VAR.WAGER=<EVAL <LINK.TAG.WAGER>>
+   LINK.TAG.BETFLAG=
+   LINK.TAG.BET=
+
+   //"Roll" the number
+   //25 is 00
+   VAR.ROLLVALUE=<EVAL {0 25}>
+
+   //Tell them what they rolled
+   VAR.ROLLMSG=<VAR.ROLLVALUE>
+   IF <VAR.ROLLMSG>=25
+      LINK.SYSMESSAGE="Looks like it stopped on 00...."
+   ELSE
+      LINK.SYSMESSAGE="Looks like it stopped on <EVAL <VAR.ROLLMSG>>...."
+   ENDIF
+
+
+//LINK.SAY="Debug ON."
+//LINK.SAY="Flag:<var.betflag> Bet:<var.bet> Roll:<var.rollvalue>"
+
+   //Set the range its in
+   //For halfrange 1 is 1 to 12, and 2 is 19 to 24
+   IF (<VAR.ROLLVALUE><13)
+      VAR.HALFRANGE=1
+   ELSE
+      VAR.HALFRANGE=2
+   ENDIF
+//LINK.SAY="Halfrange: <var.halfrange>"
+
+   //For thirdrange 1 is 1 to 8, 2 is 9 to 16 and 3 is 17 to 24
+   //The IF is done like this because its less IF clauses in it by
+   //harnessing the ELSE properly.
+   IF (<VAR.ROLLVALUE><=8)
+      //Low range
+      VAR.THIRDRANGE=1
+   ELIF (<VAR.ROLLVALUE>>16)
+      //High range
+      VAR.THIRDRANGE=3
+   ELSE
+      //Mid range
+      VAR.THIRDRANGE=2
+   ENDIF
+//LINK.SAY="Thirdrange: <var.thirdrange>"
+
+   //Define it as even or odd, if even is 1 then its even else odd
+   //0 is true and not zero (in this case 1) is false meaning its odd
+   IF (((<VAR.ROLLVALUE>/2)*2)=<VAR.ROLLVALUE>)
+      VAR.EVEN=0
+   ELSE
+      VAR.EVEN=1
+   ENDIF
+
+   //Game logic that decides if they won based on their bet
+   //Game logic is as follows
+   //1 in 24 chance at a number
+   //When the number is gotten, checks are done
+   //If the BETFLAG tag is:
+   // 1 then its a straight number
+   // 2 then its a third range
+   // 3 then its a half range
+   // 4 then its even
+   // 5 then its odd
+   //So the if conditions are based on the flag first
+   //Then further the logic with the BET tag
+
+//LINK.SAY="about to check against betflags.... <VAR.BETFLAG>"
+
+   //Straight number, BET is the number.
+   IF (<VAR.BETFLAG>=1)
+      //25 is 00
+      //User won straight 24 to 1 odds
+      IF (<VAR.ROLLVALUE>=<VAR.BET>)
+         f_roulette_win 24
+         RETURN 0
+      ENDIF
+   ENDIF
+
+//LINK.SAY="Passed straight number"
+
+   //Range cut into thirds, BET is the range 1 to 3
+   IF (<VAR.BETFLAG>=2)
+      //User won a 1/3rd range 2 to 1 odds
+      IF (<VAR.THIRDRANGE>=<VAR.BET>)
+         f_roulette_win 2
+         RETURN 0
+      ENDIF
+   ENDIF
+
+//LINK.SAY="Passed thirds"
+
+   //Range cut into halves
+   IF (<VAR.BETFLAG>=3)
+      //User won a 1/2rd range 1 to 1 odds
+      IF (<VAR.HALFRANGE>=<VAR.BET>)
+         f_roulette_win 1
+         RETURN 0
+      ENDIF
+   ENDIF
+
+//LINK.SAY="Passed halves"
+
+   //Even
+   IF (<VAR.BETFLAG>=4)
+      IF (((<VAR.ROLLVALUE>/2)*2)=<VAR.ROLLVALUE>)
+         //User won on even 1 to 1 odds
+         f_roulette_win 1
+         RETURN 0
+      ENDIF
+   ENDIF
+
+//LINK.SAY="Passed even"
+
+   //Odd
+   IF (<VAR.BETFLAG>=5)
+      IF !(((<VAR.ROLLVALUE>/2)*2)=<VAR.ROLLVALUE>)
+         //User won on odd 1 to 1 odds
+         f_roulette_win 1
+         RETURN 0
+      ENDIF
+   ENDIF
+
+//LINK.SAY="Passed odd"
+//LINK.SAY="Passed ALL, user lost"
+
+   //They have lost
+   f_roulette_lost
+RETURN 0
+CATEGORY=Memory Objects
+SUBSECTION=Roulette
+DESCRIPTION=Spin
+
+//Main roulette board
+[DIALOG d_roulette_main]
+100, 100
+PAGE 0
+resizepic 58 39 3500 500 400
+gumppic 10 0 10440               //Side dragon
+//gumppic 90 325 10452           //Box in bottom left, which i don't like all that much so its off
+text 170 50 95 0                 //Casion
+button 510 50 1150 1151 1 0 0    //Cancel
+PAGE 1
+text 75 75 1152 1                //Select Wager
+text 75 100 1152 2               //Current Wager
+text 300 100 1152 42             //Gold in pack:
+text 400 100 1152 43             //Amount of gold in pack
+text 75 117 1152 44              //Max bet 44
+button 190 73 2151 2152 1 0 1    //Wager button
+text 205 100 1152 3              //Wager text
+text 75 400 1152 4               //Spin
+button 205 400 249 248 1 0 2     //Spin button
+text 75 135 1152 5
+text 100 155 1152 6
+text 200 155 1152 7
+text 300 155 1152 8
+group 1
+radio 90 180 210 211 0 1001  //1 to 1 radios
+radio 90 210 210 211 0 1002
+radio 90 240 210 211 0 1003
+radio 90 270 210 211 0 1004
+text 120 180 1152 9          //1 to 1 text
+text 120 210 1152 10
+text 120 240 1152 11
+text 120 270 1152 12
+radio 190 180 210 211 0 1005  //2 to 1 radios
+radio 190 210 210 211 0 1006
+radio 190 240 210 211 0 1007
+text 220 180 1152 13          //2 to 1 text
+text 220 210 1152 14
+text 220 240 1152 15
+radio 290 180 210 211 0 1008  //24 to 1 radios
+radio 290 210 210 211 0 1009
+radio 290 240 210 211 0 1010
+radio 290 270 210 211 0 1011
+radio 290 300 210 211 0 1012
+radio 290 330 210 211 0 1013
+radio 290 360 210 211 0 1014
+radio 290 390 210 211 0 1015
+text 320 180 1152 16          //24 to 1 text
+text 320 210 1152 17
+text 320 240 1152 18
+text 320 270 1152 19
+text 320 300 1152 20
+text 320 330 1152 21
+text 320 360 1152 22
+text 320 390 1152 23
+radio 390 150 210 211 0 1016 //24 to 1 radios
+radio 390 180 210 211 0 1017
+radio 390 210 210 211 0 1018
+radio 390 240 210 211 0 1019
+radio 390 270 210 211 0 1020
+radio 390 300 210 211 0 1021
+radio 390 330 210 211 0 1022
+radio 390 360 210 211 0 1023
+radio 390 390 210 211 0 1024
+text 420 150 1152 24          //24 to 1 text
+text 420 180 1152 25
+text 420 210 1152 26
+text 420 240 1152 27
+text 420 270 1152 28
+text 420 300 1152 29
+text 420 330 1152 30
+text 420 360 1152 31
+text 420 390 1152 32
+radio 490 150 210 211 0 1025 //24 to 1 radios
+radio 490 180 210 211 0 1026
+radio 490 210 210 211 0 1027
+radio 490 240 210 211 0 1028
+radio 490 270 210 211 0 1029
+radio 490 300 210 211 0 1030
+radio 490 330 210 211 0 1031
+radio 490 360 210 211 0 1032
+radio 490 390 210 211 0 1033
+text 520 150 1152 33          //24 to 1 text
+text 520 180 1152 34
+text 520 210 1152 35
+text 520 240 1152 36
+text 520 270 1152 37
+text 520 300 1152 38
+text 520 330 1152 39
+text 520 360 1152 40
+text 520 390 1152 41
+group
+
+[DIALOG d_roulette_main TEXT]
+Oblivion Casino - Roulette Wheel
+Select Wager
+Current Wager:
+<EVAL <SRC.TAG.WAGER>>
+Spin the wheel!
+Bets with odds:   //line 5
+1 to 1
+2 to 1
+24 to 1
+Even     //even bet 1 to 1
+Odd      //odd bet 1 to 1   line 10
+1 - 12   //1 to 18 bet 1 to 1
+13 - 24  //19 to 36 bet 1 to 1
+1 - 8   //1 to 12 bet 2 to 1
+9 - 16  //13 to 24 bet 2 to 1
+17 - 24  //25 to 36 bet 2 to 1  line 15
+0   //all the rest are 24 to 1 odds
+00
+1
+2
+3  //line 20
+4
+5
+6
+7
+8  //line 25
+9
+10
+11
+12
+13  //line 30
+14
+15
+16
+17
+18  //line 35
+19
+20
+21
+22
+23  //line 40
+24
+Gold in pack:
+<EVAL <SRC.RESCOUNT i_gold>>
+Max bet is 1000 gold
+
+[DIALOG d_roulette_main BUTTON]
+//Exit the game
+ONBUTTON=0
+   SRC.TAG.WAGER=
+   SRC.SYSMESSAGE="You walk away from the game...."
+//Button 1 is the wager button
+ONBUTTON=1
+   //Show the wager dialog
+   SRC.DIALOG d_roulette_wager
+//Button 2 is the SPIN button
+ONBUTTON=2
+   //Check to see if they are being bad by removing gold somehow
+   IF !(<RESTEST <SRC.TAG.WAGER> i_gold>)
+      SRC.DIALOG d_roulette_not_wager
+      RETURN 1
+   ENDIF
+   //Consume the gold
+   SRC.CONSUME=<SRC.TAG.WAGER> i_gold
+
+   //Check for wager
+   IF (0<SRC.TAG.WAGER>=0)
+      //No wager!
+      SRC.DIALOG d_roulette_no_wager
+      RETURN 1
+   ENDIF
+
+   //Add the tags
+   //If the BETFLAG tag is:
+   // 1 then its a straight number
+   // 2 then its a third range
+   // 3 then its a half range
+   // 4 then its even
+   // 5 then its odd
+   //Check all the ARGCHK's to get the number
+
+   //Check to see if a bet was placed
+   IF <ARGCHK>=0
+      //No bet!
+      SRC.DIALOG d_roulette_no_bet
+      RETURN 1
+   ENDIF
+   //Even
+   IF <ARGCHK[1001]>=01
+      SRC.TAG.BETFLAG=4
+   //Odd
+   ELIF <ARGCHK[1002]>=01
+      SRC.TAG.BETFLAG=5
+   //Half Range
+   ELIF ((<ARGCHK[1003]>=01) | (<ARGCHK[1004]>=01))
+      SRC.TAG.BETFLAG=3
+      //Range 1
+      IF <ARGCHK[1003]>=01
+         SRC.TAG.BET=1
+      //Range 2
+      ELSE
+         SRC.TAG.BET=2
+      ENDIF
+   //Third Range
+   ELIF ((<ARGCHK[1005]>=01) | (<ARGCHK[1006]>=01) | (<ARGCHK[1007]>=01))
+      SRC.TAG.BETFLAG=2
+      //Range 1
+      IF <ARGCHK[1005]>=01
+         SRC.TAG.BET=1
+      //Range 2
+      ELIF <ARGCHK[1006]>=01
+         SRC.TAG.BET=2
+      //Range 3
+      ELSE
+         SRC.TAG.BET=3
+      ENDIF
+   //0
+   ELIF (<ARGCHK[1008]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=0
+   //00
+   ELIF (<ARGCHK[1009]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=25
+   //1
+   ELIF (<ARGCHK[1010]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=1
+   //2
+   ELIF (<ARGCHK[1011]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=2
+   //3
+   ELIF (<ARGCHK[1012]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=3
+   //4
+   ELIF (<ARGCHK[1013]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=4
+   //5
+   ELIF (<ARGCHK[1014]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=5
+   //6
+   ELIF (<ARGCHK[1015]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=6
+   //7
+   ELIF (<ARGCHK[1016]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=7
+   //8
+   ELIF (<ARGCHK[1017]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=8
+   //9
+   ELIF (<ARGCHK[1018]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=9
+   //10
+   ELIF (<ARGCHK[1019]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=10
+   //11
+   ELIF (<ARGCHK[1020]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=11
+   //12
+   ELIF (<ARGCHK[1021]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=12
+   //13
+   ELIF (<ARGCHK[1022]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=13
+   //14
+   ELIF (<ARGCHK[1023]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=14
+   //15
+   ELIF (<ARGCHK[1024]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=15
+   //16
+   ELIF (<ARGCHK[1025]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=16
+   //17
+   ELIF (<ARGCHK[1026]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=17
+   //18
+   ELIF (<ARGCHK[1027]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=18
+   //19
+   ELIF (<ARGCHK[1028]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=19
+   //20
+   ELIF (<ARGCHK[1029]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=20
+   //21
+   ELIF (<ARGCHK[1030]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=21
+   //22
+   ELIF (<ARGCHK[1031]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=22
+   //23
+   ELIF (<ARGCHK[1032]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=23
+   //24
+   ELIF (<ARGCHK[1032]>=01)
+      SRC.TAG.BETFLAG=1
+      SRC.TAG.BET=24
+   ENDIF
+
+   //Load the spinning wheel memory object on them
+   SRC.NEWITEM i_memory_roulette
+   SRC.ACT.EQUIP
+RETURN 1
+
+//Didn't place a wager
+[DIALOG d_roulette_no_wager]
+100, 100
+PAGE 0
+resizepic 63 61 3500 300 100
+text 110 85 95 0
+button 175 110 249 248 1 0 1
+
+[DIALOG d_roulette_no_wager TEXT]
+You did not make a wager....
+
+[DIALOG d_roulette_no_wager BUTTON]
+ONBUTTON=0
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+ONBUTTON=1
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+
+
+//Didn't pick a bet
+[DIALOG d_roulette_no_bet]
+100, 100
+PAGE 0
+resizepic 63 61 3500 300 100
+button 176 112 249 248 1 0 1
+text 125 80 95 0
+
+[DIALOG d_roulette_no_bet TEXT]
+You did not pick a bet....
+
+[DIALOG d_roulette_no_bet BUTTON]
+ONBUTTON=0
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+ONBUTTON=1
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+
+
+//Player won
+[DIALOG d_roulette_win]
+100, 100
+PAGE 0
+resizepic 63 61 3500 350 100
+button 205 110 249 248 1 0 1
+text 90 80 95 0
+
+[DIALOG d_roulette_win TEXT]
+
+You won!  The gold is in your backpack.
+
+[DIALOG d_roulette_win BUTTON]
+ONBUTTON=0
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+ONBUTTON=1
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+
+
+//Player lost
+[DIALOG d_roulette_lost]
+100, 100
+PAGE 0
+resizepic 63 61 3500 350 100
+button 205 110 249 248 1 0 1
+text 110 80 95 0
+
+[DIALOG d_roulette_lost TEXT]
+You have lost.  Please play again.
+
+[DIALOG d_roulette_lost BUTTON]
+ONBUTTON=0
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+ONBUTTON=1
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+
+
+//Wager dialog
+[DIALOG d_roulette_wager]
+100,50                                // Position
+resizepic 190 175 5054 335 150        // Curved Grey background
+resizepic 200 185 3000 315 130        // Curved White background
+resizepic 220 235 3000 270 22         // Curved White background
+text 215 200 995 0                    // Place wager
+text 255 275 0000 1                   // Continue Text
+button 220 275 4005 4007 1 0 1        // Opens Continue
+text 435 275 0000 2                   // Cancel Text
+button 400 275 4005 4007 1 0 0        // Opens Cancel
+textentry 225 237 253 25 0 0 3        // Text Input
+
+[DIALOG d_roulette_wager TEXT]
+What do you wish to wager?
+Continue
+Cancel
+<EVAL <SRC.TAG.WAGER>>
+
+[DIALOG d_roulette_wager BUTTON]
+ONBUTTON=0
+   TAG.WAGER=0
+   SRC.SYSMESSAGE="You decide not to gamble."
+ONBUTTON=1
+   IF ((<EVAL <ARGTXT[0]>>)>1000)
+      SRC.DIALOG d_roulette_big_wager
+      RETURN 1
+   ENDIF
+   IF !(<RESTEST <ARGTXT[0]> i_gold>)
+      SRC.DIALOG d_roulette_not_wager
+      RETURN 1
+   ENDIF
+   SRC.TAG.WAGER=<ARGTXT[0]>
+   SRC.SYSMESSAGE="You place a wager."
+   SRC.DIALOG d_roulette_main
+   RETURN 1
+
+
+//Not enough for wager
+[DIALOG d_roulette_not_wager]
+100, 100
+PAGE 0
+resizepic 63 61 3500 300 100
+text 110 85 95 0
+button 175 110 249 248 1 0 1
+
+[DIALOG d_roulette_not_wager TEXT]
+You do not have enough gold!
+
+[DIALOG d_roulette_not_wager BUTTON]
+ONBUTTON=0
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+ONBUTTON=1
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+
+
+//Too much for wager
+[DIALOG d_roulette_big_wager]
+100, 100
+PAGE 0
+resizepic 63 61 3500 300 100
+text 100 85 95 0
+button 165 110 249 248 1 0 1
+
+[DIALOG d_roulette_big_wager TEXT]
+Max bet is 1,000 gold pieces!
+
+[DIALOG d_roulette_big_wager BUTTON]
+ONBUTTON=0
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+ONBUTTON=1
+   //Load the roulette gump
+   SRC.DIALOG d_roulette_main
+
+[EOF]

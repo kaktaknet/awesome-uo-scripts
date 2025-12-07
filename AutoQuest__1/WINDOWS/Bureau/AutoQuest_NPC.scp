@@ -1,0 +1,369 @@
+// AutoQuest NPC by AdminJamie (electricgod@hotmail.com)
+
+// Simply extra this file to your scripts directory, customize the "main badguy"
+
+// to your satisfaction. Also you should customize the reward that the player
+
+// recieves. Place the quest npc somewhere that players are likely to find it.
+
+// Then set a spawn up of the baddie npc and you're ready to go.
+
+//
+
+// Depending on the responses I get from this (it being my first attempt at an
+
+// auto-quest) I might make it more easily configurable or...MORE quests :)
+
+//
+
+
+
+[CHARDEF c_spirit_quest]
+
+NAME=#NAMES_HUMANFEMALE the Spirit Seeker
+
+ID=c_woman
+
+CAN=MT_WALK|MT_FLY|MT_FEMALE
+
+TSPEECH=spk_spirit_quest
+
+
+
+CATEGORY=Custom
+
+SUBSECTION=Quest NPCs
+
+DESCRIPTION=Spirit Seeker
+
+
+
+On=@Create
+
+FLAGS=statf_invul|statf_freeze
+
+
+
+STR={400 600}
+
+DEX={400 600}
+
+INT={400 600}
+
+
+
+FENCING={400.0 600.0}
+
+WRESTLING={400.0 600.0}
+
+MAGICRESISTANCE={400.0 600.0}
+
+TACTICS={400.0 600.0}
+
+STEALTH={400.0 600.0}
+
+HIDING={400.0 600.0}
+
+DETECTINGHIDDEN={400.0 600.0}
+
+ANATOMY={400.0 600.0}
+
+MAGERY={400.0 600.0}
+
+
+
+KARMA=10000
+
+FAME=10000
+
+
+
+ITEMNEWBIE=i_death_shroud
+
+ITEM=i_armor_female_plate
+
+COLOR=07ba
+
+ITEM=i_boots_calf
+
+COLOR=07ba
+
+ITEM=i_cape
+
+COLOR=07ba
+
+ITEMNEWBIE=i_hair_long
+
+COLOR=07ba
+
+
+
+[SPEECH spk_spirit_quest]
+
+ON=*hail*
+
+ON=*greeting*
+
+ON=*sup*
+
+SAY Greetings traveler. Well what is it? Speak up as I am on a vital 'quest'.
+
+Return 1
+
+
+
+// Right here you need to customize the clues the NPC will give for the quest.
+
+ON=*quest*
+
+ON=*mission*
+
+ON=*job*
+
+IF <SRC.TAG.SPIRITQUEST>==01
+
+SAY I've already told you the details of my quest and you have agreed to help or have you forgotten? I do so hate to repeat myself.
+
+ELSE
+
+SAY <INSERT CLUES FOR YOUR QUEST HERE.> 
+
+SAY <INSERT CLUES FOR YOUR QUEST HERE.> To join this quest tell me 'join'.
+
+ENDIF
+
+Return 1
+
+
+
+ON=*join*
+
+IF <SRC.TAG.SPIRITQUEST>==01
+
+SAY You are already on a quest for me. Return when you have completed it or tell me 'resign' to forfeit your reward.
+
+ELSE
+
+SAY Very well, but do return to me with the artifact as soon as possible. When you have the item come to me and say 'complete'.
+
+SRC.TAG.SPIRITQUEST=01
+
+ENDIF
+
+Return 1
+
+
+
+ON=*resign*
+
+IF <SRC.TAG.SPIRITQUEST>==01
+
+SAY You disappoint me but I shall release you of your promise. Do not trouble me again in the near future for I have no time for cowards.
+
+SRC.TAG.SPIRITQUEST=00
+
+ELSE
+
+SAY You are not on a quest from me, therefore I can not release you from it.
+
+ENDIF
+
+Return 1
+
+
+
+// And here you need to customize the reward the NPC gives the player upon
+
+// completion.
+
+ON=*complete*
+
+IF <SRC.TAG.SPIRITQUEST>==01
+
+IF <SRC.RESTEST 1 i_gem_spirit>
+
+SRC.TAG.SPIRITQUEST=00
+
+SRC.CONSUME 1 i_gem_spirit
+
+SAY I thank you for completing the quest. Here is your reward.
+
+SRC.NEWITEM={<INSERT REWARDS FOR PLAYER COMPLETING QUEST> }
+
+SRC.ACT.BOUNCE
+
+ELSE
+
+SAY You have not retrieved the item I seek. Return when you have.
+
+ELSE
+
+SAY You are not on a quest from me. Seek your rewards elsewhere.
+
+ENDIF
+
+ENDIF
+
+Return 1
+
+
+
+[itemdef i_gem_spirit]
+
+ID=i_virtstone_2
+
+NAME=Gem of the Spirit
+
+VALUE=1
+
+WEIGHT=30
+
+
+
+CATEGORY=Custom
+
+SUBSECTION=Quest Items
+
+DESCRIPTION=Spirit Gem
+
+
+
+On=@Create
+
+COLOR=07ba
+
+
+
+[CHARDEF c_spirit_gem_thief]
+
+DEFNAME=c_spirit_gem_thief
+
+NAME=#NAMES_HUMANFEMALE the Gem Thief
+
+ID=C_WOMAN
+
+CAN=MT_WALK|MT_FLY|MT_FEMALE
+
+DESIRES=i_gold,e_notoriety
+
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+
+
+ON=@Create
+
+COLOR=0455
+
+
+
+STR={600 850}
+
+DEX={175 225}
+
+INT={300 400}
+
+//ALIGNMENT=EVIL
+
+
+
+FENCING={220.0 300.0}
+
+MACEFIGHTING={220.0 300.0}
+
+WRESTLING={220.0 300.0}
+
+MAGICRESISTANCE={300.0 500.0}
+
+TACTICS={220.0 300.0}
+
+DETECTINGHIDDEN={120.0 200.0}
+
+ANATOMY={220.0 300.0}
+
+MAGERY={280.0 400.0}
+
+PARRYING={220.0 300.0}
+
+
+
+NPC=brain_monster
+
+
+
+KARMA={-7500 -9000}
+
+FAME={10000 10000}
+
+
+
+ITEMNEWBIE=i_hair_long
+
+COLOR=07ba
+
+
+
+ON=@NPCRestock
+
+ITEM=i_spellbook
+
+COLOR=0455
+
+MORE1=064200890
+
+MORE2=01140120
+
+ITEM=i_platemail_gloves
+
+ITEM=i_platemail_helm
+
+ITEM=i_platemail_arms
+
+ITEM=i_platemail_gorget
+
+ITEM=i_platemail_chest
+
+ITEM=i_platemail_leggings
+
+ITEM=i_sword_viking
+
+ITEM=i_CAPE
+
+COLOR=020
+
+ITEM=i_SASH
+
+COLOR=020
+
+ITEM=i_apron_half
+
+COLOR=020
+
+ITEM={ random_jewel 1 0 1 }
+
+ITEM={ random_jewel 1 0 1 }
+
+ITEM={ random_jewel 1 0 1 }
+
+ITEM={ random_jewel 1 0 1 }
+
+ITEM=i_gold,{250 450}
+
+ITEM=101634, R15
+
+ITEM=03ea0
+
+COLOR=07a3
+
+
+
+CATEGORY=Custom
+
+SUBSECTION=Quest NPCs
+
+DESCRIPTION=Spirit Bad Guy
+
+
+
+
+
+[EOF]

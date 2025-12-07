@@ -1,0 +1,381 @@
+//HORZA WEAPON ENCHANTMENTS**********FILE: horzaenchants_effects.scp**********
+//SPHERE by : Menasoft ©1997-2000 
+//www.sphereserver.com 
+// All SPHERE script files and formats are copyright Menasoft & Partners. 
+// All donations and contributions become the property of Menasoft 
+// & Partners. 
+// 
+// This file was create by Developer Horza and Admin Lazerus for Private and 
+// shared use on The Arilum Shard and Script Sharing Network. All Code and Copyright 
+// is the property of Menasoft & Partners. 
+// 
+//      ______________________________________________________________________
+// ----| All thanks and credit to Bringer of death, this is a remake of his   |
+// ----| enchantments script for The Dark Shard and Dawn of Britannia & Dawn  |
+// ----| of Britannia 2, remade from start to finish. Concept given by him.   |
+//      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+// Please do not edit this header to give Credit to its writers and Creators.
+//****************************************************************************
+//Version 1.0
+//****************************************************************************
+//                                   Intentions 
+//---------------------------------------------------------------------------- 
+//
+//	-For admins/hosts to put the scrolls into large monster loot at random
+//	 along with magic weapons. Does not work well with weapons which
+//	 already use effects for the enchantments give all useable weapons
+//	 there own effect although not scripted on. This was intended for
+//	 larger monsters or maybe as rewards for various things.
+//
+//**************************************************************************** 
+// FILE LAST UPDATED: Friday, September 27th, 2002
+
+[FUNCTION DAEMON]
+NEWITEM = i_fire_column
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 089
+ACT.TYPE T_NORMAL
+
+[FUNCTION DEVIL]
+NEWITEM = i_fire_column
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 0f1
+ACT.TYPE T_NORMAL
+
+[FUNCTION DRAGOON]
+NEWITEM = i_fx_bless_effect
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 020
+ACT.TYPE T_NORMAL
+ACT.MOVE N
+NEWITEM = i_fx_bless_effect
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 020
+ACT.TYPE T_NORMAL
+ACT.MOVE S
+NEWITEM = i_fx_bless_effect
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 020
+ACT.TYPE T_NORMAL
+ACT.MOVE E
+NEWITEM = i_fx_bless_effect
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 020
+ACT.TYPE T_NORMAL
+ACT.MOVE W
+SRC.EFFECT=1,03728,35,35,1
+SRC.EFFECT=1,03728,35,35,2
+SRC.EFFECT=1,03728,35,35,0
+SRC.EFFECT=1,03728,35,35,1
+SRC.EFFECT=1,03728,35,35,2
+SRC.EFFECT=1,03728,35,35,0
+
+[FUNCTION ALTHALUS]
+NEWITEM = i_fx_glow_spike
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 059
+ACT.TYPE T_NORMAL
+NEWITEM = i_fx_glow
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 055
+ACT.TYPE T_NORMAL
+
+[FUNCTION LEMON]
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = colors_yellow
+ACT.TYPE T_NORMAL
+ACT.MOVE = 0 2
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = colors_yellow
+ACT.TYPE T_NORMAL
+ACT.MOVE = 2 0
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = colors_yellow
+ACT.TYPE T_NORMAL
+ACT.MOVE = -1 -1
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = colors_yellow
+ACT.TYPE T_NORMAL
+ACT.MOVE = -1 1
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = colors_yellow
+ACT.TYPE T_NORMAL
+ACT.MOVE = 1 -1
+
+[FUNCTION MAGIC]
+SPELLEFFECT=s_cure,1000
+SPELLEFFECT=s_greater_heal,1000
+
+[FUNCTION EGYPT]
+DORAND 2
+	VAR.saygypt=1
+	VAR.saygypt=2
+ENDDO
+IF <VAR.saygypt>==1
+	SYSMESSAGE You feal your self resisiting magic past your knowledge.
+	IF <EVAL <FINDLAYER.2.MOREM>>==52 || <EVAL <FINDLAYER.1.MOREM>>==52>
+		DAMAGE 5
+	ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53 || <EVAL <FINDLAYER.1.MOREM>>==53>
+		DAMAGE 7
+	ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53 || <EVAL <FINDLAYER.1.MOREM>>==53>
+		DAMAGE 9
+	ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53 || <EVAL <FINDLAYER.1.MOREM>>==53>
+		DAMAGE 13
+	ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53 || <EVAL <FINDLAYER.1.MOREM>>==53>
+		DAMAGE 18
+	ENDIF
+ELSEIF <VAR.saygypt>==2
+	SYSMESSAGE You are caught in a ball of thunder.
+	SPELLEFFECT=s_paralize,1000
+	SRC.EFFECT=1,03728,35,35,0
+	SRC.EFFECT=1,03728,35,35,1
+	SRC.EFFECT=1,03728,35,35,2
+	SRC.EFFECT=1,03728,35,35,0
+	SRC.EFFECT=1,03728,35,35,1
+	SRC.EFFECT=1,03728,35,35,2
+	SRC.EFFECT=1,03728,35,35,0
+	SRC.EFFECT=1,03728,35,35,1
+	SRC.EFFECT=1,03728,35,35,2
+	SRC.EFFECT=1,03728,35,35,0
+	IF <EVAL <FINDLAYER.2.MOREM>>==52 || <EVAL <FINDLAYER.1.MOREM>>==52>
+		DAMAGE 10
+	ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53 || <EVAL <FINDLAYER.1.MOREM>>==53>
+		DAMAGE 12
+	ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53 || <EVAL <FINDLAYER.1.MOREM>>==53>
+		DAMAGE 14
+	ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53 || <EVAL <FINDLAYER.1.MOREM>>==53>
+		DAMAGE 18
+	ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53 || <EVAL <FINDLAYER.1.MOREM>>==53>
+		DAMAGE 23
+	ENDIF
+ENDIF
+	
+
+[FUNCTION GHE]
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 02
+ACT.TYPE T_NORMAL
+ACT.MOVE = 0 2
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 03
+ACT.TYPE T_NORMAL
+ACT.MOVE = 2 0
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 04
+ACT.TYPE T_NORMAL
+ACT.MOVE = -1 -1
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 05
+ACT.TYPE T_NORMAL
+ACT.MOVE = -1 1
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 06
+ACT.TYPE T_NORMAL
+ACT.MOVE = 1 -1
+
+[FUNCTION INFERNO]
+NEWITEM = i_fire_column
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 028
+ACT.TYPE T_NORMAL
+
+[FUNCTION CLOUD]
+NEWITEM = i_fire_column
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = colors_black
+ACT.TYPE T_NORMAL
+
+[FUNCTION ELECTRICITY]
+SRC.EFFECT=1,03728,35,35,0
+SRC.EFFECT=1,03728,35,35,1
+SRC.EFFECT=1,03728,35,35,2
+SRC.EFFECT=1,03728,35,35,0
+SRC.EFFECT=1,03728,35,35,1
+SRC.EFFECT=1,03728,35,35,2
+SRC.EFFECT=1,03728,35,35,0
+SRC.EFFECT=1,03728,35,35,1
+SRC.EFFECT=1,03728,35,35,2
+SRC.EFFECT=1,03728,35,35,0
+
+[FUNCTION FLAME]
+NEWITEM = i_fx_explode
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.TYPE T_NORMAL
+
+[FUNCTION VORTEX]
+NEWITEM = 037cc
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 2
+ACT.P = <SRC.P>
+ACT.COLOR = 0791
+ACT.TYPE T_NORMAL
+ACT.MOVE = N
+NEWITEM = 037cc
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 2
+ACT.P = <SRC.P>
+ACT.COLOR = 0791
+ACT.TYPE T_NORMAL
+ACT.MOVE = S
+NEWITEM = 037cc
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 2
+ACT.P = <SRC.P>
+ACT.COLOR = 0791
+ACT.TYPE T_NORMAL
+ACT.MOVE = E
+NEWITEM = 037cc
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 2
+ACT.P = <SRC.P>
+ACT.COLOR = 0791
+ACT.TYPE T_NORMAL
+ACT.MOVE = W
+
+[FUNCTION FROST]
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = color_snow
+ACT.TYPE T_NORMAL
+ACT.MOVE = N
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = color_snow
+ACT.TYPE T_NORMAL
+ACT.MOVE = SE
+NEWITEM = 037c4
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = color_snow
+ACT.TYPE T_NORMAL
+ACT.MOVE = SW
+
+[FUNCTION STORMBLAST]
+NEWITEM = i_fx_explode
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 078f
+ACT.TYPE T_NORMAL
+ACT.MOVE = N
+NEWITEM = i_fx_explode
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 078f
+ACT.TYPE T_NORMAL
+ACT.MOVE = S
+NEWITEM = i_fx_explode
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 078f
+ACT.TYPE T_NORMAL
+ACT.MOVE = E
+NEWITEM = i_fx_explode
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 078f
+ACT.TYPE T_NORMAL
+ACT.MOVE = W
+SRC.EFFECT=1,03728,35,35,0
+SRC.EFFECT=1,03728,35,35,1
+SRC.EFFECT=1,03728,35,35,2
+SRC.EFFECT=1,03728,35,35,0
+SRC.EFFECT=1,03728,35,35,1
+SRC.EFFECT=1,03728,35,35,2
+SRC.EFFECT=1,03728,35,35,0
+SRC.EFFECT=1,03728,35,35,1
+SRC.EFFECT=1,03728,35,35,2
+
+[FUNCTION RUNE_WATER]
+NEWITEM = i_fx_sparkle
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 0b
+ACT.TYPE T_NORMAL
+
+[FUNCTION RUNE_FIRE]
+NEWITEM = i_fx_sparkle
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 026
+ACT.TYPE T_NORMAL
+
+[FUNCTION RUNE_ICE]
+NEWITEM = i_fx_sparkle
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 02b2
+ACT.TYPE T_NORMAL
+
+[FUNCTION RUNE_LIGHT]
+NEWITEM = i_fx_sparkle
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR = 035
+ACT.TYPE T_NORMAL
+
+[EOF]

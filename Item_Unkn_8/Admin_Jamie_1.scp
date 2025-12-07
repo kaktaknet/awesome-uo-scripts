@@ -1,0 +1,1365 @@
+// Originally posted by someone on the old sphereserver message boards.
+
+// Modified and updated by Admin Jamie/Jerren of Dark Realms.
+
+//
+
+// I removed all of the custom CTF weapons except for the bow and created
+
+// my own weapon stone that allows players to d-click it and choose their
+
+// weapon. If you dont like them getting power weaps for CTF then go to
+
+// the weaponstone and change it to whatever weaps you see fit. I also
+
+// changed the robes around to where they record the characters old color,
+
+// karma, fame, and kills for restoration on removing the robe.
+
+//
+
+// This is the closest I have currently to a completely auto-mated CTF
+
+// system. You will have to change the SRC.GO coords on the team stones
+
+// to wherever you have your CTF area setup. Other than that I've had
+
+// no problem running several tournements with this script thus far.
+
+//
+
+// As always send comments/suggestions/ect... to electricgod@hotmail.com
+
+
+
+[itemdef i_Green_team_robe]
+
+NAME= Green Team Robe
+
+TYPE=t_clothing
+
+ID=0204e
+
+WEIGHT=0.1
+
+ARMOR=75
+
+
+
+ON=@CREATE
+
+COLOR=0044
+
+HITPOINTS=500
+
+ATTR=000c
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Welcome To CTF! If you are wearing a different teams robe you will be kicked from CTF!
+
+SRC.TAG.OLDCOLOR=<SRC.COLOR>
+
+SRC.TAG.OLDKARMA=<SRC.KARMA>
+
+SRC.TAG.OLDFAME=<SRC.FAME>
+
+SRC.TAG.OLDKILLS=<SRC.KILLS>
+
+SRC.COLOR=0044
+
+SRC.STR=<SRC.STR> +10
+
+SRC.INT=<SRC.INT> +10
+
+SRC.DEX=<SRC.DEX> +10
+
+SRC.EFFECT=3,03715,6,15,1
+
+SOUND=263
+
+SRC.DAMAGE=0
+
+
+
+ON=@UNEQUIP
+
+SRC.MESSAGE Please do not remove the robe till the game is over!
+
+SRC.COLOR=<SRC.TAG.OLDCOLOR>
+
+SRC.KARMA=<SRC.TAG.OLDKARMA>
+
+SRC.FAME=<SRC.TAG.OLDFAME>
+
+SRC.KILLS=<SRC.TAG.OLDKILLS>
+
+SRC.COLOR=<SRC.TAG.OLDCOLOR>
+
+SRC.STR=<SRC.STR>+-10
+
+SRC.INT=<SRC.INT>+-10
+
+SRC.DEX=<SRC.DEX>+-10
+
+SOUND=246
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Ctf robe (Green)
+
+
+
+[itemdef i_Red_team_robe]
+
+NAME= Red Team Robe
+
+TYPE=t_clothing
+
+ID=0204e
+
+WEIGHT=0.1
+
+ARMOR=75
+
+
+
+ON=@CREATE
+
+COLOR=0089
+
+HITPOINTS=500
+
+ATTR=000c
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Welcome To CTF! If you are wearing a different teams robe you will be kicked from CTF!
+
+SRC.TAG.OLDCOLOR=<SRC.COLOR>
+
+SRC.TAG.OLDKARMA=<SRC.KARMA>
+
+SRC.TAG.OLDFAME=<SRC.FAME>
+
+SRC.TAG.OLDKILLS=<SRC.KILLS>
+
+SRC.COLOR=0089
+
+SRC.STR=<SRC.STR> +10
+
+SRC.INT=<SRC.INT> +10
+
+SRC.DEX=<SRC.DEX> +10
+
+SRC.EFFECT=3,03715,6,15,1
+
+SOUND=263
+
+SRC.DAMAGE=0
+
+
+
+ON=@UNEQUIP
+
+SRC.MESSAGE Please do not remove the robe till the game is over!
+
+SRC.COLOR=<SRC.TAG.OLDCOLOR>
+
+SRC.KARMA=<SRC.TAG.OLDKARMA>
+
+SRC.FAME=<SRC.TAG.OLDFAME>
+
+SRC.KILLS=<SRC.TAG.OLDKILLS>
+
+SRC.COLOR=<SRC.TAG.OLDCOLOR>
+
+SRC.STR=<SRC.STR>+-10
+
+SRC.INT=<SRC.INT>+-10
+
+SRC.DEX=<SRC.DEX>+-10
+
+SOUND=246
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Ctf robe (Red)
+
+
+
+[itemdef i_Blue_team_robe]
+
+NAME= Blue Team Robe
+
+TYPE=t_clothing
+
+ID=0204e
+
+WEIGHT=0.1
+
+ARMOR=75
+
+
+
+ON=@CREATE
+
+COLOR=00cb
+
+HITPOINTS=500
+
+ATTR=000c
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Welcome To CTF! If you are wearing a different teams robe you will be kicked from CTF!
+
+SRC.TAG.OLDCOLOR=<SRC.COLOR>
+
+SRC.TAG.OLDKARMA=<SRC.KARMA>
+
+SRC.TAG.OLDFAME=<SRC.FAME>
+
+SRC.TAG.OLDKILLS=<SRC.KILLS>
+
+SRC.COLOR=00cb
+
+SRC.STR=<SRC.STR> +10
+
+SRC.INT=<SRC.INT> +10
+
+SRC.DEX=<SRC.DEX> +10
+
+SRC.EFFECT=3,03715,6,15,1
+
+SOUND=263
+
+SRC.DAMAGE=0
+
+
+
+ON=@UNEQUIP
+
+SRC.MESSAGE Please do not remove the robe till the game is over!
+
+SRC.COLOR=<SRC.TAG.OLDCOLOR>
+
+SRC.KARMA=<SRC.TAG.OLDKARMA>
+
+SRC.FAME=<SRC.TAG.OLDFAME>
+
+SRC.KILLS=<SRC.TAG.OLDKILLS>
+
+SRC.COLOR=<SRC.TAG.OLDCOLOR>
+
+SRC.STR=<SRC.STR>+-10
+
+SRC.INT=<SRC.INT>+-10
+
+SRC.DEX=<SRC.DEX>+-10
+
+SOUND=246
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Ctf robe (Blue)
+
+
+
+[itemdef i_Yellow_team_robe]
+
+NAME= Yellow Team Robe
+
+TYPE=t_clothing
+
+ID=0204e
+
+WEIGHT=0.1
+
+ARMOR=75
+
+
+
+ON=@CREATE
+
+COLOR=0035
+
+HITPOINTS=500
+
+ATTR=000c
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Welcome To CTF! If you are wearing a different teams robe you will be kicked from CTF!
+
+SRC.TAG.OLDCOLOR=<SRC.COLOR>
+
+SRC.TAG.OLDKARMA=<SRC.KARMA>
+
+SRC.TAG.OLDFAME=<SRC.FAME>
+
+SRC.TAG.OLDKILLS=<SRC.KILLS>
+
+SRC.COLOR=0035
+
+SRC.STR=<SRC.STR> +10
+
+SRC.INT=<SRC.INT> +10
+
+SRC.DEX=<SRC.DEX> +10
+
+SRC.EFFECT=3,03715,6,15,1
+
+SOUND=263
+
+SRC.DAMAGE=0
+
+
+
+ON=@UNEQUIP
+
+SRC.MESSAGE Please do not remove the robe till the game is over!
+
+SRC.COLOR=<SRC.TAG.OLDCOLOR>
+
+SRC.KARMA=<SRC.TAG.OLDKARMA>
+
+SRC.FAME=<SRC.TAG.OLDFAME>
+
+SRC.KILLS=<SRC.TAG.OLDKILLS>
+
+SRC.COLOR=<SRC.TAG.OLDCOLOR>
+
+SRC.STR=<SRC.STR>+-10
+
+SRC.INT=<SRC.INT>+-10
+
+SRC.DEX=<SRC.DEX>+-10
+
+SOUND=246
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Ctf robe (Yellow)
+
+
+
+[ITEMDEF i_Green_Team_Stone]
+
+NAME=Dbl Click to join green Team
+
+ID=0edb
+
+ON=@Create
+
+COLOR=0044
+
+
+
+ON=@DCLICK
+
+IF !(<SRC.WEIGHT>==60)
+
+SRC.MESSAGE You must be naked and not on a mount to play with no items in your pack. All needed items are provided. No other items allowed.
+
+RETURN 1
+
+ELSE
+
+SRC.NEWITEM=i_ctf_weap_stone
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_green_ctf_shield
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_green_ctf_bow
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_bandage
+
+SRC.ACT.AMOUNT=50
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=0f3f
+
+SRC.ACT.AMOUNT=125
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_green_team_robe
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=101540
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_CTF_Spellbook
+
+SRC.ACT.COLOR=0044
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=0209f
+
+SRC.ACT.COLOR=0044
+
+SRC.ACT.NAME=Green Team Flag
+
+SRC.ACT.BOUNCE
+
+SRC.FIX
+
+SRC.GO 1303,442,0,11
+
+SRC.MESSAGE The Rules of the game are no summoning anything! 
+
+RETURN 1
+
+ENDIF
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Green CTF Stone
+
+
+
+[ITEMDEF i_Red_Team_Stone]
+
+NAME=Dbl Click to join red Team
+
+ID=0edb
+
+
+
+ON=@Create
+
+COLOR=0089
+
+
+
+ON=@DCLICK
+
+IF !(<SRC.WEIGHT>==60)
+
+SRC.MESSAGE You must be naked and not on a mount to play with no items in your pack. All needed items are provided. No other items allowed.
+
+RETURN 1
+
+ELSE
+
+SRC.NEWITEM=i_ctf_weap_stone
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_red_ctf_shield
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_red_ctf_bow
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_bandage
+
+SRC.ACT.AMOUNT=50
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=0f3f
+
+SRC.ACT.AMOUNT=125
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_red_team_robe
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=101540
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_CTF_Spellbook
+
+SRC.ACT.COLOR=0089
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=0209f
+
+SRC.ACT.COLOR=0089
+
+SRC.ACT.NAME=Red Team Flag
+
+SRC.ACT.BOUNCE
+
+SRC.FIX
+
+SRC.GO 1208,441,0,11
+
+SRC.MESSAGE The Rules of the game are no summoning anything! 
+
+RETURN 1
+
+ENDIF
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Red CTF Stone
+
+
+
+[ITEMDEF i_Blue_Team_Stone]
+
+NAME=Dbl Click to join Blue Team
+
+ID=0edb
+
+ON=@Create
+
+COLOR=00cb
+
+
+
+ON=@DCLICK
+
+IF !(<SRC.WEIGHT>==60)
+
+SRC.MESSAGE You must be naked and not on a mount to play with no items in your pack. All needed items are provided. No other items allowed.
+
+RETURN 1
+
+ELSE
+
+SRC.NEWITEM=i_ctf_weap_stone
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_blue_ctf_shield
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_blue_ctf_bow
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_bandage
+
+SRC.ACT.AMOUNT=50
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=0f3f
+
+SRC.ACT.AMOUNT=125
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_blue_team_robe
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=101540
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_CTF_Spellbook
+
+SRC.ACT.COLOR=00cb
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=0209f
+
+SRC.ACT.COLOR=00cb
+
+SRC.ACT.NAME=Blue Team Flag
+
+SRC.ACT.BOUNCE
+
+SRC.FIX
+
+SRC.GO 1216,541,0,11
+
+SRC.MESSAGE The Rules of the game are no summoning anything! 
+
+RETURN 1
+
+ENDIF
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Blue CTF Stone
+
+
+
+[ITEMDEF i_Yellow_Team_Stone]
+
+NAME=Dbl Click to join Yellow Team
+
+ID=0edb
+
+ON=@Create
+
+COLOR=0035
+
+
+
+ON=@DCLICK
+
+IF !(<SRC.WEIGHT>==60)
+
+SRC.MESSAGE You must be naked and not on a mount to play with no items in your pack. All needed items are provided. No other items allowed.
+
+RETURN 1
+
+ELSE
+
+SRC.NEWITEM=i_ctf_weap_stone
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_yellow_ctf_shield
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_yellow_ctf_bow
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_bandage
+
+SRC.ACT.AMOUNT=50
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=0f3f
+
+SRC.ACT.AMOUNT=125
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_yellow_team_robe
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=101540
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=i_CTF_Spellbook
+
+SRC.ACT.COLOR=0035
+
+SRC.ACT.BOUNCE
+
+SRC.NEWITEM=0209f
+
+SRC.ACT.COLOR=0035
+
+SRC.ACT.NAME=Yellow Team Flag
+
+SRC.ACT.BOUNCE
+
+SRC.FIX
+
+SRC.GO 1292,545,0,11
+
+SRC.MESSAGE The Rules of the game are no summoning anything! 
+
+RETURN 1
+
+ENDIF
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Yellow CTF Stone
+
+
+
+[ITEMDEF i_ctf_weap_stone]
+
+ID=i_rune_marker
+
+NAME=CTF Weapon Stone
+
+TYPE=t_script
+
+
+
+On=@Create
+
+COLOR=07db
+
+
+
+On=@Dclick
+
+REMOVE
+
+SRC.MENU m_weap_main
+
+
+
+[MENU m_weap_main]
+
+This is the main weapon menu for Capture the flag. Select your weapon type now. Canceling this menu will mean you do not get a weapon. Do NOT cancel this menu without selecting a weapon.
+
+
+
+On=0 Swords and Blades
+
+SRC.MENU m_ctf_weap_swords
+
+
+
+On=0 Maces and Hammers
+
+SRC.MENU m_ctf_weap_maces
+
+
+
+On=0 Polearms
+
+SRC.MENU m_ctf_weap_polearms
+
+
+
+On=0 Axes and Forks
+
+SRC.MENU m_ctf_weap_axes
+
+
+
+[MENU m_ctf_weap_swords]
+
+Select your weapon.
+
+
+
+On=0 Broadsword
+
+SRC.NEWITEM=0413d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Custlass
+
+SRC.NEWITEM=0411d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Katana
+
+SRC.NEWITEM=0412d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Kryss
+
+SRC.NEWITEM=04142
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Longsword
+
+SRC.NEWITEM=0414d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Scimitar
+
+SRC.NEWITEM=0410c
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Viking Sword
+
+SRC.NEWITEM=04122
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Previous Menu
+
+SRC.MENU m_weap_main
+
+
+
+[MENU m_ctf_weap_maces]
+
+Select your weapon.
+
+
+
+On=0 Club
+
+SRC.NEWITEM=04163
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Hammer Pick
+
+SRC.NEWITEM=04178
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Mace
+
+SRC.NEWITEM=04168
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Maul
+
+SRC.NEWITEM=0416d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 War Hammer
+
+SRC.NEWITEM=0417d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Previous Menu
+
+SRC.MENU m_weap_main
+
+
+
+[MENU m_ctf_weap_polearms]
+
+Select your weapon.
+
+
+
+On=0 Bardiche
+
+SRC.NEWITEM=04117
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Halbard
+
+SRC.NEWITEM=04113
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Pitchfork
+
+SRC.NEWITEM=04137
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Short Spear
+
+SRC.NEWITEM=04158
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Spear
+
+SRC.NEWITEM=04147
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Previous Menu
+
+SRC.MENU m_weap_main
+
+
+
+[MENU m_ctf_weap_axes]
+
+Select your weapon.
+
+
+
+On=0 Axe
+
+SRC.NEWITEM=04183
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Battle Axe
+
+SRC.NEWITEM=0418d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Double Axe
+
+SRC.NEWITEM=04193
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Executioner's Axe
+
+SRC.NEWITEM=04188
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Large Battle Axe
+
+SRC.NEWITEM=041a3
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Two Handed Axe
+
+SRC.NEWITEM=04198
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 War Axe
+
+SRC.NEWITEM=0419d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 War Fork
+
+SRC.NEWITEM=0415d
+
+SRC.ACT.BOUNCE
+
+
+
+On=0 Previous Menu
+
+SRC.MENU m_weap_main
+
+
+
+[ITEMDEF i_CTF_Spellbook]
+
+TYPE=107
+
+NAME=CTF Spellbook
+
+ID=00efa
+
+ON=@CREATE
+
+SRC.COLOR=0044
+
+ATTR=0020
+
+MORE1=0ffffffff
+
+MORE2=0ffffffff
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Have fun!
+
+CATEGORY=CTF
+
+SUBSECTION=Server Items
+
+DESCRIPTION=Full Spell Book
+
+
+
+[ITEMDEF i_blue_ctf_bow]
+
+DEFNAME=i_blue_ctf_bow
+
+ID=i_bow
+
+NAME=Blue Team Bow
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Magic Bows
+
+DESCRIPTION=Blue Bow of Force
+
+
+
+ON=@Create
+
+MOREY=60.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 60}
+
+COLOR=00cb
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Welcome Blue Team Archer!
+
+SRC.EFFECT=3,03715,6,15,1
+
+
+
+ON=@DAMAGE
+
+SRC.EFFECT=3,03715,6,15,1
+
+SOUND=ELEMENTL_FIRELEM1
+
+SRC.DAMAGE=10,20
+
+SRC.SPELLEFFECT=8 750
+
+RETURN 0
+
+
+
+[ITEMDEF i_Green_ctf_bow]
+
+DEFNAME=i_green_ctf_bow
+
+ID=i_bow
+
+NAME=Green Team Bow
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Magic Bows
+
+DESCRIPTION=Green Bow of Force
+
+
+
+ON=@Create
+
+MOREY=60.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 60}
+
+COLOR=0044
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Welcome Green Team Archer!
+
+SRC.EFFECT=3,03715,6,15,1
+
+
+
+ON=@DAMAGE
+
+SRC.EFFECT=3,03715,6,15,1
+
+SOUND=ELEMENTL_FIRELEM1
+
+SRC.DAMAGE=10,20
+
+RETURN 0
+
+
+
+[ITEMDEF i_Red_ctf_bow]
+
+DEFNAME=i_red_ctf_bow
+
+ID=i_bow
+
+NAME=Red Team Bow
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Magic Bows
+
+DESCRIPTION=Red Bow of Force
+
+
+
+ON=@Create
+
+MOREY=60.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 60}
+
+COLOR=0089
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Welcome Red Team Archer!
+
+SRC.EFFECT=3,i_fx_bless_effect,6,15,1
+
+
+
+ON=@DAMAGE
+
+SRC.EFFECT=3,03715,6,15,1
+
+SOUND=ELEMENTL_FIRELEM1
+
+SRC.DAMAGE=10,20
+
+RETURN 0
+
+
+
+[ITEMDEF i_Yellow_ctf_bow]
+
+DEFNAME=i_Yellow_ctf_bow
+
+ID=i_bow
+
+NAME=Yellow Team Bow
+
+
+
+CATEGORY=CTF
+
+SUBSECTION=Magic Bows
+
+DESCRIPTION=Yellow Bow of Force
+
+
+
+ON=@Create
+
+MOREY=60.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 60}
+
+COLOR=0035
+
+
+
+ON=@EQUIP
+
+SRC.MESSAGE Welcome Yellow Team Archer!
+
+SRC.EFFECT=3,03715,6,15,1
+
+
+
+ON=@DAMAGE
+
+SRC.EFFECT=3,03715,6,15,1
+
+SOUND=ELEMENTL_FIRELEM1
+
+SRC.DAMAGE=10,20
+
+RETURN 0
+
+
+
+[ITEMDEF i_green_ctf_shield]
+
+DEFNAME=i_green_ctf_shield
+
+ID=I_SHIELD_HEATER
+
+NAME=Green Team Shield
+
+ARMOR=35
+
+CATEGORY=CTF
+
+SUBSECTION=Shields
+
+DESCRIPTION=Green Heater
+
+
+
+ON=@Create
+
+HITPOINTS=55
+
+COLOR=0044
+
+
+
+[ITEMDEF i_red_ctf_shield]
+
+DEFNAME=i_red_ctf_shield
+
+ID=I_SHIELD_HEATER
+
+NAME=Red Team Shield
+
+ARMOR=35
+
+CATEGORY=CTF
+
+SUBSECTION=Shields
+
+DESCRIPTION=Red Heater
+
+
+
+ON=@Create
+
+HITPOINTS=55
+
+COLOR=0089
+
+
+
+[ITEMDEF i_Blue_ctf_shield]
+
+DEFNAME=i_blue_ctf_shield
+
+ID=I_SHIELD_HEATER
+
+NAME=Blue Team Shield
+
+ARMOR=35
+
+CATEGORY=CTF
+
+SUBSECTION=Shields
+
+DESCRIPTION=Blue Heater
+
+
+
+ON=@Create
+
+HITPOINTS=55
+
+COLOR=00cb
+
+
+
+[ITEMDEF i_yellow_ctf_shield]
+
+DEFNAME=i_yellow_ctf_shield
+
+ID=I_SHIELD_HEATER
+
+NAME=Yellow Team Shield
+
+ARMOR=35
+
+CATEGORY=CTF
+
+SUBSECTION=Shields
+
+DESCRIPTION=Yellow Heater
+
+
+
+ON=@Create
+
+HITPOINTS=55
+
+COLOR=0035
+
+
+
+[EOF]

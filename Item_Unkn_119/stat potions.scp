@@ -1,0 +1,82 @@
+
+
+//===============================================//
+// Minus Stat Potions  				 //
+// By GM Samson aka Sanchezuk			 //
+// (www.krackatoah.cjb.net)			 //
+// Please dont remove this header.		 //
+//						 //
+// Three Alchemy potions to lower stats without  //
+// any hastle craftable by players. edit the     //
+// potions required regs potion color to suit    //
+// your needs.					 //
+//===============================================//
+
+//==== Add these below to your sphereskill.scp 
+//==== under the other potions in the alchemy section.
+
+//ON=i_potion_stumble <name> (<resmake>)
+//MAKEITEM=i_potion_stumble
+//ON=i_potion_forgetfull <name> (<resmake>)
+//MAKEITEM=i_potion_forgetfull
+//ON=i_potion_weakness <name> (<resmake>)
+//MAKEITEM=i_potion_weakness
+
+
+//============================================== - Int Potion
+
+[ITEMDEF i_potion_forgetfull]
+ID=0f0e
+TYPE=T_POTION
+NAME=Forgetfull Potion
+TDATA1=i_bottle_empty
+
+RESOURCES=10 i_reag_nightshade, 10 i_reag_worm_heart, i_bottle_empty
+SKILLMAKE=ALCHEMY 99.0
+
+ON=@CREATE
+COLOR=00685
+
+ON=@DCLICK
+SRC.INT=<SRC.INT>+-1
+SRC.CONSUME=1 i_potion_forgetfull
+
+//============================================== - Dex Potion
+
+[ITEMDEF i_potion_stumble]
+ID=0f0e
+TYPE=T_POTION
+NAME=Stumble Potion
+TDATA1=i_bottle_empty
+
+RESOURCES=10 i_reag_mandrake_root, 10 i_reag_serpent_scale, i_bottle_empty
+SKILLMAKE=ALCHEMY 99.0
+
+ON=@CREATE
+COLOR=00704
+
+ON=@DCLICK
+SRC.DEX=<SRC.DEX>+-1
+SRC.CONSUME=1 i_potion_stumble
+
+//============================================== - Str Potion
+
+[ITEMDEF i_potion_weakness]
+ID=0f0e
+TYPE=T_POTION
+NAME=Weakness Potion
+TDATA1=i_bottle_empty
+
+RESOURCES=10 i_reag_garlic, 10 i_reag_dragon_blood, i_bottle_empty
+SKILLMAKE=ALCHEMY 99.0
+
+
+ON=@CREATE
+COLOR=008b8
+
+ON=@DCLICK
+SRC.STR=<SRC.STR>+-1
+SRC.CONSUME=1 i_potion_weakness
+
+
+

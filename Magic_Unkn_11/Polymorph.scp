@@ -1,0 +1,1318 @@
+[FUNCTION SPELLARGN]
+
+
+VAR.SPELLARGN <ARGN> + 0dc000000
+
+
+
+
+
+[EVENTS e_polymorph]
+
+
+ON=@SpellEffect
+
+
+SPELLARGN <ARGN>
+
+
+IF (<VAR.SPELLARGN> == s_dispel) || (<VAR.SPELLARGN> == s_mass_dispel)
+
+
+IF (<FINDID.i_polymorph>)
+
+
+FLAGS <FLAGS> &~ statf_polymorph
+
+
+BODY <OBODY>
+
+
+COLOR <OSKIN>
+
+
+FINDID.i_polymorph.REMOVE
+
+
+ENDIF
+
+
+ELIF (<VAR.SPELLARGN> == s_polymorph)
+
+
+IF !(<FLAGS> & (statf_dead|statf_polymorph))
+
+
+FLAGS <FLAGS> | statf_polymorph
+
+
+
+
+
+NEWITEM i_polymorph
+
+
+ACT.MORE2 <TIME>
+
+
+ACT.CONT <UID>
+
+
+ACT.TAG.POLY <TAG.POLY>
+
+
+ACT.TIMER <EVAL (<SRC.MAGERY> / 2) - 20>
+
+
+
+
+
+NEWNPC <TAG.POLY>
+
+
+BODY <ACT.BODY>
+
+
+COLOR <ACT.COLOR>
+
+
+ACT.REMOVE
+
+
+
+
+
+UPDATE
+
+
+TAG.POLY
+
+
+RETURN 1
+
+
+ENDIF
+
+
+ENDIF
+
+
+
+
+
+ON=@Death
+
+
+IF (<FINDID.i_polymorph>)
+
+
+FLAGS <FLAGS> &~ statf_polymorph
+
+
+BODY <OBODY>
+
+
+COLOR <OSKIN>
+
+
+FINDID.i_polymorph.REMOVE
+
+
+ENDIF
+
+
+
+
+
+ON=@EnvirOnChange
+
+
+IF (<FLAGS> & statf_polymorph)
+
+
+BARK
+
+
+ENDIF
+
+
+
+
+
+ON=@CliPeriodic
+
+
+IF (<FLAGS> & statf_polymorph)
+
+
+BARK
+
+
+ENDIF
+
+
+
+
+
+[ITEMDEF i_polymorph]
+
+
+ID=i_rune_polymorph
+
+
+TYPE=t_eq_script
+
+
+NAME=Polymorph
+
+
+
+
+
+ON=@Create
+
+
+ATTR attr_decay
+
+
+
+
+
+ON=@Timer
+
+
+CONT.FLAGS <CONT.FLAGS> &~ statf_polymorph
+
+
+CONT.COLOR <CONT.OSKIN>
+
+
+CONT.BODY <CONT.OBODY>
+
+
+CONT.UPDATE
+
+
+
+
+
+[FUNCTION polynew]
+
+
+IF !(<ISEVENT.e_polymorph>)
+
+
+EVENTS e_polymorph
+
+
+ENDIF
+
+
+
+
+
+IF (<FLAGS> & statf_dead)
+
+
+TAG.POLYLEVEL
+
+
+ELIF (<FLAGS> & statf_polymorph)
+
+
+TAG.POLYLEVEL
+
+
+SYSMESSAGE You are already polymorphed.
+
+
+ELSE
+
+
+TAG.POLY <ARGS>
+
+
+POLY <ARGS>
+
+
+ENDIF
+
+
+
+
+
+[SKILLMENU sm_polymorph_70]
+
+
+What form do you wish to take?
+
+
+
+
+
+ON=i_pet_man Man
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_man
+
+
+ON=i_pet_woman Woman
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_woman
+
+
+ON=i_pet_croc Alligator
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_alligator
+
+
+ON=i_pet_bear Brown Bear
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_bear_brown
+
+
+ON=i_pet_grizzly Grizzly Bear
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_bear_grizzly
+
+
+ON=i_pet_bear_polar Polar Bear
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_bear_polar
+
+
+ON=i_pet_bird Bird
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_bird
+
+
+ON=i_pet_bull_brown_dk Dark Brown Bull
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_bull_brown_dk
+
+
+ON=i_pet_bull Light Brown Bull
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_bull_brown_lt
+
+
+ON=i_pet_bullfrog Bullfrog
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_bullfrog
+
+
+ON=i_pet_cat Cat
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_cat
+
+
+ON=i_pet_chicken Chicken
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_chicken
+
+
+ON=i_pet_cow Brown Cow
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_cow_brown
+
+
+ON=i_pet_cow Black & White Cow
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_cow_bw
+
+
+ON=i_pet_deer Doe
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_doe
+
+
+ON=i_pet_dog Dog
+
+
+TEST=MAGERY 70.0
+
+
+TAG.POLYLEVEL 1
+
+
+POLYNEW c_dog
+
+
+
+
+
+[SKILLMENU sm_polymorph_75]
+
+
+What form do you wish to take?
+
+
+
+
+
+ON=i_pet_eagle Eagle
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_eagle
+
+
+ON=i_pet_goat Goat
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_goat
+
+
+ON=i_pet_gorilla Gorilla
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_gorilla
+
+
+ON=i_pet_panther Panther
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_panther
+
+
+ON=i_pet_pig Pig
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_pig
+
+
+ON=i_pet_pig Boar
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_pig_big
+
+
+ON=i_pet_rabbit Rabbit
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_rabbit
+
+
+ON=i_pet_rat Rat
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_rat
+
+
+ON=i_pet_rat_2 Giant Rat
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_rat_giant
+
+
+ON=i_pet_sheep Shorn Sheep
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_sheep_shorn
+
+
+ON=i_pet_sheep Wooly Sheep
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_sheep_woolly
+
+
+ON=i_pet_snake Snake
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_snake
+
+
+ON=i_pet_deer Hart
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_stag
+
+
+ON=i_pet_walrus Walrus
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_walrus
+
+
+ON=i_pet_wisp Wisp
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_wisp
+
+
+ON=i_pet_wolf Wolf
+
+
+TEST=MAGERY 75.0
+
+
+TAG.POLYLEVEL 2
+
+
+POLYNEW c_wolf
+
+
+
+
+
+[SKILLMENU sm_polymorph_80]
+
+
+What form do you wish to take?
+
+
+
+
+
+ON=i_pet_slime Slime
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_slime
+
+
+ON=i_pet_headless Headless
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_headless
+
+
+ON=i_pet_harpy Harpy
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_harpy
+
+
+ON=i_pet_mongbat Mongbat
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_mongbat
+
+
+ON=i_pet_ratman Ratman
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_ratman
+
+
+ON=i_pet_ratman Ratman w/Mace
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_ratman_w_mace
+
+
+ON=i_pet_ratman Ratman w/Sword
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_ratman_w_sword
+
+
+ON=i_pet_snake_giant Giant Snake
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_snake_giant
+
+
+ON=i_pet_spider_giant Giant Spider
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_spider_giant
+
+
+ON=i_pet_toad_giant Giant Toad
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_toad_giant
+
+
+ON=i_pet_scorp Giant Scorpion
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_scorpion_giant
+
+
+ON=i_pet_lizman Lizardman
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_lizardman
+
+
+ON=i_pet_lizman Lizardman w/Mace
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_lizardman_mace
+
+
+ON=i_pet_lizman Lizardman w/Spear
+
+
+TEST=MAGERY 80.0
+
+
+TAG.POLYLEVEL 3
+
+
+POLYNEW c_lizardman_spear
+
+
+
+
+
+[SKILLMENU sm_polymorph_85]
+
+
+What form do you wish to take?
+
+
+
+
+
+ON=i_pet_corpser Corpser
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_corpser
+
+
+ON=i_pet_ettin Ettin
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_ettin
+
+
+ON=i_pet_ettin Ettin w/Axe
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_ettin_w_axe
+
+
+ON=i_pet_garg Gargoyle
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_gargoyle
+
+
+ON=i_pet_gazer Gazer
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_gazer
+
+
+ON=i_pet_ogre Ogre
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_ogre
+
+
+ON=i_pet_orc Orc
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_orc
+
+
+ON=i_pet_orc Orc Lord
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_orc_lord
+
+
+ON=i_pet_orc Orc w/Club
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_orc_w_club
+
+
+ON=i_pet_cyclops Cyclops
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_cyclops
+
+
+ON=i_pet_titan Titan
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_titan
+
+
+ON=i_pet_troll Troll
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_troll
+
+
+ON=i_pet_troll Troll w/Axe
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_troll_w_axe
+
+
+ON=i_pet_troll Troll w/Mace
+
+
+TEST=MAGERY 85.0
+
+
+TAG.POLYLEVEL 4
+
+
+POLYNEW c_troll_w_mace
+
+
+
+
+
+[SKILLMENU sm_polymorph_90]
+
+
+What form do you wish to take?
+
+
+
+
+
+ON=i_pet_lich Liche
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_liche
+
+
+ON=i_pet_skeleton Skeleton
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_skeleton
+
+
+ON=i_pet_skeleton Skeleton w/Axe
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_skeleton_w_axe
+
+
+ON=i_pet_skeleton Skeleton w/Sword
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_skeleton_w_sword
+
+
+ON=i_pet_ghoul Spectre
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_spectre
+
+
+ON=i_pet_zombie Zombie
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_zombie
+
+
+ON=i_pet_reaper Reaper
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_reaper
+
+
+ON=i_pet_elem_air Air Elemental
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_elem_air
+
+
+ON=i_pet_elem_earth Earth Elemental
+
+
+TEST=MAGERY 90.0
+
+
+TAG.POLYLEVEL 5
+
+
+POLYNEW c_elem_earth
+
+
+
+
+
+[SKILLMENU sm_polymorph_95]
+
+
+What form do you wish to take?
+
+
+
+
+
+ON=i_pet_ophid_mage Ophidian Mage
+
+
+TEST=MAGERY 95.0
+
+
+TAG.POLYLEVEL 6
+
+
+POLYNEW c_ophidian_mage
+
+
+ON=i_pet_ophid_queen Ophidian Queen
+
+
+TEST=MAGERY 95.0
+
+
+TAG.POLYLEVEL 6
+
+
+POLYNEW c_ophidian_queen
+
+
+ON=i_pet_ophid_war Ophidian Warrior
+
+
+TEST=MAGERY 95.0
+
+
+TAG.POLYLEVEL 6
+
+
+POLYNEW c_ophidian_warrior
+
+
+ON=i_pet_terathan_drone Terathan Drone
+
+
+TEST=MAGERY 95.0
+
+
+TAG.POLYLEVEL 6
+
+
+POLYNEW c_terathan_drone
+
+
+ON=i_pet_terathan_queen Terathan Matriarch
+
+
+TEST=MAGERY 95.0
+
+
+TAG.POLYLEVEL 6
+
+
+POLYNEW c_terathan_matriarch
+
+
+ON=i_pet_terathan_war Terathan Warrior
+
+
+TEST=MAGERY 95.0
+
+
+TAG.POLYLEVEL 6
+
+
+POLYNEW c_terathan_warrior
+
+
+ON=i_pet_elem_fire Fire Elemental
+
+
+TEST=MAGERY 95.0
+
+
+TAG.POLYLEVEL 6
+
+
+POLYNEW c_elem_fire
+
+
+ON=i_pet_elem_water Water Elemental
+
+
+TEST=MAGERY 95.0
+
+
+TAG.POLYLEVEL 6
+
+
+POLYNEW c_elem_water
+
+
+
+
+
+[SKILLMENU sm_polymorph_100]
+
+
+What form do you wish to take?
+
+
+
+
+
+ON=i_pet_daemon Daemon
+
+
+TEST=MAGERY 100.0
+
+
+TAG.POLYLEVEL 7
+
+
+POLYNEW c_daemon
+
+
+ON=i_pet_daemon Daemon w/Sword
+
+
+TEST=MAGERY 100.0
+
+
+TAG.POLYLEVEL 7
+
+
+POLYNEW c_daemon_w_sword
+
+
+ON=i_pet_dragon Green Dragon
+
+
+TEST=MAGERY 100.0
+
+
+TAG.POLYLEVEL 7
+
+
+POLYNEW c_dragon_green
+
+
+ON=i_pet_dragon Red Dragon
+
+
+TEST=MAGERY 100.0
+
+
+TAG.POLYLEVEL 7
+
+
+POLYNEW c_dragon_red
+
+
+ON=i_pet_dragon Drake
+
+
+TEST=MAGERY 100.0
+
+
+TAG.POLYLEVEL 7
+
+
+POLYNEW c_dragon_small_black
+
+
+ON=i_pet_dragon Red Drake
+
+
+TEST=MAGERY 100.0
+
+
+TAG.POLYLEVEL 7
+
+
+POLYNEW c_dragon_small_red

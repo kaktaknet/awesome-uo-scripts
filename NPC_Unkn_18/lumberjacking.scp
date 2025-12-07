@@ -1,0 +1,225 @@
+[comment on this script...]
+made for Sphere.55R4.0.2 by Moe
+With this script your players can harvest different kinds of wood on different trees. The tree is tested from statics, so you won't get walnut logs from a cedar. To use it simply put it into your script directory and make sure it loads after sphere_region.scp (where default mr_tree is located).
+
+known bugs:
+Some leaves (i_foliage_cedar2, i_foliage_oak, i_foliage_oak_fall, i_foliage_oak2, i_foliage_oak2_fall) are t_tree in the default scripts. This can mess up lumberjacking. Set them to t_foliage as they should be.
+Yew tree (i_tree_yew_1) is t_normal in default scripts. Set it to t_tree to harvest logs from it.
+
+
+[defname lumberjacking_constants]
+
+logs.i_tree_trunk=mr_tree_dead //gives dead wood (reagent)
+logs.i_tree_trunk_2=mr_tree_dead
+logs.i_tree_trunk_3=mr_tree_dead
+
+logs.i_tree_3=mr_tree_birch
+logs.i_tree_4=mr_tree_birch
+logs.i_tree_5=mr_tree_birch
+
+logs.i_tree_cedar=mr_tree_cedar
+logs.i_tree_cedar2=mr_tree_cedar
+
+logs.i_tree_oak=mr_tree_oak
+logs.i_tree_oak2=mr_tree_oak
+
+logs.i_tree_walnut=mr_tree_walnut
+logs.i_tree_walnut2=mr_tree_walnut
+
+logs.i_tree_trunk_willow=mr_tree_willow
+logs.i_tree_trunk_willow2=mr_tree_willow
+
+logs.i_tree_cyprus=mr_tree_cyprus
+logs.i_tree_cyprus2=mr_tree_cyprus
+logs.i_tree_cyprus3=mr_tree_cyprus
+logs.i_tree_cyprus4=mr_tree_cyprus
+
+logs.i_tree_trunk_part_1=mr_tree_mahogany
+logs.i_tree_trunk_part_2=mr_tree_mahogany
+logs.i_tree_trunk_part_3=mr_tree_mahogany
+logs.i_tree_trunk_part_4=mr_tree_mahogany
+
+logs.i_tree_trunk_2_part_1=mr_tree_mahogany
+logs.i_tree_trunk_2_part_2=mr_tree_mahogany
+logs.i_tree_trunk_2_part_3=mr_tree_mahogany
+logs.i_tree_trunk_2_part_4=mr_tree_mahogany
+logs.i_tree_trunk_2_part_5=mr_tree_mahogany
+
+logs.i_tree_trunk_3_part_1=mr_tree_mahogany
+logs.i_tree_trunk_3_part_2=mr_tree_mahogany
+logs.i_tree_trunk_3_part_3=mr_tree_mahogany
+logs.i_tree_trunk_3_part_4=mr_tree_mahogany
+logs.i_tree_trunk_3_part_5=mr_tree_mahogany
+
+logs.i_tree_trunk_4_part_1=mr_tree_mahogany
+logs.i_tree_trunk_4_part_2=mr_tree_mahogany
+logs.i_tree_trunk_4_part_3=mr_tree_mahogany
+
+logs.i_tree_yew_1=mr_tree_yew
+
+
+[REGIONRESOURCE mr_tree_dead]
+skill=1.0,80.0
+amount=9,30
+REAP=i_reag_dead_wood
+REGEN=60*60*10
+
+
+[itemdef i_log_birch]
+id=i_log
+NAME=birch log%s
+VALUE=2
+TYPE=T_LOG
+WEIGHT=2
+
+on=@create
+color=08a5
+
+[REGIONRESOURCE mr_tree_birch]
+skill=1.0,80.0
+amount=9,30
+REAP=i_log_birch
+REGEN=60*60*10
+
+
+[itemdef i_log_cedar]
+id=i_log
+NAME=cedar log%s
+VALUE=2
+TYPE=T_LOG
+WEIGHT=2
+
+on=@create
+color=0
+
+[REGIONRESOURCE mr_tree_cedar]
+skill=1.0,80.0
+amount=9,30
+REAP=i_log_cedar
+REGEN=60*60*10
+
+
+[itemdef i_log_oak]
+id=i_log
+NAME=oak log%s
+VALUE=2
+TYPE=T_LOG
+WEIGHT=2
+
+on=@create
+color=0735
+
+[REGIONRESOURCE mr_tree_oak]
+skill=1.0,80.0
+amount=9,30
+REAP=i_log_oak
+REGEN=60*60*10
+
+[itemdef i_log_walnut]
+id=i_log
+NAME=walnut log%s
+VALUE=2
+TYPE=T_LOG
+WEIGHT=2
+
+on=@create
+color=06c8
+
+[REGIONRESOURCE mr_tree_walnut]
+skill=1.0,80.0
+amount=9,30
+REAP=i_log_walnut
+REGEN=60*60*10
+
+
+[itemdef i_log_willow]
+id=i_log
+NAME=willow log%s
+VALUE=2
+TYPE=T_LOG
+WEIGHT=2
+
+on=@create
+color=06bc
+
+[REGIONRESOURCE mr_tree_willow]
+skill=1.0,80.0
+amount=9,30
+REAP=i_log_willow
+REGEN=60*60*10
+
+
+[itemdef i_log_cyprus]
+id=i_log
+NAME=cypress log%s
+VALUE=2
+TYPE=T_LOG
+WEIGHT=2
+
+on=@create
+color=0669
+
+[REGIONRESOURCE mr_tree_cyprus]
+skill=1.0,80.0
+amount=9,30
+REAP=i_log_cyprus
+REGEN=60*60*10
+
+
+[itemdef i_log_yew]
+id=i_log
+NAME=yew log%s
+VALUE=2
+TYPE=T_LOG
+WEIGHT=2
+
+on=@create
+color=045d
+
+[REGIONRESOURCE mr_tree_yew]
+skill=1.0,80.0
+amount=9,30
+REAP=i_log_yew
+REGEN=60*60*10
+
+
+[itemdef i_log_mahogany]
+id=i_log
+NAME=mahogany log%s
+VALUE=2
+TYPE=T_LOG
+WEIGHT=2
+
+on=@create
+color=046d
+
+[REGIONRESOURCE mr_tree_mahogany]
+skill=1.0,80.0
+amount=9,30
+REAP=i_log_mahogany
+REGEN=60*60*10
+
+
+
+[REGIONRESOURCE mr_tree]
+// lumberjacking default
+// t_tree
+skill=1.0,80.0
+amount=9,30
+REAP=i_log
+REGEN=60*60*10
+
+on=@resourcefound
+obj=<argo.uid>
+call f_findtree
+if <def.logs.<local.tree>>
+	obj.more1=<def.logs.<local.tree>>
+endif
+
+[function f_findtree]
+for x 0 <eval <obj.p.statics>-1>
+	if <obj.p.statics.<local.x>.type>==t_tree
+		local.tree=<obj.p.statics.<local.x>.baseid>
+	endif
+endfor
+src.sysmessage <local.tree>

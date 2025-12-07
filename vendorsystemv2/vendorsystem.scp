@@ -1,0 +1,303 @@
+[ITEMDEF i_vendor_rental]
+ID=0bcf
+DUPELIST=0bd0,0bcf
+NAME=Vendor Rental
+TYPE=t_script
+CATEGORY=Added 
+SUBSECTION=Interactive 
+DESCRIPTION=Vendor Rental 
+
+ON=@CREATE
+COLOR=000d1
+TAG.RENTED=0
+TAG.OWNER=0
+ATTR attr_decay
+
+ON=@DCLICK
+SRC.ACT=<UID>
+IF !(<eval <SRC.ACT.TAG.RENTED>>)
+      SRC.DIALOG d_vendor_intro
+      RETURN 1
+ELSE
+   IF (<SRC.ACT.LINK.TAG.OWNER>==<SRC.UID>)||(<SRC.ISGM>)
+      VAR.LEASE=<eval <SRC.ACT.TIMER>/60>
+      VAR.LEASE=<eval <VAR.LEASE>/60>
+      SRC.MENU m_vendor_admin
+      RETURN 1
+   ELSE
+   SRC.SYSMESSAGE The shop is already rented.
+   RETURN 1
+   ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+LINK.REMOVE
+LINK=04fffffff
+TAG.RENTED=0
+TAG.OWNER=0
+COLOR=000d1
+RETURN 1
+
+
+// GUMPS 
+[DIALOG d_vendor_intro]
+100, 100
+PAGE 0
+resizepic 81 93 3500 305 126
+text 150 103 1153 0
+text 151 134 1153 1
+button 117 169 2151 2152 1 0 1
+text 151 171 1152 2
+
+[DIALOG d_vendor_intro TEXT]
+Vendor Rental System
+Vendors cost 15000gp
+Rent a vendor for 7 days
+
+
+[DIALOG d_vendor_intro BUTTON]
+on=1
+IF (<eval <SRC.BANKBALANCE>+<SRC.FINDLAYER(21).FINDTYPE(i_GOLD).AMOUNT>> >=15000)
+VAR.SIGN=<SRC.ACT>
+SRC.ACT.TAG.RENTED=1
+SRC.ACT.COLOR=0484
+SRC.ACT.TAG.OWNER=<SRC.UID>
+SRC.ACT.TIMER=60*60*24*7
+VAR.SIGN=<SRC.ACT>
+SRC.NEWNPC { C_RENTAL_VENDOR 1 C_RENTAL_VENDOR_F 1 }
+SRC.ACT.P <SRC.P>
+VAR.VEND=<SRC.ACT.UID> // keep the vendors uid for later use.
+SRC.ACT.findlayer(layer_bankbox).more1=500
+SRC.ACT.TAG.OWNER=<SRC.UID>
+SRC.ACT=<VAR.SIGN>
+SRC.ACT.LINK=<VAR.VEND>
+
+SRC.ACT=<VAR.VEND>
+SRC.NEWITEM=i_memory
+SRC.ACT.COLOR=memory_ipet
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.LAYER=layer_special
+SRC.ACT.CONT=<VAR.VEND>
+SRC.CONSUMEBANK 15000 i_gold
+SRC.UPDATE
+SRC.ACT=<VAR.SIGN> 
+SRC.MENU m_vendor_admin
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You do not have the funds to rent a vendor [15000 gp is needed]
+ENDIF
+
+[MENU m_vendor_admin]
+Rented Vendor Administration Menu
+
+ON=0 Change my vendor's name
+SRC.DIALOG d_name_vendor
+
+ON=0 Set items to sell (stock your vendor)
+SRC.ACT.LINK.FINDLAYER(layer_vendor_stock).OPEN
+SRC.SYSMESSAGE Place items to be sold in here.
+SRC.SYSMESSAGE To set a price, say "price xxx" (xxx = price)
+
+ON=0 Purchased items
+SRC.ACT.LINK.FINDLAYER(layer_vendor_extra).OPEN
+SRC.SYSMESSAGE Items you have bought are here.
+SRC.SYSMESSAGE (These can be sold too)
+
+ON=0 Set items to purchase
+SRC.ACT.LINK.FINDLAYER(layer_vendor_buys).OPEN
+SRC.SYSMESSAGE Place items you want to buy in here
+
+ON=0 Retrieve Vendors cash (<eval <SRC.ACT.LINK.findlayer(layer_bankbox).more1>> gp)
+VAR.AMT=<eval <SRC.ACT.LINK.FINDLAYER(layer_bankbox).more1>>
+SRC.ACT.LINK.FINDLAYER(layer_bankbox).more1=0
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT <VAR.AMT>
+SRC.ACT.BOUNCE 
+SRC.UPDATE
+
+ON=0 Give Vendor 500gp
+IF (<eval <SRC.BANKBALANCE>+<SRC.FINDLAYER(21).FINDTYPE(i_GOLD).AMOUNT>> >=500)
+    SRC.ACT.LINK.FINDLAYER(layer_bankbox).more1=<eval <SRC.ACT.LINK.findlayer(layer_bankbox).more1>+500>
+    SRC.CONSUMEBANK 500 i_gold
+    SRC.UPDATE
+    SRC.ACT.LINK.SAY Thank you!
+ELSE
+    SRC.SYSMESSAGE You do not have the money to give to your vendor
+ENDIF
+
+ON=0 Pay for another week (<eval <VAR.LEASE>> hours left)
+IF (<eval <SRC.BANKBALANCE>+<SRC.FINDLAYER(21).FINDTYPE(i_GOLD).AMOUNT>> >=15000)
+    SRC.CONSUMEBANK 15000 i_gold
+    SRC.UPDATE
+    SRC.ACT.TIMER=60*60*24*7
+    SRC.ACT.LINK.SAY I shall sell for you for another 7 days!
+ELSE
+    SRC.SYSMESSAGE You do not have the proper funds to cover another week
+ENDIF
+
+ON=0 Disown shop
+    SRC.ACT.TIMER 1
+
+ON=0 Access your bankbox
+    SRC.BANKSELF
+
+
+[DIALOG d_name_vendor]
+0,0
+nomove
+resizepic 190 175 5054 335 150
+resizepic 200 185 3000 315 130
+resizepic 220 235 3000 270 22
+text 215 200 995 0
+text 255 275 0000 1
+button 220 275 4005 4006 1 0 1
+text 435 275 0000 2
+button 400 275 4005 4006 1 0 0
+textentry 225 237 253 25 0 0 3
+
+[DIALOG d_name_vendor TEXT]
+How would you like to name the vendor?
+Continue
+Cancel
+<src.act.link.name>
+
+[DIALOG d_name_vendor BUTTON]
+ON=0
+ON=1
+src.act.link.say My new name is <ARGTXT[0]>!
+SRC.ACT.LINK.NAME <ARGTXT[0]>
+RETURN 1
+
+// NPCS - intended for future expansion
+[CHARDEF C_RENTAL_VENDOR]
+NAME=Rented Vendor
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_shopkeep
+TSPEECH=spk_needs
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=Vendor
+
+ON=@Create
+NPC=brain_vendor
+COLOR=colors_skin
+FLAGS=028000005
+NEED=i_gold
+
+STR={66 80}
+DEX=90
+INT={66 80}
+
+FENCING={15.0 38.0}
+PARRYING={45.0 68.0}
+SWORDSMANSHIP={15.0 38.0}
+WRESTLING={15.0 38.0}
+MACEFIGHTING={15.0 38.0}
+MAGICRESISTANCE={45.0 68.0}
+TACTICS={45.0 68.0}
+
+ITEMNEWBIE=i_lantern
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ITEMNEWBIE=i_shirt_plain
+COLOR=colors_all
+ITEMNEWBIE=random_pants
+COLOR=colors_all
+ITEMNEWBIE=random_shoes
+COLOR=colors_neutral
+
+ON=@CLICK
+SAYUA 0268 0 0 0 <NAME>
+RETURN 1
+
+[CHARDEF C_RENTAL_VENDOR_F]
+NAME=Rented Vendor
+ID=C_WOMAN
+CAN=0
+FOODTYPE=
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_shopkeep
+TSPEECH=spk_needs
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+TEVENTS=e_no_pvp
+
+ON=@Create
+NPC=brain_vendor
+COLOR=colors_skin
+FLAGS=028000001
+NEED=i_gold
+
+STR={66 80}
+DEX=90
+INT={66 80}
+FENCING={15.0 38.0}
+PARRYING={45.0 68.0}
+SWORDSMANSHIP={15.0 38.0}
+WRESTLING={15.0 38.0}
+MACEFIGHTING={15.0 38.0}
+MAGICRESISTANCE={45.0 68.0}
+TACTICS={45.0 68.0}
+
+ITEMNEWBIE=i_lantern
+ITEMNEWBIE=random_female_hair
+COLOR=colors_hair
+
+ON=@NPCRestock
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_skirt
+COLOR=colors_all
+ITEM=random_shoes
+COLOR=colors_neutral
+ITEM=random_coin_purse
+
+ON=@CLICK
+SAYUA 0268 0 0 0 <NAME>
+RETURN 1
+
+[EVENTS e_no_pvp]
+ON=@SPELLEFFECT
+SRC.SYSMESSAGE Your attack has been magically blocked.
+RETURN 1
+
+ON=@GETHIT
+SRC.SYSMESSAGE Your attack has been magically blocked.
+RETURN 1
+
+[FUNCTION consumebank] //Thanks to Kell for this! 
+act=<SRC.FINDLAYER(layer_bankbox).uid> 
+act.layer=layer_pack 
+act.type=t_container 
+act.equip 
+src.consume <args> 
+act.layer=layer_bankbox 
+act.type=t_eq_bank_box 
+act.equip 
+

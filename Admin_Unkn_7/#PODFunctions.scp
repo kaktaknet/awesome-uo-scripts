@@ -1,0 +1,571 @@
+//==========================================
+//     SPHERE Server FUNCTION PACK
+//        POWER BY ONLINEUO 2002
+//             ADMIN Peter
+//          WWW.ONLINEUO.COM
+//===========================================
+
+[Plevel 1]
+EQUIPALL
+UNEQUIPALL
+Gomyguild
+resign
+
+[Plevel 4]
+addflag
+removeflag
+GotoPlane
+WipePack
+WipeBank
+bouncebank
+Teleto
+Fix
+Fixp
+Respawnchar
+Getday
+GetHour
+GetMin
+Getsec
+
+[function getday]
+	var.time = <Eval (<ARGS>/3600)/24>
+	return <var.time>
+
+[function gethour]
+	var.time = <Eval ((<ARGS>/3600) +- ((<ARGS>/3600)/24)*24)>
+	return <var.time>
+
+[function getmin]
+	var.time = <Eval (<ARGS>/24)/60>
+	return <var.time>
+
+[function getsec]
+	var.time = <Eval ((<ARGS>/24>) +- ((<ARGS>/24)/60)*60)>
+	return <var.time>
+
+
+
+
+[function restockchar]
+	act	= <UID>
+	if <act.flags> & 010000000
+		act.memoryfindtype.0200.link.timer = 10
+		remove
+	endif
+
+
+[function chkspawn]
+if <type> = t_spawn_char
+	if (<more1> == 00)
+		remove
+		return 0
+	endif
+
+	if (<timer> <= 0)
+		timer = 5
+	endif
+
+	if (<MOREZ> = 0) || (<MOREZ> > 10)
+		MOREZ = 3
+	endif
+endif
+
+
+[Function CheckStatus]
+	if <isgm>	
+		return 1
+	endif
+		IF <SKILLTOTAL> > 7500
+			Hear "Your Skill is overcapped, please wait for GM"
+			TAG.JailReason	= "Over Capped"
+			//SRC.SYSMESSAGE <SKILLTOTAL>
+			JAIL
+		ENDIF
+
+
+[function chkstate]
+
+if <flags> & 0400
+	return 0
+endif
+	if <isgm>	
+		return 1
+	endif
+
+		IF <EVAL <STR> + <DEX> + <INT> > > 225
+			Hear "Your State is over capped. lower each by one"
+			if <str> > 0
+				STR = <EVAL <STR> - 1>
+			endif
+	
+			if <DEX> > 0
+				DEX = <EVAL <DEX> - 1>
+			endif
+
+			if <int> > 0
+				INT = <EVAL <INT> - 1>
+			endif			
+		ENDIF
+		
+		if <str> > 120
+			STR = 100
+		endif
+
+		if <dex> > 120
+			dex = 100
+		endif
+
+		if <int> > 120
+			int = 100
+		endif
+
+
+[function moongatestep]
+	var.LB	= <
+	var.RB	= >
+	dialog d_moongate_step
+
+	if <dir> = 4 
+		moves
+	else
+		moven
+	endif
+	fix
+	
+	
+[function resign]
+	if <memoryfindtype.0400>
+		memoryfindtype.0400.link.resign
+		src.sysmessage you had resigned from your guild
+	else
+		src.sysmessage You dont have a guild
+	endif
+	
+//Goto my guildstone
+[FUNCTION Gomyguild]
+IF <src.region.guarded>=0
+src.sysmessage you can only use this commands at guarded regions.
+return 1
+endif
+
+if ( <src.flags> & 002000000 )
+	src.sysmessage "You can not use this command while you committed crime"
+	return 1
+endif
+
+
+IF <Src.memoryfindtype.0400>
+	if (<src.kills>>4) && (<src.memoryfindtype.0400.link.mapplane>=0)
+	src.sysmessage PK can not goto trammel
+	return 1
+	endif
+
+SRC.GO <src.memoryfindtype.0400.link.P>
+SRC.update
+return 1
+else
+src.sysmessage you dont have a guild.
+return 1
+endif
+
+
+
+
+[function nuketype]
+	if <type>	= <args>
+		remove
+	else
+		return 1
+	endif
+
+[function nukeid]
+	if <baseid>	= <args>
+		remove
+	else
+		return 1
+	endif
+
+//DUPE an object, and then move it by args
+//Usage: In game, with Nuke
+//Syntax:
+//Move dupe a single object:
+//.XMovedupe [ARG]
+//movedupe a selection of objects: (ie, a multi)
+//.nuke movedupe [arg]
+//Arg: 
+//X,Y,Z, where X represent the horizontal displacement
+//Y represents the virtical displacement, and Z
+//controls up\down
+
+[function movedupe]
+	SRC.NEWITEM	<BASEID>
+	SRC.ACT.P	<P>
+	SRC.ACT.ATTR <ATTR>
+	SRC.ACT.MORE1 <MORE1>
+	SRC.ACT.MORE2 <MORE2>
+	SRC.ACT.TIMER <TIMER>
+	SRC.ACT.MOREP <MOREP>
+	SRC.ACT.TYPE  <TYPE>
+	SRC.ACT.DISPID <DISPID>
+	SRC.ACT.UPDATE
+	SRC.ACT.MOVE <args>
+
+
+
+//TransferBody
+
+//this will dupe the player to another NPC
+//Backpack and BANK aren't moved
+[itemdef i_bodytransfer]
+id=i_Guildstone
+TYPE=T_SCRIPT
+
+ON=@CREATE
+	ATTR=08010
+	COLOR=<EVAL RAND(7000)>
+	
+	
+ON=@UserDclick
+	target Select your new body
+	return 1
+	
+ON=@Targon_char
+	SRC.TARG.body	= <SRC.BODY>
+	SRC.TARG.obody	= <SRC.OBODY>
+	SRC.TARG.Name	= <SRC.name>
+	SRC.TARG.COLOR	= <SRC.COLOR>
+	
+	SRC.TARG.STR	= <SRC.STR>
+	SRC.TARG.INT	= <SRC.INT>
+	SRC.TARG.DEX	= <SRC.DEX>
+	
+	SRC.TARG.0     = <SRC.0>
+	SRC.TARG.1     = <SRC.1>
+	SRC.TARG.2     = <SRC.2>
+	SRC.TARG.3     = <SRC.3>
+	SRC.TARG.4     = <SRC.4>
+	SRC.TARG.5     = <SRC.5>
+	SRC.TARG.6     = <SRC.6>
+	SRC.TARG.7     = <SRC.7>
+	SRC.TARG.8     = <SRC.8>
+	SRC.TARG.9     = <SRC.9>
+	SRC.TARG.10     = <SRC.10>
+	SRC.TARG.11     = <SRC.11>
+	SRC.TARG.12     = <SRC.12>
+	SRC.TARG.13     = <SRC.13>
+	SRC.TARG.14     = <SRC.14>
+	SRC.TARG.15     = <SRC.15>
+	SRC.TARG.16     = <SRC.16>
+	SRC.TARG.17     = <SRC.17>
+	SRC.TARG.18     = <SRC.18>
+	SRC.TARG.19     = <SRC.19>
+	SRC.TARG.20     = <SRC.20>
+	SRC.TARG.21     = <SRC.21>
+	SRC.TARG.22     = <SRC.22>
+	SRC.TARG.23     = <SRC.23>
+	SRC.TARG.24     = <SRC.24>
+	SRC.TARG.25     = <SRC.25>
+	SRC.TARG.26     = <SRC.26>
+	SRC.TARG.27     = <SRC.27>
+	SRC.TARG.28     = <SRC.28>
+	SRC.TARG.29     = <SRC.29>
+	SRC.TARG.30     = <SRC.30>
+	SRC.TARG.31     = <SRC.31>
+	SRC.TARG.32     = <SRC.32>
+	SRC.TARG.33     = <SRC.33>
+	SRC.TARG.34     = <SRC.34>
+	SRC.TARG.35     = <SRC.35>
+	SRC.TARG.36     = <SRC.36>
+	SRC.TARG.37     = <SRC.37>
+	SRC.TARG.38     = <SRC.38>
+	SRC.TARG.39     = <SRC.39>
+	SRC.TARG.40     = <SRC.40>
+	SRC.TARG.41     = <SRC.41>
+	SRC.TARG.42     = <SRC.42>
+	SRC.TARG.43     = <SRC.43>
+	SRC.TARG.44     = <SRC.44>
+	SRC.TARG.45     = <SRC.45>
+	SRC.TARG.46     = <SRC.46>
+	SRC.TARG.47     = <SRC.47>
+	SRC.TARG.48     = <SRC.48>
+	SRC.TARG.49     = <SRC.49>
+	
+	SRC.TARG.FINDLAYER(1).Remove
+	SRC.FINDLAYER(1).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(2).Remove
+	SRC.FINDLAYER(2).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(3).Remove
+	SRC.FINDLAYER(3).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(4).Remove
+	SRC.FINDLAYER(4).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(5).Remove
+	SRC.FINDLAYER(5).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(6).Remove
+	SRC.FINDLAYER(6).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(7).Remove
+	SRC.FINDLAYER(7).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(8).Remove
+	SRC.FINDLAYER(8).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(9).Remove
+	SRC.FINDLAYER(9).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(10).Remove
+	SRC.FINDLAYER(10).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(11).Remove
+	SRC.FINDLAYER(11).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(12).Remove
+	SRC.FINDLAYER(12).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(13).Remove
+	SRC.FINDLAYER(13).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(14).Remove
+	SRC.FINDLAYER(14).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(15).Remove
+	SRC.FINDLAYER(15).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(16).Remove
+	SRC.FINDLAYER(16).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(17).Remove
+	SRC.FINDLAYER(17).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(18).Remove
+	SRC.FINDLAYER(18).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(19).Remove
+	SRC.FINDLAYER(19).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(20).Remove
+	SRC.FINDLAYER(20).CONT  = <SRC.TARG.UID>
+	
+	SRC.TARG.FINDLAYER(22).Remove
+	SRC.FINDLAYER(22).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(23).Remove
+	SRC.FINDLAYER(23).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(24).Remove
+	SRC.FINDLAYER(24).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(25).Remove
+	SRC.FINDLAYER(25).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(26).Remove
+	SRC.FINDLAYER(26).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(27).Remove
+	SRC.FINDLAYER(27).CONT  = <SRC.TARG.UID>
+	
+	
+	SRC.TARG.FINDLAYER(28).Remove
+	SRC.FINDLAYER(28).CONT  = <SRC.TARG.UID>
+
+	SRC.MESSAGE "SKILL\LAYER TRANSFER DONE. Now do the bank transfer by hand"
+	
+	RETURN 1
+	
+
+
+
+//EQUIP ARMOR AND WEAPON
+[function equipall]
+	var.StrArg = <StrToUpper(<ARGS>)>
+	if Strmatch("<var.StrArg>","ARMOR")
+		EQUIPARMOR
+		RETURN 0
+	ELSEIF Strmatch("<var.StrArg>","WEAPON")
+		EQUIPWEAPON
+		RETURN 0
+	ELSE
+		EQUIPWEAPON
+		EQUIPARMOR
+		RETURN 0
+	ENDIF
+
+[function unequipall]
+//Here is where a loop comes handy :(
+	Findlayer(1).UNEQUIP
+	Findlayer(2).Unequip
+	Findlayer(6).UNEQUIP
+	Findlayer(7).UNEQUIP
+	Findlayer(10).UNEQUIP
+	Findlayer(13).UNEQUIP
+	Findlayer(14).UNEQUIP
+	Findlayer(19).UNEQUIP
+	Findlayer(24).UNEQUIP
+return 0
+
+//===GM Commands===
+[Function addflag]
+//Direct add an flag TO WHOEVER USED IT
+//In script use method: Addflag 0100  (in Binary)
+//In Game Use Method: xaddflag 0100
+	FLAGS=<FLAGS>|<args>
+	Fix
+	Update
+
+[Function removeflag]
+//Direct remove an flag TO WHOEVER USED IT
+//In script use method: removeflag 0100
+//In Game Use Method: xremoveflag 0100
+	FLAGS=<FLAGS>& (~<ARGS>)
+	Fix
+	Update
+
+[Function WipePack]
+FINDLAYER(21).EMPTY
+
+[FUNCTION WIPEBANK]
+FINDLAYER(29).EMPTY
+
+
+//MAPPLANE TRAVELLING
+//since .mapplane [x] does not update the client side
+//this function can be used to replace the old one
+//Usage: In game, In Script
+
+//Syntax:
+//In Game:
+//.Gotoplane [x]
+//.xgotoplane [x] where x is the plane number
+//in script
+//[Object].gotoplane [x]
+
+[Function GotoPlane]
+	Mapplane <Args>
+        move 80,80,0
+	move -80,-80,0
+
+[Function Teleto]  //In Game use Only
+	Newitem i_teleto
+	Act.Bounce
+	Act.Dclick
+
+//Paralysis effect
+[Function f_paralize_timer]
+	NEWITEM		= i_Paralize_Memory
+	act.link	= <SRC.UID>
+	act.name	= <SRC.NAME>
+	act.layer	= 30
+	act.p		= <P>
+	act.morep	= <P>
+	act.timer	= <EVAL <ARGS>>
+	act.update
+	act.equip
+	ADDFLAG		04
+	act		= <TAG.LASTACT>
+	
+[Itemdef i_Paralize_Memory]  //paralize u for a period of time
+id=i_memory
+layer=30
+name=Paralize Memory
+
+on=@create
+	timer = 10	//default
+	layer = 30
+	
+ON=@Timer
+	CONT.Removeflag	04  //get rid of paralize flag
+	remove
+	return 0
+	
+
+
+[Itemdef I_teleto]
+	Name=teleporter
+
+ON=@UserDclick
+	target Teleport Who?
+	Return 1
+
+ON=@Targon_Char
+	Var.Targuid = <SRC.Targ.uid>
+	Targetg to Where?
+	Return 1
+
+On=@Targon_Ground
+	Uid.Targuid.go <Src.Targp>
+	Remove
+
+[TYPEDEF T_TELEPORTER]
+ON=@UserDclick
+	src.go <morep>
+	return 1
+
+ON=@STEP
+	src.go <morep>
+	return 1
+
+
+//MOVE Commands
+//.MOVE N,S,E,W are borken since 99i
+//they all need three full args to work.
+//These functions are the solution for 
+//quicker movings
+//Use in game or in script
+
+//Syntax:
+//GAME:
+//.MOVE[Direction] eg: .MOVEN (no space)
+//.XMOVE[DIR]
+
+//Scripting:
+//[Object].MOVE[DIR]
+
+
+[FUNCTION moveN]
+	MOVE 0 -1 0
+
+[FUNCTION moveS]
+	MOVE 0 1 0
+
+[FUNCTION moveW]
+	MOVE -1 0 0
+
+[FUNCTION moveE]
+	MOVE 1 0 0
+
+[FUNCTION moveUP]
+	MOVE 0 0 1
+
+[FUNCTION moveDown]
+	MOVE 0 0 1
+
+	
+[EOF]

@@ -1,0 +1,1037 @@
+////////////////////////////////////////////////////////////
+//Reward System v1.0 FINAL for Sphere Version .55i+
+//This file is NOT available for public use.
+//Created by VirtuousViper aka vv2k, Admin of Sosarian Legends
+//Also knowns as Admin Scruffy
+//Creation Date: November 24th, 2000
+//Updates made on: August 1st, 2001
+//This file is only available in full and not part. Any altering of
+//this file is against copyrights to the owner under license # 4561b93.
+//You, as a user of this file, warrant that you will NOT alter/andor
+//edit this file. You also acknowledge that you must keep the copyrights
+//'By Virtuous Viper' on your gump system. By removing this, legal action
+//can and will be taken upon you. If you see anyone who is violating any
+//of these copyrights, please do not hesitate to contact me at
+//virtuousviper2000@home.com
+//All contacts made will be kept confidential and IF wish, anonymous.
+//Thank you and enjoy.
+//Admin Scruffy ~Shawn R. Bruno
+////////////////////////////////////////////////////////////
+//http://uolegends.ath.cx/
+////////////////////////////////////////////////////////////
+//virtuousviper2000@home.com
+////////////////////////////////////////////////////////////
+
+[itemdef i_reward_barrel]
+defname=i_reward_barrel
+id=0e77
+type=t_script
+weight=5000
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Reward Barrel
+
+on=@create
+color=079a
+name=reward system [double click]
+tag.id 00
+
+on=@dclick
+if (<morex>==0)
+src.sfx 555
+link=<src.uid>
+dialog d_x_reward_system
+link=04fffffff
+return 1
+else
+if (<eval <tag.id>==<src.uid>>)
+src.sfx 555
+link=<src.uid>
+dialog d_x_reward_system
+return 1
+elseif (<src.uid>==<link.more>) || (<link.tag.co1uid>==<src.uid>) || (<link.tag.co2uid>==<src.uid>) || (<link.tag.co3uid>==<src.uid>) || (<link.tag.co4uid>==<src.uid>) || (<link.tag.co5uid>==<src.uid>) || (<link.tag.co6uid>==<src.uid>) || (<link.tag.co7uid>==<src.uid>) || (<link.tag.co8uid>==<src.uid>) || (<link.tag.f1uid>==<src.uid>) || (<link.tag.f2uid>==<src.uid>) || (<link.tag.f3uid>==<src.uid>) || (<link.tag.f4uid>==<src.uid>) || (<link.tag.f5uid>==<src.uid>) || (<link.tag.f6uid>==<src.uid>) || (<link.tag.f7uid>==<src.uid>) || (<link.tag.f8uid>==<src.uid>) || (<link.tag.f9uid>==<src.uid>) || (<link.tag.f10uid>==<src.uid>) || (<link.tag.f11uid>==<src.uid>) || (<link.tag.f12uid>==<src.uid>) || (<link.tag.f13uid>==<src.uid>) || (<link.tag.f14uid>==<src.uid>) || (<link.tag.f15uid>==<src.uid>) || (<link.tag.f16uid>==<src.uid>) || (<link.tag.f17uid>==<src.uid>) || (<link.tag.f18uid>==<src.uid>) || (<link.tag.f19uid>==<src.uid>) || (<link.tag.f20uid>==<src.uid>) || (<src.account.plevel>>=4)
+src.sfx 555
+link=<src.uid>
+dialog d_x_reward_system
+return 1
+else
+src.sysmessage this is not your house to use.
+return 1
+
+on=@targon_char
+src.message you probably are a piece of trash eh?
+sound 510
+return 1
+
+on=@targon_item
+if ! <src.restest 1 <src.targ.baseid>>
+cont.message things must be in your pack!
+sound 510
+return 1
+else
+if <src.targ.baseid> == i_reward_coin
+link=<src.uid>
+var.x=<src.targ.amount>
+src.targ.remove
+link.tag.ticketsexp=<eval <link.tag.ticketsexp>> + <var.x>
+src.sysmessage You have exchanged your tickets.
+dialog d_x_reward_system
+return 1
+else
+if <src.targ.type> == t_potion
+src.sysmessage you cannot trash potions!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.baseid> == i_robe
+src.sysmessage you cannot trash robes!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_gem
+src.sysmessage you cannot trash gems!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_scroll
+src.sysmessage you cannot trash scrolls!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_food_raw
+src.sysmessage you cannot trash that!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.attr> == 04
+src.sysmessage you cannot trash newbied items!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_food
+src.sysmessage you cannot trash food! think of the less advantage and starving!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_wall
+src.sysmessage you cannot trash that!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_sign_gump
+src.sysmessage you cannot trash that!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_container
+src.sysmessage you cannot trash containers!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_telepad
+src.sysmessage you cannot trash that!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_bboard
+src.sysmessage you cannot trash that
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_door
+src.sysmessage you cannot trash that!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_normal
+src.sysmessage you cannot trash that!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_gold
+src.sysmessage you cannot trash gold!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_ingot
+src.sysmessage you cannot trash ingots!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_log
+src.sysmessage you cannot trash logs!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_potion_empty
+src.sysmessage you cannot trash bottles!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_board
+src.sysmessage you cannot trash boards.
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_deed
+src.sysmessage you cannot trash deeds!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_reagent
+src.sysmessage you cannot trash reagents!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.type> == t_spellbook
+src.sysmessage now who would want to trash their spellbook?
+sound 510
+dialog d_x_reward_system2
+else
+if <src.targ.more2> == 899
+src.sysmessage you cannot trash this!
+sound 510
+dialog d_x_reward_system2
+return 1
+else
+if <src.targ.id> == 0e77
+src.sysmessage yeah sure! you think your that smart?
+sound 510
+dialog d_x_reward_system2
+else
+link=<src.uid>
+var.x=<src.targ.value>
+link.tag.ticketsexp=<eval <link.tag.ticketsexp>> + <var.x>
+src.targ.remove
+src.sound 500
+dialog d_x_reward_system2
+link=04fffffff
+return 1
+
+//////////////////////////////////////
+//items for system
+//////////////////////////////////////
+
+[itemdef i_reward_coin]
+defname=i_reward_coin
+id=i_gem_ruby
+type=0
+name=player reward ticket%s
+weight=0
+value=0
+
+on=@create
+color=055
+
+[itemdef i_bless_deed]
+defname=i_bless_deed
+id=i_deed
+type=0
+name=bless deed
+weight=0
+value=0
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Bless Deed
+
+on=@create
+color=056
+attr=04
+
+on=@dclick
+src.message select an item to bless.
+target
+on=@targon_item
+if <src.targ.attr>&04
+src.message that is already blessed!
+return 1
+else
+if <src.targ.type>==<t_container>
+src.message you can not bless a container.
+return 1
+else
+src.targ.attr=<src.targ.attr>+04
+src.targ.name=a blessed <src.targ.name>
+sound 501
+remove
+return 0
+endif
+return 1
+
+[itemdef i_x_ranger_sleeves]
+defname=i_x_ranger_sleeves
+id=i_studded_sleeves
+name=ranger sleeves
+armor=60
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Ranger Sleeves
+
+on=@create
+color=016f
+hitpoints={300 500}
+
+
+[itemdef i_x_ranger_gloves]
+defname=i_x_ranger_gloves
+id=i_studded_gloves
+name=ranger gloves
+armor=60
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Ranger Gloves
+
+on=@create
+color=016f
+hitpoints={300 500}
+
+
+[itemdef i_x_ranger_gorget]
+defname=i_x_ranger_gorget
+id=i_studded_gorget
+name=ranger gorget
+armor=60
+
+on=@create
+color=016f
+hitpoints={300 500}
+
+
+[itemdef i_x_ranger_leggings]
+defname=i_x_ranger_leggings
+id=i_studded_leggings
+name=ranger leggings
+armor=60
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Ranger Leggings
+
+on=@create
+color=016f
+hitpoints={300 500}
+
+
+[itemdef i_x_ranger_tunic]
+defname=i_x_ranger_tunic
+id=i_studded_tunic
+name=ranger tunic
+armor=60
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Ranger Tunic
+
+on=@create
+color=016f
+hitpoints={300 500}
+
+
+[itemdef i_x_phoenix_leggings]
+defname=i_x_phoenix_leggings
+id=i_ringmail_leggings
+name=phoenix leggings
+armor=85
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Phoenix Leggings
+
+on=@create
+color=077a
+attr=04
+hitpoints={300 500}
+
+
+[itemdef i_x_phoenix_gloves]
+defname=i_x_phoenix_gloves
+id=i_ringmail_gloves
+name=phoenix gloves
+armor=85
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Phoenix Gloves
+
+on=@create
+color=077a
+attr=04
+hitpoints={300 500}
+
+
+[itemdef i_x_phoenix_sleeves]
+defname=i_x_phoenix_sleeves
+id=i_ringmail_sleeves
+name=sleeves of the phoenix
+armor=85
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Phoenix Sleeves
+
+on=@create
+color=077a
+attr=04
+hitpoints={300 500}
+
+
+[itemdef i_x_phoenix_tunic]
+defname=i_x_phoenix_tunic
+id=i_ringmail_tunic
+name=tunic of the phoenix
+armor=85
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Phoenix Tunic
+
+on=@create
+color=077a
+attr=04
+hitpoints={300 500}
+
+
+[itemdef i_x_phoenix_gorget]
+defname=i_x_phoenix_gorget
+id=i_platemail_gorget
+name=phoenix gorget
+armor=85
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Phoenix Gorget
+
+on=@create
+color=077a
+attr=04
+hitpoints={300 500}
+
+
+[itemdef i_x_phoenix_helm]
+defname=i_x_phoenix_helm
+id=i_platemail_helm
+name=helm de phoenix
+armor=85
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Phoenix Helm
+
+on=@create
+color=077a
+attr=04
+hitpoints={300 500}
+
+[itemdef i_furny_tub]
+//by gm virtuous viper
+defname=i_furny_tub
+id=i_dye_tub
+name=furniture dying tub
+dye=1
+on=@create
+color=00
+
+CATEGORY=Viper
+SUBSECTION=Items
+DESCRIPTION=Furniture Tub
+
+on=@targon_char
+src.sysmessage you cannot dye that!
+return 1
+
+on=@targon_item
+if !(<src.restest 1 <src.targ.baseid>> >
+src.message things must be in your pack!
+sound 510
+return 1
+else
+if (<src.targ.type>==t_table)
+src.targ.color=<src.color>
+src.targ.update
+sound 37
+src.sysmessage your <src.targ.name> was dyed
+return 0
+else
+if (<src.targ.type>==t_chair)
+src.targ.color=<src.color>
+src.targ.update
+sound 37
+src.sysmessage your <src.targ.name> was dyed
+return 0
+else
+if (<src.targ.type>==t_container)
+src.targ.color=<src.color>
+src.targ.update
+sound 37
+src.sysmessage your <src.targ.name> was dyed
+return 0
+else
+src.sysmessage that is not furniture
+sound 510
+return 1
+
+
+///////////////////////////////////////
+// begin gump for reward system
+///////////////////////////////////////
+
+[dialog d_x_reward_system]
+0, 0
+resizepic 100 1 5054 370 400
+resizepic 100 1 3000 370 30
+resizepic 100 370 3000 370 30
+//gumppic  325 50 990
+resizepic 125 50 3000 325 200
+resizepic 225 270 3000 225 25
+resizepic 225 295 3000 225 25
+
+//buttons
+button 60 60 217 217 1 0 1
+button 60 140 219 219 1 0 2
+button 60 220 221 221 1 0 4
+button 60 300 223 223 1 0 5
+button 395 272 4015 4016 1 0 6
+button 395 297 4015 4016 1 0 7
+
+//text fields
+text 135 72 1153 0
+text 135 97 1101 1
+text 167 5 1153 2
+text 150 112 1000 3
+text 150 127 1000 4
+text 120 375 069 5
+text 150 143 1000 6 // start
+text 150 158 1000 7
+text 150 173 1000 8
+text 150 188 1000 9
+text 150 203 1000 10
+text 45 50 1153 11
+text 45 65 1153 12
+text 45 80 1153 13
+text 45 95 1153 14
+text 45 110 1153 15
+text 277 272 1100 16
+text 230 297 1100 17
+
+[dialog d_x_reward_system text]
+About this system
+What is this about?
+Sosarian Legends Reward System
+The clean up sosaria event is designed
+to provide you with a fun way to win
+Current Amount of Tickets : <eval <link.tag.ticketsexp>>
+prizes while helping us improve your
+gaming experience by decreasing backup
+items. Clean old, un-used items out
+of your house, trash them and win more
+tickets to spend on unique prize items.
+a
+b
+o
+u
+t
+Deposit Tickets
+Withdraw 1k Tickets
+
+[dialog d_x_reward_system button]
+onbutton=0     //right click on gump
+src.sysmessage reward system closed
+src.sound 552
+onbutton=1
+link=<src.uid>
+dialog d_x_reward_system
+link=04fffffff
+onbutton=2
+link=<src.uid>
+dialog d_x_reward_system2
+link=04fffffff
+onbutton=4
+link=<src.uid>
+dialog d_x_reward_system3
+link=04fffffff
+onbutton=5
+link=<src.uid>
+dialog d_x_reward_system4
+link=04fffffff
+onbutton=6
+target
+src.sysmessage Target your tickets!
+onbutton=7
+link=<src.uid>
+if (<eval <link.tag.ticketsexp>><1000)
+src.sysmessage You do not even have 1000 tickets to do this.
+link=04fffffff
+return 1
+else
+link.tag.ticketsexp=<eval <link.tag.ticketsexp>> + (-1000)
+src.newitem=i_reward_coin
+src.act.amount=1000
+src.act.bounce
+
+
+/////////////////////////////////////
+//begin part 2 of gump
+/////////////////////////////////////
+
+[dialog d_x_reward_system2]
+0, 0
+resizepic 100 1 5054 370 400
+resizepic 100 1 3000 370 30
+resizepic 100 370 3000 370 30
+//gumppic  325 50 990
+resizepic 125 50 3000 325 150
+resizepic 225 200 3000 225 70
+resizepic 225 270 3000 225 25
+resizepic 225 295 3000 225 25
+
+//buttons
+button 60 60 217 217 1 0 1
+button 60 140 219 219 1 0 2
+button 60 220 221 221 1 0 4
+button 60 300 223 223 1 0 5
+button 390 220 4037 4036 1 0 6
+button 395 272 4015 4016 1 0 7
+button 395 297 4015 4016 1 0 8
+
+//text fields
+text 167 5 1153 0
+text 45 130 1153 1
+text 45 145 1153 2
+text 45 160 1153 3
+text 45 175 1153 4
+text 45 190 1153 5
+text 135 72 1153 6
+text 135 97 1101 7
+text 135 113 1101 8
+text 135 128 1101 9
+text 135 143 1101 10
+text 135 158 1101 11
+text 285 230 1250 12
+text 120 375 069 13
+text 277 272 1100 14
+text 230 297 1100 15
+
+[dialog d_x_reward_system2 text]
+Sosarian Legends Reward System
+t
+r
+a
+s
+h
+What do you mean, trash?!?
+Now you can transfer your garbage in
+exchange with player reward tickets.
+By doing so, you can win many great
+prizes of a various selection.
+Try it out!
+Trash an Item
+Current Amount of Tickets : <eval <link.tag.ticketsexp>>
+Deposit Tickets
+Withdraw 1k Tickets
+
+[dialog d_x_reward_system2 button]
+onbutton=0     //right click on gump
+src.sysmessage reward system closed
+src.sound 552
+onbutton=1
+link=<src.uid>
+dialog d_x_reward_system
+link=04fffffff
+onbutton=2
+link=<src.uid>
+dialog d_x_reward_system2
+link=04fffffff
+onbutton=4
+link=<src.uid>
+dialog d_x_reward_system3
+link=04fffffff
+onbutton=5
+link=<src.uid>
+dialog d_x_reward_system4
+link=04fffffff
+onbutton=6
+target
+src.message Please select an item to trash!
+return 1
+onbutton=7
+target
+src.sysmessage Target your tickets!
+onbutton=8
+link=<src.uid>
+if (<eval <link.tag.ticketsexp>><1000)
+src.sysmessage You do not even have 1000 tickets to do this.
+link=04fffffff
+return 1
+else
+link.tag.ticketsexp=<eval <link.tag.ticketsexp>> + (-1000)
+src.newitem=i_reward_coin
+src.act.amount=1000
+src.act.bounce
+link=04fffffff
+
+/////////////////////////////////////
+//begin part 3 of gump
+/////////////////////////////////////
+
+[dialog d_x_reward_system3]
+0, 0
+resizepic 100 1 5054 370 400
+resizepic 100 1 3000 370 30
+resizepic 100 370 3000 370 30
+//gumppic  325 50 990
+resizepic 170 50 3000 225 50
+resizepic 170 110 3000 225 50
+resizepic 170 170 3000 225 50
+resizepic 170 230 3000 225 50
+resizepic 170 290 3000 225 50
+
+//buttons
+button 60 60 217 217 1 0 1
+button 60 140 219 219 1 0 2
+button 60 220 221 221 1 0 4
+button 60 300 223 223 1 0 5
+button 350 65 4015 4016 1 0 6
+button 350 125 4015 4016 1 0 7
+button 350 185 4015 4016 1 0 8
+button 350 245 4015 4016 1 0 9
+button 350 305 4015 4016 1 0 10
+//button 350 350 4015 4016 1 0 11
+
+//text fields
+text 167 5 1153 0
+text 45 210 1153 1
+text 45 225 1153 2
+text 45 240 1153 3
+text 45 255 1153 4
+text 45 270 1153 5
+text 175 53 1345 6
+text 175 73 1350 7
+text 175 113 1345 8
+text 175 133 1350 9
+text 175 173 1345 10
+text 175 193 1350 11
+text 175 233 1345 12
+text 175 253 1350 13
+text 175 293 1345 14
+text 175 313 1350 15
+text 225 350 1350 16
+text 120 375 069 17
+
+[dialog d_x_reward_system3 text]
+Sosarian Legends Reward System
+p
+r
+i
+z
+e
+Black Dye Tub
+Cost : 30,000
+Random Mini Statue
+Cost : 40,000
+Random Colored Tub
+Cost : 50,000
+Random Colored Sandals
+Cost : 100,000
+Bless Deed
+Cost : 120,000
+Prize Page : 1
+Current Amount of Tickets : <eval <link.tag.ticketsexp>>
+
+[dialog d_x_reward_system3 button]
+onbutton=0     //right click on gump
+src.sysmessage reward system closed
+src.sound 552
+onbutton=1
+link=<src.uid>
+dialog d_x_reward_system
+link=04fffffff
+onbutton=2
+link=<src.uid>
+dialog d_x_reward_system2
+link=04fffffff
+onbutton=4
+link=<src.uid>
+dialog d_x_reward_system3
+link=04fffffff
+onbutton=5
+link=<src.uid>
+dialog d_x_reward_system4
+link=04fffffff
+onbutton=6
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=30000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-30000)
+src.newitem=0fab
+src.act.color=01
+src.act.bounce
+message You have recieved your item. Thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message You haven't enough coins to get this item!
+link=04fffffff
+endif
+return 1
+onbutton=7
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=40000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-40000)
+src.newitem={020c8 1 020c9 1 020ca 1 020cb 1 020cc 1 020cf 1 020d3 1 020d6 1}
+src.act.dye=00
+src.act.attr=00
+src.act.type=00
+src.act.bounce
+message you have recieved your item. thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins to get this item!
+link=04fffffff
+endif
+return 1
+onbutton=8
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=50000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-50000)
+src.newitem=i_dye_tub
+src.act.color={0775 1 0796 1 077d 1 077f 1 0778 1 0788 1 077a 1 0785 1 0795 1 0787 1 0781 1 077e 1 07a1 1 07a2 1 07a3 1 07a4 1 07a5 1 07a6 1 07a7 1 07a8 1 }src.act.attr=00
+src.act.bounce
+message you have recieved your item. thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins to get this item!
+link=04fffffff
+endif
+return 1
+onbutton=9
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=100000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-100000)
+src.newitem=i_sandals
+src.act.color={0775 1 0796 1 077d 1 077f 1 0778 1 0788 1 077a 1 0785 1 0795 1 0787 1 0781 1 077e 1}
+src.act.bounce
+message you have recieved your item. thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins to get this item!
+link=04fffffff
+endif
+return 1
+onbutton=10
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=120000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-120000)
+src.newitem=i_bless_deed
+src.act.bounce
+src.act.attr=04
+message you have recieved your item! thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins for this item!
+link=04fffffff
+endif
+return 1
+onbutton=11
+dialog d_x_reward_system4
+link=04fffffff
+
+
+
+/////////////////////////////////////
+//begin part 4 of gump
+/////////////////////////////////////
+
+[dialog d_x_reward_system4]
+0, 0
+resizepic 100 1 5054 370 400
+resizepic 100 1 3000 370 30
+resizepic 100 370 3000 370 30
+//gumppic  325 50 990
+resizepic 170 50 3000 225 50
+resizepic 170 110 3000 225 50
+resizepic 170 170 3000 225 50
+resizepic 170 230 3000 225 50
+resizepic 170 290 3000 225 50
+
+//buttons
+button 60 60 217 217 1 0 1
+button 60 140 219 219 1 0 2
+button 60 220 221 221 1 0 4
+button 60 300 223 223 1 0 5
+button 350 65 4015 4016 1 0 6
+button 350 125 4015 4016 1 0 7
+button 350 185 4015 4016 1 0 8
+button 350 245 4015 4016 1 0 9
+button 350 305 4015 4016 1 0 10
+//button 350 350 4015 4016 1 0 11
+
+//text fields
+text 167 5 1153 0
+text 45 290 1153 1
+text 45 305 1153 2
+text 45 320 1153 3
+text 45 335 1153 4
+text 45 350 1153 5
+text 175 53 1345 6
+text 175 73 1350 7
+text 175 113 1345 8
+text 175 133 1350 9
+text 175 173 1345 10
+text 175 193 1350 11
+text 175 233 1345 12
+text 175 253 1350 13
+text 175 293 1345 14
+text 175 313 1350 15
+text 225 350 1350 16
+text 120 375 069 17
+
+[dialog d_x_reward_system4 text]
+Sosarian Legends Reward System
+p
+r
+i
+z
+e
+5 Trivia Points
+Cost : 125,000
+150 Quest Points
+Cost : 175,000
+10 Trivia Points
+Cost : 225,000
+300 Quest Points
+Cost : 325,000
+Furniture Tub
+Cost : 250,000
+Prize Page : 2
+Current Amount of Tickets : <eval <link.tag.ticketsexp>>
+
+[dialog d_x_reward_system4 button]
+onbutton=0     //right click on gump
+src.sysmessage reward system closed
+src.sound 552
+onbutton=1
+link=<src.uid>
+dialog d_x_reward_system
+link=04fffffff
+onbutton=2
+link=<src.uid>
+dialog d_x_reward_system2
+link=04fffffff
+onbutton=4
+link=<src.uid>
+dialog d_x_reward_system3
+link=04fffffff
+onbutton=5
+link=<src.uid>
+dialog d_x_reward_system4
+link=04fffffff
+onbutton=6
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=125000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-125000)
+src.tag.trivias=<eval <src.tag.trivias>> + 5
+message you have recieved your item. thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins to get this item!
+link=04fffffff
+endif
+return 1
+onbutton=7
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=175000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-175000)
+src.tag.questpoints=<eval <src.tag.questpoints>> + 150
+message you have recieved your item. thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins to get this item!
+link=04fffffff
+endif
+return 1
+onbutton=8
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=225000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-225000)
+src.tag.trivias=<eval <src.tag.trivias>> + 10
+message you have recieved your item. thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins to get this item!
+link=04fffffff
+endif
+return 1
+onbutton=9
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=325000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-325000)
+src.tag.questpoints=<eval <src.tag.questpoints>> + 300
+message you have recieved your item. thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins to get this item!
+link=04fffffff
+endif
+return 1
+onbutton=10
+link=<src.uid>
+if <eval <src.tag.ticketsexp>>>=250000
+src.tag.ticketsexp=<eval <src.tag.ticketsexp>> + (-250000)
+src.newitem=i_furny_tub
+src.act.bounce
+src.act.attr=04
+message you have recieved your item! thank thee!
+sound 0f7
+link=04fffffff
+return 1
+else
+message you haven't enough coins for this item!
+link=04fffffff
+endif
+return 1
+onbutton=11
+dialog d_x_reward_system3
+link=04fffffff
+
+[EOF]

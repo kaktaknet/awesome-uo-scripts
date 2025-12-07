@@ -1,0 +1,2349 @@
+[Chardef c_h_supply_vendor]
+defname c_h_supply_vendor
+name=Supply Vendor
+id=c_man
+
+on=@create
+color=0383ea
+str=100
+dex=0
+int=100
+invul
+
+on=@gethit
+hits=(<src.str>)
+return 1
+endif
+
+on=@dclick
+sdialog d_supply_shop
+return 1
+
+on=@npcrestock
+
+itemnewbie i_robe
+color 021
+
+[dialog d_supply_shop]
+0,0
+resizepic 1 1 2600 205 475
+resizepic 14 13 3000 180 450
+text 65 15 0030 0
+button 20 49 1209 1210 1 0 1
+text 40 44 1152 1
+button 20 69 1209 1210 1 0 2
+text 40 64 1152 2
+button 20 89 1209 1210 1 0 3
+text 40 85 1152 3
+button 20 109 1209 1210 1 0 4
+text 40 105 1152 4
+button 20 129 1209 1210 1 0 5
+text 40 126 1152 5
+button 20 149 1209 1210 1 0 6
+text 40 146 1152 6
+button 20 169 1209 1210 1 0 7
+text 40 166 1152 7
+button 20 189 1209 1210 1 0 8
+text 40 186 1152 8
+button 20 209 1209 1210 1 0 9
+text 40 206 1152 9
+button 20 229 1209 1210 1 0 10
+text 40 226 1152 10
+button 20 249 1209 1210 1 0 11
+text 40 246 1152 11
+button 20 269 1209 1210 1 0 12
+text 40 266 1152 12
+button 20 289 1209 1210 1 0 13
+text 40 286 1152 13
+button 20 309 1209 1210 1 0 14
+text 40 306 1152 14
+button 20 329 1209 1210 1 0 15
+text 40 326 1152 15
+button 20 349 1209 1210 1 0 16
+text 40 346 1152 16
+button 20 369 1209 1210 1 0 17
+text 40 366 1152 17
+button 20 389 1209 1210 1 0 18
+text 40 386 1152 18
+button 20 409 1209 1210 1 0 19
+text 40 406 1152 19
+
+[dialog d_supply_shop text]
+Supply Shop
+Reagents
+Potions
+Animal Dyes
+Weapon Dyes
+Armor Dyes
+Mana Crystal (5,000g)
+100 Bandages (2,600g)
+100 Bottles (2,100g)
+100 Ingots (500g)
+100 Hides (500g)
+100 Logs (300g)
+100 Cloth (300g)
+Scissors (20g)
+Morter and Pestle (27g)
+Smith's Hammer (39)
+Sewing Kit (29g)
+Saw (46g)
+Tinker's Tools (39g)
+Recall Rune(19g)
+
+
+[dialog d_supply_shop button]
+onbutton=1
+sdialog d_supply_shop
+sdialog d_reagents
+
+onbutton=2
+sdialog d_supply_shop
+sdialog d_potions
+
+onbutton=3
+sdialog d_supply_shop
+sdialog d_animal_dyes
+
+onbutton=4
+sdialog d_supply_shop
+sdialog d_weapon_dyes
+
+onbutton=5
+sdialog d_supply_shop
+sdialog d_armor_dyes
+
+onbutton=6
+sdialog d_supply_shop
+IF <src.restest 5000 i_gold> 
+src.consume=5000 i_gold
+src.newitem i_mana_crystal
+src.act.bounce
+else
+src.sysmessage You lack 5000 Gold 
+endif
+return 1
+
+onbutton=7
+sdialog d_supply_shop
+IF <src.restest 2600 i_gold> 
+src.consume=2600 i_gold
+src.newitem i_bandage
+src.act.amount 100
+src.act.bounce
+else
+src.sysmessage You lack 2600 Gold 
+endif
+return 1
+
+onbutton=8
+sdialog d_supply_shop
+IF <src.restest 300 i_gold> 
+src.consume=300 i_gold
+src.newitem i_bottle_empty
+src.act.amount 100
+src.act.bounce
+else
+src.sysmessage You lack 300 Gold 
+endif
+return 1
+
+onbutton=9
+sdialog d_supply_shop
+IF <src.restest 500 i_gold> 
+src.consume=500 i_gold
+src.newitem i_ingot_iron
+src.act.amount 100
+src.act.bounce
+else
+src.sysmessage You lack 500 Gold 
+endif
+return 1
+
+onbutton=10
+sdialog d_supply_shop
+IF <src.restest 500 i_gold> 
+src.consume=500 i_gold
+src.newitem i_hide
+src.act.amount 100
+src.act.bounce
+else
+src.sysmessage You lack 500 Gold 
+endif
+return 1
+
+onbutton=11
+sdialog d_supply_shop
+IF <src.restest 300 i_gold> 
+src.consume=300 i_gold
+src.newitem i_log
+src.act.amount 100
+src.act.bounce
+else
+src.sysmessage You lack 300 Gold 
+endif
+return 1
+
+onbutton=12
+sdialog d_supply_shop
+IF <src.restest 300 i_gold> 
+src.consume=300 i_gold
+src.newitem i_cloth
+src.act.amount 100
+src.act.bounce
+else
+src.sysmessage You lack 300 Gold 
+endif
+return 1
+
+onbutton=13
+sdialog d_supply_shop
+IF <src.restest 20 i_gold> 
+src.consume=20 i_gold
+src.newitem i_scissors
+src.act.bounce
+else
+src.sysmessage You lack 20 Gold 
+endif
+return 1
+
+onbutton=14
+sdialog d_supply_shop
+IF <src.restest 27 i_gold> 
+src.consume=27 i_gold
+src.newitem i_mortar_pestle
+src.act.bounce
+else
+src.sysmessage You lack 27 Gold 
+endif
+return 1
+
+onbutton=15
+sdialog d_supply_shop
+IF <src.restest 39 i_gold> 
+src.consume=39 i_gold
+src.newitem i_hammer_smith
+src.act.bounce
+else
+src.sysmessage You lack 39 Gold 
+endif
+return 1
+
+onbutton=16
+sdialog d_supply_shop
+IF <src.restest 29 i_gold> 
+src.consume=29 i_gold
+src.newitem i_sewing_kit
+src.act.bounce
+else
+src.sysmessage You lack 29 Gold 
+endif
+return 1
+
+onbutton=17
+sdialog d_supply_shop
+IF <src.restest 46 i_gold> 
+src.consume=46 i_gold
+src.newitem i_saw
+src.act.bounce
+else
+src.sysmessage You lack 46 Gold 
+endif
+return 1
+
+onbutton=18
+sdialog d_supply_shop
+IF <src.restest 39 i_gold> 
+src.consume=39 i_gold
+src.newitem i_tinker_tools
+src.act.bounce
+else
+src.sysmessage You lack 39 Gold 
+endif
+return 1
+
+onbutton=19
+sdialog d_supply_shop
+IF <src.restest 19 i_gold> 
+src.consume=19 i_gold
+src.newitem i_rune_marker
+src.act.bounce
+else
+src.sysmessage You lack 19 Gold 
+endif
+return 1
+
+[Itemdef i_Mana_crystal]
+ID=01870 
+NAME=Mana Crystal
+VALUE=5000
+
+On=@Create
+More2=10
+color=0787
+
+On=@Click
+Message [<Eval <More2>> Charges]
+
+On=@DClick
+If (<More2>==1)
+Src.Sfx 00f9
+Src.Mana=<Src.Int>
+Src.Emote meditate !
+Remove
+Src.Sysmessage That was your last charge!
+Src.Sysmessage The crystal Has been detroyed.
+src.Sound=00fd
+Return 1
+Elseif (<Src.Mana>=<Src.Int>)
+Src.sysmessage You are already super charged with mana!
+Return 1
+Else
+Src.Sfx 00f9
+Src.Mana=<Src.Int>
+Src.Emote meditate
+More2=<More2>+-1
+Return 1
+
+[ITEMDEF i_gunpowder_keg] 
+NAME=Gunpowder Keg 
+ID=i_KEG_WOOD 
+TYPE=1
+VALUE={500 800} 
+WEIGHT=30 
+RESOURCES=8 i_BOARD, 1 i_BARREL_TAP, 1 i_BARREL_HOOPS 
+SKILLMAKE=TINKERING 65.0,t_tinker_tools 
+
+CATEGORY=Other
+SUBSECTION=Gunpowder 
+DESCRIPTION=Gunpowder Keg 
+
+ON=@Create 
+MORE1=0 
+MORE2=2 
+color=00545 
+
+ON=@DClick 
+IF <SRC.FINDID.i_gunpowder_keg_memory> 
+src.sysmessage You can not use another gunpowder keg yet.
+return 1
+ELSE
+TARGET
+RETURN 1 
+ENDIF 
+
+ON=@Targon_Item 
+SRC.SYSMESSAGE You cannot Blow up items! 
+RETURN 1 
+
+ON=@Targon_Char 
+IF (<SRC.TARG.REGION.FLAGS>&region_flag_safe)
+SRC.SYSMESSAGE You can't attack persons inside safe zones.
+RETURN 1
+ELSE
+SRC.TARG.HITS=<SRC.TARG.HITS> +-50 
+SRC.TARG.FXT,i_fx_explode,1
+SRC.TARG.BARK 3
+SRC.NEWITEM=i_gunpowder_keg_memory
+SRC.ACT.EQUIP 
+SOUND=snd_SPELL_EXPLOSION
+consume
+return 1
+
+ON=@Targon_ground 
+SRC.SYSMESSAGE You cannot Blow up the ground! 
+RETURN 1 
+
+[ITEMDEF i_gunpowder_keg_memory] 
+NAME=Gunpowder Keg Memory
+ID=i_memory 
+TYPE=t_eq_script 
+LAYER=layer_special 
+
+ON=@equip 
+TIMER=6
+RETURN 1 
+
+ON=@Timer 
+REMOVE
+Return 1
+
+[DIALOG d_reagents]
+200, 150
+gumppic 1 1 2080
+gumppic 19 38 2081
+gumppic 19 108 2082
+gumppic 19 178 2082
+gumppic 19 248 2083
+text 40 5 455 0
+button 40 49 1209 1210 1 0 1
+text 60 44 455 1
+button 40 69 1209 1210 1 0 2
+text 60 64 455 2
+button 40 89 1209 1210 1 0 3
+text 60 85 455 3
+button 40 109 1209 1210 1 0 4
+text 60 105 455 4
+button 40 129 1209 1210 1 0 5
+text 60 126 455 5
+button 40 149 1209 1210 1 0 6
+text 60 146 455 6
+button 40 169 1209 1210 1 0 7
+text 60 166 455 7
+button 40 189 1209 1210 1 0 8
+text 60 186 455 8
+button 40 209 1209 1210 1 0 9
+text 60 206 455 9
+
+[DIALOG d_reagents text]
+Reagents
+Blood Moss (100 for 300g)
+Black Pearl (100 for 300g)
+Garlic (100 for 300g)
+Mandrake Root (100 for 300g)
+Ginseng (100 for 300g)
+Sulfurous Ash (100 for 300g)
+Nightshade (100 for 300g)
+Spider Silk (100 for 300g)
+All Reags (100 of each for 2400g)
+
+[DIALOG d_reagents button]
+onbutton=1
+IF <SRC.RESTEST i_gold 300>
+SRC.CONSUME i_gold 300
+SRC.NEWITEM=i_reag_blood_moss,100
+SRC.ACT.BOUNCE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 300 Gold!
+RETURN 1
+ENDIF
+
+onbutton=2
+IF <SRC.RESTEST i_gold 300>
+SRC.CONSUME i_gold 300
+SRC.NEWITEM=i_reag_black_pearl,100
+SRC.ACT.BOUNCE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 300 Gold!
+RETURN 1
+ENDIF
+
+onbutton=3
+IF <SRC.RESTEST i_gold 300>
+SRC.CONSUME i_gold 300
+SRC.NEWITEM=i_reag_garlic,100
+SRC.ACT.BOUNCE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 300 Gold!
+RETURN 1
+ENDIF
+
+onbutton=4
+IF <SRC.RESTEST i_gold 300>
+SRC.CONSUME i_gold 300
+SRC.NEWITEM=i_reag_mandrake_root,100
+SRC.ACT.BOUNCE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 300 Gold!
+RETURN 1
+ENDIF
+
+onbutton=5
+IF <SRC.RESTEST i_gold 300>
+SRC.CONSUME i_gold 300
+SRC.NEWITEM=i_reag_ginseng,100
+SRC.ACT.BOUNCE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 300 Gold!
+RETURN 1
+ENDIF
+
+onbutton=6
+IF <SRC.RESTEST i_gold 300>
+SRC.CONSUME i_gold 300
+SRC.NEWITEM=i_reag_sulfur_ash,100
+SRC.ACT.BOUNCE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 300 Gold!
+RETURN 1
+ENDIF
+
+onbutton=7
+IF <SRC.RESTEST i_gold 300>
+SRC.CONSUME i_gold 300
+SRC.NEWITEM=i_reag_nightshade,100
+SRC.ACT.BOUNCE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 300 Gold!
+RETURN 1
+ENDIF
+
+onbutton=8
+IF <SRC.RESTEST i_gold 300>
+SRC.CONSUME i_gold 300
+SRC.NEWITEM=i_reag_spider_silk,100
+SRC.ACT.BOUNCE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 300 Gold!
+RETURN 1
+ENDIF
+
+onbutton=9
+IF <SRC.RESTEST 2400 i_gold>
+SRC.NEWITEM=i_bag 
+VAR.BAGUID=<SRC.ACT.UID>
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_reag_blood_moss,100
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_reag_black_pearl,100
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_reag_garlic,100
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_reag_mandrake_root,100
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_reag_ginseng,100
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_reag_sulfur_ash,100
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_reag_nightshade,100
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_reag_spider_silk,100
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.CONSUME=2400 i_gold
+SOUND 0F7
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You Lack 2400 Gold!
+ENDIF
+
+[DIALOG d_potions]
+200, 150
+gumppic 1 1 2080
+gumppic 19 38 2081
+gumppic 19 108 2082
+gumppic 19 178 2083
+text 40 5 455 0
+button 40 38 1209 1210 1 0 1
+text 60 34 455 1
+button 40 58 1209 1210 1 0 2
+text 60 54 455 2
+button 40 78 1209 1210 1 0 3
+text 60 75 455 3
+button 40 98 1209 1210 1 0 4
+text 60 95 455 4
+button 40 118 1209 1210 1 0 5
+text 60 116 455 5
+button 40 138 1209 1210 1 0 6
+text 60 136 455 6
+button 40 158 1209 1210 1 0 7
+text 60 156 455 7
+
+[DIALOG d_potions text]
+Potions
+Shrink  (1 For 100g) 
+Potion Keg (1 for 200g)
+Heal (50 for 2000g)
+Cure (50 for 2000g)
+Poison (50 for 2000g)
+Explosion (50 for 2000g)
+Gunpowder Keg (1 for 20000g)
+
+[DIALOG d_potions button]
+on=1
+IF <SRC.RESTEST 100 i_gold> 
+SRC.CONSUME=100 i_gold
+SRC.NEWITEM=i_potion_shrink
+SRC.ACT.BOUNCE
+SRC.SYSMESSAGE Here is your potion.
+ELSE 
+SRC.MESSAGE=You lack 100 Gold!
+ENDIF
+on=2
+IF <SRC.RESTEST 200 i_gold> 
+SRC.CONSUME=200 i_gold
+SRC.NEWITEM=i_keg_potion
+SRC.ACT.BOUNCE
+SRC.SYSMESSAGE Here is your potion.
+ELSE 
+SRC.MESSAGE=You lack 200 Gold!
+ENDIF
+on=3
+IF <SRC.RESTEST 2000 i_gold> 
+SRC.CONSUME=2000 i_gold
+SRC.NEWITEM=i_bag 
+SRC.ACT.COLOR=031
+VAR.BAGUID=<SRC.ACT.UID>
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_heal
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.SYSMESSAGE Here is your potion.
+ELSE 
+SRC.MESSAGE=You lack 2000 Gold!
+ENDIF
+on=4
+IF <SRC.RESTEST 2000 i_gold> 
+SRC.CONSUME=2000 i_gold
+SRC.NEWITEM=i_bag 
+SRC.ACT.COLOR=08b
+VAR.BAGUID=<SRC.ACT.UID>
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_Cure
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.SYSMESSAGE Here is your Potion.
+ELSE 
+SRC.MESSAGE=You lack 2000 Gold!
+ENDIF 
+on=5
+IF <SRC.RESTEST 2000 i_gold> 
+SRC.CONSUME=2000 i_gold
+SRC.NEWITEM=i_bag 
+SRC.ACT.COLOR=046
+VAR.BAGUID=<SRC.ACT.UID>
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_poison
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.SYSMESSAGE Here is your Potion.
+ELSE 
+SRC.MESSAGE=You lack 2000 Gold!
+ENDIF
+on=6
+IF <SRC.RESTEST 2000 i_gold> 
+SRC.CONSUME=2000 i_gold
+SRC.NEWITEM=i_bag 
+SRC.ACT.COLOR=014
+VAR.BAGUID=<SRC.ACT.UID>
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.NEWITEM=i_potion_explosion
+SRC.ACT.CONT=<VAR.BAGUID>
+SRC.SYSMESSAGE Here is your Potion.
+ELSE 
+SRC.MESSAGE=You lack 2000 Gold!
+ENDIF 
+on=7
+IF <SRC.RESTEST 20000 i_gold> 
+SRC.CONSUME=20000 i_gold
+SRC.NEWITEM=i_gunpowder_keg
+SRC.ACT.BOUNCE
+SRC.SYSMESSAGE Here is your Potion.
+ELSE 
+SRC.MESSAGE=You lack 20000 Gold!
+ENDIF
+
+[DIALOG d_animal_dyes]
+200, 150
+gumppic 1 1 2080
+gumppic 19 38 2081
+gumppic 19 108 2082
+gumppic 19 178 2083
+text 40 5 455 0
+text 54 54 455 1
+text 126 54 455 2
+text 193 54 455 3
+text 53 82 455 4
+text 127 82 455 5
+text 193 82 455 6
+text 193 107 455 7
+text 53 107 455 8
+text 53 134 455 9
+text 193 134 455 10
+button 34 58 1209 1210 1 0 1
+button 107 58 1209 1210 1 0 2
+button 172 58 1209 1210 1 0 3
+button 34 84 1209 1210 1 0 4
+button 107 84 1209 1210 1 0 5
+button 172 84 1209 1210 1 0 6
+button 172 110 1209 1210 1 0 7
+button 34 110 1209 1210 1 0 8
+button 34 136 1209 1210 1 0 9
+button 172 136 1209 1210 1 0 10
+
+[DIALOG d_animal_dyes text]
+Animal Dye Tickets 5000g each
+Dusk
+Arcane
+Snow
+Death
+Rust
+Ancient
+Blood Red
+Elven Green
+Silver
+Rage
+
+[DIALOG d_animal_dyes button]
+on=1
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_dusk_animal_dye_ticket 
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=2
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_arcane_animal_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=3
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_snow_animal_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=4
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_death_animal_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=5
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_rust_animal_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=6
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_ancient_animal_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=7
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_bloodred_animal_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=8
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_elven_green_animal_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=9
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_silver_animal_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=10
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_rage_animal_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_dusk_animal_dye_ticket] 
+NAME=dusk animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07fe
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=07fe
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[ITEMDEF i_death_animal_dye_ticket] 
+NAME=death animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=01
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=01
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1  
+
+[ITEMDEF i_elven_green_animal_dye_ticket] 
+NAME=elven green animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07ff
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=07ff
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[ITEMDEF i_silver_animal_dye_ticket] 
+NAME=silver animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=09c1
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=09c1
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[ITEMDEF i_arcane_animal_dye_ticket] 
+NAME=arcane animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07b1
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=07b1
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[ITEMDEF i_rust_animal_dye_ticket] 
+NAME=rust animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=09c0
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=09c0
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[ITEMDEF i_snow_animal_dye_ticket] 
+NAME=snow animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0481
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=0481
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[ITEMDEF i_ancient_animal_dye_ticket] 
+NAME=ancient animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07a1
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=07a1
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[ITEMDEF i_bloodred_animal_dye_ticket] 
+NAME=bloodred animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0866
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=0866
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[ITEMDEF i_rage_animal_dye_ticket] 
+NAME=rage animal dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07a3
+
+ON=@DCLICK 
+TARGET Choose the animal to color. 
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE You can only dye your pet with this ticket! 
+RETURN 1 
+ELSEIF !<src.targ.brain>
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+ELSEIF <SRC.TARG.ISMYPET> 
+SRC.TARG.COLOR=07a3
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+Return 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can only dye your pet with this ticket!
+RETURN 1 
+
+[DIALOG d_weapon_dyes]
+200, 150
+gumppic 1 1 2080
+gumppic 19 38 2081
+gumppic 19 108 2082
+gumppic 19 178 2083
+text 40 5 455 0
+text 54 54 455 1
+text 126 54 455 2
+text 193 54 455 3
+text 53 82 455 4
+text 127 82 455 5
+text 193 82 455 6
+text 193 107 455 7
+text 53 107 455 8
+text 53 134 455 9
+text 193 134 455 10
+button 34 58 1209 1210 1 0 1
+button 107 58 1209 1210 1 0 2
+button 172 58 1209 1210 1 0 3
+button 34 84 1209 1210 1 0 4
+button 107 84 1209 1210 1 0 5
+button 172 84 1209 1210 1 0 6
+button 172 110 1209 1210 1 0 7
+button 34 110 1209 1210 1 0 8
+button 34 136 1209 1210 1 0 9
+button 172 136 1209 1210 1 0 10
+
+[DIALOG d_Weapon_dyes text]
+Weapon Dye Tickets 5000g each
+Dusk
+Arcane
+Snow
+Death
+Rust
+Ancient
+Blood Red
+Elven Green
+Silver
+Rage
+
+[DIALOG d_weapon_dyes button]
+on=1
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_dusk_weapon_dye_ticket 
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=2
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_arcane_weapon_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=3
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_snow_weapon_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=4
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_death_weapon_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=5
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_rust_weapon_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=6
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_ancient_weapon_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=7
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_bloodred_weapon_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=8
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_elven_green_weapon_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=9
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_silver_weapon_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=10
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_rage_weapon_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_dusk_weapon_dye_ticket] 
+NAME=dusk weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07fe
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=07fe
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_death_weapon_dye_ticket] 
+NAME=death weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=01
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=01
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF  
+
+[ITEMDEF i_elven_green_weapon_dye_ticket] 
+NAME=elven green weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07ff
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=07ff
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_silver_weapon_dye_ticket] 
+NAME=silver weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=09c1
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=09c1
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_arcane_weapon_dye_ticket] 
+NAME=arcane weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07b1
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=07b1
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_rust_weapon_dye_ticket] 
+NAME=rust weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=09c0
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=09c0
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_snow_weapon_dye_ticket] 
+NAME=snow weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0481
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=0481
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_ancient_weapon_dye_ticket] 
+NAME=ancient weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07a1
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=07a1
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_bloodred_weapon_dye_ticket] 
+NAME=bloodred weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0866
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=0866
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_rage_weapon_dye_ticket] 
+NAME=rage weapon dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07a3
+
+ON=@DCLICK 
+TARGET Choose the weapon to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_weapon_sword) || (<SRC.TARG.TYPE>=t_weapon_mace_smith) || (<SRC.TARG.TYPE>=t_weapon_bow) || (<SRC.TARG.TYPE>=t_weapon_xbow) || (<SRC.TARG.TYPE>=t_weapon_fence) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=07a3
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your weapon with this ticket! 
+Return 1 
+ENDIF
+
+[DIALOG d_armor_dyes]
+200, 150
+gumppic 1 1 2080
+gumppic 19 38 2081
+gumppic 19 108 2082
+gumppic 19 178 2083
+text 40 5 455 0
+text 54 54 455 1
+text 126 54 455 2
+text 193 54 455 3
+text 53 82 455 4
+text 127 82 455 5
+text 193 82 455 6
+text 193 107 455 7
+text 53 107 455 8
+text 53 134 455 9
+text 193 134 455 10
+button 34 58 1209 1210 1 0 1
+button 107 58 1209 1210 1 0 2
+button 172 58 1209 1210 1 0 3
+button 34 84 1209 1210 1 0 4
+button 107 84 1209 1210 1 0 5
+button 172 84 1209 1210 1 0 6
+button 172 110 1209 1210 1 0 7
+button 34 110 1209 1210 1 0 8
+button 34 136 1209 1210 1 0 9
+button 172 136 1209 1210 1 0 10
+
+[DIALOG d_armor_dyes text]
+Armor Dye Tickets 5000g each
+Dusk
+Arcane
+Snow
+Death
+Rust
+Ancient
+Blood Red
+Elven Green
+Silver
+Rage
+
+[DIALOG d_armor_dyes button]
+on=1
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_dusk_armor_dye_ticket 
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=2
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_arcane_armor_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=3
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_snow_armor_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=4
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_death_armor_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=5
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_rust_armor_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=6
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_ancient_armor_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+on=7
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_bloodred_armor_dye_ticket
+SRC.ACT.BOUNCE  
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=8
+IF <SRC.RESTEST 5000 i_gold> 
+SRC.CONSUME 5000 i_gold 
+SRC.NEWITEM=i_elven_green_armor_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=9
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_silver_armor_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF
+on=10
+IF <SRC.RESTEST 5000 i_gold>
+SRC.CONSUME 5000 i_gold  
+SRC.NEWITEM=i_rage_armor_dye_ticket
+SRC.ACT.BOUNCE 
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You do not have the proper funds to make this transaction! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_dusk_armor_dye_ticket] 
+NAME=dusk armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07fe
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=07fe
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_death_armor_dye_ticket] 
+NAME=death armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=01
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=01
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_elven_green_armor_dye_ticket] 
+NAME=elven green armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07ff
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=07ff
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_silver_armor_dye_ticket] 
+NAME=silver armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=09c1
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=09c1
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_arcane_armor_dye_ticket] 
+NAME=arcane armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07b1
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=07b1
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_rust_armor_dye_ticket] 
+NAME=rust armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=09c0
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=09c0
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_snow_armor_dye_ticket] 
+NAME=snow armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0481
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=0481
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_ancient_armor_dye_ticket] 
+NAME=ancient armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07a1
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=07a1
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_bloodred_armor_dye_ticket] 
+NAME=bloodred armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0866
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.TARG.COLOR=0866
+REMOVE
+Return 1 
+ELSE 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_rage_armor_dye_ticket] 
+NAME=rage armor dye ticket
+ID=i_rune_marker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07a3
+
+ON=@DCLICK 
+TARGET Choose the armor to color. 
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID> == <SRC.UID>)
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ELSEIF (<SRC.TARG.TYPE>=t_ARMOR) || (<SRC.TARG.TYPE>=t_ARMOR_LEATHER) || (<SRC.TARG.TYPE>=t_SHIELD) && (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+SRC.TARG.COLOR=07a3
+REMOVE
+Return 1 
+ELSE
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You can only dye your Armor with this ticket! 
+Return 1 
+ENDIF 
+

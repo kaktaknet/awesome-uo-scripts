@@ -1,0 +1,43 @@
+//This script created by AdminofDiamondRealm. Original idea came from Amlaruil's elven speach script. Any questions or comments should be sent to: Administrator@abeir-toril.com
+
+[PLEVEL 1]
+ELVEN
+DROW
+
+[FUNCTION elven]
+IF	!(0<TAG.ELVEN>==0)
+		VAR.LANGUAGE=Elven
+		VAR.NEWTRANSLATION=01
+		TRANSLATE=<ARGS>
+		SAYUA=038a 03 0 eng <VAR.MESSAGE>
+		SERV.ALLCLIENTS ELVEN_aux=<ARGS>
+		VAR.MESSAGE=
+		SYSMESSAGE=You say "<ARGS>" in elven.
+ELSE
+		SYSMESSAGE=You cannot speak elven.
+ENDIF
+
+[FUNCTION ELVEN_aux]
+IF	!(0<TAG.ELVEN>==0) && (<SRC.CANSEE>) && !(<SRC.UID>==<UID>)
+		SYSMESSAGE=<SRC.NAME> says "<ARGS>" in elven.
+ELSE
+ENDIF
+
+[FUNCTION drow]
+IF	!(0<TAG.DROW>==0)
+		VAR.LANGUAGE=Drow
+		VAR.NEWTRANSLATION=01
+		TRANSLATE=<ARGS>
+		SAYUA=0386 03 0 eng <VAR.MESSAGE>
+		SERV.ALLCLIENTS DROW_aux=<ARGS>
+		VAR.MESSAGE=
+		SYSMESSAGE=You say "<ARGS>" in drow.
+ELSE
+		SYSMESSAGE=You cannot speak drow.
+ENDIF
+
+[FUNCTION DROW_aux]
+IF	!(0<TAG.DROW>==0) && (<SRC.CANSEE>) && !(<SRC.UID>==<UID>)
+		SYSMESSAGE=<SRC.NAME> says "<ARGS>" in drow.
+ELSE
+ENDIF

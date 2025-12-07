@@ -1,0 +1,210 @@
+//Polymorph system
+//v1.5
+//by Rudenid
+//Sphere version: 55i.
+//Difficulty of Installation: 2/10
+//Dependencies: None.
+
+//This system fixes the rather bugged polymorph spell.
+//As of now, it only supports the default polymorphs and ostards.
+//You can easily add more creatures, however.
+
+//Add this event to your players
+[EVENTS e_player_poly]
+
+ON=@Death
+IF (<FINDID.i_newpoly>)
+OBODY=<EVAL <FINDID.i_newpoly.TAG.OLDOBODY>>
+BODY=<EVAL <FINDID.i_newpoly.TAG.OLDBODY>>
+FINDID.i_newpoly.TAG.OLDBODY=
+FINDID.i_newpoly.TAG.OLDOBODY=
+FINDID.i_newpoly.TIMERd=1
+ENDIF
+
+ON=@SpellEffect
+
+IF ((<ARGN>=41)||(<ARGN>=54))
+	//Dispel, mass dispel
+	IF (<FINDID.i_newpoly>)
+		FINDID.i_newpoly.TIMERd=1
+	ENDIF
+ENDIF
+
+IF (<ARGN>=56)
+	//Polymorph. This works with Sphere's POLY function, so no skillmenu
+	//changes are needed.
+	IF (<FINDID.i_newpoly>)
+		FINDID.i_newpoly.TIMER={120 300}
+	ELSE
+		NEWITEM i_newpoly
+		ACT.CONT=<UID>
+		ACT.TAG.OLDNAME=<NAME>
+		ACT.TAG.OLDOBODY=<OBODY>
+		ACT.TAG.OLDBODY=<BODY>
+		ACT.TAG.OLDFAME=<FAME>
+		ACT.TAG.OLDKARMA=<KARMA>
+		ACT.TAG.OLDSTR=<STR>
+		ACT.TAG.OLDDEX=<DEX>
+		ACT.TAG.OLDINT=<INT>
+		ACT.TAG.OLDCOLOR=<COLOR>
+		ACT.TIMER={120 300}
+	ENDIF
+
+	BODY=<ACTARG2>
+
+	IF (<ACTARG2>=0190)
+		//Man
+		NAME=#NAMES_HUMANMALE
+		COLOR=colors_skin
+		IF (<STR> > 100)
+			STR=100
+		ENDIF
+		IF (<INT> > 100)
+			INT=100
+		ENDIF
+		IF (<DEX> > 100)
+			DEX=100
+		ENDIF
+
+	ELSEIF (<ACTARG2>=0191)
+		//Woman
+		NAME=#NAMES_HUMANFEMALE
+		COLOR=colors_skin
+		IF (<STR> > 100)
+			STR=100
+		ENDIF
+		IF (<INT> > 100)
+			INT=100
+		ENDIF
+		IF (<DEX> > 100)
+			DEX=100
+		ENDIF
+	ELSEIF (<ACTARG2>=0D0)
+		//Chicken
+		NAME=Chicken
+		KARMA={-1 -99}
+		FAME=0
+		COLOR=0
+		STR=5
+		DEX=15
+		INT=5
+	ELSEIF (<ACTARG2>=0D9)
+		//Dog
+		NAME=Dog
+		KARMA={-1 -99}
+		FAME=0
+		COLOR={0 1 colors_animal 1}
+		STR={25 37}
+		DEX={33 43}
+		INT={25 37}
+	ELSEIF (<ACTARG2>=015)
+		//Giant Serpent
+		NAME=Giant Serpent
+		FAME={600 2000}
+		KARMA={-3000 -3999}
+		COLOR=colors_snake
+		STR={85 115}
+		DEX={40 60}
+		INT={10 30}
+	ELSEIF (<ACTARG2>=0d2)
+		//Oclock
+		NAME=Oclock
+		COLOR=0
+		FAME=0
+		KARMA=-9000
+		STR={70 110}
+		DEX={100 250}
+		INT={5 15}
+	ELSEIF (<ACTARG2>=0db)
+		//Orn
+		NAME=Orn
+		COLOR=0
+		FAME=0
+		KARMA=-9000
+		STR={70 110}
+		DEX={100 250}
+		INT={5 15}
+	ELSEIF (<ACTARG2>=0da)
+		//Zostrich
+		NAME=Zostrich
+		COLOR=0
+		FAME=0
+		KARMA=-9000
+		STR={70 130}
+		DEX={250 350}
+		INT={5 15}
+	ELSEIF (<ACTARG2>=09)
+		//Daemon
+		NAME=#NAMES_DAEMON
+		COLOR=colors_daemon
+		FAME={4000 8000}
+		KARMA={-5000 -5999}
+		STR={145 185}
+		DEX={36 75}
+		INT={160 300}
+	ELSE
+		//Dragon
+		NAME=#NAMES_DRAGON
+		FAME={3000 9000}
+		KARMA={-5000 -5999}
+		STR={175 305}
+		DEX={85 145}
+		INT={10 20}
+	ENDIF
+
+	FLAGS=<FLAGS>|statf_polymorph
+
+	UPDATE
+	SFX 527
+	BARK 3
+
+	RETURN 1
+ENDIF
+
+
+
+[ITEMDEF i_newpoly]
+ID=i_rune_polymorph
+TYPE=t_eq_script
+LAYER=30
+NAME=Polymorph
+
+ON=@Create
+ATTR=attr_invis|attr_move_never
+
+ON=@Timer
+CONT.FINDID.i_rune_curse.REMOVE
+CONT.FINDID.i_rune_mass_curse.REMOVE
+CONT.FINDID.i_rune_feeblemind.REMOVE
+CONT.FINDID.i_rune_clumsy.REMOVE
+CONT.FINDID.i_rune_weaken.REMOVE
+CONT.FINDID.i_rune_bless.REMOVE
+CONT.FINDID.i_rune_strength.REMOVE
+CONT.FINDID.i_rune_agility.REMOVE
+CONT.FINDID.i_rune_cunning.REMOVE
+
+CONT.FLAGS=<CONT.FLAGS> &~ statf_polymorph
+CONT.NAME=<TAG.OLDNAME>
+CONT.OBODY=<EVAL <TAG.OLDOBODY>>
+CONT.BODY=<EVAL <TAG.OLDBODY>>
+
+CONT.FAME=<EVAL <TAG.OLDFAME>>
+CONT.KARMA=<EVAL <TAG.OLDKARMA>>
+CONT.STR=<EVAL <TAG.OLDSTR>>
+CONT.DEX=<EVAL <TAG.OLDDEX>>
+CONT.INT=<EVAL <TAG.OLDINT>>
+IF (<CONT.HITS> > <CONT.STR>)
+CONT.HITS=<CONT.STR>
+ENDIF
+IF (<CONT.STAM> > <CONT.DEX>)
+CONT.STAM=<CONT.DEX>
+ENDIF
+IF (<CONT.MANA> > <CONT.INT>)
+CONT.MANA=<CONT.INT>
+ENDIF
+
+CONT.COLOR=<EVAL <TAG.OLDCOLOR>>
+CONT.UPDATE
+CONT.BARK 3
+REMOVE
+RETURN 1

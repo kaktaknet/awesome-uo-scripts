@@ -1,0 +1,52 @@
+//Scripted by <GM_Ramon>, 08/11/03//
+//Please leave credit//
+
+Reproducing system 0.2 for chocobos. 
+
+//New Stuff:
+I changed the event e_dead with a item in the chocobo, do not worry to implement this as
+every chocobo will get it as soon as he sees a person. Maybe you'll get a event unknown error,
+I havent tested it, but I think you could just add this lines of code:
+
+[EVENTS e_malefemale]
+ON=@CLICK
+IF !(<FINDID.i_memory_oldnesschoco>)
+SRC.NEWITEM i_memory_oldnesschoco
+SRC.ACT.CONT <UID>
+SRC.ACT.TIMER=10
+ENDIF
+IF (<ISEVENT.E_dead>)  <---  //Or whatever event u need
+EVENTS -e_dead         <---
+ENDIF                  <---
+IF (0<TAG.MALE>==1)
+VAR.GENDER=male
+ELSE
+VAR.GENDER=female
+ENDIF
+MESSAGE [<VAR.GENDER>]
+
+Besides of this, the item will spend more from birth to death, (about a week). Bad things
+about this system: The chocobo won't feel older till you dismount it. With sphere 55r+ versions you can figure out how to make chocobos grow without dismounting them easily but I don't use it so you'll have to figure out yourself(on=@dclick and then go trying lol)
+
+
+What does this script do:
+-Mainly, this script allows you to, using a nut, create a new chocobo with a mix of their father's/
+mother's strenght [VAR.STRGAIN,VAR.DEXGAIN] and newbie skills. This chocobo will have a tag 
+that will allow him to increase it's skills and stats faster than his parents. In any case, chocobos
+die with time so u'll need to reproduce them in order to get new ones.
+
+There are 6 types of chocobo:
+-Different chocobos: Mutation of the race, very random. Cannot die and can be trained.
+-Yellow chocobos: the worst, weaker race. Can die and cannot be trained.
+-Blue chocobos: A weak race too, but less. Can die and can be trained.
+-Green chocobos: Cannot reproduce, they are kinda strong.
+-Black chocobos: A good race. Can die and be trained
+-Golden chocobos: The God's chosen chocobos. Cannot die and can be trained.
+
+The types of chocobo you get mixing races depends on the races of the father/mother, 2 random
+numbers and the power of the nut. [VAR.TYPEFINAL]
+
+You must also place someone to sell the nuts or some monsters to drop them, and put some
+chocobos in the world.
+
+This script has been tested in a crowded shard without apparent errors. msgs: waghk@hotmail.com

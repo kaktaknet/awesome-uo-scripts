@@ -1,0 +1,47 @@
+// This script has been made by -Ax- and belongs to sphere.
+// First of all, There is 2 functions and 2 events.
+// First function tells you how much time you have been online since the creation of your account.
+// Second one opens a map with tells you where you are ( not from me )
+// First Event is a Silver event which can be easily added to a silver weapon. ( Events=+ e_silver )
+// Second event is a Horse riding event, which verify if you are on a horse and if you do, Your damage are gonna double.
+// I'm using the e_horse event for my Spears. ( Events=+ e_horse )
+// Have fun, If you have ANY question. Private Message me on sphere. (UserName: alphanatix)
+
+//---------------------------------------
+
+
+[FUNCTION onlinetime] 
+src.sysmessage You have been online for a total time of <src.account.totalconnecttime> minutes.
+
+
+//---------------------------------------
+
+[FUNCTION map] 
+SRC.DIALOG MapDlg 
+
+[DIALOG MapDlg] 
+90,90 
+resizepic 0 0 5120 403 434 
+gumppic 10 10 5528 
+gumppic <EVAL (10+((<P.X>*100)/1337))> <EVAL (10+((<P.Y>*100)/1067))> 2362 
+text 20 400 455 0 
+
+[DIALOG MapDlg TEXT] 
+You are in <REGION.NAME>. 
+
+[DIALOG MapDlg BUTTON] 
+
+//----------------------------------------
+
+[EVENTS e_silver]
+ON=@DAMAGE 
+IF (<SRC.BRAIN> == brain_undead) 
+    SRC.DAMAGE <ARGN> 080 <CONT> 
+    SRC.EFFECT 3,i_fx_curse,10,20,10 
+ENDIF
+
+[EVENTS e_horse]
+ON=@DAMAGE 
+IF (<CONT.FINDLAYER.25>) 
+    SRC.DAMAGE <ARGN> 080 <CONT> 
+ENDIF

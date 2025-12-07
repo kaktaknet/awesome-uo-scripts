@@ -1,0 +1,129 @@
+// To Install this script add this to ur sphere_menu.scp
+// 	[MENU MENU_PAGEGM_4]
+// 	Are you sure you want to be teleported to the Depths of Development? You will be stuck there until a GM teleports you back to the world.
+// 	ON=0 YES, down we go!
+// 	GOPLACE a_helpdesk
+// 	src.newitem i_teleport_delay
+// 	src.act.equip
+// This Script is made by Big_boy_uk89 Aka Anthony Owner Of Crazy PK and Alot of
+// Good Scripters who helped me do this Please Leave the header.
+// Any Bugs Email Admin@crazypk.com
+//
+// Up Dated 10 February 2005
+//
+// Well I Added a Tag So You Can Ban Some One From Paging
+// Just Simply Use .set tag.pageban 1 to ban them and use .set tag.pageban to unban them thanks.
+
+
+[DIALOG d_page1_gump]
+0, 0
+page 0
+resizepic 61 24 5100 605 400
+resizepic 122 85 83 485 276
+gumppic 66 31 5545
+gumppic 69 360 5545
+gumppic 600 30 5545
+gumppic 597 357 5545
+text 193 47 4 0
+text 259 115 99 1
+text 314 181 99 2
+text 285 249 99 3
+text 209 387 27 4
+button 320 146 2076 2075 1 0 1
+button 320 215 2076 2075 1 0 2
+button 323 279 2076 2075 1 0 3
+
+[DIALOG d_page1_gump TEXT] 
+Welcome to <serv.name>
+Page a member of staff?
+Stuck?
+Read the rules!
+Scripted By Anthony aka Big_boy_uk89
+
+[DIALOG d_page1_gump BUTTON] 
+ONBUTTON=1
+IF <SRC.TAG.pageban>=1 
+Message @00a5a You Are Banned From Paging.
+RETURN 1
+Else
+IF <SRC.TAG.pageban>=
+GMPAGE Other
+ENDIF
+
+ONBUTTON=2
+IF !(<src.findid.i_pvp_time>) && !(<src.findid.i_mem_timer111>)
+serv.newitem i_teleport_delay1
+src.equip <new>
+src.events +e_disturb_stuck
+ENDIF
+
+[ITEMDEF i_teleport_delay1]
+NAME=Delay Teleport
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	MORE1=60
+	MOREP=1323,1751,14
+
+ON=@Equip
+	TIMER=1
+
+ON=@Timer
+	// Take the effect we would like.
+	if ( <cont> )
+		if ( <more1> )
+			cont.message <EVAL(<more1>)> // put countdown above my head.
+			more1=<more1>-1
+			TIMER=1
+			return 1
+		else
+IF (<cont.findid.i_pvp_time>)
+cont.sysmessage You cant do this in a PVP.
+remove
+return 1
+ENDIF
+			cont.GOPLACE <morep>	
+		endif
+	endif
+	// normal timer fall through is to delete the item
+	remove
+	return 1
+
+
+ONBUTTON=3
+WEBLINK www.crazypk.com/rules.html
+
+
+[function f_remove_timerandetc] 
+findid(i_teleport_delay).remove
+src.events -e_disturb_stuck
+[events e_pageban]
+[events e_disturb_stuck]
+on @spelleffect
+findid(i_teleport_delay1).remove
+src.events -e_disturb_stuck
+ON=@GETHIT 
+findid(i_teleport_delay1).remove
+src.events -e_disturb_stuck
+ON=@LOGOUT 
+findid(i_teleport_delay1).remove
+src.events -e_disturb_stuck
+ON=@UserWarmode 
+findid(i_teleport_delay1).remove
+src.events -e_disturb_stuck
+ON=@SKILLSTART 
+findid(i_teleport_delay1).remove
+src.events -e_disturb_stuck
+ON=@SPELLCAST 
+findid(i_teleport_delay1).remove
+src.events -e_disturb_stuck
+ON=@HITTRY 
+findid(i_teleport_delay1).remove
+src.events -e_disturb_stuck
+ON=@DEATH 
+findid(i_teleport_delay1).remove
+src.events -e_disturb_stuck

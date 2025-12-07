@@ -1,0 +1,84 @@
+[itemdef i_taxidermy_knife]
+id=i_knife_skinning
+name="taxidermy skinning knife"
+resources=3 i_ingot_iron
+skillmake=blacksmithing 35.0
+type=t_script
+weight=1
+
+category=items by professions 
+subsection=taxidermist
+description=taxidermy skinning knife 
+
+on=@dclick
+     if !(<src.restest 1 i_sewing_kit>)
+          src.sysmessage="You must have a sewing kit to stuff a creature."
+          return 1
+     else
+          target="What corpse would you like to stuff?"
+          return 1
+     endif
+
+on=@targon_ground
+     trigger=@dclick
+
+on=@targon_char
+     trigger=@dclick
+
+on=@targon_item
+     if !(<src.targ.type> == t_corpse)
+          src.sysmessage="You can only stuff a corpse!"
+          return 1
+	elseif !(<src.targ.link> == 04fffffff)
+		src.sysmessage="You can't stuff that!"
+          return 1
+     else
+          src.f_taxidermy <src.targ.uid>
+          src.targ.remove
+          return 1
+     endif
+
+[function f_taxidermy]
+newnpc=<hval <uid.<argn>.morex>>
+var.icon=<act.icon>
+var.sound=<act.sound>
+act.remove
+if (<taxidermy> <= 49.9)
+     newitem=<var.icon>
+     act.color=<uid.<argn>.color>
+     act.type=t_tax_null
+     act.bounce
+     return 1
+elseif (<taxidermy> <= 94.9)
+     newitem=<var.icon>
+     act.color=<uid.<argn>.color>
+     act.type=t_tax_sound
+     act.more2=<var.sound>
+     act.bounce
+     return 1
+elseif (<taxidermy> >= 95.0)
+     newitem=<var.icon>
+     act.color=<uid.<argn>.color>
+     act.type=t_figurine
+     act.bounce
+     return 1
+endif
+
+[typedef t_tax_null]
+on=@click
+     message="a stuffed <name>"
+     return 1
+
+on=@dclick
+     return 1
+
+[typedef t_tax_sound]
+on=@click
+     message="a stuffed <name>"
+     return 1
+
+on=@dclick
+     sfx=<more2>
+     return 1
+
+[eof]

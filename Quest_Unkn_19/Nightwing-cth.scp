@@ -1,0 +1,568 @@
+[plevel 3]
+cth
+cth_end
+score
+
+[function cth_end]
+src.add i_stone_cth_end
+
+[function cth]
+src.add i_stone_cth
+
+[function score]
+src.set morem <args>
+return 1
+
+[itemdef i_stone_cth_end]
+name=Capture the Head Finishing Stone
+id=i_gravestone_10
+
+on=@dclick
+IF (<src.account.plevel>=1) 
+src.findlayer(2).remove //removes all of their items, including their pack
+src.findlayer(3).remove //make them bank and put their pack on before giving the prize
+src.findlayer(4).remove //so they don't get a free bag :P
+src.findlayer(5).remove //GIVE PRIZE AFTER THE EVENT!
+src.findlayer(6).remove 
+src.findlayer(7).remove 
+src.findlayer(8).remove 
+src.findlayer(9).remove 
+src.findlayer(10).remove 
+src.findlayer(12).remove 
+src.findlayer(13).remove 
+src.findlayer(14).remove 
+src.findlayer(17).remove 
+src.findlayer(18).remove 
+src.findlayer(19).remove 
+src.findlayer(20).remove 
+src.findlayer(21).remove 
+src.findlayer(22).remove 
+src.findlayer(23).remove 
+src.findlayer(24).remove 
+src.go West Bridge
+src.sysmessage Thanks for playing <serv.servname>'s Capture the Head, <src.name>! 
+ELSE
+src.go West Bridge
+ENDIF
+src.fame=<tag.myfame>
+src.karma=<tag.mykarma>
+src.kills=<tag.mykills>
+src.consume i_teamblack
+src.consume i_teamwhite
+events -e_black
+events -e_white
+
+[itemdef i_stone_cth]
+name=Capture the Head Starting Stone
+id=i_gravestone_10
+
+on=@dclick
+IF (<src.account.plevel>=1) 
+SRC.FINDLAYER(1).CONT=<SRC.FINDLAYER(29).UID>//Banks ALL of there items. NOTE:: If a player trys to use there backpack
+SRC.FINDLAYER(2).CONT=<SRC.FINDLAYER(29).UID>//during the event, it gets banked as well. To put it back drag it to
+SRC.FINDLAYER(3).CONT=<SRC.FINDLAYER(29).UID>//the spot where it gose on paperdoll.
+SRC.FINDLAYER(4).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(5).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(6).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(7).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(8).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(9).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(10).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(12).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(13).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(14).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(15).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(17).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(18).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(19).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(20).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(21).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(22).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(23).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(24).CONT=<SRC.FINDLAYER(29).UID>
+SRC.TAG.MYFAME=<SRC.FAME>
+SRC.TAG.MYKILLS=<SRC.KILLS>
+SRC.TAG.MYKARMA=<SRC.KARMA>
+dorand 2
+src.newitem i_teamwhite
+src.newitem i_teamblack 
+ENDDO
+src.act.equip
+ELSE
+src.go 5290,1449
+ENDIF
+
+[itemdef i_head_black]
+type=t_script
+name=Head of the Black Team
+id=01ce1 //a wierd head :P
+
+on=@create
+color=1
+
+on=@dropon_item
+IF (<src.restest 1 i_teamblack>) 
+src.sysmessage @00481,3 You may not drop a team mates head. Now the head will fall to the floor
+P=<src.p>
+return 1
+ELSE
+obj=<argo.uid>
+	IF (!<obj.type>==t_container) || (0<obj.tag.white>)
+        return 1
+	ELSE
+	obj.morem=<obj.morem>+1
+	region.allclients sysmessage @00481 <src.name> Scores a point for team white! The white team's score is <eval <obj.morem>>!
+	REMOVE
+	ENDIF
+ENDIF
+
+on=@pickup_ground
+IF (<src.restest 1 i_teamblack>)
+src.sysmessage @00481 You may not pick up your own team's head!
+return 1
+ELSE
+return 0
+ENDIF
+
+on=@dropon_char
+src.sysmessage you must take the head yourself!
+return 1
+
+[itemdef i_head_white]
+type=t_script
+name=Head of the White Team
+id=01ce1 
+
+on=@create
+color=00481
+
+on=@dropon_item
+IF (<src.restest 1 i_teamwhite>) 
+src.sysmessage @00481,3 You may not drop a team mates head. Now the head will fall to the floor
+P=<src.p>
+return 1
+ELSE
+obj=<argo.uid>
+	IF (!<obj.type>==t_container) || (0<obj.tag.black>)
+        return 1
+	ELSE
+	obj.morem=<obj.morem>+1
+	region.allclients sysmessage @1 <src.name> Scores a point for team black! The black team's score is <eval <obj.morem>>!
+	REMOVE
+	ENDIF
+ENDIF
+
+on=@pickup_ground
+IF (<src.restest 1 i_teamwhite>)
+src.sysmessage @00481 You may not pick up your own team's head!
+return 1
+ELSE
+ENDIF
+
+on=@dropon_char
+src.sysmessage you must take the head yourself!
+return 1
+
+[itemdef i_sword_white]
+name=Sword of the White Team
+type=t_weapon_sword
+id=i_sword_viking
+twohands=n
+weight=1
+dam=20,50
+reqstr=20
+
+on=@create
+color=00481
+hitpoints={100 500}
+
+[itemdef i_shield_white]
+id=i_shield_heater
+name=Shield of the White Team
+weight=10
+armor=20
+
+on=@create
+color=00481
+hitpoints=200
+
+[itemdef i_chestplate_white]
+id=i_platemail_chest
+name=Chest of the White Team
+weight=10
+armor=20
+reqstr=1
+
+on=@create
+color=00481
+hitpoints=200
+
+[itemdef i_leggings_white]
+id=i_platemail_leggings
+name=Leggings of the White Team
+weight=10
+armor=20
+
+on=@create
+color=00481
+hitpoints=200
+
+[itemdef i_gloves_white]
+id=i_platemail_gloves
+name=Gloves of the White Team
+weight=10
+armor=20
+
+on=@create
+color=00481
+hitpoints=200
+
+[itemdef i_arms_white]
+id=i_platemail_arms
+name=Arms of the White Team
+weight=10
+armor=20
+
+on=@create
+color=00481
+hitpoints=200
+
+[itemdef i_helm_white]
+id=i_helm_closed
+name=Helm of the White Team
+weight=10
+armor=20
+
+on=@create
+color=00481
+hitpoints=200
+
+[itemdef i_robe_white]
+id=i_robe
+name=Robe of the White Team
+weight=1
+
+on=@create
+color=00481
+
+on=@unequip
+IF (!<src.account.plevel>=0) && (!<src.account.plevel>=1)
+src.sysmessage @00481 you may not unequip this, <src.name>.
+return 1
+
+[template template_white]
+weight=0
+container=i_backpack
+name=White Teams Bag
+color=00481
+item=i_spellbook
+color=00481
+more1=0ffffffff
+more2=0ffffffff
+item=reg_bag
+color=00481
+item=reg_bag
+color=00481
+container=i_bag
+item=i_axe
+color=00481
+item=i_hatchet
+color=00481
+item=i_pitchfork
+color=00481
+item=i_mace
+color=00481
+item=i_katana
+color=00481
+item=0df0 //black staff
+color=00481
+item=i_bow
+color=00481
+item=i_arrow
+amount=100
+color=00481
+
+//__
+
+[itemdef i_shield_black]
+id=i_shield_heater
+name=Shield of the Black Team
+weight=10
+armor=20
+
+on=@create
+color=1
+hitpoints=200
+
+[itemdef i_sword_black]
+name=Sword of the Black Team
+type=t_weapon_sword
+id=i_sword_viking
+twohands=n
+weight=1
+dam=20,50
+reqstr=20
+
+on=@create
+color=1
+hitpoints={100 500}
+
+[itemdef i_chestplate_black]
+id=i_platemail_chest
+name=Chest of the Black Team
+weight=10
+armor=20
+reqstr=1
+
+on=@create
+color=1
+hitpoints=200
+
+[itemdef i_gloves_black]
+id=i_platemail_gloves
+name=Gloves of the Black Team
+weight=10
+armor=20
+
+on=@create
+color=1
+hitpoints=200
+
+[itemdef i_arms_black]
+id=i_platemail_arms
+name=Arms of the Black Team
+weight=10
+armor=20
+
+on=@create
+color=1
+hitpoints=200
+
+[itemdef i_leggings_black]
+id=i_platemail_leggings
+name=Leggings of the Black Team
+weight=10
+armor=20
+
+on=@create
+color=1
+hitpoints=200
+
+[itemdef i_helm_black]
+id=i_helm_closed
+name=Helm of the Black Team
+weight=10
+armor=20
+
+on=@create
+color=1
+hitpoints=200
+
+[itemdef i_robe_black]
+id=i_robe
+name=Robe of the black Team
+weight=1
+
+on=@create
+color=1
+
+on=@equip
+IF (<src.restest 1 i_teamblack>)
+return 0
+ELSE
+src.sysmessage @1 you must be on the black team to equip this! 
+return 1
+ENDIF
+
+on=@unequip
+IF !(src.isgm)
+src.sysmessage @1 you may not unequip this, <src.name>.
+return 1
+
+[template template_black]
+weight=0
+container=i_bag
+name=Black Teams Bag
+color=1
+item=i_spellbook
+color=1
+more1=0ffffffff
+more2=0ffffffff
+item=reg_bag
+color=1
+item=reg_bag
+color=1
+container=i_bag
+item=i_axe
+color=1
+item=i_hatchet
+color=1
+item=i_pitchfork
+color=1
+item=i_mace
+color=1
+item=i_katana
+color=1
+item=0df0 //black staff
+color=1
+item=i_bow
+color=1
+item=i_arrow
+amount=100
+color=1
+
+[template reg_bag]
+container=i_bag
+color=00bac //grey color
+name=Bag of Reagents
+ITEM=i_reag_black_pearl,50
+ITEM=i_reag_blood_moss,50
+ITEM=i_reag_garlic,50
+ITEM=i_reag_ginseng,50
+ITEM=i_reag_mandrake_root,50
+ITEM=i_reag_nightshade,50
+ITEM=i_reag_sulfur_ash,50
+ITEM=i_reag_spider_silk,50
+
+[itemdef i_chest_white]
+name=White Team's Chest
+id=0e7c //a metal chest
+
+on=@create
+color=00481
+morem=0
+tag.white=1
+
+on=@dclick
+IF (<src.account.plevel>=1)
+return 1
+ELSE
+return 0
+ENDIF
+
+on=@click
+message the current score for the white team is <eval <morem>>
+return 1
+
+[itemdef i_chest_black]
+name=Black Team's Chest
+id=0e7c
+
+on=@dclick
+IF (<src.account.plevel>=1)
+return 1
+ELSE
+return 0
+ENDIF
+
+on=@create
+color=1
+morem=0
+tag.black=1
+
+on=@click
+message @1 The current score for the black team is <eval <morem>>
+return 1
+
+[events e_black]
+on=@death
+act.newitem i_head_black
+act.sysmessage @ 1 Go and put the head in the box to score a point!
+on=@click
+message @1 <src.name>
+RETURN 1
+
+[events e_white]
+on=@death
+act.newitem i_head_white
+act.sysmessage @00481 Go and put the head in the box to score a point
+on=@click
+message @00481 <src.name>
+RETURN 1
+
+[itemdef i_teamwhite]
+name=white
+id=i_memory
+type=t_eq_script
+
+on=@create
+attr=00014
+
+on=@equip
+src.newitem i_gloves_white
+src.act.equip
+src.newitem i_chestplate_white
+src.act.equip
+src.newitem i_arms_white
+src.act.equip
+src.newitem i_helm_white
+src.act.equip
+src.newitem i_leggings_white
+src.act.equip
+src.newitem i_sword_white
+src.act.equip
+src.newitem i_shield_white
+src.act.equip
+src.newitem i_helm_white
+src.act.equip
+src.newitem template_white
+src.act.bounce
+src.events +e_white
+src.go 5316,1420
+timer=5
+link=<src.uid>
+
+on=@timer
+link.stone
+link.sysmessage wait for a gm's assistance please.
+return 1
+
+[itemdef i_teamblack]
+name=black
+id=i_memory
+type=t_eq_script
+
+on=@create
+attr=00014
+
+on=@equip
+src.newitem i_gloves_black
+src.act.equip
+src.newitem i_chestplate_black
+src.act.equip
+src.newitem i_arms_black
+src.act.equip
+src.newitem i_helm_black
+src.act.equip
+src.newitem i_leggings_black
+src.act.equip
+src.newitem i_sword_black
+src.act.equip
+src.newitem i_shield_black
+src.act.equip
+src.newitem template_black
+src.act.bounce
+src.events +e_black
+src.go 5138,1441,2
+timer=5
+link=<src.uid>
+
+on=@timer
+link.stone
+link.sysmessage wait for a gm's assistance please.
+return 1
+
+[itemdef i_stone_cthtest]
+name=cth test stone
+id=i_gravestone_17
+
+on=@create
+color=5
+
+on=@dclick
+dorand 2
+src.newitem i_teamwhite
+src.newitem i_teamblack 
+ENDDO
+src.act.equip
+

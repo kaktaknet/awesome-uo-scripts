@@ -1,0 +1,128 @@
+// src.findid(i_bandage).useitem
+////////////////////////////////////////////////////////////////////////////////////////
+// TO ADD
+// (Done) add function to work out if they fail or not
+// (Done) add anatomy check to work out the effects timer
+// (Done) add healing check to work out the effects amount (healing only)
+// (Done) add curing poison check
+// add skill gains later
+
+// (Done) add consume used bandage and replace with a bloody one
+// (Done) add possible break bandage effect if hit
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+[EVENTS e_bandage_concentration_healself] // if they get hit within timer = effect fail
+ON=@Death
+   CONSUME i_self_use_heal
+ON=@GetHit
+   SYSMESSAGE="Your concentration has been broken."
+   CONSUME i_self_use_heal
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+[itemdef i_self_use_cure] // check on re-using cure onself
+NAME=cure self use check
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=111
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+
+ON=@Equip
+	cont.EVENTS=+e_bandage_concentration_healself /////////////// put the concentration event on while curing
+	TIMER=1
+
+ON=@UnEquip
+   	CONT.EVENTS=-e_bandage_concentration_healself /////////////// remove curing consentration event
+
+ON=@Timer
+	cont.SPELLEFFECT=s_archcure 85.0 ///////////////////////// Cure effect
+	cont.NEWITEM=i_bandage_bloody /////////////////////////////// replace with bloody bandage
+	lastnew.CONT=<?cont.FINDLAYER(layer_pack)?>////////////////// put it in players pack
+	MESSAGE="You cure yourself."
+	remove
+	RETURN 1
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+[itemdef i_self_use_heal] // check on re-using heal onself
+NAME=heal self use check
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=109
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+
+ON=@Equip
+	cont.EVENTS=+e_bandage_concentration_healself /////////////// put the concentration event on while healing
+	TIMER=<var.im_10>
+
+ON=@UnEquip
+   	CONT.EVENTS=-e_bandage_concentration_healself /////////////// remove healing consentration event
+
+ON=@Timer
+	cont.SPELLEFFECT=s_greater_heal <var.healing_skill> ///////// Heal, effect governed by healing skill
+	cont.NEWITEM=i_bandage_bloody /////////////////////////////// replace with bloody bandage
+	lastnew.CONT=<?cont.FINDLAYER(layer_pack)?>////////////////// put it in players pack
+	MESSAGE="You heal yourself."
+	remove
+	RETURN 1
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[PLEVEL 1]
+bandageself
+
+[function bandageself]
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// set calculation vars
+var.heal_fail_calc=<EVAL {1 1100}> // generate a random number from 0 to 1100. gm healers have 1/10 chance of fail.
+var.healing_skill=<src.healing>    // store healing for calculation
+var.re_use_time=0
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+IF !<SRC.RESTEST I_bandage> //////////////////////////////////////// check if they have bandages
+  SRC.MESSAGE You lack the required bandages.
+  RETURN 1
+else
+  IF <SRC.RESTEST i_self_use_heal>||<src.restest i_self_use_cure> // check if already healing or curing.
+    SRC.SYSMESSAGE You are not ready to use healing again yet.
+    RETURN 1
+  else
+    if (SRC.HITS >= SRC.MAXHITS) /////////////////////////////////// check if needs healing
+      SRC.SYSMESSAGE="You are not in need of healing."
+      return 1
+    else  
+      if (<var.heal_fail_calc> >= var.healing_skill) /////////////// if random number is more than healing = fail
+        SRC.SYSMESSAGE="You fail to heal yourself."
+        return 1
+      else ///////////////////////////////////////////////////////// ok they have passed all checks, heal/cure them
+        var.re_use_time=<SRC.ANATOMY>/100 ////////////////////////// set heal and re_use timer to players anatomy skill/100
+	var.im_10=10 /////////////////////////////////////////////// recalculate timer cuz we want a reverse figure
+	var.im_10=(<var.im_10>-<var.re_use_time>)+<EVAL {0 3}> ///// add randow 0 to 3 to the final timer figure
+	if (SRC.ISPOISONED) //////////////////////////////////////// check if player is poisoned
+          if (SRC.HEALING < 85.0) ////////////////////////////////// check if they are skilled enough to cure it
+            SRC.SYSMESSAGE="You lack skill to cure the poison."  /// not skilled enough message
+            return 0  ////////////////////////////////////////////// allows poisoned people to be healed w/o curing.
+          endif
+	  src.CONSUME=1 i_bandage ////////////////////////////////// remove used bandage
+          newitem=i_self_use_cure ////////////////////////////////// add the curing item
+	  SRC.ACT.equip //////////////////////////////////////////// equip curing item
+        else
+	  src.CONSUME=1 i_bandage ////////////////////////////////// remove used bandage
+          newitem=i_self_use_heal ////////////////////////////////// add the healing item
+	  SRC.ACT.equip //////////////////////////////////////////// equip healing item
+        endif
+      endif
+    endif
+  endif
+endif
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[eof]

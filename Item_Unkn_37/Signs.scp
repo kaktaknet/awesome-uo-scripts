@@ -1,0 +1,175 @@
+[FUNCTION sign]
+
+
+NEWITEM i_sign_post
+
+
+ACT.ATTR attr_static
+
+
+ACT.COLOR 07a1
+
+
+ACT.P <P>
+
+
+
+
+
+NEWITEM i_sign_special
+
+
+ACT.P <P>
+
+
+ACT.MOVE se
+
+
+ACT.NUDGEUP 10
+
+
+
+
+
+[FUNCTION sign_e]
+
+
+NEWITEM i_sign_post
+
+
+ACT.ATTR attr_static
+
+
+ACT.COLOR 07a1
+
+
+ACT.P <P>
+
+
+
+
+
+NEWITEM i_sign_special
+
+
+ACT.P <P>
+
+
+ACT.MOVE se
+
+
+ACT.FLIP
+
+
+ACT.NUDGEUP 10
+
+
+
+
+
+[ITEMDEF i_sign_special]
+
+
+ID=0bcf
+
+
+TYPE=t_script
+
+
+DUPELIST=0bd0
+
+
+
+
+
+ON=@Create
+
+
+ATTR attr_static
+
+
+COLOR 07a1
+
+
+
+
+
+ON=@Click
+
+
+IF (STRLEN(<TAG.TEXT>) <= 90)
+
+
+MESSAGE <TAG.TEXT>
+
+
+ELSE
+
+
+DIALOG d_sign_special
+
+
+ENDIF
+
+
+RETURN 1
+
+
+
+
+
+ON=@DClick
+
+
+DIALOG d_sign_special
+
+
+RETURN 1
+
+
+
+
+
+[DIALOG d_sign_special]
+
+
+275,210
+
+
+resizepic 0 0 3600 250 180
+
+
+htmlgump 20 20 210 140 0 1 0
+
+
+page <EVAL <SRC.ISGM> - 1>
+
+
+button 0 0 4035 4035 1 0 1
+
+
+
+
+
+[DIALOG d_sign_special TEXT]
+
+
+<TAG.TEXT>
+
+
+
+
+
+[DIALOG d_sign_special BUTTON]
+
+
+ONBUTTON 1
+
+
+IF (<SRC.ISGM>)
+
+
+INPDLG TAG.TEXT 255
+
+
+ENDIF

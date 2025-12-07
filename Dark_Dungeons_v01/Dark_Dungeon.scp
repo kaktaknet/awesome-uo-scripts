@@ -1,0 +1,115 @@
+///////////////////////
+//// Dark Dungeons ////
+///////////////////////
+//Version 0.1
+
+//Scripted using EditPlus v2.11 with Swindler's SphereScript Syntax module installed
+//Built for & tested on Sphere 0.55i
+
+//Created by Warpe– Dragon
+//http://warped.ods.org
+//warped_dragon@hotmail.com
+//ICQ: 86428337
+//AIM: Warped Dragon
+//MSN: Use Email...
+//YIM: Not Telling
+
+//Please don't remove this header//
+
+//INSTALLATION: 
+//Place this script in your root script directory.
+
+//Place the following line in spheremap.scp under the [AREA] you wish to make dark:
+EVENTS=r_dungeon_dark
+//Comment out the above line once it has been copied into spheremap.scp
+
+//IMPORTANT: Make sure this script loads before spheremap.scp. 
+//You can do this by editing the list in spheretables.scp
+//and placing Dark_Dungeon.scp above spheremap.scp.
+
+//Restart Server, and your done.
+
+//PURPOSE: This script will make torchs, nightsight spells, and other forms of illumination unusable
+//in certain parts of the map (dungeons, for example).
+
+//If you have problems, suggestions or questions about this script,
+//please don't hesitate to contact me.
+
+//Have fun!
+
+
+//Version History:
+
+//v0.1
+//Originaly I created this script at the request of Lord Aine, admin of an italian shard. Once I was done,
+//I realized that it had potential, so I expanded on it a bit and cleaned it up. Reminds me of the dungeons
+//in Ultima IV.
+
+
+[REGIONTYPE r_dungeon_dark]
+ON=@ENTER
+	SRC.EVENTS +e_dungeon_dark
+
+	IF ((<SRC.FINDLAYER(layer_hand1).TYPE> == t_light_lit) || (<SRC.FINDLAYER(layer_hand1).TYPE> == t_light_out))
+		SRC.SYSMESSAGE A strange wind arises and snuffs out thy light
+		SRC.SFX 0014
+		SRC.SFX 0228
+		SRC.FINDLAYER(layer_hand1).UNEQUIP
+
+	ENDIF
+
+	IF ((<SRC.FINDLAYER(layer_hand2).TYPE> == t_light_lit)) || (<SRC.FINDLAYER(layer_hand2).TYPE> == t_light_out))
+		SRC.SYSMESSAGE A strange wind arises and snuffs out thy light
+		SRC.SFX 0014
+		SRC.SFX 0228
+		SRC.FINDLAYER(layer_hand2).UNEQUIP
+
+	ENDIF
+
+	IF ((<SRC.FINDLAYER(34).BASEID> == i_rune_night_sight) && (<SRC.FINDLAYER(34).TYPE> == t_spell))
+		SRC.SYSMESSAGE A strange wind arises and negates your nightsight spell!
+		SRC.SFX 0014
+		SRC.SFX 01fa
+		SRC.FINDLAYER(34).REMOVE
+
+	ENDIF
+
+ON=@EXIT
+	SRC.EVENTS -e_dungeon_dark
+
+[EVENTS e_dungeon_dark]
+ON=@ITEMEQUIP
+IF (<ACT.TYPE> == t_light_lit) || (<ACT.TYPE> == t_light_out)
+	SRC.SYSMESSAGE A strange wind arises and snuffs out thy light
+	SRC.SFX 0014
+	SRC.SFX 0228
+	ACT.UNEQUIP
+ENDIF
+
+ON=@SPELLCAST
+IF ((<ARGN> == 6) || (<ARGN> == 68))
+	SRC.SYSMESSAGE A strange wind arises and interrupts your spell
+	SRC.SFX 0014
+	SRC.SFX 005c
+	RETURN 1
+
+ENDIF
+
+ON=@ITEMDCLICK
+IF ((<SRC.ACT.TYPE> == t_potion) && (<SRC.ACT.BASEID> == i_potion_nightsight))
+	SRC.SYSMESSAGE A strange wind arises and knocks the potion from your hand
+	SRC.SFX 0014
+
+	IF (<SRC.ACT.CONT.UID> == <SRC.FINDLAYER(layer_pack).UID>)
+		SRC.SFX 0057
+
+	ELSE
+		SRC.SFX 042
+		
+	ENDIF
+
+	RETURN 1
+
+ENDIF
+
+[EOF]

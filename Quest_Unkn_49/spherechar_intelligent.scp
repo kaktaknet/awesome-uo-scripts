@@ -1,0 +1,1509 @@
+//The Oblivion Shards Intelligent NPC Monsters
+//GM Iz
+//
+//These monsters use the following triggers to act smarter than default:
+// GETHIT (SRC is the attacker)
+// NPCSeeNewPlayer ([] is the SRC)
+// PERSONALSPACE ()
+// DEATH  (ACT is the killer)
+// ENVIRONCHANGE (no f'ing clue)
+// SPELLEFFECT (SRC is the attacker)
+// HIT (SRC is the NPC, SRC.TARG is the attacked player)
+
+//Shard wide events can be used:  (USE THEM AFTER THESE EVENTS, THEY DON'T STACK OTHERWISE)
+// e_immune_poison
+// e_spec_event (no para either)
+// e_immune_magic
+// e_immune_normal_weapons
+// e_arrow_immune
+// e_reflect_damage
+// e_extra_attack
+// e_daemon_armor_events (fire immune and fire damage)
+// e_fame_gain_fix MUST BE USED ALWAYS AND LAST
+
+//Events will be created and can be stacked on monsters
+//to customize them as needed.
+// e_intel_char_gen_heal_pot - (GETHIT) NPC will take potions if harmed and they have some
+// e_intel_char_magic_heal_spell - (GETHIT) NPC will heal themselves MANA permitting
+// e_intel_char_magic_caston_gethitsrc - (GETHIT) When hit, the SRC gets casted on immediately
+// e_intel_char_magic_gethitbenefits - (GETHIT) When hit, the NPC might cast good spells on themselves
+// e_intel_char_magic_caston_newplayer - (NPCSeeNewPlayer) When seen for the first time, the SRC gets casted on immediately
+// e_intel_char_magic_newplayerbenefits - (NPCSeeNewPlayer) When seeing a new player, the NPC might cast good spells on themselves
+// e_intel_char_magic_teletoplayer - (NPCSeeNewPlayer)  Small chance the NPC will teleport on top of the player
+// e_intel_char_magic_feardeath - (GETHIT) When almost dead may heal OR go nuts.
+// e_intel_char_gen_feardeath - (GETHIT) When almost dead may go nuts.
+// e_intel_char_weapon_switch - (GETHIT) Switches from ranged to melee weapons
+// e_intel_char_gen_envhealpot - (ENVIRONCHANGE) Uses heal pots if they have them and need them
+// e_intel_char_magic_envhealspell - (ENVIRONCHANGE) Uses heal spells if they have them and need them
+// e_intel_char_magic_dispelsummoned - (SPELLEFFECT) They dispel something they are attacked by
+// e_intel_char_magic_antifield - (SPELLEFFECT) No fields
+// e_intel_char_gen_antipara - (SPELLEFFECT) No para
+// e_intel_char_magic_spelleffect - (SPELLEFFECT) If the NPC gets hit with a spell, there is a chance he will cast on the SRC
+// e_intel_char_magic_death - (DEATH) One last spell... A biiig one if possible.
+// e_intel_char_magic_dispelplayer - (HIT/GETHIT) If the player has shield/reac armor it dispels them.
+// e_intel_char_gen_disarmplayer - (HIT) If the player has a shield, it makes it fall off, same with weapon
+// e_intel_char_nodeath - (DEATH) May evade death, gains full life
+// e_death_split - (DEATH) makes new npcs the same as the creatures body 50%, uses TAG.SPLIT
+// e_fire_absorb (fire absorbtion, 1 - 150 hps)
+
+//Unused or unfinished as of yet:
+// e_intel_char_gen_personalspace - (PERSONALSPACE) Beats the shit out of the person standing on them
+// e_intel_char_magic_personalspace - (PERSONALSPACE) Say hello to a nice big spell....
+// e_intel_char_gen_environchange - (ENVIRONCHANGE)
+// e_intel_char_gen_stealfrompack - (HIT) If anything is in the pack non noobied it can be ganked!
+
+//Tags that effect some of the events:
+// TAG.SPLIT - Number of new npc's to make for e_death_split
+// TAG.RANDCAST - % to cast on event
+// TAG.SPELLLEVEL - What level of casting, 0 to 3
+// TAG.REFCHANCE - % of spelleffect reflection
+// TAG.MELEEWEAPON - The ID of the melee weapon in use for the e_intel_char_weapon_switch event
+// TAG.RANGEWEAPON - The ID of the ranged weapon in use for the e_intel_char_weapon_switch event
+// TAG.SHIELD - The ID of the shield in use for the e_intel_char_weapon_switch event
+// TAG.DISARMCHANCE - The % they disarm
+// TAG.INTELNPC - If 1, identifies this NPC as an intelligent class of NPC's
+
+//Functions:
+// f_intel_char_war_distcheck - Returns 1 if anyone attacking the NPC is closer than 4 tiles, 0 if they are all farther
+// f_intel_char_movewar_back - Used to move the monsters layers back to 30
+// f_split_body - Used to create multiple monsters with event e_death_split
+
+//Monsters
+//An intelligent warping slime
+//An intelligent skeleton
+//An intelligent liche
+//An intelligent but weak orc
+//An intelligent dragon (4 different ore colors)
+//2 new intelligent elementals for shame
+//A testing char c_intel_test with all the events on them
+//An intelligent orc hero
+//An intelligent cave troll
+//An intelligent elemental for Cove. Dungeon
+//An intelligent elemental for Fire Dungeon
+//An intelligent human npc for Dispise (uses a Grayswandir and Smite.. hes funny)
+
+
+//RULES FOR MAKING A NEW NPC CHAR:
+//
+//They use the events in the ON=@CREATE and its EVENTS=+ and not TEVENTS
+//You MUST include the TAG.INTELNPC=1 in the ON=@CREATE
+//You MUST put EVENTS=+e_fame_gain_fix at the END of the ON=@CREATE
+
+[CHARDEF c_intel_abyss_lord]
+ID=c_daemon_w_sword
+Name="Lord of the Abyss"
+DAM=30,40
+ARMOR=50
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+
+ON=@CREATE
+   COLOR=09a3
+   NPC=brain_monster
+   TAG.INTELNPC=1
+   TAG.SPLIT=4
+   TAG.DISARMCHANCE=20
+   KARMA=-8000
+   FAME=8000
+   STR=650
+   INT=350
+   DEX=750
+   WRESTLING=100.0
+   TACTICS=100.0
+   MAGICRESISTANCE=100.0
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_magic_antifield
+   EVENTS=+e_intel_char_magic_dispelplayer
+   EVENTS=+e_intel_char_gen_antipara
+   EVENTS=+e_intel_char_gen_disarmplayer
+   EVENTS=+e_death_split
+   EVENTS=+e_daemon_armor_events
+   EVENTS=+e_immune_normal_weapons
+   EVENTS=+e_immune_poison
+   EVENTS=+e_extra_attack
+   EVENTS=+e_fame_gain_fix
+   
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,15
+   ITEM=i_reag_daemon_bone, {1 25} 
+   ITEM=loot_INTEL_10
+
+[CHARDEF c_intel_rare_hunter]
+ID=c_man
+CAN=mt_walk|mt_equip|mt_usehands|MT_MALE
+NAME="Rare Hunter"
+
+ON=@CREATE  
+   TAG.INTELNPC=1
+   TAG.MELEEWEAPON=i_grayswandir
+   TAG.RANGEWEAPON=i_bow_smite_electricity
+   TAG.SHIELD=i_diamond_heater_shield
+   TAG.DISARMCHANCE=40
+   TAG.COMBATTYPE=0
+   NPC=brain_monster
+   KARMA=-7000
+   FAME=7000
+   STR=450
+   INT=450
+   DEX=300
+   ARCHERY=100.0
+   TACTICS=100.0
+   MAGICRESISTANCE=100.0
+   SWORDSMANSHIP=100.0
+   PARRYING=100.0
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_magic_newplayerbenefits
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_weapon_switch
+   EVENTS=+e_intel_char_magic_dispelplayer
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_intel_char_gen_antipara
+   EVENTS=+e_extra_attack
+   EVENTS=+e_reflect_damage
+   EVENTS=+e_fame_gain_fix
+   
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_bow_smite_electricity
+   ITEMNEWBIE=i_diamond_helm
+   ITEMNEWBIE=i_diamond_gorget
+   ITEMNEWBIE=i_diamond_gauntlets
+   ITEMNEWBIE=i_diamond_arms
+   ITEMNEWBIE=i_diamond_legs
+   ITEMNEWBIE=i_diamond_chest
+   ITEMNEWBIE=i_diamond_female_chest
+   ITEMNEWBIE=i_grayswandir
+   ITEMNEWBIE=i_diamond_heater_shield
+   ITEMNEWBIE=i_potion_healGreat, 25
+   ITEMNEWBIE=i_cape
+      COLOR=07eb
+   ITEMNEWBIE=i_arrow, 200
+   ITEM=loot_INTEL_10   
+
+[CHARDEF c_intel_hell_ele]
+ID=c_elem_air
+Name="Hell Elemental"
+DAM=30,40
+ARMOR=50
+CAN=MT_WALK|MT_RUN|MT_USEHANDS|MT_SWIM
+
+ON=@CREATE
+   COLOR=2082
+   NPC=brain_monster
+   TAG.INTELNPC=1
+   TAG.RANDCAST=20
+   TAG.SPELLLEVEL=3
+   TAG.REFCHANCE=20
+   KARMA=-8000
+   FAME=8000
+   STR=650
+   INT=650
+   DEX=350
+   WRESTLING={75.0 100.0}
+   TACTICS=100.0
+   MAGERY=100.0
+   MAGICRESISTANCE={75.0 100.0}
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_intel_char_magic_caston_gethitsrc 
+   EVENTS=+e_intel_char_magic_death
+   EVENTS=+e_intel_char_magic_caston_newplayer
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_intel_char_magic_antifield
+   EVENTS=+e_intel_char_gen_antipara
+   EVENTS=+e_intel_char_magic_spelleffect
+   EVENTS=+e_fire_absorb
+   EVENTS=+e_daemon_armor_events 
+   EVENTS=+e_arrow_immune
+   EVENTS=+e_fame_gain_fix
+   
+ON=@NPCRESTOCK
+   ITEMNEWBIE=t_fire_spells 
+   ITEM=loot_INTEL_10
+
+[CHARDEF c_intel_bone_ele]
+ID=c_elem_earth
+Name="Bone Elemental"
+DAM=30,40
+ARMOR=50
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+
+ON=@CREATE
+   COLOR=0482
+   NPC=brain_undead
+   TAG.INTELNPC=1
+   KARMA=-8000
+   FAME=8000
+   STR=950
+   INT=200
+   DEX=650
+   WRESTLING={75.0 100.0}
+   TACTICS=100.0
+   MAGICRESISTANCE={75.0 100.0}
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_gen_envhealpot
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_intel_char_magic_antifield
+   EVENTS=+e_intel_char_gen_antipara
+   EVENTS=+e_intel_char_nodeath
+   EVENTS=+e_arrow_immune
+   EVENTS=+e_immune_magic
+   EVENTS=+e_immune_poison
+   EVENTS=+e_reflect_damage
+   EVENTS=+e_fame_gain_fix
+   
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,25
+   ITEM=i_reag_bone, {1 50} 
+   ITEM=loot_INTEL_10
+   ITEM={i_malice_skull 1 0 1}
+ 
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Bone Elemental
+
+[CHARDEF c_intel_cave_troll]
+ID=c_troll
+NAME="Cave Troll"
+DAM=10,20
+ARMOR=50
+CAN=MT_WALK|MT_RUN|MT_EQUIP
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   KARMA=-5000
+   FAME=3500
+   STR=200
+   INT=50
+   DEX=125
+   WRESTLING=85.0
+   MAGICRESISTANCE=75.0
+   TACTICS=80.0
+   TAG.DISARMCHANCE=15
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_gen_disarmplayer
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,15
+   ITEM=loot_INTEL_4
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Cave Troll
+
+[CHARDEF c_intel_ele_diamond]
+ID=c_elem_water
+NAME="Diamond Elemental"
+DAM=15,25
+ARMOR=35
+CAN=MT_WALK|MT_RUN|MT_EQUIP
+
+ON=@CREATE
+   COLOR=0874
+   TAG.INTELNPC=1
+   KARMA=-5000
+   FAME=5500
+   STR=450
+   INT=50
+   DEX=75
+   WRESTLING=85.0
+   MAGICRESISTANCE=75.0
+   TACTICS=80.0
+   TAG.RANDCAST=15
+   TAG.REFCHANCE=75
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_magic_spelleffect
+   EVENTS=+e_intel_char_magic_newplayerbenefits
+   EVENTS=+e_intel_char_magic_dispelplayer
+   EVENTS=+e_intel_char_magic_antifield
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,15
+   ITEM=i_gem_diamond,{3 6}
+   ITEM=loot_INTEL_6
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Diamond Elemental
+
+[CHARDEF c_intel_ele_sapphire]
+ID=c_elem_water
+NAME="Sapphire Elemental"
+DAM=15,25
+ARMOR=30
+CAN=MT_WALK|MT_RUN|MT_EQUIP
+
+ON=@CREATE
+   COLOR=0782
+   TAG.INTELNPC=1
+   KARMA=-5000
+   FAME=5000
+   STR=375
+   INT=50
+   DEX=75
+   WRESTLING=85.0
+   MAGICRESISTANCE=75.0
+   TACTICS=80.0
+   TAG.REFCHANCE=50
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_magic_spelleffect
+   EVENTS=+e_intel_char_magic_newplayerbenefits
+   EVENTS=+e_intel_char_magic_dispelplayer
+   EVENTS=+e_intel_char_magic_antifield
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,10
+   ITEM={i_gem_sapphire 1 i_gem_star_sapphire 1},{3 6}
+   ITEM=loot_INTEL_5
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Sapphire Elemental
+
+[CHARDEF c_intel_orc_hero]
+ID=c_orc
+NAME="Orc Hero"
+DAM=5,15
+ARMOR=25
+CAN=MT_WALK|MT_RUN|MT_EQUIP
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   COLOR=06af
+   NPC=brain_monster
+   KARMA=-5000
+   FAME=3000
+   STR=300
+   INT=100
+   DEX=150
+   SWORDSMANSHIP=100.0
+   PARRYING=100.0
+   ARCHERY=75.0
+   TACTICS=80.0
+   TAG.MELEEWEAPON=i_sword_broad
+   TAG.RANGEWEAPON=i_crossbow_heavy
+   TAG.SHIELD=i_shield_kite_metal
+   TAG.COMBATTYPE=0
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_gen_antipara
+   EVENTS=+e_intel_char_weapon_switch
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,25
+   ITEMNEWBIE=i_sword_broad
+   ITEMNEWBIE=i_shield_kite_metal
+   ITEMNEWBIE=i_crossbow_heavy
+   ITEMNEWBIE=i_xbolt,100
+   ITEM=loot_INTEL_4
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Orc Hero
+
+[CHARDEF c_intel_orc_warrior]
+ID=c_orc
+NAME="Orc Warrior"
+DAM=5,15
+ARMOR=25
+CAN=MT_WALK|MT_RUN|MT_EQUIP
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   COLOR=05dd
+   NPC=brain_monster
+   KARMA=-5000
+   FAME=3000
+   STR=200
+   INT=100
+   DEX=150
+   SWORDSMANSHIP=100.0
+   PARRYING=20.0
+   ARCHERY=80.0
+   TACTICS=80.0
+   TAG.MELEEWEAPON=i_sword_broad
+   TAG.RANGEWEAPON=i_crossbow
+   TAG.SHIELD=i_shield_kite_metal
+   TAG.COMBATTYPE=0
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_weapon_switch
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,25
+   ITEMNEWBIE=i_crossbow
+   ITEMNEWBIE=i_sword_broad
+   ITEMNEWBIE=i_shield_kite_metal
+   ITEMNEWBIE=i_xbolt,100
+   ITEM=loot_INTEL_3
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Orc Warrior
+
+[CHARDEF c_intel_dragon_bloodrock]
+ID=c_dragon_small_red
+NAME="Bloodrock Dragon"
+DAM=10,25
+ARMOR=40
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+RESOURCES=25 i_ribs_raw,5 i_ore_bloodrock,8 i_reag_dragon_blood
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_civilization,r_water
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   KARMA=-6000
+   FAME=5000
+   COLOR=color_o_bloodrock
+   STR=500
+   INT=200
+   DEX=100
+   TAG.RANDCAST=10
+   TAG.SPELLLEVEL=2
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_intel_char_magic_gethitbenefits
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEM=LOOT_DRAGON_SPECIFIC
+   ITEM=loot_INTEL_6
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Bloodrock Dragon
+
+[CHARDEF c_intel_dragon_verite]
+ID=c_dragon_small_red
+NAME="Verite Dragon"
+DAM=20,30
+ARMOR=45
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+RESOURCES=25 i_ribs_raw,5 i_ore_verite,8 i_reag_dragon_blood
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_civilization,r_water
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   KARMA=-7000
+   FAME=6000
+   COLOR=color_o_verite
+   STR=600
+   INT=250
+   DEX=100
+   TAG.RANDCAST=20
+   TAG.SPELLLEVEL=2
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_intel_char_magic_gethitbenefits
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_intel_char_magic_spelleffect
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEM=LOOT_DRAGON_SPECIFIC
+   ITEM=loot_INTEL_7
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Verite Dragon
+
+[CHARDEF c_intel_dragon_mytheril]
+ID=c_dragon_red
+NAME="Mytheril Dragon"
+DAM=25,35
+ARMOR=50
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+RESOURCES=25 i_ribs_raw,4 i_ore_mytheril,8 i_reag_dragon_blood
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_civilization,r_water
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   KARMA=-8000
+   FAME=7000
+   COLOR=color_o_mytheril
+   STR=700
+   INT=300
+   DEX=150
+   TAG.RANDCAST=15
+   TAG.SPELLLEVEL=3
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_intel_char_magic_gethitbenefits
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_intel_char_magic_spelleffect
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEM=LOOT_DRAGON_SPECIFIC
+   ITEM=loot_INTEL_8
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Mytheril Dragon
+
+[CHARDEF c_intel_dragon_medieval]
+ID=c_dragon_red
+NAME="Medieval Dragon"
+DAM=30,40
+ARMOR=50
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+RESOURCES=25 i_ribs_raw,2 i_ore_medieval,8 i_reag_dragon_blood
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_civilization,r_water
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   KARMA=-9000
+   FAME=8000
+   COLOR=MEDIEVAL_ARMOR_COLOR
+   STR=750
+   INT=300
+   DEX=150
+   TAG.RANDCAST=20
+   TAG.SPELLLEVEL=3
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_intel_char_magic_spelleffect
+   EVENTS=+e_intel_char_magic_gethitbenefits
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEM=LOOT_DRAGON_SPECIFIC
+   ITEM=loot_INTEL_9
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Medieval Dragon
+
+[CHARDEF c_intel_dragon_db]
+ID=c_dragon_red
+NAME="Devilsbane Dragon"
+DAM=35,50
+ARMOR=55
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+RESOURCES=25 i_ribs_raw,2 i_ore_devils_bane,8 i_reag_dragon_blood
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_civilization,r_water
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   KARMA=-10000
+   FAME=10000
+   COLOR=DEVILS_BANE_ARMOR_COLOR
+   STR=850
+   INT=350
+   DEX=200
+   TAG.RANDCAST=30
+   TAG.SPELLLEVEL=3
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_intel_char_magic_gethitbenefits
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_intel_char_magic_spelleffect
+   EVENTS=+e_intel_char_magic_caston_gethitsrc
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEM=LOOT_DRAGON_SPECIFIC
+   ITEM=loot_INTEL_10
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Devilsbane Dragon
+
+[CHARDEF c_intel_slime]
+ID=c_slime
+NAME="Sentient Ooze"
+
+DAM=12,18
+ARMOR=50
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   NPC=brain_undead
+   COLOR={0784 1 0543 1 07f5 1}
+   KARMA=-3000
+   FAME=3000
+   STR=300
+   INT=100
+   DEX=350
+   WRESTLING=100.0
+   TACTICS=80.0
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_gen_antipara
+   EVENTS=+e_intel_char_magic_teletoplayer
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_intel_char_magic_antifield
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRestock
+   ITEM=loot_INTEL_4
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Sentient Ooze
+
+[CHARDEF c_intel_skele]
+ID=c_skeleton_w_sword
+NAME="Violent Skeleton"
+TEVENTS=e_Undead
+
+DAM=12,32
+ARMOR=35
+RESOURCES=8 i_reag_bone
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   COLOR=06af
+   NPC=brain_undead
+   KARMA=-4500
+   FAME=4000
+   STR=300
+   INT=100
+   DEX=150
+   SWORDSMANSHIP=100.0
+   PARRYING=100.0
+   ARCHERY=75.0
+   TACTICS=80.0
+   TAG.MELEEWEAPON=i_sword_broad
+   TAG.RANGEWEAPON=i_bow
+   TAG.SHIELD=i_shield_kite_metal
+   TAG.DISARMCHANCE=10
+   TAG.COMBATTYPE=0
+   EVENTS=+e_intel_char_weapon_switch
+   EVENTS=+e_intel_char_gen_feardeath
+   EVENTS=+e_intel_char_gen_antipara
+   EVENTS=+e_intel_char_gen_disarmplayer
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,25
+   ITEMNEWBIE=i_sword_broad
+   ITEMNEWBIE=i_bow
+   ITEMNEWBIE=i_shield_kite_metal
+   ITEMNEWBIE=i_arrow,100
+   ITEM=LOOT_SKELETON_SPECIFIC
+   ITEM=loot_INTEL_5
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Violent Skeleton
+
+[CHARDEF c_intel_liche]
+ID=c_liche
+NAME="Devious Liche"
+CAN=MT_WALK|MT_RUN|MT_EQUIP
+SOUND=snd_MONSTER_LICHE1
+ICON=020f8
+ANIM=07bc7f
+DAM=25,40
+ARMOR=40
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   NPC=brain_undead
+   KARMA=-7000
+   FAME=7000
+   STR=500
+   INT=500
+   DEX=125
+   MACEFIGHTING=100.0
+   MAGERY=100.0
+
+   TAG.RANDCAST=20
+   TAG.REFCHANCE=20
+   TAG.SPELLLEVEL=3
+   EVENTS=+e_intel_char_magic_gethitbenefits
+   EVENTS=+e_intel_char_magic_spelleffect
+   EVENTS=+e_intel_char_magic_death
+   EVENTS=+e_intel_char_magic_dispelplayer
+   EVENTS=+e_intel_char_magic_dispelsummoned
+   EVENTS=+e_intel_char_gen_heal_pot
+   EVENTS=+e_intel_char_magic_heal_spell
+   EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,25
+   ITEMNEWBIE=i_staff_black
+   ITEM=LOOT_MAGE_EXTRAS
+   ITEM=loot_INTEL_7
+
+CATEGORY=Monsters
+SUBSECTION=Intelligent NPCs
+DESCRIPTION=Devious Liche
+
+[CHARDEF c_intel_test]
+ID=c_man
+CAN=mt_walk|mt_equip|mt_usehands|MT_MALE
+NAME="JoJo Bufangles"
+
+ON=@CREATE
+   TAG.INTELNPC=1
+   NPC=brain_beserk
+   KARMA=-7000
+   FAME=7000
+   STR=500
+   INT=100
+   DEX=100
+   TAG.RANDCAST=20
+   TAG.REFCHANCE=20
+   TAG.SPELLLEVEL=3
+   TAG.RANGEWEAPON=i_bow      //013b1
+   TAG.MELEEWEAPON=i_sword_viking       //01b39
+   TAG.DISARMCHANCE=50
+   TAG.SHIELD=i_shield_heater         //01b76
+   TAG.COMBATTYPE=0
+   EVENTS=+e_intel_char_gen_heal_pot
+   //EVENTS=+e_intel_char_magic_heal_spell
+   //EVENTS=+e_intel_char_magic_caston_gethitsrc
+   //EVENTS=+e_intel_char_magic_gethitbenefits
+   //EVENTS=+e_intel_char_magic_feardeath
+   //EVENTS=+e_intel_char_gen_envhealpot
+   //EVENTS=+e_intel_char_magic_envhealspell
+   //EVENTS=+e_intel_char_magic_dispelsummoned
+   //EVENTS=+e_intel_char_magic_antifield
+   //EVENTS=+e_intel_char_magic_spelleffect
+   //EVENTS=+e_intel_char_magic_death
+   //EVENTS=+e_intel_char_magic_dispelplayer
+   //EVENTS=+e_intel_char_gen_disarmplayer
+   //EVENTS=+e_intel_char_gen_antipara
+   //EVENTS=+e_intel_char_weapon_switch
+   //EVENTS=+e_fame_gain_fix
+
+ON=@NPCRESTOCK
+   ITEMNEWBIE=i_potion_HealGreat,10
+   ITEMNEWBIE=i_arrow,100
+   ITEMNEWBIE=i_bow
+   ITEMNEWBIE=i_shield_heater
+   ITEMNEWBIE=i_sword_viking
+
+//Functions
+[FUNCTION f_intel_char_movewar_back]
+//Warnning, recursive....
+//Moves layer 122 back to 30
+   IF (!<FINDLAYER(122)>)
+      //No more objects, exit out
+      RETURN 1
+   ELSE
+   FINDLAYER(122).LAYER=30
+   f_intel_char_movewar_back
+RETURN 0
+
+[FUNCTION f_intel_char_war_distcheck]
+//Warnning, recursive....
+//DELTA stuff from Taran :P
+//Checks everyone the NPC is at war at and returns 1 if
+//any of them are in melee combat range (4 or less)
+   IF (!<FINDLAYER(30)>)
+      //No more objects, exit out
+      f_intel_char_movewar_back
+      RETURN 1
+   ENDIF
+   //It is based on the color
+   VAR.X=<FINDLAYER(30).COLOR>
+   //This means "if the memory object color represents war in it then we are at some
+   //stage of battle with this being and they effect what weapon I use"
+   IF (<VAR.X>&MEMORY_WAR_TARG)
+   //Ok check distance, if its farther than 4 then return 1
+      VAR.DELTAX=<EVAL <FINDLAYER(30).LINK.P.X>+(-<P.X>)>
+      IF (<VAR.DELTAX><0)
+         VAR.DELTAX=<EVAL -<VAR.DELTAX>>
+      ENDIF
+      VAR.DELTAY=<EVAL <FINDLAYER(30).LINK.P.Y>+(-<P.Y>)>
+      IF (<VAR.DELTAY><0)
+         VAR.DELTAY=<EVAL -<VAR.DELTAY>>
+      ENDIF
+      IF (<VAR.DELTAY>><VAR.DELTAX>)
+         VAR.DIST=<VAR.DELTAY>
+      ELSE
+         VAR.DIST=<VAR.DELTAX>
+      ENDIF
+      //Now move the object
+      //TAG.ATTACKTHIS=<FINDLAYER(30).LINK.UID>
+      FINDLAYER(30).LAYER=122
+      IF (<VAR.DIST><3)
+         //Ok return 1 because we found one that is less than 3 away
+         f_intel_char_movewar_back
+         RETURN 1
+      ELSE
+         f_intel_char_war_distcheck
+      ENDIF
+   ELSE
+      //Another object to call this upon
+      FINDLAYER(30).LAYER=122
+      f_intel_char_war_distcheck
+   ENDIF
+RETURN 0
+
+[FUNCTION f_split_body]
+   IF !(0<SRC.TAG.SPLITC>=<SRC.TAG.SPLIT>)
+      VAR.NEWMONSTER=<BODY>
+      NEWNPC=<VAR.NEWMONSTER>
+      ACT.P=<P>
+      SRC.TAG.SPLITC=(<SRC.TAG.SPLITC>+(1))
+      f_split_body
+   ELSE
+      SRC.TAG.SPLITC=
+   ENDIF   
+
+//Events
+[EVENTS e_intel_char_weapon_switch]
+//This one uses the distance check function to see what weapon to use
+//Beware, this could turn into a lag fest....
+//COMBATTYPE - 1 is melee 2 is ranged
+ON=@GETHIT
+   //If they are closer than 5....
+   IF <f_intel_char_war_distcheck>
+      IF (<TAG.COMBATTYPE>==2)
+         IF (<FINDLAYER(layer_hand1)>)
+            FINDLAYER(layer_hand1).CONT=<FINDLAYER(layer_pack).UID>
+         ENDIF
+         IF (<FINDLAYER(layer_hand2)>)
+            FINDLAYER(layer_hand2).CONT=<FINDLAYER(layer_pack).UID>
+         ENDIF
+         IF (<FINDID(<TAG.MELEEWEAPON>)>)
+            VAR.WEAPON=<FINDID(<TAG.MELEEWEAPON>).UID>
+            UID.WEAPON.CONT=<UID>
+         ENDIF
+         IF (0<TAG.MELEEWEAPON2>!=0)
+            IF (<FINDID(<TAG.MELEEWEAPON2>)>)
+               VAR.WEAPON=<FINDID(<TAG.MELEEWEAPON2>).UID>
+               UID.WEAPON.CONT=<UID>
+            ENDIF
+         ENDIF
+         //Now equip the shield       
+         VAR.SHIELD=<FINDID(<TAG.SHIELD>).UID>
+         UID.SHIELD.CONT=<UID>
+         TAG.COMBATTYPE=1
+         VAR.WEAPON=
+         VAR.SHIELD=
+         UPDATE
+      ELSE
+         RETURN 0
+      ENDIF
+   //Ok, maybe we should use a bow
+   ELSE
+      IF (<TAG.COMBATTYPE>!=2)
+         IF (<FINDLAYER(layer_hand1)>)
+            FINDLAYER(layer_hand1).CONT=<FINDLAYER(layer_pack).UID>
+         ENDIF
+         IF (<FINDLAYER(layer_hand2)>)
+            FINDLAYER(layer_hand2).CONT=<FINDLAYER(layer_pack).UID>
+         ENDIF
+         IF (<FINDID(<TAG.RANGEWEAPON>)>)
+            VAR.WEAPON=<FINDID(<TAG.RANGEWEAPON>).UID>
+            UID.WEAPON.CONT=<UID>
+         ENDIF
+         IF (0<TAG.RANGEWEAPON2>!=0)
+            IF (<FINDID(<TAG.RANGEWEAPON2>)>)
+               VAR.WEAPON=<FINDID(<TAG.RANGEWEAPON2>).UID>
+               UID.WEAPON.CONT=<UID>            
+            ENDIF
+         ENDIF
+         TAG.COMBATTYPE=2
+         VAR.WEAPON=
+         UPDATE
+      ELSE
+         RETURN 0
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_teletoplayer]
+ON=@NPCSeeNewPlayer
+   VAR.RAND=<EVAL {1 100}>
+   IF (<VAR.RAND><=20)
+      EFFECT 3,i_fx_smoke,2,20,0
+      P=<SRC.P>
+      ATTACK
+      FIX
+      SOUND snd_spell_teleport
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_nodeath]
+ON=@DEATH
+   VAR.RANDOM=RAND(100)
+   IF (<VAR.RANDOM><=20)
+      EFFECT=3,i_fx_HEAL_EFFECT,6,15,1
+      SOUND 413
+      HITS=<STR>
+      EMOTE="manages to flee from Death's grip"
+      RETURN 1
+   ENDIF  
+
+[EVENTS e_death_split]
+ON=@DEATH
+   VAR.RAND=<EVAL {1 100}>
+   IF (<VAR.RAND><=50)
+      TAG.SPLITC=0
+      f_split_body
+      EMOTE=body split apart!
+      RETURN 0
+   ENDIF 
+   RETURN 0
+
+[EVENTS e_fire_absorb]
+ON=@GETHIT
+   VAR.RAND=<EVAL {1 100}>
+   IF (<VAR.RAND><=20)
+      IF (<ARGN2>&damage_fire)
+         HITS=<HITS>+<EVAL {1 150}>
+         RETURN 1
+      ENDIF
+   ENDIF   
+RETURN 0
+
+[EVENTS e_intel_char_magic_dispelplayer]
+ON=@GETHIT
+   //Random based on skill level
+   VAR.RANDCAST=0<TAG.RANDCAST>
+
+   IF (<VAR.RANDCAST>==0)
+      VAR.RANDCAST=20
+   ENDIF
+
+   VAR.RAND=<EVAL {1 100}>
+   IF (<VAR.RAND>><VAR.RANDCAST>)
+      RETURN 0
+   ENDIF
+
+   IF ((<SRC.FLAGS>&statf_reactive)||(<SRC.FLAGS>&statf_reflection))&&(<MANA>>=15)
+      SRC.SPELLEFFECT s_dispel,1000
+      SRC.SOUND snd_spell_dispel
+      MANA=(<MANA>+(-15))
+   ENDIF
+RETURN 0
+
+ON=@HIT
+   //Random based on skill level
+   VAR.RANDCAST=0<TAG.RANDCAST>
+
+   IF (<VAR.RANDCAST>==0)
+      VAR.RANDCAST=20
+   ENDIF
+
+   VAR.RAND=<EVAL {1 100}>
+   IF (<VAR.RAND>><VAR.RANDCAST>)
+      RETURN 0
+   ENDIF
+
+   IF ((<SRC.FLAGS>&statf_reactive)||(<SRC.FLAGS>&statf_reflection))&&(<MANA>>=15)
+      SRC.SPELLEFFECT s_dispel,1000
+      SRC.SOUND snd_spell_dispel
+      MANA=(<MANA>+(-15))
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_gen_disarmplayer]
+ON=@HIT
+   //If its a player....
+   IF (<SRC.NPC>!=0)
+      RETURN 0
+   ENDIF
+   //DISARMCHANCE% chance it will knock your weapon under you
+   VAR.RAND=<EVAL {1 100}>
+   IF (0<TAG.DISARMCHANCE>==0)
+      VAR.DC=10
+   ELSE
+      VAR.DC=<EVAL <TAG.DISARMCHANCE>>
+   ENDIF
+   IF (<VAR.RAND><=<VAR.DC>)
+      IF (0<SRC.FINDLAYER(1).ID>!=0)
+         SRC.EMOTE "drop <SRC.FINDLAYER(1).NAME>!"
+         SRC.FINDLAYER(1).CONT=<SRC.FINDLAYER(layer_pack).UID>
+         RETURN 0
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_spelleffect]
+ON=@SPELLEFFECT
+   //NPC might cast spell back at player
+   //Default 10% chance
+   VAR.RAND=<EVAL {1 100}>
+   VAR.REFCHANCE=0<EVAL <TAG.REFCHANCE>>
+   IF (<VAR.REFCHANCE>==0)
+      VAR.REFCHANCE=10
+   ENDIF
+   VAR.SPELLSTR=(<EVAL (<INT>*10)>)
+   //Ok they are good to cast
+   IF (<VAR.RAND><=<VAR.REFCHANCE>)
+      IF (<SRC.BASEID>!=i_spell_caster)
+         IF <SRC.CANSEELOS>
+            SRC.f_any_spell <ARGN>,<EVAL <VAR.SPELLSTR>>
+         ENDIF
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_death]
+ON=@DEATH
+   //If a TAG.RANDCAST exists then it uses that,otherwise
+   //it is a flat 40% chance to cast on the player.
+   //
+   //The spells used are random as well.
+   //There is a default statement, but also if a TAG.SPELLLEVEL
+   //exists it can specify easy/medium/hard (1,2,3)
+   VAR.RANDCAST=0<TAG.RANDCAST>
+   VAR.SPELLLEVEL=0<TAG.SPELLLEVEL>
+   //Set the default, dont have to for level because 0 means default easy
+   IF (<VAR.RANDCAST>==0)
+      VAR.RANDCAST=40
+   ENDIF
+
+   VAR.RAND=<EVAL {1 100}>
+
+   //Ok they are good to cast
+   IF (<VAR.RAND><=<EVAL <VAR.RANDCAST>>)
+      //This is really just x1 but the 100.0 needs an extra x10 so its 10
+      VAR.SPELLSTR=(<INT>*10)
+      IF (<VAR.SPELLLEVEL>==0)
+         VAR.SPELL=18
+         VAR.MANALEVEL=10
+      ELIF (<VAR.SPELLLEVEL>==1)
+         VAR.SPELL=30
+         VAR.MANALEVEL=15
+      ELIF (<VAR.SPELLLEVEL>==2)
+         VAR.RAND2=<EVAL {1 3}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=30
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=46
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=43
+         ENDIF
+         VAR.MANALEVEL=20
+      ELSE
+         //highest level
+         VAR.RAND2=<EVAL {1 2}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=49
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=51
+         ENDIF
+         VAR.MANALEVEL=30
+      ENDIF
+
+      IF (<MANA>>=<VAR.MANALEVEL>)
+         VAR.SPELLSTR=(<EVAL (<INT>*10)>)
+         ACT.SPELLEFFECT <EVAL <VAR.SPELL>>,<EVAL <VAR.SPELLSTR>>
+         MANA=<MANA>+(-<VAR.MANALEVEL>)
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_dispelsummoned]
+ON=@GETHIT
+   IF (<SRC.FLAGS>&04000000) && (<MANA>>20)  //conjured
+      SRC.SPELLEFFECT 41,1500
+      MANA  = <EVAL <MANA> - 20>
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_antifield]
+ON=@itemStep
+   IF ((<ACT.ID>==0398c)||(<ACT.ID>==03946)||(<ACT.ID>==03914)||(<ACT.ID>==03967))
+      SOUND snd_spell_dispel_field
+      ACT.REMOVE
+      RETURN 1
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_gen_antipara]
+ON=@SPELLEFFECT
+   IF (<ARGN>==38)||(<ARGN>==47)
+      RETURN 1
+   ENDIF
+RETURN 0
+
+ON=@GETHIT
+   IF (<FLAGS>&statf_freeze)
+      FLAGS=<FLAGS>&~statf_freeze
+      RETURN 0
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_envhealspell]
+ON=@ENVIRONCHANGE
+   //If not full health then use it
+   IF (((<HITS>)<(<STR>))&&(<MANA>>10))
+      //This is really just x1 but the 100.0 needs an extra x10 so its 10
+      VAR.SPELLSTR=(<EVAL (<INT>*10)>)
+      SPELLEFFECT s_greater_heal,<EVAL <VAR.SPELLSTR>>
+      MANA=<MANA>+(-10)
+      IF (<MANA><=0)
+         MANA=0
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_gen_envhealpot]
+ON=@ENVIRONCHANGE
+   //If not full health then use it
+   IF ((<HITS>)<(<STR>))
+      //Check for pots
+      VAR.UID=<FINDID(i_potion_HealGreat)>
+      //We found one, use it
+      IF (<VAR.UID>!=0)
+         TRYP 0 UID.<VAR.UID>.DCLICK
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_feardeath]
+ON=@GETHIT
+   IF (<HITS>>(<STR>/10))
+      RETURN 0
+   ENDIF
+   VAR.RAND=<EVAL {1 100}>
+   //20% chance of TRYING to heal
+   IF (<VAR.RAND><=20)
+      VAR.UID=<FINDID(i_potion_HealGreat).UID>
+      //We found one, use it
+      IF (<VAR.UID>!=0)
+         FINDID(i_potion_HealGreat).USEITEM
+      ENDIF
+      IF (<SRC.MANA>>10)
+         //This is really just x1 but the 100.0 needs an extra x10 so its 10
+         VAR.SPELLSTR=(<EVAL (<INT>*10)>)
+         SPELLEFFECT s_greater_heal,<EVAL <VAR.SPELLSTR>>
+         MANA=<MANA>+(-10)
+         IF (<MANA><=0)
+            MANA=0
+         ENDIF
+      ENDIF
+   ENDIF
+
+   VAR.RAND=<EVAL {1 100}>
+   //20% chance of going nuts
+   IF ((<VAR.RAND><=20)&&(0<EVAL <TAG.PISSED>>==0))
+      EMOTE "becomes enraged!"
+      TAG.PISSED=1
+      STR=<STR>+(<STR>/5)
+      STR=<DEX>+(<DEX>/5)
+      MANA=<MANA>+100
+      SPELLEFFECT s_cure,1000
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_gen_feardeath]
+ON=@GETHIT
+   IF (<HITS>>(<STR>/10))
+      RETURN 0
+   ENDIF
+   VAR.RAND=<EVAL {1 100}>
+   //10% chance of going nuts
+   IF ((<VAR.RAND><=20)&&(0<EVAL <TAG.PISSED>>==0))
+      EMOTE "becomes enraged!"
+      TAG.PISSED=1
+      STR=<STR>+(<STR>/5)
+      STR=<DEX>+(<DEX>/5)
+      MANA=<MANA>+100
+      SPELLEFFECT s_cure,1000
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_gethitbenefits]
+ON=@GETHIT
+//Randomly adds benefits as a fighter/mage might during battle
+//5% chance of doing something
+VAR.RAND=<EVAL {1 20}>
+IF (<VAR.RAND>!=1)
+   RETURN 0
+ENDIF
+//Can do various things when they see battle may be coming
+//Pick things to cast.
+   VAR.RAN1=<EVAL {1 8}>
+   VAR.RAN2=<EVAL {1 16}>
+   //This is really just x1 but the 100.0 needs an extra x10 so its 10
+   VAR.SPELLSTR=(<EVAL (<INT>*10)>)
+   //Cast protection
+   IF ((<VAR.RAN1>==1)||(<VAR.RAN2>==1))
+      IF !(<FINDID(i_rune_protection)>)
+         SPELLEFFECT s_protection,<EVAL <VAR.SPELLSTR>>
+      ENDIF
+   //Cast reactive armor
+   ELIF ((<VAR.RAN1>==2)||(<VAR.RAN2>==2))
+      IF !(<FLAGS>&statf_reactive)
+         SPELLEFFECT s_reactive_armor,<EVAL <VAR.SPELLSTR>>
+      ENDIF
+   //Cast magic reflect
+   ELIF ((<VAR.RAN1>==3)||(<VAR.RAN2>==3))
+      IF !(<FLAGS>&statf_reflection)
+         SPELLEFFECT s_magic_reflection,<EVAL <VAR.SPELLSTR>>
+      ENDIF
+   //Cast Bless
+   ELIF ((<VAR.RAN1>==4)||(<VAR.RAN2>==4))
+      IF !(<FINDID(i_rune_bless)>)
+         SPELLEFFECT s_bless,<EVAL <VAR.SPELLSTR>>
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_newplayerbenefits]
+ON=@NPCSeeNewPlayer
+//Randomly adds benefits as a fighter/mage might during battle
+//50% chance of doing something
+VAR.RAND=<EVAL {1 2}>
+IF (<VAR.RAND>!=1)
+   RETURN 0
+ENDIF
+//Can do various things when they see battle may be coming
+//Pick things to cast.
+   VAR.RAN1=<EVAL {1 8}>
+   VAR.RAN2=<EVAL {1 16}>
+   //This is really just x1 but the 100.0 needs an extra x10 so its 10
+   VAR.SPELLSTR=(<EVAL (<INT>*10)>)
+   //Cast protection
+   IF ((<VAR.RAN1>==1)||(<VAR.RAN2>==1))
+      IF !(<FINDID(i_rune_protection)>)
+         SPELLEFFECT s_protection,<EVAL <VAR.SPELLSTR>>
+      ENDIF
+   //Cast reactive armor
+   ELIF ((<VAR.RAN1>==2)||(<VAR.RAN2>==2))
+      IF !(<FLAGS>&statf_reactive)
+         SPELLEFFECT s_reactive_armor,<EVAL <VAR.SPELLSTR>>
+      ENDIF
+   //Cast magic reflect
+   ELIF ((<VAR.RAN1>==3)||(<VAR.RAN2>==3))
+      IF !(<FLAGS>&statf_reflection)
+         SPELLEFFECT s_magic_reflection,<EVAL <VAR.SPELLSTR>>
+      ENDIF
+   //Cast Bless
+   ELIF ((<VAR.RAN1>==4)||(<VAR.RAN2>==4))
+      IF !(<FINDID(i_rune_bless)>)
+         SPELLEFFECT s_bless,<EVAL <VAR.SPELLSTR>>
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_gen_heal_pot]
+ON=@GETHIT
+   IF (<EVAL {1 3}>!=1)
+      RETURN 0
+   ENDIF
+   //If at 25% hits "use" a potion
+   IF (<HITS><=(<STR>/4))
+      //Check for pots
+      VAR.FID=0<FINDID(i_potion_HealGreat)>
+      //We found one, use it
+      IF (<VAR.FID>!=0)
+         HITS=<HITS>+<EVAL {20 50}>
+         EFFECT=3,i_fx_heal_effect,6,31,0
+         CONSUME=1 i_potion_HealGreat
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_heal_spell]
+ON=@GETHIT
+   //If at 25% hits use a potion
+   IF (<EVAL <STR>/4>><HITS>)&&(<MANA>>10)
+      //This is really just x1 but the 100.0 needs an extra x10 so its 10
+      VAR.SPELLSTR=(<INT>*10)
+      SPELLEFFECT s_greater_heal,<EVAL <VAR.SPELLSTR>>
+      MANA=<MANA>+(-10)
+      IF (<MANA><=0)
+         MANA=0
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_magic_caston_gethitsrc]
+ON=@GETHIT
+   //If a TAG.RANDCAST exists then it uses that,otherwise
+   //it is a flat 20% chance to cast on the player.
+   //
+   //The spells used are random as well.
+   //There is a default statement, but also if a TAG.SPELLLEVEL
+   //exists it can specify easy/medium/hard (1,2,3)
+   VAR.RANDCAST=0<TAG.RANDCAST>
+   VAR.SPELLLEVEL=0<TAG.SPELLLEVEL>
+
+   //Set the default, dont have to for level because 0 means default easy
+   IF <VAR.RANDCAST>==0
+      VAR.RANDCAST=20
+   ENDIF
+
+   VAR.RAND=<EVAL {1 100}>
+   //Ok they are good to cast
+   IF (<EVAL <VAR.RAND>><=<EVAL <VAR.RANDCAST>>)
+      //This is really just x1 but the 100.0 needs an extra x10 so its 10
+      VAR.SPELLSTR=(<INT>*10)
+      IF (<VAR.SPELLLEVEL>==0)
+         VAR.RAND2=<EVAL {1 4}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=5
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=18
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=8
+         ELIF (<VAR.RAND2>==4)
+            VAR.SPELL=27
+         ENDIF
+         VAR.MANALEVEL=10
+      ELIF (<VAR.SPELLLEVEL>==1)
+         VAR.RAND2=<EVAL {1 4}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=5
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=18
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=20
+         ELIF (<VAR.RAND2>==4)
+            VAR.SPELL=30
+         ENDIF
+         VAR.MANALEVEL=15
+      ELIF (<VAR.SPELLLEVEL>==2)
+         VAR.RAND2=<EVAL {1 4}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=20
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=27
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=46
+         ELIF (<VAR.RAND2>==4)
+            VAR.SPELL=43
+         ENDIF
+         VAR.MANALEVEL=20
+      ELSE
+         //highest level
+         VAR.RAND2=<EVAL {1 4}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=30
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=46
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=43
+         ELIF (<VAR.RAND2>==4)
+            VAR.SPELL=51
+         ENDIF
+         VAR.MANALEVEL=30
+      ENDIF
+      IF (<MANA>>=<EVAL <VAR.MANALEVEL>>)
+         IF <SRC.CANSEELOS>
+            SRC.f_any_spell <EVAL <VAR.SPELL>>,<EVAL <VAR.SPELLSTR>>
+            MANA=<MANA>+(-<VAR.MANALEVEL>)
+         ENDIF
+      ENDIF
+   ENDIF
+RETURN 0
+
+//This is the same as the other caston event, just for when the fun starts
+[EVENTS e_intel_char_magic_caston_newplayer]
+ON=@NPCSeeNewPlayer
+   //If a TAG.RANDCAST exists then it uses that,otherwise
+   //it is a flat 20% chance to cast on the player.
+   //
+   //The spells used are random as well.
+   //There is a default statement, but also if a TAG.SPELLLEVEL
+   //exists it can specify easy/medium/hard (1,2,3)
+   VAR.RANDCAST=0<TAG.RANDCAST>
+   VAR.SPELLLEVEL=0<TAG.SPELLLEVEL>
+   //Set the default, dont have to for level because 0 means default easy
+   IF <VAR.RANDCAST>==0
+      VAR.RANDCAST=20
+   ENDIF
+
+   VAR.RAND=<EVAL {1 100}>
+
+   //Ok they are good to cast
+   IF (<VAR.RAND><=<EVAL <VAR.RANDCAST>>)
+      //This is really just x1 but the 100.0 needs an extra x10 so its 10
+      VAR.SPELLSTR=(<INT>*10)
+      IF (<VAR.SPELLLEVEL>==0)
+         VAR.RAND2=<EVAL {1 4}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=5
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=18
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=8
+         ELIF (<VAR.RAND2>==4)
+            VAR.SPELL=27
+         ENDIF
+         VAR.MANALEVEL=10
+      ELIF (<VAR.SPELLLEVEL>==1)
+         VAR.RAND2=<EVAL {1 4}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=5
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=18
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=20
+         ELIF (<VAR.RAND2>==4)
+            VAR.SPELL=30
+         ENDIF
+         VAR.MANALEVEL=15
+      ELIF (<VAR.SPELLLEVEL>==2)
+         VAR.RAND2=<EVAL {1 4}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=20
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=27
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=46
+         ELIF (<VAR.RAND2>==4)
+            VAR.SPELL=43
+         ENDIF
+         VAR.MANALEVEL=20
+      ELSE
+         //highest level
+         VAR.RAND2=<EVAL {1 4}>
+         IF (<VAR.RAND2>==1)
+            VAR.SPELL=30
+         ELIF (<VAR.RAND2>==2)
+            VAR.SPELL=46
+         ELIF (<VAR.RAND2>==3)
+            VAR.SPELL=43
+         ELIF (<VAR.RAND2>==4)
+            VAR.SPELL=51
+         ENDIF
+         VAR.MANALEVEL=30
+      ENDIF
+      IF (<MANA>>=<VAR.MANALEVEL>)
+         SRC.f_any_spell <ARGN>,<EVAL <VAR.SPELLSTR>>
+         MANA=<MANA>+(-<VAR.MANALEVEL>)
+      ENDIF
+   ENDIF
+RETURN 0
+
+[EVENTS e_intel_char_gen_personalspace]
+ON=@PERSONALSPACE
+RETURN 0
+
+[EVENTS e_intel_char_magic_personalspace]
+ON=@PERSONALSPACE
+RETURN 0
+
+[EOF]

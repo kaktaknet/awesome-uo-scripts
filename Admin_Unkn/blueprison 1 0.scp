@@ -1,0 +1,59 @@
+// Prison Control 1.0
+// ~~~~~~~~~~~~~~~~~~
+// by Blueflame
+
+// i know its a bit complicated but i think as soon as you set it up it will be a very good jail script:
+
+// BUG: there is something with locking the door, don't know if it works like it should. if you find out 
+// where my error is, please report it to me ( marcus.artner@gmx.at ) thx
+
+// to install simply place a i_prisonsign for every Prison Room you have
+// link it to the door, and set the morep to a point inside the room
+// change the Tele-Point of your "Jail"-Region somewhere near the signs.
+
+// When you use .jail, the user will get to this tele-Point. There you can select an empty Room 
+// (Green Signs) by dclicking on a sign. It will change color to red, and show the players name, 
+// as well as teleporting the player to his room.
+
+// When you dclick on a red sign, the rooms door will be opened again, and the player will be "forgiven"
+// The player is ow able to leave the room and go to a teleporter/travel stone/ travel mage or whatever you use, 
+// to get back into a town of his choice
+
+[ITEMDEF i_prisonsign]
+ID=i_sign_blank
+TYPE=t_normal
+NAME=Zellenstatus
+
+ON=@CREATE
+NAME=Frei
+COLOR=00a52
+VALUE = 0
+LINK=0
+
+ON=@DCLICK
+IF ! (<LINK> == 0)
+  IF (<COLOR> == 00a52)
+    // noch frei
+    TARGET
+    RETURN 1
+  ELSE
+    // nicht frei
+    COLOR = 00a52
+    NAME=Frei
+    MORE2.FORGIVE
+    link.type=t_door
+    RETURN 1
+  ENDIF
+ENDIF
+
+ON=@TARGON_CHAR
+COLOR=00a4e
+NAME=<SRC.TARG.NAME>, <SRC.TARG.TITLE>
+MORE2=<SRC.TARG.UID>
+SRC.TARG.go <morep>
+LINK.TYPE=t_door_locked
+RETURN 1
+
+ON=@TIMER
+act.trigger=@dclick
+RETURN 1

@@ -1,0 +1,1242 @@
+/////////////Sphere_Runebook.scp////////////
+// Xeno's runebook Version 3.0
+// Scriptor's INC Production
+// For versions .54m-.1.0 (.55)
+// Wont work with version with broken timers! (.54x?)
+// (There is no such thing as .51a programable rune book!)
+// www.darkprowless.com/runebook.htm
+// Runebook to be distributed and ran in whole to include this info TAG
+// DarkProwless Shard www.darkprowless.com
+// To report bugs in any of my scripts (NO script requests!)
+// email me here: deathbringer@writeme.com
+// Just drop this file Sphere_Runebook.scp in your SCRIPT directory
+// Then .add i_x_runebook
+// Updated 23 Apr 2001
+//---
+// New stuff for v3:
+// >Inoperability with RB version 1.x+ (is compatable)
+// >Changed Color of book to show new version 3
+// >Check for illegal destinations
+// >Skip all checks for GM's (Recall & Gate)
+// >Doesn't require reagents IF SERVer INI is set for that
+// >Added iteruption to Recall & Gate
+// >Added delay to gate
+// >Added consume rune switch (upon scribing)(see line 3 after on=@CREATE)
+// >Gate location names SRC & DEST
+// >Various bug fixes & code cleanup
+//---
+//[EOF]  marker @ line number 1427 ~35k bytes
+////////////////////////////////////////////
+//Iz:  Added renaming features and made the book dyable.
+//     (Both the book and individual runes can be renamed)
+//     Changed all the code to be in functions so its not 3219842342 lines long
+//     Added the "locking system" so that users can lock their books for rune gardens
+//       -The user clicks the "lock" button and the book is "locked"
+//       -When the book is in a backpack it functions normally BUT....
+//       -When it is on the ground (guild houses, etc...) only the owner can modify it
+//       -Anyone can use it or ADD to it but not rename it, or delete runes
+//       -Added better "can i recall/gate" there functions
+
+VERSION=0.55
+
+[ITEMDEF i_X_RUNEBOOK]
+//RUNEBOOK by Xeno
+ID=i_spellbook
+TYPE=0
+RESOURCES=80 I_PARCHMENT, 1 I_HIDE, 1 I_CLOTH
+TYPE=t_eq_script //Stores TAGs but unEQUIPable
+WEIGHT=1
+LAYER=1 // this is wrong in TILEDATA ?
+NAME="Rune Book"
+VALUE=3500
+DYE=1
+
+ON=@DCLICK
+   //Check to see if you are in jail
+   IF (STRMATCH("<REGION.NAME>","jail")) &! <SRC.ISGM>
+      SRC.SYSMESSAGE "You can not use that object in jail."
+      RETURN 1
+   ENDIF
+   //Always set to newbied
+   ATTR=<ATTR>|attr_newbie
+   SRC.SOUND=85
+   DIALOG d_X_BOOK
+RETURN 1
+
+ON=@TARGON_CHAR
+   SRC.SYSMESSAGE="A person? You dont deserve a rune book!"
+RETURN 1
+
+ON=@TARGON_ITEM
+   IF !(0<SRC.TARG.TOPOBJ.UID>==0<SRC.TOPOBJ.UID>)
+      SRC.SYSMESSAGE"This is not in your pack!"
+      RETURN 1
+   ENDIF
+
+   IF (<SRC.TARG.TYPE>==t_container)
+      IF (0<SRC.TAG.RUNECHEAT>==01)
+         SERV.ALLCLIENTS SYSMESSAGE "<SRC.NAME> is trying to cheat with the runebook.  Ask them about their container. ;)"
+         SRC.TITLE="Runebook Cheater"
+         SRC.TARG.REMOVE
+         SRC.MESSAGE "The container is gone, but it was nice of you to try. :D!!!"
+      ELSE
+         SRC.MESSAGE "**We don't recommend you do that again or bad things will happen.**"
+         SRC.TAG.RUNECHEAT=1
+      ENDIF
+      RETURN 1
+   ENDIF
+
+   IF (<SRC.TARG.BASEID>==i_rune_marker)
+      IF (<SRC.TARG.MOREX>==0)
+        SRC.SYSMESSAGE="That is a blank rune!"
+        RETURN 1
+      ENDIF
+
+      TAG.HOLD_LOCAL=<SRC.TARG.NAME>
+      TAG.HOLD_X=<SRC.TARG.MOREX>
+      TAG.HOLD_Y=<SRC.TARG.MOREY>
+      TAG.HOLD_Z=<SRC.TARG.MOREZ>
+      TAG.HOLD_M=<SRC.TARG.MOREM>
+
+      IF !<SRC.ISGM>  //&& (<TAG.EATRUNE>==01)//IF your not gm & rune remove is on.. remove it!
+        SRC.TARG.REMOVE
+        SRC.SYSMESSAGE "The rune is destroyed in the process."
+      ENDIF
+
+      IF (<TAG.POS1_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot I."
+         f_write_rune 1
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS2_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot II."
+         f_write_rune 2
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS3_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot III."
+         f_write_rune 3
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS4_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot IV."
+         f_write_rune 4
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS5_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot V."
+         f_write_rune 5
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS6_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot VI."
+         f_write_rune 6
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS7_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot VII."
+         f_write_rune 7
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS8_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot VIII."
+         f_write_rune 8
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS9_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot IX."
+         f_write_rune 9
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS10_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot X."
+         f_write_rune 10
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS11_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot XI."
+         f_write_rune 11
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS12_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot XII."
+         f_write_rune 12
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS13_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot XIII."
+         f_write_rune 13
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS14_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot XIV."
+         f_write_rune 14
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS15_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot XV."
+         f_write_rune 15
+         RETURN 1
+      ENDIF
+      IF (<TAG.POS16_X>=00)
+         SRC.SYSMESSAGE="You scribe the rune in slot XVI."
+         f_write_rune 16
+         RETURN 1
+      ENDIF
+
+      SRC.SYSMESSAGE="You have no empty slots for that!"
+      RETURN 1
+   ELSE
+      SRC.SYSMESSAGE "That is not a rune!"
+      RETURN 1
+   ENDIF//Main IF @ start
+
+   SRC.SAY="Sphere TAGs/target/VAR maybe broken!"
+RETURN 1//Stop all
+
+CATEGORY=Rune
+SUBSECTION=Rune book
+DESCRIPTION=Rune book (By Xeno)
+
+ON=@CREATE
+COLOR=0533
+ATTR=attr_magic|attr_newbie//ATTR=04
+TAG.EATRUNE=00//01 to remove runes after scribing!
+TAG.LOCKED=0
+TAG.LOCKUID=0
+TAG.POS1_X=0
+TAG.POS2_X=0
+TAG.POS3_X=0
+TAG.POS4_X=0
+TAG.POS5_X=0
+TAG.POS6_X=0
+TAG.POS7_X=0
+TAG.POS8_X=0
+TAG.POS9_X=0
+TAG.POS10_X=0
+TAG.POS11_X=0
+TAG.POS12_X=0
+TAG.POS13_X=0
+TAG.POS14_X=0
+TAG.POS15_X=0
+TAG.POS16_X=0
+
+[ITEMDEF i_X_RBGATE]
+//Xeno's custom gate
+ID=01af3//0f6c
+//DEFNAME=i_X_RBGATE
+RESOURCES=i_scroll_gate_travel
+TYPE=t_telepad
+CATEGORY=Provisions - Alchemy & Magic
+SUBSECTION=Moongates
+DESCRIPTION=RB Gate
+
+ON=@TIMER
+  SOUND=528
+  REMOVE
+RETURN 0
+
+ON=@CREATE
+   COLOR=032
+   MORE1=1
+   ATTR=attr_move_never
+
+//////////////Start the GUMP//////////////////
+
+[DIALOG d_X_BOOK]
+// Xeno's recall book!
+//www.darkprowless.com
+0, 0
+//page 0
+gumppic 100 10 2200
+gumppic 125 50 57
+gumppic 145 50 58
+gumppic 160 50 58
+gumppic 175 50 58
+gumppic 190 50 58
+gumppic 205 50 58
+gumppic 220 50 58
+gumppic 230 50 59
+
+gumppic 290 50 57
+gumppic 310 50 58
+gumppic 325 50 58
+gumppic 340 50 58
+gumppic 355 50 58
+gumppic 370 50 58
+gumppic 385 50 58
+gumppic 395 50 59
+
+page 0//moved from top side!
+//Recall Button
+button 125 65 2103 2104 1 0 1//Button 1
+button 125 80 2103 2104 1 0 2//Button 2
+button 125 95 2103 2104 1 0 3//Button 3
+button 125 110 2103 2104 1 0 4//Button 4
+button 125 125 2103 2104 1 0 5//Button 5
+button 125 140 2103 2104 1 0 6//Button 6
+button 125 155 2103 2104 1 0 7//Button 7
+button 125 170 2103 2104 1 0 8//Button 8
+//Gate Button
+button 135 65 2103 2104 1 0 17//Button 17
+button 135 80 2103 2104 1 0 18//Button 18
+button 135 95 2103 2104 1 0 19//Button 19
+button 135 110 2103 2104 1 0 20//Button 20
+button 135 125 2103 2104 1 0 21//Button 21
+button 135 140 2103 2104 1 0 22//Button 22
+button 135 155 2103 2104 1 0 23//Button 23
+button 135 170 2103 2104 1 0 24//Button 24
+//Erase Button
+button 250 65 2103 2104 1 0 25//Button 25
+button 250 80 2103 2104 1 0 26//Button 26
+button 250 95 2103 2104 1 0 27//Button 27
+button 250 110 2103 2104 1 0 28//Button 28
+button 250 125 2103 2104 1 0 29//Button 29
+button 250 140 2103 2104 1 0 30//Button 30
+button 250 155 2103 2104 1 0 31//Button 31
+button 250 170 2103 2104 1 0 32//Button 32
+//Rename Button
+button 240 65 2103 2004 1 0 50 //Button 50
+button 240 80 2103 2104 1 0 51//Button 51
+button 240 95 2103 2104 1 0 52//Button 52
+button 240 110 2103 2104 1 0 53//Button 53
+button 240 125 2103 2104 1 0 54//Button 54
+button 240 140 2103 2104 1 0 55//Button 55
+button 240 155 2103 2104 1 0 56//Button 56
+button 240 170 2103 2104 1 0 57//Button 57
+
+//oposit page
+//recall button
+button 285 65 2103 2104 1 0 9 //Button 9
+button 285 80 2103 2104 1 0 10 //Button 10
+button 285 95 2103 2104 1 0 11 //Button 11
+button 285 110 2103 2104 1 0 12//Button 12
+button 285 125 2103 2104 1 0 13//Button 13
+button 285 140 2103 2104 1 0 14//Button 14
+button 285 155 2103 2104 1 0 15//Button 15
+button 285 170 2103 2104 1 0 16//Button 16
+//Gate Button
+button 295 65 2103 2104 1 0 33//Button 33
+button 295 80 2103 2104 1 0 34//Button 34
+button 295 95 2103 2104 1 0 35//Button 35
+button 295 110 2103 2104 1 0 36//Button 36
+button 295 125 2103 2104 1 0 37//Button 37
+button 295 140 2103 2104 1 0 38//Button 38
+button 295 155 2103 2104 1 0 39//Button 39
+button 295 170 2103 2104 1 0 40//Button 40
+//Erase Button
+button 410 65 2103 2104 1 0 41//Button 41
+button 410 80 2103 2104 1 0 42//Button 42
+button 410 95 2103 2104 1 0 43//Button 43
+button 410 110 2103 2104 1 0 44//Button 44
+button 410 125 2103 2104 1 0 45//Button 45
+button 410 140 2103 2104 1 0 46//Button 46
+button 410 155 2103 2104 1 0 47//Button 47
+button 410 170 2103 2104 1 0 48//Button 48
+//Erase Button
+button 400 65 2103 2104 1 0 58//Button 58
+button 400 80 2103 2104 1 0 59//Button 59
+button 400 95 2103 2104 1 0 60//Button 60
+button 400 110 2103 2104 1 0 61//Button 61
+button 400 125 2103 2104 1 0 62//Button 62
+button 400 140 2103 2104 1 0 63//Button 63
+button 400 155 2103 2104 1 0 64//Button 64
+button 400 170 2103 2104 1 0 65//Button 65
+//END LOCAL/start Add
+button 345 38 4033 4033 1 0 49//Button 49 (add) Maybe Dropon later!
+button 185 38 4033 4033 1 0 66//Rename book button
+//lock
+button 130 20 32 32 1 0 67 //lock button
+//Text
+// croppedtext  // 6 = x,y,sx,sy,page,startindex
+croppedtext 145 60 100 17 0 0//Location 1
+croppedtext 145 75 100 17 0 1//Location 2
+croppedtext 145 90 100 17 0 2//Location 3
+croppedtext 145 105 100 17 0 3//Location 4
+croppedtext 145 120 100 17 0 4//Location 5
+croppedtext 145 135 100 17 0 5//Location 6
+croppedtext 145 150 100 17 0 6//Location 7
+croppedtext 145 165 100 17 0 7//Location 8
+//opposite page
+croppedtext 305 60 100 17 0 8//Location 9
+croppedtext 305 75 100 17 0 9//Location 10
+croppedtext 305 90 100 17 0 10//Location 11
+croppedtext 305 105 100 17 0 11//Location 12
+croppedtext 305 120 100 17 0 12//Location 13
+croppedtext 305 135 100 17 0 13//Location 14
+croppedtext 305 150 100 17 0 14//Location 15
+croppedtext 305 165 100 17 0 15//Location 16
+//Some extra text
+text 128 180 0 16//text 125 35 0 16
+text 310 15 1300 17
+text 160 15 1300 18
+text 365 195 1101 19
+text 128 193 0 20
+text 280 193 0 21
+
+[DIALOG d_X_BOOK TEXT]
+<TAG.local1>//Location 1
+<TAG.local2>//Location 2
+<TAG.local3>//Location 3
+<TAG.local4>//Location 4
+<TAG.local5>//Location 5
+<TAG.local6>//Location 6
+<TAG.local7>//Location 7
+<TAG.local8>//Location 8
+//page 2
+<TAG.local9>//Location 9
+<TAG.local10>//Location 10
+<TAG.local11>//Location 11
+<TAG.local12>//Location 12
+<TAG.local13>//Location 13
+<TAG.local14>//Location 14
+<TAG.local15>//Location 15
+<TAG.local16>//Location 16
+| |_Gate Rename| |//text 16
+Add a Rune//text 17
+Rune Book//text 18
+By Xeno//text 19
+|_Recall  Erase_|//text 20
+<QVAL 0<TAG.LOCKED>!=01 ? (Unlocked) : (Locked)>  //text 21
+
+[DIALOG d_X_BOOK BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE="The book has been closed!"
+SRC.SOUND=85
+RETURN 1
+
+ONBUTTON=1
+   IF <TAG.POS1_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 1
+RETURN 1
+
+ONBUTTON=2
+   IF <TAG.POS2_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 2
+RETURN 1
+
+ONBUTTON=3
+   IF <TAG.POS3_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 3
+RETURN 1
+
+ONBUTTON=4
+   IF <TAG.POS4_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 4
+RETURN 1
+
+ONBUTTON=5
+   IF <TAG.POS5_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 5
+RETURN 1
+
+ONBUTTON=6
+   IF <TAG.POS6_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 6
+RETURN 1
+
+ONBUTTON=7
+   IF <TAG.POS7_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 7
+RETURN 1
+
+ONBUTTON=8
+   IF <TAG.POS8_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 8
+RETURN 1
+
+ONBUTTON=9
+   IF <TAG.POS9_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 9
+RETURN 1
+
+ONBUTTON=10
+   IF <TAG.POS10_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 10
+RETURN 1
+
+ONBUTTON=11
+   IF <TAG.POS11_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 11
+RETURN 1
+
+ONBUTTON=12
+   IF <TAG.POS12_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 12
+RETURN 1
+
+ONBUTTON=13
+   IF <TAG.POS13_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 13
+RETURN 1
+
+ONBUTTON=14
+   IF <TAG.POS14_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 14
+RETURN 1
+
+ONBUTTON=15
+   IF <TAG.POS15_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 15
+RETURN 1
+
+ONBUTTON=16
+   IF <TAG.POS16_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_recall 16
+RETURN 1
+
+///////////////START GATE///////////////
+
+ONBUTTON=17// pos1
+   IF <TAG.POS1_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 1
+RETURN 1
+
+ONBUTTON=18//pos2
+   IF <TAG.POS2_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 2
+RETURN 1
+
+ONBUTTON=19//pos3
+   IF <TAG.POS3_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 3
+RETURN 1
+
+ONBUTTON=20//pos4
+   IF <TAG.POS4_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 4
+RETURN 1
+
+ONBUTTON=21//pos5
+   IF <TAG.POS5_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 5
+RETURN 1
+
+ONBUTTON=22//pos6
+   IF <TAG.POS6_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 6
+RETURN 1
+
+ONBUTTON=23//pos7
+   IF <TAG.POS7_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 7
+RETURN 1
+
+ONBUTTON=24//pos8
+   IF <TAG.POS8_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 8
+RETURN 1
+
+ONBUTTON=25
+   f_reset_location 1
+RETURN 1
+
+ONBUTTON=26
+   f_reset_location 2
+RETURN 1
+
+ONBUTTON=27
+   f_reset_location 3
+RETURN 1
+
+ONBUTTON=28
+   f_reset_location 4
+RETURN 1
+
+ONBUTTON=29
+   f_reset_location 5
+RETURN 1
+
+ONBUTTON=30
+   f_reset_location 6
+RETURN 1
+
+ONBUTTON=31
+   f_reset_location 7
+RETURN 1
+
+ONBUTTON=32
+   f_reset_location 8
+RETURN 1
+
+ONBUTTON=33//pos9
+   IF <TAG.POS9_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 9
+RETURN 1
+
+ONBUTTON=34//pos10
+   IF <TAG.POS10_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 10
+RETURN 1
+
+ONBUTTON=35//pos11
+   IF <TAG.POS11_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 11
+RETURN 1
+
+ONBUTTON=36//pos12
+   IF <TAG.POS12_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 12
+RETURN 1
+
+ONBUTTON=37//pos13
+   IF <TAG.POS13_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 13
+RETURN 1
+
+ONBUTTON=38//pos14
+   IF <TAG.POS14_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 14
+RETURN 1
+
+ONBUTTON=39//pos15
+   IF <TAG.POS15_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 15
+RETURN 1
+
+ONBUTTON=40//pos16
+   IF <TAG.POS16_X>=00
+      SRC.SYSMESSAGE="That slot does not have a rune written to it!"
+      RETURN 1
+   ENDIF
+   f_gate 16
+RETURN 1
+
+ONBUTTON=41
+   f_reset_location 9
+RETURN 1
+
+ONBUTTON=42
+   f_reset_location 10
+RETURN 1
+
+ONBUTTON=43
+   f_reset_location 11
+RETURN 1
+
+ONBUTTON=44
+   f_reset_location 12
+RETURN 1
+
+ONBUTTON=45
+   f_reset_location 13
+RETURN 1
+
+ONBUTTON=46
+   f_reset_location 14
+RETURN 1
+
+ONBUTTON=47
+   f_reset_location 15
+RETURN 1
+
+ONBUTTON=48
+   f_reset_location 16
+RETURN 1
+
+ONBUTTON=49
+   //add rune!
+   SRC.SOUND=85
+   TARGET "Please target the rune you wish to scribe in your book."
+RETURN 0
+
+ONBUTTON=50
+   f_rename_rune 1
+RETURN 1
+
+ONBUTTON=51
+   f_rename_rune 2
+RETURN 1
+
+ONBUTTON=52
+   f_rename_rune 3
+RETURN 1
+
+ONBUTTON=53
+   f_rename_rune 4
+RETURN 1
+
+ONBUTTON=54
+   f_rename_rune 5
+RETURN 1
+
+ONBUTTON=55
+   f_rename_rune 6
+RETURN 1
+
+ONBUTTON=56
+   f_rename_rune 7
+RETURN 1
+
+ONBUTTON=57
+   f_rename_rune 8
+RETURN 1
+
+ONBUTTON=58
+   f_rename_rune 9
+RETURN 1
+
+ONBUTTON=59
+   f_rename_rune 10
+RETURN 1
+
+ONBUTTON=60
+   f_rename_rune 11
+RETURN 1
+
+ONBUTTON=61
+   f_rename_rune 12
+RETURN 1
+
+ONBUTTON=62
+   f_rename_rune 13
+RETURN 1
+
+ONBUTTON=63
+   f_rename_rune 14
+RETURN 1
+
+ONBUTTON=64
+   f_rename_rune 15
+RETURN 1
+
+ONBUTTON=65
+   f_rename_rune 16
+RETURN 1
+
+ONBUTTON=66
+   IF <ISONPLAYER>
+      SRC.TAG.BNAME=<NAME>
+      SRC.TAG.BUID=<UID>
+      SRC.DIALOG d_bookname_box
+   ELSE
+      SRC.SYSMESSAGE "You can't rename that unless you are holding it."
+   ENDIF
+RETURN 1
+
+//Lock/unlock
+ONBUTTON=67
+   //Check to see if its locked and if we are allowed to do this (owner)
+   IF !<f_check_locked>
+      RETURN 1
+   ENDIF
+
+   IF (0<TAG.LOCKED>=01)
+      TAG.LOCKED=0
+      TAG.LOCKUID=
+      SRC.SYSMESSAGE "The book has been unlocked.  Anyone can modify it when its on the ground now."
+   ELSE
+      TAG.LOCKED=1
+      TAG.LOCKUID=<SRC.UID>
+      SRC.SYSMESSAGE "The book has been locked.  Only you can modify it when its on the ground now."
+   ENDIF
+   DIALOG d_X_BOOK
+RETURN 1
+
+[ITEMDEF i_X_RBDELAY]
+//Xeno's Recall delay!
+//DEFNAME=i_X_RBDELAY
+NAME="Rune Book delay"
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@CREATE
+        ATTR=attr_invis|attr_decay
+
+ON=@EQUIP
+        TIMER=1//was 1 test with 45
+        CONT.EVENTS=e_x_breakspell//add interuption event
+        //CONT.SAY="Going to......<MOREP.region.flags>"
+ON=@TIMER
+   // Take the effect we would like.
+   IF ( <CONT> )
+      IF ( <MORE1> )
+         MORE1=<MORE1>-1
+         TIMER=1
+         RETURN 1
+      ELSE
+         CONT.GOPLACE <MOREP>
+      ENDIF
+   ENDIF
+        // normal timer fall through is to delete the item
+   CONT.EVENTS= -e_x_breakspell//didnt get hit - remove event
+   REMOVE
+RETURN 1
+
+CATEGORY=Memory Objects
+SUBSECTION=Xeno
+DESCRIPTION=Recall Delay
+
+[EVENTS e_x_breakspell]
+ON=@GETHIT
+   SYSMESSAGE="<SRC.NAME>, broke your concentration and ruined your spell!"
+   IF <FINDLAYER(30)>//Remove first layer 30 item (hope it's recall/gate!)
+     FINDLAYER(30).REMOVE
+   ENDIF
+   EVENTS= -e_x_breakspell//Remove this event after getting hit!
+   NEWITEM i_fx_smoke
+   ACT.ATTR=attr_decay|attr_move_never
+   ACT.TIMER=01
+   ACT.p=<p>
+RETURN 0
+
+[ITEMDEF i_x_research]
+ID=0eed
+//gold coin
+NAME="Research Coin"
+TYPE=T_GOLD
+VALUE=1
+CATEGORY=Rune Book
+SUBSECTION=area
+DESCRIPTION=Research Coin
+
+ON=@CREATE
+ATTR=attr_invis|attr_decay
+TIMER=05
+
+ON=@TIMER
+   REMOVE
+RETURN 0
+
+[ITEMDEF i_X_RBDELAY1]
+//Xeno's Gate delay!
+//DEFNAME=i_X_RBDELAY
+NAME="Rune Book delay"
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@CREATE
+  ATTR=attr_invis|attr_decay
+
+ON=@EQUIP
+  TIMER=2//was 2 test with 45
+  CONT.EVENTS=+e_x_breakspell//add interuption event
+
+ON=@TIMER
+// Take the effect we would like.
+   IF (<CONT>)
+      IF (<MORE1>)
+         MORE1=<MORE1>-1
+         TIMER=1
+         RETURN 1
+      ELSE
+         CONT.NEWITEM i_X_RBGATE
+         CONT.ACT.P=<MOREP>
+         CONT.ACT.TIMER=36
+         CONT.ACT.MOREP=<CONT.P>
+         CONT.ACT.NAME="A rune gate to: <CONT.REGION.NAME>"
+         CONT.VAR.HOLDER=<CONT.ACT.REGION.NAME>
+
+         CONT.NEWITEM i_X_RBGATE
+         CONT.ACT.TIMER=36
+         CONT.ACT.MOREP=<MOREP>
+         CONT.ACT.P=<CONT.P>
+         CONT.ACT.NAME="A rune gate to: <VAR.HOLDER>"
+         CONT.SOUND=535 // or 526 or 524
+      ENDIF
+   ENDIF
+   // normal timer fall through is to delete the item
+   CONT.EVENTS= -e_x_breakspell//didnt get hit - remove event
+   REMOVE
+RETURN 1
+
+CATEGORY=Memory Objects
+SUBSECTION=Xeno
+DESCRIPTION=Gate Delay
+
+[DIALOG d_runerename_box]
+100,50                                // Position
+resizepic 190 175 5054 335 150        // Curved Grey background
+resizepic 200 185 3000 315 130        // Curved White background
+resizepic 220 235 3000 270 22         // Curved White background
+text 215 200 995 3                    // Place text
+text 255 275 0000 1                   // CONTinue Text
+button 220 275 4005 4007 1 0 1        // Opens CONTinue
+text 435 275 0000 2                   // Cancel Text
+button 400 275 4005 4007 1 0 0        // Opens Cancel
+textentry 225 237 253 25 0 0 0        // Text Input
+
+[DIALOG d_runerename_box TEXT]
+<SRC.TAG.RUNENAME>
+Ok
+Cancel
+Rename Runebook Entry
+
+[DIALOG d_runerename_box BUTTON]
+ONBUTTON=0
+   SRC.TAG.RUNERENAME=
+   SRC.TAG.RUNENAME=
+   SRC.SYSMESSAGE="Renaming Canceled."
+   RETURN 1
+ONBUTTON=1
+   VAR.ID=<SRC.TAG.UID>
+
+   IF <SRC.TAG.RUNERENAME>==1
+      UID.ID.TAG.LOCAL1=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==2
+      UID.ID.TAG.LOCAL2=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==3
+      UID.ID.TAG.LOCAL3=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==4
+      UID.ID.TAG.LOCAL4=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==5
+      UID.ID.TAG.LOCAL5=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==6
+      UID.ID.TAG.LOCAL6=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==7
+      UID.ID.TAG.LOCAL7=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==8
+      UID.ID.TAG.LOCAL8=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==9
+      UID.ID.TAG.LOCAL9=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==10
+      UID.ID.TAG.LOCAL10=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==11
+      UID.ID.TAG.LOCAL11=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==12
+      UID.ID.TAG.LOCAL12=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==13
+      UID.ID.TAG.LOCAL13=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==14
+      UID.ID.TAG.LOCAL14=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==15
+      UID.ID.TAG.LOCAL15=<ARGTXT[0]>
+   ELIF <SRC.TAG.RUNERENAME>==16
+      UID.ID.TAG.LOCAL16=<ARGTXT[0]>
+   ENDIF
+   SRC.TAG.RUNERENAME=
+   SRC.TAG.RUNENAME=
+   SRC.TAG.UID=
+   SRC.SYSMESSAGE="Rune renamed to <ARGTXT[0]>"
+   RETURN 0
+ONBUTTON=2
+   SRC.SYSMESSAGE="Renaming canceled."
+   RETURN 1
+
+[DIALOG d_bookname_box]
+100,50                                // Position
+resizepic 190 175 5054 335 150        // Curved Grey background
+resizepic 200 185 3000 315 130        // Curved White background
+resizepic 220 235 3000 270 22         // Curved White background
+text 215 200 995 3                    // Place text
+text 255 275 0000 1                   // CONTinue Text
+button 220 275 4005 4007 1 0 1        // Opens CONTinue
+text 435 275 0000 2                   // Cancel Text
+button 400 275 4005 4007 1 0 0        // Opens Cancel
+textentry 225 237 253 25 0 0 0        // Text Input
+
+[DIALOG d_bookname_box TEXT]
+<SRC.TAG.BNAME>
+Ok
+Cancel
+Rename Runebook
+
+[DIALOG d_bookname_box BUTTON]
+ONBUTTON=0
+   SRC.SYSMESSAGE="Renaming Canceled."
+   SRC.TAG.BNAME=
+   SRC.TAG.BUID=
+   RETURN 1
+ONBUTTON=1
+   VAR.B=<SRC.TAG.BUID>
+   UID.B.NAME="<ARGTXT[0]>"
+   SRC.SYSMESSAGE="Book renamed to <ARGTXT[0]>"
+   SRC.TAG.BNAME=
+   SRC.TAG.BUID=
+   RETURN 0
+ONBUTTON=2
+   SRC.SYSMESSAGE="Renaming canceled."
+   SRC.TAG.BNAME=
+   SRC.TAG.BUID=
+   RETURN 1
+
+
+[FUNCTION f_recall]
+   //Check reagents and mana
+   IF !(<SRC.ISGM>)
+      IF (<SERV.REAGENTSREQUIRED>==01) &! (<SRC.RESTEST 1 i_reag_black_pearl>) |! (<SRC.RESTEST 1 i_reag_mandrake_root>) |! (<SRC.RESTEST 1 i_reag_blood_moss>)
+         SRC.SOUND=0108
+         SRC.SYSMESSAGE="You dont have required reagents."
+         SRC.SOUND=85
+         RETURN 0
+      ENDIF
+
+      IF (<SRC.MANA><11)
+         SRC.SOUND=0108
+         SRC.SYSMESSAGE="You dont have enough mana to recall!"
+         RETURN 0
+      ENDIF
+      
+      //Say the WOP's
+      SRC.SAY="Kal Ort Por"
+      SRC.ANIM=17
+
+      //Consume reagents and mana
+      IF (<SERV.REAGENTSREQUIRED>==01)
+         SRC.CONSUME=1 i_reag_black_pearl
+         SRC.CONSUME=1 i_reag_blood_moss
+         SRC.CONSUME=1 i_reag_mandrake_root
+      ENDIF
+      SRC.MANA=(<SRC.MANA>+(-11))
+
+      //If your magery is too low then fail
+      IF (<SRC.MAGERY><400)
+         SRC.SOUND=0108
+         SRC.SYSMESSAGE="You failed to recall! Low skill."
+         SRC.SOUND=85
+         RETURN 0
+      ENDIF
+   ENDIF
+
+   //Get the XYZM
+   SRC.TRYP 0 VAR.X=<TAG.POS<ARGN>_X>
+   SRC.TRYP 0 VAR.Y=<TAG.POS<ARGN>_Y>
+   SRC.TRYP 0 VAR.Z=<TAG.POS<ARGN>_Z>
+   SRC.TRYP 0 VAR.M=<TAG.POS<ARGN>_M>
+
+   //Check for anti magic field at target
+   IF !(<SRC.ISGM>)
+      SRC.NEWITEM i_x_research
+      SRC.ACT.P=<EVAL <VAR.X>>,<EVAL <VAR.Y>>,<EVAL <VAR.Z>>,<EVAL <VAR.M>>
+
+      IF (0<SRC.ACT.REGION.RECALLIN>==0)
+         SRC.SYSMESSAGE="An anti-magic field blocks you"
+         SRC.SOUND 0108
+         RETURN 1
+      ENDIF
+   ENDIF
+
+   SRC.SOUND=85 // or 92 gate- 526 or 524
+   SRC.NEWITEM i_X_RBDELAY//or 07626 timer
+   SRC.ACT.MOREP=<EVAL <VAR.X>>,<EVAL <VAR.Y>>,<EVAL <VAR.Z>>,<EVAL <VAR.M>>
+   SRC.ACT.MORE1=1
+   SRC.ACT.EQUIP
+   SRC.SOUND=85
+RETURN 1
+
+[FUNCTION f_gate]
+   //Check reagents and mana
+   IF !(<SRC.ISGM>)
+      IF (<SERV.REAGENTSREQUIRED>==01) &! (<SRC.RESTEST 1 i_reag_black_pearl>) |! (<SRC.RESTEST 1 i_reag_mandrake_root>) |! (<SRC.RESTEST 1 i_reag_sulfur_ash>)
+         SRC.SOUND=0108
+         SRC.SYSMESSAGE="You dont have required reagents."
+         SRC.SOUND=85
+         RETURN 0
+      ENDIF
+
+      IF (<SRC.MANA><40)
+         SRC.SOUND=0108
+         SRC.SYSMESSAGE="You dont have enough mana to recall!"
+         RETURN 0
+      ENDIF
+
+      //Say the WOP's
+      SRC.SAY="Vas Rel Por"
+      SRC.ANIM=17
+
+      //Consume reagents and mana
+      IF (<SERV.REAGENTSREQUIRED>==01)
+         SRC.CONSUME=1 i_reag_black_pearl
+         SRC.CONSUME=1 i_reag_sulfur_ash
+         SRC.CONSUME=1 i_reag_mandrake_root
+      ENDIF
+      SRC.MANA=(<SRC.MANA>+(-40))
+
+      //If your magery is too low then fail
+      IF (<SRC.MAGERY><600)
+         SRC.SOUND=0108
+         SRC.SYSMESSAGE="You failed to recall! Low skill."
+         SRC.SOUND=85
+         RETURN 0
+      ENDIF
+   ENDIF
+
+   //Get the XYZM
+   SRC.TRYP 0 VAR.X=<TAG.POS<ARGN>_X>
+   SRC.TRYP 0 VAR.Y=<TAG.POS<ARGN>_Y>
+   SRC.TRYP 0 VAR.Z=<TAG.POS<ARGN>_Z>
+   SRC.TRYP 0 VAR.M=<TAG.POS<ARGN>_M>
+
+   //Check for anti magic field at target
+   IF !(<SRC.ISGM>)
+      SRC.NEWITEM i_x_research
+      SRC.ACT.P=<EVAL <VAR.X>>,<EVAL <VAR.Y>>,<EVAL <VAR.Z>>,<EVAL <VAR.M>>
+
+      IF ((0<SRC.ACT.REGION.GATE>==0)||(<SRC.REGION.GATE>==0))
+         SRC.SYSMESSAGE="An anti-magic field blocks you"
+         SRC.SOUND 0108
+         RETURN 1
+      ENDIF
+   ENDIF
+
+   SRC.NEWITEM i_X_RBDELAY1//Gate Delay
+   SRC.ACT.MOREP=<EVAL <VAR.X>>,<EVAL <VAR.Y>>,<EVAL <VAR.Z>>,<EVAL <VAR.M>>
+   SRC.ACT.MORE1=1
+   SRC.ACT.EQUIP
+RETURN 1
+
+[FUNCTION f_reset_location]
+   //Check to see if its locked, fail if it is
+   IF !<f_check_locked>
+      RETURN 1
+   ENDIF
+
+   IF (0<TAG.POS<ARGN>_X>=00)
+      SRC.SYSMESSAGE "There isn't anything in that slot...."
+      DIALOG d_X_BOOK
+      RETURN 1
+   ENDIF
+   SRC.SOUND=43
+   SRC.SYSMESSAGE="Reseting location!"
+   TRYP 0 TAG.POS<ARGN>_X=00
+   TRYP 0 TAG.POS<ARGN>_Y=
+   TRYP 0 TAG.POS<ARGN>_Z=
+   TRYP 0 TAG.POS<ARGN>_M=
+   TRYP 0 TAG.LOCAL<ARGN>=
+   DIALOG d_X_BOOK
+RETURN 1
+
+[FUNCTION f_rename_rune]
+   IF <f_check_locked>
+      IF (0<TAG.POS<ARGN>_X>==0)
+         SRC.SYSMESSAGE="You can't rename blank runes."
+         RETURN 1
+      ENDIF
+      SRC.TAG.RUNERENAME=<ARGN>
+      TRYP 0 SRC.TAG.RUNENAME=<TAG.LOCAL<ARGN>>
+      SRC.TAG.UID=<UID>
+      SRC.DIALOG d_runerename_box
+   ENDIF
+RETURN 1
+
+[FUNCTION f_write_rune]
+   SRC.SOUND=79
+   TRYP 0 TAG.LOCAL<ARGN>=<TAG.HOLD_LOCAL>//<SRC.TARG.NAME>
+   TRYP 0 TAG.POS<ARGN>_X=<TAG.HOLD_X>//<SRC.TARG.MOREX>
+   TRYP 0 TAG.POS<ARGN>_Y=<TAG.HOLD_Y>//<SRC.TARG.MOREY>
+   TRYP 0 TAG.POS<ARGN>_Z=<TAG.HOLD_Z>//<SRC.TARG.MOREZ>
+   TRYP 0 TAG.POS<ARGN>_M=<TAG.HOLD_M>//<SRC.TARG.MOREM>
+
+   TAG.HOLD_LOCAL=
+   TAG.HOLD_X=
+   TAG.HOLD_Y=
+   TAG.HOLD_Z=
+   TAG.HOLD_M=
+RETURN 1
+
+[FUNCTION f_check_locked]
+   //Its not locked
+   IF (0<TAG.LOCKED>==00)
+      RETURN 1
+   ENDIF
+   //Its locked
+   IF (0<TAG.LOCKED>==01)
+      //The owner is doing it though
+      IF (0<TAG.LOCKUID>==0<SRC.UID>)
+         RETURN 1
+      ELSE
+         SRC.SYSMESSAGE "This book is locked.  Only the owner may modify it."
+         RETURN 0
+      ENDIF
+   ENDIF
+RETURN 1
+
+//------END RUNE BOOK----------
+[EOF]

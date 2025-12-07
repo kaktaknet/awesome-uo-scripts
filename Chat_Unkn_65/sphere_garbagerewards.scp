@@ -1,0 +1,1041 @@
+//Oblivion Garbage reward system.  Because our players are lazy as shiz.
+
+//Color DEFNAME's
+[DEFNAME d_trash_colors]
+//Color defnames used so its easy to change.
+d_col_guarding_one            0938
+d_col_guarding_two            081c
+d_col_guarding_three          079a
+d_col_guarding_four           080a
+d_col_hardening_one           0834
+d_col_hardening_two           078c
+d_col_fortification_one       08b5
+d_col_fortification_two       080d
+d_col_invulnerability_one     080b
+d_col_invulnerability_two     091a
+d_col_dyetub_twentyfive_one   08c0
+d_col_dyetub_thirty_one       07b9
+d_col_dyetub_thirtyfive_one   08b9
+d_col_dyetub_forty_one        08c2
+d_col_dyetub_halfmil_one      0859
+d_col_dyetub_halfmil_two      07ce
+d_col_dyetub_millandhalf_one  085f
+d_col_dyetub_threepack_one    07e5
+d_col_dyetub_threepack_two    0912
+d_col_dyetub_threepack_three  0786
+d_col_mount_llama_one         079a
+d_col_mount_horse_one         0834
+d_col_mount_zostrich_one      080d
+
+//The "machine" can that stuff gets dropped into.
+[ITEMDEF i_garbage_dumpster]
+ID=0e77
+NAME="Garbage Reward Dumpster"
+
+ON=@CREATE
+   COLOR=07cd
+
+ON=@CLICK
+   SRC.SYSMESSAGE "<NAME>"
+   SRC.SYSMESSAGE "I can be used by double clicking me and selecting something to trash."
+   SRC.SYSMESSAGE "You can use the .trash command to see your reward status."
+RETURN 1
+
+ON=@DCLICK
+   EMPTY
+   TARGET "Select an item to trash, you will NOT get it back if you screw up so don't ask."
+RETURN 1
+
+ON=@TARGON_CHAR
+   SRC.SYSMESSAGE "<SRC.TARG.NAME> wouldn't appriciate that very much...."
+   SRC.TARG.SYSMESSAGE "<SRC.NAME> just tried to throw you in the dumpster...."
+RETURN 1
+
+ON=@TARGON_GROUND
+   SRC.SYSMESSAGE "Sorry, as surprised as I'm sure you are you still can't throw the ground out."
+RETURN 1
+
+ON=@TARGON_ITEM
+   IF (0<SRC.TARG.LAYER>==021)
+      SRC.SYSMESSAGE "You can't trash that."
+      RETURN 1
+   ENDIF
+   IF (<SRC.TARG.ATTR>&attr_newbie)
+      SRC.SYSMESSAGE "You can't trash that."
+      RETURN 1
+   ENDIF
+   IF (<SRC.TARG.TYPE>==t_trash_can)
+      SRC.SYSMESSAGE "You can't trash that."
+      RETURN 1
+   ENDIF
+   IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+      SRC.SYSMESSAGE "The item has to be on you to trash it."
+      RETURN 1
+   ENDIF
+   IF (<EVAL <SRC.TARG.VALUE>>==0)
+      SRC.SYSMESSAGE "That item has no worth, or can not be trashed."
+      RETURN 1
+   ELIF (<SRC.TARG.TYPE>==t_gold)||(<SRC.TARG.BASEID>==i_ingot_platinum)
+      SRC.SYSMESSAGE "Gold is not garbage, even if you have TONS of it...."
+      RETURN 1
+   ENDIF
+
+   //Vars
+   SRC.SYSMESSAGE "You will be given <EVAL (<SRC.TARG.VALUE>*<SRC.TARG.AMOUNT>))> points for this."
+   //No points yet
+   IF (0<SRC.TAG.GREWARDPTS>==0)
+      SRC.TAG.GREWARDPTS=(<EVAL <SRC.TARG.VALUE>>*<SRC.TARG.AMOUNT>)
+   ELSE
+      VAR.X=(<EVAL <SRC.TAG.GREWARDPTS>>+(<EVAL <SRC.TARG.VALUE>>*<SRC.TARG.AMOUNT>))
+      SRC.TAG.GREWARDPTS=<VAR.X>
+   ENDIF
+   VAR.X=<EVAL <SRC.TAG.GREWARDPTS>>
+   SRC.SYSMESSAGE "You now have <EVAL <VAR.X>> points collected for garbage rewards."
+   SRC.TARG.REMOVE
+RETURN 1
+
+CATEGORY=Oblivion Items
+SUBSECTION=Garbage System
+DESCRIPTION=Dumpster
+
+//The selection menu system (no gumps, why bother for now)
+//List of items by point ranges:
+//1  2,500-4,999
+//2  5,000-9,999
+//3  10,000-24,999
+//4  25,000-49,999
+//5  50,000-99,999
+//6  100,000-499,999
+//7  500,000-999,999
+//8  1,000,000-1,999,999
+//9  2,000,000+
+
+//******************************************************
+//Dialog section
+[DIALOG d_trash]
+50, 50
+PAGE 0
+resizepic 45 50 2520 300 300
+text 75 90 95 0
+button 280 285 4014 4015 1 0 0
+text 75 170 1153 1
+text 75 190 1152 2
+text 75 225 95 3
+text 75 245 95 4
+text 75 260 95 5
+text 75 125 1153 6
+button 280 125 4005 4006 1 0 1
+text 245 285 1153 7
+
+[DIALOG d_trash TEXT]
+Oblivion Garbage Reward System  //0
+Your current points:
+<QVAL 0<EVAL <SRC.TAG.GREWARDPTS>>==0 ? 0 : <EVAL <SRC.TAG.GREWARDPTS>>>
+Double click on the "odd green"
+trash bins and target junk to
+get points.                      //5
+Click here to see rewards:
+Exit                             //7
+
+ //<qval condition ? iftrue : iffalse>
+
+[DIALOG d_trash BUTTON]
+ONBUTTON=0
+RETURN 0
+//Clicked on the menu trigger
+ONBUTTON=1
+   IF !(<REGION.FLAGS>&region_flag_guarded)
+      SRC.SYSMESSAGE "You can only 'buy' things in a guarded area."
+   ELSE
+      SRC.MENU m_trash
+   ENDIF
+RETURN 0
+
+//******************************************************
+//Menu section
+[MENU m_trash]
+Nothing Yet
+ON=i_deed Level 1
+   IF (0<SRC.TAG.GREWARDPTS><2500)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv1
+ON=i_deed Level 2
+   IF (0<SRC.TAG.GREWARDPTS><5000)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv2
+ON=i_deed Level 3
+   IF (0<SRC.TAG.GREWARDPTS><10000)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv3
+ON=i_deed Level 4
+   IF (0<SRC.TAG.GREWARDPTS><25000)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv4
+ON=i_deed Level 5
+   IF (0<SRC.TAG.GREWARDPTS><50000)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv5
+ON=i_deed Level 6
+   IF (0<SRC.TAG.GREWARDPTS><100000)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv6
+ON=i_deed Level 7
+   IF (0<SRC.TAG.GREWARDPTS><500000)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv7
+ON=i_deed Level 8
+   IF (0<SRC.TAG.GREWARDPTS><1000000)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv8
+ON=i_deed Level 9
+   IF (0<SRC.TAG.GREWARDPTS><2000000)
+      SRC.SYSMESSAGE "You don't have enough points for that."
+      RETURN 0
+   ENDIF
+   SRC.MENU m_trash_lv9
+
+//Bags of regs (normal and pagan), bag with 15 full mana potions
+[MENU m_trash_lv1]
+Level 1 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_reag_nightshade Sm Regs Pack (2500)
+   //Item 1
+   f_point_check  2500
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_regs_sm
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of regs in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_reag_blackmoor Sm Pagan Pack (2500)
+   //Item 2
+   f_point_check  2500
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_paganregs_sm
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of pagan regs in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_bottle_empty Mana Pots (3000)
+   //Item 3
+   f_point_check  3000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_potion_ManaTotal
+      SRC.ACT.AMOUNT=15
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the mana regen potions in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+
+//Big bags of regs (normal and pagan), small potion pack
+[MENU m_trash_lv2]
+Level 2 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_reag_nightshade Lg Regs Pack (5300)
+   //Item 1
+   f_point_check  5300
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_regs_lg
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of regs in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_reag_blackmoor Lg Pagan Pack (7000)
+   //Item 2
+   f_point_check  7000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_paganregs_lg
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of pagan regs in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_bottle_empty Sm Pot Pack (9000)
+   //Item 3
+   f_point_check  9000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_potionpack_sm
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of potions."
+   ENDIF
+   SRC.TAG.FAILED=
+
+//ginsing/newt eye for potions w/empty bottles, large potion packs
+[MENU m_trash_lv3]
+Level 3 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_reag_ginseng Healing Pack (10000)
+   //Item 1
+   f_point_check  10000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_healingpack
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of stuff in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_reag_eye_of_newt Mana Pack (10000)
+   //Item 2
+   f_point_check  10000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_manapack
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of stuff in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_bottle_empty Lg Pot Pack (15000)
+   //Item 3
+   f_point_check  15000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_potionpack_lg
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of potions in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_dye_tub Leather Dye Tub (20000)
+   //Item 4
+   f_point_check  20000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_leather_dye_tub
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tub is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+
+//4 limited dye tub colors from the bank colors
+[MENU m_trash_lv4]
+Level 4 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_dye_tub Limited Dye Tub (25000)
+   //Item 1
+   f_point_check  25000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_twentyfive_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tub is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_dye_tub Limited Dye Tub (30000)
+   //Item 2
+   f_point_check  30000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_thirty_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tub is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_dye_tub Limited Dye Tub (35000)
+   //Item 3
+   f_point_check  35000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_thirtyfive_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tub is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_dye_tub Limited Dye Tub (45000)
+   //Item 4
+   f_point_check  45000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_forty_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tub is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_dye_tub Furniture Dye Tub (45000)
+   //Item 5
+   f_point_check  45000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_furny_dye_tub
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tub is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+
+//4 unique colors of +10 armor
+[MENU m_trash_lv5]
+Level 5 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_platemail_helm +10 Rare Armor (70000)
+   //Item 1
+   f_point_check  70000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p10armorc1
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_platemail_helm +10 Rare Armor (70000)
+   //Item 2
+   f_point_check  70000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p10armorc2
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_platemail_helm +10 Rare Armor (70000)
+   //Item 3
+   f_point_check  70000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p10armorc3
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_platemail_helm +10 Rare Armor (70000)
+   //Item 4
+   f_point_check  70000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p10armorc4
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+
+//2 colors +15 and +20
+[MENU m_trash_lv6]
+Level 6 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_platemail_helm +15 Rare Armor (100000)
+   //Item 1
+   f_point_check  100000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p15armorc1
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_platemail_helm +15 Rare Armor (200000)
+   //Item 2
+   f_point_check  200000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p15armorc2
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_platemail_helm +20 Rare Armor (300000)
+   //Item 3
+   f_point_check  300000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p20armorc1
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_platemail_helm +20 Rare Armor (400000)
+   //Item 4
+   f_point_check  400000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p20armorc2
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+
+//limited dye tub, Colored eth mounts (horse, llama, zos)
+[MENU m_trash_lv7]
+Level 7 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_dye_tub Limited Dye Tub (500000)
+   //Item 1
+   f_point_check  500000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_halfmil_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tub is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_dye_tub Limited Dye Tub (500000)
+   //Item 2
+   f_point_check  500000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_halfmil_two
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tub is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_pet_horse Unique Horse (600000)
+   //Item 3
+   f_point_check  600000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=07959
+      SRC.ACT.COLOR=d_col_mount_horse_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new mounts are now in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_pet_llama Unique Llama (700000)
+   //Item 4
+   f_point_check  700000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=0795d
+      SRC.ACT.COLOR=d_col_mount_llama_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new mounts are now in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=0795a Unique Zos (800000)
+   //Item 5
+   f_point_check  800000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=0795a
+      SRC.ACT.COLOR=d_col_mount_zostrich_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new mounts are now in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+
+//2 item rename deeds, 1 unique limited dye tub
+[MENU m_trash_lv8]
+Level 8 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_deed 3 Dye Tickets (1mil)
+   //Item 1
+   f_point_check  1000000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_dye_tickets
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the 3 Dye Tickets in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_dye_tub Limited Dye Tub (1.5mil)
+   //Item 2
+   f_point_check  1500000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_millandhalf_one
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "You put the bag of armor in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+
+//2 colors of +25, 5 rename deeds, 3 unique dye tubs
+[MENU m_trash_lv9]
+Level 9 Rewards
+ON=i_deed Back
+   SRC.MENU m_trash
+ON=i_platemail_helm +25 Unique Armor (2mil)
+   //Item 1
+   f_point_check  2000000
+   IF (<SRC.TAG.FAILED>!=1)
+      SRC.NEWITEM=t_reward_p25armorc1
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your unique +25 armor is in your pack."
+   //Make the item
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_platemail_helm +25 Unique Armor (2mil)
+   //Item 2
+   f_point_check  2000000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_p25armorc2
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your unique +25 armor is in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+ON=i_deed 5 Rename Deeds (2mil)
+   //Item 3 
+   f_point_check  2000000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=t_reward_name_deeds
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your Rename Deeds are in your pack."
+  ENDIF
+  SRC.TAG.FAILED=
+ON=i_dye_tub 3 Limited Dyetubs (2mil)
+   //Item 4
+   f_point_check  2000000
+   IF (<SRC.TAG.FAILED>!=1)
+   //Make the item
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_threepack_one
+      SRC.ACT.BOUNCE
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_threepack_two
+      SRC.ACT.BOUNCE
+      SRC.NEWITEM=i_limited_use_dye_tub
+      SRC.ACT.COLOR=d_col_dyetub_threepack_three
+      SRC.ACT.BOUNCE
+      SRC.SYSMESSAGE "Your new dye tubs are in your pack."
+   ENDIF
+   SRC.TAG.FAILED=
+//******************************************************
+//Trash command function
+[FUNCTION trash]
+   SRC.DIALOG d_trash
+RETURN 0
+
+[FUNCTION f_point_check]
+   VAR.COST=<ARGN>
+   VAR.POINTS=<EVAL <SRC.TAG.GREWARDPTS>>
+
+   //They do not have enough points
+   IF (<VAR.COST>><VAR.POINTS>)
+      SRC.SYSMESSAGE "You don't have enough points."
+      SRC.TAG.FAILED=1
+      SRC.MENU m_trash
+   ELSE
+      f_eat_points <ARGN>
+   ENDIF
+RETURN 0
+
+[FUNCTION f_eat_points]
+   SRC.TAG.GREWARDPTS=((<EVAL <SRC.TAG.GREWARDPTS>>) + (-<EVAL <ARGN>>))
+   SRC.SYSMESSAGE "You have <EVAL <SRC.TAG.GREWARDPTS>> points left."
+RETURN 0
+
+//Templates for the rewards
+[TEMPLATE t_reward_regs_sm]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Bag of Regs (Small)
+CONTAINER=i_bag
+ITEM=i_reag_black_pearl
+AMOUNT=100
+ITEM=i_reag_blood_moss
+AMOUNT=100
+ITEM=i_reag_garlic
+AMOUNT=100
+ITEM=i_reag_ginseng
+AMOUNT=100
+ITEM=i_reag_mandrake_root
+AMOUNT=100
+ITEM=i_reag_nightshade
+AMOUNT=100
+ITEM=i_reag_sulfur_ash
+AMOUNT=100
+ITEM=i_reag_spider_silk
+AMOUNT=100
+
+[TEMPLATE t_reward_name_deeds]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Rename Deeds
+CONTAINER=i_Bag
+ITEM=i_rename_ticket
+ITEM=i_rename_ticket
+ITEM=i_rename_ticket
+ITEM=i_rename_ticket
+ITEM=i_Rename_ticket
+
+[TEMPLATE t_reward_dye_tickets]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Dye Tickets
+CONTAINER=i_Bag
+ITEM=i_dye_ticket
+ITEM=i_dye_ticket
+ITEM=i_dye_ticket
+
+[TEMPLATE t_reward_regs_lg]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Bag of Regs (Large)
+CONTAINER=i_bag
+ITEM=i_reag_black_pearl
+AMOUNT=220
+ITEM=i_reag_blood_moss
+AMOUNT=220
+ITEM=i_reag_garlic
+AMOUNT=220
+ITEM=i_reag_ginseng
+AMOUNT=220
+ITEM=i_reag_mandrake_root
+AMOUNT=220
+ITEM=i_reag_nightshade
+AMOUNT=220
+ITEM=i_reag_sulfur_ash
+AMOUNT=220
+ITEM=i_reag_spider_silk
+AMOUNT=220
+
+[TEMPLATE t_reward_paganregs_sm]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Pagan Regs (Small)
+CONTAINER=i_bag
+ITEM=i_reag_batwing,35
+ITEM=i_reag_blackmoor,35
+ITEM=i_reag_blood_spawn,35
+ITEM=i_reag_bone,35
+ITEM=i_reag_blood_vial,35
+ITEM=i_reag_brimstone,35
+ITEM=i_reag_daemon_bone,35
+ITEM=i_reag_fertile_dirt,35
+ITEM=i_reag_dragon_blood,35
+ITEM=i_reag_executioners_cap,35
+ITEM=i_reag_eye_of_newt,35
+ITEM=i_reag_obsidian,35
+ITEM=i_reag_pig_iron,35
+ITEM=i_reag_pumice,35
+ITEM=i_reag_serpent_scale,35
+ITEM=i_reag_volcanic_ash,35
+ITEM=i_reag_dead_wood,35
+ITEM=i_reag_worm_heart,35
+
+[TEMPLATE t_reward_paganregs_lg]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Pagan Regs (Large)
+CONTAINER=i_bag
+ITEM=i_reag_batwing,80
+ITEM=i_reag_blackmoor,80
+ITEM=i_reag_blood_spawn,80
+ITEM=i_reag_bone,80
+ITEM=i_reag_blood_vial,80
+ITEM=i_reag_brimstone,80
+ITEM=i_reag_daemon_bone,80
+ITEM=i_reag_fertile_dirt,80
+ITEM=i_reag_dragon_blood,80
+ITEM=i_reag_executioners_cap,80
+ITEM=i_reag_eye_of_newt,80
+ITEM=i_reag_obsidian,80
+ITEM=i_reag_pig_iron,80
+ITEM=i_reag_pumice,80
+ITEM=i_reag_serpent_scale,80
+ITEM=i_reag_volcanic_ash,80
+ITEM=i_reag_dead_wood,80
+ITEM=i_reag_worm_heart,80
+
+[TEMPLATE t_reward_potionpack_sm]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Potion Pack (Small)
+CONTAINER=i_bag
+ITEM=i_potion_ManaTotal,25
+ITEM=i_potion_HealGreat,25
+
+[TEMPLATE t_reward_potionpack_lg]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Potion Pack (Large)
+CONTAINER=i_bag
+ITEM=i_potion_ManaTotal,35
+ITEM=i_potion_HealGreat,35
+ITEM=i_potion_RefreshTotal,25
+
+[TEMPLATE t_reward_healingpack]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Healing Pack
+CONTAINER=i_bag
+ITEM=i_reag_ginseng,1200
+ITEM=i_bottle_empty,100
+
+[TEMPLATE t_reward_manapack]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=Mana Pack
+CONTAINER=i_bag
+ITEM=i_reag_eye_of_newt,1100
+ITEM=i_bottle_empty,100
+
+[TEMPLATE t_reward_p10armorc1]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+10 Armor Color 1
+CONTAINER=i_bag
+COLOR=d_col_guarding_one
+ITEM=i_platemail_guarding_female
+COLOR=d_col_guarding_one
+ITEM=i_platemail_guarding
+COLOR=d_col_guarding_one
+ITEM=i_platemail_leggings_guarding
+COLOR=d_col_guarding_one
+ITEM=i_platemail_arms_guarding
+COLOR=d_col_guarding_one
+ITEM=i_platemail_helm_guarding
+COLOR=d_col_guarding_one
+ITEM=i_platemail_gorget_guarding
+COLOR=d_col_guarding_one
+ITEM=i_platemail_gauntlets_guarding
+COLOR=d_col_guarding_one
+ITEM=i_heater_shield_guarding
+COLOR=d_col_guarding_one
+
+[TEMPLATE t_reward_p10armorc2]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+10 Armor Color 2
+CONTAINER=i_bag
+COLOR=d_col_guarding_two
+ITEM=i_platemail_guarding_female
+COLOR=d_col_guarding_two
+ITEM=i_platemail_guarding
+COLOR=d_col_guarding_two
+ITEM=i_platemail_leggings_guarding
+COLOR=d_col_guarding_two
+ITEM=i_platemail_arms_guarding
+COLOR=d_col_guarding_two
+ITEM=i_platemail_helm_guarding
+COLOR=d_col_guarding_two
+ITEM=i_platemail_gorget_guarding
+COLOR=d_col_guarding_two
+ITEM=i_platemail_gauntlets_guarding
+COLOR=d_col_guarding_two
+ITEM=i_heater_shield_guarding
+COLOR=d_col_guarding_two
+
+[TEMPLATE t_reward_p10armorc3]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+10 Armor Color 3
+CONTAINER=i_bag
+COLOR=d_col_guarding_three
+ITEM=i_platemail_guarding_female
+COLOR=d_col_guarding_three
+ITEM=i_platemail_guarding
+COLOR=d_col_guarding_three
+ITEM=i_platemail_leggings_guarding
+COLOR=d_col_guarding_three
+ITEM=i_platemail_arms_guarding
+COLOR=d_col_guarding_three
+ITEM=i_platemail_helm_guarding
+COLOR=d_col_guarding_three
+ITEM=i_platemail_gorget_guarding
+COLOR=d_col_guarding_three
+ITEM=i_platemail_gauntlets_guarding
+COLOR=d_col_guarding_three
+ITEM=i_heater_shield_guarding
+COLOR=d_col_guarding_three
+
+[TEMPLATE t_reward_p10armorc4]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+10 Armor Color 4
+CONTAINER=i_bag
+COLOR=d_col_guarding_four
+ITEM=i_platemail_guarding_female
+COLOR=d_col_guarding_four
+ITEM=i_platemail_guarding
+COLOR=d_col_guarding_four
+ITEM=i_platemail_leggings_guarding
+COLOR=d_col_guarding_four
+ITEM=i_platemail_arms_guarding
+COLOR=d_col_guarding_four
+ITEM=i_platemail_helm_guarding
+COLOR=d_col_guarding_four
+ITEM=i_platemail_gorget_guarding
+COLOR=d_col_guarding_four
+ITEM=i_platemail_gauntlets_guarding
+COLOR=d_col_guarding_four
+ITEM=i_heater_shield_guarding
+COLOR=d_col_guarding_four
+
+[TEMPLATE t_reward_p15armorc1]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+15 Armor Color 1
+CONTAINER=i_bag
+COLOR=d_col_hardening_one
+ITEM=i_platemail_hardening_female
+COLOR=d_col_hardening_one
+ITEM=i_platemail_hardening
+COLOR=d_col_hardening_one
+ITEM=i_platemail_leggings_hardening
+COLOR=d_col_hardening_one
+ITEM=i_platemail_arms_hardening
+COLOR=d_col_hardening_one
+ITEM=i_platemail_helm_hardening
+COLOR=d_col_hardening_one
+ITEM=i_platemail_gorget_hardening
+COLOR=d_col_hardening_one
+ITEM=i_platemail_gauntlets_hardening
+COLOR=d_col_hardening_one
+ITEM=i_heater_shield_hardening
+COLOR=d_col_hardening_one
+
+[TEMPLATE t_reward_p15armorc2]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+15 Armor Color 2
+CONTAINER=i_bag
+COLOR=d_col_hardening_two
+ITEM=i_platemail_hardening_female
+COLOR=d_col_hardening_two
+ITEM=i_platemail_hardening
+COLOR=d_col_hardening_two
+ITEM=i_platemail_leggings_hardening
+COLOR=d_col_hardening_two
+ITEM=i_platemail_arms_hardening
+COLOR=d_col_hardening_two
+ITEM=i_platemail_helm_hardening
+COLOR=d_col_hardening_two
+ITEM=i_platemail_gorget_hardening
+COLOR=d_col_hardening_two
+ITEM=i_platemail_gauntlets_hardening
+COLOR=d_col_hardening_two
+ITEM=i_heater_shield_hardening
+COLOR=d_col_hardening_two
+
+[TEMPLATE t_reward_p20armorc1]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+20 Armor Color 1
+CONTAINER=i_bag
+COLOR=d_col_fortification_one
+ITEM=i_platemail_fortification_female
+COLOR=d_col_fortification_one
+ITEM=i_platemail_fortification
+COLOR=d_col_fortification_one
+ITEM=i_platemail_leggings_fortification
+COLOR=d_col_fortification_one
+ITEM=i_platemail_arms_fortification
+COLOR=d_col_fortification_one
+ITEM=i_platemail_helm_fortification
+COLOR=d_col_fortification_one
+ITEM=i_platemail_gorget_fortification
+COLOR=d_col_fortification_one
+ITEM=i_platemail_gauntlets_fortification
+COLOR=d_col_fortification_one
+ITEM=i_heater_shield_fortification
+COLOR=d_col_fortification_one
+
+[TEMPLATE t_reward_p20armorc2]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+20 Armor Color 2
+CONTAINER=i_bag
+COLOR=d_col_fortification_two
+ITEM=i_platemail_fortification_female
+COLOR=d_col_fortification_two
+ITEM=i_platemail_fortification
+COLOR=d_col_fortification_two
+ITEM=i_platemail_leggings_fortification
+COLOR=d_col_fortification_two
+ITEM=i_platemail_arms_fortification
+COLOR=d_col_fortification_two
+ITEM=i_platemail_helm_fortification
+COLOR=d_col_fortification_two
+ITEM=i_platemail_gorget_fortification
+COLOR=d_col_fortification_two
+ITEM=i_platemail_gauntlets_fortification
+COLOR=d_col_fortification_two
+ITEM=i_heater_shield_fortification
+COLOR=d_col_fortification_two
+
+[TEMPLATE t_reward_p25armorc1]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+25 Armor Color 1
+CONTAINER=i_bag
+COLOR=d_col_invulnerability_one
+ITEM=i_platemail_invulnerability_female
+COLOR=d_col_invulnerability_one
+ITEM=i_platemail_invulnerability
+COLOR=d_col_invulnerability_one
+ITEM=i_platemail_leggings_invulnerability
+COLOR=d_col_invulnerability_one
+ITEM=i_platemail_arms_invulnerability
+COLOR=d_col_invulnerability_one
+ITEM=i_platemail_helm_invulnerability
+COLOR=d_col_invulnerability_one
+ITEM=i_platemail_gorget_invulnerability
+COLOR=d_col_invulnerability_one
+ITEM=i_platemail_gauntlets_invulnerability
+COLOR=d_col_invulnerability_one
+ITEM=i_heater_shield_invulnerability
+COLOR=d_col_invulnerability_one
+
+[TEMPLATE t_reward_p25armorc2]
+CATEGORY=Item Templates
+SUBSECTION=Trash Rewards
+DESCRIPTION=+25 Armor Color 2
+CONTAINER=i_bag
+COLOR=d_col_invulnerability_two
+ITEM=i_platemail_invulnerability_female
+COLOR=d_col_invulnerability_two
+ITEM=i_platemail_invulnerability
+COLOR=d_col_invulnerability_two
+ITEM=i_platemail_leggings_invulnerability
+COLOR=d_col_invulnerability_two
+ITEM=i_platemail_arms_invulnerability
+COLOR=d_col_invulnerability_two
+ITEM=i_platemail_helm_invulnerability
+COLOR=d_col_invulnerability_two
+ITEM=i_platemail_gorget_invulnerability
+COLOR=d_col_invulnerability_two
+ITEM=i_platemail_gauntlets_invulnerability
+COLOR=d_col_invulnerability_two
+ITEM=i_heater_shield_invulnerability
+COLOR=d_col_invulnerability_two
+
+[ITEMDEF i_dye_ticket]
+ID=i_deed
+TYPE=t_normal
+NAME=Dye Ticket -Legal Colors Only, 1 V-Stone Worth- Page GM to Redeem
+
+ON=@CREATE
+COLOR=07e7
+
+[ITEMDEF i_rename_ticket]
+ID=i_deed
+TYPE=t_normal
+NAME=Rename Deed -1 Item- Page a GM to Redeem
+
+ON=@CREATE
+COLOR=078f
+
+[EOF]

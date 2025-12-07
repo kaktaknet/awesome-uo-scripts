@@ -1,0 +1,52 @@
+//Season changer.
+//v0.7
+//by Rudenid.
+//This script will make the season on your shard change every week.
+//You can even put the season on the status page by referring to the crystal via UID.
+
+//Installation instructions: Download, resync, put the crystal in a GM-only area.
+
+[ITEMDEF i_crystal_weather]
+ID=i_crystal_green_big
+TYPE=t_eq_script
+NAME=Season Crystal
+
+ON=@Create
+ATTR=attr_move_never|attr_invis|attr_blessed2
+TIMER=1
+
+ON=@Timer
+IF (<EVAL <TAG.SEASON>> = 0)
+COLOR=026
+TAG.SEASONNAME=Summer
+NAME=Season Crystal (Summer)
+SERV.ALLCLIENTS SYSMESSAGE It grows uncomfortably hot. It is summer.
+TAG.SEASON=1
+ELSEIF (<EVAL <TAG.SEASON>> = 1)
+COLOR=030
+TAG.SEASONNAME=Autumn
+NAME=Season Crystal (Autumn)
+TAG.SEASON=2
+SERV.ALLCLIENTS SYSMESSAGE Leaves begin to fall from the trees, turning every color of the rainbow. It is autumn.
+ELSEIF (<EVAL <TAG.SEASON>> = 2)
+TAG.SEASON=3
+COLOR=0481
+TAG.SEASONNAME=Winter
+NAME=Season Crystal (Winter)
+SERV.ALLCLIENTS SYSMESSAGE Snow begins falling and a blanket soon covers the earth. It is winter.
+ELSE
+TAG.SEASON=0
+COLOR=0
+SERV.ALLCLIENTS SYSMESSAGE Birds are chirping and flowers are blooming... Spring is here!
+TAG.SEASONNAME=Spring
+NAME=Season Crystal (Spring)
+SERV.ALLCLIENTS SFX <EVAL {01 05}>
+ENDIF
+
+MOREP=<P>
+P=1,1
+REGION.SECTORS SEASON <EVAL <TAG.SEASON>>
+P=<MOREP>
+
+TIMER=60*60*24*7
+RETURN 1

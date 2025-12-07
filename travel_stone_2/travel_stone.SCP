@@ -1,0 +1,368 @@
+//---------------------------------------------------------- 
+// Script made by Raszith                                        
+//---------------------------------------------------------- 
+// Dont Remove this Header or prepare to have a  
+// slow death by Magic Arrows!                              
+//---------------------------------------------------------- 
+
+///////////////////////////////////////////////////////////////////////////////// 
+//               THE TRAVEL AGENT STONE                
+///////////////////////////////////////////////////////////////////////////////// 
+
+[ITEMDEF i_test_stone] 
+ID=0edc 
+NAME=Test Stone
+TYPE=t_door // This is so it dosnt say "You cant think of any way to use this" 
+
+ON=@CREATE 
+COLOR=0057b 
+
+ON=@DCLICK 
+DIALOG d_tester_menu
+SRC.SFX 00fa
+
+[DIALOG d_tester_menu]
+0, 0
+PAGE 0
+resizepic 0 0 5120 640 480
+tilepic 541 102 14148
+tilepic 418 310 14180
+tilepic 364 135 14196
+gumppic 0 0 5500
+gumppic 16 9 1417
+button 556 4 5514 5515 1 0 0
+gumppic 168 35 1143
+text 178 36 995 0
+text 274 36 1152 1
+button 25 18 5505 5506 0 0 0
+gumppic 410 184 2440
+text 438 184 995 2
+gumppic 410 253 2440
+button 405 182 2151 2152 1 0 1
+gumppic 410 219 2440
+text 439 253 995 3
+button 405 217 2151 2152 1 0 2
+button 405 251 2151 2152 1 0 3
+text 437 219 995 4
+resizepic 111 157 2620 243 220
+gumppic 412 287 2440
+button 405 284 2151 2152 1 0 4
+gumppic 413 319 2440
+button 406 317 2151 2152 1 0 5
+
+[DIALOG d_tester_menu TEXT]
+Azure Stone:
+Main Page
+Travel Agent
+Quick Links
+Vote for AD
+
+
+[DIALOG d_tester_menu BUTTON]
+//Close
+on=0
+SRC.SYSMESSAGE Azure Stone Closed
+SRC.SFX 288
+
+//Travel Menu
+on=1
+dialog d_azure_Stone_travel
+
+//Vote
+on=2
+dialog d_azure_Stone_vote
+
+//Quick Links
+on=3
+dialog d_azure_Stone_links
+
+[DIALOG d_azure_stone_travel]
+0, 0
+nomove
+nodispose
+PAGE 1
+resizepic 0 0 5120 640 480
+gumppic 58 49 5528
+gumppic 0 0 5500
+gumppic 16 9 1417
+button 556 4 5514 5515 1 0 0
+gumppic 168 35 1143
+text 178 36 995 0
+text 274 36 1152 1
+button 555 3 5514 5515 1 0 0
+button 64 438 2362 2362 0 0 1
+button 64 456 2360 2360 0 0 1
+text 79 432 995 2
+text 79 450 995 3
+button 560 393 5609 5609 1 0 1 //World Back
+text 495 72 1350 4
+text 495 230 1350 5
+button 331 285 2362 2362 1 0 2  //Occlo
+button 260 253 2360 2360 1 0 3  //Bucaneers Den
+button 279 363 2360 2360 1 0 4  //Serpents Hold
+button 335 238 2362 2362 1 0 5  //Magincia
+button 333 168 2362 2362 1 0 6  //Nujel'm
+button 170 200 2362 2362 1 0 7  //Britain
+button 95 144 2362 2362 1 0 8   //Yew
+button 276 127 2362 2362 1 0 9  //Vesper
+button 245 92 2362 2362 1 0 10  //Minoc
+button 102 251 2362 2362 1 0 11 //Skara Brae
+button 204 308 2362 2362 1 0 12 //Trinsic
+button 159 391 2362 2362 1 0 13 //Jhelom
+button 392 154 2362 2362 1 0 14 //Moonglow
+button 223 163 2362 2362 1 0 15 //Cove
+button 495 124 2362 2362 1 0 16 //PVP Arena
+button 495 166 2360 2360 1 0 17 //The Pits
+button 495 144 2362 2362 1 0 18 //Azure Garden
+button 495 264 2362 2362 1 0 19 //Newbie Dungeon
+button 495 285 2362 2362 1 0 20 //Newbie Mine
+button 495 103 2362 2362 1 0 21 //Nuetral Zone
+text 183 194 995 6
+text 108 137 995 7
+text 172 384 995 8
+text 293 357 995 9
+text 345 280 995 10
+text 359 131 995 11
+text 288 121 995 12
+text 259 86 995 13
+text 314 178 995 14
+text 218 230 995 15
+text 349 232 995 16
+text 117 245 995 17
+text 219 302 995 18
+text 511 117 995 19
+text 510 138 995 20
+text 511 96 995 21
+text 511 258 995 22
+text 510 279 995 23
+text 510 160 995 24
+text 571 402 1101 25
+text 570 418 1101 26
+text 263 451 1350 27
+text 229 433 1350 28
+text 237 157 995 29
+
+[DIALOG d_azure_stone_travel TEXT]
+Azure Stone:
+Travel Agent
+Guarded Town/Area
+Non Guarded Town/Area
+Other Areas
+Newbie Areas
+Britain
+Yew
+Jhelom
+Serpents Hold
+Occlo
+Moonglow
+Vesper
+Minoc
+Nujel'm
+Bucaneers Den
+Magincia
+Skara Brae
+Trinsic
+PVP Arena
+Garden
+Nuetral Zone
+Newbie Dungeon
+Newbie Mine
+The Pits
+Main
+Menu
+(PK ALLOWED)
+(NO PK)
+Cove
+
+[DIALOG d_azure_stone_travel BUTTON]
+//Close
+on=0
+SRC.SYSMESSAGE Azure Stone Closed
+SRC.SFX 288
+
+//World Back (Back to Main Menu)
+on=1
+dialog d_azure_stone
+
+//Occlo
+on=2
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 3686,2519,0
+
+//Bucs Den
+on=3
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 2710,2164,0
+
+//Serps Hold
+on=4
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 3021,3397,15
+
+//Magincia
+on=5
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 3714,2220,20
+
+//Nujel'm
+on=6
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 3732,1279
+
+//Britain
+on=7
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 1411,1716,40
+
+//Yew
+on=8
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 553,975,0
+
+//Vesper
+on=9
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 2898,692,0
+
+//Minoc
+on=10
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 2516,562,0
+
+//Skara Brae
+on=11
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 609,2146,0
+
+//Trinsic
+on=12
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 1867,2806,0
+
+//Jhelom
+on=13
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 1376,3758,0
+
+//Moonglow
+on=14
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 4471,1178,0
+
+//Cove
+on=15
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 2246,1214,0
+
+//PVP Arena
+on=16
+src.newitem i_5_teleport_delay
+src.act.equip
+src.act.morep 5945,315,0
+
+//The Pits
+on=17
+src.sysmessage Under Construction!
+
+//Garden
+on=18
+src.sysmessage Under Construction!
+
+//Newbie Dungeon
+on=19
+src.sysmessage Under Construction!
+
+//Newbie Mine
+on=20
+src.sysmessage Under Construction!
+
+//Neutral Zone
+on=21
+src.sysmessage Under Construction!
+
+[ITEMDEF i_5_teleport_delay]
+// Create an object that just is an equipped timer.
+// src.newitem i_5_teleport_delay
+// src.act.equip		// We must equip this on the char we want to effect.
+// src.act.timer 100	// if we want to change the time
+//
+NAME=Delay Teleport
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	MORE1=5
+
+ON=@Equip
+	TIMER=1
+	SRC.EVENTS=+e_5_tele_dly
+	
+ON=@Unequip
+	SRC.EVENTS=-e_5_tele_dly
+
+ON=@Timer
+	// Take the effect we would like.
+	if ( <cont> )
+		if ( <more1> )
+			cont.message <EVAL(<more1>)> // put countdown above my head.
+			more1=<more1>-1
+			TIMER=1
+			return 1
+		else
+                        cont.GOPLACE <morep>
+
+		endif
+	endif
+	// normal timer fall through is to delete the item
+        remove
+        return 1
+
+[EVENTS e_5_tele_dly]
+ON=@GetHit
+CONSUME 1 i_5_teleport_delay
+EVENTS=-e_5_tele_dly
+SYSMESSAGE <SRC.NAME> Interuppted the countdown!
+RETURN 0
+
+ON=@Hit
+CONSUME 1 i_5_teleport_delay
+EVENTS=-e_5_tele_dly
+SYSMESSAGE You Interuppted the countdown!
+RETURN 0
+
+ON=@SkillStart
+CONSUME 1 i_5_teleport_delay
+EVENTS=-e_5_tele_dly
+SYSMESSAGE You Interuppted the countdown!
+RETURN 0
+
+ON=@SpellEffect 
+CONSUME 1 i_5_teleport_delay 
+EVENTS=-e_5_tele_dly 
+SYSMESSAGE <SRC.NAME> Interuppted the countdown! 
+RETURN 0 
+
+ON=@SpellCast
+CONSUME 1 i_5_teleport_delay
+EVENTS=-e_5_tele_dly
+SYSMESSAGE You Interuppted the countdown!
+RETURN 0
+
+[EOF]

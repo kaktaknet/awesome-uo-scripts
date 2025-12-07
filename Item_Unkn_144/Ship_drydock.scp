@@ -1,0 +1,44 @@
+[XXXX] 
+//Written by Theol AKA Admin Dark 
+ID=01172 
+NAME=Ship Drydocker 
+TYPE=11 
+
+ONTRIGGER=DCLICK 
+SRC.SYSMESSAGE Target your boat key to have it drydocked. 
+return 0 
+
+ONTRIGGER=TARGON_ITEM 
+IF (<SRC.TARG.CONT.CONT.UID> != <SRC.UID> ) 
+SRC.SYSMESSAGE The key must be in your pack. 
+return 1 
+ENDIF 
+IF (<UID.<SRC.TARG.MORE>.MORE>!=<SRC.SERIAL>) 
+SRC.SYSMESSAGE That is not your boat to drydock. 
+return 1 
+ENDIF 
+IF (<UID.<SRC.TARG.MORE>.TYPE>=49) 
+SRC.ITEMMENU 316 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE You can not think of a way to use that. 
+return 1 
+ENDIF 
+
+[ITEMMENU 316] 
+Ship Drydock verification. WARNING!!! This will delete all items in the ships Hold!!! 
+
+ON=0 Yes, I wish to drydock my Ship. 
+SRC.MESSAGE Your Ship has been Drydocked. 
+SRC.TARG.LINK=<UID.<SRC.TARG.MORE>.SERIAL> 
+SRC.NEWITEM=014f1 
+SRC.ACT.MORE=<UID.<SRC.TARG.MORE>.BASEID> 
+SRC.ACT.NAME=a deed to a <UID.<SRC.TARG.MORE>.NAME> 
+SRC.ACT.BOUNCE 
+SRC.ACT.ATTR=0004 
+SRC.TARG.LINK.REMOVE 
+SRC.TARG.REMOVE 
+return 1 
+
+ON=0 No, I don't wish to drydock my ship as of yet. 
+return 1

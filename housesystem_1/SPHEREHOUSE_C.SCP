@@ -1,0 +1,406 @@
+//The Deus Ovis House Menu.
+//Compleatly revamped by Kzazy Zack
+//http://www3.sympatico.ca/technomancer
+//http://uowizzard.phorums.net/
+
+//House decay is enabled. This is initially set on=@create, in the timer=. Using the //housemenu refreshes the house. To alter the decay rate, edit the multi timer AND the //wooden signs. To disable decay, change the timers to -1. 
+
+[SPEECH spk_house_cmds]
+DEFNAME=spk_house_cmds
+
+on=*house Help*
+dialog d_newhousemenuss
+IF (<SRC.UID>==<MORE>)(<tag.coowner1>==<src.uid>) (<tag.coowner2>==<src.uid>)(<tag.coowner3>==<src.uid>)(<tag.coowner4>==<src.uid>)(<tag.coowner5>==<src.uid>)(<tag.coowner6>==<src.uid>)(<src.isgm>)
+
+ON=*UNSECURE THIS*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_UNSECURE_THIS
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ON=*SECURE THIS*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_SECURE_THIS
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+on=*flip this*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_FLIP
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+on=*move this North*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_NORTH
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+on=*move this South*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_SOUTH
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+on=*move this West*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_WEST
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+on=*move this East*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_EAST
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+on=*move this up*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_UP
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+on=*move this down*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_DOWN
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ON=*lock this down*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_LOCK_THIS_DOWN
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ON=*release this*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_release_this
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ON=*remove this*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_REMOVE_this
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ON=*open my bank box*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+IF (<src.region.flags>==01192) || (<src.region.flags>==01092)
+src.bankself
+endif
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ON=*remove thyself*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+morex=4
+tag.region=<region.uid>
+target
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+on=*place a trashcan*
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_TRASH_CAN
+SRC.ACT.EQUIP
+SRC.ACT.DCLICK
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+[dialog d_newhousemenuss] 
+0, 0 
+page 1
+resizepic 50 100 5100 605 400
+text 110 154 4 0
+text 226 111 73 1
+text 113 196 9 2
+text 115 247 23 3
+text 112 292 36 4
+text 111 333 60 5
+text 110 375 95 6
+text 111 417 86 7
+text 456 157 70 8
+text 456 233 45 9
+text 457 269 40 10
+text 458 307 47 11
+text 459 342 100 12
+text 462 380 61 13
+text 464 418 86 14
+text 458 197 53 15
+button 77 158 1209 1210 1 0 1
+button 78 201 1209 1210 2 0 2
+button 78 250 1209 1210 3 0 3
+button 78 297 1209 1210 4 0 4
+button 79 340 1209 1210 5 0 5
+button 79 380 1209 1210 6 0 6
+button 80 422 1209 1210 7 0 7
+button 429 161 1209 1210 8 0 8
+button 430 202 1209 1210 9 0 9
+button 431 240 1209 1210 10 0 10
+button 431 275 1209 1210 11 0 11
+button 432 311 1209 1210 12 0 12
+button 433 347 1209 1210 13 0 13
+button 434 386 1209 1210 14 0 14
+button 435 422 1209 1210 15 0 15
+gumppic 296 148 5608
+gumppic 297 247 5505
+gumppic 291 375 2342
+gumppic 355 376 2335
+
+
+[dialog d_newhousemenuss TEXT] 
+Unsecure This
+The Great Genesis House Options
+Secure This
+Flip This
+Move This North
+Move This South
+Move This West
+Move This East
+Move This Up
+Move This Down
+Lock This Down
+Release This
+Open My Bank Box
+Remove Thyself
+Place a Trashcan
+Remove This
+
+[dialog d_newhousemenuss BUTTON]
+onbutton=0
+morex=0
+return 1
+
+ONBUTTON=1
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_UNSECURE_THIS
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=2
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_SECURE_THIS
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=3
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_FLIP
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=4
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_NORTH
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=5
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_SOUTH
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=6
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_WEST
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=7
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_EAST
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=8
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_UP
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=9
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_REMOVE_this
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=10
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_MOVE_DOWN
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+ONBUTTON=11
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_LOCK_THIS_DOWN
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=12
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_release_this
+SRC.ACT.EQUIP
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=13
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+IF (<src.region.flags>==01192) || (<src.region.flags>==01092)
+src.bankself
+endif
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=14
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+morex=4
+tag.region=<region.uid>
+target
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+
+ONBUTTON=15
+IF (<SRC.UID>==<MORE>) || (<src.isgm>)
+SRC.NEWITEM=I_TRASH_CAN
+SRC.ACT.EQUIP
+SRC.ACT.DCLICK
+tag.region=<region.uid>
+return 1
+else
+src.sysmessage You do not own this house!
+return 1
+endif
+[EOF]

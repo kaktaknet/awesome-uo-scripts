@@ -1,0 +1,47 @@
+
+******************Created by Abaddon*************
+*********http://acheron.dsdv.com/main/index.php*******
+*******ownerabbadon@gmail.com*************
+
+[ITEMDEF i_axe_daemon]
+DEFNAME=i_axe_daemon
+ID=i_axe_battle_large
+NAME=Daemon Axe
+DAM=90,140
+WEIGHT=150
+REQSTR=150
+TWOHANDS=Y
+
+CATEGORY=provisions - weapons - misc
+SUBSECTION=rare
+DESCRIPTION=Daemon Axe
+
+ON=@CREATE
+COLOR=044d
+
+ON=@EQUIPTEST
+if (<SRC.OSTR> < 150)
+	src.sysmessage=You are not strong enough to wear this.
+	return 1
+endif
+
+ON=@EQUIP
+SRC.MODSTR=<SRC.MODSTR> +65
+SRC.MODDEX=<SRC.MODDEX> +30
+SRC.MODAR=<SRC.MODAR> +35
+SRC.SOUND=snd_spell_flamestrike
+SRC.EFFECT=3,i_fx_curse,15,15,1
+SRC.EFFECT=3,i_fire_column,15,15,1
+SRC.SYSMESSAGE You feel the power of Daemons rushing into your veins!
+
+ON=@UNEQUIP
+SRC.MODSTR=<SRC.MODSTR> +-65
+SRC.MODDEX=<SRC.MODDEX> +-30
+SRC.MODAR=<SRC.MODAR> +-35
+SRC.SOUND=snd_spell_flamestrike
+SRC.EFFECT=3,i_fx_curse,15,15,1
+SRC.EFFECT=3,i_fire_column
+SRC.SPELLEFFECT=s_curse 300.0
+SRC.SYSMESSAGE The power of the Daemons leaves your body, making you very weak, exhausted, and mentally drained.
+
+[EOF]

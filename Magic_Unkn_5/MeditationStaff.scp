@@ -1,0 +1,61 @@
+
+[itemdef i_staff_meditation] 
+ID=i_staff_black 
+NAME=Baton de Meditation 
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+RESOURCES=i_staff_black, 3 i_potion_mana, i_scroll_mana
+ON=@CREATE
+VALUE=1
+ON=@EQUIP 
+SRC.MESSAGE The meditation starts.
+SOUND=
+LINK=<SRC.UID> 
+TIMER=1 
+RETURN 0 
+
+ON=@TIMER 
+IF (<LINK.MANA>><LINK.INT>)
+TIMER=1
+ELSEIF (<Link.Meditation>=1000) 
+LINK.MANA <LINK.MANA>+7 
+CONT.EFFECT 3,i_fx_sparkle_2,10,20,10 
+TIMER=1 
+ELSEIF (<Link.Meditation>>900) 
+LINK.MANA <LINK.MANA>+6 
+CONT.EFFECT 3,i_fx_sparkle_2,10,20,10 
+TIMER=1 
+ELSEIF (<Link.Meditation>>800) 
+LINK.MANA <LINK.MANA>+5 
+CONT.EFFECT 3,i_fx_sparkle_2,10,20,10 
+TIMER=1 
+ELSEIF (<Link.Meditation>>700) 
+LINK.MANA <LINK.MANA>+4 
+CONT.EFFECT 3,i_fx_sparkle_2,10,20,10 
+TIMER=1 
+ELSEIF (<Link.Meditation>>600) 
+LINK.MANA <LINK.MANA>+3 
+CONT.EFFECT 3,i_fx_sparkle_2,10,20,10 
+TIMER=1 
+ELSEIF (<Link.Meditation>>500) 
+LINK.MANA <LINK.MANA>+2 
+CONT.EFFECT 3,i_fx_sparkle_2,10,20,10 
+TIMER=1 
+ELSEIF (<LINK.MANA><<LINK.INT>) 
+LINK.MANA <LINK.MANA>+1 
+CONT.EFFECT 3,i_fx_sparkle_2,10,20,10 
+TIMER=1 
+ENDIF 
+RETURN 1
+
+on=@unequip 
+IF (<LINK.MANA>><LINK.INT>)
+SRC.MANA = <src.int>
+LINK=04FFFFFFF 
+timer=-1 
+RETURN 0 
+ELSE
+LINK=04FFFFFFF
+TIMER=-1
+RETURN 0
+
+[EOF]

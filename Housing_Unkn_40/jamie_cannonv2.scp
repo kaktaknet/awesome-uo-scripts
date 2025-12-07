@@ -1,0 +1,319 @@
+//This is my updated cannons. I've fixed a previously ignored bug 
+//I knew about it but was too lazy to fix it. LOL.
+//Primarily, it now does range checking to make sure that the person
+//firing the cannon is standing next to it.
+//Also I've added line of site checking (hope it works right.)
+
+[itemdef i_cannon_n_1] 
+ID=3723 
+Name=Cannon (North) 
+TYPE=t_script 
+
+On=@Create 
+ATTR=08010 
+
+On=@Dclick 
+IF !(<TIMER>==-1) 
+SRC.SAY You must wait before firing again. 
+ELSE 
+IF !(<DISTANCE>==1) 
+SRC.SAY You must be standing next to the cannon to fire it. 
+ELSE 
+IF (<SRC.RESTEST 1 i_cannon_ball> && <SRC.RESTEST 50 i_reag_sulfur_ash>) 
+SRC.SAY Who would you like to shoot? 
+TARGET Who would you like to shoot? 
+ELSE 
+SRC.SAY You do not have the supplies to load the cannon. 
+ENDIF 
+ENDIF 
+ENDIF 
+
+On=@Targon_Char 
+IF !<SRC.TARG.CANSEELOS> 
+SRC.SAY You cant shoot at what you cant see. 
+ELSE 
+IF !(<DISTANCE>==1) 
+SRC.SAY You must be standing next to the cannon to fire it. 
+ELSE 
+SRC.CONSUME=1 i_cannon_ball 
+SRC.CONSUME=50 i_reag_sulfur_ash 
+SRC.TARG.EFFECT 0,0e73,15,0,0 //makes a canon ball fly to the target 
+SRC.TARG.DAMAGE={80 280} 
+SRC.SOUND=011e 
+TIMER=25 
+ENDIF 
+ENDIF 
+
+On=@Timer 
+TIMER=-1 
+
+[itemdef i_cannon_s_1] 
+ID=0e93 
+Name=Cannon (South) 
+TYPE=t_script 
+
+On=@Create 
+ATTR=08010 
+
+On=@Dclick 
+IF !(<TIMER>==-1) 
+SRC.SAY You must wait before firing again. 
+ELSE 
+IF !(<DISTANCE>==1) 
+SRC.SAY You must be standing next to the cannon to fire it. 
+ELSE 
+IF (<SRC.RESTEST 1 i_cannon_ball> && <SRC.RESTEST 50 i_reag_sulfur_ash>) 
+SRC.SAY Who would you like to shoot? 
+TARGET Who would you like to shoot? 
+ELSE 
+SRC.SAY You do not have the supplies to load the cannon. 
+ENDIF 
+ENDIF 
+ENDIF 
+
+On=@Targon_Char 
+IF !<SRC.TARG.CANSEELOS> 
+SRC.SAY You cant shoot at what you cant see. 
+ELSE 
+IF !(<DISTANCE>==1) 
+SRC.SAY You must be standing next to the cannon to fire it. 
+ELSE 
+SRC.CONSUME=1 i_cannon_ball 
+SRC.CONSUME=50 i_reag_sulfur_ash 
+SRC.TARG.EFFECT 0,0e73,15,0,0 //makes a canon ball fly to the target 
+SRC.TARG.DAMAGE={80 280} 
+SRC.SOUND=011e 
+TIMER=25 
+ENDIF 
+ENDIF 
+
+On=@Timer 
+TIMER=-1 
+
+[itemdef i_cannon_w_1] 
+ID=0e90 
+Name=Cannon (West) 
+TYPE=t_script 
+
+On=@Create 
+ATTR=08010 
+
+On=@Dclick 
+IF !(<TIMER>==-1) 
+SRC.SAY You must wait before firing again. 
+ELSE 
+IF !(<DISTANCE>==1) 
+SRC.SAY You must be standing next to the cannon to fire it. 
+ELSE 
+IF (<SRC.RESTEST 1 i_cannon_ball> && <SRC.RESTEST 50 i_reag_sulfur_ash>) 
+SRC.SAY Who would you like to shoot? 
+TARGET Who would you like to shoot? 
+ELSE 
+SRC.SAY You do not have the supplies to load the cannon. 
+ENDIF 
+ENDIF 
+ENDIF 
+
+On=@Targon_Char 
+IF !<SRC.TARG.CANSEELOS> 
+SRC.SAY You cant shoot at what you cant see. 
+ELSE 
+IF !(<DISTANCE>==1) 
+SRC.SAY You must be standing next to the cannon to fire it. 
+ELSE 
+SRC.CONSUME=1 i_cannon_ball 
+SRC.CONSUME=50 i_reag_sulfur_ash 
+SRC.TARG.EFFECT 0,0e73,15,0,0 //makes a canon ball fly to the target 
+SRC.TARG.DAMAGE={80 280} 
+SRC.SOUND=011e 
+TIMER=25 
+ENDIF 
+ENDIF 
+
+On=@Timer 
+TIMER=-1 
+
+[itemdef i_cannon_e_1] 
+ID=0e94 
+Name=Cannon (East) 
+TYPE=t_script 
+
+On=@Create 
+ATTR=08010 
+
+On=@Dclick 
+IF !(<TIMER>==-1) 
+SRC.SAY You must wait before firing again. 
+ELSE 
+IF !(<DISTANCE>==1) 
+SRC.SAY You must be standing next to the cannon to fire it. 
+ELSE 
+IF (<SRC.RESTEST 1 i_cannon_ball> && <SRC.RESTEST 50 i_reag_sulfur_ash>) 
+SRC.SAY Who would you like to shoot? 
+TARGET Who would you like to shoot? 
+ELSE 
+SRC.SAY You do not have the supplies to load the cannon. 
+ENDIF 
+ENDIF 
+ENDIF 
+
+On=@Targon_Char 
+IF !<SRC.TARG.CANSEELOS> 
+SRC.SAY You cant shoot at what you cant see. 
+ELSE 
+IF !(<DISTANCE>==1) 
+SRC.SAY You must be standing next to the cannon to fire it. 
+ELSE 
+SRC.CONSUME=1 i_cannon_ball 
+SRC.CONSUME=50 i_reag_sulfur_ash 
+SRC.TARG.EFFECT 0,0e73,15,0,0 //makes a canon ball fly to the target 
+SRC.TARG.DAMAGE={80 280} 
+SRC.SOUND=011e 
+TIMER=25 
+ENDIF 
+ENDIF 
+
+On=@Timer 
+TIMER=-1 
+
+[itemdef i_deed_cannon_north] 
+NAME=Cannon Deed (North) 
+ID=014ef 
+TYPE=t_cannon_n 
+VALUE={10000 25000} 
+
+CATEGORY=Custom 
+SUBSECTION=Cannon Deeds 
+DESCRIPTION=Cannon Deed (North) 
+
+[itemdef i_deed_cannon_south] 
+NAME=Cannon Deed (South) 
+ID=014ef 
+TYPE=t_cannon_s 
+VALUE={10000 25000} 
+
+CATEGORY=Custom 
+SUBSECTION=Cannon Deeds 
+DESCRIPTION=Cannon Deed (South) 
+
+[itemdef i_deed_cannon_west] 
+NAME=Cannon Deed (West) 
+ID=014ef 
+TYPE=t_cannon_w 
+VALUE={10000 25000} 
+
+CATEGORY=Custom 
+SUBSECTION=Cannon Deeds 
+DESCRIPTION=Cannon Deed (West) 
+
+[itemdef i_deed_cannon_east] 
+NAME=Cannon Deed (East) 
+ID=014ef 
+TYPE=t_cannon_e 
+VALUE={10000 25000} 
+
+CATEGORY=Custom 
+SUBSECTION=Cannon Deeds 
+DESCRIPTION=Cannon Deed (East) 
+
+[typedef t_cannon_s] 
+ON=@DCLICK 
+MOREP=<SRC.P> 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=i_cannon_s_1 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+SOUND f7 
+
+MOREP=<SRC.P> 
+MOREY=<MOREY> + 1 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=0e92 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+
+MOREP=<SRC.P> 
+MOREY=<MOREY> + 2 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=0e91 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+REMOVE 
+RETURN 1 
+
+[typedef t_cannon_n] 
+ON=@DCLICK 
+MOREP=<SRC.P> 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=i_cannon_n_1 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+SOUND f7 
+
+MOREP=<SRC.P> 
+MOREY=<MOREY> - 1 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=0e8c 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+
+MOREP=<SRC.P> 
+MOREY=<MOREY> - 2 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=0e8d 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+REMOVE 
+RETURN 1 
+
+[typedef t_cannon_w] 
+ON=@DCLICK 
+MOREP=<SRC.P> 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=i_cannon_w_1 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+SOUND f7 
+
+MOREP=<SRC.P> 
+MOREX=<MOREX> - 1 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=0e8f 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+
+MOREP=<SRC.P> 
+MOREX=<MOREX> - 2 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=0e8e 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+REMOVE 
+RETURN 1 
+
+[typedef t_cannon_e] 
+ON=@DCLICK 
+MOREP=<SRC.P> 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=0e96 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+SOUND f7 
+
+MOREP=<SRC.P> 
+MOREX=<MOREX> - 1 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=0e95 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+
+MOREP=<SRC.P> 
+MOREX=<MOREX> - 2 
+SRC.HOME=<MOREP> 
+SRC.NEWITEM=i_cannon_e_1 
+SRC.ACT.ATTR=08010 
+SRC.ACT.P=<SRC.HOME> 
+REMOVE 
+RETURN 1 
+
+[EOF]

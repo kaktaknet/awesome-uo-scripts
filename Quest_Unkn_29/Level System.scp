@@ -1,0 +1,297 @@
+// This Script Is Aloud To Be Released By Me I Got Permisson !**
+//**************************************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**  Edited Lots By Anthony aka big_boy_uk89 **
+//**********************************************
+// Any Bugs Report To Admin@crazypk.com
+
+// How To Install
+
+// Just Add TEVENTS e_ep to all monsters and
+// then make sure a player gets to use this stone
+// i_stone_level
+
+[EVENTS e_ep] 
+ON=@CLICK
+TAG.LVL=<EVAL <STR> + <DEX> + <INT>>/80
+MESSAGE @95 [Difficulty <EVAL 0<TAG.LVL>>]
+
+ON=@DEATH
+if <FLAGS>&statf_conjured
+	return 0
+endif
+VAR.OLD_ACT=<ACT>
+VAR.X=<EVAL {<EVAL <STR> /5> <EVAL <STR> /10>}>
+SRC.ACT.f_experience
+ACT=<VAR.OLD_ACT>
+IF !(RAND(20))
+	SRC.NEWNPC=<SRC.baseid>
+	SRC.ACT.COLOR=04631
+	SRC.ACT.NAME=an illusion of <SRC.NAME>
+	src.act.hits=1000
+	src.act.events +e_dep
+	SRC.SAY @96 an illusion of the monster just apeared!
+	serv.log DUBLEXP:: <CONT.NAME> just got a unique item
+	RETURN 0
+ENDIF
+
+on=@gethit
+IF !(<SRC.ACT.ISEVENT.e_level4rare>)
+	SRC.ACT.EVENTS +e_level4rare
+ENDIF
+
+[ITEMDEF i_stone_level]
+DEFNAME=i_stone_level
+ID=i_book_open
+TYPE=t_normal
+NAME=Level Stone
+
+ON=@DCLICK
+SRC.TAG.LVL=1
+SRC.TAG.EP=50
+SRC.TAG.ED=100
+SRC.EVENTS +e_lvl
+remove
+RETURN 1
+
+ON=@CLICK
+SRC.TAG.LVL=1
+SRC.TAG.EP=50
+SRC.TAG.ED=100
+SRC.EVENTS +e_lvl
+src.EVENTS +e_homehomehome
+remove
+RETURN 1
+
+[EVENTS e_lvl]
+ON=@CLICK
+MESSAGE @78 (Level: <EVAL <TAG.LVL>>)
+
+[FUNCTION f_check]
+IF (<EVAL <TAG.EP>> > <EVAL <TAG.ED>>)
+	IF (<EVAL <TAG.LvL>> > 50)
+		TAG.ED=<EVAL <TAG.ED>> +330000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>> > 40)
+		TAG.ED=<EVAL <TAG.ED>> +310000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>> > 30)
+		TAG.ED=<EVAL <TAG.ED>> +290000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LvL>> > 25)
+		TAG.ED=<EVAL <TAG.ED>> +270000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>> > 20)
+		TAG.ED=<EVAL <TAG.ED>> +250000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>> > 18)
+		TAG.ED=<EVAL <TAG.ED>> +230000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>> > 16)
+		TAG.ED=<EVAL <TAG.ED>> +210000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>> > 14)
+		TAG.ED=<EVAL <TAG.ED>> +170000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>> > 12)
+		TAG.ED=<EVAL <TAG.ED>> +150000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>> >= 10)
+		TAG.ED=<EVAL <TAG.ED>> +130000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==9)
+		TAG.ED=<EVAL <TAG.ED>> +10000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==8)
+		TAG.ED=<EVAL <TAG.ED>> +9000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==7)
+		TAG.ED=<EVAL <TAG.ED>> +8000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==6)
+		TAG.ED=<EVAL <TAG.ED>> +7000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==5)
+		TAG.ED=<EVAL <TAG.ED>> +6000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==4)
+		TAG.ED=<EVAL <TAG.ED>> +5000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==3)
+		TAG.ED=<EVAL <TAG.ED>> +4000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==2)
+		TAG.ED=<EVAL <TAG.ED>> +3000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LVL>>==1)
+		TAG.ED=<EVAL <TAG.ED>> +2000
+		f_levelup
+	ENDIF
+ENDIF
+
+[FUNCTION f_levelup]
+TAG.LVL=<EVAL <TAG.LVL>> +1
+EFFECT=3,i_fx_heal_effect,15,15,1
+SOUND=SND_SPELL_LIGHTNING
+SERV.ALLCLIENTS SYSMESSAGE @75 <NAME> has gained a level!
+SERV.ALLCLIENTS SYSMESSAGE @75 <NAME> is at level <EVAL <TAG.LVL>>
+IF (<STR> <= 180)
+	VAR.X=<EVAL {0 3}>
+	STR=<STR> +0<EVAL <VAR.X>>
+ENDIF
+IF (<DEX> <= 180)
+	VAR.X=<EVAL {0 3}>
+	DEX=<DEX> +0<EVAL <VAR.X>>
+ENDIF
+IF (<INT> <= 180)
+	VAR.X=<EVAL {0 3}>
+	INT=<INT> +0<EVAL <VAR.X>>
+ENDIF
+IF (<EVAL <TAG.EP>> > <EVAL <TAG.ED>>)
+	f_check
+ENDIF
+
+[FUNCTION f_experience]
+IF !(<SRC.MEMORYFINDTYPE.(00008).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(00008).UID>)
+	SRC.MEMORYFINDTYPE.(00008).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF !(<SRC.MEMORYFINDTYPE.(00010).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(00010).UID>)
+	SRC.MEMORYFINDTYPE.(00010).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF !(<SRC.MEMORYFINDTYPE.(00020).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(00020).UID>)
+	SRC.MEMORYFINDTYPE.(00020).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF !(<SRC.MEMORYFINDTYPE.(00080).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(00080).UID>)
+	SRC.MEMORYFINDTYPE.(00080).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF !(<SRC.MEMORYFINDTYPE.(02000).LINK.UID>) && (<SRC.MEMORYFINDTYPE.(02000).UID>)
+	SRC.MEMORYFINDTYPE.(02000).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(00008).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(00008).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(00008).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(00008).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(00008).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(00010).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(00010).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(00010).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(00010).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(00010).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(00020).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(00020).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(00020).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(00020).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(00020).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(00080).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(00080).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(00080).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(00080).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(00080).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+IF (<SRC.MEMORYFINDTYPE.(02000).LINK.UID>)
+	IF (<SRC.MEMORYFINDTYPE.(02000).LINK.NPC>)
+		SRC.MEMORYFINDTYPE.(02000).REMOVE
+		f_experience
+		RETURN 1
+	ENDIF
+	SRC.NEWITEM=i_experience_level
+	SRC.ACT.TAG.EP=<EVAL <VAR.X>>
+	SRC.ACT.CONT=<SRC.MEMORYFINDTYPE.(02000).LINK.UID>
+	SRC.ACT.TIMER=0
+	SRC.MEMORYFINDTYPE.(02000).REMOVE
+	f_experience
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_experience_level] 
+DEFNAME=i_experience_level
+NAME=Experience
+ID=i_memory
+WEIGHT=0
+LAYER=30
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+ATTR=attr_invis|attr_move_never
+
+ON=@TIMER
+IF ( <CONT.FLAGS> & statf_dead )
+	REMOVE
+	RETURN 1
+ENDIF
+CONT.SYSMESSAGE @34 You have gained <EVAL <TAG.EP>> experience!
+CONT.TAG.EP=<EVAL <CONT.TAG.EP>> + <EVAL <TAG.EP>>
+CONT.f_check
+REMOVE
+RETURN 1
+
+[FUNCTION level]
+IF (<SRC.UID>==<UID>)
+	SYSMESSAGE @89 You have Got <EVAL <TAG.Ep>> Exp and you need <EVAL <TAG.ED> -<TAG.EP>> exp for the next level.
+ELSE
+	SRC.SYSMESSAGE @89 <NAME> needs <EVAL <TAG.ED> -<TAG.EP>> experience for <SEX his/her> next level.
+ENDIF
+
+[FUNCTION exp]
+IF (<SRC.UID>==<UID>)
+	SYSMESSAGE @89 You have Got <EVAL <TAG.Ep>> Exp and you need <EVAL <TAG.ED> -<TAG.EP>> exp for the next level.
+ENDIF
+
+// double experience Event
+
+[EVENTS e_dep]
+on=@death
+VAR.OLD_ACT=<ACT>
+VAR.X2=<EVAL <STR> /15> +<EVAL <STR> /15>
+VAR.X=<EVAL {<VAR.X2> <STR>}>
+SRC.ACT.f_experience
+ACT=<VAR.OLD_ACT>
+VAR.X2=
+src.serv.b <name> Some One Just got Duble Exp From a <src.name>!!
+
+[EOF]

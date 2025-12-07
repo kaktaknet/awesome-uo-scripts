@@ -1,0 +1,421 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+VERSION=0.54
+
+//Drachen Leder resources
+[ITEMDEF i_hide_drachen]
+DEFNAME=i_hide_drachen
+ID=i_hide
+NAME=Drachen Leder
+Value=50
+TYPE=t_hide
+Weight=5
+CATEGORY=Items by Professions
+Description=Hides_Drachen (Pile)
+SUBSECTION=Tanner
+ON=@Create
+COLOR=1887
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your inventory."
+   RETURN 1
+ENDIF
+
+//Cut up fuer Drachenleder
+[ITEMDEF i_hides_cut_drachen]
+DEFNAME=i_hides_cut_drachen
+ID=i_hides_cut
+NAME=cut up drachen leather
+RESOURCES= i_hide_drachen
+TYPE=T_LEATHER
+DYE=1
+WEIGHT=1
+DUPELIST=//01068,01081,01082
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Cut-up Leather drachen
+
+ON=@Create
+COLOR=1887
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your inventory."
+   RETURN 1
+ENDIF
+
+//Schuppen von nem Drachen
+[ITEMDEF i_drachenschuppe]
+DEFNAME=i_drachenschuppe
+ID=0f8e
+NAME="Dragon's Scales"
+WEIGHT=5
+VALUE=15
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=Drachenschuppe
+ON=@CREATE 
+TYPE=T_NORMAL
+COLOR=color_magic_invulnerability
+
+[ITEMDEF 048eb]
+//Leather Arms of Invulnerability
+DEFNAME=i_leather_sleeves_invulnerability
+NAME=Leather Arms of Invulnerability
+ID=i_leather_sleeves
+RESOURCES=10 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Arms of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	ATTR=attr_magic
+	MOREY=120.0
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048ec]
+//Leather Gorget of Invulnerability
+DEFNAME=i_leather_gorget_invulnerability
+NAME=Leather Gorget of Invulnerability
+ID=i_leather_gorget
+RESOURCES=4 i_hides_cut_drachen
+WEIGHT=4
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Gorget of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048ed]
+//Leather Leggings of Invulnerability
+DEFNAME=i_leather_leggings_invulnerability
+NAME=Leather Leggings of Invulnerability
+ID=i_leather_leggings
+RESOURCES=18 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Leggings of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048ee]
+//Leather Tunic of Invulnerability
+DEFNAME=i_leather_tunic_invulnerability
+NAME=Leather Tunic of Invulnerability
+ID=i_leather_tunic
+RESOURCES=20 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Tunic of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048ef]
+//Leather Gloves of Invulnerability
+DEFNAME=i_leather_gloves_invulnerability
+NAME=Leather Gloves of Invulnerability
+ID=i_leather_gloves
+RESOURCES=6 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Gloves of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048f0]
+//leather cap of Invulnerability
+DEFNAME=i_leather_cap_invulnerability
+NAME=leather cap of Invulnerability
+ID=i_leather_cap
+RESOURCES=6 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Cap of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048fa]
+DEFNAME=i_leather_shorts_invulnerability
+NAME=Leather Shorts of Invulnerability
+ID=i_armor_female_shorts
+RESOURCES=8 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Shorts of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048fb]
+//Female Leather Armor
+DEFNAME=i_leather_armor_invulnerability_female
+NAME=Leather Armor of Invulnerability
+ID=i_armor_female_leather
+RESOURCES=15 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Armor of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048fc]
+DEFNAME=i_leather_skirt_invulnerability
+NAME=Leather Skirt of Invulnerability
+ID=i_armor_female_skirt
+RESOURCES=10 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Skirt of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048fd]
+DEFNAME=i_leather_bustier_invulnerability
+NAME=Leather Bustier of Invulnerability
+ID=i_armor_female_bustier
+RESOURCES=15 i_hides_cut_drachen
+WEIGHT=8
+VALUE=80
+ARMOR=35
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Leather
+DESCRIPTION=Leather Bustier of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048fe]
+//Studded Sleeves of Invulnerability
+DEFNAME=i_studded_sleeves_invulnerability
+NAME=Studded Sleeves of Invulnerability
+ID=i_studded_sleeves
+RESOURCES=12 i_hides_cut_drachen,3 i_Drachenschuppe
+WEIGHT=8
+VALUE=80
+ARMOR=50
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Studded
+DESCRIPTION=Studded Sleeves of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 048ff]
+//Studded Gloves of Invulnerability
+DEFNAME=i_studded_gloves_invulnerability
+NAME=Studded Gloves of Invulnerability
+ID=i_studded_gloves
+RESOURCES=8 i_hides_cut_drachen,2 i_Drachenschuppe
+WEIGHT=8
+VALUE=80
+ARMOR=50
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Studded
+DESCRIPTION=Studded Gloves of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 04900]
+//Studded Gorget of Invulnerability
+DEFNAME=i_studded_gorget_invulnerability
+ID=i_studded_gorget
+NAME=Studded Gorget of Invulnerability
+RESOURCES=6 i_hides_cut_drachen,1 i_Drachenschuppe
+WEIGHT=4
+VALUE=80
+ARMOR=50
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Studded
+DESCRIPTION=Studded Gorget of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 04901]
+//Studded Leggings of Invulnerability
+DEFNAME=i_studded_leggings_invulnerability
+NAME=Studded Leggings of Invulnerability
+ID=i_studded_leggings
+RESOURCES=20 i_hides_cut_drachen,3 i_Drachenschuppe
+WEIGHT=8
+VALUE=80
+ARMOR=50
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Studded
+DESCRIPTION=Studded Leggings of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 04902]
+//Studded Tunic of Invulnerability
+DEFNAME=i_studded_tunic_invulnerability
+NAME=Studded Tunic of Invulnerability
+ID=i_studded_tunic
+RESOURCES=22 i_hides_cut_drachen,5 i_Drachenschuppe
+WEIGHT=8
+VALUE=80
+ARMOR=50
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Studded
+DESCRIPTION=Studded Tunic of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 04903]
+DEFNAME=i_studded_armor_invulnerability
+NAME=Studded Armor of Invulnerability
+ID=i_armor_female_studded
+RESOURCES=15 i_hides_cut_drachen,4 i_Drachenschuppe
+WEIGHT=8
+VALUE=80
+ARMOR=50
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Studded
+DESCRIPTION=Studded Armor of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	MOREY=120.0
+	ATTR=attr_magic
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[ITEMDEF 04904]
+DEFNAME=i_studded_bustier_invulnerability
+NAME=Studded Bustier of Invulnerability
+ID=i_armor_female_bustier_studded
+RESOURCES=17 i_hides_cut_drachen,3 i_Drachenschuppe
+WEIGHT=8
+VALUE=80
+ARMOR=50
+REQSTR=25
+CATEGORY=Provisions - Armor - Magic
+SUBSECTION=Studded
+DESCRIPTION=Studded Bustier of Invulnerability
+SKILLMAKE=TAILORING 100.0, t_sewing_kit
+
+ON=@Create
+	ATTR=attr_magic
+	MOREY=120.0
+	HITPOINTS={80 100}
+	COLOR=1887
+
+[EOF]

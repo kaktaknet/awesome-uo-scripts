@@ -1,0 +1,72 @@
+//
+//Made By mTr
+//
+//Just a simple fuction but nice for make invis more beautifull
+
+[PLEVEL 4]
+invis_on
+invis_off
+
+[Function invis_on]
+if <isgm>	
+invis 1
+SRC.NEWITEM=i_fx_glow_spike_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE 2 0 0
+SRC.ACT.TIMER=1
+SRC.NEWITEM=i_fx_glow_spike_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE 0 2 0
+SRC.ACT.TIMER=1
+SRC.NEWITEM=i_fx_glow_spike_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE -2 0 0
+SRC.ACT.TIMER=1
+SRC.NEWITEM=i_fx_glow_spike_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE 0 -2 0
+SRC.ACT.TIMER=1
+SOUND=01eb
+endif
+RETURN 1
+
+
+[Function invis_off]
+if <isgm>
+invis 0
+SRC.NEWITEM=i_fx_glow_spike_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE 2 0 0
+SRC.ACT.TIMER=1
+SRC.NEWITEM=i_fx_glow_spike_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE 0 2 0
+SRC.ACT.TIMER=1
+SRC.NEWITEM=i_fx_glow_spike_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE -2 0 0
+SRC.ACT.TIMER=1
+SRC.NEWITEM=i_fx_glow_spike_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE 0 -2 0
+SRC.ACT.TIMER=1
+SOUND=528
+endif
+RETURN 1
+
+
+
+[Itemdef i_fx_glow_spike_2]
+id	= i_fx_glow_spike
+name	= Aura
+type	= t_normal
+
+ON=@Create
+	Color	= 00
+	Timer	= 1
+
+ON=@Timer
+	Remove
+	return 0
+
+[EOF]

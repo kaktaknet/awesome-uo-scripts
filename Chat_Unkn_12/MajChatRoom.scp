@@ -1,0 +1,398 @@
+//CHATROOM v2.0, SCRIPTED BY: ADMIN MAJESTY
+//TO GET SETUP SIMPLY TYPE: .CHATHELP AND YOU WILL GET A LIST OF RULES & FUNCTIONS
+//FOR THE CHATROOM. OR PLACE 'I_CHAT_RULES' IN CITYS OR STARTING POINTS OF SHARD.
+//ITS BEST TO JUST GIVE THEM A NOTICE ABOUT THE CHATROOM AT LOGIN. :)
+//HERE IS HOW YOU WORK THE CHATROOM:
+
+//-TO GO TO THE CHATROOM TYPE: .CHATROOM
+//-TO TEST CHAT TEXT COLORS TYPE: .TESTCOLOR <Number> *1-1000*
+//-TO LEAVE THE CHATROOM TYPE: .CHATSTOP
+//-TO TALK IN THE CHATROOM TYPE: .TALK <Text>
+//-TO CHANGE YOUR CHATROOM NAME TYPE: .CHATNAME <Name>
+//-TO CHECK WHO IS IN THE CHATROOM TYPE: .CHECKROOM
+//-TO CHANGE YOUR CHAT TEXT COLOR TYPE: .CHATCOLOR <Number> *2-1000*
+//-TO BAN PLAYERS FROM THE CHATROOM TYPE: .CHATBAN *GM ONLY*
+//-TO UNBAN PLAYERS FROM THE CHATROOM TYPE: .CHATUNBAN *GM ONLY*
+//-TO CHECK ALL THE RULES/FUNCTIONS OF THE CHATROOM TYPE: .CHATHELP
+
+//HAVE FUN :)
+
+
+[plevel 0]
+chatroom
+talk
+chathelp
+chatname
+chatstop
+chatcolor
+checkroom
+chatban
+chatunban
+testcolor
+
+[function chatroom]
+if (<eval <src.tag.chatban>> = 0 )
+if (<eval <src.tag.chaton>> = 0 )
+src.checkcolor
+src.message=Chat Color = <eval <src.tag.chathearcolor>>
+src.newitem=i_chat_name
+src.act.equip
+src.act.name=<src.tag.chatname>
+src.tag.chatname=<src.act.name>
+src.serv.allclients findid.i_chat_name.cont.chathear=<src.findid.i_chat_name.name> has entered the chatroom.
+src.events +e_maj_chatroom
+src.tag.chaton=1
+else
+src.sysmessage=You are already in the chatroom.
+src.sysmessage=--> to leave chatroom type: .chatstop
+endif
+else
+src.sysmessage=You are banned from the chatroom!
+return 1
+endif
+
+
+
+[function chatstop]
+if (<eval <src.tag.chaton>> = 1 )
+src.consume=30 i_chat_name
+src.tag.chaton=0
+src.events -e_maj_chatroom
+src.serv.allclients findid.i_chat_name.cont.chathear=<src.tag.chatname> has left the chatroom.
+src.sysmessage=You have left the chatroom.
+else
+src.sysmessage=You are not in the chatroom.
+src.sysmessage=--> to enter chatroom type: .chatroom
+endif
+
+[events e_maj_chatroom]
+on=@click
+message=[in chatroom]
+
+on=@logout
+chatstop
+events -e_maj_chatroom
+
+[itemdef i_chat_name]
+id=i_memory
+name=Spectator
+type=t_eq_script
+
+on=@create
+timer=-1
+
+on=@equip
+timer=-1
+
+[function talk]
+if (<eval <src.tag.chaton>> = 1 )
+src.serv.allclients findid.i_chat_name.cont.chathear=<src.findid.i_chat_name.name> [<src.account.plevel>]: <args>
+else
+src.sysmessage=You are not in the chatroom to do this.
+src.sysmessage=-->to go to the chatroom type: .chatroom
+endif
+
+
+
+[function chatname]
+if (<eval <src.tag.chaton>> = 1 )
+src.serv.allclients findid.i_chat_name.cont.chathear='<src.findid.i_chat_name.name>' has changed <src.sex his/her> chatname to '<args>'
+src.tag.chatname=<args>
+src.findid.i_chat_name.name=<args>
+else
+src.sysmessage=You must be in a chatroom to do this.
+src.sysmessage=-->to go to the chatroom type: .chatroom
+endif
+
+////////////////////////
+[DIALOG d_maj_chatroom]
+0, 0
+PAGE 0
+resizepic 36 27 5054 495 360
+text 36 7 1313 0
+text 45 27 1153 1
+text 45 63 1345 2
+text 45 81 1345 3
+text 45 99 1345 4
+text 45 117 1345 5
+text 45 135 1345 6
+text 45 153 1345 7
+text 45 188 1152 8
+text 45 207 32 9
+text 45 225 32 10
+text 45 243 32 11
+text 45 261 32 12
+text 45 170 1345 13
+text 45 279 32 14
+text 103 306 1101 15
+text 45 333 152 16
+text 45 351 <eval colors_white> 17
+text 230 385 1350 18
+text 45 45 95 19
+
+[DIALOG d_maj_chatroom TEXT]
+Chatroom Functions & Rules
+Functions
+.chatroom [enters the chatroom]
+.chatstop [leaves the chatroom]
+.chatname *name* [changes "chatname" while in chatroom]
+.talk *text* [talk while in chatroom]
+.chatcolor *number* [changes your chatroom text color]
+.checkroom [see who is in the chatroom]
+Rules
+-No Disrespecting Staff
+-No Immatating Players/Staff [instant chatban]
+-No Long Names
+-No Spamming [instant chatban]
+.chatban/.chatunban [ban/unban from chatroom] -GM-
+-No Shard Advertisments [instant chatban]
+-------------------------------------------
+Tip: Test chat colors by typing: .testcolor *#* [0 - 1000]
+Note: The [<eval <src.account.plevel>>] next to your chatname is your priv level [<eval <src.account.plevel>> = <src.tag.playerorstaff>] 
+Chatroom v2.0 Majesty
+.chathelp [bring up chatroom rules & functions] 
+
+
+[DIALOG d_maj_chatroom BUTTON]
+on=0
+src.sysmessage=Type: .chathelp anytime to get the chatroom rules & functions
+
+[itemdef i_chat_rules]
+id=i_crystal_purple
+name=ChatRoom Rules
+type=t_normal
+
+on=@create
+attr=00010
+color=colors_white
+
+on=@dclick
+src.player_or_staff
+src.dialog d_maj_chatroom
+src.tag.playerorstaff=
+return 1
+
+[function chathelp]
+src.player_or_staff
+src.dialog d_maj_chatroom
+src.tag.playerorstaff=
+
+[FUNCTION chathear]
+VAR.LAST_P <P>
+VAR.LASTREGION_FLAGS <REGION.FLAGS>
+VAR.LASTREGION_EVENTS <REGION.EVENTS>
+VAR.LAST_ACT <ACT.UID>
+REGION.EVENTS -0
+REGION.FLAGS 0
+P 11 11 0 1
+NEWITEM i_memory
+ACT.CONT <UID>
+ACT.SAYUA <src.tag.chathearcolor> 0 0 1 <ARGS>
+ACT.REMOVE
+P <VAR.LAST_P>
+REGION.FLAGS <VAR.LASTREGION_FLAGS>
+REGION.EVENTS <VAR.LASTREGION_EVENTS>
+ACT <VAR.LAST_ACT>
+
+
+[FUNCTION chatcolor]
+if (<eval <args>> > 1000 )||(<eval <args>> < 2 )
+src.sysmessage=-Invalid Color-
+src.sysmessage=[Must be from 2 - 1000]
+return 1
+else
+tag.chathearcolor=<eval <ARGS>>
+src.message=Chat Color = <eval <args>>
+return 1
+endif
+
+/////////////////////////
+
+[function checkroom] 
+src.tag.chattercounts=0 
+src.tag.maxclientcounts=0 
+var.counts=200 
+f_clear_1 
+serv.allclients getchatteruid 
+src.tag.chattercounts=1 
+dialog d_chatroom_list
+
+[function getchatteruid]
+if (<restest 1 i_chat_name >)
+src.tag.maxclientcounts=<eval <src.tag.maxclientcounts>+1> 
+try var.clientsnumber.<eval <src.tag.maxclientcounts>>.uid=<uid> 
+endif
+
+[function f_clear_1] 
+if <var.counts>>0 
+var.counts=<eval <var.counts>-1> 
+try var.clientsnumber.<eval <var.counts>>.uid= 
+f_clear_2 
+endif 
+
+[function f_clear_2] 
+f_clear_1
+
+[DIALOG d_chatroom_list]
+0, 0
+PAGE 0
+resizepic 27 18 5054 270 230
+text 45 37 <eval colors_black> 0
+text 45 67 <eval colors_white> 1
+text 45 96 <eval colors_black> 2
+text 45 123 <eval colors_white> 3
+text 45 150 <eval colors_black> 4
+text 45 177 <eval colors_white> 5
+button 54 212 4014 4015 1 0 1
+button 240 212 4005 4006 1 0 2
+text 30 247 <eval colors_white> 6
+
+[DIALOG d_chatroom_list TEXT]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>>.uid>.tag.chatname> [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>>.uid>.account.plevel>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+1>.uid>.tag.chatname> [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+1>.uid>.account.plevel>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+2>.uid>.tag.chatname> [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+2>.uid>.account.plevel>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+3>.uid>.tag.chatname> [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+3>.uid>.account.plevel>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+4>.uid>.tag.chatname> [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+4>.uid>.account.plevel>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+5>.uid>.tag.chatname> [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+5>.uid>.account.plevel>]
+^ People In Chatroom ^ [Name & Plevel]
+
+
+[DIALOG d_chatroom_list BUTTON]
+on=1
+tag.chattercounts=<eval <src.tag.chattercounts>-6> 
+if <tag.chattercounts><1 
+tag.chattercounts=1 
+endif 
+dialog d_chatroom_list 
+on=2
+tag.chattercounts=<eval <src.tag.chattercounts>+6> 
+dialog d_chatroom_list
+
+[function chatunban]
+if (<isgm>)
+newitem=i_chatunban
+act.equip
+else
+src.sysmessage=You cannot use this command.
+return 1
+
+[function chatban]
+if (<isgm>)
+newitem=i_chatban
+act.equip
+else
+src.sysmessage=You cannot use this command.
+return 1
+
+[itemdef i_chatban]
+id=i_memory
+name=Chat Ban
+type=t_eq_script
+
+on=@create
+timer=20
+
+on=@equip
+target
+src.sysmessage=Target the player you will ban from the chatroom.
+timer=20
+
+on=@targon_char
+if (!<src.targ.isgm>)
+if (<eval <src.targ.tag.chatban>> = 0 )
+src.targ.chatstop
+src.targ.tag.chatban=1
+src.targ.sysmessage=You have been banned from the chatroom!
+src.sysmessage=You have banned <src.targ.name> from the chatroom.
+remove
+return 1
+else
+src.sysmessage=<src.targ.name> is already banned from the chatroom.
+remove
+return 1
+endif
+else
+src.sysmessage=You cannot do this on Staff.
+remove
+return 1
+endif
+
+on=@targon_item
+remove
+src.sysmessage=You can't ban items from the chatroom.
+return 1
+
+on=@timer
+remove
+return 1
+
+
+[itemdef i_chatunban]
+id=i_memory
+name=Chat UnBan
+type=t_eq_script
+
+on=@create
+timer=20
+
+on=@equip
+target
+src.sysmessage=Target the person you will unban from the chatroom.
+timer=20
+
+on=@targon_char
+if (<eval <src.targ.tag.chatban>> = 1 )
+src.targ.tag.chatban=
+src.targ.sysmessage=You have been unbanned from the chatroom!
+src.sysmessage=You have unbanned <src.targ.name> from the chatroom.
+remove
+return 1
+else
+src.sysmessage=<src.targ.name> hasn't been banned from the chatroom yet.
+remove
+return 1
+
+on=@targon_item
+remove
+src.sysmessage=I dont think that <src.targ.name> was chatting.
+return 1
+
+on=@timer
+remove
+return 1
+
+[function checkcolor]
+if (<eval <tag.chathearcolor>> < 2 )
+tag.chathearcolor=2
+else
+return 0
+endif
+
+[function testcolor]
+if (<eval <args>> < 1 )
+//src.chathear Your Chat Color = <eval <src.tag.chathearcolor>>
+//src.sysmessage=-Invalid Color-
+//src.sysmessage=[Must be from 2 - 1000]
+src.chathear=Your current color is <eval <src.tag.chathearcolor>>
+return 1
+elseif (<eval <args>> > 1000 )
+src.sysmessage=Color # must be from 1 - 1000
+return 1
+else
+src.tag.chatcheckbefore=<eval <src.tag.chathearcolor>>
+src.tag.chathearcolor=<eval <args>>
+src.chathear=Color <eval <args>> looks like this. <-
+//src.sysmessage=
+src.tag.chathearcolor=<eval <src.tag.chatcheckbefore>>
+//src.chathear=<eval <src.tag.chathearcolor>> is you current color.<-
+src.tag.chatcheckbefore=
+endif
+
+[function player_or_staff]
+if (<eval <src.account.plevel>> < 2 )
+src.tag.playerorstaff=Player
+else
+src.tag.playerorstaff=Staff
+endif
+
+[eof]

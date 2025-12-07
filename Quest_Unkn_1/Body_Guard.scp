@@ -1,0 +1,277 @@
+[CHARDEF c_gm_escort]
+
+
+ID=c_man
+
+
+NAME=Bodyguard
+
+
+CAN=MT_EQUIP|MT_WALK|MT_RUN|MT_USEHANDS|MT_SWIM|MT_GHOST
+
+
+
+
+
+ON=@Create
+
+
+STR 1000
+
+
+DEX 0
+
+
+INT 1000
+
+
+COLOR 083ed
+
+
+ON=@Click
+
+
+RETURN 1
+
+
+ON=@NPCRestock
+
+
+ITEMNEWBIE i_robe
+
+
+DISPID i_robe_gm
+
+
+COLOR 0799
+
+
+
+
+
+[REGIONTYPE r_escort]
+
+
+ON=@Step
+
+
+IF (0<SRC.TAG.ES>)
+
+
+IF (<SRC.UID.0<SRC.TAG.ES.1>.BASEID> == <SRC.TAG.ES>)
+
+
+SRC.TRYP 0 SRC.UID.<SRC.TAG.ES.1>.P <SRC.P>
+
+
+SRC.TRYP 0 SRC.UID.<SRC.TAG.ES.1>.backleft
+
+
+ELSE
+
+
+IF (<SRC.UID.0<SRC.TAG.ES.1>.ISEVENT.e_escort>)
+
+
+SRC.TRYP 0 SRC.UID.<SRC.TAG.ES.1>.REMOVE
+
+
+ENDIF
+
+
+SRC.NEWNPC <SRC.TAG.ES>
+
+
+SRC.TAG.ES.1 <SRC.ACT.UID>
+
+
+SRC.ACT.DEX 0
+
+
+SRC.ACT.KARMA 5000
+
+
+SRC.ACT.EVENTS e_escort
+
+
+SRC.ACT.P <SRC.P>
+
+
+SRC.ACT.DIR <SRC.DIR>
+
+
+SRC.ACT.backleft
+
+
+ENDIF
+
+
+
+
+
+IF (<SRC.UID.0<SRC.TAG.ES.2>.BASEID> == <SRC.TAG.ES>)
+
+
+SRC.TRYP 0 SRC.UID.<SRC.TAG.ES.2>.P <SRC.P>
+
+
+SRC.TRYP 0 SRC.UID.<SRC.TAG.ES.2>.backright
+
+
+ELSE
+
+
+IF (<SRC.UID.0<SRC.TAG.ES.2>.ISEVENT.e_escort>)
+
+
+SRC.TRYP 0 SRC.UID.<SRC.TAG.ES.2>.REMOVE
+
+
+ENDIF
+
+
+SRC.NEWNPC <SRC.TAG.ES>
+
+
+SRC.TAG.ES.2 <SRC.ACT.UID>
+
+
+SRC.ACT.DEX 0
+
+
+SRC.ACT.KARMA 5000
+
+
+SRC.ACT.EVENTS e_escort
+
+
+SRC.ACT.P <SRC.P>
+
+
+SRC.ACT.DIR <SRC.DIR>
+
+
+SRC.ACT.backright
+
+
+ENDIF
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION backleft]
+
+
+DIR <SRC.DIR>
+
+
+DOSWITCH <SRC.DIR>
+
+
+MOVE sw
+
+
+MOVE w
+
+
+MOVE nw
+
+
+MOVE n
+
+
+MOVE ne
+
+
+MOVE e
+
+
+MOVE se
+
+
+MOVE s
+
+
+ENDDO
+
+
+
+
+
+[FUNCTION backright]
+
+
+DIR <SRC.DIR>
+
+
+DOSWITCH <SRC.DIR>
+
+
+MOVE se
+
+
+MOVE s
+
+
+MOVE sw
+
+
+MOVE w
+
+
+MOVE nw
+
+
+MOVE n
+
+
+MOVE ne
+
+
+MOVE e
+
+
+ENDDO
+
+
+
+
+
+[EVENTS e_escort]
+
+
+ON=@HitTry
+
+
+RETURN 1
+
+
+ON=@SpellCast
+
+
+RETURN 1
+
+
+ON=@SpellEffect
+
+
+RETURN 1
+
+
+ON=@Death
+
+
+HITS <STR>
+
+
+RETURN 1
+
+
+ON=@GetHit
+
+
+RETURN 1

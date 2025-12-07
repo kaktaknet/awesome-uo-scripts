@@ -1,0 +1,53 @@
+[ITEMDEF I_LEATHER_ARMOR_DYING_TUB] 
+
+//Dying Tub 
+
+ID=0fab 
+
+NAME=Leather Armor Dying Tub 
+
+TYPE=T_DYE_VAT 
+
+WEIGHT=10 
+
+CATEGORY=Items by Professions 
+
+SUBSECTION=Alchemist 
+
+DESCRIPTION=Leather Armor Dying Tub 
+
+
+
+RESOURCES=i_dye_tub, 20 i_reag_dragon_blood 
+
+SKILLMAKE=ALCHEMY 100.0 
+
+
+
+ON=@DCLICK 
+
+TARGET Which leather armor do you want to dye? 
+
+
+
+ON=@TARGON_ITEM 
+
+IF <SRC.TARG.TYPE=t_armor_leather> 
+
+SRC.TARG.COLOR=<COLOR> 
+
+
+
+ELSEIF 
+
+SRC.MESSAGE It isn't a leather armor. 
+
+
+
+ENDIF
+
+
+
+ON=@TARGON_CHAR 
+
+SRC.MESSAGE It isn't a leather armor.

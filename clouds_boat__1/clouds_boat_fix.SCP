@@ -1,0 +1,237 @@
+//Boat fix by ClouD, please, leave the credits :)
+
+//thanks to swindler's for making the script I used to know the right IDs ;)
+
+//For 55r4.0.2 or greater ONLY!
+//Put this speech at your boat scripts.
+
+[SPEECH spk_ship_cmds]
+ON=Stop
+SHIPSTOP
+
+ON=Turn Left
+ON=Port
+LOCAL.TMP=<OBJ>
+OBJ=<UID>
+FORITEMS 8
+IF (<TYPE>==t_ship)
+IF (<UID>!=<OBJ>)
+SRC.SYSMESSAGE There's a boat too next to you.
+return 1
+ENDIF
+ENDIF
+ENDFOR
+OBJ.SHIPTURNLEFT
+OBJ.shipfix
+OBJ=<LOCAL.TMP>
+
+ON=Turn Right
+ON=Starboard	
+LOCAL.TMP=<OBJ>
+OBJ=<UID>
+FORITEMS 8
+IF (<TYPE>==t_ship)
+IF (<UID>!=<OBJ>)
+SRC.SYSMESSAGE There's a boat too next to you.
+return 1
+ENDIF
+ENDIF
+ENDFOR
+OBJ.SHIPTURNRIGHT
+OBJ.shipfix
+OBJ=<LOCAL.TMP>
+
+ON=Left			
+ON=Drift Left
+	SHIPDRIFTLEFT
+
+ON=Right		
+ON=Drift Right
+	SHIPDRIFTRIGHT
+
+ON=Back		
+ON=Backward		
+ON=Backwards	
+	SHIPBACK
+
+ON=Forward
+ON=Foreward		
+ON=Unfurl sail	
+	SHIPFORE
+
+ON=Forward left
+	SHIPFORELEFT
+
+ON=forward right
+	SHIPFORERIGHT
+
+ON=backward left
+ON=back left
+	SHIPBACKLEFT
+
+ON=backward right
+ON=back right
+	SHIPBACKRIGHT
+
+ON=Raise Anchor
+	SHIPANCHORRAISE
+
+ON=Drop Anchor
+	SHIPANCHORDROP
+
+ON=Turn around	
+ON=Come about	
+	SHIPTURN
+shipfix
+
+ON=Up
+	SHIPUP
+
+ON=Down
+	SHIPDOWN
+
+ON=Land
+	SHIPLAND
+
+////Here's the function:
+
+[FUNCTION shipfix]
+LOCAL.LEFTOK=0
+LOCAL.TMP=<OBJ>
+OBJ=<UID>
+FORITEMS 18
+IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<OBJ>)
+DCLICK
+ENDIF
+ENDFOR
+IF (<OBJ.BASEID>==i_multi_ship_small_n) || (<OBJ.BASEID>==i_multi_ship_dragon_small_n)
+LOCAL.HATCH 0 -4 0
+LOCAL.TILLERMAN 1 4 0
+LOCAL.LEFTSIDE -2 0 0
+LOCAL.RIGHTSIDE 2 0 0
+ELIF (<OBJ.BASEID>==i_multi_ship_small_w) || (<OBJ.BASEID>==i_multi_ship_dragon_small_w)
+LOCAL.HATCH -4 0 0
+LOCAL.TILLERMAN 4 0 0
+LOCAL.LEFTSIDE 0 2 0
+LOCAL.RIGHTSIDE 0 -2 0
+ELIF (<OBJ.BASEID>==i_multi_ship_small_s) || (<OBJ.BASEID>==i_multi_ship_dragon_small_s)
+LOCAL.HATCH 0 4 0
+LOCAL.TILLERMAN 0 -4 0
+LOCAL.LEFTSIDE 2 0 0
+LOCAL.RIGHTSIDE -2 0 0
+ELIF (<OBJ.BASEID>==i_multi_ship_small_e) || (<OBJ.BASEID>==i_multi_ship_dragon_small_e)
+LOCAL.HATCH 4 0 0
+LOCAL.TILLERMAN -4 0 0
+LOCAL.LEFTSIDE 0 -2 0
+LOCAL.RIGHTSIDE 0 2 0
+ELIF (<OBJ.BASEID>==i_multi_ship_medium_n) || (<OBJ.BASEID>==i_multi_ship_dragon_medium_n)
+LOCAL.HATCH 0 -4 0
+LOCAL.TILLERMAN 1 5 0
+LOCAL.LEFTSIDE -2 0 0
+LOCAL.RIGHTSIDE 2 0 0
+ELIF (<OBJ.BASEID>==i_multi_ship_medium_w) || (<OBJ.BASEID>==i_multi_ship_dragon_medium_w)
+LOCAL.HATCH -4 0 0
+LOCAL.TILLERMAN 5 0 0
+LOCAL.LEFTSIDE 0 2 0
+LOCAL.RIGHTSIDE 0 -2 0
+ELIF (<OBJ.BASEID>==i_multi_ship_medium_s) || (<OBJ.BASEID>==i_multi_ship_dragon_medium_s)
+LOCAL.HATCH 0 4 0
+LOCAL.TILLERMAN 0 -5 0
+LOCAL.LEFTSIDE 2 0 0
+LOCAL.RIGHTSIDE -2 0 0
+ELIF (<OBJ.BASEID>==i_multi_ship_medium_e) || (<OBJ.BASEID>==i_multi_ship_dragon_medium_e)
+LOCAL.HATCH 4 0 0
+LOCAL.TILLERMAN -5 0 0
+LOCAL.LEFTSIDE 0 -2 0
+LOCAL.RIGHTSIDE 0 2 0
+// Long Ships
+ELIF (<OBJ.BASEID>==i_multi_ship_long_n) || (<OBJ.BASEID>==i_multi_ship_dragon_long_n)
+LOCAL.HATCH 0 -5 0
+LOCAL.TILLERMAN 1 5 0
+LOCAL.LEFTSIDE -2 -1 0
+LOCAL.RIGHTSIDE 2 -1 0
+ELIF (<OBJ.BASEID>==i_multi_ship_long_w) || (<OBJ.BASEID>==i_multi_ship_dragon_long_w)
+LOCAL.HATCH -5 0 0
+LOCAL.TILLERMAN 5 0 0
+LOCAL.LEFTSIDE -1 2 0
+LOCAL.RIGHTSIDE -1 -2 0
+ELIF (<OBJ.BASEID>==i_multi_ship_long_s) || (<OBJ.BASEID>==i_multi_ship_dragon_long_s)
+LOCAL.HATCH 0 5 0
+LOCAL.TILLERMAN 0 -5 0
+LOCAL.LEFTSIDE 2 1 0
+LOCAL.RIGHTSIDE -2 1 0
+ELIF (<OBJ.BASEID>==i_multi_ship_long_e) || (<OBJ.BASEID>==i_multi_ship_dragon_long_e)
+LOCAL.HATCH 5 0 0
+LOCAL.TILLERMAN -5 0 0
+LOCAL.LEFTSIDE 1 -2 0
+LOCAL.RIGHTSIDE 1 2 0
+ENDIF
+FORITEMS 18
+IF (<BASEID>==i_ship_hatch_e) && (<REGION.UID>==<OBJ>)
+IF (<LINK.MORE2>==00) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) //N
+DISPID 03eae
+ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+DISPID i_ship_hatch_e
+ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+DISPID 03eb9
+ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+DISPID 03e93
+ENDIF
+P=<LINK.P>
+MOVE=<LOCAL.HATCH>
+ENDIF
+IF (<REGION.UID>==<OBJ>) && (<TYPE>==t_ship_tiller)
+IF (<LINK.MORE2>==00) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+DISPID 03e4e
+ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+DISPID 03e55
+ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+DISPID 03e4b
+ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+DISPID 03e50
+ENDIF
+P=<LINK.P>
+MOVE <LOCAL.TILLERMAN>
+ENDIF
+IF (<REGION.UID>==<OBJ>) && (<UID>!=<LOCAL.LEFTSIDEUID>) && (<id>==03eb2) || (<ID>==03e85) || (<ID>==03ed4)
+IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<OBJ>)
+DCLICK
+ENDIF
+IF (<LINK.MORE2>==00) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+ID=03eb2
+ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+ID=03e85
+ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+ID=03eb2
+ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+ID=03e85
+ENDIF
+P=<LINK.P>
+MOVE <LOCAL.RIGHTSIDE>
+LOCAL.RIGHTSIDEUID=<UID>
+TIMER -1
+UPDATE
+ENDIF
+IF (<REGION.UID>==<OBJ>) && (<UID>!=<LOCAL.RIGHTSIDEUID>) && (<ID>==03eb1) || (<ID>==03e8a) || (<ID>==03ed4)
+IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<OBJ>)
+DCLICK
+ENDIF
+IF (<LINK.MORE2>==00) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+ID=03eb1
+ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+ID=03e8a
+ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+ID=03eb1
+ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+ID=03e8a
+ENDIF
+P=<LINK.P>
+MOVE <LOCAL.LEFTSIDE>
+LOCAL.LEFTSIDEUID=<UID>
+TIMER -1
+UPDATE
+ENDIF
+ENDFOR
+obj=<local.tmp>
+
+[EOF]

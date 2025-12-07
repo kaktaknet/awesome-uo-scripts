@@ -1,0 +1,120 @@
+///Erstellt von GM Carlos
+///www.the-lost-isles.de
+
+[CHARDEF C_kellner] 
+DEFNAME=c_kellner 
+NAME=#NAMES_HUMANMALE Kellner 
+ID=C_MAN 
+DAM=15,20 
+ARMOR=20 
+DESIRES=i_gold 
+SHELTER=r_civilization
+
+TSPEECH=kellner
+
+CATEGORY=NPCs
+SUBSECTION=Kellner
+DESCRIPTION=Kellner
+
+ON=@Create
+NPC=Brain_human
+COLOR=colors_skin
+STR={50 60} 
+DEX={50 60} 
+INT={50 60} 
+
+DETECTINGHIDDEN={90.0 100.0} 
+FORENSICS={90.0 100.0} 
+FENCING={90.0 100.0} 
+PARRYING={90.0 100.0} 
+SWORDSMANSHIP={90.0 100.0} 
+WRESTLING={90.0 100.0} 
+MACEFIGHTING={90.0 100.0} 
+MAGICRESISTANCE={90.0 100.0} 
+TACTICS={90.0 100.0}
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair
+
+ON=@NPCRestock 
+ITEM=i_shirt_plain 
+COLOR=colors_all 
+ITEM=random_pants 
+COLOR=colors_all
+ITEM=i_shoes_plain
+COLOR=colors_all
+
+[SPEECH kellner]
+DEFAULT=Ich verstehe euch nicht.
+
+ON=*Hi*
+ON=*Hallo*
+ON=*Gruesse*
+ON=*Hail*
+SAY=Willkommen in <REGION.NAME>.
+
+ON=*Job*
+ON=*Beruf*
+SAY=Ich bediene die Kunden
+
+ON=Auf Bald
+ON=Tschuess
+ON*Bis Bald*
+SAY=Auf Bald
+
+ON=*Speisekarte*
+ON=*Angebot*
+SAY= Wir haben Ale, Wein, Milch, Liquor, und Cider fuer je 30gp
+
+ON=*Ale haben*
+ IF <SRC.RESTEST 30 i_gold>
+  SRC.NEWITEM= i_bottle_ale
+  SRC.CONSUME= 30 i_gold
+  SRC.act.bounce
+  SAY=Hier ist euer Ale
+ ELSE
+  Say=Ihr habt nicht genug Geld.
+ ENDIF
+
+ON=*Liquor haben*
+IF <SRC.RESTEST 30 i_gold>
+  SRC.NEWITEM= i_bottle_liquor
+  SRC.CONSUME= 30 i_gold
+  SRC.act.bounce
+  SAY=Hier ist euer Liquor
+ ELSE
+  Say=Ihr habt nicht genug Geld.
+ ENDIF
+
+ON=*Milch haben*
+IF <SRC.RESTEST 30 i_gold>
+  SRC.NEWITEM= i_pitcher_milk
+  SRC.CONSUME= 30 i_gold
+  SRC.act.bounce
+  SAY=Hier ist euere Milch
+ ELSE
+  Say=Ihr habt nicht genug Geld.
+ ENDIF
+
+ON=*Wein haben*
+IF <SRC.RESTEST 30 i_gold>
+  SRC.NEWITEM= i_bottle_liquor
+  SRC.CONSUME= 30 i_gold
+  SRC.act.bounce
+  SAY=Hier ist euer Wein
+ ELSE
+  Say=Ihr habt nicht genug Geld.
+ ENDIF
+
+ON=*Cider haben*
+IF <SRC.RESTEST 30 i_gold>
+  SRC.NEWITEM= i_jug_cider
+  SRC.CONSUME= 30 i_gold
+  SRC.act.bounce
+  SAY=Hier ist euer Cider
+ ELSE
+  Say=Ihr habt nicht genug Geld.
+ ENDIF
+[EOF]

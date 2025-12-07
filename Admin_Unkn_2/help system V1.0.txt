@@ -1,0 +1,114 @@
+//Copyright EVILMACER 2002 all rights reserved
+//Instructions go to spheremenu.scp and remove the old gm page system
+//then place this there
+//[FUNCTION HelpPage]
+//Dialog d_gmpage
+//return 1
+//Now go to spheredialog.scp and remove the old dialog d_gmpage
+//Resync your shard and click the help button :)
+[DIALOG d_gmpage]
+0,0
+nomove
+resizepic 0 0 2600 607 440 // Curved Grey background
+resizepic 40 45 2620 175 315 // Gold trimmed box
+gumppic 40 100 12
+gumppic 40 100 50987
+text 100 17 1153 0 // Title
+button 500 95 1155 1154 1 0 1000
+text 210 80 1153 1
+Text 210 97 1153 2
+Text 210 120 1153 3
+text 210 137 1153 4
+button 500 135 1155 1154 1 0 2000
+text 210 160 1153 5
+text 210 177 1153 6
+button 500 175 1155 1154 1 0 3000
+text 210 200 1153 7
+text 210 217 1153 8
+button 500 215 1155 1154 1 0 4000
+Text 210 240 1153 9
+text 210 257 1153 10
+button 500 255 1155 1154 1 0 5000
+text 40 360 1153 11
+text 50 60 1153 12
+button 190 65 1210 1209 1 0 6000
+text 50 85 1153 13
+button 190 90 1210 1209 1 0 7000
+text 50 110 1153 14
+button 190 115 1210 1209 1 0 8000
+text 210 330 1153 15
+button 500 330 1155 1154 1 0 9000
+text 40 380 03 16
+[DIALOG D_gmpage TEXT]
+Hello <src.name> Welcome to the <serv.name> Help Menu
+Another player is harrassing you,
+and you need to contact a gm.
+You need to contact a admin for
+a problom a gm can't help with.
+Report a bug/issue that you have
+discovered while playing.
+My character is stuck and I need
+to teleport to britain.
+Other page a gm for reasons not
+listed above.
+Repeated pages or abuse of this system will get you jailed or banned!
+Server Information
+Server Version
+Server Website
+Close <Serv.name> Help Menu
+Help System created by EVIL MACER All rights reserved.
+[DIALOG d_gmpage BUTTON]
+ONBUTTON 1000
+SRC.GMPAGE
+ONBUTTON 2000
+SRC.GMPAGE
+ONBUTTON 3000
+SRC.GMPAGE
+ONBUTTON 4000
+src.newitem i_teleport_delay
+src.act.equip
+ONBUTTON 5000
+SRC.GMPAGE
+ONBUTTON 6000
+src.information
+onbutton 7000
+src.version
+Onbutton 8000
+src.weblink www.freewebz.com/shatteredhope
+
+[ITEMDEF i_teleport_delay]
+// Create an object that just is an equipped timer.
+// src.newitem i_teleport_delay
+// src.act.equip		// We must equip this on the char we want to effect.
+// src.act.timer 100	// if we want to change the time
+//
+NAME=Delay Teleport
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	MORE1=10
+	MOREP=britain
+
+ON=@Equip
+	TIMER=1
+
+ON=@Timer
+	// Take the effect we would like.
+	if ( <cont> )
+		if ( <more1> )
+			cont.message <EVAL(<more1>)> // put countdown above my head.
+			more1=<more1>-1
+			TIMER=1
+			return 1
+		else
+			cont.GOPLACE <morep>
+		endif
+	endif
+	// normal timer fall through is to delete the item
+	remove
+	return 1
+

@@ -1,0 +1,969 @@
+[SPEECH jobReiseMage]
+
+DEFAULT=Entschuldigt, aber ich kann euch nicht helfen.
+
+ON=*Greet*
+ON=*Hello*
+ON=*Hail*
+ON=*Seid gegruesst*
+	SAY=Seid gegruesst <SRC.NAME>!
+	SALUTE
+
+ON=*Goodbye*
+ON=*Farewell*
+ON=*Gehabt Euch wohl*
+ON=*Auf Bald*
+	SAY=Auf Bald.
+	ANIM 06
+	BYE
+	return 1
+
+
+//ON=map
+//ON=travel
+//ON=gate
+//ON=karte
+//SAY= Schaut euch die Karte an und sagt mir wohin ihr wollt.
+//if <distance> > 3 
+ // src.message=Kommt einwenig naeher!
+  //return 1
+  //else
+  //DIALOG d_reise
+  //return 1
+  //endif
+
+===DUNGEONS===
+
+ON=Covetous 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Covetous*
+ON=*tor* *zu Covetous*
+ON=*tor nach* *Covetous*
+say= Nach Covetous?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=2497,927
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=2497,927
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Deceit 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein?  
+
+ON=*gate* *to Deceit*
+ON=*tor* *nach Deceit*
+ON=*tor* *zu Deceit*
+say= Nach Deceit?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=4111,434,5
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=4111,434,5
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF
+
+
+ON=Despise 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein?
+
+ON=*gate* *to Despise*
+ON=*tor* *nach Despise*
+ON=*tor* *zu Despise*
+say= Nach Despise?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=1301,1080
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=1301,1080
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF
+
+
+ON=Destard 
+SAY=SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Destard*
+ON=*tor* *nach Destard*
+ON=*tor* *zu Destard*
+say= Nach Destard?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=1176,2639
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=1176,2639
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF
+
+
+ON=Hythloth 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Hythloth*
+ON=*tor* *nach Hythloth*
+ON=*tor *zu Hythloth*
+say= Nach Hythloth?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=4722,3825
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=4722,3825
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF
+
+
+ON=Shame 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Shame*
+ON=*tor* *nach Shame*
+ON=*tor* *zu Shame*
+say= Nach Shame?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=513,1568
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=513,1568
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF
+
+
+ON=Wrong 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Wrong*
+ON=*tor* *nach Wrong*
+ON=*tor* *zu Wrong*
+say= Nach Wrong?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=2044,238,10
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=2044,238,10
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF
+
+
+ON=Fire Dungeon 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Fire Dungeon*
+ON=*tor* *nach Fire Dungeon*
+ON=*tor *zu Fire Dungeon*
+ON=*tor* *zum Fire Dungeon*
+say= Zu dem Fire Dungeon?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=5760,2907,17
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=5760,2907,17
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch!  
+ENDIF
+
+
+ON=Ice Dungeon
+ON=*tor* *zu Ice Dungeon*
+ON=*gate* *to Ice Dungeon*
+ON=*tor* *zum Ice Dungeon*
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Ice Dungeon*
+say= Zu dem Ice Dungeon?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=1999,81,5
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=1999,81,5
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF
+
+===T2A-Towns===
+
+ON=Delucia 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Delucia*
+ON=*tor* *nach Delucia*
+ON=*tor* *zu Delucia*
+say= Nach Delucia?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=5270,3993,37
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=5270,3993,37
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Papua 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Papua*
+ON=*tor* *zu Papua*
+ON=*tor* *nach Papua*
+say= Nach Papua?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=5730,3206,-7
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=5730,3206,-7
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+===Towns===
+
+ON=Britain 
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Britain*
+ON=*tor* *zu Britain*
+ON=*tor* *nach Britain*
+say= Nach Britain?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=1460,1655,10
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=1460,1655,10
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Bucaneers Den
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Bucaneers Den*
+ON=*tor* *nach Bucaneers Den*
+ON=*tor* *zu Buccaneers Den*
+ON=*tor* *nach Buccaneer's Den*
+say= Nach Bucaneers Den?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=2731,2162,0
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=2731,2162,0
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch!
+ENDIF 
+
+
+ON=Cove
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Cove
+ON=*tor* *nach Cove
+ON=*tor* *zu Cove
+say= Nach Cove?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=2275,1210,0
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=2275,1210,0
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Jhelom
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Jhelom*
+ON=*tor* *nach Jhelom*
+ON=*tor* *zu Jhelom*
+say= Nach Jhelom?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=1383,3815,0
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=1383,3815,0
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Maginica
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Maginica*
+ON=*tor* *nach Magincia*
+ON=*tor* *zu Magincia*
+say= Nach Maginica?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=3715,2212,20
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=3715,2212,20
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Minoc
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Minoc*
+ON=*tor* *nach Minoc*
+ON=*tor* *zu Minoc*
+say= Nach Minoc?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=2466,544
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=2466,544
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Moonglow
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Moonglow*
+ON=*tor* *nach Moonglow*
+ON=*tor* *zu Moonglow*
+say= Nach Moonglow?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=4444,1171,0
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=4444,1171,0
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch!  
+ENDIF 
+
+
+ON=Njuhelm
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Njuhelm*
+ON=*tor* *zu Njuhelm*
+ON=*tor* *nach Njuhelm*
+say= Nach Njuhelm?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=3755,1284
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=3755,1284
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Occlo
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Occlo*
+ON=*tor* *nach Occlo*
+ON=*tor* *zu Occlo*
+say= Nach Occlo?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=3651,2620
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=3651,2620
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch!  
+ENDIF 
+
+
+ON=Serpents Hold
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Serpents Hold*
+ON=*tor* *nach Serpents Hold*
+ON=*tor* *zu Serpents Hold*
+say= Nach Serpents Hold?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=3021,3397,15
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=3021,3397,15
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Skara Brae
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Skara Brae*
+ON=*tor* *nach Skara Brae*
+ON=*tor* *zu Skara Brae*
+say= Nach Skara Brae?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=632,2233
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=632,2233
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Trinsic
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Trinsic*
+ON=*tor* *nach Trinsic*
+ON=*tor* *zu Trinsic*
+say= Nach Trinsic?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=1867,2780
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=1867,2780
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Vesper
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Vesper*
+ON=*tor* *zu Vesper*
+ON=*tor* *nach Vesper*
+say= Nach Vesper?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=2899,676
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=2899,676
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch!  
+ENDIF 
+
+
+ON=Wind
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Wind*
+ON=*tor* *nach Wind*
+ON=*tor* *zu Wind*
+say= Nach Wind?, Seid ihr euch da sicher? Gut, ihr muesst es ja wissen! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=1470,989
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=1470,989
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+ON=Yew
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Yew*
+ON=*tor* *nach Yew*
+ON=*tor* *zu Yew*
+say= Nach Yew?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=547,1031
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=547,1031
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+ON=Taverne
+SAY=Entschuldigt <SRC.NAME>, koenntet ihr etwas genauer sein? 
+
+ON=*gate* *to Taverne*
+ON=*tor* *nach Taverne*
+ON=*tor* *zur Taverne*
+say= Zur Taverne?, Gut! Das wird euch dann 100gp kosten.
+if <SRC.RESTEST 100 i_gold> 
+  SRC.consume 100 i_gold
+
+src.newitem=I_REISEGATE
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.move -1+rand(2), -1+rand(2)
+src.act.morep=2232,836
+src.act.timer=10
+
+src.newitem=I_REISEGATE
+src.act.p=2232,836
+src.act.morep=<src.p>
+src.act.timer=10
+ANIM=17 //zauber anim
+SOUND=526 //gate travel sound
+EMOTE=oeffnet ein Tor
+
+return 1
+ELSE 
+say Ihr habt leider zu wenig Gold bei euch! 
+ENDIF 
+
+
+[ITEMDEF I_REISEGATE]
+ID=0dda
+NAME=Reisetor
+
+CATEGORY=SonderVendoren
+SUBSECTION=Tradesmen
+DESCRIPTION=Reisegate
+
+ON=@PICKUP_GROUND
+RETURN 1
+
+on=@timer
+remove
+return 1
+
+[CHARDEF 00624]
+DEFNAME=C_H_REISEMAGE
+NAME=#NAMES_HUMANMALE
+ID=C_MAN
+DESIRES=i_gold,t_wand,t_reagent,t_bone
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+
+TSPEECH=jobReiseMage
+TEVENTS=e_invul
+TEVENTS e_reisemage
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Environ
+
+
+ON=@Create
+TITLE=Reisemagier
+NPC=brain_vendor
+COLOR=colors_skin
+STR={81 85}
+DEX={71 85}
+INT={86 100}
+SPEECHCOLOR 00455
+FLAGS=028000005
+
+MEDITATION={75.0 100.0}
+INSCRIPTION={50.0 65.0}
+MAGERY={86.0 100.0}
+WRESTLING={65.0 78.0}
+MAGICRESISTANCE={55.0 78.0}
+TACTICS={55.0 78.0}
+
+ON=@NPCRestock
+ITEM=i_gmrobe
+COLOR=0541
+ATTR=00424
+ATTR=attr_newbie
+NAME=Mantel eines Reisemagiers
+ITEM=random_shoes
+ATTR=attr_newbie
+COLOR=0541
+ITEM=i_wand_1
+ATTR=attr_newbie
+COLOR=0541
+NAME=Stab eines Reisemagiers
+
+CATEGORY=SonderVendoren
+SUBSECTION=Tradesmen
+DESCRIPTION=ReiseMage
+
+
+[EVENTS e_reisemage]
+
+ON=@NPCSeeNewPlayer
+IF (<DISTANCE>>1)
+RETURN 1
+ENDIF
+
+DORAND 2 
+SAY=Ich Gruesse Euch. 
+SAY=Wo kann ich Euch hinbringen? 
+ENDDO
+SALUTE
+
+
+//[DIALOG d_reise] 
+//0,0
+//gumppic 50 50 5528    //Karte
+//gumppic 0 0 5500      //Rahmen
+//nomove
+
+
+//ende
+
+
+[EOF]

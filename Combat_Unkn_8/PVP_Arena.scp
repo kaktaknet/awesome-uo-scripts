@@ -1,0 +1,2611 @@
+Ill try to draw a picture of how my pvp arena looks like so you understand how to set it up. it only takes a few minutes if you understand simple scripting. The instructions for the setup tiles are written on the itemdefs. if anything email me, and ill be glad to set it up for you.
+
+1.- Where the pvp tile till take them initially. there will be an ankh to rezz, the blue tile to the blue prep box, red tile to red prep box, for which they contain the blue and red pvp stones, and the moon tile to take them back to moonglow just in case.
+
+2.-The blue prep box, containing the stone and the tile to take them to the actual pvp pit (pic 4)
+
+3.- same as pic 2 but with the red stone.
+
+4.-the actual fighting space. also contains an i_death_tile, so when they die they run on it and re-equip for battle once more.
+
+
+
+Where player appears
+
+---------  ------------------------------------------
+
+|        |                                           |
+
+| 1      |                                           |
+
+|        |                                           |
+
+---------      4                                     |
+
+---------                                            |
+
+|        |                                           |
+
+|  2     |                                           |
+
+|        |                                           |
+
+---------|                                           |
+
+---------|                                           |
+
+|        |                                           |
+
+|   3    |                                           |
+
+|        |                                           |
+
+--------- -------------------------------------------                                           
+
+
+
+
+
+[itemdef i_die_stone] //This stone kills players so they can enter the pvp arena.
+
+id=i_grave_stone
+
+name=Click me and die!
+
+
+
+on=@dclick
+
+src.kill
+
+
+
+[itemdef i_telepvp_tile]//put this tile in each box where the pvp stone is contained so they can enter the pvp arena. make this a type 17. goes with pic 2 and 3.
+
+id=1174
+
+name=Go to Pvp Arena
+
+
+
+on=@step
+
+IF ! <eval <src.tag.equip>>
+
+  SRC.SYSMESSAGE You can't use this twice!
+
+ELSE
+
+Src.tag.equip=01
+
+src.go 5425,1220//change to where ever the actual pvp fighting pit is.
+
+endif
+
+
+
+[itemdef i_death_tile]//this is the tile to go to the actual pvp arena, and bring them back from when they die in action. you must be dead to enter, so exploiting is impossible. make sure to set type 17. put this in your telecenter or the city, where ever you want.
+
+id=1174
+
+name=Pvp Arena
+
+
+
+on=@step
+
+IF ! ( <SRC.FLAGS> & 02 )
+
+src.say I must be dead to enter!
+
+return 1
+
+else
+
+src.pack_to_bank
+
+src.go 5410,1214//make this the box that contains an ankh, a red tile to go to the red prep box, a blue tile for the blue prep box, and the moon tile to leave the pvp arena.
+
+
+
+
+
+[FUNCTION pack_to_bank]//moves any newbie items to the bank...
+
+IF (0<FINDLAYER(21).FINDCONT(0).UID>==0)
+
+RETURN 1
+
+ENDIF
+
+FINDLAYER(21).FINDCONT(0).CONT=<FINDLAYER(layer_bankbox).UID>
+
+pack_to_bank
+
+RETURN 1
+
+
+
+[itemdef i_color_tile]//now... you set type 20 to the tile, then cast 45 on it to mark it. mark it where the room for color a would be. make a second one for color b box. then set both tiles to type 17 so they can be telepads. goes with pic 1.
+
+id=1174
+
+name=Temp Pvp Arena
+
+
+
+on=@step
+
+IF  ( <SRC.FLAGS> & 02 )
+
+src.say I must be Alive to enter!
+
+return 1
+
+else
+
+return 0
+
+
+
+[itemdef i_moon_tile]//put this where players rezz, next to both the teams, in case the person wants to leave. goes with pic 1
+
+id=1174
+
+name=To Moonglow
+
+
+
+on=@step
+
+src.go Moonglow
+
+///////////////////////////////////////
+
+
+
+[ITEMDEF i_blue_equip]// stone.. goes with pic 2. down below is i_red_equip, goes with pic 3 i think.
+
+id=i_grave_stone
+
+name=Blue Equipment Stone
+
+
+
+on=@create
+
+color=0486
+
+
+
+ON=@DCLICK
+
+IF (<DISTANCE> > 2) 
+
+SRC.MESSAGE You are too far away. 
+
+RETURN 1
+
+elseif <eval <src.tag.equip>>
+
+  SRC.SYSMESSAGE You can't use this twice!
+
+elseif ( <SRC.FLAGS> & 02 )
+
+src.say I must be ALIVE to use this!
+
+return 1
+
+ELSE
+
+src.events +e_equip
+
+Src.tag.equip=01
+
+
+
+
+
+src.newitem=i_HEATER_SHIELD_FORTIFICATION_blue
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_FORTIFICATION_blue
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_leggings_FORTIFICATION_blue
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_ARMS_FORTIFICATION_blue
+
+src.act.equip
+
+src.newitem=i_platemail_HELM_FORTIFICATION_blue
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_GORGET_FORTIFICATION_blue
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_GAUNTLETS_FORTIFICATION_blue
+
+src.act.equip
+
+src.newitem=i_sword_viking_POWER_blue
+
+src.act.equip
+
+src.newitem=i_SCIMITAR_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_HALBERD_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_CUTLASS_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_KATANA_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_BOW_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_PITCHFORK_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_KRYSS_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_spear_short_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_WAR_FORK_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_MACE_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_HAMMER_PICK_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_hammer_war_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_AXE_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_axe_battle_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_axe_war_POWER_blue
+
+src.act.bounce
+
+src.newitem=i_full_spellbook
+
+src.act.bounce
+
+src.newitem=i_bandage
+
+src.act.amount=25
+
+src.act.bounce
+
+src.newitem=i_arrow
+
+src.act.amount=100
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+//src.go 5425,1220
+
+
+
+ENDIF
+
+ RETURN 1
+
+
+
+[events e_equip] 
+
+on=@death 
+
+tag.equip=
+
+
+
+
+
+[ITEMDEF i_SCIMITAR_POWER_blue]
+
+DEFNAME=i_SCIMITAR_POWER
+
+ID=i_scimitar
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_scimitar,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Scimitars
+
+DESCRIPTION=Scimitar of Power
+
+
+
+ON=@Create
+
+COLOR=0480
+
+HITPOINTS={115 116}
+
+ATTR=attr_magic
+
+MOREY=80.0
+
+
+
+[ITEMDEF i_HALBERD_POWER_blue]
+
+DEFNAME=i_HALBERD_POWER
+
+ID=i_halberd
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_halberd,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Halberds
+
+DESCRIPTION=Halberd of Power
+
+
+
+ON=@Create
+
+COLOR=0480
+
+HITPOINTS={31 80}
+
+ATTR=attr_magic
+
+MOREY=80.0
+
+
+
+[ITEMDEF i_BARDICHE_POWER_blue]
+
+DEFNAME=i_BARDICHE_POWER
+
+ID=i_bardiche
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_bardiche,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Bardiches
+
+DESCRIPTION=Bardiche of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 100}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_CUTLASS_POWER_blue]
+
+DEFNAME=i_CUTLASS_POWER
+
+ID=i_cutlass
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_cutlass,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Cutlasses
+
+DESCRIPTION=Cutlass of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_sword_viking_POWER_blue]
+
+DEFNAME=i_sword_viking_POWER
+
+ID=i_sword_viking
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_sword_viking,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Viking Swords
+
+DESCRIPTION=Viking Sword of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 90}
+
+COLOR=0480 
+
+
+
+
+
+[ITEMDEF i_crossbow_heavy_POWER_blue]
+
+DEFNAME=i_crossbow_heavy_POWER
+
+ID=i_crossbow_heavy
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_crossbow_heavy,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Heavy Crossbows
+
+DESCRIPTION=Heavy Crossbow of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 100}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_KATANA_POWER_blue]
+
+DEFNAME=i_KATANA_POWER
+
+ID=i_katana
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_katana,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Katanas
+
+DESCRIPTION=Katana of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={105 106}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_BOW_POWER_blue]
+
+DEFNAME=i_BOW_POWER
+
+ID=i_bow
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_bow,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Bows
+
+DESCRIPTION=Bow of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 60}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_PITCHFORK_POWER_blue]
+
+DEFNAME=i_PITCHFORK_POWER
+
+ID=i_PITCHFORK
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_PITCHFORK,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Pitchforks
+
+DESCRIPTION=Pitchfork of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 60}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_KRYSS_POWER_blue]
+
+DEFNAME=i_KRYSS_POWER
+
+ID=i_kryss
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_kryss,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Krysses
+
+DESCRIPTION=Kryss of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 90}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_SPEAR_POWER_blue]
+
+DEFNAME=i_SPEAR_POWER
+
+ID=i_spear
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_spear,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Spears
+
+DESCRIPTION=Spear of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 80}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_sword_long_POWER_blue]
+
+DEFNAME=i_sword_long_POWER
+
+ID=i_sword_long
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_sword_long,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Longswords
+
+DESCRIPTION=Longsword of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={125 126}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_spear_short_POWER_blue]
+
+DEFNAME=i_spear_short_POWER
+
+ID=i_spear_short
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_spear_short,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Short Spears
+
+DESCRIPTION=Short Spear of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_WAR_FORK_POWER_blue]
+
+DEFNAME=i_WAR_FORK_POWER
+
+ID=I_WAR_FORK
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_WAR_FORK,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic War Forks
+
+DESCRIPTION=War Fork of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={130 131}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_MACE_POWER_blue]
+
+DEFNAME=i_MACE_POWER
+
+ID=i_mace
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_mace,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Maces
+
+DESCRIPTION=Mace of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_mace_war_POWER_blue]
+
+DEFNAME=i_mace_war_POWER
+
+ID=i_mace_war
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_mace_war,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic War Maces
+
+DESCRIPTION=War Mace of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={140 141}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_HAMMER_PICK_POWER_blue]
+
+DEFNAME=i_HAMMER_PICK_POWER
+
+ID=i_hammer_pick
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_hammer_pick,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Hammer Picks
+
+DESCRIPTION=Hammer Pick of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_hammer_war_POWER_blue]
+
+DEFNAME=i_hammer_war_POWER
+
+ID=i_hammer_war
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_hammer_war,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic War Hammers
+
+DESCRIPTION=War Hammer of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={125 126}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_AXE_POWER_blue]
+
+DEFNAME=i_AXE_POWER
+
+ID=i_axe
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Axes
+
+DESCRIPTION=Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={95 96}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_axe_battle_POWER_blue]
+
+DEFNAME=i_axe_battle_POWER
+
+ID=i_axe_battle
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_battle,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Battle Axes
+
+DESCRIPTION=Battle Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={125 126}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_axe_double_POWER_blue]
+
+DEFNAME=i_axe_double_POWER
+
+ID=i_axe_double
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_double,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Double Axes
+
+DESCRIPTION=Double Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={125 126}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_axe_two_hand_POWER_blue]
+
+DEFNAME=i_axe_two_hand_POWER
+
+ID=i_axe_two_hand
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_two_hand,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Two Handed Axes
+
+DESCRIPTION=Two Handed Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_axe_war_POWER_blue]
+
+DEFNAME=i_axe_war_POWER
+
+ID=i_axe_war
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_war,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic War Axes
+
+DESCRIPTION=War Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={95 96}
+
+COLOR=0480
+
+
+
+[ITEMDEF i_axe_battle_large_POWER_blue]
+
+DEFNAME=i_axe_battle_large_POWER
+
+ID=i_axe_battle_large
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_battle_large,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Large Battle Axes
+
+DESCRIPTION=Large Battle Axe of Power
+
+
+
+ON=@Create
+
+COLOR=0480
+
+HITPOINTS={125 126}
+
+ATTR=attr_magic
+
+MOREY=80.0
+
+
+
+[ITEMDEF i_HEATER_SHIELD_FORTIFICATION_blue]
+
+DEFNAME=i_HEATER_SHIELD_FORTIFICATION
+
+ID=I_SHIELD_HEATER
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_shield_heater,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Shields
+
+DESCRIPTION=Heater of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=55
+
+COLOR=0480
+
+
+
+[ITEMDEF i_PLATEMAIL_FORTIFICATION_blue]
+
+DEFNAME=i_PLATEMAIL_FORTIFICATION
+
+ID=i_platemail_chest
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_chest,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0480
+
+
+
+[ITEMDEF i_PLATEMAIL_leggings_FORTIFICATION_blue]
+
+DEFNAME=i_PLATEMAIL_leggings_FORTIFICATION
+
+ID=i_platemail_leggings
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_leggings,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail Legs of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0480
+
+
+
+[ITEMDEF i_PLATEMAIL_ARMS_FORTIFICATION_blue]
+
+DEFNAME=i_PLATEMAIL_ARMS_FORTIFICATION
+
+ID=i_platemail_arms
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_arms,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail Arms of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0480
+
+
+
+[ITEMDEF i_platemail_HELM_FORTIFICATION_blue]
+
+DEFNAME=i_platemail_HELM_FORTIFICATION
+
+ID=i_platemail_helm
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_helm,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Plate Helm of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=75
+
+COLOR=0480
+
+
+
+[ITEMDEF i_PLATEMAIL_GORGET_FORTIFICATION_blue]
+
+DEFNAME=i_PLATEMAIL_GORGET_FORTIFICATION
+
+ID=i_platemail_gorget
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_gorget,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+
+
+DESCRIPTION=Platemail Gorget of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0480
+
+
+
+[ITEMDEF i_PLATEMAIL_GAUNTLETS_FORTIFICATION_blue]
+
+DEFNAME=i_PLATEMAIL_GAUNTLETS_FORTIFICATION
+
+ID=i_platemail_gloves
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_gloves,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail Gauntlets of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0480
+
+
+
+[ITEMDEF i_PLATEMAIL_GAUNTLETS_FORTIFICATION_blue]
+
+DEFNAME=i_PLATEMAIL_GAUNTLETS_FORTIFICATION
+
+ID=i_platemail_gloves
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_gloves,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail Gauntlets of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0480
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////
+
+//////////////////////////////////////////////////
+
+//////////////////////////////////////////
+
+
+
+[ITEMDEF i_red_equip]
+
+id=i_grave_stone
+
+name=Red Equipment Stone
+
+
+
+on=@create
+
+color=0486
+
+
+
+ON=@DCLICK
+
+IF (<DISTANCE> > 2) 
+
+SRC.MESSAGE You are too far away. 
+
+RETURN 1
+
+elseif <eval <src.tag.equip>>
+
+  SRC.SYSMESSAGE You can't use this twice!
+
+return 1
+
+elseif ( <SRC.FLAGS> & 02 )
+
+src.say I must be ALIVE to use this!
+
+return 1
+
+ELSE
+
+src.events +e_equip
+
+Src.tag.equip=01
+
+
+
+src.newitem=i_HEATER_SHIELD_FORTIFICATION_red
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_FORTIFICATION_red
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_leggings_FORTIFICATION_red
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_ARMS_FORTIFICATION_red
+
+src.act.equip
+
+src.newitem=i_platemail_HELM_FORTIFICATION_red
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_GORGET_FORTIFICATION_red
+
+src.act.equip
+
+src.newitem=i_PLATEMAIL_GAUNTLETS_FORTIFICATION_red
+
+src.act.equip
+
+src.newitem=i_sword_viking_POWER_red
+
+src.act.equip
+
+src.newitem=i_SCIMITAR_POWER_red
+
+src.act.bounce
+
+src.newitem=i_HALBERD_POWER_red
+
+src.act.bounce
+
+src.newitem=i_CUTLASS_POWER_red
+
+src.act.bounce
+
+src.newitem=i_KATANA_POWER_red
+
+src.act.bounce
+
+src.newitem=i_BOW_POWER_red
+
+src.act.bounce
+
+src.newitem=i_PITCHFORK_POWER_red
+
+src.act.bounce
+
+src.newitem=i_KRYSS_POWER_red
+
+src.act.bounce
+
+src.newitem=i_spear_short_POWER_red
+
+src.act.bounce
+
+src.newitem=i_WAR_FORK_POWER_red
+
+src.act.bounce
+
+src.newitem=i_MACE_POWER_red
+
+src.act.bounce
+
+src.newitem=i_HAMMER_PICK_POWER_red
+
+src.act.bounce
+
+src.newitem=i_hammer_war_POWER_red
+
+src.act.bounce
+
+src.newitem=i_AXE_POWER_red
+
+src.act.bounce
+
+src.newitem=i_axe_battle_POWER_red
+
+src.act.bounce
+
+src.newitem=i_axe_war_POWER_red
+
+src.act.bounce
+
+src.newitem=i_full_spellbook
+
+src.act.bounce
+
+src.newitem=i_bandage
+
+src.act.amount=25
+
+src.act.bounce
+
+src.newitem=i_arrow
+
+src.act.amount=100
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+src.newitem=i_potion_Heal
+
+src.act.bounce
+
+//src.go 5425,1220
+
+
+
+ENDIF
+
+ RETURN 1
+
+
+
+[events e_equip] 
+
+on=@death 
+
+tag.equip=
+
+
+
+[ITEMDEF i_SCIMITAR_POWER_red]
+
+DEFNAME=i_SCIMITAR_POWER
+
+ID=i_scimitar
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_scimitar,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Scimitars
+
+DESCRIPTION=Scimitar of Power
+
+
+
+ON=@Create
+
+COLOR=0846
+
+HITPOINTS={115 116}
+
+ATTR=attr_magic
+
+MOREY=80.0
+
+
+
+[ITEMDEF i_HALBERD_POWER_red]
+
+DEFNAME=i_HALBERD_POWER
+
+ID=i_halberd
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_halberd,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Halberds
+
+DESCRIPTION=Halberd of Power
+
+
+
+ON=@Create
+
+COLOR=0846
+
+HITPOINTS={31 80}
+
+ATTR=attr_magic
+
+MOREY=80.0
+
+
+
+[ITEMDEF i_BARDICHE_POWER_red]
+
+DEFNAME=i_BARDICHE_POWER
+
+ID=i_bardiche
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_bardiche,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Bardiches
+
+DESCRIPTION=Bardiche of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 100}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_CUTLASS_POWER_red]
+
+DEFNAME=i_CUTLASS_POWER
+
+ID=i_cutlass
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_cutlass,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Cutlasses
+
+DESCRIPTION=Cutlass of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_sword_viking_POWER_red]
+
+DEFNAME=i_sword_viking_POWER
+
+ID=i_sword_viking
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_sword_viking,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Viking Swords
+
+DESCRIPTION=Viking Sword of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 90}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_crossbow_heavy_POWER_red]
+
+DEFNAME=i_crossbow_heavy_POWER
+
+ID=i_crossbow_heavy
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_crossbow_heavy,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Heavy Crossbows
+
+DESCRIPTION=Heavy Crossbow of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 100}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_KATANA_POWER_red]
+
+DEFNAME=i_KATANA_POWER
+
+ID=i_katana
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_katana,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Katanas
+
+DESCRIPTION=Katana of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={105 106}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_BOW_POWER_red]
+
+DEFNAME=i_BOW_POWER
+
+ID=i_bow
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_bow,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Bows
+
+DESCRIPTION=Bow of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 60}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_PITCHFORK_POWER_red]
+
+DEFNAME=i_PITCHFORK_POWER
+
+ID=i_PITCHFORK
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_PITCHFORK,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Pitchforks
+
+DESCRIPTION=Pitchfork of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 60}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_KRYSS_POWER_red]
+
+DEFNAME=i_KRYSS_POWER
+
+ID=i_kryss
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_kryss,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Krysses
+
+DESCRIPTION=Kryss of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 90}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_SPEAR_POWER_red]
+
+DEFNAME=i_SPEAR_POWER
+
+ID=i_spear
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_spear,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Spears
+
+DESCRIPTION=Spear of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={31 80}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_sword_long_POWER_red]
+
+DEFNAME=i_sword_long_POWER
+
+ID=i_sword_long
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_sword_long,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Longswords
+
+DESCRIPTION=Longsword of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={125 126}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_spear_short_POWER_red]
+
+DEFNAME=i_spear_short_POWER
+
+ID=i_spear_short
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_spear_short,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Short Spears
+
+DESCRIPTION=Short Spear of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_WAR_FORK_POWER_red]
+
+DEFNAME=i_WAR_FORK_POWER
+
+ID=I_WAR_FORK
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_WAR_FORK,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic War Forks
+
+DESCRIPTION=War Fork of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={130 131}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_MACE_POWER_red]
+
+DEFNAME=i_MACE_POWER
+
+ID=i_mace
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_mace,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Maces
+
+DESCRIPTION=Mace of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_mace_war_POWER_red]
+
+DEFNAME=i_mace_war_POWER
+
+ID=i_mace_war
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_mace_war,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic War Maces
+
+DESCRIPTION=War Mace of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={140 141}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_HAMMER_PICK_POWER_red]
+
+DEFNAME=i_HAMMER_PICK_POWER
+
+ID=i_hammer_pick
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_hammer_pick,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Hammer Picks
+
+DESCRIPTION=Hammer Pick of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_hammer_war_POWER_red]
+
+DEFNAME=i_hammer_war_POWER
+
+ID=i_hammer_war
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_hammer_war,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic War Hammers
+
+DESCRIPTION=War Hammer of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={125 126}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_AXE_POWER_red]
+
+DEFNAME=i_AXE_POWER
+
+ID=i_axe
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Axes
+
+DESCRIPTION=Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={95 96}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_axe_battle_POWER_red]
+
+DEFNAME=i_axe_battle_POWER
+
+ID=i_axe_battle
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_battle,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Battle Axes
+
+DESCRIPTION=Battle Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={125 126}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_axe_double_POWER_red]
+
+DEFNAME=i_axe_double_POWER
+
+ID=i_axe_double
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_double,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Double Axes
+
+DESCRIPTION=Double Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={125 126}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_axe_two_hand_POWER_red]
+
+DEFNAME=i_axe_two_hand_POWER
+
+ID=i_axe_two_hand
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_two_hand,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Two Handed Axes
+
+DESCRIPTION=Two Handed Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={85 86}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_axe_war_POWER_red]
+
+DEFNAME=i_axe_war_POWER
+
+ID=i_axe_war
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_war,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic War Axes
+
+DESCRIPTION=War Axe of Power
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS={95 96}
+
+COLOR=0846
+
+
+
+[ITEMDEF i_axe_battle_large_POWER_red]
+
+DEFNAME=i_axe_battle_large_POWER
+
+ID=i_axe_battle_large
+
+NAME=PVP Arena Weapon
+
+RESOURCES=i_axe_battle_large,4 i_enchant_weapon
+
+
+
+CATEGORY=Provisions - Weapons - Magic
+
+SUBSECTION=Magic Large Battle Axes
+
+DESCRIPTION=Large Battle Axe of Power
+
+
+
+ON=@Create
+
+COLOR=0846
+
+HITPOINTS={125 126}
+
+ATTR=attr_magic
+
+MOREY=80.0
+
+
+
+[ITEMDEF i_HEATER_SHIELD_FORTIFICATION_red]
+
+DEFNAME=i_HEATER_SHIELD_FORTIFICATION
+
+ID=I_SHIELD_HEATER
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_shield_heater,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Shields
+
+DESCRIPTION=Heater of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=55
+
+COLOR=0846
+
+
+
+[ITEMDEF i_PLATEMAIL_FORTIFICATION_red]
+
+DEFNAME=i_PLATEMAIL_FORTIFICATION
+
+ID=i_platemail_chest
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_chest,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0846
+
+
+
+[ITEMDEF i_PLATEMAIL_leggings_FORTIFICATION_red]
+
+DEFNAME=i_PLATEMAIL_leggings_FORTIFICATION
+
+ID=i_platemail_leggings
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_leggings,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail Legs of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0846
+
+
+
+[ITEMDEF i_PLATEMAIL_ARMS_FORTIFICATION_red]
+
+DEFNAME=i_PLATEMAIL_ARMS_FORTIFICATION
+
+ID=i_platemail_arms
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_arms,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail Arms of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0846
+
+
+
+[ITEMDEF i_platemail_HELM_FORTIFICATION_red]
+
+DEFNAME=i_platemail_HELM_FORTIFICATION
+
+ID=i_platemail_helm
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_helm,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Plate Helm of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=75
+
+COLOR=0846
+
+
+
+[ITEMDEF i_PLATEMAIL_GORGET_FORTIFICATION_red]
+
+DEFNAME=i_PLATEMAIL_GORGET_FORTIFICATION
+
+ID=i_platemail_gorget
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_gorget,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+
+
+DESCRIPTION=Platemail Gorget of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0846
+
+
+
+[ITEMDEF i_PLATEMAIL_GAUNTLETS_FORTIFICATION_red]
+
+DEFNAME=i_PLATEMAIL_GAUNTLETS_FORTIFICATION
+
+ID=i_platemail_gloves
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_gloves,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail Gauntlets of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0846
+
+
+
+[ITEMDEF i_PLATEMAIL_GAUNTLETS_FORTIFICATION_red]
+
+DEFNAME=i_PLATEMAIL_GAUNTLETS_FORTIFICATION
+
+ID=i_platemail_gloves
+
+NAME=PVP Arena Armor
+
+RESOURCES=i_platemail_gloves,4 i_enchant_armor
+
+
+
+CATEGORY=Provisions - Armor - Magic
+
+SUBSECTION=Platemail
+
+DESCRIPTION=Platemail Gauntlets of Fortification
+
+
+
+ON=@Create
+
+MOREY=80.0
+
+ATTR=attr_magic
+
+HITPOINTS=85
+
+COLOR=0846

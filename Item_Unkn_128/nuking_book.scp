@@ -1,0 +1,936 @@
+//################################################
+//      *****- Nuking Utility For 99x5 -*****
+//################################################
+//Scripted by: Rakshasas, Arcadian Shores
+//E-mail: Rakshasas@ArcadianShores.net
+//March 14, 2003
+//
+//
+//Original nuke functions created by:
+//************************************
+// - GM Tracker, Shattered Alliance -
+//************************************
+//Nudgeupbaseid
+//Nudgedownbaseid
+//Colorbaseid
+//Attrbaseid
+//Nukebaseid
+//Znukebaseid
+//Zcolor
+//Zmove
+//Zattr
+//Znudgeup
+//Znudgedown
+//
+//*********
+// - Duo -
+//*********
+//Znuke
+//Zflip
+//
+//New nuke functions by:
+//***************
+// - Rakshasas -
+//***************
+//flipbaseid (baseid)
+//-Randomly flips the baseid
+//-Useful for making floors look better
+//
+//movebaseid (baseid,dir)
+//-Randomly flips the baseid
+//
+//zattrbaseid (baseid,z,attr)
+//-changes the attr of the baseid at that z
+//
+//zcolorbaseid (baseid,z,color)
+//-colors the baseid at that z
+//
+//zflipbaseid (baseid,z)
+//-Randomly flips the baseid at that z
+//-Useful for making floors look better
+//
+//zmovebaseid (baseid,z,dir)
+//-moves the baseid at that z
+//
+//znudgeupbaseid (baseid,z,nudge)
+//-nudges up the baseid at that z
+//
+//znudgeupbaseid (baseid,z,nudge)
+//-nudges down the baseid at that z
+//
+//nflip
+//-randomly flips all items
+//
+//Transnuke
+//-Deletes ANYTHING that uses one of the transparency colors
+//-Useful if someone drops a trans item on the ground that would cause client crashes to shards which use the 2.0.0 client
+//
+//Installation:
+//This is for inexperienced users. Those with more experience should know what to do
+//Step 1: Make a new file called nuking_book.scp
+//Step 2: Copy this entire script (HEADER TOO!) into the new file and save it.
+//Step 3: Move the file into your scripts directory (the folder with all your .scp files) if you have not done so already.
+//Step 4: Load up sphere and type .add i_nuking_book
+//
+//NOTICE: Play around with this tool first. Do not go start using it in a building
+//that has been in the works for months and months. It's very possible to accidently
+//nuke the entire thing unless you know what function does what. Play with it first
+//and familiarize yourself with the dialog.
+
+//If you have a question email me. I will reply with the answer and I will include it
+//in the next version. Also email me if you have any other nuke functions you'd like
+//me to add.
+
+// Nuking book (Launches the dialog)
+[ITEMDEF i_nuking_book]
+ID=0fbe
+NAME="The Red Button"
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0784
+
+ON=@USERCLICK
+MESSAGE "<NAME>"
+RETURN 1
+
+ON=@USERDCLICK
+IF (<SRC.ISGM>)
+	VAR.DNAME="<NAME>"
+	SRC.DIALOG d_nuking_book
+ELSE
+	MESSAGE="You are NOT a GM!"
+ENDIF
+
+RETURN 1
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Special Items
+DESCRIPTION=The Red Button (Nuke book)
+
+[DEFNAMES d_nuking_book_options]
+// Do not remove or modify unless you know what you are doing.
+NukeXposition 480	//Default 480 - Moves the position of the Nuke Menu on the X axis
+NukeYposition 12	//Default 12 - Moves the position of the Nuke Menu on the Y axis
+NukeBTdist 20		//Default 20 - Changes the distance of the buttons on the Nuke Menu
+NXRC 145		//Default 145 - Move the position of the right nuke function column 
+NukeSpacer 15		//Default 15 - Space between the words on the Nuke Menu
+
+[DIALOG d_nuking_book]
+10,50
+
+PAGE 0
+
+PAGE 1
+
+RESIZEPIC 0 0 5120 <? EVAL (NukeXposition + 305) ?> 280
+TEXT 30 5 138 6 // Title
+BUTTON 8 8 03 04 1 0 0 // Exit without saving
+
+RESIZEPIC <? EVAL (NukeXposition +- 5) ?> <? EVAL (NukeYposition +- 6) ?> 5054 300 262
+
+TEXT 10 37 1152 7
+RESIZEPIC 60 30 2620 350 35
+TEXTENTRY 70 37 335 20 1152 1 0
+BUTTON 10 68 2224 2117 1 0 100 // Item Selector
+TEXT 30 65 1152 13
+
+TEXT 10 99 1152 8
+RESIZEPIC 60 92 2620 70 35
+TEXTENTRY 70 99 60 20 1152 2 1
+BUTTON 10 130 2224 2117 1 0 101 // Z Selector
+TEXT 30 127 1152 14
+
+TEXT 10 164 1152 9
+RESIZEPIC 60 157 2620 70 35
+TEXTENTRY 70 164 60 20 1152 3 2
+BUTTON 10 195 2224 2117 1 0 102 // Color Selector
+TEXT 30 192 1152 15
+
+TEXT 150 99 1152 10
+RESIZEPIC 200 92 2620 70 35
+TEXTENTRY 210 99 60 20 1152 4 3 // Nudge
+TEXT 180 127 1152 16
+
+TEXT 150 164 1152 11
+RESIZEPIC 200 157 2620 70 35
+TEXTENTRY 210 164 60 20 1152 5 4
+BUTTON 160 195 2224 2117 1 0 103 // Attr Selector
+TEXT 180 192 1152 17
+
+TEXT 300 99 1152 12
+RESIZEPIC 340 92 2620 70 35
+TEXTENTRY 350 99 60 20 1152 6 5 // Dir
+TEXT 320 127 1152 18
+
+// Nuke Functions - Left Side
+BUTTON <? EVAL NukeXposition ?> <? EVAL NukeYposition ?> 2360 2361 1 0 300 // Attrbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition - 6) ?> 1152 19
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + NukeSpacer) ?> 2360 2361 1 0 301 // Colorbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + NukeSpacer - 6) ?> 1152 20
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 2)) ?> 2360 2361 1 0 302 // Flipbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 2) - 6) ?> 1152 21
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 3)) ?> 2360 2361 1 0 303 // Movebaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 3) - 6) ?> 1152 22
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 4)) ?> 2360 2361 1 0 304 // Nudgeupbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 4) - 6) ?> 1152 23
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 5)) ?> 2360 2361 1 0 305 // Nudgedownbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 5) - 6) ?> 1152 24
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 6)) ?> 2360 2361 1 0 306 // Nukebaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 6) - 6) ?> 1152 25
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 7)) ?> 2360 2361 1 0 307 // Attr
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 7) - 6) ?> 1152 26
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 8)) ?> 2360 2361 1 0 308 // Color
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 8) - 6) ?> 1152 27
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 9)) ?> 2360 2361 1 0 309 // Flip
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 9) - 6) ?> 1152 28
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 10)) ?> 2360 2361 1 0 310 // Move
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 10) - 6) ?> 1152 29
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 11)) ?> 2360 2361 1 0 311 // Nudgeup
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 11) - 6) ?> 1152 30
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 12)) ?> 2360 2361 1 0 312 // Nudgedown
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 12) - 6) ?> 1152 31
+
+BUTTON <? EVAL NukeXposition ?> <? EVAL (NukeYposition + (NukeSpacer * 13)) ?> 2360 2361 1 0 313 // Nuke
+TEXT <? EVAL (NukeXposition + NukeBTdist) ?> <? EVAL (NukeYposition + (NukeSpacer * 13) - 6) ?> 1152 32
+
+// Nuke Functions - Right Side
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL NukeYposition ?> 2360 2361 1 0 314 // Zattrbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition - 6) ?> 1152 33
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + NukeSpacer) ?> 2360 2361 1 0 315 // Zcolorbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + NukeSpacer - 6) ?> 1152 34
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 2)) ?> 2360 2361 1 0 316 // Zflipbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 2) - 6) ?> 1152 35
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 3)) ?> 2360 2361 1 0 317 // Zmovebaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 3) - 6) ?> 1152 36
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 4)) ?> 2360 2361 1 0 318 // Znudgeupbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 4) - 6) ?> 1152 37
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 5)) ?> 2360 2361 1 0 319 // Znudgedownbaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 5) - 6) ?> 1152 38
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 6)) ?> 2360 2361 1 0 320 // Znukebaseid
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 6) - 6) ?> 1152 39
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 7)) ?> 2360 2361 1 0 321 // Zattr
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 7) - 6) ?> 1152 40
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 8)) ?> 2360 2361 1 0 322 // Zcolor
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 8) - 6) ?> 1152 41
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 9)) ?> 2360 2361 1 0 323 // Zflip
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 9) - 6) ?> 1152 42
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 10)) ?> 2360 2361 1 0 324 // Zmove
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 10) - 6) ?> 1152 43
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 11)) ?> 2360 2361 1 0 325 // Znudgeup
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 11) - 6) ?> 1152 44
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 12)) ?> 2360 2361 1 0 326 // Znudgedown
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 12) - 6) ?> 1152 45
+
+BUTTON <? EVAL (NukeXposition + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 13)) ?> 2360 2361 1 0 327 // Znuke
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC) ?> <? EVAL (NukeYposition + (NukeSpacer * 13) - 6) ?> 1152 46
+
+BUTTON <? EVAL (NukeXposition + NXRC - 50) ?> <? EVAL (NukeYposition + (NukeSpacer * 15)) ?> 2360 2361 1 0 328 // Transnuke
+TEXT <? EVAL (NukeXposition + NukeBTdist + NXRC - 50) ?> <? EVAL (NukeYposition + (NukeSpacer * 15) - 6) ?> 1152 47
+
+// Bottom Bar
+
+RESIZEPIC 10 220 3500 400 50
+
+BUTTON 20 230 2151 2152 1 0 1 // Save settings
+TEXT 55 235 378 48
+
+BUTTON 170 230 2151 2152 1 0 2 // Clear Settings
+TEXT 205 235 378 49
+
+BUTTON 320 230 2151 2152 0 2 // Help Area - Page 2
+TEXT 355 235 378 50
+
+PAGE 2
+// Help Area
+RESIZEPIC 0 0 5120 <? EVAL (NukeXposition + 180) ?> 340
+TEXT 30 5 138 51 // Title - Help
+
+BUTTON 8 8 03 04 1 0 0 // Exit without saving
+
+TEXT 10 30 435 52 // The Purpose
+HTMLGUMP 10 50 640 60 53 1 0
+
+TEXT 10 120 435 54 // The Text Entry Fields
+HTMLGUMP 10 140 640 135 55 1 1
+
+RESIZEPIC 10 280 3500 130 50
+
+BUTTON 20 290 2151 2152 0 1 // Previous - Page 1
+TEXT 55 295 378 56
+
+[DIALOG d_nuking_book TEXT]
+<?SRC.TAG.BMODIFIER?>
+<?SRC.TAG.ZMODIFIER?>
+<?HVAL SRC.TAG.CMODIFIER?>
+<?EVAL SRC.TAG.NMODIFIER?>
+<?HVAL SRC.TAG.AMODIFIER?>
+<?SRC.TAG.DMODIFIER?>
+<?VAR.DNAME?>
+Baseid:
+Z:
+Color:
+Nudge:
+Attr:
+Dir:
+Target the Item
+Target the Z
+Target the Color
+Type the Z
+Target the Attr
+Type N E S or W
+Attrbaseid
+Colorbaseid
+Flipbaseid
+Movebaseid
+Nudgeupbaseid
+Nudgedownbaseid
+Nukebaseid
+Attr
+Color
+Flip
+Move
+Nudgeup
+Nudgedown
+Nuke
+Zattrbaseid
+Zcolorbaseid
+Zflipbaseid
+Zmovebaseid
+Znudgeupbaseid
+Znudgedownbaseid
+Znukebaseid
+Zattr
+Zcolor
+Zflip
+Zmove
+Znudgeup
+Znudgedown
+Znuke
+Transnuke
+Save Settings
+Clear Settings
+Help
+<?VAR.DNAME?> - Help
+The Purpose
+  I created this tool to utilise the nuke functions made by Duo, Tracker and a few of mine which makes building so much easier and faster. This help menu should answer all the questions you may have regarding the way it works. After that it's up to your imagination. Have fun!
+The Text Entry Fields
+  These fields are required for the nuke functions. Some functions do not need all the information available. The name of the function will give away what is needed. For Example: Znukebaseid. For this function you need to enter the Z and the BASEID, it will then NUKE (delete) everything that meets those requirements. The fields are all pretty self explanatory. Also please note that instead of typing the information you can target the item you wish to nuke and it will fill the field automatically. Dir is used to move items. Enter something like E (East) and 5 (move East 5 times) or 2 2 (move 2 east and 2 south.) ATTR works like this: if you put 02 in that field, that means the items will be Newbie, 020 will mean magic and 022 means newbie and magic. To find all the ATTR combos please use the Axis (Item Tweak tab.)
+Previous
+
+[DIALOG d_nuking_book BUTTON]
+ONBUTTON=0
+MESSAGE "Dialog closed"
+
+ONBUTTON=1
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+MESSAGE "Settings saved"
+SRC.DIALOG d_nuking_book
+
+ONBUTTON=2
+SRC.TAG.BMODIFIER=
+SRC.TAG.ZMODIFIER=
+SRC.TAG.CMODIFIER=
+SRC.TAG.NMODIFIER=
+SRC.TAG.AMODIFIER=
+SRC.TAG.DMODIFIER=
+MESSAGE "Settings reset, now closing..."
+
+ONBUTTON=100 // Baseid Selector
+SRC.NEWITEM i_nuking_book_targeter_baseid
+SRC.ACT.P=<SRC.P>
+SRC.ACT.EQUIP
+
+ONBUTTON=101 // The Z Selector 
+SRC.NEWITEM i_nuking_book_targeter_z
+SRC.ACT.P=<SRC.P>
+SRC.ACT.EQUIP
+
+ONBUTTON=102 // The Color Selector 
+SRC.NEWITEM i_nuking_book_targeter_color
+SRC.ACT.P=<SRC.P>
+SRC.ACT.EQUIP
+
+ONBUTTON=103 // The Attr Selector 
+SRC.NEWITEM i_nuking_book_targeter_attr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.EQUIP
+
+// The function buttons
+
+//ARGTXT[1] = BMODIFIER
+//ARGTXT[2] = ZMODIFIER
+//ARGTXT[3] = CMODIFIER
+//ARGTXT[4] = NMODIFIER
+//ARGTXT[5] = AMODIFIER
+//ARGTXT[6] = DMODIFIER
+
+ONBUTTON=300 // Attrbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE attrbaseid(<?ARGTXT[1]?>,<?ARGTXT[5]?>)
+
+ONBUTTON=301 // Colorbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE colorbaseid(<?ARGTXT[1]?>,<?ARGTXT[3]?>)
+
+ONBUTTON=302 // Flipbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE flipbaseid(<?ARGTXT[1]?>)
+
+ONBUTTON=303 // Movebaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE movebaseid(<?ARGTXT[1]?>,<?ARGTXT[6]?>)
+
+ONBUTTON=304 // Nudgeupbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE nudgeupbaseid(<?ARGTXT[1]?>,<?ARGTXT[4]?>)
+
+ONBUTTON=305 // Nudgedownbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE nudgedownbaseid(<?ARGTXT[1]?>,<?ARGTXT[4]?>)
+
+ONBUTTON=306 // Nukebaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE nukebaseid(<?ARGTXT[1]?>)
+
+ONBUTTON=307 // Attr
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE attr(<?ARGTXT[5]?>)
+
+ONBUTTON=308 // Color
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE color(<?ARGTXT[3]?>)
+
+ONBUTTON=309 // nFlip
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE nflip
+
+ONBUTTON=310 // Move
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE move(<?ARGTXT[6]?>)
+
+ONBUTTON=311 // Nudgeup
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE nudgeup(<?ARGTXT[4]?>)
+
+ONBUTTON=312 // Nudgedown
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE nudgedown(<?ARGTXT[4]?>)
+
+ONBUTTON=313 // Nuke
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+SRC.NUKE 
+
+ONBUTTON=314 // Zattrbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+SRC.NUKE zattrbaseid(<?ARGTXT[1]?>, <?ARGTXT[2]?>, <?ARGTXT[5]?>)
+
+ONBUTTON=315 // Zcolorbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+SRC.NUKE zcolorbaseid(<?ARGTXT[1]?>, <?ARGTXT[2]?>, <?ARGTXT[3]?>)
+
+ONBUTTON=316 // Zflipbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE zflipbaseid(<?ARGTXT[1]?>, <?ARGTXT[2]?>)
+
+ONBUTTON=317 // Zmovebaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE zmovebaseid(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[6]?>)
+
+ONBUTTON=318 // Znudgeupbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE znudgeupbaseid(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[4]?>)
+
+ONBUTTON=319 // Znudgedownbaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE znudgedownbaseid(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[4]?>)
+
+ONBUTTON=320 // Znukebaseid
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE znukebaseid(<?ARGTXT[1]?>,<?ARGTXT[2]?>)
+
+ONBUTTON=321 // Zattr
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE zattr(<?ARGTXT[2]?>,<?ARGTXT[5]?>)
+
+ONBUTTON=322 // Zcolor
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE zcolor(<?ARGTXT[2]?>,<?ARGTXT[3]?>)
+
+ONBUTTON=323 // Zflip
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE zflip(<?ARGTXT[2]?>)
+
+ONBUTTON=324 // Zmove
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE zmove(<?ARGTXT[2]?>,<?ARGTXT[6]?>)
+
+ONBUTTON=325 // Znudgeup
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE znudgeup(<?ARGTXT[2]?>,<?ARGTXT[4]?>)
+
+ONBUTTON=326 // Znudgedown
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE znudgedown(<?ARGTXT[2]?>,<?ARGTXT[4]?>)
+
+ONBUTTON=327 // Znuke
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.NUKE znuke(<?ARGTXT[2]?>)
+
+ONBUTTON=328 // transnuker
+SRC.f_save_settings(<?ARGTXT[1]?>,<?ARGTXT[2]?>,<?ARGTXT[3]?>,<?ARGTXT[4]?>,<?ARGTXT[5]?>,<?ARGTXT[6]?>)
+
+SRC.transnuker
+
+[FUNCTION f_save_settings]
+SRC.TAG.BMODIFIER=<?ARGV[0]?>
+SRC.TAG.ZMODIFIER=<?ARGV[1]?>
+SRC.TAG.CMODIFIER=<?ARGV[2]?>
+SRC.TAG.NMODIFIER=<?ARGV[3]?>
+SRC.TAG.AMODIFIER=<?ARGV[4]?>
+SRC.TAG.DMODIFIER=<?ARGV[5]?>
+
+[ITEMDEF i_nuking_book_targeter_baseid]
+NAME="Baseid Targeter"
+ID=i_memory
+TYPE=t_eq_script 
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=04092
+
+ON=@EQUIP
+TARGET "Please target an item"
+TIMER=60
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE "That's NOT an item"
+TARGET "Please target an item"
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.TAG.BMODIFIER=<SRC.TARG.BASEID>
+SRC.SYSMESSAGE "Baseid set to <SRC.TAG.BMODIFIER>"
+REMOVE
+SRC.DIALOG d_nuking_book
+RETURN 1
+
+ON=@TIMER
+REMOVE
+
+[ITEMDEF i_nuking_book_targeter_z]
+NAME="Z Targeter"
+ID=i_memory
+TYPE=t_eq_script 
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=04092
+
+ON=@EQUIP
+TARGET "Please target an item"
+TIMER=60
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE "That's NOT an item"
+TARGET "Please target an item"
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.TAG.ZMODIFIER=<SRC.TARG.Z>
+SRC.SYSMESSAGE "Z set to <? EVAL <SRC.TAG.ZMODIFIER> ?>"
+REMOVE
+SRC.DIALOG d_nuking_book
+RETURN 1
+
+ON=@TIMER
+REMOVE
+
+[ITEMDEF i_nuking_book_targeter_color]
+NAME="Color Targeter"
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=04092
+
+ON=@EQUIP
+TARGET "Please target an item"
+TIMER=60
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE "That's NOT an item"
+TARGET "Please target an item"
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.TAG.CMODIFIER=<SRC.TARG.COLOR>
+SRC.SYSMESSAGE "Color set to <? HVAL <SRC.TAG.CMODIFIER> ?>"
+REMOVE
+SRC.DIALOG d_nuking_book
+RETURN 1
+
+ON=@TIMER
+REMOVE
+
+[ITEMDEF i_nuking_book_targeter_attr]
+NAME="ATTR Targeter"
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=04092
+
+ON=@EQUIP
+TARGET "Please target an item"
+TIMER=60
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE "That's NOT an item"
+TARGET "Please target an item"
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.TAG.AMODIFIER=<SRC.TARG.ATTR>
+SRC.SYSMESSAGE "Color set to <? HVAL <SRC.TAG.AMODIFIER> ?>"
+REMOVE
+SRC.DIALOG d_nuking_book
+RETURN 1
+
+ON=@TIMER
+REMOVE
+
+// Nuke Functions by Rakshasas of Arcadian Shores
+
+[FUNCTION flipbaseid]
+IF (<?BASEID?>==<?ARGV[0]?>)
+	DORAND 3
+		FLIP
+	ENDDO
+	DORAND 3
+		FLIP
+	ENDDO 
+	DORAND 3
+		FLIP
+	ENDDO
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION movebaseid]
+IF (<?BASEID?>==<?ARGV[0]?>)
+	MOVE=<?ARGV[1]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION zattrbaseid]
+IF ((<?BASEID?>==<?ARGV[0]?>) && (<?Z?>==<?ARGV[1]?>))
+	ATTR=<?ARGV[2]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION zcolorbaseid]
+IF ((<?BASEID?>==<?ARGV[0]?>) && (<?Z?>==<?ARGV[1]?>))
+	COLOR=<?ARGV[2]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION zflipbaseid]
+IF ((<?BASEID?>==<?ARGV[0]?>) && (<?Z?>==<?ARGV[1]?>))
+	DORAND 3
+		FLIP
+	ENDDO
+	DORAND 3
+		FLIP
+	ENDDO 
+	DORAND 3
+		FLIP
+	ENDDO
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION zmovebaseid]
+IF ((<?BASEID?>==<?ARGV[0]?>) && (<?Z?>==<?ARGV[1]?>))
+	MOVE=<?ARGV[2]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION znudgeupbaseid]
+IF ((<?BASEID?>==<?ARGV[0]?>) && (<?Z?>==<?ARGV[1]?>))
+	NUDGEUP=<?ARGV[2]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION znudgedownbaseid]
+IF ((<?BASEID?>==<?ARGV[0]?>) && (<?Z?>==<?ARGV[1]?>))
+	NUDGEDOWN=<?ARGV[2]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION nflip]
+DORAND 3
+	FLIP
+ENDDO
+DORAND 3
+	FLIP
+ENDDO 
+DORAND 3
+	FLIP
+ENDDO
+RETURN 1
+
+[FUNCTION transnuker]
+SRC.NEWITEM i_gold 
+VAR.TEMP=<?lastnew.uid?>
+SRC.ACT.P=1 1 
+SRC.NUKE transnuke
+SRC.LAST 
+SRC.ACT.P 6143 4095
+SRC.LAST 
+FindUID(VAR.ACT).REMOVE
+VAR.TEMP=
+
+[FUNCTION transnuke]
+// Colors 04001 to 04999 are transparent. Correct me if I am wrong.
+IF ((<?COLOR?> >= 04001) && (<?COLOR?> < 05000))
+	//COLOR=00
+	//BOUNCE
+	REMOVE
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+//========================================
+//============NUKE FUNCTIONS==============
+//========================================
+//============By GM Tracker===============
+//========================================
+//==========of Shattered Alliance=========
+//========================================
+//========http://gray-cat.com/alliance====
+//========================================
+//========================================
+//Some of you didn't know that you can do .nuke (function)
+//and perform a function on everything that you nuked.
+//This makes decorating large areas much simpler when you need to
+//do something such as coloring a large amount of items a certain color
+//Some commands that already exist:
+//========================================
+//.nuke amount (amount)
+//.nuke color (color)
+//.nuke move (move entire area east/west movement a space, then north/south) IE .nuke move 30 20
+//.nuke attr (hex number of attr...I use it to static a large # of objects)
+//.nuke nudgeup/nudgedown (amount to nudgeup/down)
+//
+//========================================
+//The new ones added by this script:
+//========================================
+//.nuke attrbaseid (baseid,attr)
+//
+//.nuke colorbaseid (baseid,color)
+//
+//.nuke nudgeupbaseid (baseid,nudge)
+//-useful for fixing a mis-tiled z
+//
+//.nuke nudgedownbaseid (baseid,nudge)
+//-useful for fixing a mis-tiled z
+//
+//.nuke nukebaseid (baseid)
+//
+//.nuke znukebaseid (baseid)
+//
+//.nuke zcolor (z,color)
+//
+//.nuke zmove (z,dir)
+// 
+//.nuke zattr (z,attr)
+//
+//.nuke znudgeup (z,nudge)
+//
+//.nuke znudgedown (z,nudge)
+// 
+//========================================
+//These two originally by Duo:
+//========================================
+//.nuke znuke (z)
+//
+//.nuke zflip (z)
+//-Randomly flips things at that z
+//-Useful for making floors look better
+
+[FUNCTION attrbaseid]
+IF (<?ARGV[0]?>==<?BASEID?>)
+	ATTR=<?ARGV[1]?>
+ENDIF
+RETURN 1
+
+[FUNCTION colorbaseid]
+IF (<?ARGV[0]?>==<?BASEID?>)
+	COLOR=<?ARGV[1]?>
+ENDIF
+RETURN 1
+
+[FUNCTION nudgeupbaseid]
+IF (<?ARGV[0]?>==<?BASEID?>)
+	NUDGEUP=<?ARGV[1]?>
+ENDIF
+RETURN 1
+
+[FUNCTION nudgedownbaseid]
+IF (<?ARGV[0]?>==<?BASEID?>)
+	NUDGEDOWN=<?ARGV[1]?>
+ENDIF
+RETURN 1
+
+[FUNCTION nukebaseid]
+IF (<?BASEID?>==<?ARGV[0]?>)
+	REMOVE
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION znukebaseid]
+IF ((<?BASEID?>==<?ARGV[0]?>) && (<?Z?>==<?ARGV[1]?>))
+	REMOVE
+ELSE
+	RETURN 1
+ENDIF
+
+RETURN 1
+
+[FUNCTION zcolor]
+IF (<?Z?>==<?ARGV[0]?>)
+	COLOR=<?ARGV[1]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION zmove] 
+IF (<?Z?>==<?ARGV[0]?>)
+	MOVE=<?ARGV[1]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+
+[FUNCTION zattr]
+IF (<?Z?>==<?ARGV[0]?>)
+	ATTR=<?ARGV[1]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION znudgeup]
+IF (<?Z?>==<?ARGV[0]?>)
+	NUDGEUP=<?ARGV[1]?>
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+
+[FUNCTION znudgedown]
+IF (<?Z?>==<?ARGV[0]?>)
+	NUDGEDOWN=<?ARGV[1]?>
+ENDIF
+RETURN 1
+
+//==================
+//Originally by Duo
+//==================
+[function znuke]
+IF (<?Z?>==<?ARGV[0]?>)
+	REMOVE
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[function zflip]
+IF (<?Z?>==<?ARGV[0]?>)
+	DORAND 3
+		FLIP
+	ENDDO
+	DORAND 3
+		FLIP
+	ENDDO
+	DORAND 3
+		FLIP
+	ENDDO
+ELSE
+	RETURN 1
+ENDIF
+RETURN 1

@@ -1,0 +1,46 @@
+//CREATED BY RASZITH
+
+[ITEMDEF i_bag_sending] 
+ID=i_bag
+NAME=bag of sending
+RESOURCES=1 i_bag, 5 i_scroll_teleport, 7 i_scroll_telekinesis
+SKILLMAKE=78.0 TAILORING, 60.0 MAGERY, t_sewing_kit
+TYPE=t_eq_script
+
+ON=@CREATE
+MORE=5
+COLOR=04bf
+
+ON=@CLICK
+MESSAGE [<more> Charges]
+SAY a <name>
+RETURN 1
+
+ON=@DCLICK
+IF (<more>==0)
+	SRC.SYSMESSAGE This item has no more charges left.
+	RETURN 1
+ELSE
+	TARGET What would you like to send?
+	RETURN 1
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<src.targ.type>==t_container)
+	SRC.SYSMESSAGE You can't send a container through the bag of sending.
+	RETURN 1
+ELSE
+	if ( <src.targ.topobj.uid> != <src.uid> )
+		SRC.SYSMESSAGE That item must be in your backpack to send.
+		RETURN 1
+	ELSE
+	SRC.TARG.CONT=<src.findlayer.29.uid>
+	SRC.TARG.UPDATEX
+	SRC.SYSMESSAGE The <src.targ.name> has been sent to your bank.
+	MORE=<eval <more>+-1>
+	src.sfx=0200
+	RETURN 1
+	ENDIF
+ENDIF
+
+[EOF]

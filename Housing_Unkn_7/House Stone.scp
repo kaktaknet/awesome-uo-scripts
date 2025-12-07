@@ -1,0 +1,437 @@
+//Created by LiquidDragon
+
+//This script allows users an easy way to choose the house they like. I also added a script Belgar
+//has made, which allows the stone to take money from the bank and pay from there instead of
+//having to have it in your backpack. We all know how annoying that is :)
+
+//This is one of my first scripts and I happen to think that it's rather good :)
+//If you have any questions or comments please email me at jon.emes@sympatico.ca or
+//icq me 172950853
+
+//****************************House dispensing stone***************************
+
+[ITEMDEF i_house_stone]
+ID=i_grave_stone_4
+TYPE=t_normal
+NAME=A House Dispensing Stone
+
+ON=@CREATE
+COLOR=0810
+ATTR=08054
+
+ON=@CLICK
+SRC.SYSMESSAGE This Stone is used to choose a house
+
+ON=@DCLICK
+DIALOG house_main
+return 0
+
+[DIALOG house_main]
+0,0
+resizepic 100 0 2600 500 600
+button 220 550 242 243 1 0 0 //Cancel, button 0
+button 150 550 247 248 1 0 1 //Okay, button 1
+button 530 557 2224 2224 1 0 2 // More, button 2
+text 480 553 2072 13
+text 160 20 2072 0
+//House 1
+button 130 65 2152 2153 1 0 3
+text 170 68 2072 1
+//House 2
+button 130 105 2152 2153 1 0 4
+text 170 108 2072 2
+//House 3
+button 130 145 2152 2153 1 0 5
+text 170 148 2072 3
+//House 4
+button 130 185 2152 2153 1 0 6
+text 170 188 2072 4
+//House 5
+button 130 225 2152 2153 1 0 7
+text 170 228 2072 5
+//House 6
+button 130 265 2152 2153 1 0 8
+text 170 268 2072 6
+//House 7
+button 130 305 2152 2153 1 0 9
+text 170 308 2072 7
+//House 8
+button 130 345 2152 2153 1 0 10
+text 170 348 2072 8
+//House 9
+button 130 385 2152 2153 1 0 11
+text 170 388 2072 9
+//House 10
+button 130 425 2152 2153 1 0 12
+text 170 428 2072 10
+//House 11
+button 130 465 2152 2153 1 0 13
+text 170 468 2072 11
+//House 12
+button 130 505 2152 2153 1 0 14
+text 170 508 2072 12
+
+[DIALOG house_main TEXT]
+Please Choose a House
+Small Stone and Plaster House (50370 gp) 
+Small Stone House (52900 gp)
+Small Brick House (50370 gp)
+Small Wood House (50370 gp)
+Small Wood and Plaster House (50370 gp)
+Small Wood House Thatched Roof (50370 gp)
+Blue Tent (25300 gp)
+Green Tent (25300 gp)
+Three Room House (166175 gp)
+Two Story Wood and Plaster House (221260 gp)
+Two Story Stone and Plaster House (221260 gp)
+Tower (498180 gp)
+More
+
+[DIALOG house_main BUTTON]
+ONBUTTON=0
+SRC.MESSAGE House choice cancelled
+ONBUTTON=1
+SRC.MESSAGE You must choose a house first!
+ONBUTTON=2
+DIALOG house_main2
+ONBUTTON=3
+SRC.PAYUP 50370
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_stone_plaster_small
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=4
+SRC.PAYUP 52900
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_stone_small
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=5
+SRC.PAYUP 50370
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_stone_brick_small
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=6
+SRC.PAYUP 50370
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_stone_wood_small
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=7
+SRC.PAYUP 50370
+IF <var.enough>
+SRC.NEWITEM i_deed_house_wood_plaster_small
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=8
+SRC.PAYUP 50370
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_wood_thatched_small
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=9
+SRC.PAYUP 25300
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_tent_blue
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=10
+SRC.PAYUP 25300
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_tent_green
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=11
+SRC.PAYUP 166175
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_3room
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=12
+SRC.PAYUP 221260
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_wood_plaster_2story
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=13
+SRC.PAYUP 221260
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_stone_plaster_2story
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=14
+SRC.PAYUP 221260
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_tower
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+
+[DIALOG house_main2]
+0,0
+resizepic 100 100 2600 500 600
+button 220 650 242 243 1 0 0 //Cancel, button 0
+button 150 650 247 248 1 0 1 //Okay, button 1
+button 530 657 2223 2223 1 0 2 // Previous, button 2
+text 470 653 2072 12
+text 160 120 2072 0
+//House 1
+button 130 165 2152 2153 1 0 3
+text 170 168 2072 1
+//House 2
+button 130 205 2152 2153 1 0 4
+text 170 208 2072 2
+//House 3
+button 130 245 2152 2153 1 0 5
+text 170 248 2072 3
+//House 4
+button 130 285 2152 2153 1 0 6
+text 170 288 2072 4
+//House 5
+button 130 325 2152 2153 1 0 7
+text 170 328 2072 5
+//House 6
+button 130 365 2152 2153 1 0 8
+text 170 368 2072 6
+//House 7
+button 130 405 2152 2153 1 0 9
+text 170 408 2072 7
+//House 8
+button 130 445 2152 2153 1 0 10
+text 170 448 2072 8
+//House 9
+button 130 485 2152 2153 1 0 11
+text 170 488 2072 9
+//House 10
+button 130 525 2152 2153 1 0 12
+text 170 528 2072 10
+//House 11
+button 130 565 2152 2153 1 0 13
+text 170 568 2072 11
+
+[DIALOG house_main2 TEXT]
+Please Choose a House
+Keep (764980 gp)
+Castle (1176220 gp)
+Large Blacksmithy (175950 gp)
+Large Marble Patio House (220800 gp)
+Wizards Tower (101000 gp)
+Two Story Log Cabin (112470 gp)
+Sandstone Patio House (104535 gp)
+Two Story Villa (156975 gp)
+Small Stone Shop (Price gp)
+Wheat Cottage (86250 gp)
+Evil Compound (11500000 gp)
+Previous
+
+[DIALOG house_main2 BUTTON]
+
+ONBUTTON=3
+SRC.PAYUP 764980
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_keep
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=4
+SRC.PAYUP 1176220
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_castle
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=5
+SRC.PAYUP 175950
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_shop_blacksmithy_large
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=6
+SRC.PAYUP 220800
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_patio_marble
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=7
+SRC.PAYUP 101000
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_tower_wizard
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=8
+SRC.PAYUP 112470
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_cabin_log_2story
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=9
+SRC.PAYUP 104535
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_patio_sand
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=10
+SRC.PAYUP 156975
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_villa_2story
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=11
+SRC.PAYUP 80370
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_shop_stone_small
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=12
+SRC.PAYUP 86250
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_house_wheat_cottage
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+ONBUTTON=13
+SRC.PAYUP 11500000
+IF <VAR.ENOUGH>
+SRC.NEWITEM i_deed_evil_compound
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You do no have enough money to pay!
+ENDIF
+
+
+
+///////////////////////////////////////////////////////////////////////
+// pay from bank version 1.0
+//
+// written by belgar of 'a virtual paradise'
+//
+// usage: SRC.payup 'amount to pay'
+// the FUNCTION will set var.enough so you can check IF
+//   there was enough gold. an item is included to test this FUNCTION
+// this FUNCTION will always pay from the bank first, and will make up
+//   the rest from the backpack IF needed
+//
+//  enjoy
+////////////////////////////////////////////////////////////////////////
+
+
+[FUNCTION payup] // main FUNCTION
+IF !(<args>) //empty command line?
+return 1 //then do nothing
+ENDIF
+
+var.enough=0 //IF not enough gold, var.enough will be '0'
+var.totalgold=<SRC.FINDLAYER.21.rescount i_gold> + <SRC.FINDLAYER.29.rescount i_gold>
+
+IF (<eval <args>> > <var.totalgold>) //the amount to pay is more then you own??
+
+ELSE //you have enough to pay
+	var.enough=1 //allow you to check transaction later
+	IF (<eval <args>> <= <SRC.FINDLAYER.29.rescount i_gold>) //can be paid with bank money alone
+		goldtopack <args> //put the needed money in the backpack
+	ELSE
+		goldtopackall // move all the gold in the bank to the backpack
+	ENDIF
+	payamount <args> //pay the needed amount
+
+ENDIF
+
+[FUNCTION goldtopackall] //move all gold to the backpack from the bank
+IF (<SRC.FINDLAYER.29.findid.i_gold.uid>) //any gold left ??
+
+	SRC.FINDLAYER.29.findid.i_gold.cont=<SRC.FINDLAYER.21.uid> //then move it to backpack
+	goldtopackall //make sure we get all the money
+
+ENDIF // we are done
+
+[FUNCTION goldtopack] //move enough gold so that we can pay
+var.counter=<eval <args>> // amount of gold left to move
+var.found=(<var.counter> - <SRC.FINDLAYER.29.findid.i_gold.amount>) //amount found
+
+IF (<var.found> > 0) //pile is not big enough, so move it all
+
+	SRC.FINDLAYER.29.findid.i_gold.cont=<SRC.FINDLAYER.21.uid> // transfer to backpack
+	goldtopack <var.found> //get the next pile of gold
+
+ELSE //not entire pile needed
+	
+	var.left=(0 - <var.found>) // get the amount of money left in this pile
+
+	IF (<var.left>)
+		SRC.FINDLAYER.29.findid.i_gold.amount <var.left> //set this amount
+	ELSE //player has EXACT Amount in bank (bug Fix by Admin Remedy)
+		SRC.FINDLAYER.29.findid.i_gold.remove
+	ENDIF
+
+	SRC.newitem i_gold //create a new pile of gold
+	SRC.act.amount <args> //the needed amount
+	SRC.act.cont=<SRC.FINDLAYER.21.uid> //place in backpack
+
+ENDIF //done
+
+[FUNCTION payamount]
+
+var.counter=<eval <args>> //amount left to pay
+
+IF (<var.counter> > 65000) // more then 65000 left to pay??
+	SRC.consume 65000 i_gold //consume 65000 first
+	var.counter=(<var.counter> - 65000) 
+	payamount <var.counter> //then get the rest
+ELSE
+	SRC.consume <args> i_gold //consume the rest of the needed amount
+ENDIF // we are finished
+
+[itemdef i_test_pay]
+id=i_bottle
+type=t_normal
+
+on=@dclick
+SRC.payup 10000 //try to pay 10000 gold
+IF (<var.enough>) //you have paid
+SRC.message adding backpack
+SRC.newitem i_backpack //add VERY expensive backpack
+SRC.act.bounce
+ENDIF
+SRC.updatex
+return 1

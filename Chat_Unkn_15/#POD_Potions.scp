@@ -1,0 +1,431 @@
+//Potions from POD II, and Potion Kegs
+
+//Script are documented, check all comment lines
+//in the script to understand how it works
+
+[SKILLMENU sm_containers]
+Containers
+
+ON=i_Potion_Keg Potion Keg (<resmake>)
+	if !<restest 1 i_BARREL_TAP>
+		sysmessage "You lack one barrel tap for the keg"
+		return 1
+	endif
+
+	if !<restest 8 i_Board>
+		sysmessage "You lack some boards for the keg"
+		return 1
+	endif
+
+	if !<restest 1 i_barrel_hoop>
+		sysmessage "You lack one barrel hoop for the keg"
+		return 1
+	endif
+
+	if <tinkering>	> 65.0
+		makekeg
+	else
+		sysmessage "You are not skilled enough for the keg"
+		return 1
+	endif
+
+[function makekeg]
+	Makeitem i_potion_keg
+
+//New Potions=========================================
+[ITEMDEF I_POTION_Life]
+//Life Potion
+NAME	= Life Potion
+ID	= I_Bottle_White
+TYPE	= T_Script
+
+ON=@Create
+	COLOR	=052d
+	MORE1	=s_resurrection
+	MORE2	=700
+
+ON=@CLICK
+	Message "A Life Potion"
+	if <eval <more2>> > 800
+		message "[Greater]"
+	endif
+	return 1
+
+ON=@DCLICk
+	TARGET "Select a Corpse"
+	RETURn 1
+
+ON=@TARGON_ITEM
+	if !(<src.targ.canseelos>)
+		IF (<SRC.TARG.DISTANCE> > 2)
+			SRC.SYSMESSAGE That's too far from you.
+		Else
+			SRC.SYSMESSAGE "You can not see the target"
+		Endif
+		RETURN 1
+	ENDIF
+
+	if <src.flags> & 02
+		src.sysmessage "you are dead"
+		return 1
+	endif
+	
+	IF ((<SRC.TARG.BaseID>==I_Corpse) && (<SRC.TARG.LINK.FLAGS> & 02) && (<SRC.TARG.LINK.DISTANCE> < 2))
+		SRC.EMOTE Give <SRC.TARG.NAME> some potions to drink
+		SRC.ACT	= <SRC.TARG.LINK.UID>
+		SRC.ACT.RESURRECT
+
+		if <eval <more2>> > 800
+			SRC.ACT.HITS	= <SRC.ACT.STR>
+		endif
+		src.act.consume 1 i_robe
+		src.act	= 
+
+		SRC.NEWITEM=i_bottle_EMPTY
+			Src.act.bounce
+		REMOVE
+		RETURN 1
+	ELSE
+		SRC.MESSAGE "You must target on a corpse of someone near you"
+		RETURN 1
+	ENDIF
+
+
+
+[ITEMDEF I_potion_keg]
+NAME		=Potion Keg
+ID		=i_KEG_WOOD
+TYPE		=t_script
+VALUE		=200
+WEIGHT		=10
+SKILLMAKE	=Tinkering 65.0
+RESOURCES	=1 i_BARREL_TAP,8 i_Board,i_barrel_hoop
+
+
+ON=@Create
+	Name	= Potion Keg
+
+ON=@CLICK
+	Message	<NAME>
+	Message "[<MOREX>/100]"
+	return 1
+
+ON=@DCLICK
+	IF (((<src.weight>)/10) > ((<SRC.STR>)*2))
+		SRC.SYSMESSAGE "You are over weighted."
+		RETURN 1
+	ENDIF
+
+	IF (<MOREX> = 0 && <MORE1> > 0)
+		MORE1=00
+		COLOR=00
+		NAME=Potion Keg
+	ENDIF
+	TARGET "Select A potion or a keg."
+	return 1
+
+ON=@TARGON_ITEM
+	IF (((<src.weight>)/10) > ((<SRC.STR>)*2))
+		SRC.SYSMESSAGE "You are over weighted."
+		RETURN 1
+	ENDIF
+
+	IF (<Cont.UID> != <SRC.Findlayer(21).UID>) || (<Src.Targ.Cont.UID> != <SRC.Findlayer(21).UID>)
+		SRC.MESSAGE "Your target must be in your backpack"
+		RETURN 1
+	ENDIF
+
+	if (<src.action> != -1 )
+		SRC.SYSMESSAGE "You can't use this yet"
+		return 1
+	endif
+
+//======================Mixing Potions==========================
+
+	IF ( <SRC.TARG.BaseID>=I_potion_keg )  		//Target on another keg
+
+		IF ( (<Eval (<MOREX>+<SRC.TARG.MOREX>)> ) >101)
+			Src.Sysmessage "These two kegs are too full to be mixed"
+			REturn 1
+		endif
+		
+		IF (<SRC.TARG.UID>==<UID>)
+	   		SRC.MESSAGE "Targeting the same keg?"
+	   		RETURN 1
+		Endif
+		
+		if ( <src.targ.morex> <= 0 ) && ( <morex> <= 0 )
+			Src.sysmessage "Both the keg Your Target keg is empty"
+			return 1
+		endif
+			
+		if (<src.targ.more1> == <more1>)			//Same Kind of potion
+			MOREX=<Eval (<MOREX>+<SRC.TARG.MOREX>)>		//Fill the keg
+			MORE2=<eval ((<MORE2> + <SRC.TARG.MORE2>)/2)>	//Average Potion Strength
+		   	SRC.EMOTE "Mix the two potion kegs together"
+		   	SRC.TARG.REMOVE
+		   	SRC.NEWITEM=i_potion_keg			//New keg
+		   	SRC.ACT.BOUNCE
+		   	RETURN 1
+		else							//Different Kind of keg
+			IF !( <src.alchemy> > 500)
+				SRC.MESSAGE You are not skilled enough to mix them
+				return 1
+			endif
+	
+	
+			
+		 	IF ((<MORE1>=s_Refresh) && ( (<SRC.TARG.MORE1>==s_greater_heal) || (<SRC.TARG.MORE1>==s_heal) )
+		 	//RED+YELLOW=ORANGE
+		 		SRC.SOUND=snd_Z_END_LIQUID
+		 		MOREX=<eval (<MOREX>+<SRC.TARG.MOREX>)>
+		 		MORE2=<eval ((<MORE2> + <SRC.TARG.MORE2>)/2)>
+		   		MORE1=s_cure
+		   		TAG.BaseID	= i_potion_Cure
+		   		NAME=keg of Cure Potion
+		   		COlor=02c
+		   		SRC.EMOTE=Mix the two kegs together and create <NAME>
+		   		SRC.TARG.REMOVE
+		   		
+		   		SRC.NEWITEM=i_potion_keg
+		   		SRC.ACT.BOUNCE
+		   		RETURN 1
+		   	ENDIF
+		   	
+		   	IF ((<MORE1>=s_Refresh) && (<SRC.TARG.MORE1>==s_Agility)
+		 	//RED+Blue=Purple
+		 		SRC.SOUND=snd_Z_END_LIQUID
+		 		MOREX=<eval (<MOREX>+<SRC.TARG.MOREX>)>
+		 		MORE2=<eval ((<MORE2> + <SRC.TARG.MORE2>)/2)>
+		   		MORE1=s_explosion
+		   		TAG.BaseID	= i_potion_Explosion
+		   		NAME=keg of explosion Potion
+		   		COlor=0dc
+		   		SRC.EMOTE=Mix the two kegs together and create <NAME>
+		   		SRC.TARG.REMOVE
+		   		
+		   		SRC.NEWITEM=i_potion_keg
+		   		SRC.ACT.BOUNCE
+		   		RETURN 1
+		   	ENDIF
+		   	
+		   	IF ( (<MORE1>==s_greater_heal) || (<MORE1>==s_heal) ) && (<SRC.TARG.MORE1>=s_Agility)
+		 	//Yellow+Blue=Green Normal
+		 		SRC.SOUND=snd_Z_END_LIQUID
+		 		MOREX=<eval (<MOREX>+<SRC.TARG.MOREX>)>
+		 		MORE2=<eval ((<MORE2> + <SRC.TARG.MORE2>)/2)>
+		   		MORE1=s_poison
+		   		TAG.BaseID	= i_potion_Poison
+		   		NAME=keg of poison Potion
+		   		COlor=0a8
+		   		SRC.EMOTE=Mix the two kegs together and create <NAME>
+		   		SRC.TARG.REMOVE
+		   		
+		   		SRC.NEWITEM=i_potion_keg
+		   		SRC.ACT.BOUNCE
+		   		RETURN 1
+		   	ENDIF
+	
+			//Level 2 Potions
+			IF !(<src.alchemy>>750)
+				SRC.MESSAGE "You are not skilled enough to mix them"
+				return 1
+			endif
+	
+		 	//Green+Red=Black
+		 	if (<MORE1>==s_poison) && (<src.targ.more1>==s_Refresh)
+		 		SRC.SOUND=snd_Z_END_LIQUID
+		 		MOREX=<eval (<MOREX>+<SRC.TARG.MOREX>)>
+		 		MORE2=<eval ((<MORE2> + <SRC.TARG.MORE2>)/2)>
+		   		MORE1=s_night_sight
+		   		TAG.BaseID	= i_potion_NightSight
+		   		NAME=keg of NightSight Potion
+		   		COlor=03e0
+		   		SRC.EMOTE=Mix the two kegs together and create <NAME>
+		   		SRC.TARG.REMOVE
+		   		
+		   		SRC.NEWITEM=i_potion_keg
+		   		SRC.ACT.BOUNCE
+		   		RETURN 1
+		   	ENDIF
+		   	
+		   	if (<MORE1>==s_night_sight) && ((<src.targ.more1>==s_cure) || (<src.targ.more1>==s_archcure))
+		   	//Black+Orange=Invisibility
+		 		SRC.SOUND=snd_Z_END_LIQUID
+		 		MOREX=<eval (<MOREX>+<SRC.TARG.MOREX>)>
+		 		MORE2=<eval ((<MORE2> + <SRC.TARG.MORE2>)/2)>
+		   		MORE1=s_invisibility
+		   		TAG.BaseID	= i_potion_Invisibility
+		   		NAME=keg of Invisibility Potion
+		   		COLOR=COLOR_SPECTRAL
+		   		SRC.EMOTE=Mix the two kegs together and create <NAME>
+		   		SRC.TARG.REMOVE
+		   		
+		   		SRC.NEWITEM=i_potion_keg
+		   		SRC.ACT.BOUNCE
+		   		RETURN 1
+		   	ENDIF
+		   	
+		   	if (<MORE1>==s_night_sight) && (<src.targ.more1>==s_Agility)
+		   	//Black+Blue=Mana
+		 		SRC.SOUND=snd_Z_END_LIQUID
+		 		MOREX=<eval (<MOREX>+<SRC.TARG.MOREX>)>
+		 		MORE2=<eval ((<MORE2> + <SRC.TARG.MORE2>)/2)>
+		   		MORE1=s_mana
+		   		NAME=keg of Mana Refresh Potion
+		   		TAG.BaseID	= i_potion_Mana
+		   		COlor=08a5
+		   		SRC.EMOTE=Mix the two kegs together and create <NAME>
+		   		SRC.TARG.REMOVE
+		   		
+		   		SRC.NEWITEM=i_potion_keg
+		   		SRC.ACT.BOUNCE
+		   		RETURN 1
+		   	ENDIF	
+
+			if (<MORE1>==s_mana) && ( (<src.targ.more1>==s_Heal) || (<src.targ.more1>==s_greater_heal))
+			//Life potion
+		 		SRC.SOUND=snd_Z_END_LIQUID
+		 		MOREX=<eval (<MOREX>+<SRC.TARG.MOREX>)>
+		 		MORE2=<eval ((<MORE2> + <SRC.TARG.MORE2>)/2)>
+		   		MORE1=s_Resurrection
+		   		NAME=keg of Life Potion
+		   		TAG.BaseID	= i_potion_Life
+		   		COlor=052d
+		   		SRC.EMOTE=Mix the two kegs together and create <NAME>
+		   		SRC.TARG.REMOVE
+		   		
+		   		SRC.NEWITEM=i_potion_keg
+		   		SRC.ACT.BOUNCE
+		   		RETURN 1
+		   	ENDIF	
+			
+	
+			SRC.EMOTE failed mix this two kegs together
+			SRC.EFFECT=3,036b0,6,15,1
+			SRC.Damage=<Eval (<MOREX>+<SRC.TARG.MOREX>)>
+			REMOVE
+			SRC.TARG.REMOVE
+			RETURN 1
+		ENDIF
+	elseif <src.targ.baseid> == i_bottle_empty
+	//========================Pour potion out======================
+		if (<more1>==0) || (<morex>==0)
+			src.sysmessage "this keg is empty"
+			return 1
+		endif
+		
+		MOREX	= <EVAL (<MOREX> - 1)>
+		UPDATE
+		SRC.CONSUME=1 i_bottle_empty
+
+		SRC.NEWITEM <TAG.Baseid>
+		
+		sendcolor
+
+		SRC.ACT.MORE1	= <MORE1>
+		SRC.ACT.MORE2	= <MORE2>
+		SRC.ACT.P	= <SRC.P>
+		SRC.ACT.BOUNCE
+		
+		SRC.EMOTE Pour some potion out of a keg.
+		RETURN 1
+		
+	Elseif (<Src.targ.type> = t_potion) || (<src.targ.baseid> == i_potion_life)
+		//Fill in the keg
+		IF <MOREX>>99
+ 			SRC.MESSAGE "Your keg are full now."
+ 			RETURN 1
+		ENDIF
+		
+		TAG.Baseid	= <SRC.TARG.BASEID>
+//1st time
+ 		IF <MORE1> == 0
+	 		MORE1=<SRC.TARG.MORE1>
+	 		MORE2=<SRC.TARG.MORE2>
+	 		MOREX=<Eval (<MOREX>+1)>
+	 		NAME=keg of <SRC.TARG.NAME>
+	 		
+	 		getcolor
+	 		
+	 		UPDATE
+	 		SRC.TARG.REMOVE
+	 		SRC.NEWITEM=i_bottle_empty
+	 		SRC.ACT.BOUNCE
+	 		SRC.EMOTE "Fill the keg with <SRC.TARG.NAME>"
+	 		RETURN 1
+		Else
+ 			IF (<SRC.TARG.MORE>=<MORE>)
+ 				MORE2=<EVAL <MORE2>*<MOREX>>
+ 				MOREX=<EVAL (<MOREX>+1)>
+ 				MORE2=<EVAL (<MORE2> + <SRC.TARG.MORE2>) >
+ 				MORE2=<EVAL (<MORE2> / <MOREX>)>
+ 				NAME=keg of <SRC.TARG.NAME>
+ 				
+ 				SRC.TARG.REMOVE
+ 				SRC.NEWITEM=i_bottle_empty
+ 				SRC.ACT.BOUNCE
+ 				SRC.EMOTE Fill the keg with <SRC.TARG.NAME>
+ 				UPDATE
+ 				RETURN 1
+ 			ELSE
+ 				SRC.MESSAGE "You can only fill in the same type of potion"
+ 			ENDIF
+		ENDIF
+	Else
+		Src.sysmessage "You can't think a way of using it!"
+		RETURN 1
+	endif
+	
+[function getcolor]
+	if <more1>	=s_Agility
+		Color	=058
+	elseif <more1>	=s_Cure
+		color	=02c
+	elseif <more1>	=s_archcure
+		Color	=02c
+	elseif <more1>	=s_explosion
+		Color	=0dc
+	elseif <more1>	=s_heal
+		Color	=035
+	elseif <more1>	=s_greater_heal
+		Color	=035
+	elseif <more1>	=s_night_sight
+		Color	=03e0
+	elseif <more1>	=s_poison
+		Color	=0a8
+	elseif <more1>	=s_Refresh
+		Color	=021
+	elseif <more1>	=s_strength
+		Color	=0
+	else
+		Color	=<SRC.TARG.COLOR>
+	endif
+
+[function sendcolor]
+	if <more1>	=s_Agility
+		SRC.ACT.Color	=00
+	elseif <more1>	=s_Cure
+		SRC.ACT.color	=00
+	elseif <more1>	=s_archcure
+		SRC.ACT.Color	=00
+	elseif <more1>	=s_explosion
+		SRC.ACT.Color	=00
+	elseif <more1>	=s_heal
+		SRC.ACT.Color	=00
+	elseif <more1>	=s_greater_heal
+		SRC.ACT.Color	=00
+	elseif <more1>	=s_night_sight
+		SRC.ACT.Color	=00
+	elseif <more1>	=s_poison
+		SRC.ACT.Color	=00
+	elseif <more1>	=s_Refresh
+		SRC.ACT.Color	=00
+	elseif <more1>	=s_strength
+		SRC.ACT.Color	=00
+	else
+		SRC.ACT.Color	=<COLOR>
+	endif
+
+
+[EOF]

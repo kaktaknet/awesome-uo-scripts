@@ -1,0 +1,4619 @@
+//*************************************
+//Class Of Magic System v2.0 - (Pt. 2)
+//Orginally Scripted 100% By: Majesty
+//PLEASE DO NOT REMOVE THIS HEADER
+//*************************************
+
+//*********************************************************
+//INSTALLATION - INSTALLATION - INSTALLATION - INSTALLATION
+//---------------------------------------------------------
+//To Install, Simply Add: i_class_selection
+//---------------------------------------------------------
+//And Set The <morep> To Where They Wanna Go After Selecting.
+//---------------------------------------------------------
+//INSTALLATION - INSTALLATION - INSTALLATION - INSTALLATION
+//*********************************************************
+
+
+
+
+//******************************************
+//SPELL NAMES & SPELL LEVELS 
+//******************************************
+
+//Wizard
+//-Strike (1)*
+//-Barrial Escape (2)*
+//-Magic Bomb (3)*
+//-Invisible Assualt (4)*
+//-Arcane Execution (5)* 
+
+//Illusionist 
+//-Deception (1)* 
+//-Painful Decoy (2)* 
+//-Invisible Trap (3)* 
+//-Realm Switch (4)*
+//-Mystic Protection (5)*
+
+//Shaman 
+//-Mind Drain (1)*
+//-Agile Savant (2)*
+//-Wicked Fury (3)*
+//-Spirit Summon (4)*
+//-Soul Corruptor (5)*
+
+//Warlock 
+//-Soul Insert (1)*
+//-Living Arrow (2)*
+//-Warlock's Embrace (3)*
+//-Silence (4)*
+//-Armageddon (5)*
+
+//Psychic 
+//-Tele Switch (1)*
+//-Mind Collapse (2)*
+//-Mind Swap (3)*
+//-Mind Barrier (4)*
+//-Psychic Defense (5)*
+
+//Witch Doctor 
+//-Health Absorb (1)*
+//-Infection (2)*
+//-Body Restore (3)*
+//-Voodoo Doll (4)*
+//-Voodoo Rage (5)*
+
+//Necromancer 
+//-Weakness (1)*
+//-Undead Incognito (2)*
+//-Necro Blast (3)*
+//-Reanimate (4)*
+//-Call Of Necropolis (5)*
+
+//Sorcerer 
+//-Flame Attack (1)*
+//-Arctic Field (2)*
+//-Judgement (3)*
+//-Flame Barrier (4)*
+//-Sorcerer's Touch (5)*
+
+//Monk 
+//-Warp (1)*
+//-Shadow Blast (2)*
+//-Mystic Defense (3)*
+//-Living Shadow (4)*
+//-Burning Execution (5)*
+
+//Priest 
+//-Holy Energy (1)*
+//-Soul Purifaction (2)*
+//-Guardian Angel (3)*
+//-Ankh Summon (4)*
+//-Wrath Of God (5)*
+
+
+//***************************************
+//STAT ATTRIBUTE APPLICATIONS 
+//***************************************
+
+[defname spelldelay] //The Delay Time For Usage 0f Another Special Spell
+spelldelay 60*5 //<-- Thats 5 Minutes
+
+[function f_apply_discipline]
+if (<eval <tag.discipline10>> = 1 )
+tag.totaldiscipline=65
+elseif (<eval <tag.discipline9>> = 1 )
+tag.totaldiscipline=60
+elseif (<eval <tag.discipline8>> = 1 )
+tag.totaldiscipline=55
+elseif (<eval <tag.discipline7>> = 1 )
+tag.totaldiscipline=50
+elseif (<eval <tag.discipline6>> = 1 )
+tag.totaldiscipline=45
+elseif (<eval <tag.discipline5>> = 1 )
+tag.totaldiscipline=40
+elseif (<eval <tag.discipline4>> = 1 )
+tag.totaldiscipline=35
+elseif (<eval <tag.discipline3>> = 1 )
+tag.totaldiscipline=30
+elseif (<eval <tag.discipline2>> = 1 )
+tag.totaldiscipline=25
+elseif (<eval <tag.discipline2>> = 0 )
+tag.totaldiscipline=20
+endif
+
+[function f_apply_power]
+if (<eval <tag.power10>> = 1 )
+tag.totalpower=10
+elseif (<eval <tag.power9>> = 1 )
+tag.totalpower=9
+elseif (<eval <tag.power8>> = 1 )
+tag.totalpower=8
+elseif (<eval <tag.power7>> = 1 )
+tag.totalpower=7
+elseif (<eval <tag.power6>> = 1 )
+tag.totalpower=6
+elseif (<eval <tag.power5>> = 1 )
+tag.totalpower=5
+elseif (<eval <tag.power4>> = 1 )
+tag.totalpower=4
+elseif (<eval <tag.power3>> = 1 )
+tag.totalpower=3
+elseif (<eval <tag.power2>> = 1 )
+tag.totalpower=2
+elseif (<eval <tag.power2>> = 0 )
+tag.totalpower=0
+endif
+
+[function f_apply_technique]
+if (<eval <tag.technique10>> = 1 )
+tag.totaltechnique=10
+elseif (<eval <tag.technique9>> = 1 )
+tag.totaltechnique=9
+elseif (<eval <tag.technique8>> = 1 )
+tag.totaltechnique=8
+elseif (<eval <tag.technique7>> = 1 )
+tag.totaltechnique=7
+elseif (<eval <tag.technique6>> = 1 )
+tag.totaltechnique=6
+elseif (<eval <tag.technique5>> = 1 )
+tag.totaltechnique=5
+elseif (<eval <tag.technique4>> = 1 )
+tag.totaltechnique=4
+elseif (<eval <tag.technique3>> = 1 )
+tag.totaltechnique=3
+elseif (<eval <tag.technique2>> = 1 )
+tag.totaltechnique=2
+elseif (<eval <tag.technique2>> = 0 )
+tag.totaltechnique=0
+endif
+
+[function f_apply_endurance]
+if (<eval <tag.endurance10>> = 1 )
+tag.totalendurance=10
+elseif (<eval <tag.endurance9>> = 1 )
+tag.totalendurance=9
+elseif (<eval <tag.endurance8>> = 1 )
+tag.totalendurance=8
+elseif (<eval <tag.endurance7>> = 1 )
+tag.totalendurance=7
+elseif (<eval <tag.endurance6>> = 1 )
+tag.totalendurance=6
+elseif (<eval <tag.endurance5>> = 1 )
+tag.totalendurance=5
+elseif (<eval <tag.endurance4>> = 1 )
+tag.totalendurance=4
+elseif (<eval <tag.endurance3>> = 1 )
+tag.totalendurance=3
+elseif (<eval <tag.endurance2>> = 1 )
+tag.totalendurance=2
+elseif (<eval <tag.endurance2>> = 0 )
+tag.totalendurance=0
+endif
+
+[function f_apply_wisdom]
+if (<eval <tag.wisdom10>> = 1 )
+tag.totalwisdom=10
+elseif (<eval <tag.wisdom9>> = 1 )
+tag.totalwisdom=9
+elseif (<eval <tag.wisdom8>> = 1 )
+tag.totalwisdom=8
+elseif (<eval <tag.wisdom7>> = 1 )
+tag.totalwisdom=7
+elseif (<eval <tag.wisdom6>> = 1 )
+tag.totalwisdom=6
+elseif (<eval <tag.wisdom5>> = 1 )
+tag.totalwisdom=5
+elseif (<eval <tag.wisdom4>> = 1 )
+tag.totalwisdom=4
+elseif (<eval <tag.wisdom3>> = 1 )
+tag.totalwisdom=3
+elseif (<eval <tag.wisdom2>> = 1 )
+tag.totalwisdom=2
+elseif (<eval <tag.wisdom2>> = 0 )
+tag.totalwisdom=0
+endif
+
+
+[itemdef i_spelldelay_memory]
+id=i_memory
+name=Spell Delay Memory
+type=t_eq_script
+
+on=@create
+attr=attr_decay
+
+on=@timer
+cont.sysmessage=You can now use another spell...
+remove
+return 1
+
+[function f_start_delay]
+newitem=i_spelldelay_memory
+act.equip
+act.timer=<eval spelldelay>
+
+[function f_anti_gank]
+newitem=i_anti_gank_mem
+act.cont=<targ.uid>
+act.timer=15
+return 1
+
+[itemdef i_anti_gank_mem]
+id=i_memory
+type=t_eq_script
+name=Anti Gank Memory
+
+on=@create
+attr=attr_decay
+
+
+on=@timer
+remove
+return 1
+
+
+//*************************************************
+//WIZARD SPELLS WIZARD SPELLS WIZARD SPELLS
+//*************************************************
+
+
+//Wizard Spells
+[itemdef i_wizard_1] //Strike
+id=i_memory
+name=Strike Spell
+type=t_eq_script
+
+on=@create
+attr=attr_decay
+timer=30
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Select your victim...
+timer=20
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if !(<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 24 )
+src.f_anti_gank
+src.sayu=[Strike]
+src.anim=17
+src.targ.sfx=snd_spell_lightning
+src.targ.effect=1,1,16,16,16
+src.targ.sfx=011d
+src.targ.effect=3,i_fire_column,16,16,0
+src.targ.damage=<eval <src.tag.totaldiscipline>>
+src.stamina=<src.stamina>+-25
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (25 Stamina) to cast this...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[itemdef i_wizard_2] //Barrial Escape
+id=i_memory
+type=t_eq_script
+name=Escape Spell
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<eval <src.mana>> > 29 )
+link=<src.uid>
+src.anim=17
+src.sayu=[Barrial Escape]
+src.sfx=011f
+src.sfx=snd_spell_cunning
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=n
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.type=t_breakable_spell
+link.act.link=<src.uid>
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=ne
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.type=t_breakable_spell
+link.act.link=<src.uid>
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=e
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.type=t_breakable_spell
+link.act.link=<src.uid>
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=se
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.type=t_breakable_spell
+link.act.link=<src.uid>
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=s
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.type=t_breakable_spell
+link.act.link=<src.uid>
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=sw
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.type=t_breakable_spell
+link.act.link=<src.uid>
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=w
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.type=t_breakable_spell
+link.act.link=<src.uid>
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=nw
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.type=t_breakable_spell
+link.act.link=<src.uid>
+link.act.timer=<eval <src.tag.totaldiscipline>>
+src.mana=<src.mana>+-30
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (30 Mana) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[typedef t_breakable_spell]
+on=@dclick
+if (<src.uid>==<link>)
+src.sfx=011d
+remove
+return 1
+endif
+
+[itemdef i_wizard_3] //Magic Bomb
+id=i_memory
+type=t_eq_script
+name=Magic Bomb
+
+on=@create
+attr=attr_decay
+timer=30
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 64 )
+link=<src.uid>
+link.newitem=i_wizard_magic_bomb
+link.act.p=<src.p>
+link.act.timer=10
+link.act.sayu=10 Seconds Till Explosion
+link.act.say=(cast magic reflect to escape the blast)
+link.act.region.allclients sysmessage=*!a magic bomb has been planted!*
+link.act.link=<src.uid>
+link.newitem=i_fx_sparkle_2
+link.act.p=<link.p>
+link.act.timer=15
+link.act.attr attr_decay|attr_static
+link.sayu=[Magic Bomb]
+//var.distancecheck=15
+link.bow
+link.sfx=0175
+src.stamina=<src.stamina>+-65
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (65 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+[itemdef i_wizard_magic_bomb]
+id=i_oil_flask
+type=t_script
+name=Magic Bomb
+
+on=@create
+color=0480
+timer=10
+
+on=@pickup_ground
+return 1
+
+on=@timer
+sfx=011c
+sfx=0222
+link.newitem=i_fire_column
+link.act.p=<p>
+link.act.attr=attr_static|attr_decay
+link.act.timer=10
+var.damage=<eval <link.tag.totaldiscipline>>
+region.allclients f_blast_check
+remove
+return 1
+
+[function f_blast_check]
+if !(<flags> & statf_reflection )
+damage=<eval <var.damage>>+-<eval <tag.totalendurance>>
+sfx=011b
+sfx=0222
+sysmessage=You feel the impact of the Magic Bomb!
+//var.damage=
+return 1
+endif
+
+
+[itemdef i_wizard_4] //Invisible Assualt
+id=i_memory
+type=t_eq_script
+name=Invisible Assualt Spell
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 84 )
+link=<src.uid>
+timer=<eval <src.tag.totaldiscipline>>+15
+link.invis=1
+src.sayu [Invisible Assualt]
+src.sfx=01e2
+src.stamina=<src.stamina>+-85
+src.sfx=snd_spell_invisibility
+link.f_start_delay
+return 1
+else
+src.sysmessage=You need (85 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+link.invis=0
+link.sayu=*Revealed*
+remove
+return 1
+
+[itemdef i_wizard_5] //Arcane Execution
+id=i_memory
+type=t_eq_script
+name=Arcane Execution Spell
+
+on=@create
+tag.f1=0
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 74 )&&(<src.mana> > 49 )
+tag.caster=<src.uid>
+target
+src.sysmessage=Target your victim...
+return 1
+else
+src.sysmessage=You need (75 Stamina & 50 Mana) to cast this spell...
+remove
+return 1
+endif
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=<src.targ.name> is not in your line of sight...
+remove
+return 1
+endif
+
+if (!<src.targ.brain> = 0 )
+src.sysmessage=You cannot use this spell on NPCs...
+remove
+return 1
+else
+src.f_anti_gank
+src.targ.damage=1
+src.targ.sfx=248
+src.targ.tag.preflags=<src.targ.flags>
+src.targ.events=+e_arcane_execution_para
+src.targ.flags=<src.targ.flags>|000000004
+src.stamina=<src.stamina>+-75
+src.mana=<src.mana>+-50
+link=<src.targ.uid>
+cont=<src.targ.uid>
+timer=2
+src.sayu=[Arcane Execution]
+src.f_start_delay
+src.anim=17
+return 1
+endif
+
+on=@timer
+if (<eval <tag.f1>> = 0 )
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.move=n
+link.act.attr=attr_static|attr_decay
+link.act.timer=15
+tag.f1=<eval <tag.f1>>+1
+timer=2
+return 1
+elseif (<eval <tag.f1>> = 1 )
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.move=e
+link.act.attr=attr_static|attr_decay
+link.act.timer=15
+tag.f1=<eval <tag.f1>>+1
+timer=2
+return 1
+elseif (<eval <tag.f1>> = 2 )
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.move=s
+link.act.attr=attr_static|attr_decay
+link.act.timer=15
+tag.f1=<eval <tag.f1>>+1
+timer=2
+return 1
+elseif (<eval <tag.f1>> = 3 )
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.move=w
+link.act.attr=attr_static|attr_decay
+link.act.timer=15
+tag.f1=<eval <tag.f1>>+1
+timer=2
+return 1
+else
+link.damage 1
+link.events=-e_arcane_execution_para
+link.flags=<link.tag.preflags>
+link.tag.preflags=
+link.hits=<eval { 30 65 }>
+link.sfx=0222
+link.sfx=011d
+link.effect=3,i_fire_column,16,16,16
+link.effect=1,1,16,16,16
+link.effect=3,i_fx_sparkle_2,16,16,16
+remove
+return 1
+endif
+
+[events e_arcane_execution_para]
+on=@spellcast
+sysmessage=You cannot cast spells while in this state...
+return 1
+
+on=@spelleffect
+src.sysmessage=<name> cannot be effected by another spell in <sex his/her> state...
+return 1
+
+on=@gethit
+return 1
+
+
+//********************************************************
+//ILLUSIONIST SPELLS ILLUSIONIST SPELLS ILLUSIONIST SPELLS
+//********************************************************
+
+//Illusionist Spells
+[itemdef i_illusionist_1] //Deception
+id=i_memory
+name=Deception Spell
+type=t_eq_script
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 24 )
+src.f_start_delay
+src.sayu=[Deception]
+src.sfx=snd_monster_liche1
+src.anim=17
+link=<src.uid>
+link.newitem=0177c
+link.act.p=<src.p>
+link.act.attr=attr_decay|attr_static
+timer=<eval <src.tag.totaldiscipline>*2>
+link.act.timer=<eval <src.tag.totaldiscipline>*2>
+tag.returnp=<link.act.p> 
+link.events=+e_illusionist_deception_cancel
+src.flags=<src.flags>|statf_freeze
+link.invis=1
+src.stamina=<src.stamina>+-25
+return 1
+else
+src.sysmessage=You need (25 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+link.events=-e_illusionist_deception_cancel
+link.invis=0
+link.sayu=*Revealed*
+link.flags=<link.flags>&~statf_freeze
+remove
+return 1
+
+[events e_illusionist_deception_cancel]
+on=@spelleffect
+go=<findid.i_illusionist_1.tag.returnp>
+findid.i_illusionist_1.timer=0
+return 0
+
+on=@gethit
+go=<findid.i_illusionist_1.tag.returnp>
+findid.i_illusionist_1.timer=0
+return 0
+
+on=@spellcast
+go=<findid.i_illusionist_1.tag.returnp>
+findid.i_illusionist_1.timer=0
+return 0
+
+on=@hit
+go=<findid.i_illusionist_1.tag.returnp>
+findid.i_illusionist_1.timer=0
+return 0
+
+
+[itemdef i_illusionist_2] //Painful Decoy
+id=i_memory
+name=Decoy Spell
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 34 )
+link=<src.uid>
+link.newitem={ i_halberd_vanq 1 i_bardiche_vanq 1 i_robe_gm 1 i_pet_horse 1 i_virtstone_5 1 }
+link.act.p=<link.p>
+link.act.timer=<eval <link.tag.totaldiscipline>*2>
+link.act.type=t_illusionist_decoy
+link.act.link=<link.uid>
+link.sayu=[Painful Decoy]
+link.sfx=snd_spell_create_food
+link.anim=17
+link.effect=3,i_fx_sparkle_2,16,16,0
+src.stamina=<src.stamina>+-35
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (35 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+[typedef t_illusionist_decoy]
+on=@pickup_ground
+src.effect=3,i_fx_explosion_2,16,16,0
+src.damage=<eval <link.tag.totaldiscipline>>
+src.sfx=011b
+src.sysmessage=You have picked up a Decoy Trap from <link.name>!
+remove
+return 1
+
+on=@equip
+src.effect=3,i_fx_explosion_2,16,16,0
+src.damage=<eval <link.tag.totaldiscipline>>
+src.sfx=011b
+src.sysmessage=You have picked up a Decoy Trap from <link.name>!
+remove
+return 1
+
+on=@timer
+remove
+return 1
+
+
+[itemdef i_illusionist_3] //Invisible Trap
+id=i_memory
+name=Invisible Trap Spell
+type=t_eq_script
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.mana> > 34 )
+link=<src.uid>
+link.sfx=240
+link.newitem=i_illusionist_trap
+link.act.p=<link.p>
+link.act.timer=<eval <link.tag.totaldiscipline>*2>
+link.act.link=<src.uid>
+link.act.attr=attr_invis|attr_decay
+link.sayu=[Invisible Trap]
+link.anim=17
+link.effect=3,i_fx_sparkle_2,16,16,0
+src.mana=<src.mana>+-35
+remove
+return 1
+else
+src.sysmessage=You need (35 Mana) to cast this spell...
+remove
+return 1
+endif
+
+[itemdef i_illusionist_trap]
+id=011c1
+name=Illusionist Trap
+type=t_script
+
+on=@create
+attr=attr_invis|attr_decay
+
+on=@step
+if (<link> = <src.uid> )
+src.sysmessage=Your Invisible Trap is placed here...
+return 1
+endif
+
+if (<eval <tag.steppedon>> = 0 )
+attr=attr_static
+update
+timer=2
+src.damage=<eval <link.tag.totaldiscipline>>
+src.nudgedown 5
+src.sayu=*Fell Into A Trap*
+src.sfx=244
+src.events=+e_illusionist_trap_cancel
+tag.steppedon=1
+return 1
+else
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[events e_illusionist_trap_cancel]
+on=@gethit
+nudgeup=5
+events=-e_illusionist_trap_cancel
+return 0
+
+
+[itemdef i_illusionist_4] //Realm Switch
+id=i_memory
+name=Realm Switch
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+timer=30
+target
+src.sysmessage=Target the person you wish to transport...
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 24 )&&(<src.stamina> > 49 )
+src.f_anti_gank
+src.targ.damage=1
+src.f_start_delay
+src.targ.tag.realp=<src.targ.p>
+src.tag.realp=<src.p>
+src.p=<src.p.x>,<src.p.y>,<src.p.z>,50
+timer=<eval <src.tag.totaldiscipline>>
+src.targ.sfx=01ea
+src.sayu=[Realm Switch]
+src.anim=16
+link=<src.targ.uid>
+src.targ.p=<src.targ.p.x>,<src.targ.p.y>,<src.targ.p.z>,50
+src.mana=<src.mana>+-25
+src.stamina=<src.stamina>+-50
+return 1
+else
+src.sysmessage=You need (25 Mana & 50 Stamina) to cast this spell..
+remove
+return 1
+endif
+
+on=@timer
+link.p=<link.tag.realp>
+cont.p=<cont.tag.realp>
+link.update
+cont.update
+cont.say=*Returned*
+link.sayu=*Returned*
+link.update
+link.tag.realp=
+cont.tag.realp=
+remove
+return 1
+
+[itemdef i_illusionist_5] //Mystic Protection
+id=i_memory
+name=Mystic Protection
+type=t_eq_script
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 49 )&&(<src.mana> > 24 )
+src.mana=<src.mana>+-25
+src.sfx=01fa
+src.sayu=[Mystic Protection]
+src.flags=<src.flags>|statf_criminal
+src.sysmessage=This spell has temporarly flagged you criminal...
+src.anim=17
+src.stamina=<src.stamina>+-50
+link=<src.uid>
+link.newitem=i_illusionist_protection //n
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=n
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_illusionist_protection //ne
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=ne
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_illusionist_protection //e
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=e
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_illusionist_protection //se
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=se
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_illusionist_protection //s
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=s
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_illusionist_protection //sw
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=sw
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_illusionist_protection //w
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=w
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_illusionist_protection //nw
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=nw
+link.act.timer=1
+link.act.link=<link.uid>
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (50 Stamina & 25 Mana) to cast this spell...
+remove
+return 1
+endif
+
+[itemdef i_illusionist_protection]
+id=i_fx_glow
+type=t_script
+name=Mystic Barrier
+
+on=@create
+color=0480
+attr=attr_static
+
+on=@step
+if (<link> = <src.uid> )
+return 1
+else
+src.damage=<eval <link.tag.totaldiscipline>/2>
+src.sfx=snd_spell_harm
+return 1
+endif
+
+on=@timer
+if (<link.hits> < 1 )
+link.flags=<link.flags>&~statf_criminal
+remove
+return 1
+endif
+if (<morex> > 0 )
+p=<link.p>
+move=<tag.move>
+morex=<morex>+-1
+update
+timerd=1
+return 1
+else
+link.flags=<link.flags>&~statf_criminal
+remove
+return 1
+endif
+
+
+//*******************************************************
+//SHAMAN SPELLS SHAMAN SPELLS SHAMAN SPELLS SHAMAN SPELLS
+//*******************************************************
+
+
+[itemdef i_shaman_1] //Mind Drain
+id=i_memory
+type=t_eq_script
+name=Mind Drain
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Who will you drain mana from?
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 44 )
+src.f_anti_gank
+src.targ.damage=1
+src.f_start_delay
+src.targ.effect=3,i_fx_sparkle_2,16,16,1
+src.stamina=<src.stamina>+-45
+link=<src.uid>
+cont=<src.targ.uid>
+src.sayu=[Mind Drain]
+src.anim=16
+src.sfx=255
+timer=1
+morex=<eval <link.tag.totaldiscipline>/2>
+return 1
+else
+src.sysmessage=You need (45 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+if (<cont.mana> < 6 )
+remove
+return 1
+endif
+
+if (<morex> > 0 )
+link.mana=<link.mana>+15
+cont.mana=<cont.mana>+-15
+morex=<morex>+-1
+link.sayu=Mana(+15)
+cont.sayu=Mana(-15)
+timer=1
+return 1
+else
+remove
+return 1
+endif
+
+[itemdef i_shaman_2] //Agile Savant
+id=i_memory
+type=t_eq_script
+name=Agile Savant
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Who will you drain stamina from?
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 44 )&&(<src.mana> > 24 )
+src.f_anti_gank
+src.targ.damage=1
+src.f_start_delay
+src.stamina=<src.stamina>+-45
+src.mana=<src.mana>+-25
+src.targ.effect=3,i_fx_sparkle_2,16,16,1
+link=<src.uid>
+cont=<src.targ.uid>
+src.sayu=[Agile Savant]
+src.anim=16
+src.sfx=255
+timer=1
+morex=<eval <link.tag.totaldiscipline>/2>
+return 1
+else
+src.sysmessage=You need (45 Stamina & 25 Mana) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+if (<cont.stamina> < 6 )
+remove
+return 1
+endif
+
+if (<morex> > 0 )
+link.stamina=<link.stamina>+10
+cont.stamina=<cont.stamina>+-10
+morex=<morex>+-1
+link.sayu=Stamina(+10)
+cont.sayu=Stamina(-10)
+timer=1
+return 1
+else
+remove
+return 1
+endif
+
+[itemdef i_shaman_3] //Wicked Fury
+id=i_memory
+type=t_eq_script
+name=Wicked Fury
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Target your victim...
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 44 )&&(<src.stamina> > 24 )
+src.f_anti_gank
+src.targ.damage=1
+link=<src.targ.uid>
+morex=<eval <src.tag.totaldiscipline>/10>
+timer=10
+src.sayu=[Wicked Fury]
+src.anim=16
+src.sfx=01fb
+src.targ.effect=0,i_fx_glow_spike,16,16,1
+src.targ.sfx=011c
+src.mana=<src.mana>+-45
+src.stamina=<src.stamina>+-25
+src.f_start_delay
+return 1
+else
+src.sysmessage=You need (45 Mana & 25 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+if (<cont.targ.hits> < 1 )
+remove
+return 1
+endif
+if (<morex> > 0 )
+cont.targ=<link.uid>
+cont.f_no_sysmessage
+cont.targ.effect=3,i_fx_glow_spike,16,16,1
+link.sfx=011c
+link.damage=<eval <cont.tag.totaldiscipline>+-20>
+cont.anim=16
+morex=<morex>+-1
+timer=5
+return 1
+else
+remove
+return 1
+endif
+
+
+[function f_no_sysmessage]
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+
+
+[itemdef i_shaman_4] //Spirit Summon
+id=i_memory
+type=t_eq_script
+name=Spirit Summon
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 74 )&&(<src.mana> > 24 )
+src.f_start_delay
+src.stamina=<src.stamina>+-75
+src.mana=<src.mana>+-25
+link=<src.uid>
+link.newnpc=c_man_invisible
+link.act.karma=-2000
+link.act.name=Summoned Spirit
+link.act.str=250
+link.act.dex=1000
+link.act.int=0
+link.act.hits=250
+link.act.allskills=1000
+link.act.magery=0
+link.act.stamina=1000
+link.act.flags=statf_conjured
+link.anim=17
+link.sfx=259
+link.sayu=[Spirit Summon]
+var.npcuid=<link.act.uid>
+link.newitem=i_memory
+link.act.cont=<var.npcuid>
+link.act.color=00002
+link.act.link=<link.uid>
+link.newitem=i_con_cancel
+link.act.cont=<var.npcuid>
+link.act.timer=<eval <link.tag.totaldiscipline>*2>
+var.npcuid=
+remove
+return 1
+else
+src.sysmessage=You need (75 Stamina & 25 Mana) to cast this spell...
+remove
+return 1
+endif
+
+[itemdef i_shaman_5] //Soul Corruptor
+id=i_memory
+type=t_eq_script
+name=Soul Corruptor
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Target the soul you wish to corrupt...
+timer=15
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 49 )&&(<src.stamina> > 49 )
+src.f_anti_gank
+src.targ.damage=1
+src.f_start_delay
+src.mana=<src.mana>+-50
+src.stamina=<src.stamina>+-50
+link=<src.targ.uid>
+link.events=e_soul_corruptor
+src.sfx=019d
+src.anim=16
+src.sayu=[Soul Corruptor]
+timer=<eval <src.tag.totaldiscipline>>
+return 1
+else
+src.sysmessage=You need (50 Mana & 50 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+link.events=-e_soul_corruptor
+link.sysmessage=Your soul is no longer corrupted...
+remove
+return 1
+
+[events e_soul_corruptor]
+on=@spellcast
+if (<argn> = 29 )||(<argn> = 4 )||(<argn> = 11 )||(<argn> = 25 )
+src.sysmessage=Your soul is corrupted, you cannot cast this spell...
+return 1
+endif
+
+on=@click
+message=*Soul Corrupted*
+return 0
+
+
+//***************************************************
+//WARLOCK SPELLS WARLOCK SPELLS WARLOCK SPELLS
+//***************************************************
+
+
+[itemdef i_warlock_1] //Soul Insert
+id=i_memory
+type=t_eq_script
+name=Soul Insert
+
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Target your victim...
+return 1
+timer=20
+endif
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 39 )
+src.f_anti_gank
+src.f_start_delay
+src.stamina=<src.stamina>+-40
+src.sayu=[Soul Insert]
+src.targ.effect=0,01ee1,8,16,0
+src.targ.effect=3,i_fx_curse,16,16,0
+src.anim=16
+src.sfx=01ea
+timer=1
+link=<src.targ.uid>
+src.targ.damage=<eval <src.tag.totaldiscipline>/2>
+return 1
+else
+src.sysmessage=You need (40 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+link.sfx=011d
+link.effect=3,i_fire_column,16,16,16
+link.damage=20
+remove
+return 1
+
+[itemdef i_warlock_2] //Living Arrow
+id=i_memory
+type=t_eq_script
+name=Living Arrow
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Target the person you wish to harm...
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 24 )&&(<src.stamina> > 24 )
+src.f_anti_gank
+src.f_start_delay
+src.stamina=<src.stamina>+-25
+src.mana=<src.mana>+-25
+link=<src.uid>
+src.sayu=[Living Arrow]
+link.newitem=i_bow
+link.act.equip
+link.act.color=0480
+link=<link.act.uid>
+timer=1
+src.targ.damage=rand(<eval <src.tag.totaldiscipline>+35>)
+src.anim=18
+src.targ.effect=0,036f4,16,16,1
+src.sfx=0229
+return 1
+else
+src.sysmessage=You need (25 Stamina & 25 Mana) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+link.remove
+remove
+return 1
+
+
+[itemdef i_warlock_4] //Warlocks Embrace
+id=i_memory
+type=t_eq_script
+name=Warlocks Embrace
+
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+src.sysmessage=Who will you Embrace?
+target
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 49 )&&(<src.stamina> > 24 )
+src.f_anti_gank
+src.f_start_delay
+src.stamina=<src.stamina>+-25
+src.mana=<src.mana>+-50
+src.sayu=[Warlocks Embrace]
+tag.returnp=<src.p>
+src.targ.damage=<eval <src.tag.totaldiscipline>>
+timerd=2
+src.sfx=011c
+src.p=<src.targ.p>
+src.update
+src.anim=16
+src.sfx=snd_monster_liche1
+src.targ.effect=3,i_fx_glow_spike,10,10,0
+return 1
+else
+src.sysmessage=You need (50 Mana & 25 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@timer
+cont.p=<tag.returnp>
+cont.update
+remove
+return 1
+
+
+[itemdef i_warlock_3] //Silence
+id=i_memory
+type=t_eq_script
+name=Silence
+
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Who will you Silence?
+timer=20
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 34 )&&(<src.stamina> > 34 )
+src.f_anti_gank
+src.f_start_delay
+src.mana=<src.mana>+-35
+src.stamina=<src.stamina>+-35
+link=<src.targ.uid>
+link.stone=1
+src.sayu=[Silence]
+timer=<eval <src.tag.totaldiscipline>/2>
+src.anim=17
+src.sfx=250
+return 1
+else
+src.sysmessage=You need (35 Mana & 35 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+link.stone=0
+remove
+return 1
+
+
+[itemdef i_warlock_5] //Armageddon
+id=i_memory
+type=t_eq_script
+name=Armageddon
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.mana> > 74 )&&(<src.stamina> > 99 )
+src.mana=<src.mana>+-75
+src.stamina=<src.stamina>+-100
+src.sayu=[Armageddon]
+src.flags=<src.flags>|statf_criminal
+src.anim=17
+src.sfx=0221
+src.sfx=0222
+link=<src.uid>
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=n <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=ne <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=e <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=se <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=s <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=sw <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=w <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=nw <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=n <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=ne <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=e <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=se <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=s <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=sw <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=w <eval {1 10}>
+link.act.fix
+link.newitem=i_armageddon_flame
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=nw <eval {1 10}>
+link.act.fix
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (75 Mana & 100 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[itemdef i_armageddon_flame]
+id=i_fire_column
+type=t_eq_script
+name=Flames of Armageddon
+
+on=@create
+attr=attr_static|attr_decay
+
+on=@step
+if (<link> = <src.uid>)
+src.sysmessage=You cannot be harmed by your own flames...
+return 1
+else
+src.damage=<eval <link.tag.totaldiscipline>>
+return 0
+endif
+
+on=@timer
+link.flags=<link.flags>&~statf_criminal
+remove
+return 1
+
+//********************************************
+//PSYCHIC SPELLS PSYCHIC SPELLS PSYCHIC SPELLS
+//********************************************
+
+
+[itemdef i_psychic_1] //Tele Switch
+id=i_memory
+type=t_eq_script
+name=Tele Switch
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Who will you switch places with?
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if !(strmatch(<src.targ.region.name>,<src.region.name>))
+src.sysmessage=Your target must be in the same Region as you.
+remove
+return 1
+endif
+
+if (<src.stamina> > 34 )
+src.f_anti_gank
+src.stamina=<src.stamina>+-35
+var.switchp=<src.p>
+src.p=<src.targ.p>
+src.update
+src.targ.p=<var.switchp>
+src.targ.update
+src.targ.effect=3,i_fx_sparkle,16,16,0
+src.effect=3,i_fx_sparkle,16,16,0
+src.sayu=[Tele Switch]
+src.anim=17
+src.sfx=524
+var.switchp=
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You must have (35 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[itemdef i_psychic_2] //Mind Collapse
+id=i_memory
+type=t_eq_script
+name=Mind Collapse
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Whos Mind will you Collapse with yours?
+timer 20
+return 1 
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 34 )
+src.f_anti_gank
+src.targ.damage=1
+src.stamina=<src.stamina>+-35
+src.targ.mana=0
+src.mana=0
+src.sayu=[Mind Collapse]
+src.salute
+src.targ.effect=3,i_fx_curse,16,16,0
+src.effect=3,i_fx_curse,16,16,0
+src.sfx=256
+remove
+src.f_start_delay
+return 1
+else
+src.sysmessage=You need (35 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[itemdef i_psychic_3] //Mind Swap
+id=i_memory
+type=t_eq_script
+name=Mind Swap
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Whos Mind will you Swap with?
+timer 20
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1 
+
+on=@targon_char
+if (<src.targ.isgm>)
+src.sysmessage=You cannot do this on staff members...
+remove
+return 1
+endif
+
+if (<src.targ.int> > 200 )
+src.sysmessage=<src.targ.name>'s Intelligences is to hard to comprehend...
+remove
+return 1
+endif
+
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 44 )
+src.f_anti_gank
+src.targ.damage=1
+var.srcmana=<src.mana>
+src.stamina=<src.stamina>+-45
+src.mana=<eval <src.targ.mana>*2>
+src.targ.mana=<var.srcmana>
+src.sayu=[Mind Swap]
+src.salute
+src.targ.effect=3,i_fx_sparkle_2,16,16,0
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.sfx=251
+remove
+src.f_start_delay
+var.srcmana=
+return 1
+else
+src.sysmessage=You need (45 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[itemdef i_psychic_4] //Mind Barrier
+id=i_memory
+type=t_eq_script
+name=Mind Barrier
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 49 )
+link=<src.uid>
+src.sayu=[Mind Barrier]
+src.sfx=011e
+src.sfx=snd_spell_cunning
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=n
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=ne
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=e
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=se
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=s
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=sw
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=w
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=nw
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+src.stamina=<src.stamina>+-50
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=n
+link.act.color=0b
+link.act.name=Minds Energy
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=ne
+link.act.color=0b
+link.act.name=Minds Energy
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=e
+link.act.color=0b
+link.act.name=Minds Energy
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=se
+link.act.color=0b
+link.act.name=Minds Energy
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=s
+link.act.color=0b
+link.act.name=Minds Energy
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=sw
+link.act.color=0b
+link.act.name=Minds Energy
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=w
+link.act.color=0b
+link.act.name=Minds Energy
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=i_fire
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.move=nw
+link.act.color=0b
+link.act.name=Minds Energy
+link.act.timer=<eval <src.tag.totaldiscipline>>
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (50 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+
+[itemdef i_psychic_5] //Psychic Defense
+id=i_memory
+name=Psychic Defense
+type=t_eq_script
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.mana> > 49 )&&(<src.stamina> > 24 )
+src.sayu=[Psychic Defense]
+src.anim=17
+src.mana=<src.mana>+-50
+src.stamina=<src.stamina>+-25
+src.events=+e_psychic_defense
+link=<src.uid>
+timer=<eval <src.tag.totaldiscipline>*2>
+link.newitem=i_fx_sparkle
+link.act.p=<link.p>
+link.act.move=n 2
+link.act.timer=2
+link.act.attr=attr_decay|attr_static
+link.newitem=i_fx_sparkle
+link.act.p=<link.p>
+link.act.move=e 2
+link.act.timer=2
+link.act.attr=attr_decay|attr_static
+link.newitem=i_fx_sparkle
+link.act.p=<link.p>
+link.act.move=s 2
+link.act.timer=2
+link.act.attr=attr_decay|attr_static
+link.newitem=i_fx_sparkle
+link.act.p=<link.p>
+link.act.move=w 2
+link.act.timer=2
+link.act.attr=attr_decay|attr_static
+src.sfx=257
+src.f_start_delay
+return 1
+else
+src.sysmessage=You need (50 Mana & 25 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@timer
+link.events=-e_psychic_defense
+link.sayu=*Defense Off*
+remove
+return 1
+
+
+[events e_psychic_defense]
+on=@gethit
+if (<src.uid> = <uid> )
+return 0
+else
+src.damage=<eval <tag.totaldiscipline>/2>
+src.sfx=011d
+src.effect=3,i_fx_sparkle,16,16,0
+return 0
+endif
+
+on=@spellcast
+findid.i_psychic_5.timer=0
+return 0
+
+on=@click
+message=*Psychic Defense*
+return 0
+
+
+//***********************************************
+//WITCH DOCTOR SPELLS WITCH DOCTOR SPELLS
+//***********************************************
+
+
+
+[itemdef i_witchdoctor_1] //Health Absorb
+id=i_memory
+type=t_eq_script
+name=Health Absorb
+
+on=@create
+morex=0
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Target your victim...
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 34 )&&(<src.stamina> > 44 )
+src.f_anti_gank
+src.targ.damage=1
+src.f_start_delay
+src.stamina=<src.stamina>+-45
+src.mana=<src.mana>+-35
+link=<src.targ.uid>
+src.sayu=[Health Absorb]
+morex=<eval <src.tag.totaldiscipline>>
+src.sfx=snd_spell_mana_vampire
+src.anim=16
+timer=2
+return 1
+else
+src.sysmessage=You need (35 Mana & 45 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+if (<morex> > 0 )
+link.sayu=Hits(-2)
+cont.sayu=Hits(+2)
+link.hits=<link.hits>+-2
+cont.hits=<cont.hits>+2
+timer=1
+morex=<morex>+-1
+return 1
+else
+if (<cont.hits> > <cont.str>)
+cont.hits=<cont.str>
+endif
+remove
+return 1
+endif
+
+[itemdef i_witchdoctor_2] //Infection
+id=i_memory
+type=t_eq_script
+name=Infection
+
+on=@create
+morex=0
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=You will you Infect?
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 44 )&&(<src.stamina> > 44 )
+src.f_anti_gank
+src.targ.damage=1
+src.f_start_delay
+src.stamina=<src.stamina>+-45
+src.mana=<src.mana>+-45
+link=<src.targ.uid>
+src.sayu=[Infection]
+morex=<eval <src.tag.totaldiscipline>/2>
+src.sfx=snd_spell_poison
+src.targ.effect=3,i_fx_curse,16,16,0
+src.anim=16
+timer=2
+return 1
+else
+src.sysmessage=You need (45 Mana & 45 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@timer
+if (<morex> > 0 )
+link.sayu=Mana(-2)
+link.sayu=Stamina(-2)
+link.sayu=Hits(-1)
+link.hits=<link.hits>+-1
+link.stamina=<link.stamina>+-2
+link.mana=<link.mana>+-2
+timer=1
+morex=<morex>+-1
+return 1
+else
+remove
+return 1
+endif
+
+[itemdef i_witchdoctor_3] //Body Restore
+id=i_memory
+name=Body Restore
+type=t_eq_script
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Whos body will you restore?
+timer=20
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 49 )
+src.f_anti_gank
+src.f_start_delay
+src.targ.mana=<src.mana>+-50
+src.targ.sfx=snd_spell_heal
+src.targ.effect=3,i_fx_sparkle_2,16,16,0
+src.sayu=[Body Restore]
+src.anim=17
+src.targ.spelleffect s_dispel 1000
+src.targ.spelleffect s_cure 1000
+src.targ.hits=<src.str>
+src.targ.mana=<src.int>
+src.targ.stamina=<src.dex>
+remove
+return 1
+else
+src.sysmessage=You need (50 Mana) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[itemdef i_witchdoctor_4] //Voodoo Doll
+id=i_memory
+type=t_eq_script
+name=Voodoo Doll
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Who will you make a Voodoo Doll out of?
+timer=30
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 74 )
+src.f_anti_gank
+src.targ.damage=1
+src.mana=<src.mana>+-75
+src.sayu=[Voodoo Doll]
+src.f_start_delay
+link=<src.uid>
+link.newitem=i_voodoo_doll_spell
+link.act.bounce
+link.act.link=<src.targ.uid>
+link.act.name=<src.targ.name> Doll (Voodoo)
+link=<link.act.uid>
+timer=120
+return 1
+else
+src.sysmessage=You need (75 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+link.remove
+remove
+return 1
+
+[itemdef i_voodoo_doll_spell]
+id=i_pet_man
+type=t_script
+name=Voodoo Doll
+
+on=@create
+attr=00010
+tag.used=5
+
+on=@dclick
+if (<timer> > 0 )
+src.sysmessage=You cannot use this Voodoo Doll too fast!
+return 1
+endif
+
+if (<eval <tag.used>> > 0 )
+link.damage=<eval <src.tag.totaldiscipline>/2>
+link.say=*voodoo doll effect*
+src.sfx=snd_spell_mass_curse
+tag.used=<eval <tag.used>>+-1
+timer=5
+return 1
+else
+remove
+src.sysmessage=The soul of this voodoo doll is depleted...
+return 1
+endif
+
+on=@timer
+return 1
+
+
+[itemdef i_witchdoctor_5] //Voodoo Rage
+id=i_memory
+type=t_eq_script
+name=Voodoo Rage
+
+on=@create
+tag.notused=1
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 99 )
+tag.notused=0
+src.sayu=[Voodoo Rage]
+src.f_start_delay
+src.anim=17
+src.sfx=0174
+src.sfx=0222
+src.effect=3,i_fire,16,16,0
+src.str=<src.str>+150
+src.dex=<src.dex>+150
+src.int=<src.int>+150
+src.hits=<src.str>
+src.stamina=<src.dex>
+src.mana=<src.int>
+timer=<eval <src.tag.totaldiscipline>*2>
+return 1
+else
+src.sysmessage=You need (100 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@unequip
+if (<eval <tag.notused>> = 1 )
+return 1
+endif
+
+src.str=<src.str>+-150
+src.dex=<src.dex>+-150
+src.int=<src.int>+-150
+src.hits=<src.str>/2
+src.stamina=<src.dex>/2
+src.mana=<src.int>/2
+return 1
+
+on=@timer
+remove
+consume=5 i_witchdoctor_5
+return 1
+
+
+//********************************************************
+//NECROMANCER SPELLS NECROMANCER SPELLS NECROMANCER SPELLS
+//********************************************************
+
+[itemdef i_necromancer_1] //Weakness
+id=i_memory
+name=Weakness
+type=t_eq_script
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+timer=20
+src.sysmessage=Target your victim...
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 29 )
+src.f_anti_gank
+src.targ.damage=1
+src.f_start_delay
+src.targ.stamina=<src.targ.stamina>+-<eval <src.tag.totaldiscipline>>
+src.mana=<src.mana>+-30
+src.sfx=020c
+src.targ.effect=3,01ec6,16,16,0
+src.anim=16
+src.sayu=[Weakness]
+remove
+return 1
+else
+src.sysmessage=You need (30 Mana) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@timer
+remove
+return 1
+
+[itemdef i_necromancer_2] //Undead Incognito
+id=i_memory
+name=Undead Incognito
+type=t_eq_script
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 44 )
+src.stamina=<src.stamina>+-44
+src.f_start_delay
+tag.body=<src.body>
+tag.name=<src.name>
+tag.color=<src.color>
+src.color=0
+src.name=Undead
+src.body={ c_liche 1 c_ghost_man 1 c_skeleton_w_sword 1 c_zombie 1 c_spectre 1 }
+src.events=+e_undead_incognito
+timer=<eval <src.tag.totaldiscipline>*2>
+src.sayu=[Undead Incognito]
+src.flags=<src.flags>|statf_incognito
+src.sfx=0243
+src.anim=17
+src.mana=<src.int>
+src.update
+return 1
+else
+src.sysmessage=You need (45 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+cont.body=<tag.body>
+cont.name=<tag.name>
+cont.color=<tag.color>
+cont.update
+cont.events=-e_undead_incognito
+cont.flags=<cont.flags>&~statf_incognito
+remove
+return 1
+
+[events e_undead_incognito]
+on=@click
+return 1
+
+
+[itemdef i_necromancer_3] //Necro Blast
+id=i_memory
+type=t_eq_script
+name=Necro Blast
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Select your victim...
+timer=20
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 49 )
+src.f_anti_gank
+src.f_start_delay
+src.stamina=<src.stamina>+-50
+src.sayu=[Necro Blast]
+src.targ.effect=0,i_fx_spin_head,16,16,1
+src.anim=16
+src.sfx=015f
+src.targ.damage=<eval <src.tag.totaldiscipline>>
+remove
+return 1
+else
+src.sysmessage=You need (50 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@timer
+remove
+return 1
+
+
+
+[itemdef i_necromancer_4] //Reanimate
+id=i_memory
+type=t_eq_script
+name=Reanimate
+
+
+on=@equip
+if (<src.stamina> > 74 )
+if (<src.hits> < 1 )
+src.stamina=<src.stamina>+-75
+src.f_start_delay
+src.resurrect
+src.anim=17
+src.sayu=[Reanimate]
+src.effect=3,i_fire_column,16,16,0
+src.sfx=00f9
+remove
+return 1
+else
+target
+src.sysmessage=Target the person you wish to Reanimate...
+timer=20
+return 1
+endif
+else
+src.sysmessage=You need (75 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 74 )
+if (<src.targ.hits> < 1 )
+src.stamina=<src.stamina>+-75
+src.f_start_delay
+src.targ.resurrect
+src.anim=17
+src.sayu=[Reanimate]
+src.f_anti_gank
+src.targ.effect=3,i_fire_column,16,16,0
+src.sfx=00f9
+remove
+return 1
+else
+src.sysmessage=Your target must be Dead...
+remove
+return 1
+endif
+else
+src.sysmessage=You need (75 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+
+[itemdef i_necromancer_5] //Call Of Necropolis
+id=i_memory
+name=Call Of Necropolis
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 99 )
+src.stamina=<src.stamina>+-99
+src.f_start_delay
+link=<src.uid>
+src.sayu=[Call Of Necropolis]
+src.sfx=0245
+src.sfx=0222
+src.sfx=snd_monster_liche1
+src.anim=17
+link.f_call_of_necropolis
+link.f_call_of_necropolis
+link.f_call_of_necropolis
+link.f_call_of_necropolis
+link.f_call_of_necropolis
+link.f_call_of_necropolis
+link.f_call_of_necropolis
+link.f_call_of_necropolis
+remove
+return 1
+else
+src.sysmessage=You need (100 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+[function f_call_of_necropolis]
+newnpc={ c_liche 1 c_headless 1 c_spectre 1 c_zombie 1 c_skeleton_w_axe 1 c_m_liche_lord 1 }
+var.monsteruid=<act.uid>
+act.flags=statf_conjured
+act.effect=3,i_fire,16,16,0
+act.findlayer.21.remove
+dorand=8
+act.move n <eval {1 10}>
+act.move w <eval {1 10}>
+act.move e <eval {1 10}>
+act.move s <eval {1 10}>
+act.move ne <eval {1 10}>
+act.move nw <eval {1 10}>
+act.move se <eval {1 10}>
+act.move sw <eval {1 10}>
+enddo
+act.dex=1000
+act.str=250
+act.magery=0
+act.karma=0
+act.say=*command me*
+newitem=i_memory
+act.cont=<var.monsteruid>
+act.color=00002
+act.link=<uid>
+newitem=i_con_cancel
+act.cont=<var.monsteruid>
+act.timer=<eval <tag.totaldiscipline>*2>
+var.monsteruid=
+return 0
+
+
+[itemdef i_con_cancel]
+id=i_memory
+type=t_eq_script
+name=Call of Necropolis (canceler)
+
+
+on=@timer
+cont.hits=0
+remove
+return 1
+
+
+//***********************************************
+//SORCERER SPELLS SORCERER SPELLS SORCERER SPELLS
+//***********************************************
+
+
+[itemdef i_sorcerer_1] //Flame Attack
+id=i_memory
+name=Flame Attack
+type=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Target your victim...
+timer=20
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 24 )
+src.f_anti_gank
+src.stamina=<src.stamina>+-25
+src.f_start_delay
+src.targ.effect=0,i_fire,16,16,1
+src.targ.sfx=snd_spell_flamestrike
+src.targ.damage=<eval <src.tag.totaldiscipline>>
+src.sayu=[Flame Attack]
+src.anim=16
+remove
+return 1
+else
+src.sysmessage=You need (25 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[itemdef i_sorcerer_2] //Arctic Field
+id=i_memory
+name=Arctic Field
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.mana> > 24 )&&(<src.stamina> > 24 )
+src.mana=<src.mana>+-25
+src.stamina=<src.stamina>+-25
+src.sayu=[Arctic Field]
+src.anim=17
+src.sfx=0101
+src.sfx=021f
+link=<src.uid>
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=n <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=ne <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=e <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=se <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=s <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=sw <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=w <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=nw <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=n <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=ne <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=e <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=se <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=s <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=sw <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=w <eval {1 10}>
+link.act.fix
+link.newitem=i_arctic_field_ice
+link.act.p=<link.p>
+link.act.link=<link.uid>
+link.act.timer=<eval <link.tag.totaldiscipline>>
+link.act.move=nw <eval {1 10}>
+link.act.fix
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (25 Mana & 25 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+[itemdef i_arctic_field_ice]
+id=01367
+type=t_script
+name=Summoned Iceberg
+
+on=@create
+attr=attr_decay|attr_static
+color=0480
+
+
+on=@timer
+remove
+return 1
+
+
+[itemdef i_sorcerer_3] //Judgement
+id=i_memory
+name=Judgement
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.mana> > 34 )&&(<src.stamina> > 44 )&&(<src.hits> > 49 )
+src.f_start_delay
+src.mana=<src.mana>+-35
+src.stamina=<src.stamina>+-45
+src.hits=<src.hits>+-50
+src.sayu=[Judgement]
+src.anim=17
+src.sfx=611
+var.casteruid=<src.uid>
+region.allclients f_sorcerer_judgement
+remove
+return 1
+else
+src.sysmessage=You need (35 Mana & 45 Stamina & 50 Hitpoints) to cast this spell...
+remove
+return 1
+endif
+
+[function f_sorcerer_judgement]
+if (<flags> & statf_reflection )
+tryp 0 uid.<eval <var.casteruid>>.damage=25
+return 1
+endif
+
+if (<eval <uid>>==<eval <var.casteruid>> )
+return 1
+endif
+
+effect=3,i_fx_explosion_2,16,16,1
+damage={ 1 <eval <src.tag.totaldiscipline>+10> }
+sfx=011d
+return 0
+
+
+[itemdef i_sorcerer_4] //Flame Barrier
+id=i_memory
+name=Flame Barrier
+type=t_eq_script
+
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 49 )&&(<src.mana> > 49 )
+src.mana=<src.mana>+-50
+src.sfx=01fa
+src.sayu=[Flame Protection]
+src.anim=17
+src.stamina=<src.stamina>+-50
+link=<src.uid>
+link.newitem=i_sorcerer_protection //n
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=n
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_sorcerer_protection //ne
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=ne
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_sorcerer_protection //e
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=e
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_sorcerer_protection //se
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=se
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_sorcerer_protection //s
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=s
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_sorcerer_protection //sw
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=sw
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_sorcerer_protection //w
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=w
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=i_sorcerer_protection //nw
+link.act.p=<link.p>
+link.act.morex=<eval <link.tag.totaldiscipline>*5>
+link.act.tag.move=nw
+link.act.timer=1
+link.act.link=<link.uid>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=n
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=ne
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=e
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=se
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=s
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=sw
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=w
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+link.newitem=713
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay|attr_invis
+link.act.move=nw
+link.act.color=0481
+link.act.name=Magic Barrier
+link.act.timer=<eval <src.tag.totaldiscipline>>
+src.f_start_delay
+remove
+return 1
+else
+src.sysmessage=You need (50 Stamina & 50 Mana) to cast this spell...
+remove
+return 1
+endif
+
+[itemdef i_sorcerer_protection]
+id=i_fx_explosion_2
+type=t_script
+name=Flame Barrier
+
+on=@create
+attr=attr_static
+
+on=@step
+if (<link> = <src.uid> )
+return 1
+else
+src.damage=<eval <link.tag.totaldiscipline>/5>
+src.sfx=snd_spell_fireball
+return 1
+endif
+
+on=@timer
+if (<morex> > 0 )
+p=<link.p>
+move=<tag.move>
+morex=<morex>+-1
+update
+timerd=1
+return 1
+else
+remove
+return 1
+endif
+
+
+[itemdef i_sorcerer_5] //Sorcerer's Touch
+id=i_memory
+name=Sorcerer's Touch
+type=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.mana> > 24 )&&(<src.stamina> > 74 )
+src.mana=<src.mana>+-25
+src.stamina=<src.stamina>+-75
+timer=<eval <src.tag.totaldiscipline>>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.sfx=0258
+src.sayu=[Sorcerer's Touch]
+src.events=+e_sorcerers_touch
+src.anim=17
+src.f_start_delay
+return 1
+else
+src.sysmessage=You need (25 Mana & 75 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@unequip
+src.events=-e_sorcerers_touch
+return 1
+
+on=@timer
+remove
+return 1
+
+
+[events e_sorcerers_touch]
+on=@hit
+if (<eval rand(3)> = 2 )
+src.effect=1,1,16,16,16
+src.damage=<eval <tag.totaldiscipline>/2>
+src.effect=3,i_fire_column,16,16,0
+src.sfx=011c
+src.sfx=0222
+return 0
+endif
+
+
+
+//***********************************************
+//MONK SPELLS MONK SPELLS MONK SPELLS MONK SPELLS
+//***********************************************
+
+
+[itemdef i_monk_1] //Warp
+id=i_memory
+name=Warp
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+targetg
+timer=20
+src.sysmessage=Where would you like to warp?
+return 1
+
+on=@targon_ground
+if (<src.stamina> > 34 )
+src.stamina=<src.stamina>+-35
+src.f_start_delay
+tag.returnp=<src.p>
+src.p=<src.targp>
+src.events=+e_monk_warp
+src.sfx=0214
+src.anim=17
+src.update
+src.sayu=[Warp]
+timer=<eval <src.tag.totaldiscipline>>
+return 1
+else
+src.sysmessage=You need (35 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@targon_char
+src.sysmessage=You must target the ground where you wish to warp...
+remove
+return 1
+
+on=@targon_item
+src.sysmessage=You must target the ground where you wish to warp...
+remove
+return 1
+
+on=@timer
+cont.events=-e_monk_warp
+src.effect=3,i_fx_sparkle,16,16,0
+cont.p=<tag.returnp>
+cont.update
+remove
+return 1
+
+[events e_monk_warp]
+on=@itempickup_ground
+sysmessage=You cannot pick up items while in this state...
+return 1
+
+on=@itemdclick
+sysmessage=You cannot use items while in this state...
+return 1
+
+
+
+[itemdef i_monk_2] //Shadow Blast
+id=i_memory
+name=Shadow Blast
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Select your target...
+timer=20
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 24 )
+src.targ.damage=1
+src.f_anti_gank
+src.mana=<src.mana>+-25
+src.f_start_delay
+src.targ.effect=0,0379d,16,16,16
+src.targ.damage=<eval <src.tag.totaldiscipline>>
+src.sfx=0210
+src.anim=16
+src.sayu=[Shadow Blast]
+remove
+return 1
+else
+src.sysmessage=You need (25 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@timer
+remove
+return 1
+
+
+[itemdef i_monk_3] //Mystic Defense
+id=i_memory
+type=t_eq_script
+name=Mystic Defense
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 49 )
+src.stamina=<src.stamina>+-50
+src.flags=<src.flags>|statf_criminal
+src.sysmessage=This spell has temporarly flagged you criminal...
+link=<src.uid>
+src.f_start_delay
+link.newitem=i_monk_mystic_defense
+link.act.p=<link.p>
+link.act.timer=1
+link.act.morex=<eval <link.tag.totaldiscipline>>
+link.act.link=<src.uid>
+src.sayu=[Mystic Defense]
+src.sfx=01e9
+src.anim=17
+remove
+return 1
+else
+src.sysmessage=You need (50 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+
+
+[itemdef i_monk_mystic_defense]
+id=i_fx_sparkle
+name=Protective Essense
+type=t_script
+
+on=@create
+attr=attr_static
+
+on=@step
+if (<link> = <src.uid> )
+return 1
+else
+src.damage=<eval <link.tag.totaldiscipline>>
+src.sfx=011d
+return 1
+endif
+
+
+on=@timer
+if (<link.hits> < 1 )
+link.flags=<link.flags>&~statf_criminal
+remove
+return 1
+endif
+if (<morex> > 0 )
+p=<link.p>
+dorand=8
+move=n
+move=ne
+move=e
+move=se
+move=s
+move=sw
+move=w
+move=nw
+enddo
+morex=<morex>+-1
+timer=1
+return 1
+else
+link.flags=<link.flags>&~statf_criminal
+remove
+return 1
+endif
+
+
+[itemdef i_monk_4] //Living Shadow
+id=i_memory
+type=t_eq_script
+name=Living Shadow
+
+
+on=@create
+morex=0
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+src.sysmessage=Who do you wish to follow?
+target
+timer=20
+return 1
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 34 )&&(<src.mana> > 39 )
+src.f_anti_gank
+src.f_start_delay
+src.mana=<src.mana>+-40
+src.stamina=<src.stamina>+-35
+morex=<eval <src.tag.totaldiscipline>>
+link=<src.targ.uid>
+src.sayu=[Living Shadow]
+src.events +e_monk_living_shadow
+src.anim=16
+src.sfx=01f0
+timer=1
+return 1
+else
+src.sysmessage=You need (35 Stamina & 40 Mana) to cast this spell...
+remove
+return 1
+endif
+
+
+on=@timer
+if (<morex> > 0 )&&(<link.hits> > 0 )
+cont.p=<link.p>
+cont.update
+timer=1
+morex=<morex>+-1
+return 1
+else
+cont.events -e_monk_living_shadow
+remove
+return 1
+endif
+
+[events e_monk_living_shadow]
+on=@itemdclick
+if (<act.type> == t_potion )
+sysmessage=You cannot use potions while in this state...
+return 1
+endif
+
+
+
+[itemdef i_monk_5] //Burning Execution
+id=i_memory
+type=t_eq_script
+name=Burning Execution
+
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+timer=20
+src.sysmessage=Select your victim...
+target
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.mana> > 74 )&&(<src.stamina> > 64 )
+src.f_anti_gank
+src.mana=<src.mana>+-75
+src.stamina=<src.stamina>+-65
+src.f_start_delay
+link=<src.targ.uid>
+link.newitem=i_monk_execution
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=n
+link.act.timer=1
+link.act.link=<src.targ.uid>
+link.newitem=i_monk_execution
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=ne
+link.act.timer=1
+link.act.link=<src.targ.uid>
+link.newitem=i_monk_execution
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=e
+link.act.timer=1
+link.act.link=<src.targ.uid>
+link.newitem=i_monk_execution
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=se
+link.act.timer=1
+link.act.link=<src.targ.uid>
+link.newitem=i_monk_execution
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=s
+link.act.timer=1
+link.act.link=<src.targ.uid>
+link.newitem=i_monk_execution
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=sw
+link.act.timer=1
+link.act.link=<src.targ.uid>
+link.newitem=i_monk_execution
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=w
+link.act.timer=1
+link.act.link=<src.targ.uid>
+link.newitem=i_monk_execution
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=nw
+link.act.timer=1
+link.act.link=<src.targ.uid>
+link.newitem=i_monk_execution_2
+link.act.p=<link.p>
+link.act.tag.totaldiscipline=<eval <src.tag.totaldiscipline>>
+link.act.morex=<eval <src.tag.totaldiscipline>/4>
+link.act.tag.dir=n
+link.act.timer=1
+link.act.link=<src.targ.uid>
+src.sfx=00f8
+src.sayu=[Burning Execution]
+src.anim=17
+src.targ.damage=1
+remove
+return 1
+else
+src.sysmessage=You need (75 Mana & 65 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+[itemdef i_monk_execution]
+id=i_fire_column
+type=t_script
+name=Flames Of Execution
+
+
+on=@create
+attr=attr_static
+
+on=@step
+if (<eval <tag.step>> == 0 )
+move=<tag.dir>
+tag.step=1
+return 1
+else
+src.damage=<eval <tag.totaldiscipline>/4>
+src.bark=4
+return 0
+endif
+
+
+on=@timer
+if (<morex> > 0 )&&(<link.hits> > 0 )
+p=<link.p>
+move=<tag.dir>
+timer=1
+morex=<morex>+-1
+return 1
+else
+remove
+return 1
+endif
+
+
+[itemdef i_monk_execution_2]
+id=i_fire_column
+type=t_script
+name=Flames Of Execution
+
+
+on=@create
+attr=attr_static
+
+
+on=@step
+if (<eval <tag.step>> == 0 )
+move=<tag.dir>
+tag.step=1
+return 1
+else
+src.damage=<eval <tag.totaldiscipline>/4>
+src.bark=4
+return 0
+endif
+
+
+on=@timer
+if (<morex> > 0 )&&(<link.hits> > 0 )
+p=<link.p>
+timer=1
+morex=<morex>+-1
+return 1
+else
+remove
+return 1
+endif
+
+
+
+//*******************************************************
+//PRIEST SPELLS PRIEST SPELLS PRIEST SPELLS PRIEST SPELLS
+//*******************************************************
+
+
+
+
+[itemdef i_priest_1] //Angel Fire
+id=i_memory
+name=Angel Fire
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Select your victim...
+timer=20
+return 1
+
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 29 )
+src.f_anti_gank
+src.f_start_delay
+src.stamina=<src.stamina>+-30
+src.targ.effect=0,i_fx_explode_ball,10,10,10
+src.targ.damage=<eval <src.tag.totaldiscipline>>
+src.sfx=015e
+src.sayu=[Angel Fire]
+src.anim=16
+remove
+return 1
+else
+src.sysmessage=You need (30 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+on=@timer
+remove
+return 1
+
+
+[itemdef i_priest_2] //Soul Purify
+id=i_memory
+name=Soul Purify
+type=t_eq_script
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+target
+src.sysmessage=Whos soul will you Purify?
+timer=20
+return 1
+
+on=@targon_char
+if (<src.targ.findid.i_anti_gank_mem> = 1 )
+src.sysmessage=You must wait <eval <src.targ.findid.i_anti_gank_mem.timer>> seconds to cast another spell on <src.targ.name>...
+remove
+return 1
+endif
+
+if (!<src.targ.canseelos>)
+src.sysmessage=Your target is not in your line of sight...
+remove
+return 1
+endif
+
+if (<src.stamina> > 64 )
+src.f_anti_gank
+src.f_start_delay
+src.stamina=<src.stamina>+-65
+src.targ.spelleffect=s_dispel 1000
+src.targ.spelleffect=s_cure 1000
+src.targ.hits=<src.targ.str>
+src.targ.mana=<src.targ.int>
+src.sayu=[Soul Purify]
+src.anim=17
+src.targ.effect=3,i_fx_sparkle,16,16,0
+src.sfx=snd_spell_cunning
+remove
+return 1
+else
+src.sayu=You need (65 Stamina) to cast this spell...
+remove
+return 1
+endif
+
+on=@targon_item
+src.sysmessage=You cannot cast this spell on items...
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+[itemdef i_priest_3] //Guardian Angel
+id=i_memory
+type=t_eq_script
+name=Guardian Angel
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 74 )&&(<src.mana> > 24 )
+src.f_start_delay
+src.stamina=<src.stamina>+-75
+src.mana=<src.mana>+-25
+link=<src.uid>
+link.f_guardian_angel
+src.sfx=snd_spell_heal
+src.sayu=[Guardian Angel]
+src.anim=17
+remove
+return 1
+else
+src.sysmessage=You need (75 Stamina & 25 Mana) to cast this spell...
+remove
+return 1
+endif
+
+
+[function f_guardian_angel]
+newnpc=c_gargoyle
+var.monsteruid=<act.uid>
+act.flags=statf_conjured
+act.effect=3,i_fire,16,16,0
+act.findlayer.21.remove
+act.dex=1000
+act.str=250
+act.magery=0
+act.karma=0
+act.say=*hello*
+act.name=Guardian Angel
+act.color=0481
+newitem=i_memory
+act.cont=<var.monsteruid>
+act.color=00002
+act.link=<uid>
+newitem=i_con_cancel
+act.cont=<var.monsteruid>
+act.timer=<eval <tag.totaldiscipline>*2>
+var.monsteruid=
+return 0
+
+[itemdef i_priest_4] //Ankh Summon
+id=i_memory
+name=Anhk Summon
+type=t_eq_script
+
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 84 )&&(<src.mana> > 34 )
+src.f_start_delay
+src.stamina=<src.stamina>+-85
+src.stamina=<src.mana>+-35
+link=<src.uid>
+link.newitem=i_ankh
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.timer=<eval <link.tag.totaldiscipline>/2>
+link.act.color=colors_white
+link.act.name=Summoned Ankh
+link.act.type=t_shrine
+link.newitem=03
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.timer=<eval <link.tag.totaldiscipline>/2>
+link.act.color=colors_white
+link.act.move=n
+link.act.name=Summoned Ankh
+link.act.type=t_shrine
+link.newitem=i_fx_sparkle_2
+link.act.p=<link.p>
+link.act.attr=attr_static|attr_decay
+link.act.timer=<eval <link.tag.totaldiscipline>/2>
+link.act.color=colors_white
+link.act.name=Summoned Ankh
+link.act.type=t_shrine
+src.sfx=0217
+src.sayu=[Ankh Summon]
+src.anim=17
+remove
+return 1
+else
+src.sysmessage=You need (85 Stamina & 35 Mana) to cast this spell...
+remove
+return 1
+endif
+
+[itemdef i_priest_5] //Wrath Of God
+id=i_memory
+type=t_eq_script
+name=Wrath Of God
+
+on=@equip
+if (<src.hits> < 1 )
+src.sysmessage=You cannot do that while dead...
+remove
+return 1
+endif
+
+if (<src.stamina> > 94 )&&(<src.mana> > 44 )
+src.mana=<src.mana>+-45
+src.stamina=<src.stamina>+-95
+src.f_start_delay
+src.events=+e_wrath_of_god
+timer=<eval <src.tag.totaldiscipline>>
+src.sayu=[Wrath Of God]
+src.effect=3,i_fire_column,10,10,10
+src.sfx=611
+src.sfx=0220
+src.anim=17
+return 1
+else
+src.sysmessage=You need (95 Stamina & 45 Mana) to cast this spell...
+remove
+return 1
+endif
+
+on=@unequip
+src.events=-e_wrath_of_god
+return 0
+
+on=@timer
+remove
+return 1
+
+[events e_wrath_of_god]
+on=@hit
+if (<eval rand(5)> == 2 )
+src.effect=1,1,1,1,1
+src.effect=3,i_fx_explosion_2,16,16,16
+src.damage=<eval <tag.totaldiscipline>>
+src.sfx=011d
+return 0
+endif
+
+
+
+//*********************************************************
+//SPELL INITIATION FUNCTIONS!! SPELL INITIATION FUNCTIONS!!
+//*********************************************************
+
+
+[plevel 0]
+special
+
+
+[function special]
+if (<eval <args>> = 0 )
+sysmessage=You must supply the special # you wish to cast.
+sysmessage=Type: .special # (1 - 5)
+return 1
+endif
+if (<eval <args>> = 1 )
+if (strmatch(<tag.spell1name>,...?...))
+sysmessage=You have not Discovered that spell yet...
+return 1
+endif
+if (<eval <tag.totalwisdom>> < 2 )
+sysmessage=Your level of wisdom fail to comprehend this spell...
+sfx=011f
+return 1
+else
+do_special1
+return 1
+endif
+endif
+if (<eval <args>> = 2 )
+if (strmatch(<tag.spell2name>,...?...))
+sysmessage=You have not Discovered that spell yet...
+return 1
+endif
+if (<eval <tag.totalwisdom>> < 4 )
+sysmessage=Your level of wisdom fail to comprehend this spell...
+sfx=011f
+return 1
+else
+do_special2
+return 1
+endif
+endif
+if (<eval <args>> = 3 )
+if (strmatch(<tag.spell3name>,...?...))
+sysmessage=You have not Discovered that spell yet...
+return 1
+endif
+if (<eval <tag.totalwisdom>> < 6 )
+sysmessage=Your level of wisdom fail to comprehend this spell...
+sfx=011f
+return 1
+else
+do_special3
+return 1
+endif
+endif
+if (<eval <args>> = 4 )
+if (strmatch(<tag.spell4name>,...?...))
+sysmessage=You have not Discovered that spell yet...
+return 1
+endif
+if (<eval <tag.totalwisdom>> < 8 )
+sysmessage=Your level of wisdom fail to comprehend this spell...
+sfx=011f
+return 1
+else
+do_special4
+return 1
+endif
+endif
+if (<eval <args>> = 5 )
+if (strmatch(<tag.spell5name>,...?...))
+sysmessage=You have not Discovered that spell yet...
+return 1
+endif
+if (<eval <tag.totalwisdom>> < 10 )
+sysmessage=Your level of wisdom fail to comprehend this spell...
+sfx=011f
+return 1
+else
+do_special5
+return 1
+endif
+endif
+if (<eval <args>> > 5 )||(<eval <args>> < 0 )
+sysmessage=Invalid spell # (Must be from 1 - 5 )
+return 1
+endif
+
+
+
+
+
+
+[function do_special1] //Activation 1
+if (<region.flags> & region_flag_safe )||(<region.flags> & region_flag_no_pvp )
+sysmessage=You cannot cast any special spells in this area...
+sfx=011f
+return 1
+endif
+if (<findid.i_spelldelay_memory> = 1 )
+sysmessage=You must wait <eval <findid.i_spelldelay_memory.timer>> more seconds to cast another special spell...
+sfx=011f
+return 1
+endif
+if (<eval <region.tag.specialsdisabled>> = 1 )
+sysmessage=Special Spells have been temporarly disabled in this region...
+sfx=011f
+return 1
+endif
+newitem=i_<tag.magicclass>_1
+act.equip
+return 1
+
+
+[function do_special2] //Activation 2
+if (<region.flags> & region_flag_safe )||(<region.flags> & region_flag_no_pvp )
+sysmessage=You cannot cast any special spells in this area...
+sfx=011f
+return 1
+endif
+if (<findid.i_spelldelay_memory> = 1 )
+sysmessage=You must wait <eval <findid.i_spelldelay_memory.timer>> more seconds to cast another special spell...
+sfx=011f
+return 1
+endif
+if (<eval <region.tag.specialsdisabled>> = 1 )
+sysmessage=Special Spells have been temporarly disabled in this region...
+sfx=011f
+return 1
+endif
+newitem=i_<tag.magicclass>_2
+act.equip
+return 1
+
+
+[function do_special3] //Activation 3
+if (<region.flags> & region_flag_safe )||(<region.flags> & region_flag_no_pvp )
+sysmessage=You cannot cast any special spells in this area...
+sfx=011f
+return 1
+endif
+if (<findid.i_spelldelay_memory> = 1 )
+sysmessage=You must wait <eval <findid.i_spelldelay_memory.timer>> more seconds to cast another special spell...
+sfx=011f
+return 1
+endif
+if (<eval <region.tag.specialsdisabled>> = 1 )
+sysmessage=Special Spells have been temporarly disabled in this region...
+sfx=011f
+return 1
+endif
+newitem=i_<tag.magicclass>_3
+act.equip
+return 1
+
+
+[function do_special4] //Activation 4
+if (<region.flags> & region_flag_safe )||(<region.flags> & region_flag_no_pvp )
+sysmessage=You cannot cast any special spells in this area...
+sfx=011f
+return 1
+endif
+if (<findid.i_spelldelay_memory> = 1 )
+sysmessage=You must wait <eval <findid.i_spelldelay_memory.timer>> more seconds to cast another special spell...
+sfx=011f
+return 1
+endif
+if (<eval <region.tag.specialsdisabled>> = 1 )
+sysmessage=Special Spells have been temporarly disabled in this region...
+sfx=011f
+return 1
+endif
+newitem=i_<tag.magicclass>_4
+act.equip
+return 1
+
+
+[function do_special5] //Activation 5
+
+if (<region.flags> & region_flag_safe )||(<region.flags> & region_flag_no_pvp )
+sysmessage=You cannot cast any special spells in this area...
+sfx=011f
+return 1
+endif
+
+if (<findid.i_spelldelay_memory> = 1 )
+sysmessage=You must wait <eval <findid.i_spelldelay_memory.timer>> more seconds to cast another special spell...
+sfx=011f
+return 1
+endif
+
+if (<eval <region.tag.specialsdisabled>> = 1 )
+sysmessage=Special Spells have been temporarly disabled in this region...
+sfx=011f
+return 1
+endif
+
+
+newitem=i_<tag.magicclass>_5
+act.equip
+return 1
+
+
+//******************************************************
+//SPECIAL ABILITIES SPECIAL ABILITIES SPECIAL ABILITIES
+//MORE CAN BE SCRIPTED IN
+//******************************************************
+
+
+[function f_clear_abilities]
+tag.ability5name=None
+tag.ability4name=None
+tag.ability3name=None
+tag.ability2name=None
+tag.ability1name=None
+events=-<tag.ability5event>
+events=-<tag.ability4event>
+events=-<tag.ability3event>
+events=-<tag.ability2event>
+events=-<tag.ability1event>
+
+
+[events e_thermal_reflect] //Thermal Reflect
+on=@spelleffect
+if (<argn> = 43 )||(<argn> = 18 )||(<argn> = 51 )||(<argn> = 5 )
+if (<eval rand(4)> == 1 )
+sayu=*thermal reflect*
+src.damage=<eval <argn>/2>+15
+return 0
+endif
+return 0
+endif
+
+////////
+
+//[events e_super_heal] //Super Heal (This Event Crashed The Shard)
+//on=@spelleffect
+//if (<argn> = 4 )||(<argn> = 29 )
+//hits=<hits>+<argn>
+//return 0
+//endif
+
+/////////
+
+[events e_poison_reflect] //Poison Reflect
+on=@spelleffect
+if (<argn> = 20 )
+if (<eval rand(4)> == 1 )
+sayu=*poison reflect*
+src.poison <magery>
+return 1
+endif
+return 0
+endif
+
+/////////
+
+[events e_blessed_flesh] //Blessed Flesh
+on=@spelleffect
+if (<argn> = 1 )||(<argn> = 27 )||(<argn> = 46 )||(<argn> = 8 )
+if (<eval rand(4)> == 1 )
+sayu=*blessed flesh*
+return 1
+endif
+return 0
+endif
+
+//////////
+
+[events e_para_resist] //Para Resist
+on=@spelleffect
+if (<argn> = 38 )||(<argn> = 47 )
+if (<eval rand(4)> == 1 )
+sayu=*para resist*
+return 1
+endif
+return 0
+endif
+
+////////////
+
+[events e_mind_slay] //Mind Slay
+on=@hit
+if (<eval rand(4)> == 1 )
+src.mana=<src.mana>+-{1 5}
+if (<src.mana> < 1 )
+src.mana=0
+endif
+endif
+return 0
+
+[events e_electric_absorb]
+on=@spelleffect
+if (<argn> = 30 )||(<argn> = 49 )
+if (<eval rand(4)> == 1 )
+mana=<mana>+10
+sayu=*electric absorb*
+say=mana (+10)
+if (<mana> > <int> )
+mana=<int>
+endif
+endif
+endif
+return 0
+
+[events e_blood_lust]
+on=@hit
+if (<eval rand(4)> == 1 )
+sayu=*blood lust*
+hits=<hits>+{1 5}
+if (<hits> > <str> )
+hits=<str>
+endif
+return 0
+endif
+
+
+[eof]

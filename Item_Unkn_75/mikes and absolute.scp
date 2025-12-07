@@ -1,0 +1,302 @@
+// by Kenton
+// My Mikes Hard Lemonaid & Absolute Vodka script
+// For thouse of you who dont know.. i like to drink & thouse of you who know me
+// all ready know and tell me i drink to much, well now im sharing my fav brews! :P
+// Put i_mikes_hard & i_absolute_vodka  on your bar keepers for sale
+// or who ever sells the brews on your server.
+// with this script you will get drunk and you can puke if you drink to much.
+// have fun with it..
+// http://kentonsscripts.cjb.net
+
+// please leave this header if you use this script. thanks.. 
+
+[ITEMDEF i_mikes_hard]
+NAME=Mikes Hard Lemonaid
+ID=i_bottle_ale
+TYPE=T_BOOZE
+VALUE={8 12}
+WEIGHT=2
+
+ON=@Create
+MORE2=03
+COLOR=56
+
+ON=@DCLICK
+TARGET What do you want to use this on?
+Return 1
+
+ON=@TARGON_CHAR
+IF <SRC.TARG.SERIAL>==<SRC.SERIAL>
+MORE2=<MORE2>+-1
+IF <MORE2>=02
+NAME=a half empty bottle of Mikes Hard Lemonaid
+ENDIF
+IF <MORE2>=01
+NAME=an almost empty bottle of Mikes Hard Lemonaid
+ENDIF
+IF <MORE2>=00
+REMOVE
+ENDIF
+IF <SRC.FINDID.i_alcohol>
+SRC.ANIM 33
+SRC.SOUND 49
+SRC.FINDID.i_alcohol.MORE2=<SRC.FINDID.i_alcohol.MORE2>+2
+Return 1
+ELSE
+SRC.ANIM 33
+SRC.SOUND 49
+SRC.NEWITEM=i_alcohol
+SRC.ACT.EQUIP
+SRC.ACT.TIMER 15
+SRC.NEWITEM=i_alcohol_pen
+SRC.ACT.EQUIP
+SRC.ACT.TIMER 5
+Return 1
+ENDIF
+ELSE
+Return 1
+ENDIF
+
+CATEGORY=Kentons Brew
+SUBSECTION=Kentons Beers
+DESCRIPTION=Mikes Hard Lemonaid
+
+[ITEMDEF i_alcohol]
+NAME=DO NOT REMOVE
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+
+ON=@Equip
+TIMER=10
+MORE2=5
+RETURN 1
+
+ON=@Timer
+IF <MORE2>=0
+CONT.MESSAGE=You start to sober up.
+CONT.FINDID.i_alcohol_pen.REMOVE
+REMOVE
+Return 1
+ELSE
+CONT.BOW
+CONT.SAY=*Hic*
+SRC.PUKE
+MORE2=<MORE2>+-1
+TIMER=10
+Return 1
+ENDIF
+
+[ITEMDEF i_alcohol_pen]
+NAME=DO NOT REMOVE
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+
+ON=@Equip
+TIMER=3
+RETURN 1
+
+ON=@TIMER
+IF <CONT.MANA> == 1
+CONT.MANA=<CONT.MANA>+-1
+TIMER=6
+ELSEIF <CONT.MANA> >= 2
+CONT.MANA=<CONT.MANA>+-2
+TIMER=6
+ELSEIF <CONT.MANA>==0
+TIMER=6
+ENDIF
+
+[ITEMDEF i_remedy_mikes]
+NAME=Mikes Hangover Remedy
+ID=0e2b
+
+ON=@CREATE
+COLOR=56
+MORE2=0100
+
+ON=@CLICK
+MESSAGE=<NAME>
+Return 1
+
+ON=@DCLICK
+TARGET Who has the hang over?
+Return 1
+
+ON=@TARGON_CHAR
+IF <SRC.TARG.SERIAL>==<SRC.SERIAL>
+SRC.ANIM 33
+SRC.SOUND 49
+SRC.SYSMESSAGE=You can tast your stomac acid.
+SRC.PUKE
+SRC.FINDID.i_alcohol_pen.REMOVE
+SRC.FINDID.i_alcohol.REMOVE
+MORE2=<MORE2>+-1
+Return 1
+ELSE
+Return 1
+ENDIF
+
+[ITEMDEF i_absolute_vodka]
+NAME=Absolute Vodka
+ID=i_bottle_ale
+TYPE=T_BOOZE
+VALUE={8 12}
+WEIGHT=2
+
+ON=@Create
+MORE2=03
+COLOR=0481
+
+ON=@DCLICK
+TARGET What do you want to use this on?
+Return 1
+
+ON=@TARGON_CHAR
+IF <SRC.TARG.SERIAL>==<SRC.SERIAL>
+MORE2=<MORE2>+-1
+IF <MORE2>=02
+NAME=a half empty bottle of Absolute Vodka
+ENDIF
+IF <MORE2>=01
+NAME=an almost empty bottle of Absolute Vodka
+ENDIF
+IF <MORE2>=00
+REMOVE
+ENDIF
+IF <SRC.FINDID.i_alcohol>
+SRC.ANIM 33
+SRC.SOUND 49
+SRC.FINDID.i_alcohol.MORE2=<SRC.FINDID.i_alcohol.MORE2>+2
+Return 1
+ELSE
+SRC.ANIM 33
+SRC.SOUND 49
+SRC.NEWITEM=i_alcohol
+SRC.ACT.EQUIP
+SRC.ACT.TIMER 15
+SRC.NEWITEM=i_alcohol_pen
+SRC.ACT.EQUIP
+SRC.ACT.TIMER 5
+Return 1
+ENDIF
+ELSE
+Return 1
+ENDIF
+
+CATEGORY=Kentons Brew
+SUBSECTION=Kentons Beers
+DESCRIPTION=Absolute Vodka
+
+[ITEMDEF i_alcohol]
+NAME=DO NOT REMOVE
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+
+ON=@Equip
+TIMER=10
+MORE2=5
+RETURN 1
+
+ON=@Timer
+IF <MORE2>=0
+CONT.MESSAGE=You start to sober up.
+CONT.FINDID.i_alcohol_pen.REMOVE
+REMOVE
+Return 1
+ELSE
+CONT.BOW
+CONT.SAY=*Hic*
+SRC.PUKE
+MORE2=<MORE2>+-1
+TIMER=10
+Return 1
+ENDIF
+
+[ITEMDEF i_alcohol_pen]
+NAME=DO NOT REMOVE
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+
+ON=@Equip
+TIMER=3
+RETURN 1
+
+ON=@TIMER
+IF <CONT.MANA> == 1
+CONT.MANA=<CONT.MANA>+-1
+TIMER=6
+ELSEIF <CONT.MANA> >= 2
+CONT.MANA=<CONT.MANA>+-2
+TIMER=6
+ELSEIF <CONT.MANA>==0
+TIMER=6
+ENDIF
+
+[ITEMDEF i_remedy_absolute]
+NAME=Absolute's Hangover Remedy
+ID=0e2b
+
+ON=@CREATE
+COLOR=0481
+MORE2=0100
+
+ON=@CLICK
+MESSAGE=<NAME>
+Return 1
+
+ON=@DCLICK
+TARGET Who has the hang over?
+Return 1
+
+ON=@TARGON_CHAR
+IF <SRC.TARG.SERIAL>==<SRC.SERIAL>
+SRC.ANIM 33
+SRC.SOUND 49
+SRC.SYSMESSAGE=You start to tast lastnights meal coming back up.
+SRC.PUKE
+SRC.FINDID.i_alcohol_pen.REMOVE
+SRC.FINDID.i_alcohol.REMOVE
+MORE2=<MORE2>+-1
+Return 1
+ELSE
+Return 1
+ENDIF
+
+[PLEVEL 2]
+puke 
+
+[function puke] 
+SRC.anim 32
+SRC.sfx 01da
+dorand 5 
+newitem=i_blood_pool_large 
+newitem=0122b 
+newitem=0122d 
+newitem=0122e 
+newitem=i_blood_smear 
+enddo 
+dorand 6 
+act.name=Vomit with bits of pizza in 
+act.name=Vomit with bits of bufflow wings in 
+act.name=Vomit with bits of Peanuts in 
+act.name=Vomit showing bits of your last meal 
+act.name=Vomit with blood from the alcohol eating your insides
+act.name=Vomit with bits of this mornings fish stake & Eggs
+enddo 
+act.attr=attr_static|attr_decay 
+act.timer 15 
+act.p = <src.p> 
+dorand 4 
+act.color = 0222 
+act.color = 09a 
+act.color = 030 
+act.color = 036 
+enddo 
+act.type t_normal 
+emote Throw Up
+
+[EOF]

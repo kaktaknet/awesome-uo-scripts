@@ -1,0 +1,374 @@
+//=================VERSION 1.1 BUGFIXES========================
+//
+//
+//         -Can't place traps in towns anymore-
+//              -Damage on Monsters fixed-
+//
+//
+//=============================================================
+//
+//=======Trap System by Marox=================================================
+//======You may : Use this script on your shard, edit it as you wish, cut pieces out of it, just dont copy the whole thing or something, give me the credit if you do something to this file however.
+//=============================================================================
+//======Contact : marox_gm@hotmail.com=========================================
+//=SKILLGAIN edited and worked on by Marox,original made by Bran Tyrewood(Anatomy Passive gain)=
+//==================!!INSTRUCTIONS!!===========================================
+//Double click i_trap_w to place a trap (the one who placed it is immune, if you have enough detecting hidden and removetrap you can disarm the trap once you step on it, if not, you get hurt. Depending on your skill-removetrap, your traps can hurt much or less)
+//Currently Traps can be crafted (if you add the trap crafting menus in) and they need 80.0 tinkering and 5 shadow ingots(so they're not THAT easy to get)
+//PUT THIS INTO THE TINKERING SECTION OF YOUR SPHERESKILL.SCP IF YOU WANT TRAPS CRAFTABLE ( WITHOUT THE '//' INFRONT!!!
+//ON=i_trap_w <name> (<resmake>)
+//MAKEITEM=i_trap_w
+//=============================================================================
+
+
+[FUNCTION TRPAKS]
+REMOVETRAP = <REMOVETRAP>+0.1 
+
+[FUNCTION TRPREC]
+SRC.NEWITEM=i_trap_w
+SRC.ACT.BOUNCE
+
+[FUNCTION TRPFAIL]
+SRC.MESSAGE You try to place the trap but fail!
+SRC.VAR.TRCHK=
+
+[FUNCTION TRPDEST]
+SRC.MESSAGE You destroy the trap!
+SRC.CONSUME 1 i_trap_w
+SRC.VAR.TRCHK=
+
+[FUNCTION TRPDO]
+IF (<SRC.REGION.FLAGS>&04000)
+SRC.MESSAGE You cannot place traps in-town!
+RETURN 1
+ELSE
+SRC.CONSUME 1 i_trap_w
+SRC.MESSAGE You place the trap.
+SRC.TRPGHC
+IF (<SRC.VAR.TRCHK> == 1)
+SRC.NEWITEM=i_trap_hurt1
+SRC.ACT.EQUIP
+SRC.VAR.TRCHK=
+ELSEIF (<SRC.VAR.TRCHK> == 2)
+SRC.NEWITEM=i_trap_hurt2
+SRC.ACT.EQUIP
+SRC.VAR.TRCHK=
+ELSEIF (<SRC.VAR.TRCHK> == 3)
+SRC.NEWITEM=i_trap_hurt3
+SRC.ACT.EQUIP
+SRC.VAR.TRCHK=
+ELSEIF (<SRC.VAR.TRCHK> == 4)
+SRC.NEWITEM=i_trap_hurt4
+SRC.ACT.EQUIP
+SRC.VAR.TRCHK=
+ELSEIF (<SRC.VAR.TRCHK> == 5)
+SRC.NEWITEM=i_trap_hurt5
+SRC.ACT.EQUIP
+SRC.VAR.TRCHK=
+ELSE
+SRC.MESSAGE ERROR: <SRC.VAR.TRCHK> IS UNKNOWN VALUE.
+ENDIF
+ENDIF
+
+[itemdef i_trap_w] 
+DEFNAME=i_trap_w
+NAME=Trap
+ID=i_forged_metal 
+TYPE=t_script
+weight=3
+SKILLMAKE=TINKERING 80.0,t_tinker_tools
+RESOURCES=5 I_INGOT_SHADOW
+CATEGORY=Stuff
+SUBSECTION=Trap
+DESCRIPTION=Working Trap
+
+ON=@DCLICK
+
+IF (<SRC.REMOVETRAP> <= 150) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=1
+DORAND 4
+SRC.TRPDO
+SRC.TRPDO
+SRC.TRPFAIL
+SRC.TRPDEST
+ENDDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> <= 300) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=1
+SRC.TRPDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> <= 450) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=2
+DORAND 4
+SRC.TRPDO
+SRC.TRPDO
+SRC.TRPFAIL
+SRC.TRPDEST
+ENDDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> <= 500) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=2
+SRC.TRPDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> <= 600) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=3
+DORAND 4
+SRC.TRPDO
+SRC.TRPDO
+SRC.TRPFAIL
+SRC.TRPDEST
+ENDDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> <= 700) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=3
+SRC.TRPDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> <= 750) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=4
+DORAND 4
+SRC.TRPDO
+SRC.TRPDO
+SRC.TRPFAIL
+SRC.TRPDEST
+ENDDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> <= 870) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=4
+SRC.TRPDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> <= 950) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=5
+DORAND 4
+SRC.TRPDO
+SRC.TRPDO
+SRC.TRPFAIL
+SRC.TRPDEST
+ENDDO
+RETURN 1
+ELSEIF (<SRC.REMOVETRAP> >= 1000) && (<SRC.RESTEST 1 i_trap_w>)
+SRC.VAR.TRCHK=5
+SRC.TRPDO
+RETURN 1
+ELSE
+SRC.MESSAGE You must have a trap in your backpack.
+RETURN 1
+ENDIF
+
+
+[itemdef i_trap_hurt1] 
+DEFNAME=i_trap_hurt1
+NAME=Neophyte Trap
+ID=i_forged_metal
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=090
+
+ON=@EQUIP
+TAG.TRPMAKR=<SRC.UID>
+SRC.ACT.DROP
+
+ON=@STEP
+IF (<TAG.TRPMAKR>==<SRC.UID>)
+SRC.SYSMESSAGE You step past your own trap.
+ELSEIF (<SRC.DetectingHidden> >= 150) && (<SRC.RemoveTrap> >= 150)
+SRC.MESSAGE You spot a trap and disarm it successfully!
+SRC.TRPGHC
+SRC.TRPREC
+REMOVE
+
+ELSE
+IF (<SRC.BRAIN> == 0)
+SRC.SAY *Gets hit by a neophyte's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.HITS=<SRC.HITS> + -50
+REMOVE
+ELSE
+SRC.SAY *Gets hit by a neophyte's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.DAMAGE=50
+REMOVE
+
+[itemdef i_trap_hurt2] 
+DEFNAME=i_trap_hurt2
+NAME=Apprentice Trap
+ID=i_forged_metal
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=090
+
+ON=@EQUIP
+TAG.TRPMAKR=<SRC.UID>
+SRC.ACT.DROP
+
+ON=@STEP
+IF (<TAG.TRPMAKR>==<SRC.UID>)
+SRC.SYSMESSAGE You step past your own trap.
+
+ELSEIF (<SRC.DetectingHidden> >= 450) && (<SRC.RemoveTrap> >= 450)
+SRC.MESSAGE You spot a trap and disarm it successfully!
+SRC.TRPGHC
+SRC.TRPREC
+REMOVE
+
+ELSE
+IF (<SRC.BRAIN> == 0)
+SRC.SAY *Gets hit by a apprentice's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.HITS=<SRC.HITS> + -70
+REMOVE
+ELSE
+SRC.SAY *Gets hit by a apprentice's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.DAMAGE=60
+REMOVE
+
+[itemdef i_trap_hurt3] 
+DEFNAME=i_trap_hurt3
+NAME=Journeyman Trap
+ID=i_forged_metal
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=090
+
+ON=@EQUIP
+TAG.TRPMAKR=<SRC.UID>
+SRC.ACT.DROP
+
+ON=@STEP
+IF (<TAG.TRPMAKR>==<SRC.UID>)
+SRC.SYSMESSAGE You step past your own trap.
+ELSEIF (<SRC.DetectingHidden> >= 550) && (<SRC.RemoveTrap> >= 550)
+SRC.MESSAGE You spot a trap and disarm it successfully!
+SRC.TRPGHC
+SRC.TRPREC
+REMOVE
+
+ELSE
+IF (<SRC.BRAIN> == 0)
+SRC.SAY *Gets hit by a journeyman's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.HITS=<SRC.HITS> + -100
+REMOVE
+ELSE
+SRC.SAY *Gets hit by a journeyman's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.DAMAGE=70
+REMOVE
+
+[itemdef i_trap_hurt4] 
+DEFNAME=i_trap_hurt4
+NAME=Expert Trap
+ID=i_forged_metal
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=090
+
+ON=@EQUIP
+TAG.TRPMAKR=<SRC.UID>
+SRC.ACT.DROP
+
+ON=@STEP
+IF (<TAG.TRPMAKR>==<SRC.UID>)
+SRC.SYSMESSAGE You step past your own trap.
+ELSEIF (<SRC.DetectingHidden> >= 800) && (<SRC.RemoveTrap> >= 800)
+SRC.MESSAGE You spot a trap and disarm it successfully!
+SRC.TRPGHC
+SRC.TRPREC
+REMOVE
+
+ELSE
+IF (<SRC.BRAIN> == 0)
+SRC.SAY *Gets hit by a expert's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.HITS=<SRC.HITS> + -130
+REMOVE
+ELSE
+SRC.SAY *Gets hit by a expert's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.DAMAGE=100
+REMOVE
+
+[itemdef i_trap_hurt5] 
+DEFNAME=i_trap_hurt5
+NAME=Master Trap
+ID=i_forged_metal
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=090
+
+ON=@EQUIP
+TAG.TRPMAKR=<SRC.UID>
+SRC.ACT.DROP
+
+ON=@STEP
+IF (<TAG.TRPMAKR>==<SRC.UID>)
+SRC.SYSMESSAGE You step past your own trap.
+ELSEIF (<SRC.DetectingHidden> >= 950) && (<SRC.RemoveTrap> >= 950)
+SRC.MESSAGE You spot a trap and disarm it successfully!
+SRC.TRPGHC
+SRC.TRPREC
+REMOVE
+
+ELSE
+IF (<SRC.BRAIN> == 0)
+SRC.SAY *Gets hit by a master's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.HITS=<SRC.HITS> + -190
+REMOVE
+ELSE
+SRC.SAY *Gets hit by a master's trap*
+SRC.SOUND 0157
+SRC.ANIM 20
+SRC.DAMAGE=150
+REMOVE
+
+
+
+[FUNCTION TRPGHC] 
+IF (<REMOVETRAP><=150) && ((RAND(2)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>150) && (<REMOVETRAP><=225) && (rand(5)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>225) && (<REMOVETRAP><=325) && (rand(10)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>325) && (<REMOVETRAP><=425) && (rand(15)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>425) && (<REMOVETRAP><=525) && (rand(15)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>525) && (<REMOVETRAP><=625) && (rand(20)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>625) && (<REMOVETRAP><=725) && (rand(23)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>725) && (<REMOVETRAP><=825) && (rand(25)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>725) && (<REMOVETRAP><=925) && (rand(27)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>>925) && (<REMOVETRAP><=1000) && (rand(30)==1) 
+TRPAKS
+RETURN 1
+ELSEIF (<REMOVETRAP>==1000) 
+RETURN 1
+ENDIF

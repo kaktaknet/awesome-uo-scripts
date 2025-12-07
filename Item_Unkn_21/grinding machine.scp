@@ -1,0 +1,93 @@
+//
+// By Melfis
+//
+// Multi for the machine
+//
+//
+
+
+[ITEMDEF i_multi_machine_grinding]
+Name=Grinding machine
+ID=01923
+TYPE=T_MULTI
+CATEGORY=Multi
+SUBSECTION=Machine
+DESCRIPTION=Grinding machine
+MULTIREGION=0,0,0,0
+COMPONENT=01921 -1 0 0 0
+
+ON=@CREATE
+TIMER=-1
+ATTR=attr_newbie | attr_move_never
+
+ON=@DCLICK
+
+  IF <DISTANCE>>1
+    SRC.SYSMESSAGE You must stand next to the machine to use it
+    RETURN 1
+  ENDIF
+
+  IF <SRC.TINKERING><51.0
+    SRC.SYSMESSAGE You dont have the skill to use this
+    RETURN 1
+    ELSE
+    TARGET What do you wish to grind ?
+    RETURN 1
+    ENDIF
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE Try putting this in you bag first.
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE There are less painfull ways to kill thy self..
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.TOPOBJ.UID>=<SRC.UID>)
+SRC.SYSMESSAGE The item must be in your bag first!
+RETURN 1
+
+ELSEIF (<src.targ.baseid>==i_stone)
+ SRC.NEWITEM=i_litter
+ SRC.EMOTE who starts grinding
+ src.sound=010c
+ SRC.ACT.AMOUNT=<src.targ.amount>
+ SRC.SYSMESSAGE You create <SRC.ACT.AMOUNT> pieces of <src.act.name>.
+ SRC.ACT.BOUNCE
+ src.targ.remove
+
+ELSEIF (<src.targ.baseid>==i_litter)
+ SRC.NEWITEM=i_sand
+ SRC.EMOTE who starts grinding
+ src.sound=010c
+ SRC.ACT.AMOUNT=<src.targ.amount>
+ SRC.SYSMESSAGE You create <SRC.ACT.AMOUNT> pieces of <src.act.name>.
+ SRC.ACT.BOUNCE
+ src.targ.remove
+
+else
+SRC.EMOTE who tries grinding
+ src.sysmessage You cant use this in the <name>.
+ENDIF
+return 1
+
+//
+// Deed for the grinding machine
+//
+
+[ITEMDEF i_deed_machine_grinding]
+NAME=Deed for a Grinding machine
+ID=i_deed
+RESOURCES=i_deed,i_multi_fount_white
+
+CATEGORY=Special machines
+SUBSECTION=Deeds
+DESCRIPTION=Grinding machine
+
+ON=@Create
+MORE=i_multi_machine_grinding
+
+[EOF]
+
+

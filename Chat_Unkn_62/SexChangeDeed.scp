@@ -1,0 +1,53 @@
+// Scripted by Exercisto
+
+[ITEMDEF I_DEED_CHANGE_SEX]
+ID=I_DEED
+NAME=Sex Change Deed
+
+CATEGORY=Custom Items
+SUBSECTION=Weird
+DESCRIPTION=Sex Change Deed
+
+ON=@CLICK
+MESSAGE @0480 [Sex: <SRC.SEX Female/Male>] // The sex they will change into.
+MESSAGE @07a1 Sex Change Deed
+RETURN 1
+
+ON=@DCLICK
+IF (<CONT.UID>!=<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE @07a1 You must have this on you to use.
+RETURN 1
+ENDIF
+
+IF (<SRC.BODY>==C_MAN)
+SRC.BODY=C_WOMAN
+SRC.0BODY=C_WOMAN
+SRC.FINDLAYER.16.REMOVE
+SRC.SOUND 0212
+SRC.UPDATE
+SRC.FIX
+DORAND 3
+SRC.SYSMESSAGE @07a1 Oh my god, you look just like Elisha Cuthbert now!
+SRC.SYSMESSAGE @07a1 Oh my god, you look just like Avril Lavigne now!
+SRC.SYSMESSAGE @07a1 Oh my god, you look just like Keira Knightly now!
+ENDDO
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.BODY>==C_WOMAN)
+SRC.BODY=C_MAN
+SRC.0BODY=C_MAN
+SRC.SOUND 0212
+SRC.UPDATE
+SRC.FIX
+DORAND 3
+SRC.SYSMESSAGE @07a1 Oh my god, you look just like Orlando Bloom now!
+SRC.SYSMESSAGE @07a1 Oh my god, you look just like Johny Depp now!
+SRC.SYSMESSAGE @07a1 Oh my god, you look just like Exercisto now! And yes, that IS a good thing.
+ENDDO
+REMOVE
+RETURN 1
+ENDIF
+
+[EOF]

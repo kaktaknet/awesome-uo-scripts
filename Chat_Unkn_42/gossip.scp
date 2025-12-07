@@ -1,0 +1,38 @@
+[plevel 1]
+gossip
+
+[FUNCTION gossip]
+src.DIALOG d_x_gossip
+
+
+[DIALOG d_x_gossip]
+0,0
+resizepic 130 420 5054 550 140		// Curved Grey background 
+resizepic 140 430 3000 530 120		// Curved White background 
+resizepic 180 465 3000 440 22		// Message Input box 
+
+text 315 440 0000 0			// Gossip Heading
+text 550 500 0000 1			// Send Message
+text 220 500 0000 2			// Cancel Text
+textentry 185 467 253 30 0 0 3        // Message Input
+
+button 160 500 4005 4007 1 0 0        // Opens Cancel
+button 500 500 4005 4007 1 0 1        // Opens Send
+
+[DIALOG d_x_gossip TEXT]
+Lost Spirits gossip system
+Send Message
+Cancel
+.
+
+[DIALOG d_x_gossip BUTTON]
+
+ONBUTTON=0
+SRC.SYSMESSAGE You decide not to send the message.
+
+ONBUTTON=1
+serv.allclients.SYSMESSAGE <?src.name?> : <?argtxt[0]?>
+
+///////////////////////////////////////////////////////////////////////////////////
+
+[eof]

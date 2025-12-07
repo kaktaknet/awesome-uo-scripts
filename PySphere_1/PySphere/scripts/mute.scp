@@ -1,0 +1,120 @@
+//mute.scp compiled by PySphere Release 17 from mute.py.
+//#prefix-local
+//#omit-original-code
+[defnames def_allowed_commands]
+underwear 	1
+mute 		6
+ACCOUNTAGE	1
+AFK			1
+ANIM		1
+DETAIL		1
+SLEEP		1
+UNDERWEAR	1
+WHERE		1
+HUNGRY		1
+CAST		1
+TELE		1
+SUICIDE		1
+FLIP		1
+self		1
+LAST		1
+BARK		1
+HELP		1
+PASSWORD	1
+EMAIL		1
+HelpPage	1
+UNEQUIPALL	1
+RESEND		2
+SYNC		2
+RESYNC		2
+FIX			2
+INFO		2
+PROPS		2
+TWEAK		2
+CLIENTS		2
+ADMIN		2
+PAGE		2
+GO			2
+GOUID		2
+GOCHAR		2
+GOSOCK		2
+GOCLI		2
+XGO			2
+JAIL		2
+FORGIVE		2
+PARDON		2
+CHARLIST	3
+LINK		4
+TILE		4
+NUKE		4
+GOTYPE		4
+GONAME		4
+SAVE		5
+ACCOUNT		6
+SETPRIV		6
+DIALOG		6
+BLOCKIP		6
+TOME		6
+EXTRACT		6
+UNEXTRACT	6
+EXPORT		6
+import		6
+[function mute]
+IF !0<?args?>
+tag.mutemode=
+events(-e_mute)
+ELSE
+tag.mutemode=<?args?>
+events(+e_mute)
+everbtarg(<?finduid(<?uid?>).mute_sub?>)
+ENDIF
+clear
+[function mute_sub]
+IF !<?isevent(e_mute)?>
+return(1)
+ENDIF
+IF (<?strmatch(.*,<?args?>)?>)
+IF (0<?tag.mutemode?><=1)
+IF (<?account.plevel?>>=0<?var.<args?>>)
+try(finduid(<uid>)<args>)
+ENDIF
+ENDIF
+ELIF (0<?tag.mutemode?>==2)
+say(<?args?>)
+ENDIF
+everbtarg(<?finduid(<?uid?>).mute_sub?>)
+clear
+[events e_mute]
+on=@login
+everbtarg(finduid(uid).mute_sub)
+[function clear]
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE
+SYSMESSAGE

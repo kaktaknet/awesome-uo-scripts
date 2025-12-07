@@ -1,0 +1,420 @@
+[COMMENT Tabain's potions]
+I was bored and fiddled with potions, I hope somebody can use it for some good. Completely untested in a live
+environment, I only have my test shard to try scripts on which makes extensive testing somewhat difficult.
+LINKDISTANCE script is made by somebody other than me, I only corrected some minor faults in it to make it work.
+Just by looking at how I structured the potions it should be fairly easy to make new ones. Comments, ideas and
+bug reports are always welcome.
+
+
+[FUNCTION LINKDISTANCE]
+IF (<P.X>><LINK.P.X>) 
+   VAR.DX=<EVAL <P.X>-<LINK.P.X>> 
+ELSE 
+   VAR.DX=<EVAL <LINK.P.X>-<P.X>> 
+ENDIF 
+
+IF (<P.Y>><LINK.P.Y>) 
+   VAR.DY=<EVAL <P.Y>-<LINK.P.Y>> 
+ELSE 
+   VAR.DY=<EVAL <LINK.P.Y>-<P.Y>> 
+ENDIF 
+
+IF (<VAR.DX>><VAR.DY>) 
+   RETURN <VAR.DX> 
+ELSE 
+   RETURN <VAR.DY> 
+ENDIF 
+
+[FUNCTION potionfield]
+NEWITEM=<TDATA2>
+NEW.P=<P>
+NEW.MOVE <ARGS>
+NEW.TIMER={120 180}
+
+[FUNCTION f_countdown]
+MOREX=<MOREX>+(-1)
+TIMER=1
+
+[FUNCTION potionexp]
+VAR.uId=<UID>
+FORCHARS 2
+	SPELLEFFECT=<UID.uId.TDATA1> 1000 0
+END
+SOUND=s_explosion
+REMOVE
+
+[FUNCTION potionequip]
+SRC.OBJ=<UID>
+SRC.NEWITEM=i_potion_mem
+SRC.NEW.LINK=<SRC.UID>
+SRC.NEW.EQUIP
+REMOVEFROMVIEW
+
+[ITEMDEF i_fx_poison_field2]
+ID=03915
+NAME=field of poison
+
+ON=@CREATE 
+ATTR=attr_can_decay|attr_decay|attr_static
+
+ON=@STEP
+SRC.SPELLEFFECT s_poison 750 0
+
+[ITEMDEF i_fx_fire_field2]
+ID=0398c
+NAME=field of fire
+
+ON=@CREATE 
+ATTR=attr_can_decay|attr_decay|attr_static
+
+ON=@STEP
+SRC.DAMAGE 1 010
+
+[ITEMDEF i_beastform_timer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=A beastform potion timer
+
+ON=@TIMER
+LINK.BODY=<LINK.OBODY>
+LINK.RESEND
+LINK.SYSMESSAGE Your muscles ache as you regain your true form.
+IF (<EVAL(<LINK.STAM>-20)> > 5000)
+	LINK.STAM=0
+ELSE
+	LINK.STAM=<EVAL(<LINK.STAM>-{15 20})>
+ENDIF
+REMOVE
+RETURN 1
+
+[ITEMDEF i_potion_mem]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Potion countdown
+
+ON=@CREATE
+MOREX=3
+TIMERD=10
+
+ON=@EQUIP
+TARGETG Where do you wish to throw the potion?
+RETURN 1
+
+ON=@TIMER
+IF (0<MOREX>)
+	LINK.SAY <MOREX>
+	f_countdown
+	RETURN 1
+ENDIF
+LINK.OBJ.P=<LINK.P>
+LINK.OBJ.MOREX=<MOREX>
+LINK.OBJ.TIMERD=1
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.OBJ.P=<SRC.TARGP>
+IF (<SRC.OBJ.DISTANCE> < 10) && (<SRC.OBJ.CANSEELOS>)
+	SRC.OBJ.EFFECT=0,<SRC.OBJ.DISPID>,1,16,0
+	SRC.OBJ.MOREX=<MOREX>
+	SRC.OBJ.TIMERD=<TIMERD>+1
+	REMOVE
+	RETURN 1
+ELSE
+	TARGETG
+	SRC.SYSMESSAGE That is too far away or your view has been obstructed!
+	SRC.OBJ.REMOVEFROMVIEW
+	RETURN 1
+ENDIF
+
+ON=@TARGON_CHAR
+	TRIGGER @TARGON_GROUND
+	RETURN 1
+
+ON=@TARGON_ITEM
+	TRIGGER @TARGON_GROUND
+	RETURN 1
+
+ON=@TARGON_CANCEL
+	SRC.SYSMESSAGE That was silly of you.
+	RETURN 1
+
+[ITEMDEF i_potion_poisoncloud]
+NAME=poisoncloud potion
+ID=i_bottle_green
+TYPE=t_eq_script
+TDATA1=s_poison
+
+RESOURCES=i_reag_nightshade 20, i_reag_sulfur_ash 5, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+ON=@CREATE
+MOREX=9
+
+ON=@DCLICK
+IF (<DISTANCE> > 2) && (<CANSEELOS>)
+	SRC.SYSMESSAGE You must be closer to the potion to be able to use it!
+	RETURN 1
+ENDIF
+IF (<MOREX> == 9)
+	potionequip
+ENDIF
+RETURN 1
+
+ON=@TIMER
+IF (0<MOREX>)
+	SAY <MOREX>
+	f_countdown
+	RETURN 1
+ENDIF
+potionexp
+EFFECT=2,i_trap_gas,1,24,0
+RETURN 1
+
+[ITEMDEF i_potion_paralyze]
+NAME=paralyzing potion
+ID=i_bottle_white
+TYPE=t_eq_script
+TDATA1=s_paralyze
+
+RESOURCES=i_reag_garlic 10, i_reag_mandrake_root 10, i_reag_spider_silk 10, i_reag_sulfur_ash 5, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+ON=@CREATE
+MOREX=9
+
+ON=@DCLICK
+IF (<DISTANCE> > 2) && (<CANSEELOS>)
+	SRC.SYSMESSAGE You must be closer to the potion to be able to use it!
+	RETURN 1
+ENDIF
+IF (<MOREX> == 9)
+	potionequip
+ENDIF
+RETURN 1
+
+ON=@TIMER
+IF (0<MOREX>)
+	SAY <MOREX>
+	f_countdown
+	RETURN 1
+ENDIF
+potionexp
+EFFECT=2,i_fx_sparkle,1,16,0
+RETURN 1
+
+[ITEMDEF i_potion_curse]
+NAME=curse potion
+ID=i_bottle_red
+TYPE=t_eq_script
+TDATA1=s_curse
+
+RESOURCES=i_reag_garlic 10, i_reag_nightshade 20, i_reag_sulfur_ash 15, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+ON=@CREATE
+MOREX=9
+
+ON=@DCLICK
+IF (<DISTANCE> > 2) && (<CANSEELOS>)
+	SRC.SYSMESSAGE You must be closer to the potion to be able to use it!
+	RETURN 1
+ENDIF
+IF (<MOREX> == 9)
+	potionequip
+ENDIF
+RETURN 1
+
+ON=@TIMER
+IF (0<MOREX>)
+	SAY <MOREX>
+	f_countdown
+	RETURN 1
+ENDIF
+potionexp
+EFFECT=2,i_fx_curse,1,16,0
+RETURN 1
+
+[ITEMDEF i_potion_poisonfield]
+NAME=poisonfield potion
+ID=i_bottle_green
+TYPE=t_eq_script
+TDATA1=s_poison
+TDATA2=i_fx_poison_field2
+
+RESOURCES=i_reag_garlic 10, i_reag_nightshade 20, i_reag_sulfur_ash 15, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+ON=@CREATE
+MOREX=9
+
+ON=@DCLICK
+IF (<DISTANCE> > 2) && (<CANSEELOS>)
+	SRC.SYSMESSAGE You must be closer to the potion to be able to use it!
+	RETURN 1
+ENDIF
+IF (<MOREX> == 9)
+	potionequip
+ENDIF
+RETURN 1
+
+ON=@TIMER
+IF (0<MOREX>)
+	SAY <MOREX>
+	f_countdown
+	RETURN 1
+ENDIF
+potionfield -1 -1
+potionfield -1 0
+potionfield -1 1
+potionfield 0 -1
+potionfield 0 1
+potionfield 1 -1
+potionfield 1 0
+potionfield 1 1
+potionfield 0 0
+potionexp
+EFFECT=2,i_trap_gas,1,24,0
+RETURN 1
+
+[ITEMDEF i_potion_flamefield]
+NAME=flamefield potion
+ID=i_bottle_orange
+TYPE=t_eq_script
+TDATA1=s_flamestrike
+TDATA2=i_fx_fire_field2
+
+RESOURCES=i_reag_mandrake_root 10, i_reag_sulfur_ash 35, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+ON=@CREATE
+MOREX=9
+
+ON=@DCLICK
+IF (<DISTANCE> > 2) && (<CANSEELOS>)
+	SRC.SYSMESSAGE You must be closer to the potion to be able to use it!
+	RETURN 1
+ENDIF
+IF (<MOREX> == 9)
+	potionequip
+ENDIF
+RETURN 1
+
+ON=@TIMER
+IF (0<MOREX>)
+	SAY <MOREX>
+	f_countdown
+	RETURN 1
+ENDIF
+potionfield -1 -1
+potionfield -1 0
+potionfield -1 1
+potionfield 0 -1
+potionfield 0 1
+potionfield 1 -1
+potionfield 1 0
+potionfield 1 1
+potionfield 0 0
+potionexp
+EFFECT=2,i_fx_explode,1,24,0
+RETURN 1
+
+[ITEMDEF i_potion_Beastform]
+ID=i_bottle_black
+NAME=beastform potion
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+
+RESOURCES=i_reag_blood_moss, i_reag_ginseng, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 95.1
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+	SRC.SYSMESSAGE You need to have the potion in your pack to use it!
+	RETURN 1
+ENDIF
+IF !(<SRC.BODY> == <SRC.OBODY>)
+	SRC.SYSMESSAGE You can only drink this in your original shape!
+	RETURN 1
+ENDIF
+IF (<SRC.RESTEST 1 i_beastform_timer>)
+	SRC.SYSMESSAGE You have to wait to drink another of this kind of potion.
+	RETURN 1
+ENDIF
+SRC.CONSUME 1 i_potion_beastform
+DORAND 29
+SRC.BODY=c_dog
+SRC.BODY=c_cat
+SRC.BODY=c_horse_brown_dk
+SRC.BODY=c_cow
+SRC.BODY=c_chicken
+SRC.BODY=c_rat_giant
+SRC.BODY=c_spider_giant
+SRC.BODY=c_alligator
+SRC.BODY=c_gorilla
+SRC.BODY=c_bullfrog
+SRC.BODY=c_eagle
+SRC.BODY=c_bird_crow
+SRC.BODY=c_bird
+SRC.BODY=c_toad_giant
+SRC.BODY=c_headless
+SRC.BODY=c_rat
+SRC.BODY=c_bear_brown
+SRC.BODY=c_llama
+SRC.BODY=c_snake
+SRC.BODY=c_rabbit
+SRC.BODY=c_ostard_desert
+SRC.BODY=c_ostard_forest
+SRC.BODY=c_panther
+SRC.BODY=c_walrus
+SRC.BODY=c_goat
+SRC.BODY=c_bear_polar
+SRC.BODY=c_doe
+SRC.BODY=c_pig_big
+SRC.BODY=c_sheep_woolly
+ENDDO
+SRC.RESEND
+SRC.NEWITEM i_beastform_timer
+SRC.ACT.CONT=<SRC.UID>
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.TIMER=<EVAL(60+(<SRC.ALCHEMY>/20)+{1 30})>
+
+[ITEMDEF i_potion_resurrect]
+ID=i_bottle_white
+NAME=resurrection potion
+TYPE=t_eq_script
+
+RESOURCES=i_reag_ginseng 40, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+ON=@DCLICK
+IF (<DISTANCE> > 2) && (<CANSEELOS>)
+	SRC.SYSMESSAGE You must be closer to the potion to be able to use it!
+	RETURN 1
+ENDIF
+TARGET Whom do you wish to resurrect?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.TYPE> == t_corpse)
+	SRC.SYSMESSAGE You can only use this on a body!
+	RETURN 1
+ENDIF
+IF !(<SRC.TARG.LINK.FLAGS>&statf_dead)
+	SRC.SYSMESSAGE That creature cannot be resurrected!
+	RETURN 1
+ENDIF
+IF (<SRC.TARG.LINKDISTANCE> > 3)
+	SRC.SYSMESSAGE The soul has wandered too far from the body to be able to be resurrected!
+	RETURN 1
+ENDIF
+SRC.TARG.LINK.RESURRECT
+SRC.EMOTE pour the potion down <SRC.TARG.LINK.NAME>'s throat
+SRC.NEWITEM i_bottle_empty
+SRC.ACT.BOUNCE
+REMOVE
+RETURN 0
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE That is not a body!
+RETURN 1

@@ -1,0 +1,106 @@
+// Invulnerability Potion
+
+// Scripted by Fusion.
+
+// A.K.A Jdog
+
+// Please do not remove this header.
+
+
+// ** Usage **
+// Double-click it, heh.
+
+
+[ITEMDEF i_potion_invul]
+ID=i_bottle_empty
+NAME=Invulnerability
+WEIGHT=.1
+TYPE=T_POTION
+SKILLMAKE=ALCHEMY 100.0
+RESOURCES=8 i_reag_spider_silk, 1 i_bottle_empty
+DESCRIPTION=Invul Potion
+
+CATEGORY=Other
+SUBSECTION=Potion
+
+ON=@Create
+COLOR=020
+
+ON=@DClick
+IF !<SRC.FINDID.i_potion_invul>  // You could use (<SRC.UID> != <CONT.CONT.UID>), but it will exclude checking any containers inside the pack.
+SRC.SYSMESSAGE This must be in you're pack to use.
+RETURN 1
+ENDIF
+IF <SRC.FINDID.i_potion_timer>
+SRC.SYSMESSAGE You must wait to use this again.
+RETURN 1
+ELSE
+SRC.ANIM 34
+SRC.NEWITEM i_potion_timer
+SRC.ACT.EQUIP
+SRC.NEWITEM i_invul_timer
+SRC.ACT.EQUIP
+SRC.CONSUME 1 i_potion_invul
+SRC.NEWITEM i_bottle_empty
+SRC.ACT.BOUNCE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_invul_timer]
+ID=i_memory
+NAME=Invul Timer
+WEIGHT=0
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@Create
+MORE1=60
+
+ON=@Equip
+SRC.MESSAGE You cannot be damaged for sixty seconds.
+TIMER=1
+SRC.EVENTS +e_invul
+
+ON=@Timer
+IF (<CONT>)
+IF (<MORE1>)
+MORE1=<MORE1>-1
+TIMER=1
+RETURN 1
+ELSE
+CONT.EVENTS -e_invul
+CONT.MESSAGE You can now be damaged
+ENDIF
+ENDIF
+REMOVE
+RETURN 1
+
+[ITEMDEF i_potion_timer]
+ID=i_memory
+NAME=Potion Timer
+WEIGHT=0
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_decay
+MORE1=600   // Every ten minutes.
+
+ON=@Equip
+TIMER=1
+
+ON=@Timer
+IF (<CONT>)
+IF (<MORE1>)
+MORE1=<MORE1>-1
+TIMER=1
+RETURN 1
+ELSE
+ENDIF
+ENDIF
+REMOVE
+RETURN 1
+
+[EVENTS e_invul]
+ON=@GetHit
+SRC.HITS=<SRC.STR>
+RETURN 1

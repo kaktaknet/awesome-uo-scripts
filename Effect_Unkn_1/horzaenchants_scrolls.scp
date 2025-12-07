@@ -1,0 +1,4119 @@
+//HORZA WEAPON ENCHANTMENTS**********FILE: horzaenchants_scrolls.scp**********
+//SPHERE by : Menasoft ©1997-2000 
+//www.sphereserver.com 
+// All SPHERE script files and formats are copyright Menasoft & Partners. 
+// All donations and contributions become the property of Menasoft 
+// & Partners. 
+// 
+// This file was create by Developer Horza and Admin Lazerus for Private and 
+// shared use on The Arilum Shard and Script Sharing Network. All Code and Copyright 
+// is the property of Menasoft & Partners. 
+// 
+//      ______________________________________________________________________
+// ----| All thanks and credit to Bringer of death, this is a remake of his   |
+// ----| enchantments script for The Dark Shard and Dawn of Britannia & Dawn  |
+// ----| of Britannia 2, remade from start to finish. Concept given by him.   |
+//      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+// Please do not edit this header to give Credit to its writers and Creators.
+//****************************************************************************
+//Version 1.0
+//****************************************************************************
+//                                   Intentions 
+//---------------------------------------------------------------------------- 
+//
+//	-For admins/hosts to put the scrolls into large monster loot at random
+//	 along with magic weapons. Does not work well with weapons which
+//	 already use effects for the enchantments give all useable weapons
+//	 there own effect although not scripted on. This was intended for
+//	 larger monsters or maybe as rewards for various things.
+//
+//**************************************************************************** 
+// FILE LAST UPDATED: Friday, September 27th, 2002
+
+[ITEMDEF i_enchantment_1]
+ID=i_scroll_blank
+NAME=Shock
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow))
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 01
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_2]
+ID=i_scroll_blank
+NAME=Burn
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 02
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_3]
+ID=i_scroll_blank
+NAME=Cyclone
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 03
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_4]
+ID=i_scroll_blank
+NAME=Thunder
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 04
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_5]
+ID=i_scroll_blank
+NAME=Scald
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 05
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_6]
+ID=i_scroll_blank
+NAME=Black Hole
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 06
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_7]
+ID=i_scroll_blank
+NAME=Pikachu
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 07
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_8]
+ID=i_scroll_blank
+NAME=Smoked Ham
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 08
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_9]
+ID=i_scroll_blank
+NAME=Worm Hole
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 09
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_10]
+ID=i_scroll_blank
+NAME=Meltdown
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 10
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_11]
+ID=i_scroll_blank
+NAME=Chornobyl
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 11
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_12]
+ID=i_scroll_blank
+NAME=Vortex
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 12
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_13]
+ID=i_scroll_blank
+NAME=Stormfire
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 13
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_14]
+ID=i_scroll_blank
+NAME=Lightning Storm
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 14
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_15]
+ID=i_scroll_blank
+NAME=Stormblast
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 15
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_16]
+ID=i_scroll_blank
+NAME=Vanilla Ice
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 16
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_17]
+ID=i_scroll_blank
+NAME=Brimstone
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 17
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_18]
+ID=i_scroll_blank
+NAME=Inferno
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 18
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_19]
+ID=i_scroll_blank
+NAME=Dark Mist
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 19
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_20]
+ID=i_scroll_blank
+NAME=Hail Stone
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 20
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_21]
+ID=i_scroll_blank
+NAME=Frostbite
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 22
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_22]
+ID=i_scroll_blank
+NAME=Snowman
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 23
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_23]
+ID=i_scroll_blank
+NAME=Ice Créam
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 24
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_24]
+ID=i_scroll_blank
+NAME=Wintermute
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 25
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_25]
+ID=i_scroll_blank
+NAME=Frozen Popsicles
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 26
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_26]
+ID=i_scroll_blank
+NAME=Nescafe
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 27
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_27]
+ID=i_scroll_blank
+NAME=Orange Aid
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 28
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_28]
+ID=i_scroll_blank
+NAME=Vanilla Cream
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 29
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_29]
+ID=i_scroll_blank
+NAME=Cafine Crush
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 30
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_30]
+ID=i_scroll_blank
+NAME=Pussy Juice
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 31
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_31]
+ID=i_scroll_blank
+NAME=Thunder Thighs
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 32
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_32]
+ID=i_scroll_blank
+NAME=Durex
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 33
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_33]
+ID=i_scroll_blank
+NAME=McVITIES
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 34
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_34]
+ID=i_scroll_blank
+NAME=OwNED
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 35
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_35]
+ID=i_scroll_blank
+NAME=Mountain Crest
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 36
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_36]
+ID=i_scroll_blank
+NAME=Volvic
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 37
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_37]
+ID=i_scroll_blank
+NAME=Rice Crispies
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 38
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_38]
+ID=i_scroll_blank
+NAME=Cuddlerobes
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 39
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_39]
+ID=i_scroll_blank
+NAME=Fat Bottem
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 40
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_40]
+ID=i_scroll_blank
+NAME=Hazard
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 41
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_41]
+ID=i_scroll_blank
+NAME=Fresh
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 42
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_42]
+ID=i_scroll_blank
+NAME=Jiggy
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 43
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_43]
+ID=i_scroll_blank
+NAME=Destructive
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 44
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_44]
+ID=i_scroll_blank
+NAME=Clarity
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 45
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_45]
+ID=i_scroll_blank
+NAME=Enlightenment
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 46
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_46]
+ID=i_scroll_blank
+NAME=Crystal Clear
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 47
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_47]
+ID=i_scroll_blank
+NAME=Daemoness Love
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 48
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+
+[ITEMDEF i_enchantment_48]
+ID=i_scroll_blank
+NAME=Vampire Curse
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 49
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+
+[ITEMDEF i_enchantment_49]
+ID=i_scroll_blank
+NAME=Hotsex
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 50
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_50]
+ID=i_scroll_blank
+NAME=Blowjob
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 51
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_51]
+ID=i_scroll_blank
+NAME=Tzeentch
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 52
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_53]
+ID=i_scroll_blank
+NAME=Dodge
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 52
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_53]
+ID=i_scroll_blank
+NAME=Hawk
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 54
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_54]
+ID=i_scroll_blank
+NAME=Iron
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 55
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_55]
+ID=i_scroll_blank
+NAME=Hammer
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 56
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_56]
+ID=i_scroll_blank
+NAME=Calculaton
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 57
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_57]
+ID=i_scroll_blank
+NAME=Aegnor
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 58
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_58]
+ID=i_scroll_blank
+NAME=Barghest
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 59
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_59]
+ID=i_scroll_blank
+NAME=Cairne
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 60
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_60]
+ID=i_scroll_blank
+NAME=Daelon
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 61
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_62]
+ID=i_scroll_blank
+NAME=Elrak
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 63
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_63]
+ID=i_scroll_blank
+NAME=Israfel
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 64
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_64]
+ID=i_scroll_blank
+NAME=Kallomane
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 65
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_65]
+ID=i_scroll_blank
+NAME=Kragon
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 66
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_66]
+ID=i_scroll_blank
+NAME=Larac
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 67
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_67]
+ID=i_scroll_blank
+NAME=Lenroc
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 68
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_68]
+ID=i_scroll_blank
+NAME=Merkul
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 69
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_69]
+ID=i_scroll_blank
+NAME=Morturus
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 70
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_70]
+ID=i_scroll_blank
+NAME=Mytor
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 71
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_71]
+ID=i_scroll_blank
+NAME=Sartan
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 72
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_72]
+ID=i_scroll_blank
+NAME=Telzar
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 73
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_73]
+ID=i_scroll_blank
+NAME=Tyrnar
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 74
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_74]
+ID=i_scroll_blank
+NAME=Kharn
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 75
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_75]
+ID=i_scroll_blank
+NAME=Mazrim
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 76
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_76]
+ID=i_scroll_blank
+NAME=Nabius
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 77
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_77]
+ID=i_scroll_blank
+NAME=Vlade
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 78
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_78]
+ID=i_scroll_blank
+NAME=Xiltanth
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 79
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_79]
+ID=i_scroll_blank
+NAME=Zalifar
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 80
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_80]
+ID=i_scroll_blank
+NAME=Andnon
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=00793
+
+ON=@DCLICK
+TARGET What would you like to enchant?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		DORAND 10
+			VAR.TEMP=0
+			VAR.TEMP=1
+			VAR.TEMP=2
+			VAR.TEMP=3
+			VAR.TEMP=4
+			VAR.TEMP=5
+			VAR.TEMP=6
+			VAR.TEMP=7
+			VAR.TEMP=8
+			VAR.TEMP=9
+		ENDDO
+			IF (<VAR.TEMP>==4)
+				SRC.TARG.MOREM = 21
+				SRC.TARG.NAME = <SRC.TARG.NAME> [CURSED]
+				REMOVE
+			ELSE
+				SRC.TARG.MOREM = 81
+				SRC.TARG.NAME = <SRC.TARG.NAME> [<NAME>]
+				REMOVE
+			ENDIF
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_rune_water]
+ID=i_rune_marker
+NAME=rune of Water
+TYPE=t_normal
+DUPELIST=01f15,01f16,01f17
+FLIP=1
+
+ON=@CREATE
+COLOR=colors_blue
+
+ON=@DCLICK
+IF (<SRC.FINDID.i_enchantment_rune_light> && <SRC.FINDID.i_enchantment_rune_fire> && <SRC.FINDID.i_enchantment_rune_water> && <SRC.FINDID.i_enchantment_rune_ice>)
+	SRC.CONSUME=1 i_enchantment_rune_light
+	SRC.CONSUME=1 i_enchantment_rune_ice
+	SRC.CONSUME=1 i_enchantment_rune_fire
+	SRC.CONSUME=1 i_enchantment_rune_water
+	SRC.NEWITEM=i_enchantment_rune_elemental
+	SRC.ACT.BOUNCE
+	SRC.MESSAGE You have required all items for a elemental spirit mage of your own!
+	SRC.EMOTE create an elemental spirit mage scroll!
+ENDIF
+TARGET What would you like to mark with this rune?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		IF <SRC.TARG.MOREM>==0
+			SRC.TARG.MOREM = 82
+				IF <SRC.TARG.MOREY>>0
+					SRC.TARG.NAME = <SRC.TARG.NAME> [Tidal Rune]
+				ELSE
+					SRC.TARG.NAME = a <SRC.TARG.NAME> [Tidal Rune]
+				ENDIF
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==82
+			SRC.TARG.MOREM = 83
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==83
+			SRC.TARG.MOREM = 84
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==84
+			SRC.TARG.MOREM = 85
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==85
+			SRC.TARG.MOREM = 86
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==86
+			SRC.MESSAGE This cannot be upgraded any further
+		ELSEIF <SRC.TARG.MOREM>>0
+			SRC.MESSAGE This is already enchanted!
+			RETURN 1
+		ENDIF 
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_rune_fire]
+ID=i_rune_marker
+NAME=rune of Fire
+TYPE=t_normal
+DUPELIST=01f15,01f16,01f17
+FLIP=1
+
+ON=@CREATE
+COLOR=colors_red
+
+ON=@DCLICK
+IF (<SRC.FINDID.i_enchantment_rune_light> && <SRC.FINDID.i_enchantment_rune_fire> && <SRC.FINDID.i_enchantment_rune_water> && <SRC.FINDID.i_enchantment_rune_ice>)
+	SRC.CONSUME=1 i_enchantment_rune_light
+	SRC.CONSUME=1 i_enchantment_rune_ice
+	SRC.CONSUME=1 i_enchantment_rune_fire
+	SRC.CONSUME=1 i_enchantment_rune_water
+	SRC.NEWITEM=i_enchantment_rune_elemental
+	SRC.ACT.BOUNCE
+	SRC.MESSAGE You have required all items for a elemental spirit mage of your own!
+	SRC.EMOTE create an elemental spirit mage scroll!
+ENDIF
+TARGET What would you like to mark with this rune?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		IF <SRC.TARG.MOREM>==0
+			SRC.TARG.MOREM = 87
+				IF <SRC.TARG.MOREY>>0
+					SRC.TARG.NAME = <SRC.TARG.NAME> [Inferno Rune]
+				ELSE
+					SRC.TARG.NAME = a <SRC.TARG.NAME> [Inferno Rune]
+				ENDIF
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==87
+			SRC.TARG.MOREM = 88
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==88
+			SRC.TARG.MOREM = 89
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==89
+			SRC.TARG.MOREM = 90
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==90
+			SRC.TARG.MOREM = 91
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==91
+			SRC.MESSAGE This cannot be upgraded any further
+		ELSEIF <SRC.TARG.MOREM>>0
+			SRC.MESSAGE This is already enchanted!
+			RETURN 1
+		ENDIF 
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_rune_ice]
+ID=i_rune_marker
+NAME=rune of Ice
+TYPE=t_normal
+DUPELIST=01f15,01f16,01f17
+FLIP=1
+
+ON=@CREATE
+COLOR=colors_green
+
+ON=@DCLICK
+IF (<SRC.FINDID.i_enchantment_rune_light> && <SRC.FINDID.i_enchantment_rune_fire> && <SRC.FINDID.i_enchantment_rune_water> && <SRC.FINDID.i_enchantment_rune_ice>)
+	SRC.CONSUME=1 i_enchantment_rune_light
+	SRC.CONSUME=1 i_enchantment_rune_ice
+	SRC.CONSUME=1 i_enchantment_rune_fire
+	SRC.CONSUME=1 i_enchantment_rune_water
+	SRC.NEWITEM=i_enchantment_rune_elemental
+	SRC.ACT.BOUNCE
+	SRC.MESSAGE You have required all items for a elemental spirit mage of your own!
+	SRC.EMOTE create an elemental spirit mage scroll!
+ENDIF
+TARGET What would you like to mark with this rune?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		IF <SRC.TARG.MOREM>==0
+			SRC.TARG.MOREM = 92
+				IF <SRC.TARG.MOREY>>0
+					SRC.TARG.NAME = <SRC.TARG.NAME> [Blizzard Rune]
+				ELSE
+					SRC.TARG.NAME = a <SRC.TARG.NAME> [Blizzard Rune]
+				ENDIF
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==92
+			SRC.TARG.MOREM = 93
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==93
+			SRC.TARG.MOREM = 94
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==94
+			SRC.TARG.MOREM = 95
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==95
+			SRC.TARG.MOREM = 96
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==96
+			SRC.MESSAGE This cannot be upgraded any further
+		ELSEIF <SRC.TARG.MOREM>>0
+			SRC.MESSAGE This is already enchanted!
+			RETURN 1
+		ENDIF 
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_rune_light]
+ID=i_rune_marker
+NAME=rune of Light
+TYPE=t_normal
+DUPELIST=01f15,01f16,01f17
+FLIP=1
+
+ON=@CREATE
+COLOR=colors_yellow
+
+ON=@DCLICK
+IF (<SRC.FINDID.i_enchantment_rune_light> && <SRC.FINDID.i_enchantment_rune_fire> && <SRC.FINDID.i_enchantment_rune_water> && <SRC.FINDID.i_enchantment_rune_ice>)
+	SRC.CONSUME=1 i_enchantment_rune_light
+	SRC.CONSUME=1 i_enchantment_rune_ice
+	SRC.CONSUME=1 i_enchantment_rune_fire
+	SRC.CONSUME=1 i_enchantment_rune_water
+	SRC.NEWITEM=i_enchantment_rune_elemental
+	SRC.ACT.BOUNCE
+	SRC.MESSAGE You have required all items for a elemental spirit mage of your own!
+	SRC.EMOTE create an elemental spirit mage scroll!
+ENDIF
+TARGET What would you like to mark with this rune?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		IF <SRC.TARG.MOREM>==0
+			SRC.TARG.MOREM = 97
+				IF <SRC.TARG.MOREY>>0
+					SRC.TARG.NAME = <SRC.TARG.NAME> [Light Rune]
+				ELSE
+					SRC.TARG.NAME = a <SRC.TARG.NAME> [Light Rune]
+				ENDIF
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==97
+			SRC.TARG.MOREM = 98
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==98
+			SRC.TARG.MOREM = 99
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==99
+			SRC.TARG.MOREM = 100
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==100
+			SRC.TARG.MOREM = 101
+			REMOVE
+		ELSEIF <SRC.TARG.MOREM>==101
+			SRC.MESSAGE This cannot be upgraded any further
+		ELSEIF <SRC.TARG.MOREM>>0
+			SRC.MESSAGE This is already enchanted!
+			RETURN 1
+		ENDIF 
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_enchantment_rune_elemental]
+ID=i_rune_marker
+NAME=unseen element
+TYPE=t_normal
+DUPELIST=01f15,01f16,01f17
+FLIP=1
+
+ON=@CREATE
+COLOR=053
+
+ON=@DCLICK
+SRC.EMOTE activate a force beyond anything seen before!
+TARGET What would you like to mark with this rune?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF ((<src.targ.type>==t_weapon_sword) || (<src.targ.type>==t_weapon_mace_staff) || (<src.targ.type>==t_weapon_axe) || (<src.targ.type>==t_weapon_mace_smith) || (<src.targ.type>==t_weapon_fence) || (<src.targ.type>==t_weapon_mace_sharp) || (<src.targ.type>==t_weapon_bow) || (<src.targ.type>==t_weapon_xbow)) && (<SRC.TARG.WEIGHT>>40) && !(<SRC.TARG.ATTR>&04)
+	IF <SRC.TARG.MOREM>>0
+		SRC.MESSAGE This is already enchanted!
+		RETURN 1
+	ENDIF
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		SRC.TARG.MOREM = 102
+		RANDOMELEMNAME
+		IF <SRC.TARG.MOREY>>0
+			SRC.TARG.NAME = <SRC.TARG.NAME> [<VAR.TEMP>]
+		ELSE
+			SRC.TARG.NAME = a <SRC.TARG.NAME> [<VAR.TEMP>]
+		ENDIF
+		SRC.EFFECT=1,03728,35,35,0
+		SRC.EFFECT=1,03728,35,35,1
+		SRC.EFFECT=1,03728,35,35,2
+		SRC.EFFECT=1,03728,35,35,0
+		SRC.EFFECT=1,03728,35,35,1
+		SRC.EFFECT=1,03728,35,35,2
+		SRC.EFFECT=1,03728,35,35,0
+		SRC.EFFECT=1,03728,35,35,1
+		SRC.EFFECT=1,03728,35,35,2
+		SRC.TARG.ATTR=<SRC.TARG.ATTR>|00004
+		REMOVE
+	ELSE
+		SRC.MESSAGE It must be on your person!
+	ENDIF
+ELSE
+	SRC.MESSAGE You can't enchant this.
+ENDIF
+RETURN 1
+
+[EOF]

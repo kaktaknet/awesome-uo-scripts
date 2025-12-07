@@ -1,0 +1,252 @@
+//dialogs.scp compiled by PySphere Release 17 from dialogs.py.
+//#prefix-local
+//#omit-original-code
+[function Admin2]
+dialog(d_admin_system_2)
+[dialog d_admin_system_2]
+ARG(argo.tag.sortby,<?argv[0]?>)
+ARG(argo.tag.startindex,<?argv[1]?>)
+argo.PlayerList(<?argo.tag.sortby?>)
+IF !0<?argo.contextcount?>
+src.sysmessage(No clients to list)
+return(1)
+ENDIF
+SetLocation=5,80
+page=0
+resizepic(0,0,5054,800,517)
+gumppictiled(10,10,780,22,2624)
+gumppictiled(10,37,140,450,2624)
+gumppictiled(155,37,615,450,2624)
+gumppictiled(10,490,780,25,2624)
+checkertrans(10,10,780,507)
+textA(30,12,2301,"<?serv.name?> ADMIN CONSOLE -")
+textA(345,12,2301,"Client's Online Console (<?argo.contextcount?>)")
+button(760,10,4017,4019,1,0,0)
+textA(22,35,2301,"goto")
+textA(22+30,35,2301,"jail")
+textA(22+60,35,2301,"msg")
+textA(22+90,35,2301,"admin")
+button(600,495,04b9,04ba,1,0,1)
+textA(160,35,2301,Account)
+button(200,495,04b9,04ba,1,0,2)
+textA(280,35,2301,Char)
+button(400,495,04b9,04ba,1,0,3)
+textA(430,35,2301,IP)
+textA(540,35,2301,Location)
+ARG(icontextcount,<?argo.contextcount?>)
+ARG(iqty,<?ARG(icontextcount)?>-0<?argo.tag.startindex?>)
+IF <?ARG(iqty)?>>100
+ARG(iqty,100)
+ENDIF
+ARG(icount,0)
+WHILE (<?ARG(icount)?><<?ARG(iqty)?>)
+IF (<?ARG(icount)?>%20)==0
+ARG(iy,70)
+ARG(ipage,1+(<?ARG(icount)?>/20))
+argo.page(<?ARG(ipage)?>)
+IF <?ARG(icount)?>
+argo.button(700,460,0fa,0fb,0,<?ARG(ipage)?>-1)
+ELIF <?argo.tag.startindex?>
+argo.button(700,460,0fa,0fb,1,0,4)
+ENDIF
+IF (<?ARG(iqty)?>><?ARG(icount)?>+20)
+argo.button(750,460,0fc,0fd,0,<?ARG(ipage)?>+1)
+ELIF <?ARG(icontextcount)?>-0<?argo.tag.startindex?>>100
+argo.button(750,460,0fc,0fd,1,0,5)
+ENDIF
+ENDIF
+ARG(pClient,<?argo.ContextEnum(<?argo.tag.startindex?>+<?ARG(icount)?>)?>)
+argo.button(20,<?ARG(iy)?>,4005,4007,1,0,(4*<?ARG(icount)?>)+6)
+argo.button(20+30,<?ARG(iy)?>,4005,4007,1,0,(4*<?ARG(icount)?>)+7)
+argo.button(20+60,<?ARG(iy)?>,4005,4007,1,0,(4*<?ARG(icount)?>)+8)
+argo.button(20+90,<?ARG(iy)?>,4005,4007,1,0,(4*<?ARG(icount)?>)+9)
+argo.textA(160,<?ARG(iy)?>,99,"<?finduid(<?ARG(pClient)?>).AccountName?>")
+argo.textA(280,<?ARG(iy)?>,99,"<?finduid(<?ARG(pClient)?>).Name?>")
+argo.textA(430,<?ARG(iy)?>,99,"<?finduid(<?ARG(pClient)?>).IPAddr?>")
+argo.textA(540,<?ARG(iy)?>,99,"<?finduid(<?ARG(pClient)?>).P?>")
+ARG(iy,#+20)
+ARG(icount,#+1)
+ENDWHILE
+[DIALOG d_admin_system_2 BUTTON]
+on=0
+return
+on=1
+src.dialog(<?d_admin_system2("Account",<?argo.tag.startindex?>)?>)
+on=2
+src.dialog(<?d_admin_system2("Name",<?argo.tag.startindex?>)?>)
+on=3
+src.dialog(<?d_admin_system2("IPAddr",<?argo.tag.startindex?>)?>)
+on=4
+src.dialog(<?d_admin_system2(<?argo.tag.sortby?>,(<?argo.tag.startindex?>-100))?>)
+on=5
+src.dialog(<?d_admin_system2?>,"<?argo.tag.sortby?>",(<?argo.tag.startindex?>+100))
+on=@AnyButton
+IF (((<?argn?>-6)%4)==0)
+src.gouid(<?argo.contextEnum((<?argn?>-6)/4).uid?>)
+ENDIF
+IF (((<?argn?>-6)%4)==1)
+argo.contextEnum((<?argn?>-6)/4).jail
+ENDIF
+IF (((<?argn?>-6)%4)==2)
+src.targ=<?argo.contextEnum((<?argn?>-6)/4)?>
+src.everbtarg(<?hear?>)
+ENDIF
+IF (((<?argn?>-6)%4)==3)
+argo.tag.propback=1
+argo.tag.propback2=d_AdminPlayers
+argo.contextEnum((<?argn?>-6)/4).tweak
+ENDIF
+[MENU Menu_Context_Pet]
+Pet Menu
+on=0 6107 020 0ff 0ff
+Act=<?src.uid?>
+Hear("Guard Me")
+on=0 6108
+Act=<?src.uid?>
+Hear("Follow Me")
+on=0 6109
+Act=<?src.uid?>
+Hear("Drop All")
+on=0 6111
+Act=<?src.uid?>
+Hear("Kill")
+on=0 6112
+Act=<?src.uid?>
+Hear("Stay")
+on=0 6106
+Act=<?src.uid?>
+Hear("Go")
+on=0 6110
+Act=<?src.uid?>
+Hear("Friend")
+on=0 6113
+Act=<?src.uid?>
+Hear("Transfer")
+on=0 6118
+Act=<?src.uid?>
+Hear("Release")
+[MENU MENU_TOWN_MAYOR_2]
+Town of <?Name?> (<?MasterTitle?> <?Master?>)
+on=0 View the current citizenship.
+VIEWROSTER
+on=0 View the town's charter.
+VIEWCHARTER
+on=0 Vote for mayor. You are currently loyal to <?LoyalTo?>.
+DECLAREFEALTY
+on=0 Resign from the town.
+RESIGN
+on=0 View list of those applying for citizenship.
+VIEWCANDIDATES
+on=0 View list of towns that <?Name?> has declared war on.
+VIEWENEMYS
+on=0 View list of towns that have declared war on <?Name?>.
+VIEWTHREATS
+on=0 Access Mayoral functions.
+MASTERMENU
+[DIALOG d_menu_town_mayor_2]
+SetLocation=10,30
+argo.page=0
+resizepic(0,0,2620,600,450)
+argo.tag.ytextpos=5
+argo.tag.pagenum=1
+argo.page=1
+textA(35,<?argo.tag.ytextpos?>,1152,"Town of <?Name?> (asdf)")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"View the current citizenship.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,1)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"View the town's charter.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,2)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"Vote for mayor. You are currently loyal to yourself.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,3)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"Resign from the town.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,4)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"View list of those applying for citizenship.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,5)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"View list of towns that <?Name?> has declared war on.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,6)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"View list of towns that have declared war on <?Name?>.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,7)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"say moo.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,8)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"say my name.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,9)
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,1152,"The following text is space-filler to go to another page...")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"b.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"c.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"d.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"e.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"f.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"g.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"h.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"i.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"j.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"k.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"l.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"m.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"n.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"o.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"p.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"q.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"r.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"s.")
+argo.f_d_menu_town_mayor_2_py
+textA(35,<?argo.tag.ytextpos?>,90,"set my name to bob.")
+argo.button(15,<?argo.tag.ytextpos?>+5,2117,2118,1,<?argo.tag.pagenum?>,10)
+argo.f_d_menu_town_mayor_2_py
+[FUNCTION f_d_menu_town_mayor_2_py]
+tag.ytextpos=<?tag.ytextpos?>+20
+if (<?tag.ytextpos?>>440)
+tag.ytextpos=5
+button(570,0,4005,4007,0,<?eval (<?tag.pagenum?>+1)?>,0)
+tag.pagenum=<?tag.pagenum?>+1
+page=<?tag.pagenum?>
+button(0,0,4014,4015,0,<?eval (<?tag.pagenum?>-1)?>,0)
+endif
+[DIALOG d_menu_town_mayor_2 BUTTON]
+onbutton=1
+VIEWROSTER
+onbutton=2
+VIEWCHARTER
+onbutton=3
+DECLAREFEALTY
+onbutton=4
+RESIGN
+onbutton=5
+VIEWCANDIDATES
+onbutton=6
+VIEWENEMYS
+onbutton=7
+VIEWTHREATS
+onbutton=8
+say(moo)
+onbutton=9
+say(<?name?>)
+onbutton=10
+name(bob)

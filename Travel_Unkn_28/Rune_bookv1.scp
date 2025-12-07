@@ -1,0 +1,849 @@
+//Scripted for 55r402 by Theol, Admin Dark
+//Updated the gates so they cannot be picked up by players
+//updated some outdated keys 12/10/2004
+//added defs to turn on/off charges, for the built in manual, gate/recall
+//settings, maxcharges and startcharges. 12/17/2004
+//edited and made the script smaller ~1,275 lines down to 847 ;P as well as added 
+//1 new option GATE_OPTION turns smoke on or off when gating. 
+//fixed a few bugs; feb 10, 2005.
+
+[defname runic_bookious]
+MAXCHARGE		50 //max charges the runebook can hold
+STARTCHARGE		5  //charges the rune book starts with
+RECALLTIMER		0  //time in seconds +1 to use this 
+GATETIMER		2  //time in seconds +1 to use this 
+NEEDCHARGES		1  //to turn on or off charges 1=charges 0=no charges
+HELPMANUAL		1  //to turn on or off help manual 1=on 0=off
+GATE_OPTION		1  // 1=nosmoke 0=smoke
+
+[ITEMDEF i_rune_bk]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+ID=i_spellbook
+TYPE=t_script
+NAME=Rune Book
+
+ON=@CREATE
+COLOR=0901
+ATTR=attr_decay
+TAG.MANUAL=Serpent's Hold
+TAG.CHARGE=<EVAL (<DEF.STARTCHARGE>)>
+TAG.LASTPG=1
+FOR 1 20
+TRYP 0 TAG.NAME_<EVAL <LOCAL._FOR>>=Empty
+TRYP 0 TAG.LOC_<EVAL <LOCAL._FOR>>=0
+ENDIF
+END
+
+ON=@DCLICK
+TAG.TCHARGE=<EVAL (<DEF.MAXCHARGE>)>
+SOUND=055
+SRC.DIALOGCLOSE d_rune_bk
+SRC.DIALOG d_rune_bk <EVAL (<SRC.TARG.TAG.LASTPG>)>
+RETURN 1
+
+ON=@DROPON_SELF
+IF (<ARGO.BASEID>==i_rune_marker) && (<EVAL <ARGO.MOREP>>==0)
+SRC.SYSMESSAGE That <ARGO.NAME> is not marked
+RETURN 1
+ENDIF
+IF (<ARGO.BASEID>==i_rune_marker) && (<EVAL <ARGO.MOREP>>>0)
+FOR 1 20 
+IF <EVAL <TAG.LOC_<EVAL <LOCAL._FOR>>>>==0
+LOCAL.M=<EVAL <LOCAL._FOR>>
+OBJ=<ARGO.UID>
+TRYP 0 TAG.LOC_<EVAL <LOCAL.M>>=<OBJ.MOREP>
+TRYP 0 TAG.NAME_<EVAL <LOCAL.M>>=<OBJ.NAME>
+SOUND=snd_spell_mark
+SAY Found slot <EVAL <LOCAL.M>> Empty
+SRC.SYSMESSAGE Added <OBJ.NAME> to slot <EVAL <LOCAL.M>>
+OBJ.REMOVE
+RETURN 1
+ENDIF
+END
+RETURn 1
+ELSEIF (<ARGO.BASEID>==i_scroll_recall)
+OBJ=<ARGO.UID>
+CALL CHARGE_BOOK <EVAL <OBJ.AMOUNT>>
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_recall_delay]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+ID=i_memory
+LAYER=layer_special
+TYPE=t_eq_script
+
+ON=@CREATE
+TAG.GET_HIT=0
+TAG.HIT=0
+MORE=<EVAL (<DEF.RECALLTIMER>)>
+
+ON=@TIMER
+IF (<MORE>>0)
+MORE=<MORE> +-1
+TIMER=1
+RETURN 1
+ELSE
+LINK.GO_RECALL <MOREZ>
+LINK.EVENTS=-e_spell_fight_fizzle
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_gate_delay]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+ID=i_memory
+LAYER=layer_special
+TYPE=t_eq_script
+
+ON=@CREATE
+TAG.GET_HIT=0
+TAG.HIT=0
+MORE=<EVAL (<DEF.GATETIMER>)>
+
+ON=@TIMER
+IF (<MORE>>0)
+MORE=<MORE> +-1
+TIMER=1
+RETURN 1 
+ELSE
+LINK.GO_GATE <MOREZ>
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_gateway]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+ID=i_moongate_blue_fx
+TYPE=t_script
+
+ON=@CREATE
+ATTR=attr_decay|attr_move_never
+
+ON=@TIMER
+IF <TYPE>==t_script
+TIMER=60
+DISPID=i_moongate_blue
+TYPE=t_telepad
+REMOVEFROMVIEW
+UPDATE
+RETURN 1
+ELSE
+RETURN 0
+
+[EVENTS e_spell_fight_fizzle]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+
+ON=@SPELLCAST
+IF !(<FINDID(i_recall_delay).UID>)
+EVENTS=-e_spell_fight_fizzle
+RETURN 0
+ELSE
+FINDID(i_recall_delay).REMOVE
+EVENTS=-e_spell_fight_fizzle
+SYSMESSAGE You fail to recall
+SOUND=05c
+RETURN 0 
+
+ON=@HIT
+IF !(<FINDID(i_recall_delay).UID>)
+EVENTS=-e_spell_fight_fizzle
+RETURN 0
+ELSEIF (<EVAL (<FINDID(i_recall_delay).TAG.GET_HIT>)>>0) && (<EVAL (<FINDID(i_recall_delay).TAG.HIT>)><2)
+FINDID(i_recall_delay).TAG.HIT=<EVAL (<FINDID(i_recall_delay).TAG.HIT>)>+1
+RETURN 0
+ELSE
+FINDID(i_recall_delay).REMOVE
+EVENTS=-e_spell_fight_fizzle
+SYSMESSAGE You fail to recall
+SOUND=05c
+RETURN 0
+
+ON=@GETHIT
+IF !(<FINDID(i_recall_delay).UID>)
+EVENTS=-e_spell_fight_fizzle
+RETURN 0
+ELSEIF (<EVAL (<FINDID(i_recall_delay).TAG.GET_HIT>)><2)
+FINDID(i_recall_delay).TAG.GET_HIT=<EVAL (<FINDID(i_recall_delay).TAG.GET_HIT>)>+1
+RETURN 0
+ELSE
+FINDID(i_recall_delay).REMOVE
+EVENTS=-e_spell_fight_fizzle
+SYSMESSAGE You fail to recall
+SOUND=05c
+RETURN 0
+
+ON=@USERWARMODE
+IF (<ARGN1>==1) && (<FINDID(i_recall_delay).UID>)
+FINDID(i_recall_delay).REMOVE
+EVENTS=-e_spell_fight_fizzle
+SYSMESSAGE You fail to recall
+SOUND=05c
+RETURN 0
+
+ON=@DEATH
+IF (<FINDID(i_recall_delay).UID>)
+FINDID(i_recall_delay).REMOVE
+EVENTS=-e_spell_fight_fizzle
+RETURN 0
+
+ON=@LOGOUT
+IF !(<FINDID(i_recall_delay).UID>)
+EVENTS=-e_spell_fight_fizzle
+RETURN 0
+ELSE
+FINDID(i_recall_delay).REMOVE
+EVENTS=-e_spell_fight_fizzle
+RETURN 0 
+
+[FUNCTION Charge_book]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+IF !(<DEF.NEEDCHARGES>>0)
+SRC.SYSMESSAGE You can't add that to the <NAME>
+RETURN 1
+ENDIF
+IF (<EVAL (<TAG.CHARGE>)>>=50)
+SRC.SYSMESSAGE Your book is fully charged.
+RETURN 1
+ENDIF
+IF (<EVAL <EVAL <TAG.CHARGE>>+<OBJ.AMOUNT>>>50)
+VAR.ADDAMOUNT=<EVAL <TAG.CHARGE>+<EVAL <OBJ.AMOUNT>>>
+VAR.RETURNAMOUNT=<EVAL <VAR0.ADDAMOUNT>-50>
+VAR.AMOUNT=<EVAL <EVAL <OBJ.AMOUNT>>-<EVAL <VAR0.RETURNAMOUNT>>>//for scroll%s return
+TAG.CHARGE=<EVAL <EVAL <TAG.CHARGE>>+<EVAL <VAR0.AMOUNT>>>
+OBJ.AMOUNT=<EVAL <VAR0.RETURNAMOUNT>>
+SRC.SYSMESSAGE You Add <EVAL <VAR.AMOUNT>> <OBJ.NAME> to the <NAME>!
+SOUND=snd_spell_telekinesis
+VAR.ADDAMOUNT=
+VAR.AMOUNT=
+VAR.MINUSAMOUNT=
+RETURN 1
+ELSEIF (<EVAL <EVAL <TAG.CHARGE>>+<OBJ.AMOUNT>><50)
+TAG.CHARGE=<EVAL <TAG.CHARGE>+<OBJ.AMOUNT>>
+SRC.SYSMESSAGE You Add <EVAL <OBJ.AMOUNT>> <OBJ.NAME> to the <NAME>!
+OBJ.REMOVE
+SOUND=snd_spell_telekinesis
+RETURN 1
+
+[FUNCTION Drop_rune] 
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+IF !(<EVAL <TARG.TAG.LOC_<ARGS>>>==0) 
+NEWITEM=i_rune_marker 
+NEW.NAME=<TARG.TAG.NAME_<ARGS>> 
+NEW.MOREP=<TARG.TAG.LOC_<ARGS>>
+NEW.MORE1=0a 
+NEW.BOUNCE
+SYSMESSAGE @0122 You Dropped the rune <TARG.TAG.NAME_<ARGS>>
+TRYP 0 TARG.TAG.NAME_<ARGS>=Empty 
+TRYP 0 TARG.TAG.LOC_<ARGS>=0 
+DIALOGCLOSE d_rune_bk 
+ELSE 
+SYSMESSAGE There's no rune in this slot!
+RETURN 1
+ENDIF
+
+[FUNCTION go_recall]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+OBJ=<FINDID(i_recall_delay).TAG.BOOK>
+LOCAL.T=<EVAL <FINDID(i_recall_delay).MOREZ>>
+NEWITEM=i_gold
+NEW.P=<OBJ.TAG.LOC_<ARGS>>
+NEW.UPDATE
+NEW.TIMERd=.1
+NEW.ATTR=attr_decay|attr_invis
+IF (<ISGM>==1) //GM's dont get charged for usage or blocked
+SOUND=snd_spell_recall
+GO=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+ANIM=16
+SYSMESSAGE You have arrived at <OBJ.TAG.NAME_<EVAL <LOCAL.T>>>
+UPDATE
+EFFECT=3,i_fx_sparkle,12,18
+RETURN 1 
+ENDIF
+IF !(<OBJ.CONT.CONT.UID>==<UID>)
+SYSMESSAGE You must have the runebook in the main part of your pack to recall.
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+RETURN 1
+ENDIF
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in)
+FINDID(i_recall_delay).REMOVE
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+RETURN 1
+ELSEIF (<DEF.NEEDCHARGES>>0)
+OBJ.TAG.CHARGE -= 1
+SOUND=snd_spell_recall
+GO=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+ANIM=16
+SYSMESSAGE You have arrived at <OBJ.TAG.NAME_<EVAL <LOCAL.T>>>
+UPDATE
+EFFECT=3,i_fx_sparkle,12,18
+RETURN 1 
+ELSE
+SOUND=snd_spell_recall
+GO=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+ANIM=16
+SYSMESSAGE You have arrived at <OBJ.TAG.NAME_<EVAL <LOCAL.T>>>
+UPDATE
+EFFECT=3,i_fx_sparkle,12,18
+RETURN 1
+ENDIF
+
+[FUNCTION Recall_wdelay]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+IF (<ISGM>==1) && (<EVAL <OBJ.TAG.LOC_<ARGS>>> >0)
+EVENTS +e_spell_fight_fizzle
+NEWITEM=i_recall_delay
+NEW.P=<P>
+NEW.EQUIP
+NEW.LINK=<SERIAL>
+TRYP 0 NEW.TAG.BOOK=<OBJ.UID>
+NEW.MOREZ=<ARGS>
+NEW.ATTR=attr_decay
+NEW.TIMERD=.1
+RETURN 1
+ENDIF
+IF !(<EVAL <OBJ.TAG.CHARGE>>>0) && (<DEF.NEEDCHARGES>>0)
+SYSMESSAGE The <OBJ.NAME> has no charges
+SYSMESSAGE You stop casting the spell.
+EFFECT=3,i_fx_smoke_small,12,24
+SOUND=05c
+RETURN 1
+ENDIF
+IF (<REGION.FLAGS>&region_antimagic_recall_out)
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+EFFECT=3,i_fx_smoke_small,12,24
+SOUND=05c
+RETURN 1
+ELSEIF (<EVAL <OBJ.TAG.LOC_<ARGS>>> >0)
+EVENTS +e_spell_fight_fizzle
+NEWITEM=i_recall_delay
+NEW.P=<P>
+NEW.EQUIP
+NEW.LINK=<SERIAL>
+TRYP 0 NEW.TAG.BOOK=<OBJ.UID>
+NEW.MOREZ=<ARGS>
+NEW.ATTR=attr_decay
+NEW.TIMERD=.1
+RETURN 1
+ELSE
+SYSMESSAGE There's no rune in this slot!
+RETURN 1 
+ENDIF
+
+[FUNCTION gate_wdelay]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+IF (<ISGM>>0) && (<EVAL <OBJ.TAG.LOC_<ARGS>>> >0)
+NEWITEM=i_gate_delay
+NEW.P=<P>
+NEW.EQUIP
+NEW.LINK=<SERIAL>
+TRYP 0 NEW.TAG.BOOK=<OBJ.UID>
+NEW.MOREZ=<ARGS>
+NEW.ATTR=attr_decay
+NEW.TIMERD=.1
+RETURN 1
+ENDIF
+IF (<REGION.FLAGS>&region_antimagic_recall_in) || (<REGION.FLAGS>&region_antimagic_gate) || (<REGION.FLAGS>&region_antimagic_recall_out)
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+RETURN 1
+ENDIF
+IF (<REGION.FLAGS>&region_antimagic_recall_in) || (<REGION.FLAGS>&region_antimagic_gate) || (<REGION.FLAGS>&region_antimagic_recall_out)
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+RETURN 1
+ENDIF
+IF !(<EVAL <OBJ.TAG.CHARGE>>>0) && (<DEF.NEEDCHARGES>>0)
+SYSMESSAGE The <OBJ.NAME> has no charges
+SYSMESSAGE You stop casting the spell.
+EFFECT=3,i_fx_smoke_small,12,24
+SOUND=05c
+RETURN 1
+ELSEIF (<EVAL <OBJ.TAG.LOC_<ARGS>>> >0)
+NEWITEM=i_gate_delay
+NEW.P=<P>
+NEW.EQUIP
+NEW.LINK=<SERIAL>
+TRYP 0 NEW.TAG.BOOK=<OBJ.UID>
+NEW.MOREZ=<ARGS>
+NEW.ATTR=attr_decay
+NEW.TIMERD=.1
+RETURN 1
+ELSE
+SYSMESSAGE There's no rune in this slot!
+RETURN 1 
+ENDIF
+
+[FUNCTION go_gate]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+OBJ=<FINDID(i_gate_delay).TAG.BOOK>
+LOCAL.T=<EVAL <FINDID(i_gate_delay).MOREZ>>
+NEWITEM=i_gold
+NEW.P=<OBJ.TAG.LOC_<ARGS>>
+NEW.ATTR=attr_decay|attr_invis
+NEW.MOVE 0 0 -1
+NEW.UPDATE
+NEW.LINK=<FINDID(i_gate_delay).SERIAL>
+NEW.TIMERd=1
+IF (<ISGM>==1) && (<EVAL <OBJ.TAG.LOC_<ARGS>>> >0)
+NEWITEM=i_gateway
+NEW.P=<P>
+NEW.LINK=<SERIAL>
+NEW.TIMERD=.1
+NEW.MOREP=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+NEW.MORE2=<EVAL <DEF.GATE_OPTION>>
+NEW.NAME=a GM Rune Gate to <OBJ.TAG.NAME_<EVAL <LOCAL.T>>>
+NEW.SOUND=snd_spell_gate_travel
+NEWITEM=i_gateway
+NEW.LINK=<SERIAL>
+NEW.P=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+NEW.COLOR=020
+NEW.NAME=a GM Rune Gate to <REGION.NAME>
+NEW.MOREP=<P>
+NEW.MORE2=<EVAL <DEF.GATE_OPTION>>
+NEW.SOUND=snd_spell_gate_travel
+NEW.TIMERD=.1
+UPDATE
+ANIM=16
+RETURN 1
+ENDIF
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in) || (<NEW.REGION.FLAGS>&region_antimagic_gate)
+FINDID(i_gate_delay).REMOVE
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+TAG.FLAGSARE=
+RETURN 1
+ENDIF
+IF !(<OBJ.CONT.CONT.UID>==<UID>)
+SYSMESSAGE You must have the runebook in the main part of your pack to gate!
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+RETURN 1
+ELSEIF (<DEF.NEEDCHARGES>>0)
+NEWITEM=i_gateway
+NEW.P=<P>
+NEW.LINK=<SERIAL>
+NEW.TIMERD=.1
+NEW.MOREP=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+NEW.MORE2=<EVAL <DEF.GATE_OPTION>>
+NEW.NAME=a Rune Gate to <OBJ.TAG.NAME_<EVAL <LOCAL.T>>>
+NEW.SOUND=snd_spell_gate_travel
+NEWITEM=i_gateway
+NEW.LINK=<SERIAL>
+NEW.P=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+NEW.COLOR=020
+NEW.NAME=a Rune Gate to <REGION.NAME>
+NEW.MOREP=<P>
+NEW.MORE2=<EVAL <DEF.GATE_OPTION>>
+NEW.SOUND=snd_spell_gate_travel
+NEW.TIMERD=.1
+UPDATE
+ANIM=16
+OBJ.TAG.CHARGE -= 1
+RETURN 1
+ELSE
+NEWITEM=i_gateway
+NEW.P=<P>
+NEW.LINK=<SERIAL>
+NEW.TIMERD=.1
+NEW.MOREP=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+NEW.MORE2=<EVAL <DEF.GATE_OPTION>>
+NEW.NAME=a Rune Gate to <OBJ.TAG.NAME_<EVAL <LOCAL.T>>>
+NEW.SOUND=snd_spell_gate_travel
+NEWITEM=i_gateway
+NEW.LINK=<SERIAL>
+NEW.P=<OBJ.TAG.LOC_<EVAL <LOCAL.T>>>
+NEW.COLOR=020
+NEW.NAME=a Rune Gate to <REGION.NAME>
+NEW.MOREP=<P>
+NEW.MORE2=<EVAL <DEF.GATE_OPTION>>
+NEW.SOUND=snd_spell_gate_travel
+NEW.TIMERD.=1
+UPDATE
+ANIM=16
+RETURN 1
+ENDIF
+
+[DIALOG d_rune_bk]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+0,0
+PAGE 0
+GUMPPIC 50 50 2220
+RESIZEPIC 263 175 5100 135 70
+RESIZEPIC 105 85 5100 130 165
+BUTTON 150 60 2225 2331 0 1 0
+BUTTON 170 60 2226 2331 0 2 0
+BUTTON 190 60 2227 2331 0 3 0 
+BUTTON 210 60 2228 2331 0 4 0
+
+PAGE 1
+BUTTON 370 58 2206 2206 0 2 0
+IF (<EVAL (<DEF.HELPMANUAL>)>>0) 
+BUTTON 270 60 2114 2115 0 5 0
+ENDIF 
+RADIO 105 90 25 26 0 1
+RADIO 105 110 25 26 0 2
+RADIO 105 130 25 26 0 3
+RADIO 105 150 25 26 0 4
+RADIO 105 170 25 26 0 5
+resizepic 110 218 2620 100 30
+Dtextentry 115 225 110 32 922 1
+BUTTON 210 223 208 209 1 0 1 
+BUTTON 255 150 2706 2707 1 0 2
+BUTTON 280 190 2271 2297 1 0 3 
+BUTTON 335 190 2291 2263 1 0 4 
+DTEXT 115 195 0 Rename Rune
+DTEXT 268 150 0 Drop Rune
+DTEXT 280 170 0 Recall
+DTEXT 345 170 0 Gate
+Dcroppedtext 130 90 100 20 0 <TARG.TAG.NAME_1>
+Dcroppedtext 130 110 100 20 0 <TARG.TAG.NAME_2>
+Dcroppedtext 130 130 100 20 0 <TARG.TAG.NAME_3>
+Dcroppedtext 130 150 100 20 0 <TARG.TAG.NAME_4>
+Dcroppedtext 130 170 100 20 0 <TARG.TAG.NAME_5>
+IF (<EVAL <DEF.NEEDCHARGES>>>0)
+DTEXT 268 110 0 Max Charges:[<EVAL (<TARG.TAG.TCHARGE>)>]
+DTEXT 260 125 0 Actual Charges:[<EVAL (<TARG.TAG.CHARGE>)>]
+ENDIF
+
+PAGE 2
+BUTTON 95 58 2205 2205 0 1 0 
+BUTTON 370 58 2206 2206 0 3 0
+RADIO 105 90 25 26 0 6
+RADIO 105 110 25 26 0 7
+RADIO 105 130 25 26 0 8
+RADIO 105 150 25 26 0 9
+RADIO 105 170 25 26 0 10
+resizepic 110 218 2620 100 30
+Dtextentry 115 225 250 32 922 2
+BUTTON 210 223 208 209 1 0 1 
+BUTTON 255 150 2706 2707 1 0 2
+BUTTON 280 190 2271 2297 1 0 3 
+BUTTON 335 190 2291 2263 1 0 4 
+DTEXT 115 195 0 Rename Rune
+DTEXT 268 150 0 Drop Rune
+DTEXT 280 170 0 Recall
+DTEXT 345 170 0 Gate
+Dcroppedtext 130 90 100 20 0 <TARG.TAG.NAME_6>
+Dcroppedtext 130 110 100 20 0 <TARG.TAG.NAME_7>
+Dcroppedtext 130 130 100 20 0 <TARG.TAG.NAME_8>
+Dcroppedtext 130 150 100 20 0 <TARG.TAG.NAME_9>
+Dcroppedtext 130 170 100 20 0 <TARG.TAG.NAME_10>
+IF (<EVAL <DEF.NEEDCHARGES>>>0)
+DTEXT 268 110 0 Max Charges:[<EVAL (<TARG.TAG.TCHARGE>)>]
+DTEXT 260 125 0 Actual Charges:[<EVAL (<TARG.TAG.CHARGE>)>]
+ENDIF
+
+PAGE 3
+BUTTON 370 58 2206 2206 0 4 0
+BUTTON 95 58 2205 2205 0 2 0
+RADIO 105 90 25 26 0 11
+RADIO 105 110 25 26 0 12
+RADIO 105 130 25 26 0 13
+RADIO 105 150 25 26 0 14
+RADIO 105 170 25 26 0 15
+resizepic 110 218 2620 100 30
+Dtextentry 115 225 250 32 922 3
+BUTTON 210 223 208 209 1 0 1 
+BUTTON 255 150 2706 2707 1 0 2
+BUTTON 280 190 2271 2297 1 0 3 
+BUTTON 335 190 2291 2263 1 0 4 
+DTEXT 115 195 0 Rename Rune
+DTEXT 268 150 0 Drop Rune
+DTEXT 280 170 0 Recall
+DTEXT 345 170 0 Gate
+Dcroppedtext 130 90 100 20 0 <TARG.TAG.NAME_11>
+Dcroppedtext 130 110 100 20 0 <TARG.TAG.NAME_12>
+Dcroppedtext 130 130 100 20 0 <TARG.TAG.NAME_13>
+Dcroppedtext 130 150 100 20 0 <TARG.TAG.NAME_14>
+Dcroppedtext 130 170 100 20 0 <TARG.TAG.NAME_15>
+IF (<EVAL <DEF.NEEDCHARGES>>>0)
+DTEXT 268 110 0 Max Charges:[<EVAL (<TARG.TAG.TCHARGE>)>]
+DTEXT 260 125 0 Actual Charges:[<EVAL (<TARG.TAG.CHARGE>)>]
+ENDIF
+
+PAGE 4
+BUTTON 95 58 2205 2205 0 3 0
+RADIO 105 90 25 26 0 16
+RADIO 105 110 25 26 0 17
+RADIO 105 130 25 26 0 18
+RADIO 105 150 25 26 0 19
+RADIO 105 170 25 26 0 20
+resizepic 110 218 2620 100 30
+Dtextentry 115 225 110 32 922 4
+BUTTON 210 223 208 209 1 0 1 
+BUTTON 255 150 2706 2707 1 0 2
+BUTTON 280 190 2271 2297 1 0 3 
+BUTTON 335 190 2291 2263 1 0 4 
+DTEXT 115 195 0 Rename Rune
+DTEXT 268 150 0 Drop Rune
+DTEXT 280 170 0 Recall
+DTEXT 345 170 0 Gate
+Dcroppedtext 130 90 100 20 0 <TARG.TAG.NAME_16>
+Dcroppedtext 130 110 100 20 0 <TARG.TAG.NAME_17>
+Dcroppedtext 130 130 100 20 0 <TARG.TAG.NAME_18>
+Dcroppedtext 130 150 100 20 0 <TARG.TAG.NAME_19>
+Dcroppedtext 130 170 100 20 0 <TARG.TAG.NAME_20>
+IF (<EVAL <DEF.NEEDCHARGES>>>0)
+DTEXT 268 110 0 Max Charges:[<EVAL (<TARG.TAG.TCHARGE>)>]
+DTEXT 260 125 0 Actual Charges:[<EVAL (<TARG.TAG.CHARGE>)>]
+ENDIF
+
+PAGE 5
+BUTTON 370 58 2206 2206 0 6 0
+BUTTON 255 150 2706 2707 0 5 0 
+BUTTON 280 190 2271 2297 0 5 0 
+BUTTON 335 190 2291 2263 0 5 0 
+RADIO 105 90 25 26 0 0
+RADIO 105 110 25 26 0 0
+Dcroppedtext 130 90 100 20 0 Northern Territory
+Dcroppedtext 130 110 100 20 0 <TARG.TAG.MANUAL>
+GUMPPIC 125 90 4014
+GUMPPIC 220 200 4007
+DTEXT 268 150 0 Drop Rune
+DTEXT 280 170 0 Recall
+DTEXT 345 170 0 Gate
+GUMPPIC 270 140 4014
+DTEXT 100 125 995 to gate and recall
+DTEXT 100 140 995 you must first press
+DTEXT 100 155 995 the radio button to
+DTEXT 100 170 995 the location you
+DTEXT 100 185 995 wish to travel.
+DTEXT 100 200 995 Then click on 
+DTEXT 100 215 995 either gate or recall.
+DTEXT 260 90 995 To drop a rune, again
+DTEXT 260 105 995 you first must select
+DTEXT 260 120 995 a radio button.
+
+PAGE 6
+BUTTON 95 58 2205 2205 0 5 0 
+BUTTON 370 58 2206 2206 0 7 0
+RADIO 105 90 25 26 0 0
+RADIO 105 110 25 26 0 21
+BUTTON 210 223 208 209 1 0 1 
+Dcroppedtext 130 90 100 20 0 Northern Territory
+Dcroppedtext 130 110 100 20 0 <TARG.TAG.MANUAL>
+resizepic 110 218 2620 100 30
+Dtextentry 115 225 110 32 922 5 
+TILEPIC 65 105 8300
+DTEXT 100 125 995 To rename a marked
+DTEXT 100 140 995 slot select the radio
+DTEXT 100 155 995 button next to the
+DTEXT 100 170 995 name then type in
+DTEXT 100 185 995 the text box below
+DTEXT 100 200 995 for a new name,
+GUMPPIC 225 225 4014
+DTEXT 260 205 995 making sure you
+DTEXT 260 220 995 push the button 
+DTEXT 260 235 995 when your done.
+GUMPPIC 255 70 2205
+GUMPPIC 290 70 2225
+TILEPIC 255 99 8275
+DTEXT 280 100 922 These 2 button
+DTEXT 280 115 922 types allow quick
+DTEXT 280 130 922 page changes next,
+DTEXT 280 145 922 last, or jump ahead.
+
+PAGE 7
+BUTTON 95 58 2205 2205 0 6 0
+TILEPIC 105 90 8012
+TILEPIC 195 90 7956
+DTEXT 100 145 995 These are the only
+DTEXT 100 160 995 Things you need to
+DTEXT 100 175 995 Charge and mark
+DTEXT 100 190 995 this book.
+DTEXT 100 205 995 dropping them on
+DTEXT 100 220 995 the rune book does
+DTEXT 100 235 995 all the work.
+DTEXT 100 105 0 Recall Scroll &
+DTEXT 100 120 0 Marked recall rune
+DTEXT 260 95 922 Enjoy & have fun
+TILEPIC 260 130 6907
+TILEPIC 295 150 1065
+BUTTON 310 130 247 248 0 1 0
+
+[DIALOG d_rune_bk BUTTON]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+ON=0
+SOUND=055
+
+ON=1
+OBJ=<TARG.UID>
+IF <OBJ.BASEID>!=i_rune_bk
+//to stop adding tags to other object that 
+//have been clicked after the dialogs opening
+RETURN 1
+ENDIF
+IF !(<OBJ.CONT.CONT.UID>==<UID>)
+SYSMESSAGE You must have the runebook in the main part of your pack to rename rune's
+RETURN 1
+ENDIF
+FOR 1 21
+IF <ARGCHK[<EVAL <LOCAL._FOR>>]>==1
+LOCAL.L=<EVAL <LOCAL._FOR>>
+IF <EVAL <LOCAL._FOR>>>=21
+LOCAL.ARG_TXT=5
+TRYP 0 OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>> 
+TRYP 0 OBJ.TAG.MANUAL=<ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+SYSMESSAGE @0122 Slot <EVAL <LOCAL.L>> renamed to <ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+DIALOG d_rune_bk <EVAL <TARG.TAG.LASTPG>>
+ELSEIF  !<EVAL <OBJ.TAG.LOC_<EVAL <LOCAL.L>>>> >0
+SRc.SYSMESSAGE You must have the location marked
+ELSEIF <EVAL <LOCAL._FOR>>>=16
+LOCAL.ARG_TXT=4
+TRYP 0 OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>> 
+TRYP 0 OBJ.TAG.NAME_<EVAL <LOCAL.L>>=<ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+SYSMESSAGE @0122 Slot <EVAL <LOCAL.L>> renamed to <ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=11
+LOCAL.ARG_TXT=3 
+TRYP 0 OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>> 
+TRYP 0 OBJ.TAG.NAME_<EVAL <LOCAL.L>>=<ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+SYSMESSAGE @0122 Slot <EVAL <LOCAL.L>> renamed to <ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=6
+LOCAL.ARG_TXT=2 
+TRYP 0 OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>> 
+TRYP 0 OBJ.TAG.NAME_<EVAL <LOCAL.L>>=<ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+SYSMESSAGE @0122 Slot <EVAL <LOCAL.L>> renamed to <ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=1 
+LOCAL.ARG_TXT=1
+TRYP 0 OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>  
+TRYP 0 OBJ.TAG.NAME_<EVAL <LOCAL.L>>=<ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+SYSMESSAGE @0122 Slot <EVAL <LOCAL.L>> renamed to <ARGTXT[<EVAL <LOCAL.ARG_TXT>>]>
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ENDIF
+ENDIF
+ENDIF
+END
+
+ON=2 
+OBJ=<TARG.UID>
+IF <OBJ.BASEID>!=i_rune_bk
+//to stop adding tags to other object that 
+//have been clicked after the dialogs opening
+RETURN 1
+ENDIF
+IF !(<OBJ.CONT.CONT.UID>==<UID>)
+SYSMESSAGE You must have the runebook in the main part of your pack to drop rune's
+RETURN 1
+ENDIF
+FOR 1 20
+IF <ARGCHK[<EVAL <LOCAL._FOR>>]>==1
+LOCAL.D=<EVAL <LOCAL._FOR>>
+IF <EVAL <LOCAL._FOR>>>=16
+CALL DROP_RUNE <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=4
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=11
+CALL DROP_RUNE <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=3
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=6
+CALL DROP_RUNE <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=2
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=1
+CALL DROP_RUNE <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=1
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ENDIF
+ENDIF
+END
+
+ON=3
+OBJ=<TARG.UID>
+IF <OBJ.BASEID>!=i_rune_bk
+//to stop adding tags to other object that 
+//have been clicked after the dialogs opening
+RETURN 1
+ENDIF
+IF !(<OBJ.CONT.CONT.UID>==<UID>)
+SYSMESSAGE You must have the runebook in the main part of your pack to recall.
+RETURN 1
+ENDIF
+FOR 1 20
+IF <ARGCHK[<EVAL <LOCAL._FOR>>]>==1
+LOCAL.D=<EVAL <LOCAL._FOR>>
+IF <EVAL <LOCAL._FOR>>>=16
+CALL Recall_wdelay <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=4
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=11
+CALL Recall_wdelay <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=3
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=6
+CALL Recall_wdelay <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=2
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=1
+CALL Recall_wdelay <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=1
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ENDIF
+ENDIF
+END
+
+ON=4
+OBJ=<TARG.UID>
+IF <OBJ.BASEID>!=i_rune_bk
+//to stop adding tags to other object that 
+//have been clicked after the dialogs opening
+RETURN 1
+ENDIF
+IF !(<OBJ.CONT.CONT.UID>==<UID>)
+SYSMESSAGE You must have the runebook in the main part of your pack to gate.
+RETURN 1
+ENDIF
+FOR 1 20
+IF <ARGCHK[<EVAL <LOCAL._FOR>>]>==1
+LOCAL.D=<EVAL <LOCAL._FOR>>
+IF <EVAL <LOCAL._FOR>>>=16
+CALL GATE_wdelay <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=4
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=11
+CALL GATE_wdelay <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=3
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=6
+CALL GATE_wdelay <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=2
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ELSEIF <EVAL <LOCAL._FOR>>>=1
+CALL GATE_wdelay <EVAL <LOCAL.D>>
+LOCAL.ARG_TXT=1
+OBJ.TAG.LASTPG=<EVAL <LOCAL.ARG_TXT>>
+ENDIF
+ENDIF
+END
+
+[EOF]

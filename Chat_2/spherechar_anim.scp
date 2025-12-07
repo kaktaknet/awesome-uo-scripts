@@ -1,0 +1,911 @@
+// ****************************************************************************
+// sphere by : menasoft ©1997-2000
+// www.sphereserver.com
+// all sphere script files and formats are copyright menasoft & partners.
+// this file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// menasoft & partners.  all donations and contributions
+// become the property of menasoft & partners.
+// ****************************************************************************
+// file last updated: thursday, june 29, 2000
+version=0.54
+
+[CHARDEF 01026]
+DEFNAME=c_bird_crow
+NAME=a crow
+ID=c_bird
+SOUND=snd_animals_crow1
+ICON=i_pet_bird
+
+DAM=4
+ARMOR=1
+RESOURCES=2 i_ribs_raw, 25 i_feather
+
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+FOODTYPE=25 t_crops, 25 t_grain
+SHELTER=t_crops,t_grain
+DESIRES=c_bird_crow,t_crops
+AVERSIONS=e_carnivores,R_water,i_scarecrow
+DESCRIPTION=crow
+SUBSECTION=air (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_black
+STR=6
+DEX=25
+INT={6 10}
+
+parrying=5.0
+magicresistance=5.0
+tactics=4.0
+wrestling=5.0
+taming=15.0
+
+NPC=brain_animal
+
+FAME=10
+KARMA={-1 -99}
+
+[CHARDEF 01027]
+DEFNAME=c_bird_magpie
+NAME=a magpie
+ID=c_bird
+SOUND=snd_animals_frstbrd1
+ICON=i_pet_bird
+
+DAM=4
+ARMOR=1
+RESOURCES=2 i_ribs_raw,25 i_feather
+
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+FOODTYPE=25 t_fruit,25 t_crops, 25 t_grain
+SHELTER=r_foliage
+DESIRES=c_bird,c_bird_magpie,t_gem
+AVERSIONS=e_carnivores,R_water
+DESCRIPTION=magpie
+SUBSECTION=air (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_black
+STR=9
+DEX=25
+INT=5
+
+parrying=5.0
+magicresistance=5.0
+tactics=4.0
+wrestling=5.0
+taming=15.0
+
+NPC=brain_animal
+
+FAME=30
+KARMA={-1 -99}
+
+[CHARDEF 01060]
+DEFNAME=c_bird_tropical
+NAME=a tropical bird
+ID=c_bird
+SOUND=snd_animals_parrot1
+ICON=i_pet_bird
+
+DAM=4
+ARMOR=1
+RESOURCES=2 i_ribs_raw, 25 i_feather
+
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+FOODTYPE=3 t_crops, 6 t_fruit
+SHELTER=r_foliage,R_plains
+DESIRES=c_bird_tropical,c_bird,R_jungle
+AVERSIONS=r_civilization
+DESCRIPTION=tropical bird
+SUBSECTION=air (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_bird
+STR={1 4}
+DEX={26 35}
+INT={1 4}
+
+parrying=4.0
+magicresistance=4.0
+tactics=4.0
+wrestling=4.0
+taming=10.0
+
+NPC=brain_animal
+
+FAME=10
+KARMA={-1 -99}
+
+[CHARDEF 01061]
+DEFNAME=c_bird_raven
+NAME=a raven
+ID=c_bird
+SOUND=snd_animals_raven1
+ICON=i_pet_raven
+
+DAM=4
+ARMOR=3
+RESOURCES=2 i_ribs_raw, 25 i_feather
+
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+FOODTYPE=15 t_crops, 15 t_grain
+DESIRES=c_bird_raven
+AVERSIONS=r_civilization,R_water
+
+DESCRIPTION=raven
+SUBSECTION=air (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_black
+STR=9
+DEX=25
+INT=5
+
+parrying=5.0
+magicresistance=5.0
+tactics=6.0
+wrestling=6.0
+
+NPC=brain_animal
+
+FAME=5
+KARMA={-1 -99}
+
+[CHARDEF c_bird_jungle]
+NAME=a tropical bird
+ID=c_bird
+SOUND=snd_animals_jungbrd1
+ICON=i_pet_bird
+
+DAM=4
+ARMOR=1
+RESOURCES=2 i_ribs_raw, 25 i_feather
+
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+FOODTYPE=3 t_crops, 6 t_fruit
+SHELTER=r_foliage,R_plains
+DESIRES=c_bird_jungle,c_bird_tropical, c_bird, c_bird_jungle,R_jungle
+AVERSIONS=r_civilization
+DESCRIPTION=tropical bird
+SUBSECTION=air (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_bird
+STR={1 4}
+DEX={26 35}
+INT={1 4}
+
+parrying=4.0
+magicresistance=4.0
+tactics=4.0
+wrestling=4.0
+taming=10.0
+
+NPC=brain_animal
+
+FAME=10
+KARMA={-1 -99}
+
+[CHARDEF 01114]
+DEFNAME=c_a_mustang_black
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_brown_dk
+ICON=i_pet_horse_brown_dk
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+SHELTER=r_stables,e_human_greet
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (black mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=0455
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+//alignment=neutral
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=98.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01115]
+DEFNAME=c_a_mustang_crimson
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_brown_dk
+ICON=i_pet_horse_brown_dk
+
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw, 10 i_hide
+
+//alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (crimson mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=01b6
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=96.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01116]
+DEFNAME=c_a_mustang_skygray
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_brown_dk
+ICON=i_pet_horse_brown_dk
+
+DAM={3,4}
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+
+//alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (sky-grey mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=031c
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=94.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01117]
+DEFNAME=c_a_mustang_wimmimate
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_gray
+ICON=i_pet_horse_brown_dk
+
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+
+//alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (willimate mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=0158
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=92.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01118]
+DEFNAME=c_a_mustang_pamamino
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_gray
+ICON=i_pet_horse_brown_dk
+
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+
+//alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (pamamino mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=033
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=90.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01119]
+DEFNAME=c_a_mustang_sky
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_brown_lt
+ICON=i_pet_horse_brown_dk
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+
+//alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (sky mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=0263
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=88.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01120]
+DEFNAME=c_a_mustang_redroan
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_gray
+ICON=i_pet_horse_brown_dk
+
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+
+//alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (red roan mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=0279
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=86.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01121]
+DEFNAME=c_a_mustang_chocolate
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_brown_dk
+ICON=i_pet_horse_brown_dk
+
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+
+//alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (chocolate mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=01bb
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=84.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01122]
+DEFNAME=c_a_mustang_roan
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_gray
+ICON=i_pet_horse_brown_dk
+
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+
+//alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (roan mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=01bb
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=82.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF 01123]
+DEFNAME=c_a_mustang_grey
+NAME=a pony
+SOUND=snd_animals_horse1
+ID=c_horse_gray
+CAN=mt_run|mt_equip|mt_walk|mt_run
+ICON=i_pet_horse_brown_dk
+
+DAM=2,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+//alignment=neutral
+SHELTER=r_stables,e_human_greet
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=horse (grey mustang)
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=03e7
+STR={100 180}
+DEX={90 130}
+INT={6 10}
+
+parrying={35.0 45.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=80.0
+
+NPC=brain_animal
+
+FAME=0
+KARMA={-1 -99}
+
+[CHARDEF c_a_lion]
+ID=c_panther
+SOUND=snd_animals_lion1
+NAME=a mountain lion
+ICON=i_pet_panther
+CAN=mt_run|mt_equip|mt_walk|mt_run
+
+DAM=2,12
+ARMOR=8
+RESOURCES=6 i_ribs_raw,2 i_fur_dark
+FOODTYPE=15 t_meat_raw
+DESIRES=c_a_lion,R_foliage
+SHELTER=r_caves,R_mountains,R_forests
+AVERSIONS=r_civilization,R_water
+DESCRIPTION=lion
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+STR={55 80}
+DEX={65 85}
+INT={25 50}
+
+parrying={55.0 65.0}
+magicresistance={15.0 30.0}
+tactics={45.0 60.0}
+wrestling={45.0 60.0}
+taming=55.0
+
+NPC=brain_animal
+
+FAME=100
+KARMA={-300 -399}
+
+[CHARDEF 0600]
+DEFNAME=c_a_cougar
+//DEFNAME2=cougars
+ID=c_panther
+NAME=a cougar
+SOUND=snd_animals_cougar1
+ICON=i_pet_panther
+CAN=mt_run|mt_equip|mt_walk|mt_run
+
+DAM=2,12
+ARMOR=8
+RESOURCES=6 i_ribs_raw,2 i_fur_dark
+FOODTYPE=15 t_meat_raw
+DESIRES=c_a_cougar,R_foliage
+SHELTER=r_caves,R_mountains,R_forests
+AVERSIONS=r_civilization,R_water
+DESCRIPTION=cougar
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+STR={55 80}
+DEX={65 85}
+INT={25 50}
+
+parrying={55.0 65.0}
+magicresistance={15.0 30.0}
+tactics={45.0 60.0}
+wrestling={45.0 60.0}
+taming=55.0
+
+NPC=brain_animal
+
+FAME=100
+KARMA={-300 -399}
+
+[CHARDEF 01010]
+DEFNAME=c_a_mountain_goat
+NAME=a mountain goat
+ID=c_goat
+SOUND=snd_animals_goat1
+ICON=i_pet_goat
+CAN=mt_run|mt_equip|mt_walk
+
+DAM=2,7
+ARMOR=8
+RESOURCES=16 i_ribs_raw,12 i_hide
+FOODTYPE=5 t_foliage, 5 t_fruit, 64 t_grass
+DESIRES=c_goat, c_a_mountain_goat
+SHELTER=r_forests,R_mountains
+AVERSIONS=r_civilization,e_carnivores3
+DESCRIPTION=mountain goat
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=color_snow
+STR={22 64}
+DEX={56 75}
+INT={16 30}
+
+parrying={45.0 55.0}
+magicresistance={25.0 30.0}
+tactics={29.0 44.0}
+wrestling={29.0 44.0}
+taming=20.0
+
+NPC=brain_animal
+
+FAME=40
+KARMA={-199 -299}
+
+[CHARDEF 01029]
+DEFNAME=c_a_jackrabbit
+NAME=a jackrabbit
+ID=c_rabbit
+SOUND=snd_animals_rabbit3
+ICON=i_pet_rabbit_2
+
+DAM=4,2
+ARMOR=2
+RESOURCES=2 i_ribs_raw,1 i_fur_dark
+
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=55 t_crops, 55 t_foliage, 64 t_grass
+DESIRES=t_crops,c_a_jackrabbit
+SHELTER=r_plains
+AVERSIONS=e_carnivores2
+DESCRIPTION=jackrabbit
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_brown
+STR=5
+DEX=14
+INT=15
+
+parrying=5.0
+magicresistance=5.0
+tactics=5.0
+wrestling=5.0
+taming=5.0
+
+NPC=brain_animal
+
+FAME=10
+KARMA={-1 -99}
+
+[CHARDEF 01030]
+DEFNAME=c_a_rat_sewer
+NAME=a sewer rat
+ID=c_rat
+SOUND=snd_animals_rat1
+ICON=i_pet_rat
+
+DAM=4,2
+ARMOR=3
+RESOURCES=2 i_ribs_raw
+
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=5 t_food
+SHELTER=r_sewers,t_garbage
+DESIRES=c_rat,c_rat_giant,c_a_rat_sewer,R_darkness
+AVERSIONS=r_light,e_human_greet,e_carnivores
+DESCRIPTION=sewer rat
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_brown
+STR=9
+DEX=25
+INT={6 10}
+//alignment=evil
+
+parrying=5.0
+magicresistance=5.0
+tactics=5.0
+wrestling=5.0
+taming=20.0
+
+NPC=brain_animal
+
+FAME=15
+KARMA={-1 -99}
+
+[CHARDEF 01031]
+DEFNAME=c_a_wolf_gray
+NAME=a gray wolf
+ID=c_wolf
+SOUND=snd_animals_wolf1
+ICON=i_pet_wolf_gray
+
+DAM=2,8
+ARMOR=9
+RESOURCES=3 i_ribs_raw, 3 i_fur_light
+
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+SHELTER=r_forests,R_caves,R_mountains
+DESIRES=c_wolf
+AVERSIONS=r_civilization
+DESCRIPTION=gray wolf
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_gray
+STR={56 80}
+DEX={56 75}
+INT={31 55}
+
+parrying={45.0 55.0}
+magicresistance={20.0 35.0}
+tactics={45.0 60.0}
+wrestling={45.0 60.0}
+taming=65.0
+
+NPC=brain_animal
+
+FAME=150
+KARMA={-300 -399}
+
+[CHARDEF 01032]
+DEFNAME=c_a_wolf_white
+NAME=a white wolf
+ID=c_wolf
+SOUND=snd_animals_wolf1
+DAM=2,8
+ARMOR=8
+CAN=mt_run|mt_equip|mt_walk
+
+RESOURCES=3 i_ribs_raw, 3 i_fur_light
+FOODTYPE=15 t_meat_raw
+DESIRES=c_a_wolf_white,c_wolf,R_snow
+AVERSIONS=r_civilization
+SHELTER=r_snow,R_caves
+
+DESCRIPTION=white wolf
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_white
+STR={56 80}
+DEX={56 75}
+INT={31 55}
+
+parrying={45.0 55.0}
+magicresistance={20.0 35.0}
+tactics={45.0 60.0}
+wrestling={45.0 60.0}
+taming=75.0
+
+NPC=brain_animal
+
+FAME=175
+KARMA={-400 -599}
+
+[CHARDEF 01056]
+DEFNAME=c_a_black_bear
+NAME=a black bear
+ID=c_bear_brown
+SOUND=snd_animals_bear1
+ICON=i_pet_bear_black
+
+DAM=2,12
+ARMOR=8
+RESOURCES=9 i_ribs_raw
+FOODTYPE=5 t_fish, 5 t_fruit, 15 t_meat_raw
+CAN=mt_run|mt_equip|mt_walk
+SHELTER=r_forests,R_caves
+AVERSIONS=r_civilization
+
+DESCRIPTION=black bear
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_black
+STR={75 100}
+DEX={55 75}
+INT={10 14}
+
+parrying={25.0 45.0}
+magicresistance={20.0 40.0}
+tactics={40.0 60.0}
+wrestling={40.0 60.0}
+taming=50.0
+
+NPC=brain_animal
+
+FAME=10
+KARMA={-300 -399}
+
+[CHARDEF 01059]
+DEFNAME=c_a_snow_leopard
+NAME=a snow leopard
+ID=c_panther
+SOUND=snd_animals_panther1
+ICON=i_pet_panther
+DAM=2,10
+ARMOR=12
+RESOURCES=6 i_ribs_raw, 2 i_fur_light
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+SHELTER=r_snow,R_mountains,R_caves
+DESIRES=r_snow,c_a_snow_leopard
+AVERSIONS=r_civilization,R_water
+DESCRIPTION=snow leopard
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+COLOR=colors_white
+STR={56 80}
+DEX={66 85}
+INT={26 50}
+
+parrying={55.0 65.0}
+magicresistance={25.0 35.0}
+tactics={45.0 60.0}
+wrestling={40.0 50.0}
+taming=65.0
+
+NPC=brain_animal
+
+FAME=75
+KARMA={-300 -399}
+
+
+
+
+[eof]

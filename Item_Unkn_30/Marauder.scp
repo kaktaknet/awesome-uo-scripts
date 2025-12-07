@@ -1,0 +1,96 @@
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////** Marauder With Ostard **//////////////////////
+///////////////////////////Crafted By: Bran Tyrewood///////////////////////
+/////////////////////////°http://sphereworld.6deex.net°//////////////////// 
+/////////////////////////////////////////////////////////////////////////// 
+
+[CHARDEF c_marauderlord_fencer] 
+ID=C_MAN 
+NAME=#NAMES_HUMANMALE the Marauder 
+SOUND=snd_HUMAN_M_DIE_01 
+RESOURCES=1 i_marauderlord_head 
+DAM=6,24 
+ARMOR=30 
+CAN=MT_WALK|MT_RUN|MT_EQUIP|MT_USEHANDS 
+DESIRES=i_gold,e_notoriety,  
+AVERSIONS=t_TRAP,t_eerie_stuff 
+
+CATEGORY=Civilized 
+SUBSECTION=Predoni Lord 
+DESCRIPTION=Fencer 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+//TEVENTS=e_looter 
+TEVENTS=e_predoni_lord 
+//TEVENTS=e_nocasthard_AI 
+//TEVENTS=e_dam_bonus 
+
+ON=@Create 
+STR={210 250} 
+DEX={300 350} 
+INT={70 75} 
+
+PARRYING={90.0 95.0} 
+FENCING={100.0 115.0} 
+TACTICS={90.0 98.0} 
+POISONING={200.0 250.0} 
+WRESTLING={55.0 70.0} 
+MAGICRESISTANCE={85.0 95.0} 
+
+NPC=brain_monster 
+
+FAME={2000 3000} 
+KARMA={-5000 -7999} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_platemail_arms 
+ITEM=i_platemail_chest 
+ITEM=i_platemail_gloves 
+ITEM=i_platemail_gorget 
+ITEM=i_platemail_helm 
+ITEM=i_platemail_leggings 
+ITEM=i_shield_heater 
+ITEM=i_mt_ostard_forest 
+ITEMNEWBIE=i_potion_CureGreat,{2 3} 
+ITEMNEWBIE=i_potion_healgreat 
+ITEM=i_gold,{1600 2000} 
+//ITEM=RANDOM_NEW_WEAPONS,R300 
+ITEM=i_war_fork 
+ITEM=i_SASH 
+COLOR=0800 
+ITEM=i_CAPE 
+COLOR=0800 
+
+
+
+[EVENTS e_predoni_lord] 
+ON=@SkillStart 
+if <SRC.RESTEST 1 i_mt_ostard_forest> 
+return 1 
+else 
+newitem=i_mt_ostard_forest 
+act.equip 
+return 0 
+endif 
+
+ON=@EnvironChange 
+if <SRC.RESTEST 1 i_mt_ostard_forest> 
+return 1 
+else 
+newitem=i_mt_ostard_forest 
+act.equip 
+return 0 
+endif 
+
+ON=@Death 
+if <src.findlayer(25)> 
+SRC.findlayer(25).remove 
+endif 
+SRC.NEWNPC=c_ostard_forest 

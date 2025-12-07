@@ -1,0 +1,319 @@
+[ITEMDEF i_stun_gun] 
+
+NAME=Stun Gun 
+
+ID=013fc 
+
+TYPE=0 
+
+TWOHANDS=Y 
+
+WEIGHT=10 
+
+
+
+ON=@CREATE 
+
+COLOR=0480 
+
+HITPOINTS=10000 
+
+
+
+on=@dclick 
+
+src.message Who do you want to stun? 
+
+target 
+
+return 1 
+
+
+
+on=@targon_ground 
+
+src.message YOU CANNOT STUN THE GROUND! 
+
+
+
+ON=@TARGon_CHAR 
+
+IF (<SRC.RESTEST i_stun_gun_charge>) 
+
+SRC.NEWITEM=i_paralyze_timer 
+
+SRC.ACT.LINK=<SRC.targ.UID> 
+
+SRC.ACT.P=<SRC.targ.P> 
+
+SRC.ACT.TIMER=1 
+
+SRC.CONSUME 1 i_stun_gun_charge 
+
+return 1 
+
+ELSE 
+
+SRC.MESSAGE YOU HAVE NO CHARGES LEFT! 
+
+return 1 
+
+
+
+
+
+CATEGORY=Stun Gun 
+
+SUBSECTION=Stunner
+
+DESCRIPTION=ZZZAP
+
+
+
+[ITEMDEF i_paralyze_timer] 
+
+ID=i_worldgem_bit 
+
+NAME=paralyze timer 
+
+TYPE=T_NORMAL 
+
+WEIGHT=0 
+
+ON=@Create 
+
+ATTR=attr_invis|attr_decay 
+
+
+
+ON=@TIMER 
+
+LINK.NEWITEM=i_paralyze_timer1 
+
+LINK.ACT.LINK=<LINK.UID> 
+
+LINK.ACT.P=<LINK.P> 
+
+LINK.ACT.TIMER=15 
+
+LINK.FLAGS=<LINK.FLAGS>|statf_freeze 
+
+link.tag.color=<link.color> 
+
+link.color=0480 
+
+link.tag.color1 = <link.findlayer(1).color> 
+
+link.tag.color2 = <link.findlayer(2).color> 
+
+link.tag.color3 = <link.findlayer(3).color> 
+
+link.tag.color4 = <link.findlayer(4).color> 
+
+link.tag.color5 = <link.findlayer(5).color> 
+
+link.tag.color6 = <link.findlayer(6).color> 
+
+link.tag.color7 = <link.findlayer(7).color> 
+
+link.tag.color8 = <link.findlayer(8).color> 
+
+link.tag.color9 = <link.findlayer(9).color> 
+
+link.tag.color10 = <link.findlayer(10).color> 
+
+link.tag.color11 = <link.findlayer(11).color> 
+
+link.tag.color12 = <link.findlayer(12).color> 
+
+link.tag.color13 = <link.findlayer(13).color> 
+
+link.tag.color14 = <link.findlayer(14).color> 
+
+link.tag.color15 = <link.findlayer(15).color> 
+
+link.tag.color16 = <link.findlayer(16).color> 
+
+link.tag.color17 = <link.findlayer(17).color> 
+
+link.tag.color18 = <link.findlayer(18).color> 
+
+link.tag.color19 = <link.findlayer(19).color> 
+
+link.tag.color20 = <link.findlayer(20).color> 
+
+link.tag.color21 = <link.findlayer(21).color> 
+
+link.tag.color22 = <link.findlayer(22).color> 
+
+link.tag.color23 = <link.findlayer(23).color> 
+
+link.tag.color24 = <link.findlayer(24).color> 
+
+link.tag.color25 = <link.findlayer(25).color> 
+
+link.findlayer(1).color = 0480 
+
+link.findlayer(2).color = 0480 
+
+link.findlayer(3).color = 0480 
+
+link.findlayer(4).color = 0480 
+
+link.findlayer(5).color = 0480 
+
+link.findlayer(6).color = 0480 
+
+link.findlayer(7).color = 0480 
+
+link.findlayer(8).color = 0480 
+
+link.findlayer(9).color = 0480 
+
+link.findlayer(10).color = 0480 
+
+link.findlayer(11).color = 0480 
+
+link.findlayer(12).color = 0480 
+
+link.findlayer(13).color = 0480 
+
+link.findlayer(14).color = 0480 
+
+link.findlayer(15).color = 0480 
+
+link.findlayer(16).color = 0480 
+
+link.findlayer(17).color = 0480 
+
+link.findlayer(18).color = 0480 
+
+link.findlayer(19).color = 0480 
+
+link.findlayer(20).color = 0480 
+
+link.findlayer(21).color = 0480 
+
+link.findlayer(22).color = 0480 
+
+link.findlayer(23).color = 0480 
+
+link.findlayer(24).color = 0480 
+
+link.findlayer(25).color = 0480 
+
+REMOVE 
+
+return 0 
+
+
+
+[ITEMDEF i_paralyze_timer1] 
+
+ID=i_worldgem_bit 
+
+NAME=paralyze timer 
+
+TYPE=T_NORMAL 
+
+WEIGHT=0 
+
+ON=@Create 
+
+ATTR=attr_invis|attr_decay 
+
+
+
+ON=@TIMER 
+
+IF <LINK>!=04FFFFFFF 
+
+if <link.flags>|statf_freeze==<link.flags> 
+
+LINK.FLAGS=<link.FLAGS>-statf_freeze 
+
+endif 
+
+link.color=<link.tag.color> 
+
+link.findlayer(1).color = <link.tag.color1> 
+
+link.findlayer(2).color = <link.tag.color2> 
+
+link.findlayer(3).color = <link.tag.color3> 
+
+link.findlayer(4).color = <link.tag.color4> 
+
+link.findlayer(5).color = <link.tag.color5> 
+
+link.findlayer(6).color = <link.tag.color6> 
+
+link.findlayer(7).color = <link.tag.color7> 
+
+link.findlayer(8).color = <link.tag.color8> 
+
+link.findlayer(9).color = <link.tag.color9> 
+
+link.findlayer(10).color = <link.tag.color10> 
+
+link.findlayer(11).color = <link.tag.color11> 
+
+link.findlayer(12).color = <link.tag.color12> 
+
+link.findlayer(13).color = <link.tag.color13> 
+
+link.findlayer(14).color = <link.tag.color14> 
+
+link.findlayer(15).color = <link.tag.color15> 
+
+link.findlayer(16).color = <link.tag.color16> 
+
+link.findlayer(17).color = <link.tag.color17> 
+
+link.findlayer(18).color = <link.tag.color18> 
+
+link.findlayer(19).color = <link.tag.color19> 
+
+link.findlayer(20).color = <link.tag.color20> 
+
+link.findlayer(21).color = <link.tag.color21> 
+
+link.findlayer(22).color = <link.tag.color22> 
+
+link.findlayer(23).color = <link.tag.color23> 
+
+link.findlayer(24).color = <link.tag.color24> 
+
+link.findlayer(25).color = <link.tag.color25> 
+
+ENDIF 
+
+REMOVE 
+
+return 0 
+
+
+
+[ITEMDEF i_stun_gun_charge] 
+
+NAME=Stun Gun Charge 
+
+ID=i_cannon_ball 
+
+weight=.5
+
+
+
+ON=@CREATE 
+
+COLOR=0480 
+
+
+
+
+
+CATEGORY=Cannon Gun
+
+SUBSECTION=BalL Gun
+
+DESCRIPTION=BOOM!

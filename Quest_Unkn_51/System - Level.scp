@@ -1,0 +1,584 @@
+***************************************
+**     Note: Please dont modify this              **
+**	           Script                               **
+**                                                             **
+**       Scripted By: aKuma                         **
+***************************************
+
+//INSTALLATION
+//-Add this following event to ALL MONSTERS!
+
+[itemdef i_level_gem]
+defname=i_level_gem
+NAME=level gem
+id=i_gold
+TYPE=t_eq_script
+
+ON=@CREATE
+attr=092
+
+on=@equip
+SRC.TAG.KS=0
+SRC.TAG.LEVEL=1
+SRC.TAG.EXP=1
+SRC.TAG.EXPNEEDED=100
+SRC.EVENTS +e_level
+
+[EVENTS e_exp]
+ON=@CLICK
+VAR.X=<EVAL <oSTR> /6>
+IF !(0<VAR.X>)
+	VAR.X=1
+ENDIF
+message @025,3 (Level: <EVAL <VAR.X>>)
+
+ON=@DEATH
+SRC.TAG.KS=
+VAR.OLD_ACT=<ACT>
+VAR.X1=<EVAL <oSTR> /1> +<EVAL <oSTR> /1>
+VAR.X=<EVAL {<VAR.X1> <oSTR>}>
+SRC.f_experience
+ACT=<VAR.OLD_ACT>
+VAR.X1=
+
+
+[EVENTS e_exp_1]
+ON=@CLICK
+VAR.X=<EVAL <oSTR> /1>
+IF !(0<VAR.X>)
+	VAR.X=1
+ENDIF
+
+ON=@DEATH
+src.consume 1000 i_memory
+SRC.TAG.KS=
+VAR.OLD_ACT=<ACT>
+VAR.X1=<EVAL <oSTR> /1> +<EVAL <oSTR> /1>
+VAR.X=<EVAL {<VAR.X1> <oSTR>}>
+SRC.f_experience
+ACT=<VAR.OLD_ACT>
+VAR.X1=
+
+[events e_man]
+
+ON=@DEATH
+
+SRC.TAG.KS=0
+VAR.OLD_ACT=<ACT>
+VAR.X1=<EVAL <oSTR> /1> +<EVAL <oSTR> /1>
+VAR.X=<EVAL {<VAR.X1> <oSTR>}>
+SRC.f_experience
+ACT=<VAR.OLD_ACT>
+VAR.X1=
+
+
+//NEXT PART
+//-Find a way so every player has to use this stone
+
+[ITEMDEF i_stone_level]
+DEFNAME=i_stone_level
+ID=i_floor_marble
+TYPE=t_normal
+NAME=Level Stone
+
+ON=@CLICK
+SRC.TAG.KS=0
+SRC.TAG.LEVEL=1
+SRC.TAG.EXP=1
+SRC.TAG.EXPNEEDED=100
+SRC.EVENTS +e_SHOW
+SRC.EVENTS +e_exp_1
+src.events +e_man
+//SRC.GO=1429,1695
+RETURN 1
+
+ON=@DCLICK
+SRC.TAG.KS=0
+SRC.TAG.LEVEL=1
+SRC.TAG.EXP=1
+SRC.TAG.EXPNEEDED=100
+SRC.EVENTS +e_SHOW
+SRC.EVENTS +e_exp_1
+src.events +e_man
+//SRC.GO=1429.1695
+RETURN 1
+
+ON=@step
+src.str=50
+src.dex=50
+src.int=50
+SRC.TAG.KS=0
+SRC.TAG.LEVEL=1
+SRC.TAG.EXP=1
+SRC.TAG.EXPNEEDED=100
+SRC.EVENTS +e_SHOW
+SRC.EVENTS +e_exp_1
+src.events +e_man
+RETURN 1
+
+
+[FUNCTION resetlevel] 
+SRC.TAG.KS=0
+SRC.TAG.LEVEL=1
+SRC.TAG.EXP=1
+SRC.TAG.EXPNEEDED=100
+SRC.sysmessage=@055 Your level have been reseted.
+return 1
+
+
+[ITEMDEF i_tele_level]
+DEFNAME=i_stone_level
+ID=i_floor_marble
+TYPE=t_telepad
+NAME=Level Stone
+
+ON=@step
+src.str=50
+src.dex=50
+src.int=50
+SRC.TAG.KS=0
+SRC.TAG.LEVEL=1
+SRC.TAG.EXP=1
+SRC.TAG.EXPNEEDED=100
+SRC.EVENTS +e_SHOW
+SRC.EVENTS +e_exp_1
+src.events +e_man
+RETURN 1
+
+[EVENTS e_SHOW]
+ON=@CLICK
+IF (<EVAL <TAG.KS>> >= 50)
+message @25 [TOTAL RECALL]
+ELSEIF (<EVAL <TAG.KS>> >= 45) 
+message @25 [Recall]
+ELSEIF (<EVAL <TAG.KS>> >= 40) 
+message @25 [Wicked Sick]
+ELSEIF (<EVAL <TAG.KS>> >= 35) 
+message @25 [Realy Mad]
+ELSEIF (<EVAL <TAG.KS>> >= 25) 
+message @25 [Mad]
+ELSEIF (<EVAL <TAG.KS>> >= 20) 
+message @25 [Godlike]
+ELSEIF (<EVAL <TAG.KS>> >= 15) 
+message @25 [unstoppeble]
+ELSEIF (<EVAL <TAG.KS>> >= 10) 
+message @25 [Dominating]
+ELSEIF (<EVAL <TAG.KS>> >= 8) 
+message @25 [Rampage]
+ELSEIF (<EVAL <TAG.KS>> >= 5) 
+message @25 [Killing Spree]
+Else
+message @025,3 (Level: <EVAL <TAG.LEVEL>>)
+ENDIF 
+
+[FUNCTION f_check]
+IF (<EVAL <TAG.EXP>> > <EVAL <TAG.EXPNEEDED>>)
+	IF (<EVAL <TAG.LEVEL>> > 1500)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +500000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 1400)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +400000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 1300)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +300000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 1200)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +250000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 1100)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +200000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 1000)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +160000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 900)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +130000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 800)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +110000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 700)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +100000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 600)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +90000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 550)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +80000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 500)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +60000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 400)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +25000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 200)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +23000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 100)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +20000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 75)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +18000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 50)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +15000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 40)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +9000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 30)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +8500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 25)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +7500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 20)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +6500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 18)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +6000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 16)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +5000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 14)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +4000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 12)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +3500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> >= 10)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +3000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==9)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +2600
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==8)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +2400
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==7)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +2000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==6)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +1800
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==5)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +1500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==4)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +1000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==3)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +800
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==2)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +400
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==1)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +250
+		f_levelup
+	ENDIF
+ENDIF
+
+[FUNCTION f_levelup]
+TAG.LEVEL=<EVAL <TAG.LEVEL>> +1
+EFFECT=3,i_fx_heal_effect,15,15,1
+SOUND=SND_SPELL_LIGHTNING
+SERV.ALLCLIENTS SYSMESSAGE @088,3 <NAME> has gained a level!
+SERV.ALLCLIENTS SYSMESSAGE @088,3 <NAME> is at level <EVAL <TAG.LEVEL>>
+	IF (<STR> >= 500)
+		return 0
+	ELSE
+		STR=<STR> +5
+
+	IF (<DEX> >= 500)
+		return 0
+	Else
+		DEX=<DEX> +5
+	ENDIF
+	IF (<INT> >= 500)
+		return 0
+	Else
+		INT=<INT> +5
+	ENDIF
+IF (<EVAL <TAG.EXP>> > <EVAL <TAG.EXPNEEDED>>)
+f_check
+ENDIF
+
+
+[FUNCTION f_experience]
+FORCHARLAYER 30
+	IF (<BASEID>==i_memory)
+		IF (<LINK.ISCHAR>)
+			IF !(<LINK.NPC>)
+				IF (<COLOR> & 08) || (<COLOR> & 010) || (<COLOR> & 020) || (<COLOR> & 080) || (<COLOR> & 02000)
+					IF (<TOPOBJ.ISCHAR>)
+						IF !(<TOPOBJ.NPC>)
+							LINK.TAG.KS=0<LINK.TAG.KS> +1
+							LINK.SYSMESSAGE @23 You have killed a total of <EVAL 0<LINK.TAG.KS>> players without die!
+							LINK.TAG.KILLS=0<LINK.TAG.KILLS> +1
+							LINK.SYSMESSAGE @23 You have killed a total of <EVAL 0<LINK.TAG.KILLS>> players!
+							LINK.f_ks_announce
+						ENDIF
+					ENDIF
+					VAR.OLD_ACT=<LINK.ACT.UID>
+					LINK.NEWITEM=i_experience_level
+					LINK.ACT.TAG.EXP=<EVAL <VAR.X>>
+					LINK.ACT.CONT=<LINK.UID>
+					LINK.ACT.TIMER=0
+					LINK.ACT=<VAR.OLD_ACT>
+					VAR.OLD_ACT=
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDFOR
+
+
+[ITEMDEF i_experience_level] 
+DEFNAME=i_experience_level
+NAME=Experience
+ID=i_memory
+WEIGHT=0
+LAYER=30
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+ATTR=attr_invis|attr_move_never
+
+ON=@TIMER
+IF ( <CONT.FLAGS> & statf_dead )
+	REMOVE
+	RETURN 1
+ENDIF
+CONT.SYSMESSAGE @55,3 You have gained <EVAL <TAG.EXP>> experience!
+CONT.TAG.EXP=<EVAL <CONT.TAG.EXP>> + <EVAL <TAG.EXP>>
+CONT.f_check
+REMOVE
+RETURN 1
+
+[FUNCTION level]
+IF (<SRC.UID>==<UID>)
+Dialog d_levelup
+ELSE
+	SRC.SYSMESSAGE=<NAME> needs <EVAL <TAG.EXPNEEDED> -<TAG.EXP>> experience for <SEX his/her> next level.
+ENDIF
+IF (<EVAL <TAG.EXP>> > <EVAL <TAG.EXPNEEDED>>)
+	IF (<EVAL <TAG.LEVEL>> > 50)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +50000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 40)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +40000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 30)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +30000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 25)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +25000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 20)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +20000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 18)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +17500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 16)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +15000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 14)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +14000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> > 12)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +13000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>> >= 10)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +12000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==9)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +11000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==8)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +10000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==7)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +9000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==6)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +8000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==5)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +4000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==4)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +2000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==3)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +1000
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==2)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +500
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==1)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +250
+		f_levelup
+	ELSEIF (<EVAL <TAG.LEVEL>>==0)
+		TAG.EXPNEEDED=<EVAL <TAG.EXPNEEDED>> +5
+		f_levelup
+	ENDIF
+ENDIF
+
+
+[DIALOG d_level]
+0,0
+gumppic 0 0 102
+text 70 60 99 0
+text 50 245 25 1
+text 70 100 33 2
+text 70 120 33 3
+text 70 150 33 4
+text 70 170 33 5
+button 50 110 1209 1210 1 0 1
+button 50 160 1209 1210 1 0 2
+
+
+[DIALOG d_level TEXT]
+Level System
+Exp Needed=<EVAL 0<TAG.EXPNEEDED> +-0<TAG.EXP>>
+View Kills
+And Deaths
+Dont View
+Kills And Deaths
+
+
+[DIALOG d_level BUTTON]
+
+ON=1 View Kills And Deaths
+Events +e_kills
+events -e_level
+
+ON=2 Dont View Kills And Deaths
+Events -e_kills
+events +e_level
+
+
+//*********************
+// Killing Spree System
+
+[FUNCTION f_ks_announce]
+IF (<EVAL <TAG.KS>> >= 50)
+SERV.B @3 TOTAL RECALL! <NAME> is killing everyone! Someone stop the carnage!
+ELSEIF (<EVAL <TAG.KS>> >= 45) 
+SERV.B @3 RECALL ! <NAME> are murdering everyone! Can someone kill him!
+ELSEIF (<EVAL <TAG.KS>> >= 40) 
+SERV.B @3 <NAME> are wicked sick! Someone have to pawn him!
+ELSEIF (<EVAL <TAG.KS>> >= 35) 
+SERV.B @3 <NAME> is realy mad! OMG! noone can kill him.
+ELSEIF (<EVAL <TAG.KS>> >= 25) 
+SERV.B @3 <NAME> is mad! Now you have to gank him to kill him.
+ELSEIF (<EVAL <TAG.KS>> >= 20) 
+SERV.B @3 <NAME> is godlike! Someone have to kill him if its avable. 
+ELSEIF (<EVAL <TAG.KS>> >= 15) 
+SERV.B @3 <NAME> is unstoppeble! Someone kill him please.
+ELSEIF (<EVAL <TAG.KS>> >= 10) 
+SERV.B @3 <NAME> is dominating!  kill him!!!
+ELSEIF (<EVAL <TAG.KS>> >= 8) 
+SERV.B @3 <NAME> is on a rampage! he/she is going to be a dominator if no one kill him.
+ELSEIF (<EVAL <TAG.KS>> >= 5) 
+SERV.B @3 <NAME> is on a killing spree! someone kill him.
+ENDIF 
+
+[FUNCTION f_ks_announce_death]
+IF (<EVAL <TAG.KS>> >= 50)
+SERV.B @025 <name>:s TOTAL RECALL! have been stoped by: <src.act.name>, He pawned the head of <name>!
+ELSEIF (<EVAL <TAG.KS>> >= 45) 
+SERV.B @025 <name>:s RECALL ! are now pawned by: <src.act.name>!
+ELSEIF (<EVAL <TAG.KS>> >= 40) 
+SERV.B @025 <name>:s wicked sick are now removed by: <src.act.name>!
+ELSEIF (<EVAL <TAG.KS>> >= 35) 
+SERV.B @025 <NAME>:s realy mad! are stoped by a cheap... JK by: <src.act.name>.
+ELSEIF (<EVAL <TAG.KS>> >= 25) 
+SERV.B @025 <NAME>:s mad! have been pawned by: <src.act.name>.
+ELSEIF (<EVAL <TAG.KS>> >= 20) 
+SERV.B @025 <NAME>:s goooood like! have been stoped! By: <src.act.name>.
+ELSEIF (<EVAL <TAG.KS>> >= 15) 
+SERV.B @025 <NAME>:s unstoppeble! is no more, thx <src.act.name>.
+ELSEIF (<EVAL <TAG.KS>> >= 10) 
+SERV.B @025 <NAME>:s dominating! are broken, thx <src.act.name>.
+ELSEIF (<EVAL <TAG.KS>> >= 8) 
+SERV.B @025 <NAME>:s rampage! is gone. Thx <src.act.name>.
+ELSEIF (<EVAL <TAG.KS>> >= 5) 
+SERV.B @025 <NAME>:s killing spree! have been lost by: <src.act.name>.
+ENDIF 
+
+[DIALOG d_levelupp]
+0,0
+page 0
+gumppic 200 87 06f
+gumppic 335 250 0804
+tilepic 210 90 7036
+tilepic 560 90 7039
+text 320 93 900 0
+text 350 260 336 1
+text 320 165 336 2
+text 320 195 336 3
+text 310 320 336 4
+text 440 320 336 5
+text 320 450 336 6
+text 310 400 336 7
+text 440 400 336 8
+text 340 500 336 9
+
+[DIALOG d_levelupp TEXT]
+Level System For <src.name> 
+Level: <eval <tag.level>>.
+Experiance Gaind=<eval <tag.exp>>
+Experiance Needed=<eval <tag.expneeded>>
+Karma=<src.karma>
+Fame=<src.fame>
+Killing Spree Points=<eval 0<src.tag.ks>>
+Kills=<eval 0<tag.kILLS>>
+Deaths=<src.deaths>
+Players Online: <serv.statclients>
+
+
+[DIALOG d_levelup]
+0,0
+page 0
+resizepic 97 57 9300 400 453
+resizepic 135 163 9350 313 125
+resizepic 134 321 9350 203 138
+resizepic 137 80 9350 313 36
+text 158 182 42 0
+text 205 87 47 1
+text 155 255 43 2
+text 156 229 43 3
+text 355 488 2123 4
+text 146 353 0 5
+text 146 330 0 6
+text 146 424 0 7
+text 146 376 0 8
+text 146 399 0 9
+text 104 485 0 10
+tilepic 367 346 4070
+tilepic 390 343 4071
+tilepic 411 345 4072
+tilepic 346 363 4073
+tilepic 389 363 4074
+tilepic 433 363 4075
+tilepic 367 386 4076
+tilepic 390 408 4077
+tilepic 411 385 4078
+
+[DIALOG d_levelup text]
+Current Level: <eval <tag.level>>
+Lost PvP Level System
+Experiance Needed=<eval <tag.expneeded>>
+Experiance Gained=<eval <tag.exp>>
+Scripted by aKuma
+Karma=<src.karma>
+Fame=<src.fame>
+Killing Spree Points=<eval 0<src.tag.ks>>
+Kills=<eval 0<tag.kILLS>>
+Deaths=<src.deaths>
+Players Online: <serv.statclients>

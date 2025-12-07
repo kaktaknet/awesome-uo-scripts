@@ -1,0 +1,433 @@
+[ITEMDEF i_minoc_vesper_caravan_leader_control]
+ID=i_plant_cactus_potted
+TYPE=T_EQ_SCRIPT
+NAME=Minoc To Vesper Caravan Leader Controller
+WEIGHT=0
+
+ON=@CREATE
+ATTR=attr_invis|attr_decay
+TIMER=10
+MOREZ=0
+MOREX=0
+MOREY=0
+
+ON=@userDCLICK
+return 1
+
+ON=@TIMER
+
+//p.x and p.y don't work, neither do p_x and p_y
+more=<hval extractX(<cont.P>)>
+more2=<hval extractY(<cont.P>)>
+
+var.mv_caravan_1=<cont.UID>
+
+if (<MOREZ>==0)
+	//Put Wait to start conditions in here
+	MOREZ=1
+	TIMER=1
+	MOREX=2489
+	MOREY=570
+	return 1
+ENDIF
+
+//walk slowly cause your leading pack horses
+timer={2 3}
+
+if ((<more>==<MOREX>) && (<more2>==<MOREY>))
+	MOREZ=<MOREZ>+1
+	//cont.say heading to waypoint <morez>/
+	if (<MOREZ>==2)
+		MOREX=2489
+		MOREY=518
+		return 1
+	ENDIF
+	if (<MOREZ>==3)
+		MOREX=2526
+		MOREY=516
+		return 1
+	ENDIF
+	if (<MOREZ>==4)
+		MOREX=2527
+		MOREY=500
+		return 1
+	endif
+	if (<MOREZ>==5)
+		MOREX=2554
+		MOREY=503
+		return 1
+	endif
+	if (<MOREZ>==6)
+		MOREX=2595
+		MOREY=506 //505
+		return 1
+	endif
+	if (<MOREZ>==7)
+		MOREX=2608
+		MOREY=505
+		return 1
+	endif
+	if (<MOREZ>==8)
+		MOREX=2624
+		MOREY=488
+		return 1
+	endif
+	if (<MOREZ>==9)
+		MOREX=2630
+		MOREY=469
+		return 1
+	endif
+	if (<MOREZ>==10)
+		MOREX=2662
+		MOREY=470
+		return 1
+	endif
+	if (<MOREZ>==11)
+		MOREX=2662
+		MOREY=513
+		return 1
+	endif
+	if (<MOREZ>==12)
+		MOREX=2668
+		MOREY=524
+		return 1
+	endif
+	if (<MOREZ>==13)
+		MOREX=2740
+		MOREY=507
+		return 1
+	endif
+	if (<MOREZ>==14)
+		MOREX=2774
+		MOREY=504
+		return 1
+	endif
+	if (<MOREZ>==15)
+		MOREX=2850
+		MOREY=580
+		return 1
+	endif
+	if (<MOREZ>==16)
+		MOREX=2907
+		MOREY=589
+		return 1
+	endif
+	if (<MOREZ>==17)
+		MOREX=2907
+		MOREY=683
+		return 1
+	endif
+	if (<MOREZ>==18)
+		MOREX=2886
+		MOREY=710
+		return 1
+	endif
+	if (<MOREZ>==19)
+		MOREX=2893
+		MOREY=729
+		return 1
+	endif
+	if (<MOREZ>==20)
+		MOREX=2876
+		MOREY=740
+		return 1
+	endif
+	if (<MOREZ>==21)
+		MOREX=2883
+		MOREY=756
+		return 1
+	endif
+	if (<MOREZ>==22)
+		MOREX=2882
+		MOREY=792
+		return 1
+	endif
+	if (<MOREZ>==23)
+		MOREX=2843
+		MOREY=804
+		return 1
+	endif
+        if (<MOREZ>==24)
+		cont.remove
+	endif
+endif
+
+var.pdir="Q"
+var.sdir="Q"
+
+if (<more2> > <moreY>)
+	var.pdir="N"
+elif (<more2> < <moreY>)
+	var.pdir="S"
+endif
+
+if (<more> > <moreX>)
+	var.sdir="W"
+elif (<more> < <morex>)
+	var.sdir="E"
+endif
+
+
+cont.walk <var.pdir>
+cont.walk <var.sdir>
+
+timer=1
+return 1
+
+[ITEMDEF i_mv_caravan_member_1_control]
+ID=i_plant_cactus_potted
+TYPE=T_EQ_SCRIPT
+NAME=Minoc To Vesper Caravan Member 1 Controller
+WEIGHT=0
+ON=@CREATE
+ ATTR=attr_invis|attr_decay
+ TIMER=10
+ MOREZ=0
+ MOREX=0
+ MOREY=0
+
+ON=@TIMER
+
+ var.mv_caravan_2=<cont.UID>
+
+ if (!<link>)
+   //we have no leader
+
+   if (<cont.region>==086002A11)
+     //we're there
+     cont.remove
+   endif
+
+
+   link=<eval <var.mv_caravan_1> >
+   //cont.say <link> : <var.mv_caravan_1>
+   timer=5
+   return 1
+ endif
+
+ timerd=5
+
+ if (<extractX(<link.p>)> < <extractX(<cont.p>)>-1)
+   cont.walk W
+ endif
+
+ if (<extractX(<link.p>)> > <extractX(<cont.p>)>+1)
+   cont.walk E
+ endif
+
+
+ if (<extractY(<link.p>)> < <extractY(<cont.p>)>-1)
+   cont.walk N
+ endif
+
+ if (<extractY(<link.p>)> > <extractY(<cont.p>)>+1)
+   cont.walk S
+ endif
+return 1
+
+[ITEMDEF i_mv_caravan_member_2_control]
+ID=i_plant_cactus_potted
+TYPE=T_EQ_SCRIPT
+NAME=Minoc To Vesper Caravan Member 2 Controller
+WEIGHT=0
+ON=@CREATE
+ ATTR=attr_invis|attr_decay
+ TIMER=10
+ MOREZ=0
+ MOREX=0
+ MOREY=0
+
+ON=@TIMER
+ if (!<link>)
+   //we have no leader (pack horse in front of us)
+
+
+   if (<cont.region>==086002A11)
+     //we're there
+     cont.remove
+   endif
+
+   link=<eval <var.mv_caravan_2> >
+   //cont.say <link> : <var.mv_caravan_2>
+   timer=5
+   return 1
+ endif
+
+ timerd=5
+
+ if (<extractX(<cont.p>)>==2843&&<extractY(<cont.p>)>==804)
+    cont.remove
+ endif
+
+ cont.stam=40
+
+ if (<extractX(<link.p>)> < <extractX(<cont.p>)>-2)
+   cont.walk W
+ endif
+
+ if (<extractX(<link.p>)> > <extractX(<cont.p>)>+2)
+   cont.walk E
+ endif
+
+
+ if (<extractY(<link.p>)> < <extractY(<cont.p>)>-2)
+   cont.walk N
+ endif
+
+ if (<extractY(<link.p>)> > <extractY(<cont.p>)>+2)
+   cont.walk S
+ endif
+return 1
+
+[CHARDEF c_h_caravan_leader]
+NAME="#NAMES_HUMAN_MALE"
+ID=C_MAN
+HIREDAYWAGE=70
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+//TSPEECH=jobWarrior
+//TSPEECH=jobFighter
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+     NAME="<NAME> the caravan leader"
+     COLOR=colors_skin
+     STR={86 100}
+     DEX={76 90}
+     INT={61 75}
+
+     POISONING={35.0 55.0}
+     ARMSLORE={50.0 70.0}
+     FENCING={50.0 70.0}
+     PARRYING={50.0 70.0}
+     SWORDSMANSHIP={50.0 70.0}
+     WRESTLING={50.0 70.0}
+     MACEFIGHTING={50.0 70.0}
+     TACTICS={50.0 70.0}
+
+     NPC=brain_human
+
+     ITEMNEWBIE=random_male_hair
+     COLOR=colors_hair
+     ITEMNEWBIE=random_facial_hair
+     COLOR=match_hair
+     ITEMNEWBIE=i_minoc_vesper_caravan_leader_control
+
+ON=@NPCRestock
+     ITEM=i_mt_horse_tan
+     ITEM=random_LIGHT
+     ITEM=i_shirt_fancy
+     COLOR=colors_all
+     ITEM=random_chest_armor
+     ITEM=random_leg_armor
+     ITEM=random_gloves
+     ITEM=random_head_armor
+     ITEM=random_shield
+     ITEM=random_gorget
+     ITEM=i_boots_calf
+     ITEM=random_weapon
+     ITEM=random_coin_purse
+
+////////////////////////////////////////Custom Pack horses to follow
+
+[CHARDEF c_horse_pack_mv_caravan_1]
+//DEFNAME=PACKHORSES
+ID=0123
+NAME="Pack Horse"
+SOUND=snd_ANIMALS_HORSE1
+ANIM=01fff
+ICON=i_pet_horse_pack
+CAN=MT_WALK|MT_RUN
+DAM=4,12
+ARMOR=9
+
+RESOURCES=15 i_ribs_raw, 10 i_hide
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+DESIRES=e_horses,c_man,c_woman
+SHELTER=r_stables,e_Human_Greet
+AVERSIONS=e_carnivores3
+TEVENTS=e_horses
+
+DESCRIPTION=Pack Horse
+SUBSECTION=Land (Domestic)
+CATEGORY=Animals
+
+ON=@Create
+     NPC=brain_animal
+     STR={100 220}
+     DEX={36 55}
+     INT={6 10}
+
+     PARRYING={35.0 45.0}
+     MAGICRESISTANCE={25.0 30.0}
+     TACTICS={29.0 44.0}
+     WRESTLING={29.0 44.0}
+     TAMING=30.0
+
+     FAME=0
+     KARMA={-1 -99}
+
+     ITEM=i_ingot_iron,{100 200}
+     ITEMNEWBIE=i_mv_caravan_member_1_control
+
+[CHARDEF c_horse_pack_mv_caravan_2]
+//DEFNAME=PACKHORSES
+ID=0123
+NAME="Pack Horse"
+SOUND=snd_ANIMALS_HORSE1
+ANIM=01fff
+ICON=i_pet_horse_pack
+CAN=MT_WALK|MT_RUN
+DAM=4,12
+ARMOR=9
+
+RESOURCES=15 i_ribs_raw, 10 i_hide
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+DESIRES=e_horses,c_man,c_woman
+SHELTER=r_stables,e_Human_Greet
+AVERSIONS=e_carnivores3
+TEVENTS=e_horses
+
+DESCRIPTION=Pack Horse
+SUBSECTION=Land (Domestic)
+CATEGORY=Animals
+
+ON=@Create
+     NPC=brain_animal
+     STR={100 220}
+     DEX={36 55}
+     INT={6 10}
+
+     PARRYING={35.0 45.0}
+     MAGICRESISTANCE={25.0 30.0}
+     TACTICS={29.0 44.0}
+     WRESTLING={29.0 44.0}
+     TAMING=30.0
+
+     FAME=0
+     KARMA={-1 -99}
+     ITEMNEWBIE=i_mv_caravan_member_2_control
+     ITEM=i_ingot_iron,{1 25}
+     ITEM=i_ingot_gold,{1 25}
+     ITEM=i_ingot_silver,{1 25}
+     ITEM=i_ingot_bronze,{1 25}
+     ITEM=i_ingot_mytheril,{1 25}
+     ITEM=i_ingot_copper,{1 25}
+     ITEM=i_ingot_shadow,{1 25}
+     ITEM=i_ingot_agapite,{1 25}
+     ITEM=i_ingot_verite,{1 25}
+     ITEM=i_ingot_rose,{1 25}
+     var.mv_caravan_3=<UID>
+

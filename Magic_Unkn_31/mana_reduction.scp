@@ -1,0 +1,1340 @@
+[comment Mana_reduction_sword]
+Mana reduction system 1.0
+I only request one thing for the use of this script, leave in this headed and give me credit.
+//
+//What this script does:
+//
+This script allows you to reduce your mana useage by percentages.
+//
+//install Instructions
+//
+drop this script in your scripts directory
+add tevents=e_manauserto all char defs in the game other wise you'll have chars useing
+free mana all the time. before you add a tevent, it should look something like this...
+
+//[CHARDEF 0401]
+//DEFNAME=C_H_VENDOR
+//NAME=#NAMES_HUMANMALE the Vendor
+//ID=C_MAN
+//HIREDAYWAGE=50
+//DESIRES=i_gold,e_notoriety
+//AVERSIONS=t_TRAP,t_eerie_stuff
+
+//after you add a tevent it should look like this...
+
+//[CHARDEF 0401]
+//DEFNAME=C_H_VENDOR
+//NAME=#NAMES_HUMANMALE the Vendor
+//ID=C_MAN
+//HIREDAYWAGE=50
+//DESIRES=i_gold,e_notoriety
+//AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TEVENTS=e_manauser
+
+//This makes it possible to add the event to all exsisting charactors
+//with out having to rebuild the shard.
+//
+//finally resync the shard
+//
+//
+//creating weapons with mana use reduction/increases...
+//
+//type .manareduction <args> to set your reduction tag
+//
+//Below this defname thing is the a sword for an example. It's id is i_sword_of_mana
+//
+[defname def_manause]//These are the amount of mana each spell can use.
+0.manause=4
+1.manause=4
+2.manause=4
+3.manause=4
+4.manause=4
+5.manause=4
+6.manause=4
+7.manause=4
+8.manause=4
+9.manause=6
+10.manause=9
+11.manause=9
+12.manause=9
+13.manause=9
+14.manause=9
+15.manause=9
+16.manause=9
+17.manause=9
+18.manause=9
+19.manause=9
+20.manause=9
+21.manause=9
+22.manause=11
+23.manause=9
+24.manause=9
+25.manause=11
+26.manause=11
+27.manause=11
+28.manause=11
+29.manause=11
+30.manause=11
+31.manause=11
+32.manause=11
+33.manause=14
+34.manause=14
+35.manause=14
+36.manause=14
+37.manause=14
+38.manause=14
+39.manause=14
+40.manause=14
+41.manause=20
+42.manause=20
+43.manause=20
+44.manause=20
+45.manause=20
+46.manause=20
+47.manause=20
+48.manause=20
+49.manause=20
+50.manause=40
+51.manause=40
+52.manause=40
+53.manause=40
+54.manause=40
+55.manause=40
+56.manause=40
+57.manause=50
+58.manause=50
+59.manause=50
+60.manause=50
+61.manause=50
+62.manause=50
+63.manause=50
+64.manause=50
+65.manause=15
+66.manause=15
+67.manause=15
+68.manause=15
+69.manause=15
+70.manause=15
+
+//Here is an example of a mana use reducing sword
+
+[itemdef i_sword_of_mana]
+id=i_sword_viking
+name=Long Sword of the Heavens
+RESOURCES=10 i_ingot_iron
+WEIGHT=8
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=4,32
+//SPEED=35
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=N
+CATEGORY=Provisions - Weapons
+SUBSECTION=Swords
+DESCRIPTION=Long Sword of the heavens
+SKILLMAKE=BLACKSMITHING 50.2
+DUPELIST=013b8
+
+on=@create
+hitpoints=50
+
+on=@damage
+if <morez>=1
+hits=999
+endif
+
+on=@click
+var.message=<name>
+if <morex>>0
+var.message=a <var.message> +<morex>
+endif
+if <morez>=1
+var.message=an indestructable <var.message>
+endif
+message <var.message>
+return 1
+
+on=@equip
+manause +<morex>
+src.sysmessage Your mana useage decreased <morex>%
+
+on=@unequip
+manause -<morex>
+src.sysmessage Your mana useage increased <morex>%
+
+[function manause]
+if (strmatch("+*","<args>"))|(strmatch("-*","<args>"))
+src.tag.manareduction=<eval 0<src.tag.manareduction><args>>
+else
+src.tag.manareduction <args>
+endif
+
+[events e_manauser]
+on=@spellcast
+if <cancast> <args>
+manause2 <eval <var.<args>.manause>-((<var.<args>.manause>*0<tag.manareduction>)/100)>
+endif
+
+[function manause2]
+if <mana>>(<args>-1)
+mana=<eval <mana>-<args>>
+else
+sysmessage You do not have enough mana.
+action=-1
+return 1
+endif
+
+[Spell 0] // No effect.
+DEFNAME=s_Water
+NAME=Water
+SOUND=0
+RUNES=
+CAST_TIME=0
+RESOURCES=
+RUNE_ITEM=0
+SCROLL_ITEM=0
+FLAGS=0
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 1.0
+
+[Spell 1]
+// NOTE: This spell at low levels is deadly and can stop a player from running at high level an annoyance at best
+DEFNAME=s_Clumsy
+NAME=Clumsy
+SOUND=snd_SPELL_CLUMSY
+RUNES=UJ
+CAST_TIME=1.0
+RESOURCES=i_reag_blood_moss,i_reag_nightshade
+RUNE_ITEM=i_rune_CLUMSY
+SCROLL_ITEM=i_scroll_CLUMSY
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM | SPELLFLAG_FX_TARG | SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=3,15
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 10.0
+
+[Spell 2]
+DEFNAME=s_create_food
+NAME=Create Food
+SOUND=snd_SPELL_CREATE_FOOD
+RUNES=IMY
+CAST_TIME=1.0
+RESOURCES=i_reag_garlic,i_reag_ginseng,i_reag_mand rake_root
+RUNE_ITEM=i_rune_CREATE_FOOD
+SCROLL_ITEM=i_scroll_CREATE_FOOD
+FLAGS=SPELLFLAG_TARG_XYZ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 10.0
+
+[Spell 3]
+DEFNAME=s_feeblemind
+NAME=Feeblemind
+SOUND=snd_SPELL_FEEBLEMIND
+RUNES=RW
+CAST_TIME=1.0
+RESOURCES=i_reag_ginseng,i_reag_nightshade
+RUNE_ITEM=i_rune_FEEBLEMIND
+SCROLL_ITEM=i_scroll_FEEBLEMIND
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=5,10
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 10.0
+
+[Spell 4]
+DEFNAME=s_heal
+NAME=Heal
+SOUND=snd_SPELL_HEAL
+RUNES=IM
+CAST_TIME=1.0
+RESOURCES=i_reag_garlic,i_reag_ginseng,i_reag_spid er_silk
+RUNE_ITEM=i_rune_HEAL
+SCROLL_ITEM=i_scroll_HEAL
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG | SPELLFLAG_GOOD
+EFFECT_ID=i_fx_HEAL_EFFECT
+EFFECT=5,20
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 10.0
+
+[Spell 5]
+DEFNAME=s_magic_arrow
+NAME=Magic Arrow
+SOUND=snd_SPELL_MAGIC_ARROW
+CAST_TIME=1.0
+RUNES=IPY
+RESOURCES=i_reag_black_pearl,i_reag_nightshade
+RUNE_ITEM=i_rune_MAGIC_ARROW
+SCROLL_ITEM=i_scroll_MAGIC_ARROW
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=5,15
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 10.0
+
+[Spell 6]
+DEFNAME=s_night_sight
+NAME=Night Sight
+SOUND=snd_SPELL_NIGHT_SIGHT
+RUNES=IL
+CAST_TIME=1.0
+RESOURCES=i_reag_spider_silk,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_NIGHT_SIGHT
+SCROLL_ITEM=i_scroll_NIGHT_SIGHT
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_HEAL_EFFECT
+EFFECT=0
+DURATION=3*60.0,10*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 10.0
+
+[Spell 7]
+DEFNAME=s_reactive_armor
+NAME=Reactive Armor
+SOUND=snd_SPELL_REACTIVE_ARMOR
+RUNES=FS
+CAST_TIME=1.0
+RESOURCES=i_reag_garlic,i_reag_spider_silk,i_reag_ sulfur_ash
+RUNE_ITEM=i_rune_REACTIVE_ARMOR
+SCROLL_ITEM=i_scroll_REACTIVE_ARMOR
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_HEAL_EFFECT
+EFFECT=10.0,60.0
+DURATION=3*60.0,5*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 10.0
+
+[Spell 8]
+DEFNAME=s_weaken
+NAME=Weaken
+SOUND=snd_SPELL_WEAKEN
+RUNES=DM
+CAST_TIME=1.0
+RESOURCES=i_reag_garlic,i_reag_nightshade
+RUNE_ITEM=i_rune_WEAKEN
+SCROLL_ITEM=i_scroll_WEAKEN
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=5,30
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 10.0
+
+[Spell 9]
+// Raise dex
+DEFNAME=s_Agility
+NAME=Agility
+SOUND=snd_SPELL_AGILITY
+RUNES=EU
+CAST_TIME=20
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root
+RUNE_ITEM=i_rune_AGILITY
+SCROLL_ITEM=i_scroll_AGILITY
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_BLESS_EFFECT
+EFFECT=5,20
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 20.0
+
+[Spell 10]
+// Raise int.
+DEFNAME=s_Cunning
+NAME=Cunning
+SOUND=snd_SPELL_CUNNING
+RUNES=UW
+CAST_TIME=20
+RESOURCES=i_reag_mandrake_root,i_reag_nightshade
+RUNE_ITEM=i_rune_CUNNING
+SCROLL_ITEM=i_scroll_CUNNING
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_BLESS_EFFECT
+EFFECT=5,20
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 20.0
+
+[Spell 11]
+DEFNAME=s_cure
+NAME=Cure
+SOUND=snd_SPELL_CURE
+RUNES=AN
+CAST_TIME=20
+RESOURCES=i_reag_garlic,i_reag_ginseng
+RUNE_ITEM=i_rune_CURE
+SCROLL_ITEM=i_scroll_CURE
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_HEAL_EFFECT
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 20.0
+
+[Spell 12]
+DEFNAME=s_harm
+NAME=Harm
+SOUND=snd_SPELL_HARM
+RUNES=AM
+CAST_TIME=20
+RESOURCES=i_reag_nightshade,i_reag_spider_silk
+RUNE_ITEM=i_rune_HARM
+SCROLL_ITEM=i_scroll_HARM
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=5,16
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 20.0
+
+[Spell 13]
+DEFNAME=s_magic_trap
+NAME=Magic Trap
+SOUND=snd_SPELL_MAGIC_TRAP
+RUNES=IJ
+CAST_TIME=20
+RESOURCES=i_reag_garlic,i_reag_spider_silk,i_reag_ sulfur_ash
+RUNE_ITEM=i_rune_MAGIC_TRAP
+SCROLL_ITEM=i_scroll_MAGIC_TRAP
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 20.0
+
+[Spell 14]
+DEFNAME=s_magic_untrap
+NAME=Magic Untrap
+SOUND=snd_SPELL_MAGIC_UNTRAP
+RUNES=AJ
+CAST_TIME=20
+RESOURCES=i_reag_blood_moss,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_MAGIC_UNTRAP
+SCROLL_ITEM=i_scroll_MAGIC_UNTRAP
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 20.0
+
+[Spell 15]
+DEFNAME=s_protection
+NAME=Protection
+SOUND=snd_SPELL_PROTECTION
+RUNES=US
+CAST_TIME=20
+RESOURCES=i_reag_garlic,i_reag_ginseng,i_reag_sulf ur_ash
+RUNE_ITEM=i_rune_PROTECTION
+SCROLL_ITEM=i_scroll_PROTECTION
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_BLESS_EFFECT
+EFFECT=5,35
+DURATION=3*60.0,5*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 20.0
+
+[Spell 16]
+DEFNAME=s_strength
+NAME=Strength
+SOUND=snd_SPELL_STRENGTH
+RUNES=UM
+CAST_TIME=20
+RESOURCES=i_reag_mandrake_root,i_reag_nightshade
+RUNE_ITEM=i_rune_STRENGTH
+SCROLL_ITEM=i_scroll_STRENGTH
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_BLESS_EFFECT
+EFFECT=5,15
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 20.0
+
+[Spell 17]
+DEFNAME=s_bless
+NAME=Bless
+SOUND=snd_SPELL_BLESS
+RUNES=RS
+CAST_TIME=3.0
+RESOURCES=i_reag_garlic,i_reag_mandrake_root
+RUNE_ITEM=i_rune_BLESS
+SCROLL_ITEM=i_scroll_BLESS
+FLAGS=SPELLFLAG_TARG_OBJ | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_BLESS_EFFECT
+EFFECT=5,20
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0
+
+[Spell 18]
+DEFNAME=s_fireball
+NAME=Fireball
+SOUND=snd_SPELL_FIREBALL
+RUNES=VF
+CAST_TIME=3.0
+RESOURCES=i_reag_black_pearl,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_FIREBALL
+SCROLL_ITEM=i_scroll_FIREBALL
+FLAGS=SPELLFLAG_TARG_OBJ | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=8,16
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0
+
+[Spell 19]
+DEFNAME=s_magic_lock
+NAME=Magic Lock
+SOUND=snd_SPELL_MAGIC_LOCK
+RUNES=AP
+CAST_TIME=3.0
+RESOURCES=i_reag_blood_moss,i_reag_garlic,i_reag_s ulfur_ash
+RUNE_ITEM=i_rune_MAGIC_LOCK
+SCROLL_ITEM=i_scroll_MAGIC_LOCK
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0
+
+[Spell 20]
+// NOTE: Does poison need a duration or are they stuck with it until cured ??
+DEFNAME=s_poison
+NAME=Poison
+SOUND=snd_SPELL_POISON
+RUNES=IN
+CAST_TIME=3.0
+RESOURCES=i_reag_nightshade
+RUNE_ITEM=i_rune_POISON
+SCROLL_ITEM=i_scroll_POISON
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=0 // 100,750
+DURATION=1.0,15.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0
+
+[Spell 21]
+DEFNAME=s_telekinesis
+NAME=Telekinesis
+SOUND=snd_SPELL_telekinesis
+RUNES=OPY
+CAST_TIME=3.0
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root
+RUNE_ITEM=i_rune_telekinesis
+SCROLL_ITEM=i_scroll_telekinesis
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0
+
+[Spell 22]
+DEFNAME=s_teleport
+NAME=Teleport
+SOUND=snd_SPELL_TELEPORT
+RUNES=RP
+CAST_TIME=3.0
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root
+RUNE_ITEM=i_rune_TELEPORT
+SCROLL_ITEM=i_scroll_TELEPORT
+FLAGS=SPELLFLAG_TARG_XYZ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=01
+SKILLREQ=MAGERY 30.0
+
+[Spell 23]
+DEFNAME=s_unlock
+NAME=Unlock
+SOUND=snd_SPELL_UNLOCK
+RUNES=EP
+CAST_TIME=3.0
+RESOURCES=i_reag_blood_moss,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_UNLOCK
+SCROLL_ITEM=i_scroll_UNLOCK
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0
+
+[Spell 24]
+DEFNAME=s_wall_of_stone
+NAME=Wall of Stone
+SOUND=snd_SPELL_WALL_OF_STONE
+RUNES=ISY
+CAST_TIME=3.0
+RESOURCES=i_reag_blood_moss,i_reag_garlic
+RUNE_ITEM=i_rune_WALL_OF_STONE
+SCROLL_ITEM=i_scroll_WALL_OF_STONE
+FLAGS=SPELLFLAG_TARG_XYZ|SPELLFLAG_FIELD
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,4*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0
+
+[Spell 25]
+DEFNAME=s_archcure
+NAME=Arch Cure
+SOUND=snd_SPELL_ARCHCURE
+RUNES=VAN
+CAST_TIME=3.0
+RESOURCES=i_reag_garlic,i_reag_ginseng,i_reag_mand rake_root
+RUNE_ITEM=i_rune_ARCHCURE
+SCROLL_ITEM=i_scroll_ARCHCURE
+FLAGS=SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_HEAL_EFFECT
+EFFECT=0
+DURATION=0.0
+MANAUSE=01
+SKILLREQ=MAGERY 40.0
+
+[Spell 26]
+DEFNAME=s_archprotection
+NAME=Arch Protection
+SOUND=snd_SPELL_ARCHPROTECTION
+RUNES=VUS
+CAST_TIME=3.0
+RESOURCES=i_reag_garlic,i_reag_ginseng,i_reag_mand rake_root,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_ARCHPROTECTION
+SCROLL_ITEM=i_scroll_ARCHPROTECTION
+FLAGS=SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_BLESS_EFFECT
+EFFECT=5,15
+DURATION=30.0,1000.0
+MANAUSE=01
+SKILLREQ=MAGERY 40.0
+
+[Spell 27]
+DEFNAME=s_curse
+NAME=Curse
+SOUND=snd_SPELL_CURSE
+RUNES=DS
+CAST_TIME=3.0
+RESOURCES=i_reag_garlic,i_reag_nightshade,i_reag_s ulfur_ash
+RUNE_ITEM=i_rune_CURSE
+SCROLL_ITEM=i_scroll_CURSE
+FLAGS=SPELLFLAG_TARG_OBJ | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=5,15
+DURATION=10.0,60.0
+MANAUSE=01
+SKILLREQ=MAGERY 40.0
+
+[Spell 28]
+DEFNAME=s_fire_field
+NAME=Fire Field
+SOUND=snd_SPELL_FIRE_FIELD
+RUNES=IFG
+CAST_TIME=3.0
+RESOURCES=i_reag_black_pearl,i_reag_spider_silk,i_ reag_sulfur_ash
+RUNE_ITEM=i_rune_FIRE_FIELD
+SCROLL_ITEM=i_scroll_FIRE_FIELD
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_HARM | SPELLFLAG_FIELD| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=2,12
+DURATION=2*60.0,4*60.0
+MANAUSE=01
+SKILLREQ=MAGERY 40.0
+
+[Spell 29]
+DEFNAME=s_greater_heal
+NAME=Greater Heal
+SOUND=snd_SPELL_GREATER_HEAL
+RUNES=IVM
+CAST_TIME=3.0
+RESOURCES=i_reag_garlic,i_reag_ginseng,i_reag_mand rake_root,i_reag_spider_silk
+RUNE_ITEM=i_rune_GREATER_HEAL
+SCROLL_ITEM=i_scroll_GREATER_HEAL
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_HEAL_EFFECT
+EFFECT=10,50
+DURATION=0.0
+MANAUSE=01
+SKILLREQ=MAGERY 40.0
+
+[Spell 30]
+DEFNAME=s_lightning
+NAME=Lightning
+SOUND=snd_SPELL_LIGHTNING
+RUNES=POG
+CAST_TIME=3.0
+RESOURCES=i_reag_black_pearl,i_reag_mandrake_root, i_reag_sulfur_ash
+RUNE_ITEM=i_rune_LIGHTNING
+SCROLL_ITEM=i_scroll_LIGHTNING
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_HARM| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=10,20
+DURATION=0.0
+MANAUSE=01
+SKILLREQ=MAGERY 40.0
+
+[Spell 31]
+DEFNAME=s_mana_drain
+NAME=Mana Drain
+SOUND=snd_SPELL_MANA_DRAIN
+RUNES=OR
+CAST_TIME=3.0
+RESOURCES=i_reag_black_pearl,i_reag_mandrake_root, i_reag_spider_silk
+RUNE_ITEM=i_rune_MANA_DRAIN
+SCROLL_ITEM=i_scroll_MANA_DRAIN
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=0
+DURATION=0.0
+MANAUSE=01
+SKILLREQ=MAGERY 40.0
+
+[Spell 32]
+DEFNAME=s_recall
+NAME=Recall
+SOUND=snd_SPELL_RECALL
+RUNES=KOP
+CAST_TIME=3.0
+RESOURCES=i_reag_black_pearl,i_reag_blood_moss,i_r eag_mandrake_root
+RUNE_ITEM=i_rune_RECALL
+SCROLL_ITEM=i_scroll_RECALL
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=01
+SKILLREQ=MAGERY 40.0
+
+[Spell 33]
+// NOTE: Blade Spirits is a popular kill-all, basically a loot gatherer with little to no reprecusions to the player, keep summon time a bit low to counter that a bit.
+DEFNAME=s_blade_spirits
+NAME=Blade Spirit
+SOUND=snd_SPELL_BLADE_SPIRITS
+RUNES=IHJY
+CAST_TIME=20.0
+RESOURCES=i_reag_black_pearl,i_reag_mandrake_root, i_reag_nightshade
+RUNE_ITEM=i_rune_BLADE_SPIRITS
+SCROLL_ITEM=i_scroll_BLADE_SPIRITS
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_HARM | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=04
+SKILLREQ=MAGERY 50.0
+
+[Spell 34]
+DEFNAME=s_dispel_field
+NAME=Dispel Field
+SOUND=snd_SPELL_DISPEL_FIELD
+RUNES=AG
+CAST_TIME=40
+RESOURCES=i_reag_black_pearl,i_reag_garlic,i_reag_ spider_silk,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_DISPEL_FIELD
+SCROLL_ITEM=i_scroll_DISPEL_FIELD
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=04
+SKILLREQ=MAGERY 50.0
+
+[Spell 35]
+// NOTE: This spell is used primarily for roleplaying purposes or for avoiding being killed if red. The longer duration would not unbalance gameplay in any way I could see.
+DEFNAME=s_incognito
+NAME=Incognito
+SOUND=snd_SPELL_INCOGNITO
+RUNES=KIE
+CAST_TIME=40
+RESOURCES=i_reag_blood_moss,i_reag_garlic,i_reag_n ightshade
+RUNE_ITEM=i_rune_INCOGNITO
+SCROLL_ITEM=i_scroll_INCOGNITO
+FLAGS=0
+EFFECT_ID=0
+EFFECT=0
+DURATION=5*60.0,8*60.0
+MANAUSE=04
+SKILLREQ=MAGERY 50.0
+
+[Spell 36]
+// NOTE: This is a proactive type of protection that no one wants to see run out. Because of it's level and the amount of reagents I would think this spell last a bit longer in light of it only being a one time reflect as opposed to Reactive and protection. Should it have a duration at all or remain until dispel'ed or hit ???
+DEFNAME=s_magic_reflection
+NAME=Magic Reflect
+SOUND=snd_SPELL_MAGIC_REFLECTION
+RUNES=IJS
+CAST_TIME=40
+RESOURCES=i_reag_garlic,i_reag_mandrake_root,i_rea g_spider_silk
+RUNE_ITEM=i_rune_MAGIC_REFLECTION
+SCROLL_ITEM=i_scroll_MAGIC_REFLECTION
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_FX_TARG| SPELLFLAG_GOOD
+EFFECT_ID=i_fx_BLESS_EFFECT
+EFFECT=0
+DURATION=4*60.0,8*60.0
+MANAUSE=04
+SKILLREQ=MAGERY 50.0
+
+[Spell 37]
+DEFNAME=s_mind_blast
+NAME=Mind Blast
+SOUND=snd_SPELL_MIND_BLAST
+RUNES=PCW
+CAST_TIME=40
+RESOURCES=i_reag_black_pearl,i_reag_mandrake_root, i_reag_nightshade,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_MIND_BLAST
+SCROLL_ITEM=i_scroll_MIND_BLAST
+FLAGS=SPELLFLAG_TARG_CHAR|SPELLFLAG_DIR_ANIM| SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=5,20
+DURATION=0.0
+MANAUSE=04
+SKILLREQ=MAGERY 50.0
+
+[Spell 38]
+// keep min duration a bit low here, paralyze is a killer in the hands of PK's. A powerful PK only needs a sec to kill you anyways.
+DEFNAME=s_paralyze
+NAME=Paralyze
+SOUND=snd_SPELL_PARALYZE
+RUNES=AEP
+CAST_TIME=40
+RESOURCES=i_reag_garlic,i_reag_mandrake_root,i_rea g_spider_silk
+RUNE_ITEM=i_rune_PARALYZE
+SCROLL_ITEM=i_scroll_PARALYZE
+FLAGS=SPELLFLAG_TARG_CHAR|SPELLFLAG_DIR_ANIM| SPELLFLAG_HARM| SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=0
+DURATION=60.0,3*60.0
+MANAUSE=04
+SKILLREQ=MAGERY 50.0
+
+[Spell 39]
+DEFNAME=s_poison_field
+NAME=Poison Field
+SOUND=snd_SPELL_POISON_FIELD
+RUNES=ING
+CAST_TIME=40
+RESOURCES=i_reag_black_pearl,i_reag_nightshade,i_r eag_spider_silk
+RUNE_ITEM=i_rune_POISON_FIELD
+SCROLL_ITEM=i_scroll_POISON_FIELD
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_HARM | SPELLFLAG_FX_TARG | SPELLFLAG_FIELD| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=5,50 // 50,500
+DURATION=2*60.0,4*60.0
+MANAUSE=04
+SKILLREQ=MAGERY 50.0
+
+[Spell 40]
+// NOTE: This spell is the mages first true form of combat at low levels. One of the main uses is summoning a horse to travel. Don't set to low.
+DEFNAME=s_summon_creature
+NAME=Summon
+SOUND=snd_SPELL_SUMMON_CREATURE
+RUNES=KX
+CAST_TIME=200
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root,i _reag_spider_silk
+RUNE_ITEM=i_rune_SUMMON_CREATURE
+SCROLL_ITEM=i_scroll_SUMMON_CREATURE
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=3*60.0,5*60.0
+MANAUSE=04
+SKILLREQ=MAGERY 50.0
+
+[Spell 41]
+DEFNAME=s_dispel
+NAME=Dispel
+SOUND=snd_SPELL_DISPEL
+RUNES=AO
+CAST_TIME=40
+RESOURCES=i_reag_garlic,i_reag_mandrake_root,i_rea g_sulfur_ash
+RUNE_ITEM=i_rune_DISPEL
+SCROLL_ITEM=i_scroll_DISPEL
+FLAGS=SPELLFLAG_TARG_CHAR |SPELLFLAG_DIR_ANIM
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 60.0
+
+[Spell 42]
+DEFNAME=s_energy_bolt
+NAME=Energy Bolt
+SOUND=snd_SPELL_ENERGY_BOLT
+RUNES=CP
+CAST_TIME=40
+RESOURCES=i_reag_black_pearl,i_reag_nightshade
+RUNE_ITEM=i_rune_ENERGY_BOLT
+SCROLL_ITEM=i_scroll_ENERGY_BOLT
+FLAGS=SPELLFLAG_TARG_CHAR |SPELLFLAG_DIR_ANIM| SPELLFLAG_HARM| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=10,45
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 60.0
+
+[Spell 43]
+DEFNAME=s_explosion
+NAME=Explosion
+SOUND=snd_SPELL_EXPLOSION
+RUNES=VOF
+CAST_TIME=100
+RESOURCES=i_reag_black_pearl,i_reag_mandrake_root, i_reag_sulfur_ash
+RUNE_ITEM=i_rune_EXPLOSION
+SCROLL_ITEM=i_scroll_EXPLOSION
+FLAGS=SPELLFLAG_TARG_CHAR |SPELLFLAG_DIR_ANIM| SPELLFLAG_HARM |SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_explode
+EFFECT=15,35
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 60.0
+
+[Spell 44]
+// NOTE: Used primarily to regain mana while fighting or cast helpful spells without incurring attack. Duration should reflect the non-offensive use of this spell
+DEFNAME=s_invisibility
+NAME=Invisibility
+SOUND=snd_SPELL_INVISIBILITY
+RUNES=ALX
+CAST_TIME=40
+RESOURCES=i_reag_blood_moss,i_reag_nightshade
+RUNE_ITEM=i_rune_INVISIBILITY
+SCROLL_ITEM=i_scroll_INVISIBILITY
+FLAGS=SPELLFLAG_TARG_CHAR| SPELLFLAG_GOOD
+EFFECT_ID=0
+EFFECT=0
+DURATION=3*60.0,5*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 60.0
+
+[Spell 45]
+DEFNAME=s_mark
+NAME=Mark
+SOUND=snd_SPELL_MARK
+RUNES=KPY
+CAST_TIME=40
+RESOURCES=i_reag_black_pearl,i_reag_blood_moss,i_r eag_mandrake_root
+RUNE_ITEM=i_rune_MARK
+SCROLL_ITEM=i_scroll_MARK
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=1,10
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 60.0
+
+[Spell 46]
+DEFNAME=s_mass_curse
+NAME=Mass Curse
+SOUND=snd_SPELL_MASS_CURSE
+RUNES=VDS
+CAST_TIME=40
+RESOURCES=i_reag_garlic,i_reag_mandrake_root,i_rea g_nightshade,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_MASS_CURSE
+SCROLL_ITEM=i_scroll_MASS_CURSE
+FLAGS=SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=5,30
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 60.0
+
+[Spell 47]
+DEFNAME=s_paralyzation_field
+NAME=Paralyze Field
+SOUND=snd_SPELL_PARALYZE_FIELD
+RUNES=IEG
+CAST_TIME=40
+RESOURCES=i_reag_black_pearl,i_reag_ginseng,i_reag _spider_silk
+RUNE_ITEM=i_rune_PARALYZE_FIELD
+SCROLL_ITEM=i_scroll_PARALYZE_FIELD
+FLAGS=SPELLFLAG_HARM | SPELLFLAG_FX_TARG | SPELLFLAG_FIELD| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 60.0
+
+[Spell 48]
+DEFNAME=s_reveal
+NAME=Reveal
+SOUND=snd_SPELL_REVEAL
+RUNES=WQ
+CAST_TIME=40
+RESOURCES=i_reag_blood_moss,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_REVEAL
+SCROLL_ITEM=i_scroll_REVEAL
+FLAGS=0
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 60.0
+
+[Spell 49]
+DEFNAME=s_chain_lightning
+NAME=Chain Lightning
+SOUND=snd_SPELL_CHAIN_LIGHTNING
+RUNES=VOG
+CAST_TIME=50
+RESOURCES=i_reag_black_pearl,i_reag_blood_moss,i_r eag_mandrake_root,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_CHAIN_LIGHTNING
+SCROLL_ITEM=i_scroll_CHAIN_LIGHTNING
+FLAGS=SPELLFLAG_TARG_XYZ|SPELLFLAG_HARM| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=10,20
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 70.0
+
+[Spell 50]
+DEFNAME=s_energy_field
+NAME=Energy Field
+SOUND=snd_SPELL_ENERGY_FIELD
+RUNES=ISG
+CAST_TIME=50
+RESOURCES=i_reag_black_pearl,i_reag_mandrake_root, i_reag_spider_silk,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_ENERGY_FIELD
+SCROLL_ITEM=i_scroll_ENERGY_FIELD
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_HARM | SPELLFLAG_FIELD
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 70.0
+
+[Spell 51]
+DEFNAME=s_flamestrike
+NAME=Flame Strike
+SOUND=snd_SPELL_FLAMESTRIKE
+RUNES=KVF
+CAST_TIME=70
+RESOURCES=i_reag_spider_silk,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_FLAMESTRIKE
+SCROLL_ITEM=i_scroll_FLAMESTRIKE
+FLAGS=SPELLFLAG_TARG_OBJ|SPELLFLAG_HARM| SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=03709
+EFFECT=25,50
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 70.0
+
+[Spell 52]
+// NOTE: should be set to less then a minute?? Gate has been known to be the downfall of innocent travellers. Down-side would be for large groups. With that in mind, one minute should suffice.
+DEFNAME=s_gate_travel
+NAME=Gate Travel
+SOUND=snd_SPELL_GATE_TRAVEL
+RUNES=VRP
+CAST_TIME=50
+RESOURCES=i_reag_black_pearl,i_reag_mandrake_root, i_reag_sulfur_ash
+RUNE_ITEM=i_rune_GATE_TRAVEL
+SCROLL_ITEM=i_scroll_GATE_TRAVEL
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=i_moongate_blue
+EFFECT=0
+DURATION=60.0
+MANAUSE=00
+SKILLREQ=MAGERY 70.0
+
+[Spell 53]
+DEFNAME=s_mana_vampire
+NAME=Mana Vampire
+SOUND=snd_SPELL_MANA_VAMPIRE
+RUNES=OS
+CAST_TIME=50
+RESOURCES=i_reag_black_pearl,i_reag_blood_moss,i_r eag_mandrake_root,i_reag_spider_silk
+RUNE_ITEM=i_rune_MANA_VAMPIRE
+SCROLL_ITEM=i_scroll_MANA_VAMPIRE
+FLAGS=SPELLFLAG_TARG_CHAR|SPELLFLAG_DIR_ANIM| SPELLFLAG_HARM| SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=0
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 70.0
+
+[Spell 54]
+DEFNAME=s_mass_dispel
+NAME=Mass Dispel
+SOUND=snd_SPELL_MASS_DISPEL
+RUNES=VAO
+CAST_TIME=50
+RESOURCES=i_reag_black_pearl,i_reag_garlic,i_reag_ mandrake_root,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_MASS_DISPEL
+SCROLL_ITEM=i_scroll_MASS_DISPEL
+FLAGS=0
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 70.0
+
+[Spell 55]
+// NOTE: Does Meteor Swarm have a duration or does it just send out one blast of 'rocks' ??? IF a duration then certainly no more the 30secs IMO.
+DEFNAME=s_meteor_swarm
+NAME=Meteor Swarm
+SOUND=snd_SPELL_METEOR_swarm
+RUNES=FKDY
+CAST_TIME=50
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root,i _reag_spider_silk,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_METEOR_swarm
+SCROLL_ITEM=i_scroll_METEOR_swarm
+FLAGS=SPELLFLAG_TARG_XYZ|SPELLFLAG_HARM| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=35,50
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 70.0
+
+[Spell 56]
+DEFNAME=s_polymorph
+NAME=Polymorph
+SOUND=snd_SPELL_POLYMORPH
+RUNES=VYR
+CAST_TIME=200
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root,i _reag_spider_silk
+RUNE_ITEM=i_rune_POLYMORPH
+SCROLL_ITEM=i_scroll_POLYMORPH
+FLAGS=SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=0
+DURATION=5*60.0,8*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 70.0
+// NOTE: This is a Mages true form of attack/defence at higher levels. Due to the level I would suggest having decent levels to the duration. Have incognito and polymorph match in duration as they are often used in conjunction
+
+[Spell 57]
+DEFNAME=s_earthquake
+NAME=Earthquake
+SOUND=snd_SPELL_EARTHQUAKE
+RUNES=IVP
+CAST_TIME=100
+RESOURCES=i_reag_blood_moss,i_reag_ginseng,i_reag_ mandrake_root,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_EARTHQUAKE
+SCROLL_ITEM=i_scroll_EARTHQUAKE
+FLAGS=SPELLFLAG_HARM| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=30,45
+DURATION=30.0
+MANAUSE=00
+SKILLREQ=MAGERY 80.0
+// NOTE: does Earthquake use a duration?? IF so, no more then 30secs. This spell is more like an irradiating wave thus should have a set distance/time it can be effective
+
+[Spell 58]
+DEFNAME=s_energy_vortex
+NAME=Energy Vortex
+SOUND=snd_SPELL_ENERGY_VORTEX
+RUNES=VCP
+CAST_TIME=50
+RESOURCES=i_reag_black_pearl,i_reag_blood_moss,i_r eag_mandrake_root,i_reag_nightshade
+RUNE_ITEM=i_rune_ENERGY_VORTEX
+SCROLL_ITEM=i_scroll_ENERGY_VORTEX
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_HARM | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 80.0
+
+[Spell 59]
+DEFNAME=s_resurrection
+NAME=Resurrection
+SOUND=snd_SPELL_RESURRECTION
+RUNES=AC
+CAST_TIME=50
+RESOURCES=i_reag_blood_moss,i_reag_garlic,i_reag_g inseng
+RUNE_ITEM=i_rune_RESURRECTION
+SCROLL_ITEM=i_scroll_RESURRECTION
+FLAGS=SPELLFLAG_TARG_CHAR| SPELLFLAG_GOOD
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=00
+SKILLREQ=MAGERY 80.0
+
+[Spell 60]
+DEFNAME=s_summon_elem_air
+NAME=Air Elemental
+SOUND=snd_SPELL_SUMMON_elem_air
+RUNES=KVXH
+CAST_TIME=200
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root,i _reag_spider_silk
+RUNE_ITEM=i_rune_SUMMON_elem_air
+SCROLL_ITEM=i_scroll_SUMMON_elem_air
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 80.0
+
+[Spell 61]
+DEFNAME=s_summon_daemon
+NAME=Daemon
+SOUND=snd_SPELL_SUMMON_DAEMON
+RUNES=KVXC
+CAST_TIME=200
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root,i _reag_spider_silk,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_SUMMON_DAEMON
+SCROLL_ITEM=i_scroll_SUMMON_DAEMON
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 80.0
+
+[Spell 62]
+DEFNAME=s_summon_elem_earth
+NAME=Earth Elemental
+SOUND=snd_SPELL_SUMMON_elem_earth
+RUNES=KVXY
+CAST_TIME=200
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root,i _reag_spider_silk
+RUNE_ITEM=i_rune_SUMMON_elem_earth
+SCROLL_ITEM=i_scroll_SUMMON_elem_earth
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 80.0
+
+[Spell 63]
+DEFNAME=s_summon_elem_fire
+NAME=Fire Elemental
+SOUND=snd_SPELL_SUMMON_elem_fire
+RUNES=KVXF
+CAST_TIME=200
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root,i _reag_spider_silk,i_reag_sulfur_ash
+RUNE_ITEM=i_rune_SUMMON_elem_fire
+SCROLL_ITEM=i_scroll_SUMMON_elem_fire
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 80.0
+
+[Spell 64]
+DEFNAME=s_summon_elem_water
+NAME=Water Elemental
+SOUND=snd_SPELL_SUMMON_elem_water
+RUNES=KVXAF
+CAST_TIME=200
+RESOURCES=i_reag_blood_moss,i_reag_mandrake_root,i _reag_spider_silk
+RUNE_ITEM=i_rune_SUMMON_elem_water
+SCROLL_ITEM=i_scroll_SUMMON_elem_water
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=00
+SKILLREQ=MAGERY 80.0
+
+[Spell 65]
+DEFNAME=s_summon_undead
+NAME=Summon Undead
+SOUND=snd_SPELL_SUMMON_UNDEAD
+RUNES=KNM
+CAST_TIME=200
+RESOURCES=i_reag_blood_moss
+RUNE_ITEM=i_RUNE_ALCHEM_1
+SCROLL_ITEM=i_scroll_X_GREEN2
+FLAGS=SPELLFLAG_TARG_XYZ | SPELLFLAG_SUMMON
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0, NECROMANCY 40.0
+
+[Spell 66]
+DEFNAME=s_animate_dead
+NAME=Animate Dead
+SOUND=snd_SPELL_ANIMATE_DEAD
+RUNES=IAMG
+CAST_TIME=60
+RESOURCES=i_reag_blood_moss
+RUNE_ITEM=i_RUNE_ALCHEM_2
+SCROLL_ITEM=i_scroll_X_TEAL2
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=2*60.0,3*60.0
+MANAUSE=0
+// NOTE: This spell, in past testings, when used on a player corpse, would cause the loss of all players effects upon decay. I suggest code that when used on a player corpse and the player is in the area that it ressurects the player, retains the items, but leaves him controlled by the caster for the duration of the spell, like a pet :)
+SKILLREQ=MAGERY 30.0, NECROMANCY 40.0
+
+[Spell 67]
+DEFNAME=s_bone_armor
+NAME=Bone Armor
+SOUND=snd_SPELL_BONE_ARMOR
+RUNES=ICSY
+CAST_TIME=60
+RESOURCES=i_reag_blood_moss
+RUNE_ITEM=i_RUNE_ALCHEM_3
+SCROLL_ITEM=i_scroll_X_BROWN2
+FLAGS=SPELLFLAG_TARG_OBJ
+EFFECT_ID=0
+EFFECT=0
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0, NECROMANCY 40.0
+
+[Spell 68]
+DEFNAME=s_light
+NAME=Light
+SOUND=snd_SPELL_LIGHT
+RUNES=IL
+CAST_TIME=60
+RESOURCES=i_reag_spider_silk,i_reag_sulfur_ash
+RUNE_ITEM=i_light_source
+SCROLL_ITEM=I_SCROLL_X_RED
+FLAGS=SPELLFLAG_TARG_CHAR| SPELLFLAG_GOOD
+EFFECT_ID=0
+EFFECT=0
+DURATION=3*60.0,5*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0, NECROMANCY 40.0
+
+[Spell 69]
+DEFNAME=s_fire_bolt
+NAME=Fire Bolt
+SOUND=snd_SPELL_FIRE_BOLT
+RUNES=VFP
+CAST_TIME=60
+RESOURCES=i_reag_black_pearl,i_reag_sulfur_ash,i_r eag_nightshade
+RUNE_ITEM=i_rune_FIREBALL
+SCROLL_ITEM=I_SCROLL_X_BLUE
+FLAGS=SPELLFLAG_TARG_CHAR | SPELLFLAG_DIR_ANIM | SPELLFLAG_HARM | SPELLFLAG_FX_BOLT| SPELLFLAG_RESIST
+EFFECT_ID=0
+EFFECT=30,50
+DURATION=0.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0, NECROMANCY 40.0
+
+[Spell 70]
+DEFNAME=s_Hallucination
+NAME=Hallucination
+SOUND=snd_Z_END_MYSTERY1
+RUNES=WN
+CAST_TIME=60
+RESOURCES=i_reag_garlic,i_reag_nightshade
+RUNE_ITEM=i_rune_MIND_BLAST
+SCROLL_ITEM=i_scroll_MIND_BLAST
+FLAGS=SPELLFLAG_TARG_CHAR|SPELLFLAG_DIR_ANIM| SPELLFLAG_HARM | SPELLFLAG_FX_TARG| SPELLFLAG_RESIST
+EFFECT_ID=i_fx_curse
+EFFECT=2,5
+DURATION=2*60.0,4*60.0
+MANAUSE=0
+SKILLREQ=MAGERY 30.0, NECROMANCY 40.0
+
+[EOF]

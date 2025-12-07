@@ -1,0 +1,53 @@
+[ITEMDEF i_holy_water]
+
+//NAME=Holy Water
+
+ID=01006
+
+TYPE=T_HOLY_WATER
+
+//VALUE={8 12}
+
+NAME=Holy Water
+
+WEIGHT=1
+
+CATEGORY=North Items
+
+SUBSECTION=Stuff
+
+DESCRIPTION=Holy Water
+
+
+
+[TYPEDEF T_HOLY_WATER]
+
+DEFNAME=T_HOLY_WATER
+
+ON=@DCLICK
+
+Target What do you want to use this on?
+
+Return 1
+
+ON=@TARGON_CHAR // I have been targetted on a char.
+
+IF <SRC.TARG.NPC> == 12
+
+SRC.TARG.DAMAGE={20 50}
+
+SRC.EMOTE You split holy water on <SRC.TARG.NAME> and it screamed in pain.
+
+remove
+
+Return 1
+
+ON=@TARGON_ITEM
+
+SRC.TARG.ATTR=00c20
+
+SRC.EMOTE You bless <SRC.TARG.NAME> with holy water.
+
+remove
+
+Return 1

@@ -1,0 +1,397 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//Dueling System v0.5 scripted by Blizzard, developped for Antony on the free UO shard - Fight For Life Shard
+
+//Info:
+//This script will allow players to duel anyone anywhere in UO.  Once both players have accepted to fight they will be teleported to an arena to fight.  As soon as one of the fighters die, they will automatically be teleported back to their previous state, no items will be lost.
+//Only 2 people can fight in this arena at the same time.
+
+//usage:
+//to Duel someone type .duel and target them, they must be alive and they have to be a player.
+//to Accept a duel, type .accept
+//to Refuse a duel, type .refuse (pretty simple huh?)
+
+//Installation:
+//Copy this following part and place it under [SKILLCLASS 0] in spheretables.scp
+//**this script is only for 55i shards!
+
+ON=@CLICK
+IF !(0<GM>)
+	VAR.OLD_UID=<UID>
+	IF (0<TAG.DUEL_WINS>)
+		VAR.DUEL_WINS=<TAG.DUEL_WINS>
+		VAR.DUEL_RANK=
+		SERV.ALLCLIENTS f_duel_get_rank
+		MESSAGE=(Rank: <EVAL <VAR.DUEL_RANK>>)
+		VAR.OLD_UID=
+		VAR.DUEL_RANK=
+	ELSE
+		MESSAGE=(Rank: never fought)
+	ENDIF
+ENDIF
+
+//this next part can stay within this .scp file!
+
+[PLEVEL 1]
+DUEL
+ACCEPT
+REFUSE
+
+[FUNCTION duel]
+VAR.X=
+VAR.DUELING_NAME1=
+VAR.DUELING_NAME2=
+VAR.DUELING_HITS1=
+VAR.DUELING_HITS2=
+VAR.DUELING_STR1=
+VAR.DUELING_STR2=
+IF ( <FLAGS> & statf_dead )
+	SYSMESSAGE=You are dead and can not do this.
+ELSE
+	SERV.ALLCLIENTS f_duel_check
+	IF (0<VAR.X>)
+		SYSMESSAGE=Dueling in progress, please wait for the battle to finish.
+		IF (<EVAL <VAR.X>>==1)
+			SYSMESSAGE=**Battle Stats
+			SYSMESSAGE=<VAR.DUELING_NAME1> has <VAR.DUELING_HITS1>/<VAR.DUELING_STR1> hitpoints.
+			SYSMESSAGE=<VAR.DUELING_NAME2> has <VAR.DUELING_HITS2>/<VAR.DUELING_STR2> hitpoints.
+		ELSEIF (<EVAL <VAR.X>>==2)
+			SYSMESSAGE=<VAR.DUELING_NAME1> is asking <VAR.DUELING_NAME2> to duel.
+		ELSE
+			SYSMESSAGE=<VAR.DUELING_NAME1> is asking someone to duel.
+		ENDIF
+		RETURN 1
+	ELSE
+		VAR.OLD_ACT=
+		NEWITEM=i_memory_dueling_ask
+		EQUIP=<ACT>
+		ACT=<VAR.OLD_ACT>
+	ENDIF
+ENDIF
+
+[FUNCTION f_duel_check]
+IF (0<FINDID.i_memory_dueling.UID>) || (0<FINDID.i_memory_dueling_wait.UID>)
+	VAR.X=1
+	IF (0<VAR.DUELING_NAME1>)
+		VAR.DUELING_NAME2=<NAME>
+		VAR.DUELING_HITS2=<HITPOINTS>
+		VAR.DUELING_STR2=<STR>
+	ELSE
+		VAR.DUELING_NAME1=<NAME>
+		VAR.DUELING_HITS1=<HITPOINTS>
+		VAR.DUELING_STR1=<STR>
+	ENDIF
+ELSEIF (0<FINDID.i_memory_dueling_accept.UID>)
+	VAR.X=2
+	IF (0<VAR.DUELING_NAME1>)
+		VAR.DUELING_NAME2=<NAME>
+	ELSE
+		VAR.DUELING_NAME1=<NAME>
+	ENDIF
+ELSEIF (0<FINDID.i_memory_dueling_ask.UID>)
+	VAR.X=3
+	VAR.DUELING_NAME1=<NAME>
+ENDIF
+
+[FUNCTION accept]
+IF (0<FINDID.i_memory_dueling_accept.UID>)
+	IF !(0<FINDID.i_memory_dueling_accept.MORE>)
+		FINDID.i_memory_dueling_accept.LINK.SYSMESSAGE=<NAME> has accepted your challenge!
+		FINDID.i_memory_dueling_accept.LINK.SYSMESSAGE=Dueling will start in 15 seconds.
+		NEWITEM=i_memory_dueling_wait
+		ACT.LINK=<SRC.UID>
+		FINDID.i_memory_dueling_accept.LINK.EQUIP=<ACT>
+		NEWITEM=i_memory_dueling_wait
+		ACT.LINK=<FINDID.i_memory_dueling_accept.LINK.UID>
+		ACT.MOREM=1
+		EQUIP=<ACT>
+		FINDID.i_memory_dueling_accept.LINK.FINDID.i_memory_dueling_accept.REMOVE
+		FINDID.i_memory_dueling_accept.LINK.EVENTS -e_dueling_accept
+		FINDID.i_memory_dueling_accept.REMOVE
+		EVENTS -e_dueling_accept
+	ELSE
+		SYSMESSAGE=You have no been asked to duel.
+		SYSMESSAGE=Please wait for <FINDID.i_memory_dueling_accept.LINK.NAME> to ".accept" the duel.
+	ENDIF
+ELSE
+	SYSMESSAGE=You must be asked to duel to use this command.
+ENDIF
+
+[FUNCTION refuse]
+IF (0<FINDID.i_memory_dueling_accept.UID>)
+	FINDID.i_memory_dueling_accept.LINK.SYSMESSAGE=<NAME> has refused the challenge.
+	FINDID.i_memory_dueling_accept.LINK.EVENTS -e_dueling_accept
+	FINDID.i_memory_dueling_accept.LINK.FINDID.i_memory_dueling_accept.REMOVE
+	FINDID.i_memory_dueling_accept.REMOVE
+	EVENTS -e_dueling_accept
+ELSE
+	SYSMESSAGE=You have not been asked to duel.
+ENDIF
+
+[FUNCTION f_duel_get_rank]
+IF !(0<GM>)
+	IF !(<VAR.OLD_UID>==<UID>)
+		IF (<EVAL 0<TAG.DUEL_WINS>> < <EVAL 0<VAR.DUEL_WINS>>)
+			VAR.OLD_RANK=0<VAR.OLD_RANK> +1
+		ENDIF
+	ENDIF
+ENDIF
+
+[ITEMDEF i_memory_dueling_ask]
+DEFNAME=i_memory_dueling_ask
+NAME=Asking to Duel Memory
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+SRC.EVENTS +e_dueling_ask
+TARGET=To whom do you wish to duel?
+SRC.SYSMESSAGE=You have 60 seconds to comply.
+TIMER=60
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.NPC>)
+	IF !( <SRC.TARG.FLAGS> & statf_dead )
+		IF !(<SRC.UID>==<SRC.TARG.UID>)
+			VAR.OLD_UID=<SRC.TARG.UID>
+			SRC.NEWITEM=i_memory_dueling_accept
+			SRC.ACT.LINK=<SRC.TARG.UID>
+			SRC.ACT.MORE=1
+			SRC.EQUIP=<SRC.ACT>
+			SRC.NEWITEM=i_memory_dueling_accept
+			SRC.ACT.LINK=<SRC.UID>
+			VAR.OLD_UID2=<SRC.ACT>
+			SRC.ACT=<VAR.OLD_UID>
+			SRC.ACT.EQUIP=<VAR.OLD_UID2>
+			VAR.OLD_UID=
+			VAR.OLD_UID2=
+		ELSE
+			SRC.SYSMESSAGE=You can not challenge yourself to a duel!
+		ENDIF
+	ELSE
+		SRC.SYSMESSAGE=You can not challenge a dead person, for he has already lost ;)
+	ENDIF
+ELSE
+	SRC.SYSMESSAGE=You can only ask a player to duel.
+ENDIF
+SRC.EVENTS -e_dueling_ask
+REMOVE
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.EVENTS -e_dueling_ask
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.EVENTS -e_dueling_ask
+REMOVE
+RETURN 1
+
+ON=@TIMER
+TOPOBJ.SYSMESSAGE=Dueling timed out, canceled.
+TOPOBJ.SYSMESSAGE=If you wish to duel someone retype .duel
+TOPOBJ.EVENTS -e_dueling_ask
+REMOVE
+RETURN 1
+
+[ITEMDEF i_memory_dueling_accept]
+DEFNAME=i_memory_dueling_accept
+NAME=Accept Duel Memory
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+SRC.EVENTS +e_dueling_accept
+IF (0<MORE>)
+	SRC.SYSMESSAGE=Waiting for <LINK.NAME> to ".accept" the duel.
+ELSE
+	SRC.SYSMESSAGE=<LINK.NAME> has asked you to duel!
+	SRC.SYSMESSAGE=Type ".accept" to accept the duel.
+	SRC.SYSMESSAGE=Type ".refuse" to refuse the duel.
+	SRC.SYSMESSAGE=You have 60 seconds to comply.
+ENDIF
+TIMER=60
+
+ON=@TIMER
+TOPOBJ.SYSMESSAGE=Dueling timed out, canceled.
+IF (0<MORE>)
+	TOPOBJ.SYSMESSAGE=If you wish to duel someone retype ".duel"
+ENDIF
+TOPOBJ.EVENTS -e_dueling_accept
+REMOVE
+RETURN 1
+
+[ITEMDEF i_memory_dueling_wait]
+DEFNAME=i_memory_dueling_wait
+NAME=Waiting for Duel to Begin
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+SRC.EVENTS +e_dueling_wait
+SRC.SYSMESSAGE=Dueling Begins In: 15 seconds
+MORE=15
+TIMER=1
+
+ON=@TIMER
+IF (0<MORE>)
+	MORE=<MORE> +-1
+	TOPOBJ.SYSMESSAGE=Dueling Begins In: <EVAL <MORE>> seconds
+	TIMER=1
+	RETURN 1
+ELSE
+	IF (0<MOREM>)
+		TOPOBJ.NEWITEM=i_memory_dueling
+		TOPOBJ.ACT.LINK=<LINK>
+		TOPOBJ.ACT.MORE=1
+		TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	ELSE
+		TOPOBJ.NEWITEM=i_memory_dueling
+		TOPOBJ.ACT.LINK=<LINK>
+		TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	ENDIF
+	IF (0<TOPOBJ.FINDLAYER.(25).UID>)
+		IF (<TOPOBJ.FINDLAYER.(25).BASEID>==i_mt_horse_tan)
+			TOPOBJ.NEWITEM=i_pet_horse_tan
+		ELSEIF (<TOPOBJ.FINDLAYER.(25).BASEID>==i_mt_horse_gray)
+			TOPOBJ.NEWITEM=i_pet_horse_gray
+		ELSEIF (<TOPOBJ.FINDLAYER.(25).BASEID>==i_mt_horse_brown_dk)
+			TOPOBJ.NEWITEM=i_pet_horse_brown_dk
+		ELSEIF (<TOPOBJ.FINDLAYER.(25).BASEID>==i_mt_horse_brown_lt)
+			TOPOBJ.NEWITEM=i_pet_horse_brown_lt
+		ELSEIF (<TOPOBJ.FINDLAYER.(25).BASEID>==i_mt_llama)
+			TOPOBJ.NEWITEM=i_pet_llama
+		ELSEIF (<TOPOBJ.FINDLAYER.(25).BASEID>==i_mt_ostard_forest)
+			TOPOBJ.NEWITEM=i_pet_ostard_forest
+		ELSEIF (<TOPOBJ.FINDLAYER.(25).BASEID>==i_mt_ostard_desert)
+			TOPOBJ.NEWITEM=i_pet_ostard_desert
+		ELSEIF (<TOPOBJ.FINDLAYER.(25).BASEID>==i_mt_ostard_zostrich)
+			TOPOBJ.NEWITEM=i_pet_ostard_zostrich
+		ENDIF
+		TOPOBJ.ACT.MORE1=<TOPOBJ.FINDLAYER.(25).MORE1>
+		TOPOBJ.ACT.MORE2=<TOPOBJ.FINDLAYER.(25).MORE2>
+		TOPOBJ.ACT.NAME=<TOPOBJ.FINDLAYER.(25).NAME>
+		TOPOBJ.ACT.COLOR=<TOPOBJ.FINDLAYER.(25).COLOR>
+		TOPOBJ.ACT.CONT=<TOPOBJ.FINDLAYER.(29).UID>
+		TOPOBJ.SYSMESSAGE=Your pet, <FINDLAYER.(25).NAME>, has been placed in your bank.
+		TOPOBJ.FINDLAYER.(25).REMOVE
+	ENDIF
+	TOPOBJ.EVENTS -e_dueling_wait
+	REMOVE
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_memory_dueling]
+DEFNAME=i_memory_dueling
+NAME=Dueling in Progress
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+SRC.EVENTS +e_dueling
+MOREP=<SRC.P>
+IF (0<MORE>)
+	SRC.GO=1320,1805
+ELSE
+	SRC.GO=1320,1824
+ENDIF
+
+[ITEMDEF i_memory_dueling_res1]
+DEFNAME=i_memory_dueling_res1
+NAME=Dueling Resurrect Memory 1
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+TIMER=1
+
+ON=@TIMER
+TOPOBJ.NEWITEM=i_memory_dueling_res2
+TOPOBJ.EQUIP=<TOPOBJ.ACT>
+REMOVE
+RETURN 1
+
+[ITEMDEF i_memory_dueling_res2]
+DEFNAME=i_memory_dueling_res2
+NAME=Dueling Resurrect Memory 2
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+SRC.RESURRECT
+SRC.P=<SRC.FINDID.i_memory_dueling.MOREP>
+SRC.UPDATE
+SRC.FINDID.i_memory_dueling.REMOVE
+SRC.EVENTS -e_dueling
+REMOVE
+
+[EVENTS e_dueling_ask]
+ON=@DEATH
+SRC.FINDID.i_memory_dueling_ask.REMOVE
+SRC.EVENTS -e_dueling_ask
+
+ON=@LOGOUT
+SRC.FINDID.i_memory_dueling_ask.REMOVE
+SRC.EVENTS -e_dueling_ask
+
+[EVENTS e_dueling_accept]
+ON=@DEATH
+SRC.FINDID.i_memory_dueling_accept.LINK.EVENTS -e_dueling_accept
+SRC.FINDID.i_memory_dueling_accept.LINK.FINDID.i_memory_dueling_accept.REMOVE
+SRC.FINDID.i_memory_dueling_accept.REMOVE
+SRC.EVENTS -e_dueling_accept
+
+ON=@LOGOUT
+SRC.FINDID.i_memory_dueling_accept.LINK.EVENTS -e_dueling_accept
+SRC.FINDID.i_memory_dueling_accept.LINK.FINDID.i_memory_dueling_accept.REMOVE
+SRC.FINDID.i_memory_dueling_accept.REMOVE
+SRC.EVENTS -e_dueling_accept
+
+[EVENTS e_dueling_wait]
+ON=@DEATH
+SRC.FINDID.i_memory_dueling_wait.LINK.EVENTS -e_dueling_wait
+SRC.FINDID.i_memory_dueling_wait.LINK.FINDID.i_memory_dueling_wait.REMOVE
+SRC.FINDID.i_memory_dueling_wait.REMOVE
+SRC.EVENTS -e_dueling_wait
+
+ON=@LOGOUT
+SRC.FINDID.i_memory_dueling_wait.LINK.EVENTS -e_dueling_wait
+SRC.FINDID.i_memory_dueling_wait.LINK.FINDID.i_memory_dueling_wait.REMOVE
+SRC.FINDID.i_memory_dueling_wait.REMOVE
+SRC.EVENTS -e_dueling_wait
+
+[EVENTS e_dueling]
+ON=@DEATH
+VAR.OLD_ACT=<ACT>
+SRC.NEWITEM=i_memory_dueling_res1
+SRC.EQUIP=<ACT>
+ACT=<VAR.OLD_ACT>
+SRC.FINDID.i_memory_dueling.LINK.P=<SRC.FINDID.i_memory_dueling.LINK.FINDID.i_memory_dueling.MOREP>
+SRC.FINDID.i_memory_dueling.LINK.TAG.DUEL_WINS=0<SRC.FINDID.i_memory_dueling.LINK.TAG.DUEL_WINS> +1
+SRC.FINDID.i_memory_dueling.LINK.EVENTS -e_dueling
+SRC.FINDID.i_memory_dueling.LINK.UPDATE
+SRC.FINDID.i_memory_dueling.LINK.MESSAGE=Congratulations!  This is your <EVAL <SRC.FINDID.i_memory_dueling.LINK.TAG.DUEL_WINS>> win!
+SRC.FINDID.i_memory_dueling.LINK.FINDID.i_memory_dueling.REMOVE
+
+[EOF]

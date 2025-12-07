@@ -1,0 +1,2962 @@
+// Weapons macro book by Maul
+// 1.0 28/9/03
+// Please dont remove this header, alot of work went into this script, to make it both 99x and 55i compatible.
+// The weapons macro book is designed to replace some of the macro functions of assist, players can store 8
+// macros in the book, what the book does is store ids of what ever weapon or sheild the player wants to use
+// and then when the player wants to equip one or more of these items they can use a ingame command to equip
+// the desired item, eg a player has a viking swored stored in slot 1, and a heater shield in slot two, using
+// the ingame macros he can assign a key to equip both items by setting the key to do this
+// say  .wepmacro1
+// say  .wepmacro2
+
+// a more complex macro would have a task like maybe casting a spell them using the commands to re equip the
+// desired weapons. when a player uses one of the weapon macro commands the book first checks the stored item
+// is in the players pack, and if so equips it. Both weapons and shields can be stored.
+
+// Ive designed the script in a way so it can be used on both 99x and 55i, im sure it would even work in 99z
+// but i have not tested it on that version. depending on what version you choose to use this script you simply have to change the vollowing lines, the script is by default 99x.
+// ON=@DClick	// use this line for 55i
+// ON=@UserDClick	// use this line for 99x
+
+[ITEMDEF i_Weapon_macro_book]
+ID=i_spellbook
+RESOURCES=80 I_PARCHMENT, 1 I_HIDE, 1 I_CLOTH
+TYPE=t_script//Stores tags but unequipable
+WEIGHT=1
+NAME=Weapon Macro Book
+
+//ON=@DClick	// use this line for 55i
+ON=@UserDClick	// use this line for 99x
+SRC.SOUND=85
+DIALOG d_Weapons_macro_BOOK
+RETURN 1
+
+///////////////start of add weapon/shield button check code//////////////////////
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE Doh!
+RETURN 1
+
+ON=@TARGON_ITEM
+
+IF (<SRC.TARG.TYPE>==t_weapon_sword)||(<SRC.TARG.TYPE>==t_shield)||(<SRC.TARG.TYPE>==t_weapon_mace_smith)||(<SRC.TARG.TYPE>==t_weapon_mace_sharp)||(<SRC.TARG.TYPE>==t_weapon_fence)||(<SRC.TARG.TYPE>==t_weapon_bow)||(<SRC.TARG.TYPE>==t_weapon_mace_staff)||(<SRC.TARG.TYPE>==t_weapon_mace_crook)||(<SRC.TARG.TYPE>==t_weapon_mace_pick)||(<SRC.TARG.TYPE>==t_weapon_axe)||(<SRC.TARG.TYPE>==t_weapon_xbow)
+
+//////////////////////////////////////////////////////// 1
+
+	IF (<SRC.TAG.MACRO_WEAPON_ID1_X>==0)
+        	SRC.SYSMESSAGE You add the macro in slot 1.
+	        SRC.SOUND=79
+	        SRC.TAG.MACRO_WEAPON_NAME1=<SRC.TARG.NAME>
+	        SRC.TAG.MACRO_WEAPON_ID1_X=<SRC.TARG.id>
+	        RETURN 1
+	ENDIF
+
+//////////////////////////////////////////////////////// 2
+
+	IF (<SRC.TAG.MACRO_WEAPON_ID2_X>==0)
+        	SRC.SYSMESSAGE You add the macro in slot 2.
+	        SRC.SOUND=79
+        	SRC.TAG.MACRO_WEAPON_NAME2=<SRC.TARG.NAME>
+	        SRC.TAG.MACRO_WEAPON_ID2_X=<SRC.TARG.id>
+	        RETURN 1
+	ENDIF
+
+//////////////////////////////////////////////////////// 3
+
+	IF (<SRC.TAG.MACRO_WEAPON_ID3_X>==0)
+        	SRC.SYSMESSAGE You add the macro in slot 3.
+	        SRC.SOUND=79
+	        SRC.TAG.MACRO_WEAPON_NAME3=<SRC.TARG.NAME>
+        	SRC.TAG.MACRO_WEAPON_ID3_X=<SRC.TARG.id>
+	        RETURN 1
+	ENDIF
+
+//////////////////////////////////////////////////////// 4
+
+	IF (<SRC.TAG.MACRO_WEAPON_ID4_X>==0)
+        	SRC.SYSMESSAGE You add the macro in slot 4.
+	        SRC.SOUND=79
+        	SRC.TAG.MACRO_WEAPON_NAME4=<SRC.TARG.NAME>
+	        SRC.TAG.MACRO_WEAPON_ID4_X=<SRC.TARG.id>
+        	RETURN 1
+	ENDIF
+
+//////////////////////////////////////////////////////// 5
+
+	IF (<SRC.TAG.MACRO_WEAPON_ID5_X>==0)
+        	SRC.SYSMESSAGE You add the macro in slot 5.
+	        SRC.SOUND=79
+        	SRC.TAG.MACRO_WEAPON_NAME5=<SRC.TARG.NAME>
+	        SRC.TAG.MACRO_WEAPON_ID5_X=<SRC.TARG.id>
+        	RETURN 1
+	ENDIF
+
+//////////////////////////////////////////////////////// 6
+
+	IF (<SRC.TAG.MACRO_WEAPON_ID6_X>==0)
+        	SRC.SYSMESSAGE You add the macro in slot 6.
+	        SRC.SOUND=79
+        	SRC.TAG.MACRO_WEAPON_NAME6=<SRC.TARG.NAME>
+	        SRC.TAG.MACRO_WEAPON_ID6_X=<SRC.TARG.id>
+        	RETURN 1
+	ENDIF
+
+//////////////////////////////////////////////////////// 7
+
+	IF (<SRC.TAG.MACRO_WEAPON_ID7_X>==0)
+        	SRC.SYSMESSAGE You add the macro in slot 7.
+	        SRC.SOUND=79
+        	SRC.TAG.MACRO_WEAPON_NAME7=<SRC.TARG.NAME>
+	        SRC.TAG.MACRO_WEAPON_ID7_X=<SRC.TARG.id>
+        	RETURN 1
+	ENDIF
+
+//////////////////////////////////////////////////////// 8
+
+	IF (<SRC.TAG.MACRO_WEAPON_ID8_X>==0)
+        	SRC.SYSMESSAGE You add the macro in slot 8.
+	        SRC.SOUND=79
+        	SRC.TAG.MACRO_WEAPON_NAME8=<SRC.TARG.NAME>
+	        SRC.TAG.MACRO_WEAPON_ID8_X=<SRC.TARG.id>
+        	RETURN 1
+	ELSE
+
+//////////////////////////////////////////////////////// end
+
+		SRC.SYSMESSAGE You have no empty slots for that!
+		RETURN 1
+	endif
+ELSE
+	SRC.SYSMESSAGE This isnt a weapon or shield.
+	return 1
+ENDIF
+
+/////////////////// end of add macro button code ///////////////////
+
+CATEGORY=Maul
+SUBSECTION=Special Items
+DESCRIPTION=Weapons macros
+
+ON=@CREATE
+COLOR=021
+ATTR=attr_magic|attr_newbie//ATTR=04
+src.TAG.MACRO_WEAPON_ID1_X=0
+src.TAG.MACRO_WEAPON_ID2_X=0
+src.TAG.MACRO_WEAPON_ID3_X=0
+src.TAG.MACRO_WEAPON_ID4_X=0
+src.TAG.MACRO_WEAPON_ID5_X=0
+src.TAG.MACRO_WEAPON_ID6_X=0
+src.TAG.MACRO_WEAPON_ID7_X=0
+src.TAG.MACRO_WEAPON_ID8_X=0
+
+//////////////Start the GUMP//////////////////
+
+[DIALOG d_Weapons_macro_BOOK]
+// Weapons macro book!
+0, 0
+//page 0
+gumppic 100 10 2200
+gumppic 125 50 57
+gumppic 145 50 58
+gumppic 160 50 58
+gumppic 175 50 58
+gumppic 190 50 58
+gumppic 205 50 58
+gumppic 220 50 58
+gumppic 230 50 59
+
+gumppic 290 50 57
+gumppic 310 50 58
+gumppic 325 50 58
+gumppic 340 50 58
+gumppic 355 50 58
+gumppic 370 50 58
+gumppic 385 50 58
+gumppic 395 50 59
+
+//Erase Button
+button 250 65 2103 2104 1 0 1
+button 250 80 2103 2104 1 0 2
+button 250 95 2103 2104 1 0 3
+button 250 110 2103 2104 1 0 4
+button 250 125 2103 2104 1 0 5
+button 250 140 2103 2104 1 0 6
+button 250 155 2103 2104 1 0 7
+button 250 170 2103 2104 1 0 8
+button 400 35 2361 2362 1 0 9//add weapon macro
+
+// Weapon/shield names
+croppedtext 130 60 110 17 0 0
+croppedtext 130 75 110 17 0 1
+croppedtext 130 90 110 17 0 2
+croppedtext 130 105 110 17 0 3
+croppedtext 130 120 110 17 0 4
+croppedtext 130 135 110 17 0 5
+croppedtext 130 150 110 17 0 6
+croppedtext 130 165 110 17 0 7
+
+// Menu text
+text 170 185 1300 8
+text 305 29 1300 9
+text 150 22 1300 10
+
+// Macro commands
+text 305 60 0 11
+text 305 75 0 12
+text 305 90 0 13
+text 305 105 0 14
+text 305 120 0 15
+text 305 135 0 16
+text 305 150 0 17
+text 305 165 0 18
+text 305 185 1300 19
+
+[DIALOG d_Weapons_macro_BOOK TEXT]
+<?SRC.TAG.MACRO_WEAPON_NAME1?>
+<?SRC.TAG.MACRO_WEAPON_NAME2?>
+<?SRC.TAG.MACRO_WEAPON_NAME3?>
+<?SRC.TAG.MACRO_WEAPON_NAME4?>
+<?SRC.TAG.MACRO_WEAPON_NAME5?>
+<?SRC.TAG.MACRO_WEAPON_NAME6?>
+<?SRC.TAG.MACRO_WEAPON_NAME7?>
+<?SRC.TAG.MACRO_WEAPON_NAME8?>
+Clear Macro ^
+Add a macro
+Macro Book
+.wepmacro1
+.wepmacro2
+.wepmacro3
+.wepmacro4
+.wepmacro5
+.wepmacro6
+.wepmacro7
+.wepmacro8
+^ Type to equip
+
+[DIALOG d_Weapons_macro_BOOK BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE The book has been closed!
+SRC.SOUND=85
+RETURN 1
+
+////////////////////////////////////////////  erase buttons
+
+ONBUTTON=1
+SRC.SOUND=43
+SRC.SYSMESSAGE Reseting macro!
+src.TAG.MACRO_WEAPON_ID1_X=0
+SRC.TAG.MACRO_WEAPON_NAME1=
+DIALOG d_Weapons_macro_BOOK
+
+ONBUTTON=2
+SRC.SOUND=43
+SRC.SYSMESSAGE Reseting macro!
+src.TAG.MACRO_WEAPON_ID2_X=0
+SRC.TAG.MACRO_WEAPON_NAME2=
+DIALOG d_Weapons_macro_BOOK
+
+ONBUTTON=3
+SRC.SOUND=43
+SRC.SYSMESSAGE Reseting macro!
+src.TAG.MACRO_WEAPON_ID3_X=0
+SRC.TAG.MACRO_WEAPON_NAME3=
+DIALOG d_Weapons_macro_BOOK
+
+ONBUTTON=4
+SRC.SOUND=43
+SRC.SYSMESSAGE Reseting macro!
+src.TAG.MACRO_WEAPON_ID4_X=0
+SRC.TAG.MACRO_WEAPON_NAME4=
+DIALOG d_Weapons_macro_BOOK
+
+ONBUTTON=5
+SRC.SOUND=43
+SRC.SYSMESSAGE Reseting macro!
+src.TAG.MACRO_WEAPON_ID5_X=0
+SRC.TAG.MACRO_WEAPON_NAME5=
+DIALOG d_Weapons_macro_BOOK
+
+ONBUTTON=6
+SRC.SOUND=43
+SRC.SYSMESSAGE Reseting macro!
+src.TAG.MACRO_WEAPON_ID6_X=0
+SRC.TAG.MACRO_WEAPON_NAME6=
+DIALOG d_Weapons_macro_BOOK
+
+ONBUTTON=7
+SRC.SOUND=43
+SRC.SYSMESSAGE Reseting macro!
+src.TAG.MACRO_WEAPON_ID7_X=0
+SRC.TAG.MACRO_WEAPON_NAME7=
+DIALOG d_Weapons_macro_BOOK
+
+ONBUTTON=8
+SRC.SOUND=43
+SRC.SYSMESSAGE Reseting macro!
+src.TAG.MACRO_WEAPON_ID8_X=0
+SRC.TAG.MACRO_WEAPON_NAME8=
+DIALOG d_Weapons_macro_BOOK
+
+ONBUTTON=9
+//add macro!
+SRC.SOUND=85
+SRC.SYSMESSAGE Please target a weapon or sheild to add to your book.
+TARGET
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+wepmacro1
+
+[function wepmacro1]
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_axe_war)
+	check_axe_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_axe_battle_large)
+	check_axe_battle_large
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_axe_two_hand)
+	check_axe_two_hand
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_pickaxe)
+	check_pickaxe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_hatchet)
+	check_hatchet
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_axe_exec)
+	check_axe_exec
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_axe_battle)
+	check_axe_battle
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_axe)
+	check_axe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_axe_double)
+	check_axe_double
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_crossbow)
+	check_crossbow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_bow)
+	check_bow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_crossbow_heavy)
+	checki_crossbow_heavy
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_cleaver_meat)
+	check_cleaver_meat
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_knife_skinning)
+	check_knife_skinning
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_dagger)
+	check_dagger
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_knife_butcher)
+	check_knife_butcher
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_mace)
+	check_mace
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_club)
+	check_club
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_hammer_smith)
+	check_hammer_smith
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_mace_war)
+	check_mace_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_hammer_war)
+	check_hammer_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_maul)
+	check_maul
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_hammer_pick)
+	check_hammer_pick
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_bardiche)
+	check_bardiche
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_halberd)
+	check_halberd
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_pitchfork)
+	check_pitchfork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_spear)
+	check_spear
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_spear_short)
+	check_spear_short
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_war_fork)
+	check_war_fork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_staff_black)
+	check_staff_black
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_staff_quarter)
+	check_staff_quarter
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shepherds_crook)
+	check_shepherds_crook
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_crook_thin)
+	check_crook_thin
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_staff_gnarled)
+	check_staff_gnarled
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_kryss)
+	check_kryss
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_sword_broad)
+	check_sword_broad
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_sword_long)
+	check_sword_long
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_scimitar)
+	check_scimitar
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_sword_long_b)
+	check_sword_long_b
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_sword_viking)
+	check_sword_viking
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_katana)
+	check_katana
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_cutlass)
+	check_cutlass
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_round_bronze)
+	check_shield_round_bronze
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_buckler)
+	check_shield_buckler
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_kite_metal)
+	check_shield_kite_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_heater)
+	check_shield_heater
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_kite_wood)
+	check_shield_kite_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_wood)
+	check_shield_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_round_metal)
+	check_shield_round_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_chaos)
+	check_shield_chaos
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID1_X> == i_shield_order)
+	check_shield_order
+	return 1
+endif
+
+//////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+wepmacro2
+
+[function wepmacro2]
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_axe_war)
+	check_axe_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_axe_battle_large)
+	check_axe_battle_large
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_axe_two_hand)
+	check_axe_two_hand
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_pickaxe)
+	check_pickaxe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_hatchet)
+	check_hatchet
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_axe_exec)
+	check_axe_exec
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_axe_battle)
+	check_axe_battle
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_axe)
+	check_axe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_axe_double)
+	check_axe_double
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_crossbow)
+	check_crossbow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_bow)
+	check_bow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_crossbow_heavy)
+	checki_crossbow_heavy
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_cleaver_meat)
+	check_cleaver_meat
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_knife_skinning)
+	check_knife_skinning
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_dagger)
+	check_dagger
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_knife_butcher)
+	check_knife_butcher
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_mace)
+	check_mace
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_club)
+	check_club
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_hammer_smith)
+	check_hammer_smith
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_mace_war)
+	check_mace_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_hammer_war)
+	check_hammer_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_maul)
+	check_maul
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_hammer_pick)
+	check_hammer_pick
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_bardiche)
+	check_bardiche
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_halberd)
+	check_halberd
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_pitchfork)
+	check_pitchfork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_spear)
+	check_spear
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_spear_short)
+	check_spear_short
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_war_fork)
+	check_war_fork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_staff_black)
+	check_staff_black
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_staff_quarter)
+	check_staff_quarter
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shepherds_crook)
+	check_shepherds_crook
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_crook_thin)
+	check_crook_thin
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_staff_gnarled)
+	check_staff_gnarled
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_kryss)
+	check_kryss
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_sword_broad)
+	check_sword_broad
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_sword_long)
+	check_sword_long
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_scimitar)
+	check_scimitar
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_sword_long_b)
+	check_sword_long_b
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_sword_viking)
+	check_sword_viking
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_katana)
+	check_katana
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_cutlass)
+	check_cutlass
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_round_bronze)
+	check_shield_round_bronze
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_buckler)
+	check_shield_buckler
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_kite_metal)
+	check_shield_kite_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_heater)
+	check_shield_heater
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_kite_wood)
+	check_shield_kite_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_wood)
+	check_shield_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_round_metal)
+	check_shield_round_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_chaos)
+	check_shield_chaos
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID2_X> == i_shield_order)
+	check_shield_order
+	return 1
+endif
+
+//////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+wepmacro3
+
+[function wepmacro3]
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_axe_war)
+	check_axe_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_axe_battle_large)
+	check_axe_battle_large
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_axe_two_hand)
+	check_axe_two_hand
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_pickaxe)
+	check_pickaxe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_hatchet)
+	check_hatchet
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_axe_exec)
+	check_axe_exec
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_axe_battle)
+	check_axe_battle
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_axe)
+	check_axe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_axe_double)
+	check_axe_double
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_crossbow)
+	check_crossbow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_bow)
+	check_bow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_crossbow_heavy)
+	checki_crossbow_heavy
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_cleaver_meat)
+	check_cleaver_meat
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_knife_skinning)
+	check_knife_skinning
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_dagger)
+	check_dagger
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_knife_butcher)
+	check_knife_butcher
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_mace)
+	check_mace
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_club)
+	check_club
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_hammer_smith)
+	check_hammer_smith
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_mace_war)
+	check_mace_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_hammer_war)
+	check_hammer_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_maul)
+	check_maul
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_hammer_pick)
+	check_hammer_pick
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_bardiche)
+	check_bardiche
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_halberd)
+	check_halberd
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_pitchfork)
+	check_pitchfork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_spear)
+	check_spear
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_spear_short)
+	check_spear_short
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_war_fork)
+	check_war_fork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_staff_black)
+	check_staff_black
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_staff_quarter)
+	check_staff_quarter
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shepherds_crook)
+	check_shepherds_crook
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_crook_thin)
+	check_crook_thin
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_staff_gnarled)
+	check_staff_gnarled
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_kryss)
+	check_kryss
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_sword_broad)
+	check_sword_broad
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_sword_long)
+	check_sword_long
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_scimitar)
+	check_scimitar
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_sword_long_b)
+	check_sword_long_b
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_sword_viking)
+	check_sword_viking
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_katana)
+	check_katana
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_cutlass)
+	check_cutlass
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_round_bronze)
+	check_shield_round_bronze
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_buckler)
+	check_shield_buckler
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_kite_metal)
+	check_shield_kite_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_heater)
+	check_shield_heater
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_kite_wood)
+	check_shield_kite_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_wood)
+	check_shield_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_round_metal)
+	check_shield_round_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_chaos)
+	check_shield_chaos
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID3_X> == i_shield_order)
+	check_shield_order
+	return 1
+endif
+
+//////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+wepmacro4
+
+[function wepmacro4]
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_axe_war)
+	check_axe_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_axe_battle_large)
+	check_axe_battle_large
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_axe_two_hand)
+	check_axe_two_hand
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_pickaxe)
+	check_pickaxe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_hatchet)
+	check_hatchet
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_axe_exec)
+	check_axe_exec
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_axe_battle)
+	check_axe_battle
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_axe)
+	check_axe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_axe_double)
+	check_axe_double
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_crossbow)
+	check_crossbow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_bow)
+	check_bow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_crossbow_heavy)
+	checki_crossbow_heavy
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_cleaver_meat)
+	check_cleaver_meat
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_knife_skinning)
+	check_knife_skinning
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_dagger)
+	check_dagger
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_knife_butcher)
+	check_knife_butcher
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_mace)
+	check_mace
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_club)
+	check_club
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_hammer_smith)
+	check_hammer_smith
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_mace_war)
+	check_mace_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_hammer_war)
+	check_hammer_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_maul)
+	check_maul
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_hammer_pick)
+	check_hammer_pick
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_bardiche)
+	check_bardiche
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_halberd)
+	check_halberd
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_pitchfork)
+	check_pitchfork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_spear)
+	check_spear
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_spear_short)
+	check_spear_short
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_war_fork)
+	check_war_fork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_staff_black)
+	check_staff_black
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_staff_quarter)
+	check_staff_quarter
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shepherds_crook)
+	check_shepherds_crook
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_crook_thin)
+	check_crook_thin
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_staff_gnarled)
+	check_staff_gnarled
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_kryss)
+	check_kryss
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_sword_broad)
+	check_sword_broad
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_sword_long)
+	check_sword_long
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_scimitar)
+	check_scimitar
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_sword_long_b)
+	check_sword_long_b
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_sword_viking)
+	check_sword_viking
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_katana)
+	check_katana
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_cutlass)
+	check_cutlass
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_round_bronze)
+	check_shield_round_bronze
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_buckler)
+	check_shield_buckler
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_kite_metal)
+	check_shield_kite_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_heater)
+	check_shield_heater
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_kite_wood)
+	check_shield_kite_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_wood)
+	check_shield_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_round_metal)
+	check_shield_round_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_chaos)
+	check_shield_chaos
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID4_X> == i_shield_order)
+	check_shield_order
+	return 1
+endif
+
+//////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+wepmacro5
+
+[function wepmacro5]
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_axe_war)
+	check_axe_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_axe_battle_large)
+	check_axe_battle_large
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_axe_two_hand)
+	check_axe_two_hand
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_pickaxe)
+	check_pickaxe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_hatchet)
+	check_hatchet
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_axe_exec)
+	check_axe_exec
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_axe_battle)
+	check_axe_battle
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_axe)
+	check_axe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_axe_double)
+	check_axe_double
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_crossbow)
+	check_crossbow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_bow)
+	check_bow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_crossbow_heavy)
+	checki_crossbow_heavy
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_cleaver_meat)
+	check_cleaver_meat
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_knife_skinning)
+	check_knife_skinning
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_dagger)
+	check_dagger
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_knife_butcher)
+	check_knife_butcher
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_mace)
+	check_mace
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_club)
+	check_club
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_hammer_smith)
+	check_hammer_smith
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_mace_war)
+	check_mace_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_hammer_war)
+	check_hammer_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_maul)
+	check_maul
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_hammer_pick)
+	check_hammer_pick
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_bardiche)
+	check_bardiche
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_halberd)
+	check_halberd
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_pitchfork)
+	check_pitchfork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_spear)
+	check_spear
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_spear_short)
+	check_spear_short
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_war_fork)
+	check_war_fork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_staff_black)
+	check_staff_black
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_staff_quarter)
+	check_staff_quarter
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shepherds_crook)
+	check_shepherds_crook
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_crook_thin)
+	check_crook_thin
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_staff_gnarled)
+	check_staff_gnarled
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_kryss)
+	check_kryss
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_sword_broad)
+	check_sword_broad
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_sword_long)
+	check_sword_long
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_scimitar)
+	check_scimitar
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_sword_long_b)
+	check_sword_long_b
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_sword_viking)
+	check_sword_viking
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_katana)
+	check_katana
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_cutlass)
+	check_cutlass
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_round_bronze)
+	check_shield_round_bronze
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_buckler)
+	check_shield_buckler
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_kite_metal)
+	check_shield_kite_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_heater)
+	check_shield_heater
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_kite_wood)
+	check_shield_kite_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_wood)
+	check_shield_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_round_metal)
+	check_shield_round_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_chaos)
+	check_shield_chaos
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID5_X> == i_shield_order)
+	check_shield_order
+	return 1
+endif
+
+
+//////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+wepmacro6
+
+[function wepmacro6]
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_axe_war)
+	check_axe_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_axe_battle_large)
+	check_axe_battle_large
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_axe_two_hand)
+	check_axe_two_hand
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_pickaxe)
+	check_pickaxe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_hatchet)
+	check_hatchet
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_axe_exec)
+	check_axe_exec
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_axe_battle)
+	check_axe_battle
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_axe)
+	check_axe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_axe_double)
+	check_axe_double
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_crossbow)
+	check_crossbow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_bow)
+	check_bow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_crossbow_heavy)
+	checki_crossbow_heavy
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_cleaver_meat)
+	check_cleaver_meat
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_knife_skinning)
+	check_knife_skinning
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_dagger)
+	check_dagger
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_knife_butcher)
+	check_knife_butcher
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_mace)
+	check_mace
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_club)
+	check_club
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_hammer_smith)
+	check_hammer_smith
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_mace_war)
+	check_mace_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_hammer_war)
+	check_hammer_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_maul)
+	check_maul
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_hammer_pick)
+	check_hammer_pick
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_bardiche)
+	check_bardiche
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_halberd)
+	check_halberd
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_pitchfork)
+	check_pitchfork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_spear)
+	check_spear
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_spear_short)
+	check_spear_short
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_war_fork)
+	check_war_fork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_staff_black)
+	check_staff_black
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_staff_quarter)
+	check_staff_quarter
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shepherds_crook)
+	check_shepherds_crook
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_crook_thin)
+	check_crook_thin
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_staff_gnarled)
+	check_staff_gnarled
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_kryss)
+	check_kryss
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_sword_broad)
+	check_sword_broad
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_sword_long)
+	check_sword_long
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_scimitar)
+	check_scimitar
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_sword_long_b)
+	check_sword_long_b
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_sword_viking)
+	check_sword_viking
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_katana)
+	check_katana
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_cutlass)
+	check_cutlass
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_round_bronze)
+	check_shield_round_bronze
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_buckler)
+	check_shield_buckler
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_kite_metal)
+	check_shield_kite_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_heater)
+	check_shield_heater
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_kite_wood)
+	check_shield_kite_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_wood)
+	check_shield_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_round_metal)
+	check_shield_round_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_chaos)
+	check_shield_chaos
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID6_X> == i_shield_order)
+	check_shield_order
+	return 1
+endif
+
+//////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+wepmacro7
+
+[function wepmacro7]
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_axe_war)
+	check_axe_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_axe_battle_large)
+	check_axe_battle_large
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_axe_two_hand)
+	check_axe_two_hand
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_pickaxe)
+	check_pickaxe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_hatchet)
+	check_hatchet
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_axe_exec)
+	check_axe_exec
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_axe_battle)
+	check_axe_battle
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_axe)
+	check_axe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_axe_double)
+	check_axe_double
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_crossbow)
+	check_crossbow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_bow)
+	check_bow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_crossbow_heavy)
+	checki_crossbow_heavy
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_cleaver_meat)
+	check_cleaver_meat
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_knife_skinning)
+	check_knife_skinning
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_dagger)
+	check_dagger
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_knife_butcher)
+	check_knife_butcher
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_mace)
+	check_mace
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_club)
+	check_club
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_hammer_smith)
+	check_hammer_smith
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_mace_war)
+	check_mace_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_hammer_war)
+	check_hammer_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_maul)
+	check_maul
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_hammer_pick)
+	check_hammer_pick
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_bardiche)
+	check_bardiche
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_halberd)
+	check_halberd
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_pitchfork)
+	check_pitchfork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_spear)
+	check_spear
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_spear_short)
+	check_spear_short
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_war_fork)
+	check_war_fork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_staff_black)
+	check_staff_black
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_staff_quarter)
+	check_staff_quarter
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shepherds_crook)
+	check_shepherds_crook
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_crook_thin)
+	check_crook_thin
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_staff_gnarled)
+	check_staff_gnarled
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_kryss)
+	check_kryss
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_sword_broad)
+	check_sword_broad
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_sword_long)
+	check_sword_long
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_scimitar)
+	check_scimitar
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_sword_long_b)
+	check_sword_long_b
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_sword_viking)
+	check_sword_viking
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_katana)
+	check_katana
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_cutlass)
+	check_cutlass
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_round_bronze)
+	check_shield_round_bronze
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_buckler)
+	check_shield_buckler
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_kite_metal)
+	check_shield_kite_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_heater)
+	check_shield_heater
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_kite_wood)
+	check_shield_kite_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_wood)
+	check_shield_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_round_metal)
+	check_shield_round_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_chaos)
+	check_shield_chaos
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID7_X> == i_shield_order)
+	check_shield_order
+	return 1
+endif
+
+//////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+wepmacro8
+
+[function wepmacro8]
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_axe_war)
+	check_axe_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_axe_battle_large)
+	check_axe_battle_large
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_axe_two_hand)
+	check_axe_two_hand
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_pickaxe)
+	check_pickaxe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_hatchet)
+	check_hatchet
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_axe_exec)
+	check_axe_exec
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_axe_battle)
+	check_axe_battle
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_axe)
+	check_axe
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_axe_double)
+	check_axe_double
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_crossbow)
+	check_crossbow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_bow)
+	check_bow
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_crossbow_heavy)
+	checki_crossbow_heavy
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_cleaver_meat)
+	check_cleaver_meat
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_knife_skinning)
+	check_knife_skinning
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_dagger)
+	check_dagger
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_knife_butcher)
+	check_knife_butcher
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_mace)
+	check_mace
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_club)
+	check_club
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_hammer_smith)
+	check_hammer_smith
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_mace_war)
+	check_mace_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_hammer_war)
+	check_hammer_war
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_maul)
+	check_maul
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_hammer_pick)
+	check_hammer_pick
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_bardiche)
+	check_bardiche
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_halberd)
+	check_halberd
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_pitchfork)
+	check_pitchfork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_spear)
+	check_spear
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_spear_short)
+	check_spear_short
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_war_fork)
+	check_war_fork
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_staff_black)
+	check_staff_black
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_staff_quarter)
+	check_staff_quarter
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shepherds_crook)
+	check_shepherds_crook
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_crook_thin)
+	check_crook_thin
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_staff_gnarled)
+	check_staff_gnarled
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_kryss)
+	check_kryss
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_sword_broad)
+	check_sword_broad
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_sword_long)
+	check_sword_long
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_scimitar)
+	check_scimitar
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_sword_long_b)
+	check_sword_long_b
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_sword_viking)
+	check_sword_viking
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_katana)
+	check_katana
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_cutlass)
+	check_cutlass
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_round_bronze)
+	check_shield_round_bronze
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_buckler)
+	check_shield_buckler
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_kite_metal)
+	check_shield_kite_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_heater)
+	check_shield_heater
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_kite_wood)
+	check_shield_kite_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_wood)
+	check_shield_wood
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_round_metal)
+	check_shield_round_metal
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_chaos)
+	check_shield_chaos
+	return 1
+endif
+
+if (<SRC.TAG.MACRO_WEAPON_ID8_X> == i_shield_order)
+	check_shield_order
+	return 1
+endif
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// equip check functions
+////////////////////////////////////////////////////////////////////////////
+[function check_axe_war]
+
+IF <SRC.RESTEST 1 i_axe_war>
+	src.EQUIP <FindID i_axe_war>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_axe_battle_large]
+
+IF <SRC.RESTEST 1 i_axe_battle_large>
+	src.EQUIP <FindID i_axe_battle_large>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_axe_two_hand]
+
+IF <SRC.RESTEST 1 i_axe_two_hand>
+	src.EQUIP <FindID i_axe_two_hand>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_pickaxe]
+
+IF <SRC.RESTEST 1 i_pickaxe>
+	src.EQUIP <FindID i_pickaxe>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_hatchet]
+
+IF <SRC.RESTEST 1 i_hatchet>
+	src.EQUIP <FindID i_hatchet>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_axe_exec]
+
+IF <SRC.RESTEST 1 i_axe_exec>
+	src.EQUIP <FindID i_axe_exec>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_axe_battle]
+
+IF <SRC.RESTEST 1 i_axe_battle>
+	src.EQUIP <FindID i_axe_battle>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_axe]
+
+IF <SRC.RESTEST 1 i_axe>
+	src.EQUIP <FindID i_axe>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_axe_double]
+
+IF <SRC.RESTEST 1 i_axe_double>
+	src.EQUIP <FindID i_axe_double>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_crossbow]
+
+IF <SRC.RESTEST 1 i_crossbow>
+	src.EQUIP <FindID i_crossbow>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_bow]
+
+IF <SRC.RESTEST 1 i_bow>
+	src.EQUIP <FindID i_bow>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function checki_crossbow_heavy]
+
+IF <SRC.RESTEST 1 i_crossbow_heavy>
+	src.EQUIP <FindID i_crossbow_heavy>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_cleaver_meat]
+
+IF <SRC.RESTEST 1 i_cleaver_meat>
+	src.EQUIP <FindID i_cleaver_meat>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_knife_skinning]
+
+IF <SRC.RESTEST 1 i_knife_skinning>
+	src.EQUIP <FindID i_knife_skinning>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_dagger]
+
+IF <SRC.RESTEST 1 i_dagger>
+	src.EQUIP <FindID i_dagger>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_knife_butcher]
+
+IF <SRC.RESTEST 1 i_knife_butcher>
+	src.EQUIP <FindID i_knife_butcher>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_mace]
+
+IF <SRC.RESTEST 1 i_mace>
+	src.EQUIP <FindID i_mace>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_club]
+
+IF <SRC.RESTEST 1 i_club>
+	src.EQUIP <FindID i_club>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_hammer_smith]
+
+IF <SRC.RESTEST 1 i_hammer_smith>
+	src.EQUIP <FindID i_hammer_smith>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_mace_war]
+
+IF <SRC.RESTEST 1 i_mace_war>
+	src.EQUIP <FindID i_mace_war>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_hammer_war]
+
+IF <SRC.RESTEST 1 i_hammer_war>
+	src.EQUIP <FindID i_hammer_war>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_maul]
+
+IF <SRC.RESTEST 1 i_maul>
+	src.EQUIP <FindID i_maul>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_hammer_pick]
+
+IF <SRC.RESTEST 1 i_hammer_pick>
+	src.EQUIP <FindID i_hammer_pick>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_bardiche]
+
+IF <SRC.RESTEST 1 i_bardiche>
+	src.EQUIP <FindID i_bardiche>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_halberd]
+
+IF <SRC.RESTEST 1 i_halberd>
+	src.EQUIP <FindID i_halberd>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_pitchfork]
+
+IF <SRC.RESTEST 1 i_pitchfork>
+	src.EQUIP <FindID i_pitchfork>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_spear]
+
+IF <SRC.RESTEST 1 i_spear>
+	src.EQUIP <FindID i_spear>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_spear_short]
+
+IF <SRC.RESTEST 1 i_spear_short>
+	src.EQUIP <FindID i_spear_short>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_war_fork]
+
+IF <SRC.RESTEST 1 i_war_fork>
+	src.EQUIP <FindID i_war_fork>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_staff_black]
+
+IF <SRC.RESTEST 1 i_staff_black>
+	src.EQUIP <FindID i_staff_black>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_staff_quarter]
+
+IF <SRC.RESTEST 1 i_staff_quarter>
+	src.EQUIP <FindID i_staff_quarter>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shepherds_crook]
+
+IF <SRC.RESTEST 1 i_shepherds_crook>
+	src.EQUIP <FindID i_shepherds_crook>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_crook_thin]
+
+IF <SRC.RESTEST 1 i_crook_thin>
+	src.EQUIP <FindID i_crook_thin>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_staff_gnarled]
+
+IF <SRC.RESTEST 1 i_staff_gnarled>
+	src.EQUIP <FindID i_staff_gnarled>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+//////////////////////////////////////////////////////////////////////////////
+[function check_kryss]
+
+IF <SRC.RESTEST 1 i_kryss>
+	src.EQUIP <FindID i_kryss>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_sword_broad]
+
+IF <SRC.RESTEST 1 i_sword_broad>
+	src.EQUIP <FindID i_sword_broad>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_sword_long]
+
+IF <SRC.RESTEST 1 i_sword_long>
+	src.EQUIP <FindID i_sword_long>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_scimitar]
+
+IF <SRC.RESTEST 1 i_scimitar>
+	src.EQUIP <FindID i_scimitar>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_sword_long_b]
+
+IF <SRC.RESTEST 1 i_sword_long_b>
+	src.EQUIP <FindID i_sword_long_b>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_sword_viking]
+
+IF <SRC.RESTEST 1 i_sword_viking>
+	src.EQUIP <FindID i_sword_viking>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_katana]
+
+IF <SRC.RESTEST 1 i_katana>
+	src.EQUIP <FindID i_katana>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_cutlass]
+
+IF <SRC.RESTEST 1 i_cutlass>
+	src.EQUIP <FindID i_cutlass>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_round_bronze]
+
+IF <SRC.RESTEST 1 i_shield_round_bronze>
+	src.EQUIP <FindID i_shield_round_bronze>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_buckler]
+
+IF <SRC.RESTEST 1 i_shield_buckler>
+	src.EQUIP <FindID i_shield_buckler>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_kite_metal]
+
+IF <SRC.RESTEST 1 i_shield_kite_metal>
+	src.EQUIP <FindID i_shield_kite_metal>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_heater]
+
+IF <SRC.RESTEST 1 i_shield_heater>
+	src.EQUIP <FindID i_shield_heater>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_kite_wood]
+
+IF <SRC.RESTEST 1 i_shield_kite_wood>
+	src.EQUIP <FindID i_shield_kite_wood>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_wood]
+
+IF <SRC.RESTEST 1 i_shield_wood>
+	src.EQUIP <FindID i_shield_wood>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_round_metal]
+
+IF <SRC.RESTEST 1 i_shield_round_metal>
+	src.EQUIP <FindID i_shield_round_metal>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_chaos]
+
+IF <SRC.RESTEST 1 i_shield_chaos>
+	src.EQUIP <FindID i_shield_chaos>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+[function check_shield_order]
+
+IF <SRC.RESTEST 1 i_shield_order>
+	src.EQUIP <FindID i_shield_order>
+	return 1
+else
+	say Item wasnt found in your pack
+	return 1
+endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+//------END WEAPONS MACRO BOOK----------
+[EOF]

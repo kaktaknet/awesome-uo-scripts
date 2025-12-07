@@ -1,0 +1,1325 @@
+// Zimmervermietungssystem über NPC 
+// by GM Darek für Calandria (Darek@calandria.de)
+// Version 3.0L (Sphere 55i) - 2002
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// - Jeder NPC kann max 100 Schlüssel/Zimmer verwalten
+// - verlängern der Mietzeit jederzeit bei dem jeweiligen NPC möglich
+// - "Info" zeigt Information und Status zum jeweiligen NPC an. Nur für GM's möglich
+// - NPC kann nur mit einen PO Gleichzeitig sprechen. Wichtig wegen der Tag Steuerung im NPC
+// - Goldabzug aus BackPack und Bankfach
+//
+// Befehl .ZimmerLink
+// Erleichtert das einrichten der Zimmervermitung indem es Vermiet-Schlüssel duch einfaches auswählen der Tür erzeugt.
+// Die Schlüssel brauchen dann nur noch ins Backpack den NPC's gelegt zu werden.
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//
+[DEFNAME Zimmerpreise]
+ZimmerPreis = 120		// Preis pro Tag
+MaxDistance = 3		// max Abstand PO <-> NPC
+
+[PLEVEL 3]
+ZIMMERLINK
+
+[FUNCTION ZIMMERLINK]
+NEWITEM=i_get_Tuer
+ACT.EQUIP <UID>
+ACT.DCLICK
+
+[ITEMDEF i_get_Tuer]
+ID=i_memory
+TYPE=t_eq_script
+Name= .Get Tuer
+
+ON=@DCLICK
+TARGET Die Tuer waehlen...
+Return 1
+
+ON=@TARGON_Char
+Src.SysMessage Fehler: Kein Item !!!
+Remove
+Return 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE> == t_door)||(<SRC.TARG.TYPE> == t_door_locked)
+	IF (<SRC.TARG.TYPE> == t_door_locked)
+		Src.SysMessage Info: Gewaehlte Tuer ist verschlossen.
+	ENDIF
+	SRC.TARG.MORE1 = <SRC.TARG.UID>
+	SRC.NEWITEM i_key_vermietung
+	SRC.ACT.BOUNCE
+	SRC.ACT.MORE1 = <SRC.TARG.UID>
+	SRC.ACT.INPDLG NAME 16
+	Remove
+	Return 1
+ELSE
+	SRC.SysMessage Fehler: Gewahltes Item ist keine Tuer!!!
+ENDIF
+Remove
+Return 1
+
+[CHARDEF c_herberge_vendor_man]
+ID=c_man
+NAME=#NAMES_HUMANMALE
+DAM=1, 1
+CAN=MT_WALK|MT_EQUIP|MT_MALE
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+CATEGORY=Zivilisiert
+SUBSECTION=Haendler
+DESCRIPTION=Zimmervermietung (Mann)
+TSPEECH=vermieten
+
+ON=@Create
+Speechcolor=colors_all
+TITLE=Herbergen Wirt
+TAG.KEYCOLOR = 029
+TAG.EINNAHMEN = 0
+NPC=brain_Human
+COLOR=083ea
+STR={60 80}
+DEX={60 80}
+INT={60 80}
+SWORDSMANSHIP={35.0 50.0}
+TACTICS={15.0 38.0}
+COOKING={50.0 70.0}
+KARMA=0
+FAME=0
+ITEMNEWBIE=RANDOM_MALE_HAIR
+COLOR=colors_hair
+ITEMNEWBIE=i_backpack
+ITEM=RANDOM_MALE_TOPS
+COLOR=colors_all
+ITEM=RANDOM_MALE_PANTS
+COLOR=colors_all
+ITEM=RANDOM_SHOES 
+COLOR=colors_all
+
+ON=@NPCSeeNewPlayer
+SAY Willkommen <SRC.SEX Reisender/Reisende>.
+
+[CHARDEF c_herberge_vendor_woman]
+ID=c_woman
+NAME=#NAMES_HUMANFEMALE
+DAM=1,1
+CAN=MT_WALK|MT_EQUIP|MT_FEMALE
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+CATEGORY= Zivilisiert
+SUBSECTION= Haendler
+DESCRIPTION=Zimmervermietung (Frau)
+TSPEECH=vermieten
+
+
+ON=@Create
+Speechcolor=colors_all
+TITLE=Herbergen Wirtin
+TAG.KEYCOLOR = 029
+TAG.EINNAHMEN = 0
+NPC=brain_Human
+COLOR=083ea
+STR={60 80}
+DEX={60 80}
+INT={60 80}
+SWORDSMANSHIP={35.0 50.0}
+TACTICS={15.0 38.0}
+COOKING={50.0 70.0}
+KARMA=0
+FAME=0
+ITEMNEWBIE=RANDOM_FEMALE_HAIR
+COLOR=colors_hair
+ITEMNEWBIE=i_backpack
+ITEM=RANDOM_FEMALE_TOPS
+COLOR=colors_all
+ITEM=RANDOM_FEMALE_PANTS 
+COLOR=colors_all
+ITEM=RANDOM_SHOES
+COLOR=colors_all
+
+ON=@NPCSeeNewPlayer
+SAY Willkommen <SRC.SEX Reisender/Reisende>.
+
+// THE EVENT *****************************************************************************************
+[SPEECH vermieten]
+ON=*mieten*
+ON=*übernachten*
+ON=*uebernachten*
+ON=*bett*
+ON=*zimmer*
+IF (<f_Vermietung_Distance_check> == 1) && (<Distance> < 5)
+	DORAND 3 
+	Say Wie? Ich kann euch nicht verstehen. Kommt naeher.
+	Say Kommt bitte naeher damit ich nicht so schreien muss.
+	emote winkt euch zu sich
+	ENDDO
+	Return 1 
+ENDIF
+IF (0<TAG.InUse> == 1)
+	IF (0<TAG.POUID> == 0)
+		Say Bitte warten Sie einen Moment...bis ich mit dem Gast fertig bin.
+		Return 1
+	ELSE
+		IF (<f_Vermietung_Distance_check> == 0)
+			Say Bitte warten Sie einen Moment...bis ich mit dem Gast fertig bin.
+			Return 1
+		ENDIF
+	ENDIF
+ENDIF
+TAG.InUse = 1
+TAG.POUID = <SRC.UID>
+IF (<FindID(i_Zimmer_Memory).TAG.PUID> == <SRC.UID>)
+	IF (<FindID(i_Zimmer_Memory).LINK.LINK> == <SRC.UID>)
+		DORAND 3
+		Say Ihr habt doch bereits ein Zimmer hier.
+		Say Nur ein Zimmer pro Gast in meiner Herberge.
+		Say Gefaellt ihnen Ihr alte Zimmer nicht? Ein anderes habe ich leider nicht mehr frei.
+		ENDDO
+		TAG.InUse = 0
+		TAG.POUID = 0
+		Return 1
+	ELSE
+		// hat ein Zimmer aber Schluessel existiert nicht mehr
+		f_Kein_Schluessel_mehr
+		TAG.InUse = 0
+		TAG.POUID = 0
+		Return 1
+	ENDIF
+ENDIF
+// Pueft auf vorhandene Schluessel im Backpack. 
+IF (<FINDLAYER(21).FINDID(i_key_vermietung)>)
+	IF (<FindLayer(21).FindCont(0).BaseID> == i_key_vermietung)
+		Dialog d_Zimmer_Mieten
+	ELSE
+		SRC.SysMessage FEHLER: Fremder Gegenstand im Backpack des Vendors endeckt. Bitte Pagen!
+		TAG.InUse = 0
+		TAG.POUID = 0
+	ENDIF
+ELSE
+	SAY Tut mir leid. Es ist leider kein Zimmer mehr frei.
+	TAG.InUse = 0
+	TAG.POUID = 0
+ENDIF
+
+ON=*verlängern*
+ON=*verlaengern*
+ON=*erweitern*
+ON=*länger*
+ON=*laenger*
+IF (<f_Vermietung_Distance_check> == 1) && (<Distance> < 5)
+	DORAND 3 
+	Say Wie? Ich kann euch nicht verstehen. Kommt naeher.
+	Say kommt bitte naeher damit ich nicht so schreien muss.
+	emote winkt euch zu sich
+	ENDDO
+	Return 1 
+ENDIF
+IF (0<TAG.InUse> == 1)
+	IF (0<TAG.POUID> == 0)
+		Say Bitte warten Sie einen Moment...bis ich mit dem Gast fertig bin.
+		Return 1
+	ELSE
+		IF (<f_Vermietung_Distance_check> == 0)
+			Say Bitte warten Sie einen Moment...bis ich mit dem Gast fertig bin.
+			Return 1
+		ENDIF
+	ENDIF
+ENDIF
+TAG.InUse = 1
+TAG.POUID = <SRC.UID>
+TAG.Result =
+TAG.Counter = 0
+f_Find_Ptr
+SRC.ACT = <FindCont(<EVAL <TAG.Counter>>).UID>
+IF  (<TAG.Counter> == -1) || (0<SRC.ACT.LINK.LINK> != <SRC.UID>)
+	DORAND 3
+	Say Tut mir Leid, ich denke nicht das Ihr ein Zimmer hier haben.
+	Say Hmm...Ich kann euch nicht in meinem Gaestebuch finden. Seit Ihr sicher auch in der richtigen Herberge?
+	Say Bei mir habt Ihr kein Zimmer.
+	ENDDO
+	TAG.InUse = 0
+	TAG.POUID = 0
+ELSE
+	Dialog d_Zimmer_Verlaengern
+ENDIF
+
+ON=*buy*
+ON=*kaufen*
+IF (<f_Vermietung_Distance_check> == 1)
+	DORAND 3 
+	Say Wie? Ich kann euch nicht verstehen. Kommt naeher.
+	Say kommt bitte naeher damit ich nicht so schreien muss.
+	emote winkt euch zu sich
+	ENDDO
+	Return 1 
+ENDIF
+SAY Tut mir leid ich verkaufe keine Waren.
+ON=*sell*
+ON=*verkaufen*
+IF (<f_Vermietung_Distance_check> == 1)
+	DORAND 3 
+	Say Wie? Ich kann euch nicht verstehen. Kommt naeher.
+	Say kommt bitte naeher damit ich nicht so schreien muss.
+	emote winkt euch zu sich
+	ENDDO
+	Return 1 
+ENDIF
+SAY Nein danke ich kaufe nichts.
+
+ON=*hallo*
+ON=*gruss*
+IF (<f_Vermietung_Distance_check> == 1)
+	DORAND 3 
+	Say Wie? Ich kann euch nicht verstehen. Kommt naeher.
+	Say kommt bitte naeher damit ich nicht so schreien muss.
+	emote winkt euch zu sich
+	ENDDO
+	Return 1 
+ENDIF
+SAY Seit gegruest <SRC.SEX Sir/Lady>.
+SAY Was kann ich fuer euch tun?
+
+ON=*auf bald*
+ON=*wiedersehen*
+ON=*aufwiedersehen*
+IF (<f_Vermietung_Distance_check> == 1)
+	DORAND 3 
+	Say Wie? Ich kann euch nicht verstehen. Kommt naeher.
+	Say kommt bitte naeher damit ich nicht so schreien muss.
+	emote winkt euch zu sich
+	ENDDO
+	Return 1 
+ENDIF
+DORAND 3
+	Say Auf bald.
+	Say Wiedersehen, und beehrt uns bald wieder.
+	Say Auf bald, und moegen die Goetter euch auf euren Weg beschuetzen.
+ENDDO
+
+// GM only 
+ON=*Info*
+// Zeigt Infos zum Vendor Status
+IF <SRC.IsGM>
+	f_ZIMMERVERMIETUNG_LISTE
+ELSE
+	DORAND 3
+	Say Tut mir leid, diese Auskunft kann ich euch nicht geben.
+	Say Das verstoest gegen die Regeln des Herberge Geschaefts
+	Emote Schaut euch fragend an 
+	ENDDO
+ENDIF
+
+ON=**
+IF (<Distance> < 4)
+	DORAND 3
+	Say Tut mir leid, ich versteh euch nicht.
+	Say Das kenne ich nicht.
+	Emote schaut euch fragend an
+	ENDDO
+ENDIF
+	
+[FUNCTION f_zimmer_mieten]
+IF (0<ARGS> == 0)
+	SRC.SysMessage FEHLER: Mietendauer = (<args>).
+	Return 1
+ENDIF
+TAG.ZimmerZeit = <EVAL 86400 * <ARGS>>
+f_GetGold <ARGS>
+IF (<TAG.Result> == 0)
+	Say Ihr habt nicht genug Gold.
+	Say Ein Zimmer kostet <EVAL ZimmerPreis> Goldstuecke pro Tag.
+	TAG.ZimmerZeit =
+	TAG.Result =
+	TAG.InUse = 0
+	Return 1
+ENDIF
+TAG.Result =
+// Schluessel beim Player erzeugen
+SRC.NEWITEM i_key_vermietung
+SRC.ACT.TIMER = <EVAL <TAG.ZimmerZeit>>
+SRC.ACT.NAME = <FindLayer(21).FindCont(0).Name>
+SRC.ACT.MORE1 = <FindLayer(21).FindCont(0).MORE1>
+SRC.ACT.MORE2 = <FindLayer(21).FindCont(0).MORE2>
+SRC.ACT.COLOR = <TAG.KEYCOLOR>
+SRC.ACT.LINK = <SRC.UID>
+SRC.ACT.BOUNCE
+
+SAY Hier Ihr Schluessel zu <SRC.ACT.NAME>. Angenehmen Tag noch.
+TAG.Dummy = <SRC.ACT.UID>
+
+// Memory im NPC
+SRC.NEWITEM i_Zimmer_Memory
+SRC.ACT.CONT = <UID>
+SRC.ACT.LINK = <TAG.Dummy>
+SRC.ACT.TAG.Name = <FindLayer(21).FindCont(0).Name>
+SRC.ACT.TAG.More1 = <FindLayer(21).FindCont(0).MORE1>
+SRC.ACT.TAG.More2 = <FindLayer(21).FindCont(0).MORE2>
+SRC.ACT.TIMER = <EVAL <TAG.ZimmerZeit>>
+SRC.ACT.NAME = .Zimmer (<SRC.NAME>)
+SRC.ACT.TAG.PUID = <SRC.UID>
+//SRC.ACT=<UID>
+//SRC.ACT.UPDATE
+
+// Memory beim Player. Sorgt dafuer das der Schluessel auf jeden Fall geloescht wird.
+SRC.NEWITEM i_Zimmer_Memory_Player
+SRC.ACT.LINK = <TAG.Dummy>
+SRC.ACT.NAME = .Zimmer Memory (<NAME>)
+SRC.ACT.TIMER = <EVAL <TAG.ZimmerZeit> + 5>
+SRC.ACT.EQUIP <SRC.UID>
+//
+TAG.InUse = 0
+TAG.POUID = 0
+TAG.Dummy
+TAG.ZimmerZeit
+FindLayer(21).FindCont(0).Remove	
+        		
+// Zimmerschluessel NEU
+[ITEMDEF i_key_vermietung]
+ID=i_key_iron
+NAME=Zimmer x
+WEIGHT=1.0
+TYPE=t_key
+CATEGORY=Special Items
+SUBSECTION=RGK
+DESCRIPTION=Zimmerschluessel (Neu)
+
+ON=@CREATE
+ATTR attr_newbie
+
+ON=@Click
+IF (<TIMER> > 0)
+	VAR.Tage = <EVAL <TIMER> / 86400>
+	VAR.Stunde = <EVAL (<TIMER> + (-<VAR.Tage> * 86400)) / 3600>
+	VAR.Minute = <EVAL (<TIMER> + (-<VAR.Tage> * 86400) + (-<VAR.Stunde> * 3600)) / 60>  
+	VAR.Sekunde = <EVAL <TIMER> + (-<VAR.Tage> * 86400) + (-<VAR.Stunde> * 3600) + (-<VAR.Minute> * 60)>
+	Message <NAME> (<EVAL <VAR.Tage>> Tag(e), <EVAL <VAR.Stunde>> h, <EVAL <VAR.Minute>> min, <EVAL <VAR.Sekunde>> sek)
+	Return 1
+ENDIF
+
+
+ON=@TIMER
+REMOVE
+Return 1
+
+[ITEMDEF i_Zimmer_Memory_Player]
+ID=i_Memory
+TYPE =T_EQ_SCRIPT
+NAME=.test
+
+ON=@TIMER
+IF (<LINK.UID> != 0)
+	LINK.REMOVE
+ENDIF
+REMOVE
+Return 1
+
+// Memory was bei Vendor gespeichert wird
+// TAG.Name = Zimmer x
+// TAG.More1 = MORE1 (Schluessel)
+// TAG.PUID = UID des Players
+[ITEMDEF i_Zimmer_Memory]
+ID=i_Memory
+TYPE =T_EQ_SCRIPT
+NAME=.test
+
+ON=@UNEQUIP
+// LINK ist Schluessel
+// LINK.LINK ist Player
+// Infos der Alten Tuer ermittel
+SRC.ACT=<TAG.MORE1>	
+TAG.Tuer_BaseID=<SRC.ACT.BaseID>
+TAG.Tuer_NAME=<SRC.ACT.NAME>
+TAG.Tuer_P=<SRC.ACT.P>
+TAG.Tuer_MORE2=<SRC.ACT.MORE2>
+TAG.Tuer_DispID=<SRC.ACT.DispID>
+
+SRC.ACT.Remove	// Alte Tuer loeschen
+
+SRC.NEWITEM <TAG.Tuer_BaseID>	// neu tuer setzen
+SRC.ACT.NAME= <TAG.Tuer_NAME>
+SRC.ACT.MORE1= <SRC.ACT.SERIAL>
+SRC.ACT.DispID=<TAG.Tuer_DispID>
+SRC.ACT.MORE2= <TAG.Tuer_MORE2>
+SRC.ACT.TYPE= t_door
+SRC.ACT.P = <TAG.Tuer_P>
+SRC.ACT.UPDATE
+
+TAG.MORE1 = <SRC.ACT.SERIAL>
+
+// neuen Schluessel fuer NPC erzeugen
+SRC.NewItem i_key_vermietung
+SRC.ACT.TIMER = -1
+SRC.ACT.NAME = <TAG.NAME>
+SRC.ACT.MORE1 = <TAG.MORE1>
+SRC.ACT.MORE2 = <TAG.MORE2>
+SRC.ACT.COLOR = <SRC.TAG.KEYCOLOR>
+SRC.ACT.EQUIP
+SRC.Say Da wurde gerade <SRC.ACT.Name> frei.
+TAG.NAME =
+TAG.More1 =
+LINK.Remove
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[FUNCTION f_Zimmer_verlaengern]
+TAG.ZimmerZeit = <EVAL 86400 * <ARGN>>
+f_GetGold <ARGS>
+IF (<TAG.Result> == 0)
+	Say Ihr habt nicht genug Gold. 
+	Say Ein Zimmer kostet <EVAL ZimmerPreis> Goldstuecke pro Tag.
+	TAG.Result
+	TAG.ZimmerZeit
+	TAG.InUse = 0
+	TAG.POUID = 0
+	Return 1
+ENDIF
+TAG.Result =
+TAG.Counter = 0
+f_Find_Ptr
+SRC.ACT = <FindCont(<EVAL <TAG.Counter>>).UID>
+TAG.Dummy = <SRC.ACT.LINK.UID>
+SRC.ACT.TIMER = <SRC.ACT.TIMER> + <EVAL <TAG.ZimmerZeit>>
+SRC.ACT.LINK.TIMER = <SRC.ACT.LINK.TIMER> + <EVAL <TAG.ZimmerZeit>>
+TAG.Dummy2 = <SRC.ACT.TIMER>
+VAR.Tage = <EVAL <SRC.ACT.TIMER> / 86400>
+VAR.Stunde = <EVAL (<SRC.ACT.TIMER> + (-<VAR.Tage> * 86400)) / 3600>
+VAR.Minute = <EVAL (<SRC.ACT.TIMER> + (-<VAR.Tage> * 86400) + (-<VAR.Stunde> * 3600)) / 60>  
+Say Eure Mietzeit wurde um <ARGS> Tag(e) auf insgesammt <EVAL <VAR.Tage>> Tag(e), <EVAL <VAR.Stunde>> Stunden und <EVAL <VAR.Minute>> min. verlaengert.
+
+// Memory beim Player auch erweitern
+TAG.Counter = 0
+f_FindPtr_2
+SRC.ACT = <SRC.FindCont(<TAG.Counter>).UID>
+IF (<SRC.ACT.LINK> == <TAG.Dummy>)
+	SRC.ACT.Timer = <EVAL <TAG.Dummy2> + 2>
+ELSE
+	// Sollte eigentlich Nicht passieren...
+	Src.SysMessage Fehler: Memory Item  beim Player nicht gefunden. (<SRC.FindCont(<EVAL <TAG.Counter>>).NAME>)
+ENDIF
+
+TAG.Dummy =
+TAG.Dummy2 =
+TAG.ZimmerZeit =
+TAG.Counter =
+TAG.InUse = 0
+TAG.POUID = 0
+
+[FUNCTION f_FindPtr_2]
+SRC.ACT = <SRC.FindCont(<TAG.Counter>).UID>
+IF (<SRC.ACT> != 0)
+	IF (<SRC.ACT.LINK> == <TAG.Dummy>) && (<SRC.ACT.BASEID> == i_Zimmer_Memory_Player)
+		Return 1
+	ELSE
+		TAG.Counter = <EVAL <TAG.Counter> + 1>
+		f_FindPtr_2
+	ENDIF
+ENDIF
+
+// Sucht die CONT nummer des gesuchten ITEMS zu dem Player im NPC
+[FUNCTION f_Find_Ptr]
+TAG.Counter = -1
+IF (0<FindCont(0).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 0
+	Return 1
+ELSEIF (0<FindCont(1).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 1
+	Return 1
+ELSEIF (0<FindCont(2).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 2
+	Return 1
+ELSEIF (0<FindCont(3).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 3
+	Return 1
+ELSEIF (0<FindCont(4).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 4
+	Return 1
+ELSEIF (0<FindCont(5).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 5
+	Return 1
+ELSEIF (0<FindCont(6).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 6
+	Return 1
+ELSEIF (0<FindCont(7).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 7
+	Return 1
+ELSEIF (0<FindCont(8).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 8
+	Return 1
+ELSEIF (0<FindCont(9).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 9
+	Return 1
+ELSEIF (0<FindCont(10).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 10
+	Return 1
+ELSEIF (0<FindCont(11).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 11
+	Return 1
+ELSEIF (0<FindCont(12).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 12
+	Return 1
+ELSEIF (0<FindCont(13).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 13
+	Return 1
+ELSEIF (0<FindCont(14).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 14
+	Return 1
+ELSEIF (0<FindCont(15).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 15
+	Return 1
+ELSEIF (0<FindCont(16).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 16
+	Return 1
+ELSEIF (0<FindCont(17).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 17
+	Return 1
+ELSEIF (0<FindCont(18).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 18
+	Return 1
+ELSEIF (0<FindCont(19).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 19
+	Return 1
+ELSEIF (0<FindCont(20).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 20
+	Return 1
+ELSEIF (0<FindCont(21).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 21
+	Return 1
+ELSEIF (0<FindCont(22).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 22
+	Return 1
+ELSEIF (0<FindCont(23).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 23
+	Return 1
+ELSEIF (0<FindCont(24).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 24
+	Return 1
+ELSEIF (0<FindCont(25).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 25
+	Return 1
+ELSEIF (0<FindCont(26).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 26
+	Return 1
+ELSEIF (0<FindCont(27).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 27
+	Return 1
+ELSEIF (0<FindCont(28).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 28
+	Return 1
+ELSEIF (0<FindCont(29).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 29
+	Return 1
+ELSEIF (0<FindCont(30).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 30
+	Return 1
+ELSEIF (0<FindCont(31).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 31
+	Return 1
+ELSEIF (0<FindCont(32).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 32
+	Return 1
+ELSEIF (0<FindCont(33).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 33
+	Return 1
+ELSEIF (0<FindCont(34).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 34
+	Return 1
+ELSEIF (0<FindCont(35).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 35
+	Return 1
+ELSEIF (0<FindCont(36).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 36
+	Return 1
+ELSEIF (0<FindCont(37).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 37
+	Return 1
+ELSEIF (0<FindCont(38).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 38
+	Return 1
+ELSEIF (0<FindCont(39).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 39
+	Return 1
+ELSEIF (0<FindCont(40).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 40
+	Return 1
+ELSEIF (0<FindCont(41).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 41
+	Return 1
+ELSEIF (0<FindCont(42).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 42
+	Return 1
+ELSEIF (0<FindCont(43).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 43
+	Return 1
+ELSEIF (0<FindCont(44).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 44
+	Return 1
+ELSEIF (0<FindCont(45).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 45
+	Return 1
+ELSEIF (0<FindCont(46).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 46
+	Return 1
+ELSEIF (0<FindCont(47).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 47
+	Return 1
+ELSEIF (0<FindCont(48).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 48
+	Return 1
+ELSEIF (0<FindCont(49).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 49
+	Return 1
+ELSEIF (0<FindCont(50).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 50
+	Return 1
+ELSEIF (0<FindCont(51).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 51
+	Return 1
+ELSEIF (0<FindCont(52).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 52
+	Return 1
+ELSEIF (0<FindCont(53).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 53
+	Return 1
+ELSEIF (0<FindCont(54).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 54
+	Return 1
+ELSEIF (0<FindCont(55).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 55
+	Return 1
+ELSEIF (0<FindCont(56).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 56
+	Return 1
+ELSEIF (0<FindCont(57).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 57
+	Return 1
+ELSEIF (0<FindCont(58).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 58
+	Return 1
+ELSEIF (0<FindCont(59).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 59
+	Return 1
+ELSEIF (0<FindCont(60).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 60
+	Return 1
+ELSEIF (0<FindCont(61).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 61
+	Return 1
+ELSEIF (0<FindCont(62).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 62
+	Return 1
+ELSEIF (0<FindCont(63).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 63
+	Return 1
+ELSEIF (0<FindCont(64).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 64
+	Return 1
+ELSEIF (0<FindCont(65).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 65
+	Return 1
+ELSEIF (0<FindCont(66).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 66
+	Return 1
+ELSEIF (0<FindCont(67).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 67
+	Return 1
+ELSEIF (0<FindCont(68).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 68
+	Return 1
+ELSEIF (0<FindCont(69).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 69
+	Return 1
+ELSEIF (0<FindCont(70).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 70
+	Return 1
+ELSEIF (0<FindCont(71).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 71
+	Return 1
+ELSEIF (0<FindCont(72).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 72
+	Return 1
+ELSEIF (0<FindCont(73).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 73
+	Return 1
+ELSEIF (0<FindCont(74).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 74
+	Return 1
+ELSEIF (0<FindCont(75).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 75
+	Return 1
+ELSEIF (0<FindCont(76).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 76
+	Return 1
+ELSEIF (0<FindCont(77).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 77
+	Return 1
+ELSEIF (0<FindCont(78).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 78
+	Return 1
+ELSEIF (0<FindCont(79).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 79
+	Return 1
+ELSEIF (0<FindCont(80).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 80
+	Return 1
+ELSEIF (0<FindCont(81).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 81
+	Return 1
+ELSEIF (0<FindCont(82).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 82
+	Return 1
+ELSEIF (0<FindCont(83).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 83
+	Return 1
+ELSEIF (0<FindCont(84).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 84
+	Return 1
+ELSEIF (0<FindCont(85).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 85
+	Return 1
+ELSEIF (0<FindCont(86).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 86
+	Return 1
+ELSEIF (0<FindCont(87).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 87
+	Return 1
+ELSEIF (0<FindCont(88).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 88
+	Return 1
+ELSEIF (0<FindCont(89).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 89
+	Return 1
+ELSEIF (0<FindCont(90).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 90
+	Return 1
+ELSEIF (0<FindCont(91).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 91
+	Return 1
+ELSEIF (0<FindCont(92).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 92
+	Return 1
+ELSEIF (0<FindCont(93).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 93
+	Return 1
+ELSEIF (0<FindCont(94).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 94
+	Return 1
+ELSEIF (0<FindCont(95).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 95
+	Return 1
+ELSEIF (0<FindCont(96).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 96
+	Return 1
+ELSEIF (0<FindCont(97).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 97
+	Return 1
+ELSEIF (0<FindCont(98).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 98
+	Return 1
+ELSEIF (0<FindCont(99).TAG.PUID> == <SRC.UID>)
+	TAG.Counter = 99
+	Return 1
+ELSE
+	TAG.Counter = -1
+ENDIF
+
+
+[FUNCTION f_Kein_Schluessel_mehr]
+TAG.Counter = 0
+f_Find_Ptr
+SRC.ACT = <FindCont(<EVAL <TAG.Counter>>).UID>
+TAG.NEW_TIMER = <SRC.ACT.TIMER>
+TAG.NEW_NAME = <SRC.ACT.TAG.NAME>
+TAG.NEW_MORE1 = <SRC.ACT.TAG.MORE1>
+TAG.NEW_MORE2 = <SRC.ACT.TAG.MORE2>
+
+SRC.NEWITEM i_key_vermietung
+SRC.ACT.TIMER = <EVAL <TAG.NEW_TIMER>>
+SRC.ACT.NAME = <TAG.NEW_NAME>
+SRC.ACT.MORE1 = <TAG.NEW_MORE1>
+SRC.ACT.MORE2 = <TAG.NEW_MORE2>
+SRC.ACT.LINK = <SRC.UID>
+SRC.ACT.COLOR = <TAG.KEYCOLOR>
+SRC.ACT.BOUNCE
+
+SRC.SysMessage Es wurde ein neuer Zimmerschluessel in eurer Backpack gelegt.
+TAG.Dummy = <SRC.ACT.UID>
+f_Find_Ptr
+SRC.ACT = <FindCont(<EVAL <TAG.Counter>>).UID>
+SRC.ACT.LINK = <TAG.DUMMY>
+
+TAG.Dummy =
+TAG.NEW_TIMER = 
+TAG.NEW_NAME = 
+TAG.NEW_MORE1 = 
+TAG.NEW_MORE2 = 
+TAG.InUse = 0
+TAG.POUID = 0
+
+
+[FUNCTION f_GetGold]
+IF (0<args> == 0)
+	Return 1
+ENDIF
+TAG.Counter = 0
+SRC.TAG.GoldBackPack = 0
+f_Goldcounter
+SRC.TAG.GoldTotal = <SRC.BANKBALANCE>+<SRC.TAG.GoldBackPack>
+TAG.MietPreis = <EVAL ZimmerPreis * <args>>
+
+IF (<TAG.MietPreis> <= <SRC.TAG.GoldTotal>)
+	IF (<TAG.MietPreis> <= <SRC.TAG.GoldBackPack>)
+		// gesammt Gold im Backpack
+		SRC.Consume <EVAL <TAG.MietPreis>> i_Gold
+	ELSEIF (<TAG.Mietpreis> > <SRC.TAG.GoldBackPack>)
+		// nicht genug Gold im Backpack (Teil Gold BP + Bankfach)
+		TAG.GoldRest = <EVAL <TAG.Mietpreis> + (-<SRC.TAG.GoldBackPack>)>
+		SRC.Consume <EVAL <SRC.TAG.GoldBackPack>> i_gold
+		SRC.FindLayer(29).FindID(i_gold).Consume <EVAL <TAG.GoldRest>> i_gold
+	ENDIF
+	SRC.Update
+	SFX 50
+	TAG.EINNAHMEN = <EVAL <TAG.EINNAHMEN> + <TAG.MietPreis>>
+	TAG.Result = 1
+ELSE
+	TAG.Result = 0
+ENDIF
+TAG.GoldRest =
+TAG.MietPreis =
+SRC.TAG.GoldTotal =
+SRC.TAG.GoldBackPack =
+TAG.Counter =
+
+// Findet Gold das Direckt im Backpack liegt 
+[FUNCTION f_Goldcounter]
+IF <SRC.FindLayer(21).FindCont(<TAG.Counter>)>
+	IF (<SRC.FindLayer(21).FindCont(<TAG.Counter>).BaseID> == i_gold)
+		SRC.TAG.GoldBackPack = <SRC.TAG.GoldBackPack> + <SRC.FindLayer(21).FindCont(<TAG.Counter>).Amount>
+	ENDIF
+	TAG.Counter = <EVAL <TAG.Counter> + 1>
+	f_Goldcounter
+ENDIF
+
+[DIALOG d_Zimmer_Mieten]
+0, 0
+PAGE 0
+resizepic 120 70 3500 430 298
+Text 250 80 2010 0
+gumppic 92 140 13 	// Body
+gumppic 92 140 60707	// Haare
+gumppic 92 140 60448	// Kleid
+gumppic 92 140 60480	// Schuhe
+gumppic 92 140 50500	// Laterne
+Text 150 110 61 1		// Info
+Text 150 125 61 2		// Info
+Text 150 140 61 3		// Info
+Text 150 155 61 4		// Info
+Text 150 170 61 5		// Info
+Text 300 190 61 26 	// gez
+Text 260 220 2010 6	// 1 Tag
+button 240 223 2117 2118 1 0 1
+Text 320 220 152 16
+Text 260 240 2010 7	// 2 Tage
+button 240 243 2117 2118 1 0 2
+Text 320 240 152 17
+Text 260 260 2010 8	// 3 Tage
+button 240 263 2117 2118 1 0 3
+Text 320 260 152 18
+Text 260 280 2010 9	// 4 Tage
+button 240 283 2117 2118 1 0 4
+Text 320 280 152 19
+Text 260 300 2010 10	// 5 Tage
+button 240 303 2117 2118 1 0 5
+Text 320 300 152 20
+Text 400 220 2010 11	// 6 Tage
+button 380 223 2117 2118 1 0 6
+Text 480 220 152 21
+Text 400 240 2010 12	// 1 Woche
+button 380 243 2117 2118 1 0 7
+Text 480 240 152 22
+Text 400 260 2010 13	// 2 Wochen
+button 380 263 2117 2118 1 0 8
+Text 480 260 152 23
+Text 400 280 2010 14	// 3 Wochen
+button 380 283 2117 2118 1 0 9
+Text 480 280 152 24
+Text 400 300 2010 15	// 4 Wochen
+button 380 303 2117 2118 1 0 10
+Text 480 300 152 25
+button 450 330 243 241 1 0 99	// Cancel
+
+[DIALOG d_Zimmer_Mieten TEXT]
+Willkommen <SRC.SEX Reisender/Reisende>.
+Hier koennt Ihr euch fuer nur <EVAL Zimmerpreis> Goldstuecken pro
+Nacht ein Zimmer mieten. Die Miete ist immer im 
+vorraus zu zahlen. Wenn es euch hier gefaellt
+und Ihr eure Mietzeit verlaengern wollt, dann 
+sprecht mit mir.
+1 Tag
+2 Tage
+3 Tage
+4 Tage
+5 Tage
+6 Tage
+1 Woche
+2 Wochen
+3 Wochen
+4 Wochen
+<EVAL Zimmerpreis * 1>g
+<EVAL Zimmerpreis * 2>g
+<EVAL Zimmerpreis * 3>g
+<EVAL Zimmerpreis * 4>g
+<EVAL Zimmerpreis * 5>g
+<EVAL Zimmerpreis * 6>g
+<EVAL Zimmerpreis * 7>g
+<EVAL Zimmerpreis * 14>g
+<EVAL Zimmerpreis * 21>g
+<EVAL Zimmerpreis * 28>g
+gez. <NAME>, <Title>
+<VAR.SPACE>
+
+[DIALOG d_Zimmer_Mieten BUTTON]
+ON=0
+TAG.InUse = 0
+TAG.POUID = 0
+ON=99
+TAG.InUse = 0
+TAG.POUID = 0
+ON=1
+f_zimmer_mieten 1
+ON=2
+f_zimmer_mieten 2
+ON=3
+f_zimmer_mieten 3
+ON=4
+f_zimmer_mieten 4
+ON=5
+f_zimmer_mieten 5
+ON=6
+f_zimmer_mieten 6
+ON=7
+f_zimmer_mieten 7
+ON=8
+f_zimmer_mieten 14
+ON=9
+f_zimmer_mieten 21
+ON=10
+f_zimmer_mieten 28
+
+[DIALOG d_Zimmer_Verlaengern]
+0, 0
+PAGE 0
+resizepic 120 70 3500 430 200
+Text 183 80 2010 0
+gumppic 92 40 13 	// Body
+gumppic 92 40 60707	// Haare
+gumppic 92 40 60448	// Kleid
+gumppic 92 40 60480	// Schuhe
+gumppic 92 40 50500	// Laterne
+Text 260 120 2010 1	// 1 Tag
+button 240 123 2117 2118 1 0 1
+Text 320 120 152 11
+Text 260 140 2010 2	// 2 Tage
+button 240 143 2117 2118 1 0 2
+Text 320 140 152 12
+Text 260 160 2010 3	// 3 Tage
+button 240 163 2117 2118 1 0 3
+Text 320 160 152 13
+Text 260 180 2010 4	// 4 Tage
+button 240 183 2117 2118 1 0 4
+Text 320 180 152 14
+Text 260 200 2010 5	// 5 Tage
+button 240 203 2117 2118 1 0 5
+Text 320 200 152 15
+Text 400 120 2010 6	// 6 Tage
+button 380 123 2117 2118 1 0 6
+Text 480 120 152 16
+Text 400 140 2010 7	// 1 Woche
+button 380 143 2117 2118 1 0 7
+Text 480 140 152 17
+Text 400 160 2010 8	// 2 Wochen
+button 380 163 2117 2118 1 0 8
+Text 480 160 152 18
+Text 400 180 2010 9	// 3 Wochen
+button 380 183 2117 2118 1 0 9
+Text 480 180 152 19
+Text 400 200 2010 10	// 4 Wochen
+button 380 203 2117 2118 1 0 10
+Text 480 200 152 20
+button 450 230 243 241 1 0 99	// Cancel
+
+[DIALOG d_Zimmer_Verlaengern TEXT]
+Um wieviel Tage moechtet Ihr verlaengern ?
+1 Tag
+2 Tage
+3 Tage
+4 Tage
+5 Tage
+6 Tage
+1 Woche
+2 Wochen
+3 Wochen
+4 Wochen
+<EVAL Zimmerpreis * 1>g
+<EVAL Zimmerpreis * 2>g
+<EVAL Zimmerpreis * 3>g
+<EVAL Zimmerpreis * 4>g
+<EVAL Zimmerpreis * 5>g
+<EVAL Zimmerpreis * 6>g
+<EVAL Zimmerpreis * 7>g
+<EVAL Zimmerpreis * 14>g
+<EVAL Zimmerpreis * 21>g
+<EVAL Zimmerpreis * 28>g
+<VAR.SPACE>
+
+[DIALOG d_Zimmer_Verlaengern BUTTON]
+ON=0
+TAG.InUse = 0
+TAG.POUID = 0
+ON=99
+TAG.InUse = 0
+TAG.POUID = 0
+ON=1
+f_Zimmer_verlaengern 1
+ON=2
+f_Zimmer_verlaengern 2
+ON=3
+f_Zimmer_verlaengern 3
+ON=4
+f_Zimmer_verlaengern 4
+ON=5
+f_Zimmer_verlaengern 5
+ON=6
+f_Zimmer_verlaengern 6
+ON=7
+f_Zimmer_verlaengern 7
+ON=8
+f_Zimmer_verlaengern 14
+ON=9
+f_Zimmer_verlaengern 21
+ON=10
+f_Zimmer_verlaengern 28
+
+// GM Functionen
+//**************************************************************************************************
+[FUNCTION f_ZIMMERVERMIETUNG_LISTE]
+VAR.KEYFREI = 0
+VAR.DUMMY = 0
+f_KEYLIST_BACKPACK 0
+
+VAR.KEYVERMIETET = 0
+VAR.DUMMY2 = 0
+VAR.KEYINFOSTR = 
+f_KEYLIST_MEMORY 0
+
+VAR.KEYANZAHL = <EVAL <VAR.KEYVERMIETET> + <VAR.KEYFREI>>
+
+Dialog d_keylist
+
+[FUNCTION f_KEYLIST_BACKPACK]
+SRC.ACT = <FindLayer(21).FindCont(<EVAL <VAR.DUMMY>>).UID>
+IF (<SRC.ACT> != 0)
+	IF (<SRC.ACT.BaseID> == i_Key_Vermietung)
+		VAR.KEYFREI = <EVAL <VAR.KEYFREI> + 1>
+	ENDIF
+	VAR.DUMMY = <EVAL <VAR.DUMMY> + 1>
+	f_KEYLIST_BACKPACK <VAR.DUMMY>	
+ENDIF
+
+[FUNCTION f_KEYLIST_MEMORY]
+SRC.ACT = <FindCont(<EVAL <VAR.DUMMY2>>).UID>
+IF (<SRC.ACT> != 0)
+	IF (<SRC.ACT.BaseID> == i_Zimmer_Memory)
+		VAR.KEYVERMIETET = <EVAL <VAR.KEYVERMIETET> + 1>
+		//VAR.STRING_Playername = <SRC.ACT.LINK.CONT.CONT.NAME>
+		VAR.STRING_Playername = <SRC.ACT.LINK.TOPOBJ.NAME>
+		VAR.STRING_Schluessel = <SRC.ACT.LINK.NAME>
+		VAR.Tage = <EVAL <SRC.ACT.TIMER> / 86400>
+		VAR.Stunde = <EVAL (<SRC.ACT.TIMER> + (-<VAR.Tage> * 86400)) / 3600>
+		VAR.Minute = <EVAL (<SRC.ACT.TIMER> + (-<VAR.Tage> * 86400) + (-<VAR.Stunde> * 3600)) / 60>  
+		VAR.Sekunde = <EVAL <SRC.ACT.TIMER> + (-<VAR.Tage> * 86400) + (-<VAR.Stunde> * 3600) + (-<VAR.Minute> * 60)>
+
+		IF (STRMatch(<VAR.STRING_Playername>,))
+			VAR.STRING_Schluessel = <SRC.ACT.TAG.NAME>
+			SRC.ACT = <SRC.ACT.TAG.PUID>
+			VAR.STRING_Playername = *<SRC.ACT.NAME>
+			
+		ENDIF
+		VAR.KEYINFOSTR = <VAR.KEYINFOSTR><VAR.STRING_Schluessel> - <VAR.STRING_Playername> (<EVAL <VAR.Tage>> Tag(e), <EVAL <VAR.Stunde>>:<EVAL <VAR.Minute>>:<EVAL <VAR.Sekunde>>)<VAR.BR>
+	ENDIF
+	VAR.DUMMY2 = <EVAL <VAR.DUMMY2> + 1>
+	f_KEYLIST_MEMORY <VAR.DUMMY2>	
+ENDIF
+
+[DIALOG d_keylist]
+0, 0
+PAGE 0
+resizepic 0 0 3500 400 450
+Text 120 20 2010 0		// ueberschrift 
+Text 40 50 1790 10
+Text 200 50 1790 11
+Button 20 53 2117 2118 1 0 3 
+Text 40 70 1790 12
+Button 20 73 2117 2118 1 0 1 
+Text 200 70 <EVAL <TAG.KEYCOLOR>> 13
+Text 40 90 1790 1		//
+Text 200 90 1790 2		
+Text 40 110 1790 3		//
+Text 200 110 1790 4		
+Text 40 130 1790 5		//
+Text 200 130 1790 6	
+Text 40 150 1790 14
+Text 200 150 1790 15
+Text 40 170 1790 16
+Text 200 170 1790 17
+Button 20 173 2117 2118 1 0 2 
+Text 20 190 1790 7		// -----------
+HTMLGUMP 20 210 360 200 8 1 1
+Text 90 420 843 9
+
+[DIALOG d_keylist TEXT]
+Schluessel Information
+Anzahl der Schluessel
+<EVAL <VAR.KEYANZAHL>>
+Vermietete Zimmer
+<EVAL <VAR.KEYVERMIETET>>
+Freie Zimmer
+<EVAL <VAR.KEYFREI>>
+---------------------------------------------
+<VAR.KEYINFOSTR>
+by GM Darek fuer Calandria.de
+Name
+<NAME>
+Farbe
+<TAG.KEYCOLOR>
+Einnahmen
+<EVAL <TAG.Einnahmen>> g
+NPC Status
+<EVAL <TAG.InUse>>
+
+[DIALOG d_keylist BUTTON]
+ON=1
+Dialog d_keycolor
+
+ON=2
+IF (<TAG.InUse> == 0)
+	TAG.InUse = 1
+	TAG.POUID = <SRC.UID>
+ELSE
+	TAG.InUse = 0
+	TAG.POUID = 0
+ENDIF
+Dialog d_keylist
+
+ON=3
+Dialog d_NPC_Rename
+
+//**************************************************************************************************
+//Fix Farbe alle Schluessel im Backpack
+[FUNCTION f_FIXCOLOR_BACKPACK]
+SRC.ACT = <FindLayer(21).FindCont(<EVAL <VAR.Dummy>>).UID>
+IF (<SRC.ACT> != 0)
+	IF (<SRC.ACT.BaseID> == i_Key_Vermietung)
+		SRC.ACT.COLOR = <ARGS>
+		SRC.SysMessage Geaendert im BP: <SRC.ACT.NAME>
+		FIX
+	ENDIF
+	VAR.Dummy = <EVAL <VAR.Dummy> + 1>
+	f_FIXCOLOR_BACKPACK <args>	
+ENDIF
+
+//Fixt Farbe alle vermieteten Schluessel
+[FUNCTION f_FIXCOLOR_MEMORY]
+SRC.ACT = <FindCont(<EVAL <VAR.Dummy2>>).UID>
+IF (<SRC.ACT> != 0)
+	IF (<SRC.ACT.BaseID> == i_Zimmer_Memory)
+		SRC.ACT.LINK.COLOR = <args>
+		SRC.SysMessage Memory (<SRC.ACT.LINK.CONT.CONT.NAME>) : <SRC.ACT.LINK.NAME>
+		SRC.ACT.LINK.FIX
+	ENDIF
+	VAR.Dummy2 = <EVAL <VAR.Dummy2> + 1>
+	f_FIXCOLOR_MEMORY <args>
+ENDIF
+
+//**************************************************************************************************
+[DIALOG d_keycolor]
+0, 0
+PAGE 0
+resizepic 120 70 3500 300 120
+Text 145 90 2010 0
+Resizepic 215 115 3000 100 30
+Textentry 220 120 300 20 1891 1 1
+Text 140 120 1891 2
+Button 330 150 2071 2072 1 0 2	// Cancel
+Button 150 150 2074 2075 1 0 3	// OK
+
+[DIALOG d_keycolor TEXT]
+Gib die neuen Schluessel-Farbe ein.
+<TAG.KEYCOLOR>
+Farbe   $
+
+[DIALOG d_keycolor BUTTON]
+ON=3
+TAG.KEYCOLOR = <ARGTXT[1]>
+SRC.SysMessage Schluesselfarbe in <TAG.KEYCOLOR> geaendert.
+VAR.Dummy = 0
+f_FIXCOLOR_BACKPACK <TAG.KEYCOLOR>
+VAR.Dummy2 = 0
+f_FIXCOLOR_MEMORY <TAG.KEYCOLOR>
+SRC.SysMessage Alle Schluessel wurden in die neue Farbe geaendert.
+Dialog d_keylist
+
+[DIALOG d_NPC_Rename]
+0, 0
+PAGE 0
+resizepic 120 70 3500 300 120
+Text 145 90 2010 0
+Resizepic 140 115 3000 260 30
+Textentry 145 120 260 20 1891 1 1
+Button 330 150 2071 2072 1 0 2	// Cancel
+Button 150 150 2074 2075 1 0 3	// OK
+
+[DIALOG d_NPC_Rename TEXT]
+Wie soll der NPC heissen?
+<NAME>
+
+
+[DIALOG d_NPC_Rename BUTTON]
+ON=3
+NAME = <ARGTXT[1]>
+Dialog d_keylist
+
+[FUNCTION f_Vermietung_Distance_check]
+IF (0<TAG.POUID> == 0)
+	IF (<Distance> > <VAR.MaxDistance>)
+		Return 1
+	ELSE
+		Return 0
+	ENDIF
+ENDIF
+NewItem i_Memory
+ACT.TYPE = t_eq_Script
+ACT.NAME = Vermietung Rechner
+ACT.CONT = <UID>
+ACT.MOREP = <P>
+ACT.LINK = <TAG.POUID>	
+IF (<ACT.MOREX> > <ACT.LINK.P.X>)
+	TAG.X = <EVAL <ACT.MOREX> - <ACT.LINK.P.X>>
+ELSE
+	TAG.X = <EVAL <ACT.LINK.P.X> - <ACT.MOREX>>
+ENDIF
+IF (<ACT.MOREY> > <ACT.LINK.P.Y>)
+	TAG.Y = <EVAL <ACT.MOREY> - <ACT.LINK.P.Y>>
+ELSE
+	TAG.Y = <EVAL <ACT.LINK.P.Y> - <ACT.MOREY>>
+ENDIF
+IF (<EVAL <TAG.X>> > <EVAL <VAR.MaxDistance>>) || (<EVAL <TAG.Y>> > <EVAL <VAR.MaxDistance>>)
+	Return 1
+ELSE
+	Return 0
+ENDIF
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+[EOF]

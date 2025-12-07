@@ -1,0 +1,1517 @@
+//################# PAGE 1 of 3 ########################
+//
+//Housing system Ver1.0 [beta]
+//
+//Created by Feral
+//
+//Please report bugs or comments to Ferals_scripts@yahoo.com
+//
+//#######################################################
+
+[ITEMDEF 0bd1]
+//brass sign
+DEFNAME=i_sign_brass
+TYPE=T_SIGN_GUMP
+TDATA2=064
+FLIP=1
+RESOURCES=2 I_BOARD, 1 i_ingot_iron
+DUPELIST=0bd2
+
+CATEGORY=Decoration - Signs
+SUBSECTION=Blank
+DESCRIPTION=Brass Blank
+
+ON=@CREATE
+TIMER=172800
+MORE2=1
+
+ON=@CLICK
+IF (<MORE2>=1)
+MESSAGE This house is like new
+ELSEIF (<MORE2>=2)
+MESSAGE This house is barely worn
+ELSEIF (<MORE2>=3)
+MESSAGE This house is fairly worn
+ELSEIF (<MORE2>=4) 
+MESSAGE This house is greatly worn
+ELSEIF (<MORE2>=5) 
+MESSAGE This house is ready to fall apart
+ELSEIF (<MORE2>=6) 
+MESSAGE This house is in danger of collapsing
+
+ON=@TIMER
+IF (<MORE2>=1)
+TIMER=172800
+MORE2=2
+RETURN 1
+ELSEIF (<MORE2>=2)
+TIMER=172800
+MORE2=3
+RETURN 1
+ELSEIF (<MORE2>=3)
+TIMER=172800
+MORE2=4
+RETURN 1
+ELSEIF (<MORE2>=4)
+TIMER=172800
+MORE2=5
+RETURN 1
+ELSEIF (<MORE2>=5)
+TIMER=172800
+MORE2=6
+RETURN 1
+ELSEIF (<MORE2>=6)
+LINK.REMOVE
+
+ON=@DCLICK
+IF !0<LINK.TAG.OWNER>
+	IF (<SRC.UID>==<LINK.MORE1>)
+	LINK.REGION.TAG.OWNER=<SRC.UID>
+	LINK.TAG.OWNER=<SRC.UID>
+	LINK.TAG.OWNERNAME=<SRC.NAME>
+	LINK.REGION.EVENTS +r_house_default
+	SRC.SCROLL SCROLL_HOUSE
+	RETURN 1
+	ELSE
+	RETURN 1
+	ENDIF
+ENDIF
+IF (<TAGCHECK>==1)|<SRC.ISGM>
+TIMER=172800
+MORE2=1
+SRC.SYSMESSAGE Your house has been refreshed.
+DIALOG d_house_menu
+RETURN 1
+ELSE
+DIALOG d_no_own
+RETURN 1
+
+ON=@TARGON_CHAR
+IF <SRC.TARG.NPC>
+SRC.SYSMESSAGE You cannot affect NPCs this way.
+VAR.FRIEND=
+VAR.COown=
+VAR.BAN=
+RETURN 1
+
+ELSEIF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE You cannot affect yourself this way.
+VAR.FRIEND=
+VAR.COown=
+VAR.BAN=
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=1)
+LINK.REGION.TAG.FNAME1=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND1=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=2)
+LINK.REGION.TAG.FNAME2=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND2=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=3)
+LINK.REGION.TAG.FNAME3=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND3=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=4)
+LINK.REGION.TAG.FNAME4=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND4=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=5)
+LINK.REGION.TAG.FNAME5=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND5=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=6)
+LINK.REGION.TAG.FNAME6=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND6=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=7)
+LINK.REGION.TAG.FNAME7=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND7=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=8)
+LINK.REGION.TAG.FNAME8=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND8=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=9)
+LINK.REGION.TAG.FNAME9=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND9=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.FRIEND>=10)
+LINK.REGION.TAG.FNAME10=<SRC.TARG.NAME>
+LINK.REGION.TAG.FRIEND10=<SRC.TARG.UID>
+VAR.FRIEND=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a friend of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a friend of the house.
+RETURN 1
+
+ELSEIF (0<VAR.COown>=1)
+link.region.tag.COname1=<SRC.TARG.NAME>
+link.region.tag.COowner1=<SRC.TARG.UID>
+VAR.COown=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a co-owner of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a co-owner of the house.
+RETURN 1
+
+ELSEIF (0<VAR.COown>=2)
+link.region.tag.COname2=<SRC.TARG.NAME>
+link.region.tag.COowner2=<SRC.TARG.UID>
+VAR.COown=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been added as a co-owner of the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has added you as a co-owner of the house.
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=1)
+LINK.REGION.TAG.banname1=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned1=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=2)
+LINK.REGION.TAG.banname2=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned2=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=3)
+LINK.REGION.TAG.banname3=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned3=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=4)
+LINK.REGION.TAG.banname4=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned4=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=5)
+LINK.REGION.TAG.banname5=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned5=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=6)
+LINK.REGION.TAG.banname6=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned6=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=7)
+LINK.REGION.TAG.banname7=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned7=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=8)
+LINK.REGION.TAG.banname8=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned8=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=9)
+LINK.REGION.TAG.banname9=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned9=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.BAN>=10)
+LINK.REGION.TAG.banname10=<SRC.TARG.NAME>
+LINK.REGION.TAG.banned10=<SRC.TARG.UID>
+VAR.BAN=
+SRC.SYSMESSAGE <SRC.TARG.NAME> Has been banned from the house.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+SRC.TARG.GO 2065,804
+RETURN 1
+
+ELSEIF (0<VAR.TRANSFER>=1)
+IF (<SRC.MEMORYFINDTYPE.0100.LINK>==<LINK>)
+SRC.MEMORYFINDTYPE.0100.REMOVE
+ENDIF
+
+LINK.MORE1=<SRC.TARG.UID>
+MORE2=1
+
+SRC.TARG.NEWITEM=i_memory
+SRC.TARG.ACT.CONT=<SRC.TARG.UID>
+SRC.TARG.ACT.COLOR=0100
+SRC.ACT.NAME=<LINK.NAME>
+SRC.TARG.ACT.LINK=<LINK>
+
+LINK.REGION.TAG.OWNER=<SRC.TARG.UID>
+LINK.TAG.OWNER=<SRC.TARG.UID>
+LINK.TAG.OWNERNAME=<SRC.TARG.NAME>
+
+link.region.tag.COname1=
+link.region.tag.COowner1=
+link.region.tag.COname2=
+link.region.tag.COowner2=
+LINK.REGION.TAG.FNAME1=
+LINK.REGION.TAG.FRIEND1=
+LINK.REGION.TAG.FNAME2=
+LINK.REGION.TAG.FRIEND2=
+LINK.REGION.TAG.FNAME3=
+LINK.REGION.TAG.FRIEND3=
+LINK.REGION.TAG.FNAME4=
+LINK.REGION.TAG.FRIEND4=
+LINK.REGION.TAG.FNAME5=
+LINK.REGION.TAG.FRIEND5=
+LINK.REGION.TAG.FNAME6=
+LINK.REGION.TAG.FRIEND6=
+LINK.REGION.TAG.FNAME7=
+LINK.REGION.TAG.FRIEND7=
+LINK.REGION.TAG.FNAME8=
+LINK.REGION.TAG.FRIEND8=
+LINK.REGION.TAG.FNAME9=
+LINK.REGION.TAG.FRIEND9=
+LINK.REGION.TAG.FNAME10=
+LINK.REGION.TAG.FRIEND10=
+LINK.REGION.TAG.banname1=
+LINK.REGION.TAG.banned1=
+LINK.REGION.TAG.banname2=
+LINK.REGION.TAG.banned2=
+LINK.REGION.TAG.banname3=
+LINK.REGION.TAG.banned3=
+LINK.REGION.TAG.banname4=
+LINK.REGION.TAG.banned4=
+LINK.REGION.TAG.banname5=
+LINK.REGION.TAG.banned5=
+LINK.REGION.TAG.banname6=
+LINK.REGION.TAG.banned6=
+LINK.REGION.TAG.banname7=
+LINK.REGION.TAG.banned7=
+LINK.REGION.TAG.banname8=
+LINK.REGION.TAG.banned8=
+LINK.REGION.TAG.banname9=
+LINK.REGION.TAG.banned9=
+LINK.REGION.TAG.banname10=
+LINK.REGION.TAG.banned10=
+RETURN 1
+
+ENDIF
+
+//ITEMS **************
+
+[ITEMDEF i_garbage_can] 
+NAME=Trash Barrel
+ID=i_barrel_open 
+TYPE=t_container
+
+ON=@CLICK
+EMPTY
+return 0
+
+ON=@DCLICK
+EMPTY
+RETURN 0
+
+ON=@REGPERIODIC
+EMPTY
+RETURN 0
+
+[ITEMDEF i_strongbox]
+NAME=Strongbox
+ID=0e42
+FLIP=1
+DUPELIST=0e43
+
+ON=@CREATE
+COLOR=022c
+ATTR=08010
+
+ON=@CLICK
+MESSAGE <NAME>
+RETURN 1
+
+ON=@DCLICK
+IF (<SRC.ISGM>==1) //390
+RETURN 0
+ELSEIF (<LINK>==<SRC.UID>)|(<OWNTAGCHECK>==1)
+RETURN 0
+ELSE
+SRC.SYSMESSAGE You may not access this container!
+RETURN 1
+
+[ITEMDEF 0100e]
+DEFNAME=i_key_copper
+RESOURCES=3 i_ingot_copper
+WEIGHT=1
+TYPE=T_KEY
+SKILLMAKE=TINKERING 43.0,t_tinker_tools
+RESOURCES2=1 i_ingot_copper
+
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Keys
+DESCRIPTION=Copper Key
+
+//REGION TYPE ********
+
+[REGIONTYPE r_house_default]
+DEFNAME=r_house_default
+
+ON=@ENTER
+IF (0<TAG.banned1>==<SRC.UID>)|(0<TAG.banned2>==<SRC.UID>)|(0<TAG.banned3>==<SRC.UID>)|(0<TAG.banned4>==<SRC.UID>)|(0<TAG.banned5>==<SRC.UID>)|(0<TAG.banned6>==<SRC.UID>)|(0<TAG.banned7>==<SRC.UID>)|(0<TAG.banned8>==<SRC.UID>)|(0<TAG.banned9>==<SRC.UID>)|(0<TAG.banned10>==<SRC.UID>)
+SRC.MOVE 0,1
+SRC.SYSMESSAGE You are banned from this house!
+RETURN 1
+
+ELSEIF (0<TAG.OWNER>==<SRC.UID>)|(0<tag.COowner1>==<SRC.UID>)|(0<tag.COowner2>==<SRC.UID>)
+SRC.SYSMESSAGE Welcome home <SRC.NAME>.
+SRC.RESEND
+SRC.EVENTS +e_house
+
+ELSEIF (0<TAG.FRIEND1>==<SRC.UID>)|(0<TAG.FRIEND2>==<SRC.UID>)|(0<TAG.FRIEND3>==<SRC.UID>)|(0<TAG.FRIEND4>==<SRC.UID>)|(0<TAG.FRIEND5>==<SRC.UID>)|(0<TAG.FRIEND6>==<SRC.UID>)|
+(0<TAG.FRIEND7>==<SRC.UID>)|(0<TAG.FRIEND8>==<SRC.UID>)|(0<TAG.FRIEND9>==<SRC.UID>)|(0<TAG.FRIEND10>==<SRC.UID>)
+SRC.SYSMESSAGE Welcome back friend.
+SRC.EVENTS +e_house
+SRC.RESEND
+
+ELSE
+SRC.EVENTS +e_house
+SRC.RESEND
+ENDIF
+
+ON=@EXIT
+SRC.EVENTS -e_house
+
+
+[EVENTS e_house]
+ON=@ITEMCLICK
+IF (<SRC.ACT.ATTR>==08010)&!(<SRC.ACT.TYPE>==t_secure)
+SRC.ACT.MESSAGE [Locked down]
+ELSE
+RETURN 0
+ENDIF
+
+// TYPDEFS *****************
+[TYPEDEF t_secure]
+ON=@Click
+MESSAGE [locked down & secure]
+MESSAGE <NAME>
+RETURN 1
+
+ON=@DClick
+IF (<TAGCHECK>==1)
+TYPE=t_container
+USE
+TYPE=t_secure
+RETURN 1
+ELSE
+MESSAGE This container is secure.
+RETURN 1
+ENDIF
+
+// FUNCTIONS ***************
+
+[FUNCTION TAGCHECK]
+IF (0<REGION.TAG.OWNER>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND1>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND2>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND3>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND4>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND5>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND6>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND7>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND8>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND9>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<REGION.TAG.FRIEND10>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<region.tag.COowner1>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<region.tag.COowner2>==<SRC.UID>)
+RETURN 1
+ELSEIF <SRC.ISGM>
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+[FUNCTION OWNTAGCHECK]
+IF (0<REGION.TAG.OWNER>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<region.tag.COowner1>==<SRC.UID>)
+RETURN 1
+ELSEIF (0<region.tag.COowner2>==<SRC.UID>)
+RETURN 1
+ELSEIF <SRC.ISGM>
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+[FUNCTION REDEED]
+SRC.NEWITEM=i_deed
+SRC.ACT.CONT=<SRC.FINDLAYER.29.UID>
+SRC.ACT.MORE=<LINK.BASEID>
+SRC.ACT.NAME=a deed to a <LINK.NAME>
+LINK.REMOVE
+
+// DIALOGS ****************
+
+[SCROLL SCROLL_HOUSE]
+ Congratulations, You have successfully placed a new house. There are a few things you should know that will help you enjoy your experience.
+ In order to view a list of available house commands simply say "House Help".
+ In order to refresh your house you must use the house sign. If you do not refresh your house it will fall in 12 days.
+ Due to a currently unfixed bug do not lock down stackable items. Place them in a secure container or a lockbox to protect them from thieves.
+ You will not recieve this message again. Enjoy your new home.
+
+[DIALOG d_house_menu]
+0, 0
+PAGE 0
+PAGE 1
+resizepic 0 0 2600 350 400
+resizepic 75 30 3000 200 30
+button 73 350 243 241 1 0 0
+button 190 350 249 248 1 0 1
+text 100 35 0 0 //house name
+
+button 40 132 2117 2118  0 2 2 //friend list
+text 60 130 0 1
+button 40 157 2117 2118  0 3 3 // co-owner list
+text 60 155 0 2
+button 40 182 2117 2118  1 0 4 // change sign
+text 60 180 0 3
+button 40 207 2117 2118  1 0 5 // change building name
+text 60 205 0 4
+button 40 232 2117 2118  1 0 6 // bankself
+text 60 230 0 5
+button 40 257 2117 2118  1 0 7 // redeed
+text 60 255 0 6
+button 40 282 2117 2118  0 4 14 // ban list
+text 60 280 0 39
+button 40 107 2117 2118  1 0 15 //new key
+text 60 105 0 40
+button 40 307 2117 2118  1 0 16
+text 60 305 0 41
+
+text 80 70 0 7 //owner
+
+PAGE 2
+resizepic 0 0 2600 350 400
+resizepic 84 54 3000 175 20
+resizepic 84 81 3000 175 20
+resizepic 84 108 3000 175 20
+resizepic 84 136 3000 175 20
+resizepic 84 165 3000 175 20
+resizepic 84 194 3000 175 20
+resizepic 84 222 3000 175 20
+resizepic 84 251 3000 175 20
+resizepic 84 280 3000 175 20
+resizepic 84 310 3000 175 20
+button 190 350 249 248 1 0 8
+button 94 349 243 241 0 1 9
+text 85 53 0 8
+text 85 80 0 9
+text 85 107 0 10
+text 85 135 0 11
+text 85 164 0 12
+text 85 193 0 13
+text 85 221 0 14
+text 85 250 0 15
+text 85 279 0 16
+text 85 309 0 17
+text 48 27 102 18 //add
+text 248 26 32 19 //remove
+text 119 15 1152 20 //title
+
+radio 55 56 210 211 0 1 0
+radio 55 82 210 211 0 2 0
+radio 55 109 210 211 0 3 0
+radio 55 137 210 211 0 4 0
+radio 55 166 210 211 0 5 0
+radio 55 195 210 211 0 6 0
+radio 55 223 210 211 0 7 0
+radio 55 252 210 211 0 8 0
+radio 55 281 210 211 0 9 0
+radio 55 311 210 211 0 10 0
+
+radio 265 56 210 211 0 11 0
+radio 265 82 210 211 0 12 0
+radio 265 109 210 211 0 13 0
+radio 265 137 210 211 0 14 0
+radio 265 166 210 211 0 15 0
+radio 265 195 210 211 0 16 0
+radio 265 223 210 211 0 17 0
+radio 265 252 210 211 0 18 0
+radio 265 281 210 211 0 19 0
+radio 265 311 210 211 0 20 0
+
+PAGE 3
+resizepic 0 0 2600 350 400
+resizepic 84 54 3000 175 20
+resizepic 84 81 3000 175 20
+button 190 350 249 248 1 0 10
+button 94 349 243 241 0 1 11
+text 85 53 0 21
+text 85 80 0 22
+text 48 27 102 23 //add
+text 248 26 32 24 //remove
+text 119 15 1152 25 //title
+
+radio 55 56 210 211 0 21 0
+radio 55 82 210 211 0 22 0
+radio 265 56 210 211 0 23 0
+radio 265 82 210 211 0 24 0
+
+PAGE 4
+resizepic 0 0 2600 350 400
+resizepic 84 54 3000 175 20
+resizepic 84 81 3000 175 20
+resizepic 84 108 3000 175 20
+resizepic 84 136 3000 175 20
+resizepic 84 165 3000 175 20
+resizepic 84 194 3000 175 20
+resizepic 84 222 3000 175 20
+resizepic 84 251 3000 175 20
+resizepic 84 280 3000 175 20
+resizepic 84 310 3000 175 20
+button 190 350 249 248 1 0 12
+button 94 349 243 241 0 1 13
+text 85 53 0 26
+text 85 80 0 27
+text 85 107 0 28
+text 85 135 0 29
+text 85 164 0 30
+text 85 193 0 31
+text 85 221 0 32
+text 85 250 0 33
+text 85 279 0 34
+text 85 309 0 35
+text 48 27 102 36 //add
+text 248 26 32 37 //remove
+text 119 15 1152 38 //title
+
+radio 55 56 210 211 0 25 0
+radio 55 82 210 211 0 26 0
+radio 55 109 210 211 0 27 0
+radio 55 137 210 211 0 28 0
+radio 55 166 210 211 0 29 0
+radio 55 195 210 211 0 30 0
+radio 55 223 210 211 0 31 0
+radio 55 252 210 211 0 32 0
+radio 55 281 210 211 0 33 0
+radio 55 311 210 211 0 34 0
+
+radio 265 56 210 211 0 35 0
+radio 265 82 210 211 0 36 0
+radio 265 109 210 211 0 37 0
+radio 265 137 210 211 0 38 0
+radio 265 166 210 211 0 39 0
+radio 265 195 210 211 0 40 0
+radio 265 223 210 211 0 41 0
+radio 265 252 210 211 0 42 0
+radio 265 281 210 211 0 43 0
+radio 265 311 210 211 0 44 0
+
+[DIALOG d_house_menu TEXT]
+<NAME>
+View friend list
+View co-owner list
+Change sign
+Change building name
+Access bankbox
+Re-deed building
+Owned by: <LINK.TAG.OWNERNAME>
+
+//page 2
+<link.region.tag.fname1>
+<link.region.tag.fname2>
+<link.region.tag.fname3>
+<link.region.tag.fname4>
+<link.region.tag.fname5>
+<link.region.tag.fname6>
+<link.region.tag.fname7>
+<link.region.tag.fname8>
+<link.region.tag.fname9>
+<link.region.tag.fname10>
+Add
+Remove
+Friend list
+
+//page 3
+<link.region.tag.COname1>
+<link.region.tag.COname2>
+Add
+Remove
+Co-Owner list
+
+//page 4
+<link.region.tag.banname1>
+<link.region.tag.banname2>
+<link.region.tag.banname3>
+<link.region.tag.banname4>
+<link.region.tag.banname5>
+<link.region.tag.banname6>
+<link.region.tag.banname7>
+<link.region.tag.banname8>
+<link.region.tag.banname9>
+<link.region.tag.banname10>
+Add
+Remove
+Banned list
+View Banned list
+Create new Key [3 copper ingots]
+Transfer ownership
+
+[DIALOG d_house_menu BUTTON]
+//PAGE 1
+ONBUTTON=4
+	IF (0<REGION.TAG.OWNER>==<SRC.UID>)|<SRC.ISGM>
+	DIALOG d_sign_change
+	ELSE
+	SRC.SYSMESSAGE Only the owner may change the sign.
+	RETURN 1
+	ENDIF
+
+ONBUTTON=5
+	IF (0<REGION.TAG.OWNER>==<SRC.UID>)|<SRC.ISGM>
+	DIALOG d_house_rename
+	ELSE
+	SRC.SYSMESSAGE Only the owner may rename the building.
+	RETURN 1
+	ENDIF
+
+ONBUTTON=6
+SRC.BANKSELF
+
+ONBUTTON=7
+IF (0<REGION.TAG.OWNER>==<SRC.UID>)|<SRC.ISGM>
+	IF (0<LINK.TAG.SB01>==1)|(0<LINK.TAG.TRASHCAN>==1)
+	SRC.SYSMESSAGE You need to clean out your house before you redeed.
+	RETURN 1
+	ELSE
+	DIALOG d_redeed
+	ENDIF
+ELSE
+SRC.SYSMESSAGE Only the owner may redeed the building.
+RETURN 1
+ENDIF
+
+ONBUTTON=15
+IF (<SRC.RESTEST 3 i_ingot_copper>)
+SRC.CONSUME 3 i_ingot_copper
+SRC.NEWITEM=i_key_copper
+SRC.ACT.CONT=<SRC.UID>
+SRC.ACT.MORE1=<LINK.UID>
+SRC.ACT.LINK=<LINK.UID>
+SRC.ACT.NAME=Key to:<NAME>
+ELSE
+SRC.SYSMESSAGE You lack the copper to create a new key.
+ENDIF
+ONBUTTON=16
+	IF (0<REGION.TAG.OWNER>==<SRC.UID>)|<SRC.ISGM>
+	TARGET
+	VAR.TRANSFER=1
+	ELSE
+	SRC.SYSMESSAGE Only the owner may transfer ownership of the building.
+	RETURN 1
+	ENDIF
+
+//PAGE 2
+ONBUTTON=8
+IF (0<REGION.TAG.OWNER>==<SRC.UID>)|<SRC.ISGM>|(0<region.tag.COowner1>==<SRC.UID>)(0<region.tag.COowner2>==<SRC.UID>)
+	IF (<ARGCHK[1]>==1)
+	VAR.FRIEND=1
+	TARGET
+	ELSEIF (<ARGCHK[2]>==1)
+	VAR.FRIEND=2
+	TARGET
+	ELSEIF (<ARGCHK[3]>==1)
+	VAR.FRIEND=3
+	TARGET
+	ELSEIF (<ARGCHK[4]>==1)
+	VAR.FRIEND=4
+	TARGET
+	ELSEIF (<ARGCHK[5]>==1)
+	VAR.FRIEND=5
+	TARGET
+	ELSEIF (<ARGCHK[6]>==1)
+	VAR.FRIEND=6
+	TARGET
+	ELSEIF (<ARGCHK[7]>==1)
+	VAR.FRIEND=7
+	TARGET
+	ELSEIF (<ARGCHK[8]>==1)
+	VAR.FRIEND=8
+	TARGET
+	ELSEIF (<ARGCHK[9]>==1)
+	VAR.FRIEND=9
+	TARGET
+	ELSEIF (<ARGCHK[10]>==1)
+	VAR.FRIEND=10
+	TARGET
+
+	ELSEIF (<ARGCHK[11]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME1> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME1=
+	LINK.REGION.TAG.FRIEND1=
+	
+	ELSEIF (<ARGCHK[12]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME2> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME2=
+	LINK.REGION.TAG.FRIEND2=
+
+	ELSEIF (<ARGCHK[13]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME3> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME3=
+	LINK.REGION.TAG.FRIEND3=
+
+	ELSEIF (<ARGCHK[14]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME4> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME4=
+	LINK.REGION.TAG.FRIEND4=
+
+	ELSEIF (<ARGCHK[15]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME5> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME5=
+	LINK.REGION.TAG.FRIEND5=
+
+	ELSEIF (<ARGCHK[16]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME6> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME6=
+	LINK.REGION.TAG.FRIEND6=
+
+	ELSEIF (<ARGCHK[17]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME7> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME7=
+	LINK.REGION.TAG.FRIEND7=
+
+	ELSEIF (<ARGCHK[18]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME8> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME8=
+	LINK.REGION.TAG.FRIEND8=
+
+	ELSEIF (<ARGCHK[19]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME9> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME9=
+	LINK.REGION.TAG.FRIEND9=
+
+	ELSEIF (<ARGCHK[20]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.FNAME10> Has been removed from the friend list
+	LINK.REGION.TAG.FNAME10=
+	LINK.REGION.TAG.FRIEND10=
+	ENDIF
+ELSE
+SRC.SYSMESSAGE Only owners and co-owners may edit the friend list.
+RETURN 1
+ENDIF
+
+//PAGE 3
+ONBUTTON=10
+IF (0<REGION.TAG.OWNER>==<SRC.UID>)|<SRC.ISGM>
+	IF (<ARGCHK[21]>==1)
+	VAR.COown=1
+	TARGET
+	ELSEIF (<ARGCHK[22]>==1)
+	VAR.COown=2
+	TARGET
+
+	ELSEIF (<ARGCHK[23]>==1)
+	SRC.SYSMESSAGE <link.region.tag.COname1> Has Been Removed
+	link.region.tag.COname1=
+	link.region.tag.COowner1=
+	RETURN 1
+
+	ELSEIF (<ARGCHK[24]>==1)
+	SRC.SYSMESSAGE <link.region.tag.COname2> Has Been Removed
+	link.region.tag.COname2=
+	link.region.tag.COowner2=
+	RETURN 1
+	ENDIF
+ELSE
+SRC.SYSMESSAGE Only the owner may edit the co-owner list
+RETURN 1
+ENDIF
+
+//page 4
+ONBUTTON=12
+IF (0<REGION.TAG.OWNER>==<SRC.UID>)|<SRC.ISGM>|(0<region.tag.COowner1>==<SRC.UID>)(0<region.tag.COowner2>==<SRC.UID>)
+	IF (<ARGCHK[25]>==1)
+	VAR.BAN=1
+	TARGET
+	ELSEIF (<ARGCHK[26]>==1)
+	VAR.BAN=2
+	TARGET
+	ELSEIF (<ARGCHK[27]>==1)
+	VAR.BAN=3
+	TARGET
+	ELSEIF (<ARGCHK[28]>==1)
+	VAR.BAN=4
+	TARGET
+	ELSEIF (<ARGCHK[29]>==1)
+	VAR.BAN=5
+	TARGET
+	ELSEIF (<ARGCHK[30]>==1)
+	VAR.BAN=6
+	TARGET
+	ELSEIF (<ARGCHK[31]>==1)
+	VAR.BAN=7
+	TARGET
+	ELSEIF (<ARGCHK[32]>==1)
+	VAR.BAN=8
+	TARGET
+	ELSEIF (<ARGCHK[33]>==1)
+	VAR.BAN=9
+	TARGET
+	ELSEIF (<ARGCHK[34]>==1)
+	VAR.BAN=10
+	TARGET
+
+	ELSEIF (<ARGCHK[35]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname1> Has been removed from the banned list.
+	LINK.REGION.TAG.banname1=
+	LINK.REGION.TAG.banned1=
+	RETURN 1
+
+	ELSEIF (<ARGCHK[36]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname2> Has been removed from the banned list
+	LINK.REGION.TAG.banname2=
+	LINK.REGION.TAG.banned2=
+
+	ELSEIF (<ARGCHK[37]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname3> Has been removed from the banned list
+	LINK.REGION.TAG.banname3=
+	LINK.REGION.TAG.banned3=
+
+	ELSEIF (<ARGCHK[38]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname4> Has been removed from the banned list
+	LINK.REGION.TAG.banname4=
+	LINK.REGION.TAG.banned4=
+
+	ELSEIF (<ARGCHK[39]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname5> Has been removed from the banned list
+	LINK.REGION.TAG.banname5=
+	LINK.REGION.TAG.banned5=
+
+	ELSEIF (<ARGCHK[40]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname6> Has been removed from the banned list
+	LINK.REGION.TAG.banname6=
+	LINK.REGION.TAG.banned6=
+
+	ELSEIF (<ARGCHK[41]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname7> Has been removed from the banned list
+	LINK.REGION.TAG.banname7=
+	LINK.REGION.TAG.banned7=
+
+	ELSEIF (<ARGCHK[42]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname8> Has been removed from the banned list
+	LINK.REGION.TAG.banname8=
+	LINK.REGION.TAG.banned8=
+
+	ELSEIF (<ARGCHK[43]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname9> Has been removed from the banned list
+	LINK.REGION.TAG.banname9=
+	LINK.REGION.TAG.banned9=
+
+	ELSEIF (<ARGCHK[44]>==1)
+	SRC.SYSMESSAGE <LINK.REGION.TAG.banname10> Has been removed from the banned list
+	LINK.REGION.TAG.banname10=
+	LINK.REGION.TAG.banned10=
+	ENDIF
+ELSE
+SRC.SYSMESSAGE Only owners and co-owners may edit the ban list.
+RETURN 1
+ENDIF
+
+[DIALOG d_no_own]
+100, 100
+PAGE 0
+resizepic 0 0 2600 350 200
+resizepic 75 20 3500 200 50
+text 100 35 0 0 //house name
+text 80 70 0 1 //owner
+button 150 150 249 248 1 0 0
+
+[DIALOG d_no_own TEXT]
+<NAME>
+Owned by: <LINK.TAG.OWNERNAME>
+
+
+[DIALOG d_no_own BUTTON]
+
+
+
+[DIALOG d_house_rename]               
+0, 0
+Page 0
+resizepic 190 175 2600 380 200                                
+resizepic 245 235 3000 270 22         
+text 240 200 995 0    //what                
+button 280 275 249 248 1 0 1        
+button 400 275 243 241 1 0 2        
+textentry 260 237 253 25 0 0 1       
+
+
+[DIALOG d_house_rename TEXT]
+What do you wish to name your house?
+<NAME>
+
+[DIALOG d_house_rename BUTTON]
+ONBUTTON=1
+NAME=<ARGTXT[0]>
+MESSAGE <NAME>
+ONBUTTON=2
+DIALOG d_house_menu
+
+[DIALOG d_redeed]
+100, 100
+PAGE 0
+resizepic 0 0 2600 350 200
+text 60 35 0 0
+text 110 55 0 1 
+button 73 150 243 241 1 0 2
+button 190 150 249 248 1 0 1
+
+[DIALOG d_redeed TEXT]
+Are you sure you want to destroy
+this building?
+
+[DIALOG d_redeed BUTTON]
+ONBUTTON=1
+REDEED
+SRC.SYSMESSAGE A deed for the building has been placed in your bank box.
+ONBUTTON=2
+DIALOG d_house_menu
+
+[DIALOG d_sign_change]
+0, 0
+PAGE 0
+resizepic 100 120 2600 400 350
+button 150 376 247 248 1 0 1          // Okay, button 0
+
+page 1
+text 250 150 0 0
+radio 140 203 208 209 0 0              // Sign Button
+tilepic 149 195 2980                   // Sign Picture
+radio 140 238 208 209 0 1              // Sign Button
+tilepic 149 230 2982                   // Sign Picture
+radio 140 273 208 209 0 2              // Sign Button
+tilepic 149 265 2984                   // Sign Picture
+radio 140 308 208 209 0 3              // Sign Button
+tilepic 149 300 2986                   // Sign Picture
+radio 195 203 208 209 0 4              // Sign Button
+tilepic 204 195 2988                   // Sign Picture
+radio 195 238 208 209 0 5              // Sign Button
+tilepic 204 230 2990                   // Sign Picture
+radio 195 273 208 209 0 6              // Sign Button
+tilepic 204 265 2992                   // Sign Picture
+radio 195 308 208 209 0 7              // Sign Button
+tilepic 204 300 2994                   // Sign Picture
+radio 250 203 208 209 0 8              // Sign Button
+tilepic 259 195 2996                   // Sign Picture
+radio 250 238 208 209 0 9              // Sign Button
+tilepic 259 230 2998                   // Sign Picture
+radio 250 273 208 209 0 10             // Sign Button
+tilepic 259 265 3000                   // Sign Picture
+radio 250 308 208 209 0 11             // Sign Button
+tilepic 259 300 3002                   // Sign Picture
+radio 305 203 208 209 0 12             // Sign Button
+tilepic 314 195 3004                   // Sign Picture
+radio 305 238 208 209 0 13             // Sign Button
+tilepic 314 230 3006                   // Sign Picture
+radio 305 273 208 209 0 14             // Sign Button
+tilepic 314 265 3008                   // Sign Picture
+radio 305 308 208 209 0 15             // Sign Button
+tilepic 314 300 3010                   // Sign Picture
+radio 360 203 208 209 0 16             // Sign Button
+tilepic 369 195 3012                   // Sign Picture
+radio 360 238 208 209 0 17             // Sign Button
+tilepic 369 230 3014                   // Sign Picture
+radio 360 273 208 209 0 18             // Sign Button
+tilepic 369 265 3016                   // Sign Picture
+radio 360 308 208 209 0 19             // Sign Button
+tilepic 369 300 3018                   // Sign Picture
+radio 415 203 208 209 0 20             // Sign Button
+tilepic 424 195 3020                   // Sign Picture
+radio 415 238 208 209 0 21     	       // Sign Button
+tilepic 424 230 3022                   // Sign Picture
+radio 415 273 208 209 0 22             // Sign Button
+tilepic 424 265 3024                   // Sign Picture
+radio 415 308 208 209 0 23             // Sign Button
+tilepic 424 300 3026                   // Sign Picture
+button 425 370 252 253 0 2             // Guild Section
+text 380 370 0 1
+
+page 2                                 // Page 2
+text 250 150 0 2
+radio 140 203 208 209 0 24             // Sign Button
+tilepic 149 195 3028                   // Sign Picture
+radio 140 238 208 209 0 25             // Sign Button
+tilepic 149 230 3030                   // Sign Picture
+radio 140 273 208 209 0 26             // Sign Button
+tilepic 149 265 3032                   // Sign Picture
+radio 140 308 208 209 0 27             // Sign Button
+tilepic 149 300 3034                   // Sign Picture
+radio 140 343 208 209 0 28             // Sign Button
+tilepic 149 335 3036                   // Sign Picture
+radio 195 203 208 209 0 29             // Sign Button
+tilepic 204 195 3038                   // Sign Picture
+radio 195 238 208 209 0 30             // Sign Button
+tilepic 204 230 3040                   // Sign Picture
+radio 195 273 208 209 0 31             // Sign Button
+tilepic 204 265 3042                   // Sign Picture
+radio 195 308 208 209 0 32             // Sign Button
+tilepic 204 300 3044                   // Sign Picture
+radio 195 343 208 209 0 33             // Sign Button
+tilepic 204 335 3046                   // Sign Picture
+radio 250 203 208 209 0 34             // Sign Button
+tilepic 259 195 3048                   // Sign Picture
+radio 250 238 208 209 0 35             // Sign Button
+tilepic 259 230 3050                   // Sign Picture
+radio 250 273 208 209 0 36             // Sign Button
+tilepic 259 265 3052                   // Sign Picture
+radio 250 308 208 209 0 37             // Sign Button
+tilepic 259 300 3054                   // Sign Picture
+radio 250 343 208 209 0 38             // Sign Button
+tilepic 259 335 3056                   // Sign Picture
+radio 305 203 208 209 0 39             // Sign Button
+tilepic 314 195 3058                   // Sign Picture
+radio 305 238 208 209 0 40             // Sign Button
+tilepic 314 230 3060                   // Sign Picture
+radio 305 273 208 209 0 41             // Sign Button
+tilepic 314 265 3062                   // Sign Picture
+radio 305 308 208 209 0 42             // Sign Button
+tilepic 314 300 3064                   // Sign Picture
+radio 305 343 208 209 0 43             // Sign Button
+tilepic 314 335 3066                   // Sign Picture
+radio 360 203 208 209 0 44             // Sign Button
+tilepic 369 195 3068                   // Sign Picture
+radio 360 238 208 209 0 45             // Sign Button
+tilepic 369 230 3070                   // Sign Picture
+radio 360 273 208 209 0 46             // Sign Button
+tilepic 369 265 3072                   // Sign Picture
+radio 360 308 208 209 0 47             // Sign Button
+tilepic 369 300 3074                   // Sign Picture
+radio 360 343 208 209 0 48             // Sign Button
+tilepic 369 335 3076                   // Sign Picture
+radio 415 203 208 209 0 49             // Sign Button
+tilepic 424 195 3078                   // Sign Picture
+radio 415 238 208 209 0 50             // Sign Button
+tilepic 424 230 3080                   // Sign Picture
+radio 415 273 208 209 0 51             // Sign Button
+tilepic 424 265 3082                   // Sign Picture
+radio 415 308 208 209 0 52             // Sign Button
+tilepic 424 300 3084
+radio 415 343 208 209 0 53             // Sign Button
+tilepic 424 335 3086
+button 425 370 250 251 0 1             // Guild Section
+text 380 370 0 3
+
+[DIALOG d_sign_change TEXT]
+Shop signs
+More
+Guild signs
+Back
+
+[DIALOG d_sign_change BUTTON]
+ONBUTTON=1
+IF (!<ARGCHK>)
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[0]>==1)
+DISPID=2980
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[1]>==1)
+DISPID=2982
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[2]>==1)
+DISPID=2984
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[3]>==1)
+DISPID=2986
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[4]>==1)
+DISPID=2988
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[5]>==1)
+DISPID=2990
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[6]>==1)
+DISPID=2992
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[7]>==1)
+DISPID=2994
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[8]>==1)
+DISPID=2996
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[9]>==1)
+DISPID=2998
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[10]>==1)
+DISPID=3000
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[11]>==1)
+DISPID=3002
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[12]>==1)
+DISPID=3004
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[13]>==1)
+DISPID=3006
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[14]>==1)
+DISPID=3008
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[15]>==1)
+DISPID=3010
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[16]>==1)
+DISPID=3012
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[17]>==1)
+DISPID=3014
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[18]>==1)
+DISPID=3016
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[19]>==1)
+DISPID=3018
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[20]>==1)
+DISPID=3020
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[21]>==1)
+DISPID=3022
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[22]>==1)
+DISPID=3024
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[23]>==1)
+DISPID=3026
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[24]>==1)
+DISPID=3028
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[25]>==1)
+DISPID=3030
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[26]>==1)
+DISPID=3032
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[27]>==1)
+DISPID=3034
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[28]>==1)
+DISPID=3036
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[29]>==1)
+DISPID=3038
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[30]>==1)
+DISPID=3040
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[31]>==1)
+DISPID=3042
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[32]>==1)
+DISPID=3044
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[33]>==1)
+DISPID=3046
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[34]>==1)
+DISPID=3048
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[35]>==1)
+DISPID=3050
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[36]>==1)
+DISPID=3052
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[37]>==1)
+DISPID=3054
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[38]>==1)
+DISPID=3056
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[39]>==1)
+DISPID=3058
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[40]>==1)
+DISPID=3060
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[41]>==1)
+DISPID=3062
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[42]>==1)
+DISPID=3064
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[43]>==1)
+DISPID=3066
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[44]>==1)
+DISPID=3068
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[45]>==1)
+DISPID=3070
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[46]>==1)
+DISPID=3072
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[47]>==1)
+DISPID=3074
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[48]>==1)
+DISPID=3076
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[49]>==1)
+DISPID=3078
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[50]>==1)
+DISPID=3080
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[51]>==1)
+DISPID=3082
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[52]>==1)
+DISPID=3084
+UPDATEX
+DIALOG d_house_menu
+ELSEIF (<ARGCHK[53]>==1)
+DISPID=3086
+UPDATEX
+DIALOG d_house_menu
+ENDIF
+
+
+[DIALOG d_house_help]
+0, 0
+PAGE 0
+resizepic 0 0 2620 350 350
+text 110 20 95 0
+button 108 291 1304 1305 1 0 0 //done
+
+Page 1
+text 50 40 455 1
+text 50 70 455 2
+text 50 100 455 3
+text 50 130 455 4
+text 50 160 455 5
+text 50 190 455 6
+text 50 220 455 7
+text 50 250 455 8
+button 30 43 2117 2118 0 2 0 //lock down
+button 30 73 2117 2118 0 3 0 //secure this
+button 30 103 2117 2118 0 4 0 //release this
+button 30 133 2117 2118 0 5 0 //remove this
+button 30 163 2117 2118 0 6 0 //flip this
+button 30 193 2117 2118 0 7 0 //ban thee
+button 30 223 2117 2118 0 8 0 //trash can
+button 30 253 2117 2118 0 9 0 //strongbox
+
+PAGE 2 //lock down
+HTMLGUMP 50 70 250 200 17 1 1
+text 85 40 455 9
+button 173 291 1301 1302 0 1 
+
+PAGE 3 //secure this
+HTMLGUMP 50 70 250 200 18 1 1
+text 90 40 455 10
+button 173 291 1301 1302 0 1 
+
+PAGE 4 //release this
+HTMLGUMP 50 70 250 200 19 1 1
+text 90 40 455 11
+button 173 291 1301 1302 0 1 
+
+PAGE 5 //remove this
+HTMLGUMP 50 70 250 200 20 1 1
+text 90 40 455 12
+button 173 291 1301 1302 0 1
+
+PAGE 6 //flip this
+HTMLGUMP 50 70 250 200 21 1 1
+text 100 40 455 13
+button 173 291 1301 1302 0 1
+
+PAGE 7 //ban thee
+HTMLGUMP 50 70 250 200 22 1 1
+text 65 40 455 14
+button 173 291 1301 1302 0 1
+
+PAGE 8 //trash can
+HTMLGUMP 50 70 250 200 23 1 1
+text 60 40 455 15
+button 173 291 1301 1302 0 1
+
+PAGE 9 //strongbox
+HTMLGUMP 50 70 250 200 24 1 1
+text 70 40 455 16
+button 173 291 1301 1302 0 1 
+
+[DIALOG d_house_help TEXT]
+House Commands
+I wish to lock this down
+I wish to secure this
+I wish to release this
+I wish to remove this
+I wish to flip this
+I ban thee / Remove thyself
+I wish to place a trash barrel
+I wish to place a strongbox
+
+//headers
+I wish to lock this down
+I wish to secure this
+I wish to release this
+I wish to remove this
+I wish to flip this
+I ban thee / Remove thyself
+I wish to place a trash barrel
+I wish to place a strongbox
+
+//htmlgumps
+//lock down 17
+To lock something down, say, "I wish to lock this down." This will change your pointer into a targeting cursor. All you have to do is target the item and you get the message that it has been locked down. Only the owner and co-owners may use this command.
+
+//secure this 18
+It is possible to lock down a container in such a way that it provides secure storage without locking down its contents. Only containers can be made secure. When you secure an item, it locks it down. The item gains a security setting that determines who can open the container. Anyone who can open the container can put items inside or take items out. To secure a container say, "I wish to secure this" and target the item. This will cause the item to be locked down and made secure. Only the owner and co-owners may use this command.
+
+//release this 19
+To unlock something, say "I wish to release this" and this unlocks the item, making it available to be moved. To make a container no longer secure say, "I wish to release this." The item will no longer be secure, or locked down. Only the owner and co-owners may use this command.
+
+//remove this 20
+Owners and co-owners may use this command to remove the houses garbage can if one is placed. Owners, co-owners, and friends may use this command to remove personal strongboxes if they have any placed. *NOTE...Owners and GMs can remove any strongbox placed in the house.*
+
+//flip this 21
+Persons who have strongboxes placed may use this command in order to flip their strongbox and help with proper placement.
+
+//I ban thee 22
+If one of your guests becomes unruly, you can revoke his access. The offender will be immediately ejected from the house and cannot re-enter. Their name will be added to the houses ban list which can be edited using the house sign. Only the owner and co-owners may use this command. To simply remove someone from the house without banning them you may use the command "Remove Thyself". The owner, co-owners, and friends may use this command.
+
+//trash barrel 23
+A portion of house maintenance is throwing out the unwanted trash. To place a trash container in your home say, "I wish to place a trash barrel." You may only place one trash barrel in your house at a time. To remove your trash container the house owner can use the command "I wish to remove this". Once a trash barrel has been removed you can place it again in any location of the house. Only the owner and co-owners may use this command.
+
+//strongbox 24
+A strongbox is a type of secure container that can only be accessed by the person who placed it. To place a strongbox in your home say, "I wish to place a strongbox." The owner, co-owners, and friends may place strongboxes. To remove a strongbox the person who placed it can use the command "I wish to remove this". Once a strongbox has been removed you can place it again in any location of the house. *Please note..."A house may only have a total of ten strongboxes placed inside it."*
+
+
+
+[DIALOG d_house_help BUTTON]
+
+[EOF]

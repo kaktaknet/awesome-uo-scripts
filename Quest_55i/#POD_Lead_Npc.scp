@@ -1,0 +1,499 @@
+﻿//================================================
+//              AN ONLINEUO PRODUCT
+//                 ADMIN PETER
+//================================================
+//Copy these into one SCP file
+//IN Game add a bulletin board for the whole region
+//ie. put one bulletin board on Britain bank
+//the double click the board to make it default
+//Add c_lead_quest\ C_lead_quest_female (or spawn point)
+//You now should see the Bulletin board has a new message posted
+//(TURN OFF GM!)
+
+
+//Revision:
+//Too bad i do not know how to check the NPC's direction relativly to the
+//board
+//Suggest that you can use face command the get the direction. Put them 
+//into one function and have the correct direct in the return statement
+//and I didnt put the distance check as well, since it causes error in 
+//SPHERE, but basically you need a QVAL statement:
+// "I am a <QVAL <UID.<REGION.BBSID>.DISTANCE>>30 ? A long way:A Short Way> from here."
+//Have fun editing this and learn sphere scripting!
+
+[ITEMDEF I_Lead_memory]
+ID      = I_memory
+Type    = T_EQ_Script
+Name    = Lead Memory
+Layer   = 30
+
+ON=@Create
+	MOREY	= 60
+        Timer   = 5	//5*60 = 300
+
+ON=@Timer
+
+	if ( <morey> == 0 )
+	        Cont.Say "I'm better look for another person who can take me to my destination. bye"
+	        Cont.Tag.Lead   = 0
+	        Cont.Action     = 0
+	        link.newitem    = I_Lead_memory_player
+	        link.act.timer  = 300
+	        link.act.p      = <link.p>
+	        link.act.layer  = 30
+	        link.act.update
+	        link.act.cont   = <link.UID>
+	        cont.homedist   = 1
+	        cont.home       = <P>
+	        return 0
+	else
+		MOREY	= <eval (<MOREY> +- 1) >
+		
+		
+		Cont.P	= <LINK.P>
+		Cont.update
+	
+		
+		timer	= 5
+		return 1
+	endif
+	
+		
+        
+[ITEMDEF I_Lead_memory_player]
+ID      = I_memory
+Type    = T_EQ_Script
+Name    = lead memory Player
+Layer   = 30
+
+ON=@Create
+        Timer   = 300   
+
+ON=@Timer
+        return 0
+
+[function f_get_destination]
+        DORAND 8
+                TAG.Destination = "Vesper"
+                TAG.Destination = "Britain"
+                TAG.Destination = "Minoc Territory"
+                TAG.Destination = "Yew"
+                TAG.Destination = "Trinsic"
+                TAG.Destination = "Despise Entryway"
+                TAG.Destination = "Monster Valley"
+                TAG.Destination = "Destard Entrance"
+        ENDDO
+        
+        if STRMATCH("<TAG.Destination>","<REGION.NAME>")
+                f_get_destination  //loop
+        endif
+
+[function postmsg_lead]
+                //lead quest
+                f_get_destination
+                
+                if ( <eval (strlen(<TAG.Destination>))> <= 0 )
+                	remove
+                	return 0
+                endif
+                
+                
+                if (0<Region.tag.bbsid>)
+                
+                	SPEECH  +spk_Lead_NPC
+			SPEECH  +spk_human_default
+			EVENTS  +e_Human_Environ
+			EVENTS	+e_Lead_NPC
+	
+                        Newitem         0eb0
+                        act.link        <UID>           
+                        Act.Author      = <ACT.LINK.NAME>
+                        Act.timer       = 3600
+                        
+                        Dorand 3
+                                getbody_1
+                                Getbody_2
+                                Getbody_3
+                        Enddo
+                        
+                        Act.Update
+                        Act.Cont        = <Region.tag.bbsid>
+                else
+                	remove
+                	return 0
+                endif
+                
+
+[function getbody_1]
+act.name        ="Hiring a guard"
+Act.Body.0      ="   Reputable Merchant seeks"
+Act.Body.1      ="able warriors to serve as"
+Act.Body.2      ="escort. Pay is SCALE; we"
+Act.Body.3      ="prefer to hire experienced"
+Act.Body.4      ="mercenaries"
+Act.Body.5      ="I can be found a short way"
+Act.Body.6      ="from here. When thou dost"
+Act.Body.7      ="find me, look at me close"
+Act.Body.8      ="to accept my request to go"
+Act.Body.9      ="to <TAG.Destination>"
+Act.Body.10     =" " 
+Act.Body.11     ="<NAME>"
+
+[function getbody_2]
+Act.name        = "Seeking Escort"
+Act.Body.0      = "  'Tis a terrible thing to be"
+Act.Body.1      = "a parent with an ungrateful"
+Act.Body.2      = "child! Yet such is my"
+Act.Body.3      = "situation."
+Act.Body.4      = "  Because of the poor"
+Act.Body.5      = "behavior and lack of"
+Act.Body.6      = "character of this offspring of"
+Act.Body.7      = "mine, I am obliged to foster"
+Act.Body.8      = "them away from home."
+Act.Body.9      = "  So Now I am in need of an"
+Act.Body.10     = "able escort of good character"
+Act.Body.11     = "who migh serve as role"
+Act.Body.12     = "model and who can ensure"
+Act.Body.13     = "that my child reaches their"
+Act.Body.14     = "destination safely"
+Act.Body.15     = "I can be found a short way"
+Act.Body.16     = "from here.When thou dost"
+Act.Body.17     = "find my child, look at"
+Act.Body.18     = "them closely to accept my"
+Act.Body.19     = "to <TAG.Destination> "
+Act.Body.20     = " " 
+Act.Body.21     ="<NAME>"
+
+[function getbody_3]
+act.name        ="Seeking Companion"
+Act.Body.0      ="   I am one of Load British's
+Act.Body.1      = "couriers, and I seek an able"
+Act.Body.2      = "warrior to escort me safely,"
+Act.Body.3      = "as the message I carry is"
+Act.Body.4      = "very important to our
+Act.Body.5      = "kingdom"
+Act.Body.6      = "I can be found a short way"
+Act.Body.7      = "from here. When thou dost"
+Act.Body.8      = "find me, look at me close"
+Act.Body.9      = "to accept my request to"
+Act.Body.10     = "<tag.destination>"
+Act.Body.11     = " "
+Act.Body.12     ="<NAME>"
+
+
+[Itemdef I_Mem_Post_timer]
+ID      =I_Memory
+Layer   =30
+Type    =T_EQ_SCRIPT
+Name    =Posting memory
+
+ON=@create
+	Timer	= 5
+	Layer	= 30
+
+ON=@Timer
+        Cont.postmsg_lead
+        RETURN 0
+
+
+[Speech spk_Lead_NPC]
+
+ON=I will take thee  //Agree
+	if ( <eval <src.FindID.I_Lead_Memory_Player.timer>> <= 0 )
+		src.findid.I_Lead_Memory_Player.remove
+	endif
+
+
+        if <SRC.FINDID.I_Lead_Memory_Player.Timer>> 0
+                SAY     "You need to rest about <EVAL <SRC.FINDID.I_Lead_Memory_Player.Timer>/60> Mins to take another quest"
+                return 1
+        endif
+        
+        if 0<tag.lead>  = 1  //already leading?
+                if <findid.i_lead_memory.link.uid>      = <SRC.UID> //Im leading by you
+                        SAY "You are already leading me"
+                        ACT     = <SRC.UID>
+                        action  = 100
+                else
+                        SAY "I am already going to my destination"
+                endif
+                return 1
+        else            
+                TAG.Lead        = 1  //Alread lead
+                Newitem         = I_Lead_memory
+                act.link        = <SRC.UID>
+                act.name        = <SRC.NAME>
+                act.timer       = 5
+                act.morey	= 180
+                act.layer       = 30
+                act.p           = <P>
+                act.morep       = <P>
+                act.update
+                act.cont        = <UID>
+                
+                SAY "Lead on! Payment will be made when we arrive in <TAG.Destination>"
+                ACT             = <SRC.UID>
+                ACTION          = 100
+        endif
+        
+ON=Destination
+        if 0<tag.lead>  = 1  //already leading?
+                if <findid.i_lead_memory.link.uid>      = <SRC.UID> //Im leading you
+                        SAY "We are going to The City of <TAG.Destination>"
+                else
+                        SAY "I am already going to my destination"
+                endif
+                return 1
+        else            
+                SpeechColor = 995
+                SAY "I'm looking to go to <TAG.Destination>. Will you take me?"
+        endif
+        return 1
+        
+ON=Here
+ON=Arrive
+        if strmatch("<tag.destination>","<region.name>")
+                SAY "We arrived! thanks very much, here is your payment"
+		src.f_virtue_exp_gain_compassion {10 20}
+                
+                If <eval rand(6)==1>
+                        SRC.newitem     = I_Gold
+                        SRC.ACT.Amount  = <EVAL RAND(200)> + <EVAL 2500>
+                        SRC.ACT.bounce
+                elseif <eval rand(3) == 1>
+                        SRC.Newitem     random_average_magic_loot
+                        SRC.ACT.Bounce
+                elseif <eval rand(5) == 1>
+                        SRC.Newitem     {RANDOM_SWORDTYPE_FORCE 1 RANDOM_SWORDTYPE_Power 1)
+                        SRC.ACT.Bounce
+                else
+                        SRC.newitem     = I_Gold
+                        SRC.ACT.Amount  = <EVAL RAND(200)> + <EVAL 1500>
+                        SRC.ACT.bounce
+                endif
+                        
+                
+                SRC.Newitem     = I_Lead_memory_player
+                SRC.act.Timer   = 300
+                SRC.ACT.Layer   = 30
+                SRC.ACT.P       = <SRC.P>
+                SRC.ACT.Update
+                SRC.ACT.Cont    = <SRC.UID>
+                
+                FINDID.i_lead_memory.remove
+                TAG.Lead        = 0
+                TAG.Destination = ""
+                Home            = <P>
+                ACT             = <UID>
+                ACTION          = 0
+                homedist        = 1
+                Remove
+                RETURN 1
+        Else
+                SAY "No, we arent quite there yet. Should we keep going?"
+                RETURN 1
+        endif
+        
+ON=Abandon
+        if 0<tag.lead>  = 1
+                if <findid.i_lead_memory.link.uid>      = <SRC.UID>
+                        Say     "Fine, thanks for leading me, Bye"
+                        GO <HOME>
+			Remove
+                		                        
+                        SRC.Newitem     = I_Lead_memory_player
+                        SRC.act.Timer   = 300
+                        SRC.ACT.Layer   = 30
+                        SRC.ACT.P       = <SRC.P>
+                        SRC.ACT.Update
+                        SRC.ACT.Cont    = <SRC.UID>
+                else
+                        Say "You are not leading me?"
+                endif
+        else
+                Hear "destination"
+        endif
+        return 1
+
+[Events e_Lead_NPC]
+ON=@NPCSEENEWPLAYER
+		SpeechColor = 03f
+		IF (STRMATCH("<SRC.ACCOUNT.LANG>","Chs"))
+			SAYU "<SRC.Name>，请问您能带我去 <TAG.Destination> 吗？ 我会给您不少报酬的!"
+		Else
+			SAY "Dear <SRC.Name>, Would you please take me to <TAG.Destination>? Payment will be made after we arrived!"
+		endif
+
+ON=@click
+        if <Distance> > 4
+                return 0
+        endif
+        
+        
+        if ( 0<src.tag.nomenu> == 1 )
+        	return 0
+        endif
+        
+        Src.act = <UID>
+        if 0<tag.lead>  = 1 //being leading
+                if <findid.i_lead_memory.link.uid> = <Src.uid>  //im leading by you
+                        Src.Dialog D_LEAD_QUEST
+                else
+                        Src.Dialog D_LEAD_QUEST_2                       
+                endif
+        else
+                Src.Dialog D_LEAD_QUEST_2
+        endif
+        		
+		
+[CHARDEF C_LEAD_QUEST]
+//Male GUARD With Bow
+NAME           =#NAMES_HUMANMALE
+ID             =C_MAN
+DAM            =45,60
+ARMOR          =80
+DESIRES        =i_gold
+SHELTER        =r_civilization,r_GUARDPOST
+AVERSIONS      =ANYONE WITH NEGATIVITY (SHOWS AGGRESION)
+
+CATEGORY       =POD Customs
+SUBSECTION     =Quests
+DESCRIPTION    =leading
+        
+ON=@Create
+        NPC=Brain_human
+        COLOR           =colors_skin
+        STR             ={351 365}
+        DEX             ={151 165}
+        INT             ={151 165}
+        ITEMNEWBIE      = i_lantern
+        ITEMNEWBIE      = i_Robe
+                Color   = Colors_all
+        ITEMNEWBIE      = I_Cape
+                Color   = Colors_All
+        ITEMNEWBIE      = random_male_hair
+                COLOR   = colors_hair
+        ITEMNEWBIE      = random_facial_hair
+                COLOR   = match_hair
+                
+              
+
+              
+ON=@NPCRESTOCK
+	ITEM            = I_Mem_Post_timer
+                TIMER   =5
+                LAYER   =30
+                
+  
+        
+ON=@NPCRefuseItem
+        SAY I cannot be bribed. be gone.
+        return 1
+        
+[CHARDEF C_LEAD_QUEST_FEMALE]
+//Male GUARD With Bow
+NAME           =#NAMES_HUMANMALE
+ID             =C_WOMAN
+DAM            =45,60
+ARMOR          =80
+DESIRES        =i_gold
+SHELTER        =r_civilization,r_GUARDPOST
+AVERSIONS      =ANYONE WITH NEGATIVITY (SHOWS AGGRESION)
+
+
+CATEGORY       =POD Customs
+SUBSECTION     =Quests
+DESCRIPTION    =leading female
+        
+ON=@Create
+        NPC=Brain_human
+        COLOR           =colors_skin
+        STR             ={351 365}
+        DEX             ={151 165}
+        INT             ={151 165}
+        ITEMNEWBIE      = i_lantern
+        ITEMNEWBIE      = i_Robe
+                Color   = Colors_all
+        ITEMNEWBIE      = I_Cape
+                Color   = Colors_All
+        ITEMNEWBIE      = random_female_hair
+                COLOR   = colors_hair
+
+
+       
+ON=@NPCRESTOCK
+ITEM            = I_Mem_Post_timer
+                TIMER   =5
+                LAYER   =30
+
+ON=@NPCRefuseItem
+        SAY I cannot be bribed. be gone.
+        return 1
+       
+[DIALOG D_LEAD_QUEST]
+50, 50
+PAGE 0
+resizepic 0 0 5054 220 130
+checkertrans  5 5 210 120
+text 45 15 1152 0
+text 45 40 1152 1
+text 45 65 1152 2
+text 45 90 1152 3
+button 10 15 4005 4006 1 0 1
+button 10 40 4005 4006 1 0 2
+button 10 65 4005 4006 1 0 3
+button 10 90 4005 4006 1 0 4
+
+[DIALOG D_LEAD_QUEST TEXT]
+Open PaperDoll
+Ask Destination
+Abandon Escort
+Arrived Destination
+
+[DIALOG D_LEAD_QUEST BUTTON]
+ON=0
+        
+ON=1   //Open PaperDoll
+        SRC.ACT.DCLICK
+ON=2
+        SRC.ACT.SRC     = <SRC.UID>
+        SRC.ACT.HEAR "destination"
+                
+ON=3
+        SRC.ACT.SRC     = <SRC.UID>
+        SRC.ACT.HEAR "abandon"
+ON=4
+        SRC.ACT.SRC     = <SRC.UID>
+        SRC.ACT.HEAR "arrive"
+        
+
+[DIALOG D_LEAD_QUEST_2]
+50, 50
+PAGE 0
+resizepic 0 0 5054 220 105
+checkertrans  5 5 210 95
+text 45 15 1152 0
+text 45 40 1152 1
+text 45 65 1152 2
+button 10 15 4005 4006 1 0 1
+button 10 40 4005 4006 1 0 2
+button 10 65 4005 4006 1 0 3
+
+[DIALOG D_LEAD_QUEST_2 TEXT]
+Open PaperDoll
+Ask Destination
+Accept Escort
+
+[DIALOG D_LEAD_QUEST_2 BUTTON]
+ON=0
+        
+ON=1   //Open PaperDoll
+        SRC.ACT.DCLICK
+ON=2
+        SRC.ACT.SRC     = <SRC.UID>
+        SRC.ACT.HEAR "destination"
+ON=3
+        SRC.ACT.SRC     = <SRC.UID>
+        SRC.ACT.HEAR "I will take thee"
+
+[EOF]

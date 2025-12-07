@@ -1,0 +1,956 @@
+//New Arrows, by Rudenid
+//Version 2.0.
+//Made for Sphere .55i.
+//Installation Difficulty: 4/10.
+//Dependencies: None.
+
+//Add the e_player_arrows event to your players! It will not work without this!
+//This also comes with an NPC that is capable of firing these arrows.
+//The ID of the NPC is c_h_evilarcher for a male evil archer, and c_h_evilarcher_f for a female.
+
+[EVENTS e_player_arrows]
+ON=@HitTry
+
+IF (<FINDLAYER.2>)
+	IF (<FINDLAYER.2.BASEID> = i_bow_enchanted)
+
+		IF !(<ISGM>)
+			IF (!(<RESTEST 1 t_new_arrow>) && !(<RESTEST 1 t_weapon_arrow>))
+				SYSMESSAGE You are out of ammunition.
+				ACTION=-1
+				RETURN 1
+			ELSE
+				IF (<FINDLAYER.2.MORE2> = 0)
+					FINDLAYER.2.MORE2=i_arrow
+				ENDIF
+
+				IF !(<FINDID.<FINDLAYER.2.MORE2>>)
+					FINDLAYER.2.MORE2=<FINDTYPE.t_new_arrow.BASEID>
+				ENDIF
+
+				IF ((<SRC.FINDID.i_fire_memory>)&&(i_arrow_fire = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>))
+					SYSMESSAGE This target is already on fire.
+					ACTION=-1
+					RETURN 1
+				ENDIF
+
+				CONSUME 1 <FINDLAYER.2.MORE2>
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@Hit
+IF (<FINDLAYER.2>)
+	IF (<FINDLAYER.2.BASEID> = i_bow_enchanted)
+		IF (i_arrow_fire = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=i_fx_fireball
+			ACT.MOREP=14,14,1
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ELSEIF (i_arrow_ice = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=0e5c
+			ACT.MOREP=14,14,0
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ELSEIF (i_arrow_light = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=01535
+			ACT.MOREP=14,14,0
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ENDIF
+
+		IF (i_arrow = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			RETURN 0
+		ELSEIF (i_arrow_blunt = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.ARROWDAMAGE=<EVAL (<TACTICS>/100) + (<ARCHERY>/200) + (<STR>/20)>
+			VAR.ARROWDAMAGE=<EVAL <EVAL {1 5}> + RAND(<EVAL <VAR.ARROWDAMAGE>>)>
+			IF (<EVAL <SRC.STAM> + <EVAL <VAR.ARROWDAMAGE>>> < 1)
+				SRC.STAM=1
+			ELSE
+				SRC.STAM=<EVAL <SRC.STAM> + <EVAL <VAR.ARROWDAMAGE>>>
+			ENDIF
+	
+			VAR.ARROWDAMAGE=
+
+			SRC.DAMAGE <EVAL {1 5}> 02 <UID>
+			SRC.SFX 309
+	
+			IF (<STAM> < 7)
+				STAM=1
+			ELSE
+				STAM=<EVAL <STAM>+(-7)>
+			ENDIF
+
+			RETURN 1
+		ELSEIF (i_arrow_poison = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			SRC.POISON <ARCHERY>
+		ELSEIF (i_arrow_silver = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.ARROWDAMAGE=<EVAL (<TACTICS>/100) + (<ARCHERY>/200) + (<STR>/20)>
+			VAR.ARROWDAMAGE=<EVAL (<EVAL {5 10}> + RAND(<SRC.ARMOR>) + RAND(<EVAL <VAR.ARROWDAMAGE>>))>
+			SRC.DAMAGE <EVAL <VAR.ARROWDAMAGE>> 0802 <UID>
+			VAR.ARROWDAMAGE=
+		ELSEIF (i_arrow_fire = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<SRC.ACT.UID>
+			SRC.SYSMESSAGE You were set on fire!
+			SRC.NEWITEM i_fire_memory
+			SRC.ACT.LINK=<UID>
+			SRC.ACT.EQUIP
+			SRC.ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+			RETURN 0
+		ELSEIF (i_arrow_ice = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			SRC.SFX 254
+			VAR.ARROWDAMAGE=<EVAL (<TACTICS>/100) + (<ARCHERY>/200) + (<STR>/20)>
+			VAR.ARROWDAMAGE=<EVAL (<EVAL {5 10}> + RAND(<EVAL <VAR.ARROWDAMAGE>>))>
+			SRC.DAMAGE <EVAL <VAR.ARROWDAMAGE>> 0284 <UID>
+			VAR.ARROWDAMAGE=
+			VAR.OLDACT=<SRC.ACT.UID>
+			SRC.FLAGS=<SRC.FLAGS>|statf_freeze
+			SRC.NEWITEM i_rune_paralyze
+			SRC.ACT.MOREX=s_paralyze
+			SRC.ACT.MOREY=100.0
+			SRC.ACT.LINK=<UID>
+			SRC.ACT.MORE2=1
+			SRC.ACT.TIMER={2 5}
+			SRC.ACT.TYPE=t_spell
+			SRC.ACT.LAYER=38
+			SRC.ACT.CONT=<SRC.UID>
+			SRC.ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+			SRC.EFFECT 3, 03779, 100, 100
+			RETURN 1
+		ELSEIF (i_arrow_light = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			SRC.SFX 489
+			VAR.OLDACT=<SRC.ACT.UID>
+			SRC.NEWITEM i_arrow_light_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+			RETURN 0
+		ELSEIF (i_arrow_darkness = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<SRC.ACT.UID>
+			SRC.NEWITEM i_arrow_darkness_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.MORE1=1
+			SRC.ACT.MORE2=200
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT.TIMER=1
+			SRC.NEWITEM i_arrow_darkness_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.MORE1=1
+			SRC.ACT.MORE2=200
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT.TIMER=1
+			SRC.NEWITEM i_arrow_darkness_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.MORE1=1
+			SRC.ACT.MORE2=200
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT.TIMER=1
+			SRC.NEWITEM i_arrow_darkness_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.MORE1=1
+			SRC.ACT.MORE2=200
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT.TIMER=1
+			SRC.ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+			RETURN 0
+
+		ELSE
+			RETURN 0
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@HitMiss
+
+IF (<FINDLAYER.2>)
+	IF (<FINDLAYER.2.BASEID> = i_bow_enchanted)
+		IF (i_arrow_fire = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=i_fx_fireball
+			ACT.MOREP=14,14,1
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ELSEIF (i_arrow_ice = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=0e5c
+			ACT.MOREP=14,14,0
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ENDIF
+	ENDIF
+ENDIF
+
+[TYPEDEF t_new_arrow]
+ON=@DClick
+IF !(<SRC.FINDLAYER.2>)
+SRC.SYSMESSAGE Equip the mytheril bow you want to use this with before double-clicking it.
+RETURN 1
+ENDIF
+
+IF !(<SRC.FINDLAYER.2.BASEID> = i_bow_enchanted)
+SRC.SYSMESSAGE Equip the mytheril bow you want to use this with before double-clicking it.
+RETURN 1
+ENDIF
+
+IF (<SRC.ARCHERY> < <MORE2>)
+SRC.SYSMESSAGE You are not a good enough archer to fire this type of arrow.
+RETURN 1
+ENDIF
+
+SRC.FINDLAYER.2.MORE2=<EVAL <BASEID>>
+SRC.SYSMESSAGE Your mytheril bow will now fire this type of arrow.
+RETURN 1
+
+[ITEMDEF i_arrow_silver]
+ID=i_arrow
+TYPE=t_new_arrow
+NAME=silver arrow%s
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=10 i_arrow_shaft, 10 i_feather, 1 i_ingot_silver
+VALUE=60
+
+ON=@Create
+AMOUNT=10
+ATTR=attr_decay
+COLOR=color_o_silver
+MORE2=65.0
+
+[ITEMDEF i_arrow_poison]
+ID=i_arrow
+TYPE=t_new_arrow
+NAME=poison arrow%s
+SKILLMAKE=85.0 BOWCRAFT, 45.0 POISONING
+RESOURCES=1 i_arrow_shaft, 1 i_feather, 1 i_potion_poisongreat
+VALUE=40
+
+ON=@Create
+ATTR=attr_decay
+COLOR=color_o_verite
+MORE2=70.0
+
+[ITEMDEF i_arrow_ice]
+ID=i_arrow
+NAME=ice arrow%s
+TYPE=t_new_arrow
+SKILLMAKE=90.0 BOWCRAFT
+RESOURCES=1 i_log_enchanted, 1 i_arrow_shaft, 1 i_feather, 1 i_blood_ice_dragon
+VALUE=70
+
+ON=@Create
+ATTR=attr_decay
+COLOR=color_o_mytheril
+MORE2=85.0
+
+[ITEMDEF i_arrow_blunt]
+ID=i_arrow
+NAME=blunt arrow%s
+TYPE=t_new_arrow
+SKILLMAKE=60.0 BOWCRAFT
+RESOURCES=1 i_arrow_shaft, 1 i_feather, 1 i_ingot_iron
+VALUE=10
+
+ON=@Create
+ATTR=attr_decay
+COLOR=1001
+MORE2=50.0
+
+[ITEMDEF i_arroweffect_equip]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Arrow Equip
+
+ON=@Create
+ATTR=attr_invis|attr_move_never
+
+ON=@Equip
+LINK.EFFECT 0, <MORE1>, <MOREX>, <MOREY>, <MOREZ>
+REMOVE
+RETURN 1
+
+[ITEMDEF i_arrow_fire]
+ID=i_arrow
+NAME=fire arrow%s
+TYPE=t_new_arrow
+SKILLMAKE=100.0 BOWCRAFT
+RESOURCES=1 i_log_enchanted, 1 i_feather_phoenix, 1 i_arrow_shaft, 1 i_feather
+VALUE=100
+
+ON=@Create
+ATTR=attr_decay
+COLOR=021
+MORE2=100.0
+
+[ITEMDEF i_arrow_darkness]
+ID=i_arrow
+NAME=darkness arrow%s
+TYPE=t_new_arrow
+VALUE=3000
+
+ON=@Create
+ATTR=attr_decay
+COLOR=color_o_blackrock
+MORE2=100.0
+
+[ITEMDEF i_arrow_darkness_effect]
+ID=i_fx_vortex_full
+NAME=vortex of darkness
+
+ON=@Create
+ATTR=attr_move_never|attr_magic
+MOREX=s_harm
+MOREY=100.0
+COLOR=color_o_blackrock
+
+ON=@Timer
+IF (<LINK.COLOR> = 01)
+IF (<LINK.HITS> < <LINK.STR>)
+LINK.HITS=<LINK.HITS> + <EVAL {1 4}>
+ENDIF
+ELSE
+IF (RAND(5) = 1)
+LINK.EFFECT 1,1
+LINK.DAMAGE <EVAL {2 5}> 024 <UID>
+ELSE
+LINK.EFFECT 3, i_fx_curse, 15, 15
+LINK.DAMAGE <EVAL {1 2}> 082 <UID>
+ENDIF
+ENDIF
+
+IF ((<P> != <LINK.P>)&&(<MORE1> = 0))
+P=<LINK.P>
+ENDIF
+
+IF (<MORE1> > 0)
+P=<LINK.P>
+MOVE <EVAL RAND(<EVAL <MORE1> + 3>) + (-2)>, <EVAL RAND(<EVAL <MORE1> + 3>) + (-2)>
+ENDIF
+IF (<MORE2> > 0)
+MORE2=<EVAL <MORE2> +(-1)>
+ELSE
+REMOVE
+RETURN 1
+ENDIF
+
+TIMERd=1
+RETURN 1
+
+[ITEMDEF i_arrow_light]
+ID=i_arrow
+NAME=light arrow%s
+TYPE=t_new_arrow
+VALUE=4000
+
+ON=@Create
+ATTR=attr_decay
+COLOR=color_o_gold
+MORE2=100.0
+
+ON=@Dropon_Ground
+SRC.NEWITEM i_light_source
+SRC.ACT.MOREZ=29
+SRC.ACT.ATTR=032
+SRC.ACT.LINK=<UID>
+SRC.ACT.P=<P>
+LINK=<SRC.ACT.UID>
+
+ON=@Pickup_Ground
+IF (<LINK.BASEID> = i_light_source)
+LINK.REMOVE
+LINK=-1
+ENDIF
+
+[ITEMDEF i_arrow_light_effect]
+ID=i_fire_column
+NAME=pillar of light
+
+ON=@Create
+ATTR=attr_move_never
+COLOR=0481
+MOREZ=29
+MORE2=200
+MOREX=s_flamestrike
+MOREY=150.0
+TIMERd=1
+
+ON=@Step
+IF (<SRC.UID> != <LINK.UID>)
+SRC.NEWITEM i_arrow_light_effect
+SRC.ACT.MORE2=<MORE2>
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.P=<SRC.P>
+LINK.RUN n
+LINK.RUN e
+LINK.RUN ne
+LINK.RUN se
+LINK.RUN sw
+LINK.RUN ne
+LINK.RUN s
+LINK.RUN w
+
+SRC.SYSMESSAGE You were set on fire!
+ENDIF
+
+ON=@Timer
+MORE2=<EVAL <MORE2> +(-1)>
+
+IF (<MORE2> < 1)
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<LINK.ISCHAR>)
+IF (<P> != <LINK.P>)
+LINK.DAMAGE <EVAL {2 5}> 094 <UID>
+P=<LINK.P>
+ENDIF
+ENDIF
+
+TIMERd=1
+
+RETURN 1
+
+[ITEMDEF i_feather_phoenix]
+ID=i_feather
+NAME=phoenix feather
+TYPE=t_feather
+
+ON=@Create
+ATTR=attr_decay
+COLOR=colors_lava
+
+[ITEMDEF i_blood_ice_dragon]
+ID=i_reag_dragon_blood
+NAME=ice dragon's blood
+
+ON=@Create
+COLOR=065
+
+[ITEMDEF i_arrow_fire_column]
+ID=i_fx_field_fire
+NAME=fire
+
+ON=@Create
+ATTR=attr_move_never
+MOREX=s_fire_field
+MOREY=50.0
+
+ON=@Step
+IF !(<SRC.FINDID.i_fire_memory>)
+	VAR.OLDACT=<SRC.ACT.UID>
+	SRC.SYSMESSAGE You were set on fire!
+	SRC.NEWITEM i_fire_memory
+	SRC.ACT.MORE2={2 4}
+	SRC.ACT.LINK=<UID>
+	SRC.ACT.EQUIP
+	SRC.ACT=<EVAL <VAR.OLDACT>>
+	VAR.OLDACT=
+ENDIF
+
+RETURN 0
+
+ON=@Timer
+REMOVE
+RETURN 1
+
+[ITEMDEF i_fire_memory]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Fire arrow burning
+
+ON=@Create
+ATTR=attr_move_never|attr_invis|attr_decay
+MORE2={5 10}
+
+ON=@Equip
+TIMER=1
+
+ON=@UnEquip
+IF (<CONT.HITS> = 0)
+VAR.OLDACT=<SRC.ACT.UID>
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER={300 600}
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE s
+SRC.ACT.TIMER={300 600}
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE n
+SRC.ACT.TIMER={300 600}
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE e
+SRC.ACT.TIMER={300 600}
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE w
+SRC.ACT.TIMER={300 600}
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE se
+SRC.ACT.TIMER={300 600}
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE sw
+SRC.ACT.TIMER={300 600}
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE ne
+SRC.ACT.TIMER={300 600}
+SRC.NEWITEM i_arrow_fire_column
+SRC.ACT.P=<SRC.P>
+SRC.ACT.MOVE nw
+SRC.ACT.TIMER={300 600}
+SRC.ACT=<EVAL <VAR.OLDACT>>
+ENDIF
+
+ON=@Timer
+IF (<MORE2> > 0)
+CONT.DAMAGE <EVAL {5 10}> 094 <LINK.UID>
+CONT.EFFECT 3, i_fire_column, 30, 30
+CONT.SFX 477
+MORE2=<EVAL <MORE2> +(-1)>
+TIMER=1
+ELSE
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_staff_summoner]
+//Summoner's Staff
+ID=i_staff_quarter
+NAME=Summoner's Staff
+TYPE=T_WEAPON_MACE_STAFF
+FLIP=1
+RESOURCES=40 i_log
+DAM=8,28
+//SPEED=50
+SKILL=MaceFighting
+REQSTR=30
+TWOHANDS=N
+WEIGHT=4
+CATEGORY=Provisions - Weapons
+SUBSECTION=Staves
+DESCRIPTION=Summoner's Staff
+
+ON=@Create
+HITPOINTS={31 60}
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE> = t_weapon_sword)
+IF (<SRC.LUMBERJACKING> < 90.0)
+SRC.SYSMESSAGE You are not a skilled enough lumberjack to chop this into enchanted logs.
+RETURN 1
+ENDIF
+
+SRC.NEWITEM i_log_enchanted
+SRC.ACT.AMOUNT=10
+SRC.ACT.BOUNCE
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_log_enchanted]
+ID=i_log
+NAME=Enchanted log%s
+TYPE=t_normal
+
+ON=@Create
+ATTR=attr_magic|attr_decay
+COLOR=colors_red
+
+[ITEMDEF i_yarn_enchanted]
+ID=i_yarn_ball
+NAME=Enchanted Yarn
+TYPE=t_normal
+
+ON=@Create
+ATTR=attr_magic|attr_decay
+COLOR=colors_red
+
+ON=@DClick
+IF (<SRC.TAILORING> < 90.0)
+SRC.SYSMESSAGE You are not a skilled enough tailor to make string out of this.
+RETURN 1
+ENDIF
+
+IF (<AMOUNT> > 4)
+SRC.SYSMESSAGE You roll the yarn up into string.
+SRC.NEWITEM i_string_enchanted
+SRC.ACT.BOUNCE
+IF (<AMOUNT> = 5)
+AMOUNT=1
+REMOVE
+ELSE
+AMOUNT=<EVAL <AMOUNT> +(-5)>
+ENDIF
+ELSE
+SRC.SYSMESSAGE You need 5 yarn to make string.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_string_enchanted]
+ID=i_string
+NAME=Enchanted String
+TYPE=t_normal
+
+ON=@Create
+ATTR=attr_magic|attr_decay
+
+[ITEMDEF i_bow_enchanted]
+ID=i_bow
+NAME=Mytheril Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=100.0 BOWCRAFT
+RESOURCES=100 I_LOG, 10 i_log_enchanted, 1 i_string_enchanted, 1 i_ingot_mytheril
+VALUE=10000
+WEIGHT=5
+DAM=9,21
+//SPEED=20
+SKILL=Archery
+REQSTR=20
+TWOHANDS=Y
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows
+DESCRIPTION=Mytheril Bow
+
+TDATA3=0
+TDATA4=i_arrow_x
+
+ON=@Create
+HITPOINTS={41 70}
+COLOR=color_o_mytheril
+
+[EVENTS e_newarrowhits]
+ON=@HitTry
+
+IF (<FINDLAYER.2>)
+	IF (<FINDLAYER.2.BASEID> = i_bow_enchanted)
+		DORAND 10
+			FINDLAYER.2.MORE2=i_arrow_silver
+			FINDLAYER.2.MORE2=i_arrow_silver
+			FINDLAYER.2.MORE2=i_arrow_silver
+			FINDLAYER.2.MORE2=i_arrow_poison
+			FINDLAYER.2.MORE2=i_arrow_poison
+			FINDLAYER.2.MORE2=i_arrow_poison
+			FINDLAYER.2.MORE2=i_arrow_poison
+			FINDLAYER.2.MORE2=i_arrow_ice
+			FINDLAYER.2.MORE2=i_arrow_blunt
+			FINDLAYER.2.MORE2=i_arrow_fire
+		ENDDO
+
+		IF ((<SRC.FINDID.i_fire_memory>)&&(i_arrow_fire = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>))
+			SYSMESSAGE This target is already on fire.
+			ACTION=-1
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@HitMiss
+
+IF (<FINDLAYER.2>)
+	IF (<FINDLAYER.2.BASEID> = i_bow_enchanted)
+		IF (i_arrow_fire = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=i_fx_fireball
+			ACT.MOREP=14,14,1
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ELSEIF (i_arrow_ice = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=0e5c
+			ACT.MOREP=14,14,0
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@Hit
+IF (<FINDLAYER.2>)
+	IF (<FINDLAYER.2.BASEID> = i_bow_enchanted)
+		IF (i_arrow_fire = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=i_fx_fireball
+			ACT.MOREP=14,14,1
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ELSEIF (i_arrow_ice = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=0e5c
+			ACT.MOREP=14,14,0
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ELSEIF (i_arrow_light = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<ACT.UID>
+			NEWITEM i_arroweffect_equip
+			ACT.LINK=<SRC.UID>
+			ACT.MORE1=01535
+			ACT.MOREP=14,14,0
+			EQUIP <ACT.UID>
+			ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+		ENDIF
+
+		IF (i_arrow = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			RETURN 0
+		ELSEIF (i_arrow_blunt = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.ARROWDAMAGE=<EVAL (<TACTICS>/100) + (<ARCHERY>/200) + (<STR>/20)>
+			VAR.ARROWDAMAGE=<EVAL <EVAL {1 5}> + RAND(<EVAL <VAR.ARROWDAMAGE>>)>
+
+			IF (<EVAL <VAR.ARROWDAMAGE> < 1)
+				VAR.ARROWDAMAGE=<EVAL <VAR.ARROWDAMAGE> * -1>
+			ENDIF
+
+			IF (<EVAL <SRC.STAM> + <EVAL <VAR.ARROWDAMAGE>>> < 1)
+				SRC.STAM=1
+			ELSE
+				SRC.STAM=<EVAL <SRC.STAM> + <EVAL <VAR.ARROWDAMAGE>>>
+			ENDIF
+	
+			VAR.ARROWDAMAGE=
+
+			SRC.DAMAGE <EVAL {1 5}> 02 <UID>
+			SRC.SFX 309
+	
+			IF (<STAM> < 7)
+				STAM=1
+			ELSE
+				STAM=<EVAL <STAM>+(-7)>
+			ENDIF
+
+			RETURN 1
+		ELSEIF (i_arrow_poison = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			SRC.POISON <ARCHERY>
+		ELSEIF (i_arrow_silver = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.ARROWDAMAGE=<EVAL (<TACTICS>/100) + (<ARCHERY>/200) + (<STR>/20)>
+			VAR.ARROWDAMAGE=<EVAL (<EVAL {5 10}> + RAND(<SRC.ARMOR>) + RAND(<EVAL <VAR.ARROWDAMAGE>>))>
+			SRC.DAMAGE <EVAL <VAR.ARROWDAMAGE>> 0802 <UID>
+			VAR.ARROWDAMAGE=
+		ELSEIF (i_arrow_fire = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<SRC.ACT.UID>
+			SRC.SYSMESSAGE You were set on fire!
+			SRC.NEWITEM i_fire_memory
+			SRC.ACT.LINK=<UID>
+			SRC.ACT.EQUIP
+			SRC.ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+			RETURN 0
+		ELSEIF (i_arrow_ice = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			SRC.SFX 254
+			VAR.ARROWDAMAGE=<EVAL (<TACTICS>/100) + (<ARCHERY>/200) + (<STR>/20)>
+			VAR.ARROWDAMAGE=<EVAL (<EVAL {5 10}> + RAND(<EVAL <VAR.ARROWDAMAGE>>))>
+			SRC.DAMAGE <EVAL <VAR.ARROWDAMAGE>> 0284 <UID>
+			VAR.ARROWDAMAGE=
+			VAR.OLDACT=<SRC.ACT.UID>
+			SRC.FLAGS=<SRC.FLAGS>|statf_freeze
+			SRC.NEWITEM i_rune_paralyze
+			SRC.ACT.MOREX=s_paralyze
+			SRC.ACT.MOREY=100.0
+			SRC.ACT.LINK=<UID>
+			SRC.ACT.MORE2=1
+			SRC.ACT.TIMER={2 5}
+			SRC.ACT.TYPE=t_spell
+			SRC.ACT.LAYER=38
+			SRC.ACT.CONT=<SRC.UID>
+			SRC.ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+			SRC.EFFECT 3, 03779, 100, 100
+			RETURN 1
+		ELSEIF (i_arrow_light = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			SRC.SFX 489
+			VAR.OLDACT=<SRC.ACT.UID>
+			SRC.NEWITEM i_arrow_light_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+			RETURN 0
+		ELSEIF (i_arrow_darkness = <SERV.ITEMDEF.<FINDLAYER.2.MORE2>.BASEID>)
+			VAR.OLDACT=<SRC.ACT.UID>
+			SRC.NEWITEM i_arrow_darkness_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.MORE1=1
+			SRC.ACT.MORE2=200
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT.TIMER=1
+			SRC.NEWITEM i_arrow_darkness_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.MORE1=1
+			SRC.ACT.MORE2=200
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT.TIMER=1
+			SRC.NEWITEM i_arrow_darkness_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.MORE1=1
+			SRC.ACT.MORE2=200
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT.TIMER=1
+			SRC.NEWITEM i_arrow_darkness_effect
+			SRC.ACT.LINK=<SRC.UID>
+			SRC.ACT.MORE1=1
+			SRC.ACT.MORE2=200
+			SRC.ACT.P=<SRC.P>
+			SRC.ACT.TIMER=1
+			SRC.ACT=<EVAL <VAR.OLDACT>>
+			VAR.OLDACT=
+			RETURN 0
+
+		ELSE
+			RETURN 0
+		ENDIF
+	ENDIF
+ENDIF
+
+[CHARDEF c_h_evilarcher]
+DEFNAME=c_h_evilarcher
+ID=c_man
+NAME=#NAMES_HUMANMALE the Evil Ranger
+DESIRES=i_gold,e_notoriety
+
+TSPEECH=jobRanger
+TSPEECH=spk_needs
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+TEVENTS=e_newarrowhits
+
+ON=@Create
+COLOR=colors_skin
+STR={185 235}
+INT={15 38}
+DEX={115 130}
+
+KARMA={-5000 -4000}
+FAME={5000 8000}
+ARCHERY={100.0 120.0}
+TACTICS={100.0 120.0}
+WRESTLING={47.6 51.4}
+
+NPC=brain_human
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRestock
+ITEM=i_chainmail_tunic
+ITEM=i_chainmail_leggings
+ITEM=i_chainmail_coif
+ITEM=i_ringmail_gloves
+ITEM=i_ringmail_sleeves
+
+ITEMNEWBIE=i_bow_enchanted
+COLOR=0
+NAME=a bow
+//ITEM=i_shirt_fancy
+//COLOR=colors_green
+//ITEM=random_pants
+//COLOR=colors_brown
+//ITEM=random_footwear
+//COLOR=colors_neutral
+ITEM=i_gold,{350 600}
+
+CATEGORY=Civilized
+SUBSECTION=Outlaws & Rogues
+DESCRIPTION=Evil Archer (Male)
+
+
+[CHARDEF c_h_evilarcher_f]
+DEFNAME=c_h_evilarcher_f
+ID=c_woman
+NAME=#NAMES_HUMANFEMALE the Evil Ranger
+DESIRES=i_gold,e_notoriety
+
+TSPEECH=jobRanger
+TSPEECH=spk_needs
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+TEVENTS=e_newarrowhits
+
+ON=@Create
+COLOR=colors_skin
+STR={185 235}
+INT={15 38}
+DEX={115 130}
+
+KARMA={-5000 -4000}
+FAME={5000 8000}
+ARCHERY={100.0 120.0}
+TACTICS={100.0 120.0}
+WRESTLING={47.6 51.4}
+
+NPC=brain_human
+
+ITEMNEWBIE=random_female_hair
+COLOR=colors_hair
+
+ON=@NPCRestock
+ITEM=i_chainmail_tunic
+ITEM=i_chainmail_leggings
+ITEM=i_chainmail_coif
+ITEM=i_ringmail_gloves
+ITEM=i_ringmail_sleeves
+
+ITEMNEWBIE=i_bow_enchanted
+COLOR=0
+NAME=a bow
+//ITEM=i_shirt_fancy
+//COLOR=colors_green
+//ITEM=random_pants
+//COLOR=colors_brown
+//ITEM=random_footwear
+//COLOR=colors_neutral
+ITEM=i_gold,{350 600}
+
+CATEGORY=Civilized
+SUBSECTION=Outlaws & Rogues
+DESCRIPTION=Evil Archer (Female)

@@ -1,0 +1,68 @@
+[EVENTS e_lock_doors]
+//-------------------------------------------------------------------//
+//
+//    Open House Door from Inside / House Owners open with no key
+//
+//------------------------------------------------------------------//
+
+ON=@ItemDClick
+IF (<src.act.type> == t_door_locked)
+	IF (<src.region.flags>==01192) || (<src.region.flags>==01092) //Allows anyone to leave house
+		IF ((<SRC.ACT.P.Y> - <SRC.P.Y>) == 1) && (<SRC.ACT.P.Z>==<SRC.P.Z>) && ((<SRC.ACT.P.X>) - <SRC.P.X> == 1) 
+			SRC.ACT.TYPE t_door_open
+			VAR.ACTP <SRC.ACT.P> //doors P
+			VAR.ACTL <SRC.ACT.UID>  // Doors link
+			
+			SRC.NEWITEM i_door_close
+			SRC.ACT.P <VAR.ACTP>
+			SRC.ACT.LINK <VAR.ACTL>
+			
+			VAR.ACTP //debug
+			VAR.ACTL //debug
+
+		ELIF ((<SRC.P.X> - <SRC.ACT.P.X>) == 1) && (<SRC.ACT.P.Z>==<SRC.P.Z>) && (<SRC.P.Y> == <SRC.ACT.P.Y>)
+			SRC.ACT.TYPE t_door_open
+			VAR.ACTP <SRC.ACT.P> //doors P
+			VAR.ACTL <SRC.ACT.UID>  // Doors link
+			
+			SRC.NEWITEM i_door_close
+			SRC.ACT.P <VAR.ACTP>
+			SRC.ACT.LINK <VAR.ACTL>
+
+			VAR.ACTP //debug
+			VAR.ACTL //debug
+
+		ELIF (<SRC.UID> == <SRC.UID.<REGION.UID>.MORE1>) // ||  (<SRC.ISCoOwner>) <--- Your CooWner check here
+			SRC.ACT.TYPE t_door_open
+			VAR.ACTP <SRC.ACT.P> //doors P
+			VAR.ACTL <SRC.ACT.UID>  // Doors link
+			
+			SRC.NEWITEM i_door_close
+			SRC.ACT.P <VAR.ACTP>
+			SRC.ACT.LINK <VAR.ACTL>
+
+			VAR.ACTP //debug
+			VAR.ACTL //debug
+
+		ENDIF
+	ELSE
+			RETURN 0
+	ENDIF
+ENDIF
+
+
+[ITEMDEF i_door_close]
+ID=i_worldgem_bit
+name=door close
+TYPE=T_EQ_SCRIPT 
+
+on=@create 
+attr=attr_invis 
+TIMER=1
+
+ON=@TIMER
+LINK.TYPE = t_door_locked
+REMOVE
+RETURN 1
+
+[EOF]

@@ -1,0 +1,133 @@
+// Scripted by Exercisto
+
+// Includes: 2 Rare Dye Tubs, one WITH (I_RARE_DYE_TUB_W_CHARGES) and one WITHOUT (I_RARE_DYE_TUB) Charges.
+
+// Note: You'll probably have to change the COLORS under ON=@CREATE
+
+[ITEMDEF I_RARE_DYE_TUB]
+ID=I_DYE_TUB
+NAME=Rare Dye Tub
+TYPE=T_EQ_SCRIPT
+WEIGHT=5
+
+ON=@CREATE
+COLOR={0a62 0870 0480 0793 0794 0795 0796 0797 0798 0799} // Add your own colors, you probably don't have my Hues (Blizzards).
+
+ON=@CLICK
+MESSAGE @0480 [Infinite Charges]
+MESSAGE @07a1 Rare Dye Tub
+RETURN 1
+
+ON=@DCLICK
+TARGET
+SRC.SYSMESSAGE @07a1 What would you like to dye?
+RETURN 1
+
+ON=@TARGON_GROUND
+DORAND 3
+SRC.SYSMESSAGE @07a1 Greenpeace wouldn't agree with dying the ground.
+SRC.SYSMESSAGE @07a1 I doubt you want to dye the ground. Get a better mouse.
+SRC.SYSMESSAGE @07a1 Looks like something moved. Or you were really aiming at the ground...
+ENDDO
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.CONT.UID>!=<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE @07a1 The <SRC.TARG.NAME> must be in your pack.
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==T_CLOTHING) || (<SRC.TARG.BASEID>==I_BAG)
+SRC.SYSMESSAGE @07a1 You can't dye that.
+RETURN 1
+ENDIF
+
+SRC.TARG.COLOR=<COLOR>
+SRC.TARG.UPDATE
+SRC.SYSMESSAGE @07a1 You succesfully dye the <SRC.TARG.NAME>.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.UID>==<SRC.UID>
+SRC.FINDLAYER.11.COLOR=<COLOR>
+SRC.FINDLAYER.16.COLOR=<COLOR>
+SRC.SYSMESSAGE @07a1 You succesfully dye your hair.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @07a1 You can't dye that.
+RETURN 1
+ENDIF
+
+CATEGORY=Custom Items
+SUBSECTION=Colors and that Crap
+DESCRIPTION=Rare Dye Tub w/o Charges
+
+[ITEMDEF I_RARE_DYE_TUB_W_CHARGES] // If you're going to use this, I'd change the ITEMDEF if I were you.
+ID=I_DYE_TUB
+NAME=Rare Dye Tub
+TYPE=T_EQ_SCRIPT
+WEIGHT=5
+
+ON=@CREATE
+COLOR={0a62 0870 0480 0793 0794 0795 0796 0797 0798 0799} // Add your own colors, you probably don't have my Hues (Blizzards).
+MORE={8 13}
+NAME=Rare Dye Tub [<EVAL <MORE>> Charges]
+
+ON=@CLICK
+NAME=Rare Dye Tub [<EVAL <MORE>> Charges]
+MESSAGE @0480 [<EVAL <MORE>> Charges]
+MESSAGE @07a1 Rare Dye Tub
+RETURN 1
+
+ON=@DCLICK
+IF (<MORE> < 1)
+SRC.SYSMESSAGE @07a1 This Rare Dye Tub doesn't have any Charges left.
+RETURN 1
+ENDIF
+
+TARGET
+SRC.SYSMESSAGE @07a1 What would you like to dye?
+RETURN 1
+
+ON=@TARGON_GROUND
+DORAND 3
+SRC.SYSMESSAGE @07a1 Greenpeace wouldn't agree with dying the ground.
+SRC.SYSMESSAGE @07a1 I doubt you want to dye the ground. Get a better mouse.
+SRC.SYSMESSAGE @07a1 Looks like something moved. Or you were really aiming at the ground...
+ENDDO
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.CONT.UID>!=<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE @07a1 The <SRC.TARG.NAME> must be in your pack.
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==T_CLOTHING) || (<SRC.TARG.BASEID>==I_BAG)
+SRC.SYSMESSAGE @07a1 You can't dye that.
+RETURN 1
+ENDIF
+
+SRC.TARG.COLOR=<COLOR>
+SRC.TARG.UPDATE
+MORE=<MORE>+-1
+SRC.SYSMESSAGE @07a1 You succesfully dye the <SRC.TARG.NAME>.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.UID>==<SRC.UID>
+SRC.FINDLAYER.11.COLOR=<COLOR>
+SRC.FINDLAYER.16.COLOR=<COLOR>
+MORE=<MORE>+-1
+SRC.SYSMESSAGE @07a1 You succesfully dye your hair.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @07a1 You can't dye that.
+RETURN 1
+ENDIF
+
+CATEGORY=Custom Items
+SUBSECTION=Colors and that Crap
+DESCRIPTION=Rare Dye Tub w/ Charges
+
+[EOF]

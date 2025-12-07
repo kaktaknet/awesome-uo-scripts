@@ -1,0 +1,2204 @@
+/////////////////////////////////////////////////////////////////////////////////
+//Skill swap stone- By: Maul 
+//Please do not remove this header--
+//Notes: This stone will let a player sellect any skill that has 100
+//and take it back down to 0, and then let them add 50 to any other
+//skill, so it allows them to transfer 100 of one skill to 50 of another.
+//The stone will not add skill over 90, so if the skill to be added to
+//is greater than 40 eg 41 or higher then the stone simply takes that skill
+//to a max of 90. The stone has a timer that links to the player and stops
+//them from using it for 30 days, then they will see a message informing
+//them that it is ok to use the stone again. So basically usage is once a month.
+///////////////////////////////////////////////////////////////////////////////////
+
+
+[ITEMDEF I_skill_swap_stone]
+DEFNAME=i_skill_swap_stone
+ID=0ed4
+TYPE=00
+CATEGORY=Maul
+SUBSECTION=Stones
+DESCRIPTION=Skill Swap Stone
+
+ON=@CREATE
+COLOR=00022
+ATTR=8010
+NAME=Skill Swap Stone (only usable once every 30 days) [double click]
+
+///////////////////////////////////////////////////////////////////////////
+on=@dclick 								///
+IF (0<SRC.TAG.SS> ==1)                                                   ///
+SRC.SAY It has not been 30 days since you last used this stone. 	///
+RETURN 1 								///
+									///
+ELSE 									///
+SRC.SFX 555								///
+DIALOG d_x_skills_swap_stone1						///
+RETURN 1
+									///
+///////////////////////////////////////////////////////////////////////////
+
+[DIALOG d_x_skills_swap_stone1]
+0,0                                    	// Position
+resizepic 50 90 2600 560 300          	// Curved Grey background 
+
+////////////////////////////////////////////////////////////////////
+page 0                                 	// Page 0
+resizepic 66 162 5100 528 25          	// Square Grey box
+button 285 366 247 248 1 0 0           	// Okay, button 0
+
+////Headings/////////////////////////////////////////////////////////
+text 200 120 455 0			// menu heading
+text 150 140 0 1
+
+text 80 165 0 2                       	// Skills 1
+text 180 165 0 3                       	// Skills 2
+text 280 165 0 4                       	// Skills 3
+text 380 165 0 5                       	// Skills 4
+text 480 165 0 6                       	// Skills 5
+
+button 150 166 5209 5003 0 1 1         	// Skills 1
+button 250 166 5209 5003 0 2 2         	// Skills 2
+button 350 166 5209 5003 0 3 3         	// Skills 3
+button 450 166 5209 5003 0 4 4         	// Skills 4
+button 550 166 5209 5003 0 5 5         	// Skills 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                 	// Skills 1
+
+/////////menu text and screen location
+
+text 95 200 0 7
+croppedtext 250 200 110 17 455 8
+text 95 230 0 9
+croppedtext 250 230 110 17 455 10
+text 95 260 0 11
+croppedtext 250 260 110 17 455 12
+text 95 290 0 13
+croppedtext 250 290 110 17 455 14
+text 95 320 0 15
+croppedtext 250 320 110 17 455 16
+text 330 200 0 17
+croppedtext 485 200 110 17 455 18
+text 330 230 0 19
+croppedtext 485 230 110 17 455 20
+text 330 260 0 21
+croppedtext 485 260 110 17 455 22
+text 330 290 0 23
+croppedtext 485 290 110 17 455 24
+text 330 320 0 25
+croppedtext 485 320 110 17 455 26
+
+////////Targets skills//////////////////
+
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 6
+button 70 230 2714 2714 1 0 7 		
+button 70 260 2714 2714 1 0 8
+button 70 290 2714 2714 1 0 9 	
+button 70 320 2714 2714 1 0 10
+button 305 200 2714 2714 1 0 11 	
+button 305 230 2714 2714 1 0 12
+button 305 260 2714 2714 1 0 13 	
+button 305 290 2714 2714 1 0 14
+button 305 320 2714 2714 1 0 15 	
+
+/////////////////////////////////////////////////////////////////////
+page 2                                 	// Skills 2
+
+/////////menu text and screen location
+
+text 95 200 0 27
+croppedtext 250 200 110 17 455 28
+text 95 230 0 29
+croppedtext 250 230 110 17 455 30
+text 95 260 0 31
+croppedtext 250 260 110 17 455 32
+text 95 290 0 33
+croppedtext 250 290 110 17 455 34
+text 95 320 0 35
+croppedtext 250 320 110 17 455 36
+text 330 200 0 37
+croppedtext 485 200 110 17 455 38
+text 330 230 0 39
+croppedtext 485 230 110 17 455 40
+text 330 260 0 41
+croppedtext 485 260 110 17 455 42
+text 330 290 0 43
+croppedtext 485 290 110 17 455 44
+text 330 320 0 45
+croppedtext 485 320 110 17 455 46
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 16
+button 70 230 2714 2714 1 0 17 		
+button 70 260 2714 2714 1 0 18
+button 70 290 2714 2714 1 0 19 	
+button 70 320 2714 2714 1 0 20
+button 305 200 2714 2714 1 0 21 	
+button 305 230 2714 2714 1 0 22
+button 305 260 2714 2714 1 0 23 	
+button 305 290 2714 2714 1 0 24
+button 305 320 2714 2714 1 0 25 	
+
+///////////////////////////////////////////////////////////////////////
+page 3                                 	// Skills 3
+
+/////////menu text and screen location
+
+text 95 200 0 47
+croppedtext 250 200 110 17 455 48
+text 95 230 0 49
+croppedtext 250 230 110 17 455 50
+text 95 260 0 51
+croppedtext 250 260 110 17 455 52
+text 95 290 0 53
+croppedtext 250 290 110 17 455 54
+text 95 320 0 55
+croppedtext 250 320 110 17 455 56
+text 330 200 0 57
+croppedtext 485 200 110 17 455 58
+text 330 230 0 59
+croppedtext 485 230 110 17 455 60
+text 330 260 0 61
+croppedtext 485 260 110 17 455 62
+text 330 290 0 63
+croppedtext 485 290 110 17 455 64
+text 330 320 0 65
+croppedtext 485 320 110 17 455 66	
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 26
+button 70 230 2714 2714 1 0 27 		
+button 70 260 2714 2714 1 0 28
+button 70 290 2714 2714 1 0 29 	
+button 70 320 2714 2714 1 0 30
+button 305 200 2714 2714 1 0 31 	
+button 305 230 2714 2714 1 0 32
+button 305 260 2714 2714 1 0 33 	
+button 305 290 2714 2714 1 0 34
+button 305 320 2714 2714 1 0 35 	
+
+///////////////////////////////////////////////////////////////////////
+page 4                                 	// Skills 4
+
+/////////menu text and screen location
+
+text 95 200 0 67
+croppedtext 250 200 110 17 455 68
+text 95 230 0 69
+croppedtext 250 230 110 17 455 70
+text 95 260 0 71
+croppedtext 250 260 110 17 455 72
+text 95 290 0 73
+croppedtext 250 290 110 17 455 74
+text 95 320 0 75
+croppedtext 250 320 110 17 455 76
+text 330 200 0 77
+croppedtext 485 200 110 17 455 78
+text 330 230 0 79
+croppedtext 485 230 110 17 455 80
+text 330 260 0 81
+croppedtext 485 260 110 17 455 82
+text 330 290 0 83
+croppedtext 485 290 110 17 455 84
+text 330 320 0 85
+croppedtext 485 320 110 17 455 86			
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 36
+button 70 230 2714 2714 1 0 37 		
+button 70 260 2714 2714 1 0 38
+button 70 290 2714 2714 1 0 39 	
+button 70 320 2714 2714 1 0 40
+button 305 200 2714 2714 1 0 41 	
+button 305 230 2714 2714 1 0 42
+button 305 260 2714 2714 1 0 43 	
+button 305 290 2714 2714 1 0 44
+button 305 320 2714 2714 1 0 45 	
+
+///////////////////////////////////////////////////////////////////////
+page 5                                 	// Skills 5
+
+/////////menu text and screen location
+
+text 95 200 0 87
+croppedtext 250 200 110 17 455 88
+text 95 230 0 89
+croppedtext 250 230 110 17 455 90
+text 95 260 0 91
+croppedtext 250 260 110 17 455 92
+text 95 290 0 93
+croppedtext 250 290 110 17 455 94
+text 95 320 0 95
+croppedtext 250 320 110 17 455 96
+text 330 200 0 97
+croppedtext 485 200 110 17 455 98
+text 330 230 0 99
+croppedtext 485 230 110 17 455 100
+text 330 260 0 101
+croppedtext 485 260 110 17 455 102
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 46
+button 70 230 2714 2714 1 0 47 		
+button 70 260 2714 2714 1 0 48
+button 70 290 2714 2714 1 0 49 	
+button 70 320 2714 2714 1 0 50
+button 305 200 2714 2714 1 0 51 	
+button 305 230 2714 2714 1 0 52
+button 305 260 2714 2714 1 0 53
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_x_skills_swap_stone1 TEXT]
+Skills swapping Stone By Maul// Menu heading
+Choose the GM skill u wish to swap
+
+Skills 1
+Skills 2
+Skills 3
+Skills 4
+Skills 5
+
+///page 1
+Alchemy 				// Skills 1
+<SRC.Alchemy>
+Anatomy
+<SRC.Anatomy>
+Archery
+<SRC.Archery>
+ArmsLore
+<SRC.ArmsLore>
+Begging
+<SRC.Begging>
+Blacksmithing
+<SRC.Blacksmithing>
+Bowcraft
+<SRC.Bowcraft>
+Camping
+<SRC.Camping>
+Carpentry
+<SRC.Carpentry>
+Cartography
+<SRC.Cartography>
+
+
+///page 2
+Cooking					// Skills 2
+<SRC.Cooking>
+Detecting Hidden
+<SRC.DetectingHidden>
+Enticement
+<SRC.Enticement>
+Evaluating Intel
+<SRC.EvaluatingIntel>
+Fencing
+<SRC.Fencing>
+Fishing
+<SRC.Fishing>
+Forensics
+<SRC.Forensics>
+Healing
+<SRC.Healing>
+Herding
+<SRC.Herding>
+Hiding
+<SRC.Hiding>
+
+///page 3
+ItemID	 				// Skills 3
+<SRC.ItemID>
+Inscription
+<SRC.Inscription>
+Lock Picking
+<SRC.LockPicking>
+Lumber Jacking
+<SRC.Lumberjacking>
+Macefighting
+<SRC.Macefighting>
+Magery
+<SRC.Magery>
+Magic Resistance
+<SRC.MagicResistance>
+Meditation
+<SRC.Meditation>
+Mining
+<SRC.Mining>
+Musicianship
+<SRC.Musicianship>
+
+///page 4
+Parrying				// Skills 4
+<SRC.Parrying>
+Peacemaking
+<SRC.Peacemaking>
+Poisoning
+<SRC.Poisoning>
+Provocation
+<SRC.Provocation>
+Remove Trap
+<SRC.RemoveTrap>
+Snooping
+<SRC.Snooping>
+Spirit Speak
+<SRC.SpiritSpeak>
+Stealing
+<SRC.Stealing>
+Stealth
+<SRC.Stealth>
+Swordsmanship
+<SRC.Swordsmanship>
+
+///page 5
+Tactics					// Skills 5
+<SRC.Tactics>
+Tailoring
+<SRC.Tailoring>
+Taming
+<SRC.Taming>
+TasteID
+<SRC.TasteID>
+Tinkering
+<SRC.Tinkering>
+Tracking
+<SRC.Tracking>
+Veterinary
+<SRC.Veterinary>
+Wrestling
+<SRC.Wrestling>
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_x_skills_swap_stone1 BUTTON]
+
+ONBUTTON=0 // nothing
+
+ONBUTTON=6
+if (<SRC.Alchemy><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Alchemy>>=1000)
+	SRC.Alchemy=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=7
+if (<SRC.Anatomy><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Anatomy>>=1000)
+	SRC.Anatomy=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=8
+if (<SRC.Archery><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Archery>>=1000)
+	SRC.Archery=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=9
+if (<SRC.ArmsLore><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.ArmsLore>>=1000)
+	SRC.ArmsLore=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=10
+if (<SRC.Begging><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Begging>>=1000)
+	SRC.Begging=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=11
+if (<SRC.Blacksmithing><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Blacksmithing>>=1000)
+	SRC.Blacksmithing=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=12
+if (<SRC.Bowcraft><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Bowcraft>>=1000)
+	SRC.Bowcraft=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=13
+if (<SRC.Camping><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Camping>>=1000)
+	SRC.Camping=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=14
+if (<SRC.Carpentry><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Carpentry>>=1000)
+	SRC.Carpentry=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=15
+if (<SRC.Cartography><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Cartography>>=1000)
+	SRC.Cartography=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=16
+if (<SRC.Cooking><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Cooking>>=1000)
+	SRC.Cooking=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=17
+if (<SRC.DetectingHidden><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.DetectingHidden>>=1000)
+	SRC.DetectingHidden=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=18
+if (<SRC.Enticement><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Enticement>>=1000)
+	SRC.Enticement=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=19
+if (<SRC.EvaluatingIntel><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.EvaluatingIntel>>=1000)
+	SRC.EvaluatingIntel=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=20
+if (<SRC.Fencing><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Fencing>>=1000)
+	SRC.Fencing=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=21
+if (<SRC.Fishing><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Fishing>>=1000)
+	SRC.Fishing=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=22
+if (<SRC.Forensics><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Forensics>>=1000)
+	SRC.Forensics=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=23
+if (<SRC.Healing><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Healing>>=1000)
+	SRC.Healing=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=24
+if (<SRC.Herding><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Herding>>=1000)
+	SRC.Herding=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=25
+if (<SRC.Hiding><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Hiding>>=1000)
+	SRC.Hiding=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=26
+if (<SRC.ItemID><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.ItemID>>=1000)
+	SRC.ItemID=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=27
+if (<SRC.Inscription><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Inscription>>=1000)
+	SRC.Inscription=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=28
+if (<SRC.LockPicking><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.LockPicking>>=1000)
+	SRC.LockPicking=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=29
+if (<SRC.Lumberjacking><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Lumberjacking>>=1000)
+	SRC.Lumberjacking=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=30
+if (<SRC.Macefighting><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Macefighting>>=1000)
+	SRC.Macefighting=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+
+ONBUTTON=31
+if (<SRC.Magery><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Magery>>=1000)
+	SRC.Magery=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=32
+if (<SRC.MagicResistance><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.MagicResistance>>=1000)
+	SRC.MagicResistance=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=33
+if (<SRC.Meditation><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Meditation>>=1000)
+	SRC.Meditation=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=34
+if (<SRC.Mining><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Mining>>=1000)
+	SRC.Mining=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=35
+if (<SRC.Musicianship><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Musicianship>>=1000)
+	SRC.Musicianship=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=36
+if (<SRC.Parrying><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Parrying>>=1000)
+	SRC.Parrying=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=37
+if (<SRC.Peacemaking><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Peacemaking>>=1000)
+	SRC.Peacemaking=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=38
+if (<SRC.Poisoning><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Poisoning>>=1000)
+	SRC.Poisoning=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=39
+if (<SRC.Provocation><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Provocation>>=1000)
+	SRC.Provocation=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=40
+if (<SRC.RemoveTrap><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.RemoveTrap>>=1000)
+	SRC.RemoveTrap=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=41
+if (<SRC.Snooping><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Snooping>>=1000)
+	SRC.Snooping=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=42
+if (<SRC.SpiritSpeak><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.SpiritSpeak>>=1000)
+	SRC.SpiritSpeak=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=43
+if (<SRC.Stealing><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Stealing>>=1000)
+	SRC.Stealing=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=44
+if (<SRC.Stealth><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Stealth>>=1000)
+	SRC.Stealth=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=45
+if (<SRC.Swordsmanship><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Swordsmanship>>=1000)
+	SRC.Swordsmanship=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=46
+if (<SRC.Tactics><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Tactics>>=1000)
+	SRC.Tactics=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=47
+if (<SRC.Tailoring><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Tailoring>>=1000)
+	SRC.Tailoring=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=48
+if (<SRC.Taming><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Taming>>=1000)
+	SRC.Taming=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=49
+if (<SRC.TasteID><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.TasteID>>=1000)
+	SRC.TasteID=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=50
+if (<SRC.Tinkering><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Tinkering>>=1000)
+	SRC.Tinkering=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=51
+if (<SRC.Tracking><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Tracking>>=1000)
+	SRC.Tracking=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=52
+if (<SRC.Veterinary><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Veterinary>>=1000)
+	SRC.Veterinary=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+ONBUTTON=53
+if (<SRC.Wrestling><1000)
+	SRC.SYSMESSAGE Can only swap GMed skills, this isnt a GM skill. Try again.
+	DIALOG d_x_skills_swap_stone1
+elseif (<SRC.Wrestling>>=1000)
+	SRC.Wrestling=000 // set skill to 0
+	DIALOG d_x_skills_swap_stone2
+endif
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+[DIALOG d_x_skills_swap_stone2]
+0,0                                    	// Position
+resizepic 50 90 2600 560 300          	// Curved Grey background 
+
+////////////////////////////////////////////////////////////////////
+page 0                                 	// Page 0
+resizepic 66 162 5100 528 25          	// Square Grey box
+button 285 366 247 248 1 0 0           	// Okay, button 0
+
+////Headings/////////////////////////////////////////////////////////
+text 200 120 455 0			// menu heading
+text 150 140 0 1
+
+text 80 165 0 2                       	// Skills 1
+text 180 165 0 3                       	// Skills 2
+text 280 165 0 4                       	// Skills 3
+text 380 165 0 5                       	// Skills 4
+text 480 165 0 6                       	// Skills 5
+
+button 150 166 5209 5003 0 1 1         	// Skills 1
+button 250 166 5209 5003 0 2 2         	// Skills 2
+button 350 166 5209 5003 0 3 3         	// Skills 3
+button 450 166 5209 5003 0 4 4         	// Skills 4
+button 550 166 5209 5003 0 5 5         	// Skills 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                 	// Skills 1
+
+/////////menu text and screen location
+
+text 95 200 0 7
+croppedtext 250 200 110 17 455 8
+text 95 230 0 9
+croppedtext 250 230 110 17 455 10
+text 95 260 0 11
+croppedtext 250 260 110 17 455 12
+text 95 290 0 13
+croppedtext 250 290 110 17 455 14
+text 95 320 0 15
+croppedtext 250 320 110 17 455 16
+text 330 200 0 17
+croppedtext 485 200 110 17 455 18
+text 330 230 0 19
+croppedtext 485 230 110 17 455 20
+text 330 260 0 21
+croppedtext 485 260 110 17 455 22
+text 330 290 0 23
+croppedtext 485 290 110 17 455 24
+text 330 320 0 25
+croppedtext 485 320 110 17 455 26
+
+////////Targets skills//////////////////
+
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 6
+button 70 230 2714 2714 1 0 7 		
+button 70 260 2714 2714 1 0 8
+button 70 290 2714 2714 1 0 9 	
+button 70 320 2714 2714 1 0 10
+button 305 200 2714 2714 1 0 11 	
+button 305 230 2714 2714 1 0 12
+button 305 260 2714 2714 1 0 13 	
+button 305 290 2714 2714 1 0 14
+button 305 320 2714 2714 1 0 15 	
+
+/////////////////////////////////////////////////////////////////////
+page 2                                 	// Skills 2
+
+/////////menu text and screen location
+
+text 95 200 0 27
+croppedtext 250 200 110 17 455 28
+text 95 230 0 29
+croppedtext 250 230 110 17 455 30
+text 95 260 0 31
+croppedtext 250 260 110 17 455 32
+text 95 290 0 33
+croppedtext 250 290 110 17 455 34
+text 95 320 0 45
+croppedtext 250 320 110 17 455 36
+text 330 200 0 37
+croppedtext 485 200 110 17 455 38
+text 330 230 0 39
+croppedtext 485 230 110 17 455 40
+text 330 260 0 41
+croppedtext 485 260 110 17 455 42
+text 330 290 0 43
+croppedtext 485 290 110 17 455 44
+text 330 320 0 45
+croppedtext 485 320 110 17 455 46
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 16
+button 70 230 2714 2714 1 0 17 		
+button 70 260 2714 2714 1 0 18
+button 70 290 2714 2714 1 0 19 	
+button 70 320 2714 2714 1 0 20
+button 305 200 2714 2714 1 0 21 	
+button 305 230 2714 2714 1 0 22
+button 305 260 2714 2714 1 0 23 	
+button 305 290 2714 2714 1 0 24
+button 305 320 2714 2714 1 0 25 	
+
+///////////////////////////////////////////////////////////////////////
+page 3                                 	// Skills 3
+
+/////////menu text and screen location
+
+text 95 200 0 47
+croppedtext 250 200 110 17 455 48
+text 95 230 0 49
+croppedtext 250 230 110 17 455 50
+text 95 260 0 51
+croppedtext 250 260 110 17 455 52
+text 95 290 0 53
+croppedtext 250 290 110 17 455 54
+text 95 320 0 55
+croppedtext 250 320 110 17 455 56
+text 330 200 0 57
+croppedtext 485 200 110 17 455 58
+text 330 230 0 59
+croppedtext 485 230 110 17 455 60
+text 330 260 0 61
+croppedtext 485 260 110 17 455 62
+text 330 290 0 63
+croppedtext 485 290 110 17 455 64
+text 330 320 0 65
+croppedtext 485 320 110 17 455 66	
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 26
+button 70 230 2714 2714 1 0 27 		
+button 70 260 2714 2714 1 0 28
+button 70 290 2714 2714 1 0 29 	
+button 70 320 2714 2714 1 0 30
+button 305 200 2714 2714 1 0 31 	
+button 305 230 2714 2714 1 0 32
+button 305 260 2714 2714 1 0 33 	
+button 305 290 2714 2714 1 0 34
+button 305 320 2714 2714 1 0 35 	
+
+///////////////////////////////////////////////////////////////////////
+page 4                                 	// Skills 4
+
+/////////menu text and screen location
+
+text 95 200 0 67
+croppedtext 250 200 110 17 455 68
+text 95 230 0 69
+croppedtext 250 230 110 17 455 70
+text 95 260 0 71
+croppedtext 250 260 110 17 455 72
+text 95 290 0 73
+croppedtext 250 290 110 17 455 74
+text 95 320 0 75
+croppedtext 250 320 110 17 455 76
+text 330 200 0 77
+croppedtext 485 200 110 17 455 78
+text 330 230 0 79
+croppedtext 485 230 110 17 455 80
+text 330 260 0 81
+croppedtext 485 260 110 17 455 82
+text 330 290 0 83
+croppedtext 485 290 110 17 455 84
+text 330 320 0 85
+croppedtext 485 320 110 17 455 86			
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 36
+button 70 230 2714 2714 1 0 37 		
+button 70 260 2714 2714 1 0 38
+button 70 290 2714 2714 1 0 39 	
+button 70 320 2714 2714 1 0 40
+button 305 200 2714 2714 1 0 41 	
+button 305 230 2714 2714 1 0 42
+button 305 260 2714 2714 1 0 43 	
+button 305 290 2714 2714 1 0 44
+button 305 320 2714 2714 1 0 45 	
+
+///////////////////////////////////////////////////////////////////////
+page 5                                 	// Skills 5
+
+/////////menu text and screen location
+
+text 95 200 0 87
+croppedtext 250 200 110 17 455 88
+text 95 230 0 89
+croppedtext 250 230 110 17 455 90
+text 95 260 0 91
+croppedtext 250 260 110 17 455 92
+text 95 290 0 93
+croppedtext 250 290 110 17 455 94
+text 95 320 0 95
+croppedtext 250 320 110 17 455 96
+text 330 200 0 97
+croppedtext 485 200 110 17 455 98
+text 330 230 0 99
+croppedtext 485 230 110 17 455 100
+text 330 260 0 101
+croppedtext 485 260 110 17 455 102
+
+////////button types and screen location
+
+button 70 200 2714 2714 1 0 46
+button 70 230 2714 2714 1 0 47 		
+button 70 260 2714 2714 1 0 48
+button 70 290 2714 2714 1 0 49 	
+button 70 320 2714 2714 1 0 50
+button 305 200 2714 2714 1 0 51 	
+button 305 230 2714 2714 1 0 52
+button 305 260 2714 2714 1 0 53
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_x_skills_swap_stone2 TEXT]
+Skills swapping Stone By Maul// Menu heading
+Choose the skill u wish to pass too.
+
+Skills 1
+Skills 2
+Skills 3
+Skills 4
+Skills 5
+
+///page 1
+Alchemy 				// Skills 1
+<SRC.Alchemy>
+Anatomy
+<SRC.Anatomy>
+Archery
+<SRC.Archery>
+ArmsLore
+<SRC.ArmsLore>
+Begging
+<SRC.Begging>
+Blacksmithing
+<SRC.Blacksmithing>
+Bowcraft
+<SRC.Bowcraft>
+Camping
+<SRC.Camping>
+Carpentry
+<SRC.Carpentry>
+Cartography
+<SRC.Cartography>
+
+
+///page 2
+Cooking					// Skills 2
+<SRC.Cooking>
+Detecting Hidden
+<SRC.DetectingHidden>
+Enticement
+<SRC.Enticement>
+Evaluating Intel
+<SRC.EvaluatingIntel>
+Fencing
+<SRC.Fencing>
+Fishing
+<SRC.Fishing>
+Forensics
+<SRC.Forensics>
+Healing
+<SRC.Healing>
+Herding
+<SRC.Herding>
+Hiding
+<SRC.Hiding>
+
+///page 3
+ItemID	 				// Skills 3
+<SRC.ItemID>
+Inscription
+<SRC.Inscription>
+Lock Picking
+<SRC.LockPicking>
+Lumber Jacking
+<SRC.Lumberjacking>
+Macefighting
+<SRC.Macefighting>
+Magery
+<SRC.Magery>
+Magic Resistance
+<SRC.MagicResistance>
+Meditation
+<SRC.Meditation>
+Mining
+<SRC.Mining>
+Musicianship
+<SRC.Musicianship>
+
+///page 4
+Parrying				// Skills 4
+<SRC.Parrying>
+Peacemaking
+<SRC.Peacemaking>
+Poisoning
+<SRC.Poisoning>
+Provocation
+<SRC.Provocation>
+Remove Trap
+<SRC.RemoveTrap>
+Snooping
+<SRC.Snooping>
+Spirit Speak
+<SRC.SpiritSpeak>
+Stealing
+<SRC.Stealing>
+Stealth
+<SRC.Stealth>
+Swordsmanship
+<SRC.Swordsmanship>
+
+///page 5
+Tactics					// Skills 5
+<SRC.Tactics>
+Tailoring
+<SRC.Tailoring>
+Taming
+<SRC.Taming>
+TasteID
+<SRC.TasteID>
+Tinkering
+<SRC.Tinkering>
+Tracking
+<SRC.Tracking>
+Veterinary
+<SRC.Veterinary>
+Wrestling
+<SRC.Wrestling>
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_x_skills_swap_stone2 BUTTON]
+
+ONBUTTON=0 // nothing
+
+ONBUTTON=6
+if (<SRC.Alchemy>>400)
+	SRC.Alchemy=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Alchemy><=400)
+	SRC.Alchemy=<SRC.Alchemy> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=7
+if (<SRC.Anatomy>>400)
+	SRC.Anatomy=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Anatomy><=400)
+	SRC.Anatomy=<SRC.Anatomy> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=8
+if (<SRC.Archery>>400)
+	SRC.Archery=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Archery><=400)
+	SRC.Archery=<SRC.Archery> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=9
+if (<SRC.ArmsLore>>400)
+	SRC.ArmsLore=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.ArmsLore><=400)
+	SRC.ArmsLore=<SRC.ArmsLore> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=10
+if (<SRC.Begging>>400)
+	SRC.Begging=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Begging><=400)
+	SRC.Begging=<SRC.Begging> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=11
+if (<SRC.Blacksmithing>>400)
+	SRC.Blacksmithing=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Blacksmithing><=400)
+	SRC.Blacksmithing=<SRC.Blacksmithing> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=12
+if (<SRC.Bowcraft>>400)
+	SRC.Bowcraft=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Bowcraft><=400)
+	SRC.Bowcraft=<SRC.Bowcraft> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=13
+if (<SRC.Camping>>400)
+	SRC.Camping=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Camping><=400)
+	SRC.Camping=<SRC.Camping> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=14
+if (<SRC.Carpentry>>400)
+	SRC.Carpentry=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Carpentry><=400)
+	SRC.Carpentry=<SRC.Carpentry> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=15
+if (<SRC.Cartography>>400)
+	SRC.Cartography=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Cartography><=400)
+	SRC.Cartography=<SRC.Cartography> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=16
+if (<SRC.Cooking>>400)
+	SRC.Cooking=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Cooking><=400)
+	SRC.Cooking=<SRC.Cooking> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=17
+if (<SRC.DetectingHidden>>400)
+	SRC.DetectingHidden=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.DetectingHidden><=400)
+	SRC.DetectingHidden=<SRC.DetectingHidden> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=18
+if (<SRC.Enticement>>400)
+	SRC.Enticement=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Enticement><=400)
+	SRC.Enticement=<SRC.Enticement> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=19
+if (<SRC.EvaluatingIntel>>400)
+	SRC.EvaluatingIntel=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.EvaluatingIntel><=400)
+	SRC.EvaluatingIntel=<SRC.EvaluatingIntel> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=20
+if (<SRC.Fencing>>400)
+	SRC.Fencing=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Fencing><=400)
+	SRC.Fencing=<SRC.Fencing> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=21
+if (<SRC.Fishing>>400)
+	SRC.Fishing=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Fishing><=400)
+	SRC.Fishing=<SRC.Fishing> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=22
+if (<SRC.Forensics>>400)
+	SRC.Forensics=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Forensics><=400)
+	SRC.Forensics=<SRC.Forensics> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=23
+if (<SRC.Healing>>400)
+	SRC.Healing=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Healing><=400)
+	SRC.Healing=<SRC.Healing> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=24
+if (<SRC.Herding>>400)
+	SRC.Herding=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Herding><=400)
+	SRC.Herding=<SRC.Herding> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=25
+if (<SRC.Hiding>>400)
+	SRC.Hiding=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Hiding><=400)
+	SRC.Hiding=<SRC.Hiding> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=26
+if (<SRC.ItemID>>400)
+	SRC.ItemID=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.ItemID><=400)
+	SRC.ItemID=<SRC.ItemID> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=27
+if (<SRC.Inscription>>400)
+	SRC.Inscription=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Inscription><=400)
+	SRC.Inscription=<SRC.Inscription> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=28
+if (<SRC.LockPicking>>400)
+	SRC.LockPicking=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.LockPicking><=400)
+	SRC.LockPicking=<SRC.LockPicking> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=29
+if (<SRC.Lumberjacking>>400)
+	SRC.Lumberjacking=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Lumberjacking><=400)
+	SRC.Lumberjacking=<SRC.Lumberjacking> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=30
+if (<SRC.Macefighting>>400)
+	SRC.Macefighting=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Macefighting><=400)
+	SRC.Macefighting=<SRC.Macefighting> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=31
+if (<SRC.Magery>>400)
+	SRC.Magery=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Magery><=400)
+	SRC.Magery=<SRC.Magery> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=32
+if (<SRC.MagicResistance>>400)
+	SRC.MagicResistance=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.MagicResistance><=400)
+	SRC.MagicResistance=<SRC.MagicResistance> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=33
+if (<SRC.Meditation>>400)
+	SRC.Meditation=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Meditation><=400)
+	SRC.Meditation=<SRC.Meditation> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=34
+if (<SRC.Mining>>400)
+	SRC.Mining=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Mining><=400)
+	SRC.Mining=<SRC.Mining> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=35
+if (<SRC.Musicianship>>400)
+	SRC.Musicianship=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Musicianship><=400)
+	SRC.Musicianship=<SRC.Musicianship> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=36
+if (<SRC.Parrying>>400)
+	SRC.Parrying=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Parrying><=400)
+	SRC.Parrying=<SRC.Parrying> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=37
+if (<SRC.Peacemaking>>400)
+	SRC.Peacemaking=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Peacemaking><=400)
+	SRC.Peacemaking=<SRC.Peacemaking> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=38
+if (<SRC.Poisoning>>400)
+	SRC.Poisoning=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Poisoning><=400)
+	SRC.Poisoning=<SRC.Poisoning> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=39
+if (<SRC.Provocation>>400)
+	SRC.Provocation=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Provocation><=400)
+	SRC.Provocation=<SRC.Provocation> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=40
+if (<SRC.RemoveTrap>>400)
+	SRC.RemoveTrap=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.RemoveTrap><=400)
+	SRC.RemoveTrap=<SRC.RemoveTrap> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=41
+if (<SRC.Snooping>>400)
+	SRC.Snooping=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Snooping><=400)
+	SRC.Snooping=<SRC.Snooping> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=42
+if (<SRC.SpiritSpeak>>400)
+	SRC.SpiritSpeak=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.SpiritSpeak><=400)
+	SRC.SpiritSpeak=<SRC.SpiritSpeak> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=43
+if (<SRC.Stealing>>400)
+	SRC.Stealing=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Stealing><=400)
+	SRC.Stealing=<SRC.Stealing> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=44
+if (<SRC.Stealth>>400)
+	SRC.Stealth=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Stealth><=400)
+	SRC.Stealth=<SRC.Stealth> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=45
+if (<SRC.Swordsmanship>>400)
+	SRC.Swordsmanship=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Swordsmanship><=400)
+	SRC.Swordsmanship=<SRC.Swordsmanship> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=46
+if (<SRC.Tactics>>400)
+	SRC.Tactics=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Tactics><=400)
+	SRC.Tactics=<SRC.Tactics> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=47
+if (<SRC.Tailoring>>400)
+	SRC.Tailoring=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Tailoring><=400)
+	SRC.Tailoring=<SRC.Tailoring> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=48
+if (<SRC.Taming>>400)
+	SRC.Taming=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Taming><=400)
+	SRC.Taming=<SRC.Taming> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=49
+if (<SRC.TasteID>>400)
+	SRC.TasteID=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.TasteID><=400)
+	SRC.TasteID=<SRC.TasteID> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=50
+if (<SRC.Tinkering>>400)
+	SRC.Tinkering=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Tinkering><=400)
+	SRC.Tinkering=<SRC.Tinkering> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=51
+if (<SRC.Tracking>>400)
+	SRC.Tracking=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Tracking><=400)
+	SRC.Tracking=<SRC.Tracking> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=52
+if (<SRC.Veterinary>>400)
+	SRC.Veterinary=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Veterinary><=400)
+	SRC.Veterinary=<SRC.Veterinary> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+ONBUTTON=53
+if (<SRC.Wrestling>>400)
+	SRC.Wrestling=900
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE You have more than 40 in this skill already, you have been transfered up to the max of 90.0.
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+
+elseif (<SRC.Wrestling><=400)
+	SRC.Wrestling=<SRC.Wrestling> +(50.0)
+	SRC.NEWITEM i_mem_skill_swap_stone_timer 
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.BOUNCE
+	SRC.TAG.SS=1
+	SRC.MESSAGE Thank you for using the stone, come back in 30 days to swap again.
+	return 1
+endif
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_mem_skill_swap_stone_timer] 
+ID=i_gem_diamond 
+TYPE=t_script 
+NAME=skillstone timer 
+CATEGORY=Maul
+SUBSECTION=Timers
+DESCRIPTION=skillstone timer
+
+
+on=@create 
+TIMER=3110400 //= 30 days 
+ATTR=04090 //Invis, don't move, decay. 
+
+ON=@timer 
+LINK.TAG.SS= 
+LINK.SYSMESSAGE 30 days is now up, You may now reuse the Skill Swap Stone.
+LINK.SYSMESSAGE 30 days is now up, You may now reuse the Skill Swap Stone.
+LINK.SYSMESSAGE 30 days is now up, You may now reuse the Skill Swap Stone.
+REMOVE 
+RETURN 0  
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+[EOF]

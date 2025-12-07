@@ -1,0 +1,268 @@
+//Scripted by <GM_Ramon> 04/11/03
+[EVENTS e_beggingnew]
+ON=@SKILLSTART
+//Itemid section
+IF (<FIXACTION>==skill_appraise)
+ACTION -1
+SRC.MESSAGE 
+SRC.MESSAGE
+SRC.MESSAGE
+IF !(<SRC.FINDID.i_memory_itemider>)
+IF (<SRC.ACT.ATTR>&21)
+SRC.SYSMESSAGE That item is already identified!
+RETURN 1
+ENDIF
+IF !(<ACT.CONT>==<SRC.FINDLAYER(21).UID>)
+SRC.SYSMESSAGE You must have that on your backpack in order to identify it!
+RETURN 1
+ENDIF
+VAR.MIACT=<ACT.UID>
+SRC.NEWITEM i_memory_itemider
+SRC.ACT.TIMER=<EVAL {1 2}>
+SRC.ACT.LINK=<VAR.MIACT>
+SRC.ACT.CONT=<SRC.UID>
+ELSE
+SRC.SYSMESSAGE You must wait to use that skill again.
+RETURN 1
+ENDIF
+
+//Begging section
+ELSEIF (<FIXACTION>==skill_begging)
+ACTION -1
+IF !(<SRC.FINDID.I_begging_rememberings>)
+	IF !(<ACT.BODY>==c_man)&&!(<ACT.BODY>==c_woman)
+		SRC.SYSMESSAGE You cannot beg to that.
+		douremember
+		SRC.ANIM 4
+		RETURN 1
+	ELSEIF (<ACT.UID>==<SRC.UID>)
+		SRC.SYSMESSAGE That's you.
+		douremember
+		SRC.ANIM 4
+		RETURN 1
+	ELSEIF (<ACT.DISTANCE> > 3)||!(<ACT.CanSeeLOS>)
+		SRC.SYSMESSAGE <ACT.NAME> is too far away!
+		douremember
+		SRC.ANIM 4
+		RETURN 1
+	ELSEIF (<SRC.KILLS> >= 3)||(<SRC.KARMA> < -4000)
+		SRC.SAY I grovel at your feet sir
+		ACT.SAY Get away from me, scoundrel!
+		douremember
+		RETURN 1
+	ELSEIF (<SRC.FINDLAYER(25).TYPE>==t_eq_horse)
+		SRC.SAY I grovel at your feet sir
+		ACT.SAY How can u beg to me mounted?!
+		douremember
+		SRC.ANIM 4
+		RETURN 1
+	ELSEIF (<SRC.FINDID.i_gold.AMOUNT> > 700)
+		SRC.SAY I grovel at your feet sir
+		ACT.SAY I can see the money falling from your bag!
+		douremember
+		RETURN 1		
+	ENDIF
+IF (<ACT.BRAIN>==brain_human)||(<ACT.BRAIN>==brain_vendor)||(<ACT.BRAIN>==3)
+	VAR.ACTUAL=<ACT.UID>
+	f_begin_npc
+ELSEIF (<ACt.BRAIN>==0)
+	ACT.FACE
+	f_ponledecara
+	douremember
+	f_frasessegunlvl <EVAL <SRC.BEGGING>/100>+<EVAL {0 5}>
+ENDIF
+ELSE
+SRC.SYSMESSAGE You must wait to use that skill again.
+SRC.ANIM 4
+RETURN 1
+ENDIF
+
+//Itemid object
+[ITEMDEF i_memory_itemider]
+ID=i_memory
+NAME=I recall a better worlch full of itemiders
+TYPE=T_eq_script
+
+ON=@TIMER
+f_tiraparaskill <EVAL <CONT.ITEMID>/100>
+VAR.POSSIBILITY=<VAR.POSSIBILITY>+(<EVAL {0 10}>)
+IF (<VAR.POSSIBILITY> >= (28+<EVAL 0<ACT.MOREY>/100>)
+CONT.SYSMESSAGE You estimate <EVAL (<LINK.VALUE>+<VAR.POSSIBILITY>+(-<EVAL <VAR.POSSIBILITY>+(-<EVAL {0 30}>)>)> gold coins
+CONT.SYSMESSAGE for this <LINK.NAME>.
+CONT.SYSMESSAGE It is made of <LINK.RESMAKE>
+//CONT.SYSMESSAGE It has <EVAL <LINK.MORE1H>+<VAR.POSSIBILITY>+(-<EVAL <VAR.POSSIBILITY>+(-<EVAL {0 30}>)>> Hitpoints out of <EVAL <LINK.MORE1L>+<VAR.POSSIBILITY>+(-<EVAL <VAR.POSSIBILITY>+(-<EVAL {0 30}>)>>
+LINK.ATTR=<LINK.ATTR>|01
+//IF (<CONT.ITEMID > 99.9)&&(RAND(3)==0)
+//LINK.NAME=<LINK.NAME> Identified by <CONT.NAME>
+//ENDIF
+f_tiraparaskill <EVAL <CONT.ITEMID>/100>
+IF (<VAR.POSSIBILITY> <= 12)&&(<CONT.ITEMID> < 100.1)
+CONT.ITEMID=<CONT.ITEMID>+1
+ENDIF
+ELSE
+CONT.SYSMESSAGE You haven't been able to identify this!
+ENDIF
+REMOVE
+RETURN 1
+
+//Both systems function
+[FUNCTION f_tiraparaskill]
+DOSWITCH <EVAL <CONT.ITEMID>/100>
+VAR.POSSIBILITY=<EVAL {1 5}>
+VAR.POSSIBILITY=<EVAL {4 12}>
+VAR.POSSIBILITY=<EVAL {6 19}>
+VAR.POSSIBILITY=<EVAL {8 24}>
+VAR.POSSIBILITY=<EVAL {10 27}>
+VAR.POSSIBILITY=<EVAL {12 30}>
+VAR.POSSIBILITY=<EVAL {14 33}>
+VAR.POSSIBILITY=<EVAL {16 36}>
+VAR.POSSIBILITY=<EVAL {18 39}>
+VAR.POSSIBILITY=<EVAL {20 42}>
+VAR.POSSIBILITY=<EVAL {22 45}>
+ENDDO
+
+//Begging function
+[FUNCTION f_begin_npc]
+ACT.FACE
+f_ponledecara
+SRC.SAY I grovel at your feet noble sir
+IF (<ACT.FINDID.i_begging_rememberings>)
+ACT.SAY I'm sorry, I've given all I can afford
+ELSE
+ACT.SAY Let me see...
+SRC.NEWITEM i_begging_linker
+SRC.ACT.TIMER=<EVAL {1 2}>
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.CONT=<VAR.ACTUAL>
+douremember
+ENDIF
+
+//Begging object
+[ITEMDEF i_begging_linker]
+ID=i_memory
+NAME=Begging linker for a better world
+TYPE=t_eq_script
+
+ON=@TIMER
+IF (<LINK.BEGGING> > <EVAL {1 1108}>)
+CONT.SAY Here, you can have this
+f_skillgainbeg
+	VAR.MONEY=<EVAL <LINK.BEGGING>/10>+<EVAL {10 50}>+(-<EVAL {0 180}>)+<EVAL 0<LINK.TAG.BEGMODIFIERS>>
+	IF (<VAR.MONEY> <= 0)
+	VAR.MONEY=1
+	ENDIF
+	LINK.NEWITEM i_gold, <VAR.MONEY>
+	LINK.ACT.CONT=<LINK.UID>
+ELSE
+IF (<LINK.BEGGING> < 300)
+f_skillgainbeg
+ENDIF
+CONT.SAY I'm sorry, I have nothing to share with thee
+ENDIF
+LINK.NEWITEM I_begging_rememberings
+LINK.ACT.TIMER=<EVAL {105 220}>+(-<EVAL <LINK.BEGGING>/10>)
+LINK.ACT.CONT=<VAR.ACTUAL>
+REMOVE
+RETURN 1
+
+//Begging object
+[ITEMDEF I_begging_rememberings]
+ID=i_dagger
+NAME=I recall a better world full of beggars
+TYPE=t_eq_script
+LAYER=30
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+//Begging function
+[FUNCTION f_frasessegunlvl]
+DOSWITCH <ARGS>
+SRC.SAY "¬¬"
+SRC.SAY Give me something for God's sake!
+SRC.SAY I haven't got no money, could you spare some?
+SRC.SAY Give a little money to this poor beggar
+SRC.SAY I'm a poor man, I can't even afford clothes!
+SRC.SAY Could you spare some money noble sir?
+SRC.SAY Would his outstanding majesty spare some money to this poor beggar?
+SRC.SAY Could you give me some money, great noble?
+SRC.SAY Could <ACT.NAME> the great spare some of <ACT.SEX his/her> richness?
+SRC.SAY Please <ACT.NAME>, your majestic figure sure has some money to someone as awful as me...
+SRC.SAY Will noone react against the beggar's social reality?
+SRC.SAY I want some meat to eat, give me money and I'll let u a bit
+SRC.SAY Please money please money please please please... I'm not whining
+SRC.SAY Oh man, I'm farkin tired of asking money but I don't have a cent
+SRC.SAY Wanna change the social statments? give me some money
+ENDDO
+
+//Begging function
+[FUNCTION f_ponledecara]
+IF (<ACT.DIR>==0)||(<ACT.DIR>==1)||(<ACT.DIR>==2)||(<ACT.DIR>==3)
+SRC.DIR=<ACT.DIR>+4
+ELSE
+SRC.DIR=<ACT.DIR>+(-4)
+ENDIF
+SRC.UPDATE
+
+//Begging function
+[FUNCTION f_skillgainbeg]
+VAR.SKILL=<EVAL <LINK.BEGGING>/100>
+DOSWITCH <VAR.SKILL>
+VAR.SUBE=<EVAL {1 3}>
+VAR.SUBE=<EVAL {5 9}>
+VAR.SUBE=<EVAL {12 16}>
+VAR.SUBE=<EVAL {17 22}>
+VAR.SUBE=<EVAL {25 28}>
+VAR.SUBE=<EVAL {30 33}>
+VAR.SUBE=<EVAL {35 39}>
+VAR.SUBE=<EVAL {42 45}>
+VAR.SUBE=<EVAL {46 47}>
+VAR.SUBE=<EVAL {46 48}>
+ENDDO
+IF (<EVAL (<EVAL RAND(91)>+<EVAL <VAR.SUBE>>)> < 55)&&(<EVAL <LINK.BEGGING>> < 100.0)
+LINK.BEGGING=<LINK.BEGGING>+0.1
+ENDIF
+
+//Begging function
+[FUNCTION douremember]
+SRC.NEWITEM I_begging_rememberings
+SRC.ACT.TIMER=<EVAL {2 3}>
+SRC.ACT.CONT=<SRC.UID>
+
+//Begging bonus object
+[ITEMDEF i_hat_beggar]
+ID=i_hat_straw
+NAME=Beggar's hat
+VALUE=1000
+
+ON=@CREATE
+HITPOINTS={1 2}
+COLOR=0632
+
+ON=@EQUIP
+SRC.TAG.BEGMODIFIERS=<EVAL <SRC.TAG.BEGMODIFIERS>>+10
+
+ON=@UNEQUIP
+SRC.TAG.BEGMODIFIERS=<EVAL <SRC.TAG.BEGMODIFIERS>>+(-10)
+
+//Begging bonus object
+[ITEMDEF i_robe_beggar]
+ID=i_robe
+NAME=Beggar's robe
+VALUE=1000
+
+ON=@CREATE
+HITPOINTS={1 2}
+COLOR=0632
+
+ON=@EQUIP
+SRC.TAG.BEGMODIFIERS=<EVAL <SRC.TAG.BEGMODIFIERS>>+10
+
+ON=@UNEQUIP
+SRC.TAG.BEGMODIFIERS=<EVAL <SRC.TAG.BEGMODIFIERS>>+(-10)
+
+//Function VERY needed, just in case u didn't have it
+[FUNCTION FIXACTION] 
+return (<ACTION>|0d2000000) 
+[eof]

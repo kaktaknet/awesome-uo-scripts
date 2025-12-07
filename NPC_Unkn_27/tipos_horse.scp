@@ -1,0 +1,451 @@
+[TYPEDEF t_figurine]
+ON=@DCLICK
+if (<dispid>=i_pet_horse_tan) || (<dispid>==i_pet_horse_brown_dk)|| (<dispid>=020dd) ||(<dispid>==i_pet_horse_gray)||(<dispid>==i_pet_horse_brown_lt)
+if !(<src.findlayer.25.uid>)  
+src.newitem i_ingot_horses   
+new.more1=c_horse_ingot
+new.more2=01
+new.color=<color>
+new.tag.shrink=<defname>
+new.name=<name>
+new.equip 
+remove  
+return 1  
+else  
+src.message Voce ja esta montado.
+return 1  
+endif 
+endif
+
+if ( <dispid>==i_pet_llama ) 
+if !(<src.findlayer.25.uid>)  
+serv.newitem i_Llamas  
+new.more1=c_llama_todas
+new.more2=01
+new.color=<color>
+new.tag.shrink=<defname>
+new.name=<name>
+new.equip 
+remove  
+return 1  
+else  
+src.message Voce ja esta montado.
+return 1  
+endif 
+endif
+
+if ( <dispid>==i_pet_ostard_zostrich ) 
+if !(<src.findlayer.25.uid>)  
+serv.newitem i_zosts  
+new.more1=c_zost_todos
+new.more2=01
+new.color=<color>
+new.tag.shrink=<defname>
+new.name=<name>
+new.equip 
+remove  
+return 1  
+else  
+src.message Voce ja esta montado.
+return 1  
+endif 
+endif
+
+if ( <dispid>==i_pet_ostard_forest ) 
+if !(<src.findlayer.25.uid>)  
+serv.newitem i_zostsfo  
+new.more1=c_zostfo_todos
+new.more2=01
+new.color=<color>
+new.tag.shrink=<defname>
+new.name=<name>
+new.equip 
+remove  
+return 1  
+else  
+src.message Voce ja esta montado.
+return 1  
+endif 
+endif
+
+if ( <dispid>==i_pet_ostard_desert ) 
+if !(<src.findlayer.25.uid>)  
+serv.newitem i_zostsde  
+new.more1=c_zostde_todos
+new.more2=01
+new.color=<color>
+new.tag.shrink=<defname>
+new.name=<name>
+new.equip 
+remove  
+return 1  
+else  
+src.message Voce ja esta montado.
+return 1  
+endif 
+endif
+
+
+[itemdef i_ingot_horses]  
+name=Ethereal horse  
+id=i_mt_horse_brown_dk 
+TDATA3=c_horse_ingot 
+layer=25  
+ 
+on=@create  
+attr=04
+color=0ffff  
+
+on=@equip  
+link=<src.uid>  
+ 
+on=@unequip  
+serv.newitem=<tag.shrink>
+new.color=<color>
+new.more2=<more2>
+new.name=<name>
+new.bounce  
+
+[itemdef i_zostsfo]  
+name=Zosts Forests
+id=i_mt_ostard_forest
+TDATA3=c_ostard_forest
+layer=25  
+ 
+on=@create  
+color=0ffff  
+attr=04
+
+on=@equip  
+link=<src.uid>  
+ 
+on=@unequip  
+serv.newitem <tag.shrink>
+new.color=<color>
+new.more2=01
+new.name=<name>
+new.bounce  
+
+[CHARDEF c_zostfo_todos]
+DEFNAME=zostfo_todos
+NAME=Zosts Forest
+ID=c_ostard_forest
+SOUND=snd_ANIMAL_OSTARD_DESERT1
+ICON=i_pet_OSTARD_FOREST
+
+DAM=9,29
+ARMOR=30
+RESOURCES=25 i_ribs_raw,10 i_hide
+
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=5 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+COLOR=0
+STR={100}
+DEX={100}
+INT={100}
+
+PARRYING={55.0 95.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={98.0 100.0}
+WRESTLING={90.0 93.0}
+TAMING=50.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+on=@click  
+remove  
+return 1  
+ 
+on=@npcrestock  
+remove  
+return 1  
+ 
+on=@skillstart  
+remove  
+return 1  
+
+
+CATEGORY=Ingot - Animais
+SUBSECTION=Miscellaneous
+DESCRIPTION=Neutro
+
+[itemdef i_zostsde]  
+name=Zosts Desert
+id=i_mt_ostard_desert 
+TDATA3=c_ostard_desert
+layer=25  
+ 
+on=@create  
+color=0ffff  
+attr=04
+
+on=@equip  
+link=<src.uid>  
+ 
+on=@unequip  
+serv.newitem <tag.shrink>
+new.color=<color>
+new.more2=01
+new.name=<name>
+new.bounce  
+
+[CHARDEF c_zostde_todos]
+DEFNAME=zostde_todos
+NAME=Zosts Desert
+ID=c_ostard_desert
+SOUND=snd_ANIMAL_OSTARD_DESERT1
+ICON=i_pet_OSTARD_desert
+
+DAM=9,29
+ARMOR=30
+RESOURCES=25 i_ribs_raw,10 i_hide
+
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=5 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+COLOR=0
+STR={100}
+DEX={100}
+INT={100}
+
+PARRYING={55.0 95.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={98.0 100.0}
+WRESTLING={90.0 93.0}
+TAMING=50.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+on=@click  
+remove  
+return 1  
+ 
+on=@npcrestock  
+remove  
+return 1  
+ 
+on=@skillstart  
+remove  
+return 1  
+
+
+CATEGORY=Ingot - Animais
+SUBSECTION=Miscellaneous
+DESCRIPTION=Neutro
+
+
+[itemdef i_zosts]  
+name=Zosts 
+id=i_mt_ostard_zostrich  
+TDATA3=c_ostard_zostrich
+layer=25  
+ 
+on=@create  
+color=0ffff  
+attr=04
+
+on=@equip  
+link=<src.uid>  
+ 
+on=@unequip  
+serv.newitem <tag.shrink>
+new.color=<color>
+new.more2=01
+new.name=<name>
+new.bounce  
+
+[CHARDEF c_zost_todos]
+DEFNAME=zost_todos
+NAME=Zosts
+ID=c_ostard_zostrich
+SOUND=snd_ANIMAL_OSTARD_FRENZIED1
+ICON=i_pet_OSTARD_ZOSTRICH
+
+DAM=9,29
+ARMOR=30
+RESOURCES=25 i_ribs_raw,10 i_hide
+
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=5 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+COLOR=0
+STR={100}
+DEX={100}
+INT={100}
+
+PARRYING={55.0 95.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={98.0 100.0}
+WRESTLING={90.0 93.0}
+TAMING=50.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+on=@click  
+remove  
+return 1  
+ 
+on=@npcrestock  
+remove  
+return 1  
+ 
+on=@skillstart  
+remove  
+return 1  
+
+
+CATEGORY=Ingot - Animais
+SUBSECTION=Miscellaneous
+DESCRIPTION=Neutro
+
+
+[itemdef i_Llamas]  
+name=Llamas  
+id=i_mt_llama  
+TDATA3=c_llama
+layer=25  
+ 
+on=@create  
+color=0ffff  
+attr=04
+
+on=@equip  
+link=<src.uid>  
+ 
+on=@unequip  
+serv.newitem <tag.shrink>
+new.color=<color>
+new.more2=01
+new.name=<name>
+new.bounce  
+
+[CHARDEF c_llama_todas]
+DEFNAME=llama_todas
+NAME=Llamas
+ID=c_llama
+SOUND=snd_ANIMALS_llama3
+ICON=i_pet_llama
+
+DAM=9,29
+ARMOR=30
+RESOURCES=25 i_ribs_raw,10 i_hide
+
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=5 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+COLOR=0
+STR={100}
+DEX={100}
+INT={100}
+
+PARRYING={55.0 95.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={98.0 100.0}
+WRESTLING={90.0 93.0}
+TAMING=50.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+on=@click  
+remove  
+return 1  
+ 
+on=@npcrestock  
+remove  
+return 1  
+ 
+on=@skillstart  
+remove  
+return 1  
+
+
+CATEGORY=Ingot - Animais
+SUBSECTION=Miscellaneous
+DESCRIPTION=Neutro
+
+
+[CHARDEF horse_ingot]
+DEFNAME=c_horse_ingot
+NAME=Ingot Horse
+ID=00cc
+SOUND=snd_ANIMALS_HORSE1
+ICON=i_pet_horse_brown_dk
+
+DAM=9,29
+ARMOR=30
+RESOURCES=25 i_ribs_raw,10 i_hide
+
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=5 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+COLOR=0
+STR={100}
+DEX={100}
+INT={100}
+
+PARRYING={55.0 95.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={98.0 100.0}
+WRESTLING={90.0 93.0}
+TAMING=50.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+on=@click  
+remove  
+return 1  
+ 
+on=@npcrestock  
+remove  
+return 1  
+ 
+on=@skillstart  
+remove  
+return 1  
+
+
+CATEGORY=Ingot - Animais
+SUBSECTION=Miscellaneous
+DESCRIPTION=Neutro
+

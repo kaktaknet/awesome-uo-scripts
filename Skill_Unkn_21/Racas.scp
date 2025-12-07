@@ -1,0 +1,110 @@
+///////////////////script by Mandrak_BR
+///////dont remove this plz
+//////////////////bugs? contact-me asylumshard@hotmail.com
+//////BRAZIL RULIZ! ALL MASTERS OF SPHERE SCRIPTING
+
+[ITEMDEF i_pedra_racas]
+ID=i_gravestone_18
+DEFNAME=i_pedra_racas
+NAME=pedra das racas
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=01
+ATTR=010
+
+ON=@DCLICK
+SRC.ALLSKILLS 30.0
+SRC.STR 60
+SRC.INT 60
+SRC.DEX 60
+SRC.SDIALOG D_racas
+RETURN 1
+
+[DIALOG D_racas]
+0,0
+noclose
+page 0
+resizepic 200 200 2620 500 350
+checkertrans 200 200 500 350
+dtext 210 210 650 Seja Bem Vindo ao <serv.name> <src.name>!!
+dtext 210 240 650 Selecione uma raca (opcional):
+dtext 210 280 650 Elfo
+dtext 210 320 650 Anao
+dtext 210 360 650 Meio-Orc
+dtext 210 400 650 Hobbit
+dtext 210 440 650 Vampiro
+dtext 210 500 900 QUERO CONTINUAR SENDO HUMANO
+dtext 400 360 900 Sistema feito por Mandrak,msn
+dtext 400 380 900 asylumshard@hotmail.com
+button 300 280 025fe 02601 1 0 0
+button 300 320 025fe 02601 1 0 1
+button 300 360 025fe 02601 1 0 2
+button 300 400 025fe 02601 1 0 3
+button 300 440 025fe 02601 1 0 4
+button 450 490 025fe 02601 1 0 5
+
+[DIALOG D_racas BUTTON]
+ON=0 5
+IF !(<ARGN>)
+OSKIN=021
+COLOR=021
+STR=100
+INT=100
+DEX=100
+MAGERY=100.0
+MEDITATION=80.0
+GO britain
+TAG.RACENAME=Elfo
+ELIF (<ARGN>==1)
+OSKIN=0183
+COLOR=0183
+STR=70
+INT=70
+DEX=70
+BOWCRAFT=100.0
+FENCING=80.0
+GO minoc
+TAG.RACENAME=Anao
+ELIF (<ARGN>==2)
+OSKIN=021f
+COLOR=021f
+STR=80
+INT=80
+DEX=80
+STEALTH=90.0
+TAMING=100.0
+GO vesper
+TAG.RACENAME=Meio-Orc
+ELIF (<ARGN>==3)
+OSKIN=09a
+COLOR=09a
+STR=75
+INT=75
+DEX=75
+TINKERING=100.0
+TAMING=70.0
+GO cove
+TAG.RACENAME=Hobbit
+ELIF (<ARGN>==4)
+OSKIN=0481
+COLOR=0481
+STR=90
+INT=90
+DEX=90
+TAILORING=100.0
+FISHING=70.0
+GO serpent's hold
+TAG.RACENAME=Vampiro
+ELIF (<ARGN>==5)
+GO magincia
+TAG.RACENAME=Humano
+ENDIF
+EVENTS +e_todasracas
+SYSMESSAGE @021 Voce selecionou a raca <tag.racename>!!
+
+[EVENTS e_todasracas]
+ON=@CLICK
+MESSAGE [<tag.racename>]
+
+[EOF]

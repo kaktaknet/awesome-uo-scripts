@@ -1,0 +1,87 @@
+//this is a re-write of the consumegold function by Kell
+//i have added the ability to check inside bags on both the bankbox and backpack layers.    i have tested //it to 15 layers, and it worked fine for me.
+//there may be bugs that i havent noticed, as with any code.  if any are encountered, or anybody mods it //more, please lemme know  :)
+ 
+// begin code
+
+[function getgold]
+// based on consumegold_everywhere
+// mod for checking in bags by Zhyrohaad for Alasiya
+var.need=<args>
+var.ggn=0
+findlayer(21).f_check 0
+if <var.need>
+  findlayer(29).f_check 0
+  if <var.need>
+    var.ggn=
+    var.baguid=
+    return 1
+  endif
+  var.ggn=
+  var.baguid=
+  update
+  return 1
+endif
+var.ggn=
+var.baguid=
+update
+return 1
+ 
+[function f_check]
+if (<findcont(<args>).uid>==0)
+  return 1
+endif
+if (<findcont(<args>).baseid>==i_gold) 
+if (<var.need>>=<findcont(<args>).amount>)
+  var.need=<eval <var.need>+ -<findcont(<args>).amount>>
+  var.ggn=<eval <var.ggn>+1>
+  topobj.tryp 0 var.golduid<var.ggn>=<findcont(<args>).uid>
+  if <var.need>
+    f_check <eval <args>+1>
+    return 1
+  else
+    src.f_takegold
+    return 1
+  endif
+elseif (<var.need><<findcont(<args>).amount>)
+  var.need=<eval <findcont(<args>).amount>+ -<var.need>>
+  if <var.need>
+    var.contuid=<findcont(<args>).cont.uid>
+    src.act=<findcont(<args>).uid>
+    src.act.remove
+    src.newitem=i_gold
+    src.act.amount=<var.need>
+    src.act.cont=<var.contuid>
+    var.need=
+    src.f_takegold
+    return 1
+  else
+    var.ggn=<eval <var.ggn>+1>
+    topobj.tryp 0 var.golduid<var.ggn>=<findcont(<args>).uid>
+    topobj.f_takegold
+    return 1
+  endif
+endif
+elseif (<findcont(<args>).type>==t_container)
+  if (0<var.baguid>==<findcont(<args>).uid>)
+    f_check <eval <args>+1>
+  endif
+  var.baguid=<findcont(<args>).uid>
+  topobj.tryp 0 uid.<var.baguid>.f_check 0
+endif
+f_check <eval <args>+1>
+return 1
+ 
+[function f_takegold]
+if <var.ggn>
+  if (<uid.<var.golduid<var.ggn>>.baseid>==i_gold)
+    topobj.tryp 0 uid.<var.golduid<var.ggn>>.remove
+  endif
+  var.ggn=<eval <var.ggn>+ -1>
+  f_takegold
+  return 1
+endif
+update
+return 1
+
+// end code

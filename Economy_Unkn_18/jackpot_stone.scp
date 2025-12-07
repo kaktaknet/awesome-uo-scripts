@@ -1,0 +1,243 @@
+//JACKPOT STONE CREATED BY RASZITH
+//INCLUDES: PART OF BANK CHECK SYSTEM MADE BY KUCHERVANO
+
+[ITEMDEF I_JACKPOT_STONE] 
+ID=i_grave_stone
+NAME=Gambling Stone
+FLIP=0ed5
+
+ON=@CREATE
+MORE=5000
+TIMER=60
+
+ON=@CLICK
+MESSAGE [Jackpot: <more>gp]
+
+ON=@DCLICK 
+IF !(<src.findid.i_jackpot_timer>)
+	IF (<eval <src.findid.i_gold.amount>> > 249)
+		VAR.SUA_COLOR=152
+		SRC.NEWITEM i_jackpot_timer
+		SRC.ACT.TIMER=2
+		SRC.ACT.EQUIP
+		SRC.CONSUME 250 i_gold
+		IF (<eval <more>> < 380000)
+			MORE=<EVAL <MORE>+150>
+		ELSE
+			VAR.SUA_COLOR=155
+			MORE=380000
+			SRC.SYSMESSAGEUA The Jackpot will not rise over 380k.
+			VAR.SUA_COLOR=152
+		ENDIF
+		VAR.RANDOMISE=<EVAL {1 480}>
+		IF (<VAR.RANDOMISE>==20) || (<VAR.RANDOMISE>==50) || (<VAR.RANDOMISE>=80) || (<VAR.RANDOMISE>==110) || (<VAR.RANDOMISE>==140) || (<VAR.RANDOMISE>==170) || (<VAR.RANDOMISE>==200) || (<VAR.RANDOMISE>==230) || (<VAR.RANDOMISE>==260) || (<VAR.RANDOMISE>==290) || (<VAR.RANDOMISE>==320) || (<VAR.RANDOMISE>==350) || (<VAR.RANDOMISE>==380) || (<VAR.RANDOMISE>==410) || (<VAR.RANDOMISE>==440)
+			SRC.SFX=01ff
+			SRC.SYSMESSAGEUA You have won a check for 2000gp.
+			SRC.NEWITEM=i_bank_check
+			SRC.ACT.MORE=2000
+			SRC.ACT.BOUNCE
+			MORE=<EVAL <MORE>+-2000>
+		ELSEIF (<VAR.RANDOMISE>==15) || (<VAR.RANDOMISE>==30) || (<VAR.RANDOMISE>==45) || (<VAR.RANDOMISE>==60) || (<VAR.RANDOMISE>==75) || (<VAR.RANDOMISE>==90) || (<VAR.RANDOMISE>==105) || (<VAR.RANDOMISE>==120) || (<VAR.RANDOMISE>==135) || (<VAR.RANDOMISE>==150) || (<VAR.RANDOMISE>==165) || (<VAR.RANDOMISE>==180) || (<VAR.RANDOMISE>==195) || (<VAR.RANDOMISE>==210) || (<VAR.RANDOMISE>==225) || (<VAR.RANDOMISE>==240) || (<VAR.RANDOMISE>==255) || (<VAR.RANDOMISE>==270) || (<VAR.RANDOMISE>==285) || (<VAR.RANDOMISE>==300) || (<VAR.RANDOMISE>==315) || (<VAR.RANDOMISE>==330) || (<VAR.RANDOMISE>==345) || (<VAR.RANDOMISE>==360)
+			SRC.SFX=01ff
+			SRC.SYSMESSAGEUA You have won a check for 1000gp.
+			SRC.NEWITEM=i_bank_check
+			SRC.ACT.MORE=1000
+			SRC.ACT.BOUNCE
+			MORE=<EVAL <MORE>+-1000>
+		ELSEIF (<VAR.RANDOMISE>==10) || (<VAR.RANDOMISE>==25) || (<VAR.RANDOMISE>==40) || (<VAR.RANDOMISE>==55) || (<VAR.RANDOMISE>==70) || (<VAR.RANDOMISE>==85) || (<VAR.RANDOMISE>==100) || (<VAR.RANDOMISE>==115) || (<VAR.RANDOMISE>==130) || (<VAR.RANDOMISE>==145) || (<VAR.RANDOMISE>==160) || (<VAR.RANDOMISE>==175) || (<VAR.RANDOMISE>==190) || (<VAR.RANDOMISE>==205) || (<VAR.RANDOMISE>==220) || (<VAR.RANDOMISE>==235) || (<VAR.RANDOMISE>==250) || (<VAR.RANDOMISE>==265) || (<VAR.RANDOMISE>==280) || (<VAR.RANDOMISE>==295) || (<VAR.RANDOMISE>==310) || (<VAR.RANDOMISE>==325) || (<VAR.RANDOMISE>==340) || (<VAR.RANDOMISE>==355) || (<VAR.RANDOMISE>==370) || (<VAR.RANDOMISE>==385) || (<VAR.RANDOMISE>==405) || (<VAR.RANDOMISE>==420) || (<VAR.RANDOMISE>==435) || (<VAR.RANDOMISE>==450)
+			SRC.SFX=01ff
+			SRC.SYSMESSAGEUA You have won a check for 500gp.
+			SRC.NEWITEM=i_bank_check
+			SRC.ACT.MORE=500
+			SRC.ACT.BOUNCE
+			MORE=<EVAL <MORE>+-500>
+		ELSEIF (<VAR.RANDOMISE>==5) || (<VAR.RANDOMISE>==35) || (<VAR.RANDOMISE>==65) || (<VAR.RANDOMISE>==95) || (<VAR.RANDOMISE>==125) || (<VAR.RANDOMISE>==155) || (<VAR.RANDOMISE>==185) || (<VAR.RANDOMISE>==215) || (<VAR.RANDOMISE>==245) || (<VAR.RANDOMISE>==275) || (<VAR.RANDOMISE>==305) || (<VAR.RANDOMISE>==335) || (<VAR.RANDOMISE>==365) || (<VAR.RANDOMISE>==395) || (<VAR.RANDOMISE>==425) || (<VAR.RANDOMISE>==455)
+			SRC.SFX=01ff
+			SRC.SYSMESSAGEUA You have won a bag of reagents.
+			SRC.NEWITEM=tm_bag_reagents
+			SRC.ACT.BOUNCE
+		ELSEIF (<VAR.RANDOMISE>==267) 
+			SRC.SFX=0043
+			SAY Jackpot!
+			SRC.SUPERFIREWORKS
+			SRC.SYSMESSAGEUA You have won the Jackpot of <more>gp
+			SRC.SYSMESSAGEUA Your winnings have been placed in your bank box.
+			IF (<eval <more>> > 60000)
+				SRC.NEWITEM=i_bank_check
+				SRC.ACT.MORE=60000	
+				SRC.ACT.CONT=<src.findlayer.29.uid>
+				SRC.ACT.UPDATEX
+				MORE=<eval <more>+-60000>
+				IF (<eval <more>> > 60000)
+					SRC.NEWITEM=i_bank_check
+					SRC.ACT.MORE=60000	
+					SRC.ACT.CONT=<src.findlayer.29.uid>
+					SRC.ACT.UPDATEX
+					MORE=<eval <more>+-60000>
+					IF (<eval <more>> > 60000)
+						SRC.NEWITEM=i_bank_check
+						SRC.ACT.MORE=60000	
+						SRC.ACT.CONT=<src.findlayer.29.uid>
+						SRC.ACT.UPDATEX
+						MORE=<eval <more>+-60000>
+						IF (<eval <more>> > 60000)
+							SRC.NEWITEM=i_bank_check
+							SRC.ACT.MORE=60000	
+							SRC.ACT.CONT=<src.findlayer.29.uid>
+							SRC.ACT.UPDATEX
+							MORE=<eval <more>+-60000>
+							IF (<eval <more>> > 60000)
+								SRC.NEWITEM=i_bank_check
+								SRC.ACT.MORE=60000	
+								SRC.ACT.CONT=<src.findlayer.29.uid>
+								SRC.ACT.UPDATEX
+								MORE=<eval <more>+-60000>
+								IF (<eval <more>> > 60000)
+									SRC.NEWITEM=i_bank_check
+									SRC.ACT.MORE=60000	
+									SRC.ACT.CONT=<src.findlayer.29.uid>
+									SRC.ACT.UPDATEX
+									MORE=2000
+								ELSE
+									SRC.NEWITEM=i_bank_check
+									SRC.ACT.MORE=<more>	
+									SRC.ACT.CONT=<src.findlayer.29.uid>
+									SRC.ACT.UPDATEX
+									MORE=2000
+								ENDIF
+							ELSE
+								SRC.NEWITEM=i_bank_check
+								SRC.ACT.MORE=<more>	
+								SRC.ACT.CONT=<src.findlayer.29.uid>
+								SRC.ACT.UPDATEX
+								MORE=2000
+							ENDIF
+						ELSE
+							SRC.NEWITEM=i_bank_check
+							SRC.ACT.MORE=<more>	
+							SRC.ACT.CONT=<src.findlayer.29.uid>
+							SRC.ACT.UPDATEX
+							MORE=2000
+						ENDIF
+					ELSE
+						SRC.NEWITEM=i_bank_check
+						SRC.ACT.MORE=<more>	
+						SRC.ACT.CONT=<src.findlayer.29.uid>
+						SRC.ACT.UPDATEX
+						MORE=2000
+					ENDIF
+				ELSE
+					SRC.NEWITEM=i_bank_check
+					SRC.ACT.MORE=<more>	
+					SRC.ACT.CONT=<src.findlayer.29.uid>
+					SRC.ACT.UPDATEX
+					MORE=2000
+				ENDIF
+			ELSE
+				SRC.NEWITEM=i_bank_check
+				SRC.ACT.MORE=<more>	
+				SRC.ACT.CONT=<src.findlayer.29.uid>
+				SRC.ACT.UPDATEX
+				MORE=2000
+			ENDIF
+		ELSE
+			VAR.SUA_COLOR=32
+			SRC.SYSMESSAGEUA You tried but failed to win anything.
+		ENDIF
+	ELSE
+		SRC.SYSMESSAGE You do not have 250gp in your backpack to play.
+	ENDIF
+ELSE
+SRC.SYSMESSAGE You must wait to perform another action.
+ENDIF
+RETURN 1
+
+ON=@TIMER
+MORE=<EVAL <MORE>+50>
+TIMER=60
+
+[FUNCTION SYSMESSAGEUA]
+VAR.OLD_P <P>
+VAR.OLD_REGION_FLAGS <REGION.FLAGS>
+VAR.OLD_REGION_EVENTS <REGION.EVENTS>
+VAR.OLD_ACT <ACT.UID>
+REGION.EVENTS -0
+REGION.FLAGS=0
+P 11 11 0 1
+NEWITEM i_memory
+ACT.CONT <UID>
+ACT.SAYUA <VAR.SUA_COLOR> 0 0 1 <args>
+ACT.REMOVE
+P <VAR.OLD_P>
+REGION.FLAGS <VAR.OLD_REGION_FLAGS>
+REGION.EVENTS <VAR.OLD_REGION_EVENTS>
+ACT <VAR.OLD_ACT>
+
+[ITEMDEF i_jackpot_timer] 
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+NAME=Jackpot Timer
+WEIGHT=0
+LAYER=layer_special
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[TEMPLATE tm_bag_reagents] 
+CONTAINER=i_bag
+
+ITEM=0f7a, 50 //Black Pearl
+ITEM=0f7b, 50 //Blood Moss
+ITEM=0f84, 50 //Garlic
+ITEM=0f85, 50 //Ginseng
+ITEM=0f86, 50 //Mandrake
+ITEM=0f88, 50 //Niteshade
+ITEM=0f8c, 50 //Sulphorous Ash
+ITEM=0f8d, 50 //Spider Silk
+
+[ITEMDEF I_BANK_CHECK] 
+ID=i_deed
+NAME=bank check
+FLIP=0ed5
+WEIGHT=.1
+
+ON=@CREATE
+MORE=0
+COLOR=0fd
+
+ON=@CLICK
+MESSAGE a bank check of <more>gp
+RETURN 1
+
+ON=@DCLICK 
+IF (<CONT.UID> = <SRC.FINDLAYER(29).UID>)
+	SRC.SYSMESSAGE The gold has been placed in your bank box.
+	SRC.NEWITEM=i_gold
+	SRC.ACT.AMOUNT=<more>
+	SRC.ACT.CONT=<src.findlayer.29.uid>
+	SRC.ACT.UPDATEX
+	REMOVE
+ELSE
+	SRC.SYSMESSAGE You may only use this in your bank box.
+ENDIF
+RETURN 1
+
+[FUNCTION getgoldbank]
+VAR.GOLDLEFT=<ARGN>
+IF (<VAR.GOLDLEFT><=<FINDLAYER(29).FINDID.i_gold.AMOUNT>)
+IF (<FINDLAYER(29).FINDID.i_gold.AMOUNT> == <VAR.GOLDLEFT>)
+FINDLAYER(29).FINDID.i_gold.REMOVE
+RETURN 1
+ENDIF
+FINDLAYER(29).FINDID.i_gold.AMOUNT=<FINDLAYER(29).FINDID.i_gold.AMOUNT>+(-<VAR.GOLDLEFT>)
+RETURN 1
+ELSE
+VAR.GOLDLEFT=<eval <VAR.GOLDLEFT>+(-<FINDLAYER(29).FINDID.i_gold.AMOUNT>)>
+FINDLAYER(29).FINDID.i_gold.REMOVE
+GETGOLDBANK <VAR.GOLDLEFT>
+RETURN 1
+ENDIF
+RETURN 1
+
+[EOF]

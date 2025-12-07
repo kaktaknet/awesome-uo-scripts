@@ -1,0 +1,33 @@
+// Wigs
+// To use Double Click the wig. To take off Double Click the stand.
+// It doesn't work with any stand though. Just the one scripted here!
+// I will do longer ones soon.
+// 
+// MattVonFat
+
+[ITEMDEF i_wig_short]
+ID=i_wig_2
+NAME=Short Wig
+TYPE=0
+VALUE=1000
+
+ON=@DCLICK
+SRC.CONSUME=1 i_wig_short
+SRC.NEWITEM=i_hair_short
+SRC.ACT.COLOR=colors_hair
+SRC.ACT.EQUIP
+MESSAGE You put on the wig
+RETURN 1
+
+[ITEMDEF i_wig_stander]
+ID=i_wig_stand
+NAME=Wig Stand
+VALUE=500
+
+ON=@DCLICK
+IF <SRC.FINDLAYER(11).BASEID> = i_hair_short
+SRC.FINDLAYER(11).REMOVE
+SRC.NEWITEM=i_wig_short
+SRC.ACT.BOUNCE
+MESSAGE You take off the wig!
+ENDIF

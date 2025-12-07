@@ -1,0 +1,337 @@
+/////////////////////////////////////////////////////////////////////////////////
+//// Banner
+//// Vending Machine stone by Maul
+////
+//// Modify this script if you wish but please do not remove this banner.
+////////////////////////////////////////////////////////////////////////////////////////////
+//// Note: This is a Vending Machine stone using gumps, your should find it faily well orgainised.
+//// It has some of the custom items used on my old shard, so u may wish to check and change some
+//// of the items available before placing it in your world.
+///////////////////////////////////////////////////
+
+
+[ITEMDEF I_vending_machine]
+ID=0ed4
+ON=@Create
+COLOR=000b3
+NAME=Vending Machine Stone
+CATEGORY=Apophis
+SUBSECTION=Stones
+DESCRIPTION=vending machine stone
+
+ON=@DCLICK
+SRC.SFX 555
+DIALOG d_x_vending_stone
+RETURN 1
+
+
+////////////////////////////////////////////////////////////////////
+// BEGIN GUMP 
+////////////////////////////////////////////////////////////////////
+
+[DIALOG d_x_vending_stone]
+0,0                                    	// Position
+resizepic 50 100 2600 530 300          	// Curved Grey background 
+
+////////////////////////////////////////////////////////////////////
+page 0                                 	// Page 0
+resizepic 66 155 5100 498 25          	// Square Grey box
+button 270 360 247 248 1 0 0           	// Okay, button 0
+
+////Headings/////////////////////////////////////////////////////////
+text 220 120 0 0			// menu heading
+text 270 133 0 1			// By Apophis
+
+text 125 158 0 2                       	// Actions
+text 250 158 0 3                       	// Items
+text 390 158 0 4                       	// House Items
+
+button 180 159 5209 5003 0 1 1         	// Opens Actions
+button 310 159 5209 5003 0 2 2         	// Opens Items
+button 455 159 5209 5003 0 3 3         	// Opens House Items
+
+/////////////////////////////////////////////////////////////////////
+page 1                                 	// Actions Page
+
+/////////menu text and screen location
+
+text 115 200 0 5			// Read my Fame
+text 115 225 0 6			// Runebook
+text 115 250 0 7			// Runebook Charge
+text 115 275 0 8			// Deed to a Forge
+text 115 300 0 9			// Deed to an Anvil
+text 115 325 0 10			// Deed to a fountain
+text 335 200 0 11			// Brazier
+text 335 225 0 12			// Spining Wheel
+text 335 250 0 13			// Decorative armor
+text 335 275 0 14			// Training Dagger
+text 335 300 0 15			// Training Mace
+text 335 325 0 16			// Training Sword
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 4 		// Read my Fame
+button 90 225 2714 2714 1 0 5		// Runebook
+button 90 250 2714 2714 1 0 6		// Runebook Charge
+button 90 275 2714 2714 1 0 7		// Deed to a Forge
+button 90 300 2714 2714 1 0 8		// Deed to an Anvil
+button 90 325 2714 2714 1 0 9		// Deed to a fountain
+button 310 200 2714 2714 1 0 10		// Brazier
+button 310 225 2714 2714 1 0 11		// Spining Wheel
+button 310 250 2714 2714 1 0 12		// Decorative armor
+button 310 275 2714 2714 1 0 13		// Training Dagger
+button 310 300 2714 2714 1 0 14		// Training Mace
+button 310 325 2714 2714 1 0 15		// Training Sword
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+page 2                                 	// Items Page
+
+/////////menu text and screen location
+
+text 115 200 0 17			// chest of draws
+text 115 225 0 18			// armoire
+text 115 250 0 19			// bookcase
+text 115 275 0 20			// Uid Chest
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 16 		// chest of draws
+button 90 225 2714 2714 1 0 17		// armoire
+button 90 250 2714 2714 1 0 18		// bookcase
+button 90 275 2714 2714 1 0 19		// Uid Chest
+
+///////////////////////////////////////////////////////////////////////
+page 3                                 	// House Items Page
+
+/////////menu text and screen location
+
+
+
+////////button types and screen location
+
+
+
+///////////////////////////////////////////////////////////////////////
+
+
+[DIALOG d_x_vending_stone TEXT]
+Vending Machine Stone // Menu heading
+By Apophis
+
+Page 1
+Page 2
+Page 3
+
+///page 1
+Read my Fame/Karma 			
+Runebook 5K	
+Runebook Charge 100 gp				
+Deed to a Forge 6K 			
+Deed to an Anvil 6K
+Deed to a fountain 10K			
+Brazier 5K 				
+Spining Wheel 25K 			
+Decorative armor 3K
+Training Dagger 100 gp
+Training Mace 100 gp
+Training Sword 100 gp
+
+///page 2
+Chest of draws 3K
+Armoire 3K
+Bookcase 1K
+Uid Chest 5K
+
+///page 3
+
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_x_vending_stone BUTTON]
+
+ONBUTTON=4 // Read my Fame/Karma/Kills
+SRC.message You have <src.karma> karma.
+SRC.message You have <src.fame> fame.
+SRC.message You have <src.kills> kills.
+RETURN 1
+
+ONBUTTON=5 // Runebook 5 K
+IF <SRC.RESTEST 5000 I_GOLD>
+SRC.CONSUME=5000 I_GOLD
+SRC.MESSAGE You pay 5000 gold
+SOUND 0F7
+SRC.NEWITEM=i_x_runebook
+SRC.ACT.ATTR=attr_newbie
+SRC.ACT.BOUNCE
+RETURN 0 // testing to see if fixes the crash bug
+ELSE
+SRC.MESSAGE You dont have enough gold
+RETURN 1
+ENDIF
+
+ONBUTTON=6 // Runebook Charge 100 gp
+IF <SRC.RESTEST 100 I_GOLD>
+	IF <SRC.RESTEST i_x_runebook>
+		SRC.CONSUME=100 I_GOLD
+		SRC.MESSAGE You pay 100 gold
+		SOUND 0F7
+		SRC.NEWITEM=i_scroll_recall
+		SRC.ACT.BOUNCE
+	ELSE
+		SRC.MESSAGE You dont have a runebook to charge
+	ENDIF
+ELSE
+	SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=7 // Deed to a Forge 6 K
+IF <SRC.RESTEST 6000 I_GOLD>
+SRC.CONSUME=6000 I_GOLD
+SRC.MESSAGE You pay 6000 gold
+SOUND 0F7
+SRC.NEWITEM=i_deed_forge
+SRC.ACT.BOUNCE
+return 1
+ELSE
+SRC.MESSAGE You dont have enough gold
+RETURN 1
+ENDIF
+
+ONBUTTON=8 // Deed to an Anvil 6 K
+IF <SRC.RESTEST 600 I_GOLD>
+SRC.CONSUME=6000 I_GOLD
+SRC.MESSAGE You pay 6000 gold
+SOUND 0F7
+SRC.NEWITEM=i_deed_anvil
+SRC.ACT.BOUNCE
+return 1
+ELSE
+SRC.MESSAGE You dont have enough gold
+return 1
+ENDIF
+
+ONBUTTON=9 // Deed to a white fountain 10K
+IF <SRC.RESTEST 10000 I_GOLD>
+SRC.CONSUME=10000 I_GOLD
+SRC.MESSAGE You pay 10000 gold
+SOUND 0F7
+SRC.NEWITEM=i_deed_fount_wh
+SRC.ACT.BOUNCE
+return 1
+ELSE
+SRC.MESSAGE You dont have enough gold
+return 1
+ENDIF
+
+ONBUTTON=10 // Brazier 5K 
+IF <SRC.RESTEST 5000 I_GOLD>
+SRC.CONSUME=5000 I_GOLD
+SRC.MESSAGE You pay 5000 gold
+SOUND 0F7
+SRC.NEWITEM=i_brazier_tall
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=11 // Spining Wheel 25K
+IF <SRC.RESTEST 25000 I_GOLD>
+SRC.CONSUME=25000 I_GOLD
+SRC.MESSAGE You pay 25000 gold
+SOUND 0F7
+SRC.NEWITEM=i_deed_spinwheel
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=12 // Decorative armor 3K
+IF <SRC.RESTEST 3000 I_GOLD>
+SRC.CONSUME=3000 I_GOLD
+SRC.MESSAGE You pay 3000 gold
+SOUND 0F7
+SRC.NEWITEM=01512
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=13 // Training Dagger 100gp
+IF <SRC.RESTEST 100 I_GOLD>
+SRC.CONSUME=100 I_GOLD
+SRC.MESSAGE You pay 100 gold
+SOUND 0F7
+SRC.NEWITEM=i_train_dagger
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=14 // Training Mace 100gp
+IF <SRC.RESTEST 100 I_GOLD>
+SRC.CONSUME=100 I_GOLD
+SRC.MESSAGE You pay 100 gold
+SOUND 0F7
+SRC.NEWITEM=i_train_mace
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=15 // Training Sword 100gp
+IF <SRC.RESTEST 100 I_GOLD>
+SRC.CONSUME=100 I_GOLD
+SRC.MESSAGE You pay 100 gold
+SOUND 0F7
+SRC.NEWITEM=i_train_sword
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=16 // Chest of draws 3K
+IF <SRC.RESTEST 3000 I_GOLD>
+SRC.CONSUME=3000 I_GOLD
+SRC.MESSAGE You pay 3000 gold
+SOUND 0F7
+SRC.NEWITEM=i_bureau
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=17 // Armoire 3K
+IF <SRC.RESTEST 3000 I_GOLD>
+SRC.CONSUME=3000 I_GOLD
+SRC.MESSAGE You pay 3000 gold
+SOUND 0F7
+SRC.NEWITEM=i_armoir_dk
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=18 // Bookcase 1K
+IF <SRC.RESTEST 1000 I_GOLD>
+SRC.CONSUME=1000 I_GOLD
+SRC.MESSAGE You pay 1000 gold
+SOUND 0F7
+SRC.NEWITEM=i_bookcase_full
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+ONBUTTON=19 // Uid Chest
+IF <SRC.RESTEST 5000 I_GOLD>
+SRC.CONSUME=5000 I_GOLD
+SRC.MESSAGE You pay 5000 gold
+SOUND 0F7
+SRC.NEWITEM=i_uid_chest
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You dont have enough gold
+ENDIF
+
+[EOF]

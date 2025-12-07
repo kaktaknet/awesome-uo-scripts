@@ -1,0 +1,1117 @@
+// Ctf is started and players join via .ctf command, all player items auto banked, including shrinking any mounts they may
+// have, aswell as fame karma and kills recored to be auto restored when they leave. They are auto given ctf armor and
+// weapons. The game is run and each round updates the status page showing who won. When players leave, all ctf items
+// removed, and fame karma and kills are auto restored.
+
+//requirements
+
+// Follow instructions provided
+// To update status page requires Gm_Raiden custom status page
+
+/////////////////////////////////////////////////////////////////////////////////
+//// Banner
+//// Capture the flag System by Gm Raiden (Update)
+//// This script is for 55I
+////
+//// Modify this script if you wish but please do not remove this banner.
+////////////////////////////////////////////////////////////////////////////////////////////
+//// Note: This isnt all my work, i have borrowed some code from others.
+//////////////////////////////////////////////////////////////////////////////////////////
+////
+//// DESCRIPTION: This capture the flag system was designed to make running ctf simple.
+//// To run the ctf game use the CTF book (I_ctfbook) menu, And when the staff is ready type .ctfgo
+////
+//// The .ctf command asks the player to join green or blue team. When they choose, there items
+//// are banked and they are sent to a waiting area (any mounts are shrunk and banked aslo), diff
+//// waiting areas for each team, next to each other. The command also gives them colored armor
+//// with colored weapons and regs, pots. 
+////
+//// Once enough players have arrived the ctf is closed from more entries, and all the players
+//// are auto sent to there own flag points, now the game starts.
+////
+//// In the middle of the playing area is the finnish pad. When a player steps on another teams
+//// flag/pad he will be issued with a robe colored with that teams color, he then needs to get
+//// to the finnish pad to win. Once a player wins, a message is sent to all shard players on
+//// the shard saying such and such has won the ctf for team whatever. And all ctf players are
+//// auto taken back to there teams start point (auto ressed if they are dead).
+////
+//// And then it can be played again or the players can type .ctfexit to leave the game.
+////
+//////////////////////////////////////////////////////////////////////////////////////////
+////
+//// Commands
+//// Player
+//// .ctf = will take players to the ctf arena (banks player items)
+////
+//// .ctfexit = will take players back to towns (green or blue)
+////
+//////////////////////////////////////////////////////////////////////////////////////////
+////
+//// Warning: Do not have any other way for the players to be able to gain access to
+//// the ctf arena, eg tele pads or a stone that lets them come to the ctf arena. This is to
+//// stop players from being able to bring other items to the ctf, otherwise u 
+//// will end up with players using power weapons against players who dont have them
+//// and thus unbalance the system. If you already have a ctf area that already 
+//// has pads or any other way for the players to gain access then i would suggest 
+//// making another ctf arena in a diff location that u know they would not 
+//// otherwise be able to get to, and use it for this system.
+//// Warning2: If you want to change the location, you can, but plz dont erease this banner. 
+////
+///////////////////////////////////////////////////////////////////////////////////////////
+////
+//// Installation, modify the ctf go locations to your ctf arena area, i suggest putting
+//// the one for the players in an arena waiting area and the one for the person running
+//// the tourney in the arena itself. You may wish to modify the items i have chosen to give the players.
+//// First open your spheremenu.scp and search for MENU MENU_PAGEGM_4, when found comment
+//// these lines out to prevent players from using the helpdesk to leave the ctf
+//// with the ctf items. I have included a replacement for these in this script that will
+//// check to see if the player is in a ctf before it will let them go to the Help Desk.
+//// Then place the two pads (green and blue) in your arena at each ends, and then place the winner pad in the middle. 
+////
+//// Heres the itemdefs.
+////
+//// i_blue_flag_pad
+//// i_green_flag_pad
+//// i_blue_winner_pad
+//// i_green_winner_pad
+////
+////////////////////////////////////////////////////////////////////////////////////////////
+////
+//// Comment this out in your spheremenu.scp file like this, note // before each line
+// [MENU MENU_PAGEGM_4]
+// Are you sure you want to be teleported to the Depths of Development? You will be stuck there until a GM teleports you back 
+
+to the world.
+// ON=0 YES, down we go!
+// //GOPLACE a_helpdesk
+// src.newitem i_teleport_delay
+// src.act.equip
+//
+// ON=0 NO, I'd rather stay here.
+// SYSMESSAGE Help request aborted.
+////
+////
+//// Lastly drop this file into your scripts folder and 
+//// resync the shard.
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////// Now the script starts //////////////////////////////////////////////////////
+[MENU MENU_PAGEGM_4]
+Are you sure you want to be teleported to the Depths of Development? You will be stuck there until a GM teleports you back to 
+
+the world.
+ON=0 YES, down we go!
+IF <SRC.RESTEST i_mem_tourney_stat_storage>
+sysmessage You are involved in an event right now, use the event exit command to leave.
+return 1
+
+elseif <SRC.RESTEST i_mem_ctf_stat_storage>
+sysmessage You are involved in an event right now, use the event exit command to leave.
+return 1
+else
+src.newitem i_teleport_delay
+src.act.equip
+endif
+
+ON=0 NO, I'd rather stay here.
+SYSMESSAGE Help request aborted.
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_ctf_crook] 
+NAME=CTF Crook 
+ID=i_shepherds_crook 
+WEIGHT=500 
+
+ON=@CREATE 
+COLOR=021// {009d4} 
+HITPOINTS={5 10} 
+ATTR=attr_newbie|attr_move_never|attr_magic 
+
+CATEGORY=Raiden 
+SUBSECTION=CTF
+DESCRIPTION=CTF Staff 
+
+ON=@DCLICK 
+TARGET Select the player you would like to move or res. 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+if ((<src.TARG.id>==c_ghost_man) || (<src.TARG.id>==c_ghost_woman)) 
+SRC.TARG.RESURRECT
+src.targ.HITS = <SRC.targ.STR> 
+sound=snd_SPELL_RESURRECTION 
+RETURN 1
+endif
+
+LINK=<SRC.TARG.UID> 
+TARGETG Where would you like to move <SRC.TARG.NAME>? 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+LINK.GO <SRC.TARGP> 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+LINK.GO <SRC.TARGP> 
+RETURN 1 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[Function f_backtostart]
+if <tag.ctf_blue>=1
+FINDLAYER(layer_robe).remove
+if ((<id>==c_ghost_man) || (<id>==c_ghost_woman)) 
+RESURRECT
+HITS=100
+mana=100 
+go=6095,278,44 /// blue team start area 
+return 1
+else
+go=6095,278,44 /// blue team start area 
+return 1 
+endif
+elseif <tag.ctf_green>=1
+FINDLAYER(layer_robe).remove
+if ((<id>==c_ghost_man) || (<id>==c_ghost_woman)) 
+RESURRECT
+HITS=100
+mana=100
+go=6063,278,-22 /// green team start area
+return 1
+else
+go=6063,278,-22 /// green team start area
+return 1
+endif
+endif
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_mem_ctf_team_blue] 
+ID=i_gem_diamond 
+TYPE=t_script 
+NAME=CTF blue team identifer
+CATEGORY=Raiden
+SUBSECTION=CTF
+DESCRIPTION=CTF blue team identifer
+
+on=@create 
+ATTR=04090 //Invis, don't move, decay. 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_mem_ctf_team_green] 
+ID=i_gem_diamond 
+TYPE=t_script 
+NAME=CTF green team identifer
+CATEGORY=Raiden
+SUBSECTION=CTF
+DESCRIPTION=CTF green team identifer
+
+on=@create 
+ATTR=04090 //Invis, don't move, decay. 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_mem_ctf_stat_storage] 
+ID=i_gem_diamond 
+TYPE=t_script 
+NAME=CTF stat storage 
+CATEGORY=Raiden
+SUBSECTION=Tourney
+DESCRIPTION=CTF stat storage
+
+on=@create 
+ATTR=04090 //Invis, don't move, decay. 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+[Function ctfon] // only usable by an assigned player
+var.ctf=1
+SERV.B A GAME OF CTF HAS JUST BEEN STARTED, TYPE .ctf TO JOIN.
+SERV.B A GAME OF CTF HAS JUST BEEN STARTED, TYPE .ctf TO JOIN.
+src.go=6128,361,-22 //ctf arena staff start point
+SRC.FINDLAYER(layer_hand1).BOUNCE 
+SRC.NEWITEM=i_ctf_crook 
+SRC.ACT.equip 
+///////////////////////////////////////////////////////////////////////////////////////////
+[Function ctfgo] // only usable by an assigned player
+var.ctfgo=1
+SERV.B GO*GO*GO*GO*GO*GO**
+SERV.B GO*GO*GO*GO*GO*GO**
+///////////////////////////////////////////////////////////////////////////////////////////
+[Function ctfoff] // only usable by an assigned player
+var.ctf=2
+SERV.B ENTRIES TO CTF ARE NOW CLOSED.
+SERV.B ENTRIES TO CTF ARE NOW CLOSED.
+
+///////////////////////////////////////////////////////////////////////////////////////////
+[Function ctfstartround] // only usable by an assigned player
+
+if <tag.ctf_blue>=1
+go=6095,278,44 /// blue team flag 
+return 1 
+
+elseif <tag.ctf_green>=1
+go=6063,278,-22 /// green team flag
+return 1
+endif
+
+///////////////////////////////////////////////////////////////////////////////////////////
+[function ctfstart]
+
+region.allclients ctfstartround
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[function ctfwinner]
+if <SRC.RESTEST i_mem_ctf_team_blue>
+SERV.B <src.name> has just make 1 point for Blue team.
+elseif <SRC.RESTEST i_mem_ctf_team_green>
+SERV.B <src.name> has just make 1 point for Green team.
+end
+
+sound=snd_SPELL_RESURRECTION
+if <src.tag.ctfwon>=
+src.tag.ctfwon=1
+else
+src.tag.ctfwon=(<src.tag.ctfwon>+1)
+endif
+SRC.NEWITEM=i_gem_diamond
+SRC.ACT.EQUIP
+src.act.color=07a8
+src.act.name=CTF Points
+
+//////////////// send all ctf players to the game start point /////////////
+
+region.allclients f_backtostart
+
+///////////////////////////////////////////////////////////////////////////////////////////
+[Function ctfleave] // only usable by assigned player with book
+src.go=1425,1697
+SRC.CONSUME=i_ctf_crook
+return 1
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[plevel 1] 
+ctf 
+
+[function ctf] 
+if <var.ctf>=2
+SRC.SYSMESSAGE There is no game of ctf on at this time.
+return 1
+elseif <var.ctf>=
+SRC.SYSMESSAGE There is no game of ctf on at this time.
+return 1 
+else
+DIALOG d_x_ctf_choose_team
+//DIALOG d_x_ctf_menu
+endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+///show menu to ask the player what team they want to be on
+
+[DIALOG d_x_ctf_choose_team]
+0,0 // Position
+resizepic 250 200 2600 300 170 // Curved Grey background 
+button 360 330 247 248 1 0 0 // Okay, button 0
+
+/////////menu text and screen location
+
+text 360 255 0 0 // Blue Team
+text 360 280 0 1 // Green Team
+
+////////button types and screen location ///////////////////////////////////////////////////////
+
+button 335 255 2714 2714 1 0 1 // Blue Team
+button 335 280 2714 2714 1 0 2 // Green Team
+
+[DIALOG d_x_ctf_choose_team TEXT]
+Blue Team
+Green Team
+
+[DIALOG d_x_ctf_choose_team BUTTON]
+
+ONBUTTON=0
+
+ONBUTTON=1 // Blue Team
+if <SRC.RESTEST i_mem_ctf_stat_storage>
+sysmessage To change teams first exit ctf, then rejoin.
+else
+f_ctf_bounce_items_to_pack
+f_ctf_blue_team_items
+src.tag.ctf_blue=1 //blue
+src.go 6095,278,44 /// blue team start area
+SRC.EVENTS e_ctf
+RETURN 1
+endif
+
+ONBUTTON=2 // Green Team
+if <SRC.RESTEST i_mem_ctf_stat_storage>
+sysmessage To change teams first exit ctf, then rejoin.
+else
+f_ctf_bounce_items_to_pack
+f_ctf_green_team_items
+src.tag.ctf_green=1 //green
+src.go 6063,278,-22 /// green team start area
+SRC.EVENTS e_ctf
+RETURN 1
+endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+[function f_ctf_bounce_items_to_pack]
+
+SRC.findlayer.21.updatex 
+SRC.FINDLAYER(layer_hand1).BOUNCE 
+SRC.FINDLAYER(layer_hand2).BOUNCE 
+SRC.FINDLAYER(layer_shoes).BOUNCE 
+SRC.FINDLAYER(layer_pants).BOUNCE 
+SRC.FINDLAYER(layer_shirt).BOUNCE 
+SRC.FINDLAYER(layer_helm).BOUNCE 
+SRC.FINDLAYER(layer_gloves).BOUNCE 
+SRC.FINDLAYER(layer_ring).BOUNCE 
+SRC.FINDLAYER(layer_collar).BOUNCE 
+SRC.FINDLAYER(layer_half_apron).BOUNCE 
+SRC.FINDLAYER(layer_chest).BOUNCE 
+SRC.FINDLAYER(layer_wrist).BOUNCE 
+SRC.FINDLAYER(layer_tunic).BOUNCE 
+SRC.FINDLAYER(layer_ears).BOUNCE 
+SRC.FINDLAYER(layer_arms).BOUNCE 
+SRC.FINDLAYER(layer_cape).BOUNCE 
+SRC.FINDLAYER(layer_robe).BOUNCE 
+SRC.FINDLAYER(layer_skirt).BOUNCE 
+SRC.FINDLAYER(layer_legs).BOUNCE 
+SRC.FINDTYPE.T_SPELLBOOK.EQUIP 
+SRC.DISMOUNT
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+if (<SRC.findlayer.21.findcont> = 1 ) /// Bank items in pack
+updatex 
+var.getbankuid=<findlayer.29.uid> ///gets used in bank items function
+f_getbags 
+findlayer.21.f_misccheck
+f_bags_to_bank
+endif 
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+SRC.NEWITEM=i_mem_ctf_stat_storage
+SRC.ACT.BOUNCE
+SRC.FINDTYPE.T_SPELLBOOK.UNEQUIP
+
+src.tag.famepits=<src.fame>
+src.tag.karmapits=<src.karma>
+src.tag.murderpits=<src.kills>
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+/////Blue team
+[function f_ctf_blue_team_items]
+
+SRC.NEWITEM=i_mem_ctf_team_blue
+SRC.ACT.BOUNCE
+SRC.NEWITEM=tm_event_regs 
+SRC.ACT.BOUNCE
+SRC.NEWITEM=tm_event_pots 
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_bandage,150
+SRC.ACT.BOUNCE
+src.act.color=06d0
+SRC.NEWITEM=i_bow
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_arrow,200
+src.act.color=07a9
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_kryss
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_axe_war
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_war_fork
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_axe_battle
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_katana
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_dagger
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_mace
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_halberd
+SRC.ACT.BOUNCE
+src.act.color=07a9
+SRC.NEWITEM=i_platemail_helm
+SRC.ACT.EQUIP
+src.act.color=07a9
+SRC.NEWITEM=i_platemail_arms
+SRC.ACT.EQUIP
+src.act.color=07a9
+SRC.NEWITEM=i_platemail_leggings
+SRC.ACT.EQUIP
+src.act.color=07a9
+SRC.NEWITEM=i_platemail_chest
+SRC.ACT.EQUIP
+src.act.color=07a9
+SRC.NEWITEM=i_platemail_gorget
+SRC.ACT.EQUIP
+src.act.color=07a9
+SRC.NEWITEM=i_platemail_gloves
+SRC.ACT.EQUIP
+src.act.color=07a9
+SRC.NEWITEM=i_shield_heater
+SRC.ACT.EQUIP
+src.act.color=07a9
+SRC.NEWITEM=i_sword_viking
+SRC.ACT.EQUIP
+src.act.color=07a9
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+/////Green team
+[function f_ctf_green_team_items]
+
+SRC.NEWITEM=i_mem_ctf_team_green
+SRC.ACT.BOUNCE
+SRC.NEWITEM=tm_event_regs 
+SRC.ACT.BOUNCE
+SRC.NEWITEM=tm_event_pots 
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_bandage,150
+SRC.ACT.BOUNCE
+src.act.color=06d0
+SRC.NEWITEM=i_bow
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_arrow,200
+src.act.color=0817
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_kryss
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_war_fork
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_axe_war
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_axe_battle
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_katana
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_dagger
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_mace
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_halberd
+SRC.ACT.BOUNCE
+src.act.color=0817
+SRC.NEWITEM=i_platemail_helm
+SRC.ACT.EQUIP
+src.act.color=0817
+SRC.NEWITEM=i_platemail_arms
+SRC.ACT.EQUIP
+src.act.color=0817
+SRC.NEWITEM=i_platemail_leggings
+SRC.ACT.EQUIP
+src.act.color=0817
+SRC.NEWITEM=i_platemail_chest
+SRC.ACT.EQUIP
+src.act.color=0817
+SRC.NEWITEM=i_platemail_gorget
+SRC.ACT.EQUIP
+src.act.color=0817
+SRC.NEWITEM=i_platemail_gloves
+SRC.ACT.EQUIP
+src.act.color=0817
+SRC.NEWITEM=i_shield_heater
+SRC.ACT.EQUIP
+src.act.color=0817
+SRC.NEWITEM=i_sword_viking
+SRC.ACT.EQUIP
+src.act.color=0817
+
+
+/////////////////////////////////////////////////////////////////////////////////
+
+[function f_getbags] 
+src.newitem=i_crate_lg
+src.act.bounce 
+src.act.drop
+src.act.color=058 
+src.act.attr=0 
+src.tag.tourneybag=<act.uid> 
+var.tourneybag=<tag.tourneybag>
+f_clear_sysmessage 
+
+///////////////////////////////////////////////////////////////////////////////////
+
+[function f_misccheck] // loops through checking for items in pack
+if (<findcont> = 1 ) 
+var.tourneybag=<cont.tag.tourneybag> 
+findcont(0).cont=<var.tourneybag> 
+return <f_misccheck> 
+else 
+cont.sysmessage=Welcome to Capture the flag. 
+endif 
+
+///////////////////////////////////////////////////////////////////////////////////
+
+[function f_clear_sysmessage] 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+
+//////////////////////////////////////////////
+
+[function f_bags_to_bank] 
+//Sends the bag to your bank & clears tags and vars 
+try uid.<var.tourneybag>.cont=<var.getbankuid> 
+try uid.<var.tourneybag>.update 
+tag.tourneybag= 
+var.getbankuid= 
+bankself 
+updatex 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[TEMPLATE tm_event_regs] 
+DEFNAME=bag_o_regs 
+
+CATEGORY=Raiden 
+SUBSECTION=Events 
+DESCRIPTION=Bag of Regs 
+
+CONTAINER=i_bag 
+ITEM=i_reag_black_pearl,60 
+ITEM=i_reag_blood_moss,60 
+ITEM=i_reag_garlic,60 
+ITEM=i_reag_ginseng,60 
+ITEM=i_reag_mandrake_root,60 
+ITEM=i_reag_nightshade,60 
+ITEM=i_reag_sulfur_ash,60 
+ITEM=i_reag_spider_silk,60
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[TEMPLATE tm_event_pots] 
+DEFNAME=bag_o_pots 
+
+CATEGORY=Raiden 
+SUBSECTION=Tourney 
+DESCRIPTION=Bag of Pots
+
+CONTAINER=i_bag 
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+
+//////////////////////////
+
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[function dismount] /// dismounts the player and bounces his ride
+
+SRC.findlayer.21.updatex 
+if (<src.findlayer.25.uid> ) 
+src.act=<src.findlayer.25.more2> 
+src.act.p=<src.p> 
+src.findlayer.25.remove
+src.flags=<src.flags>&~080000000
+src.update 
+update
+SRC.act.SHRINK
+SRC.BOUNCE <SRC.act.ACTARG1>&~080000000
+// SRC.BOUNCE <SRC.TARG.ACTARG1>&~080000000
+SRC.findlayer.21.updatex
+endif
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[plevel 1] 
+ctfexit
+
+[function ctfexit]
+IF !<SRC.RESTEST i_mem_ctf_stat_storage> 
+sysmessage Your are not in a game of ctf right now.
+return 1
+
+else
+
+SRC.SYSMESSAGE Choose where you wish to go to.
+SRC.FINDLAYER.(31).REMOVE //removes items from cursor.
+DIALOG D_ctf_Travel_book
+return 1
+
+//////////////////////////////////////////////////////////////
+
+[DIALOG d_ctf_Travel_book]
+0, 0
+gumppic 100 10 5528 //Background: open book
+page 1 //Page 1: 
+
+button 285 55 2361 2361 1 0 2 //Button: 2 Minoc
+button 125 95 2361 2361 1 0 3 //Button: 3 Yew
+button 210 155 2361 2361 1 0 4 //Button: 4 Britain
+button 245 265 2361 2361 1 0 5 //Button: 5 Trinsic
+button 310 95 2361 2361 1 0 6 //Button: 6 Vesper
+button 260 120 2361 2361 1 0 7 //Button: 7 Cove
+button 420 95 2361 2361 1 0 8 //Button: 8 Moonglow
+button 300 200 2360 2360 1 0 9 //Button: 9 Buc's den
+button 372 244 2360 2360 1 0 10 //Button: 10 Ocllo
+button 190 110 2360 2360 1 0 11 //Button: 11 Wind
+
+///////////////////////////////////////////////////////////////
+
+text 195 400 899 0 //Text: Where would you like to go?
+text 149 190 899 1 //Text: <None>
+text 300 50 0 2 //Text: Minoc
+text 140 90 0 3 //Text: Yew
+text 225 150 0 4 //Text: Britain
+text 260 260 0 5 //Text: Trinsic
+text 325 90 0 6 //Text: Vesper
+text 275 115 0 7 //Text: Cove
+text 390 70 0 8 //Text: Moonglow
+text 280 175 0 9 //Text: Buc's den
+text 390 240 0 10 //Text: Ocllo
+text 205 105 0 11 //Text: Wind
+
+//////////////////////////////////////////////////////////////
+
+[DIALOG d_ctf_Travel_Book TEXT]
+Where would you like to travel?
+<None>
+Minoc
+Yew
+Britain
+Trinsic
+Vesper
+Cove
+Moonglow
+Buc's den
+Ocllo
+Wind
+
+
+
+//////////////////////////////////////////////////////////////
+
+[DIALOG d_ctf_Travel_Book BUTTON]
+
+ONBUTTON=0 // Close Book
+
+ONBUTTON=1 
+
+ONBUTTON=2
+SRC.ctf_strip_items
+go 2466,443,15 //Minoc
+RETURN 1
+
+ONBUTTON=3
+SRC.ctf_strip_items
+go 635,818,0 //Yew
+RETURN 1
+
+ONBUTTON=4
+SRC.ctf_strip_items
+go 1475,1645,21 //Britain
+RETURN 1
+
+ONBUTTON=5
+SRC.ctf_strip_items
+go 1815,2822,0 //Trinsic
+RETURN 1
+
+ONBUTTON=6
+SRC.ctf_strip_items
+go 2895,688,0 //Vesper
+RETURN 1
+
+ONBUTTON=7
+SRC.ctf_strip_items
+go 2246,1214,0 //Cove
+RETURN 1
+
+ONBUTTON=8
+SRC.ctf_strip_items
+go 4471,1178,0 //Moonglow
+RETURN 1
+
+ONBUTTON=9
+SRC.ctf_strip_items
+go 2685,2154 //Buc's den
+RETURN 1
+
+ONBUTTON=10
+SRC.ctf_strip_items
+go 3689,2523 //Ocllo
+RETURN 1
+
+ONBUTTON=11
+SRC.ctf_strip_items
+go 5184,105,5 //Wind
+RETURN 1
+
+
+
+
+////////////////////////////////////////////////////////////////////
+[function ctf_strip_items] /// removes ctf items and flags
+
+SRC.act.remove // testing to try and stop players stealing items
+SRC.findlayer.21.updatex 
+SRC.FINDLAYER(layer_hand1).remove 
+SRC.FINDLAYER(layer_hand2).remove 
+SRC.FINDLAYER(layer_shoes).remove 
+SRC.FINDLAYER(layer_pants).remove 
+SRC.FINDLAYER(layer_shirt).remove 
+SRC.FINDLAYER(layer_helm).remove 
+SRC.FINDLAYER(layer_gloves).remove 
+SRC.FINDLAYER(layer_ring).remove 
+SRC.FINDLAYER(layer_collar).remove 
+SRC.FINDLAYER(layer_half_apron).remove 
+SRC.FINDLAYER(layer_chest).remove 
+SRC.FINDLAYER(layer_wrist).remove 
+SRC.FINDLAYER(layer_tunic).remove 
+SRC.FINDLAYER(layer_ears).remove 
+SRC.FINDLAYER(layer_arms).remove 
+SRC.FINDLAYER(layer_cape).remove 
+SRC.FINDLAYER(layer_robe).remove 
+SRC.FINDLAYER(layer_skirt).remove 
+SRC.FINDLAYER(layer_legs).remove 
+SRC.FINDTYPE.T_SPELLBOOK.EQUIP 
+SRC.Findlayer(21).EMPTY
+SRC.FINDTYPE.T_SPELLBOOK.UNEQUIP
+
+/////////////// flags reset back to original
+src.flags=<src.flags>&~ statf_criminal
+SRC.KILLS=<SRC.TAG.MURDERPITS>
+SRC.FAME=<SRC.TAG.FAMEPITS>
+SRC.KARMA=<SRC.TAG.KARMAPITS>
+src.tag.ctf_green= //green
+src.tag.ctf_blue= //blue
+
+/////////////// ctf ids removed
+src.act.remove <i_mem_ctf_stat_storage.remove>
+src.act.remove <i_mem_ctf_team_blue>
+src.act.remove <i_mem_ctf_team_green>
+src.EVENTS -e_ctf
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_blue_flag_pad] 
+ID=i_floor_marble_5
+NAME=Blue Flag Pad 
+
+ON=@CREATE 
+ATTR=8010
+COLOR=0814 
+
+ON=@STEP
+IF <SRC.RESTEST i_mem_ctf_team_blue> // blue
+return 1
+
+elseif <var.blue_flag_out>=1
+SRC.MESSAGE The flag/robe is already taken, you will have to find who took it.
+return 1
+
+elseif <SRC.RESTEST i_mem_ctf_team_green> // green
+var.blue_flag_out=1
+SRC.NEWITEM=i_Blue_team_robe
+SRC.ACT.EQUIP
+SERV.B <src.name> Steal the Blue team Flag
+endif
+
+///////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_green_flag_pad] 
+ID=i_floor_marble_5
+NAME=Green Flag Pad 
+
+ON=@CREATE 
+ATTR=8010
+COLOR=00817 
+
+ON=@STEP 
+if <SRC.RESTEST i_mem_ctf_team_green> //green
+return 1
+
+elseif <var.green_flag_out>=1
+SRC.MESSAGE The flag/robe is already taken, you will have to find who took it.
+return 1
+
+elseif <SRC.RESTEST i_mem_ctf_team_blue> //blue
+var.green_flag_out=1
+SRC.NEWITEM=i_Green_team_robe
+SRC.ACT.EQUIP
+SERV.B <src.name> Steal the Green team Flag
+endif
+
+/////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_blue_winner_pad] 
+ID=i_floor_marble_5
+NAME=Winner Pad 
+
+ON=@CREATE 
+ATTR=8010
+COLOR=080b
+
+ON=@STEP 
+IF <SRC.RESTEST 1 i_Green_team_robe>
+var.green_flag_out=
+var.blue_flag_out=
+SRC.FINDLAYER(layer_robe).remove
+ctfwinner
+endif
+
+/////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_green_winner_pad] 
+ID=i_floor_marble_5
+NAME=Winner Pad 
+
+ON=@CREATE 
+ATTR=8010
+COLOR=080c
+
+ON=@STEP 
+IF <SRC.RESTEST 1 i_blue_team_robe>
+var.green_flag_out=
+var.blue_flag_out=
+SRC.FINDLAYER(layer_robe).remove
+ctfwinner
+endif
+
+/////////////////////////////////////
+[itemdef i_Green_team_robe]
+NAME= Green Team Robe
+TYPE=t_clothing
+ID=0204e
+WEIGHT=0.1
+ARMOR=75
+
+ON=@CREATE
+COLOR=080c
+HITPOINTS=500
+ATTR=000c|attr_move_never
+
+ON=@EQUIP
+SRC.MESSAGE You have the other teams flag/robe, quick get to the winner pad to win the game.
+
+CATEGORY=Raiden
+SUBSECTION=Green flag/robe
+DESCRIPTION=Ctf robe (Green)
+
+///////////////////////////////////////
+[itemdef i_Blue_team_robe]
+NAME= Blue Team Robe
+TYPE=t_clothing
+ID=0204e
+WEIGHT=0.1
+ARMOR=75
+
+ON=@CREATE
+COLOR=080b
+HITPOINTS=500
+ATTR=000c|attr_move_never
+
+ON=@EQUIP
+SRC.MESSAGE You have the other teams flag/robe, quick get to the winner pad to win the game.
+
+CATEGORY=Raiden
+SUBSECTION=Blue flag/robe
+DESCRIPTION=Ctf robe (Blue)
+
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF I_ctfbook]
+NAME=CTF Book
+ID=i_BOOK_OPEN
+
+CATEGORY=Raiden 
+SUBSECTION=ctf
+DESCRIPTION=CTF Book 
+
+ON=@CREATE 
+COLOR=009de
+ATTR=attr_newbie //|attr_move_never|attr_magic 
+
+ON=@DCLICK
+SRC.SFX 555
+DIALOG d_x_ctf_book
+RETURN 1
+
+[DIALOG d_x_ctf_book]
+107,77
+resizepic 50 360 5054 480 160 // Curved Grey background 
+resizepic 60 370 3000 460 140 // Curved White background
+
+////////////////////////////////////////////////////////////////////
+button 210 485 2103 2104 1 0 0 //Close book
+
+button 80 380 2103 2104 1 0 1 //Button Open entries to CTF
+button 80 405 2103 2104 1 0 2 //Button Close entries
+button 80 430 2103 2104 1 0 3 //Button Start ctf round
+button 80 455 2103 2104 1 0 4 //Button Exit CTF
+
+button 320 380 2103 2104 1 0 5 //Button Add a bag o regs
+button 320 405 2103 2104 1 0 6 //Button Add a bag o pots
+button 320 430 2103 2104 1 0 7 //Button Add 100 bandies
+button 320 455 2103 2104 1 0 8 //Button Add 200 arrows
+
+////Headings/////////////////////////////////////////////////////////
+text 230 480 0 0 // Close book
+
+text 100 375 0 1 // Open entries to CTF
+text 100 400 0 2 // Close entries
+text 100 425 0 3 // Start ctf round
+text 100 450 0 4 // Exit CTF
+
+text 340 375 0 5 // Add a bag o regs
+text 340 400 0 6 // Add a bag o pots
+text 340 425 0 7 // Add 100 bandies
+text 340 450 0 8 // Add 200 arrows
+
+////////button types and screen location
+
+[DIALOG d_x_ctf_book TEXT]
+Close book
+Open CTF for entries
+Close ctf entries
+Start ctf round
+Exit CTF
+Add a bag o regs
+Add a bag o pots
+Add 100 bandies
+Add 200 arrows
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_x_ctf_book BUTTON]
+
+ONBUTTON=0
+
+ONBUTTON=1
+ctfon
+
+ONBUTTON=2
+ctfoff
+
+ONBUTTON=3
+var.green_flag_out=
+var.blue_flag_out=
+ctfstart
+
+ONBUTTON=4
+ctfleave
+
+ONBUTTON=5
+SRC.NEWITEM=tm_event_regs 
+SRC.ACT.BOUNCE
+
+ONBUTTON=6
+SRC.NEWITEM=tm_event_pots 
+SRC.ACT.BOUNCE
+
+ONBUTTON=7
+SRC.NEWITEM=i_bandage,100
+SRC.ACT.BOUNCE
+
+ONBUTTON=8
+SRC.NEWITEM=i_arrow,200
+SRC.ACT.BOUNCE
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+[EVENTS e_ctf] 
+ON=@CLICK 
+MESSAGE [CTF]
+
+//////////////////////////////////////////
+// this is to disable the use of some skills during an event. Skills disabled listed
+// Hiding
+
+ON=@SkillStart 
+IF <src.action>==Skill_Hiding 
+SRC.ACTION -1 
+SRC.SYSMESSAGE This skill is not allowed.
+RETURN 1 
+endif
+
+//////////////////////////////////////////
+// this is to disable the use of some spells during an event. Spells disabled listed
+// Reactive Armor, Protection, Arch Protection, Fire Field, Blade Spirit, Summon, Energy Vortex, 
+// Air Elemental, Daemon, Earth Elemental, Fire Elemental, Water Elemental, Summon Undead.
+
+
+ON=@SPELLCAST 
+IF (<ARGN>==7) || (<ARGN>==15) || (<ARGN>==26) || (<ARGN>==28) || (<ARGN>==33) || (<ARGN>==40) || (<ARGN>==58) || 
+
+(<ARGN>==60) || (<ARGN>==61) || (<ARGN>==62) || (<ARGN>==63) || (<ARGN>==64) || (<ARGN>==65)
+SRC.ACTION -1 
+SRC.SYSMESSAGE This spell is not allowed.
+RETURN 1 
+ENDIF 
+
+//////////////////////////////////////////

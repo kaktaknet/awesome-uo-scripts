@@ -1,0 +1,323 @@
+////////////////////////////////////////////////////////////////////////////////
+//############################################################################//
+//#                                Backstab        	                     #//
+//#                           Crafted by Silver Ghost                        #//
+//# Version: Beta 0.9							     #//
+//# E-Mail: sg@ablogic.com		                                     #//
+//# ICQ: 553410                                                              #//
+//# Date: 1/20/02                                                            #//
+//# If you change this file, please leave your name and changes below...:    #//
+//#									     #//
+//# 1.Silver Ghost: Minor update for players.				     #//
+//# 2.Silver Ghost: Script has been completely re-written from 28kb to 10kb  #//
+//#		    without any changes in effect ;) 			     #//
+//# 3.Silver Ghost: Damadge and chance of hitting formulas have been	     #//
+//#		    re-written.						     #//
+//# 4.Silver Ghost: Now you can stab only when dismounted.		     #//
+//# 5.Silver Ghost: Now you will also poison if weapon is poisoned.	     #//
+//# 6.Silver Ghost: Changed the appearance of skillgain message(thx Taran)   #//
+//# 7.Silver Ghost: Skillgain formula has been re-written		     #//
+//# 8.Silver Ghost: Litle fix in dmg formula.				     #//
+//# 									     #//
+//############################################################################//
+////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_backstabbed_blood]
+ID=0122A
+NAME=Blood
+TYPE=t_normal
+ON=@CREATE
+TIMER=15
+ATTR=08010
+ON=@TIMER
+IF (<DISPID>==i_blood_pool_large)
+	DISPID=i_blood_smear
+	TIMER=15
+ELSEIF (<DISPID>==i_blood_smear)
+	DISPID=0122D
+	TIMER=15
+ELSEIF (<DISPID>==0122D)
+	DISPID=0122E
+	TIMER=15
+ELSEIF (<DISPID>==0122E)
+	DISPID=0122C
+	TIMER=15
+ELSE
+	REMOVE
+ENDIF
+UPDATE
+RETURN 1
+
+[PLEVEL 1]
+backstab
+
+[FUNCTION backstab]
+IF (<SRC.FINDLAYER(25)>==0)
+	IF (<SRC.FLAGS>&000800000)
+		IF (<SRC.FINDLAYER(1).ID>==0f51)||(<SRC.FINDLAYER(1).ID>==0f5e)||(<SRC.FINDLAYER(1).ID>==013f6)||(<SRC.FINDLAYER(1).ID>==013fe)||(<SRC.FINDLAYER(1).ID>==0ec4)
+			SRC.NEWITEM=i_backstab_trigger
+			ACT.P=<SRC.P>
+			ACT.TARGET Select the target.
+		ELSE
+			SRC.MESSAGE Use another weapon to stab!
+		ENDIF
+	ELSE
+		SRC.MESSAGE Hide first!
+	ENDIF
+ELSE
+	SRC.MESSAGE Dismount first!
+ENDIF
+
+
+[function backstab_increase]
+VAR.SUA_COLOR=95
+SYSMESSAGEUA Your skill in backstabbing has increased by 1! It's now <EVAL <SRC.TAG.BACKSTAB>>.
+
+[ITEMDEF i_backstab_trigger]
+ID=i_gold
+TYPE=t_normal
+ON=@CREATE
+ATTR=082
+TIMER=30
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>!=c_eagle)&&(<SRC.TARG.BODY>!=c_bird)&&(<SRC.TARG.BODY>!=c_corpser)&&(<SRC.TARG.BODY>!=c_dragon_green)&&(<SRC.TARG.BODY>!=c_snake_giant)&&(<SRC.TARG.BODY>!=c_reaper)&&(<SRC.TARG.BODY>!=c_scorpion_giant)&&(<SRC.TARG.BODY>!=c_slime)&&(<SRC.TARG.BODY>!=c_snake)&&(<SRC.TARG.BODY>!=c_wisp)&&(<SRC.TARG.BODY>!=c_dragon_red)&&(<SRC.TARG.BODY>!=c_dragon_small_black)&&(<SRC.TARG.BODY>!=c_dragon_small_red)&&(<SRC.TARG.BODY>!=c_bullfrog)&&(<SRC.TARG.BODY>!=c_ophidian_mage)&&(<SRC.TARG.BODY>!=c_ophidian_warrior)&&(<SRC.TARG.BODY>!=c_ophidian_queen)&&(<SRC.TARG.BODY>!=c_sea_monster)&&(<SRC.TARG.BODY>!=c_sea_serpent)&&(<SRC.TARG.BODY>!=c_dolphin)&&(<SRC.TARG.BODY>!=c_cat)&&(<SRC.TARG.BODY>!=c_alligator)&&(<SRC.TARG.BODY>!=c_rabbit)&&(<SRC.TARG.BODY>!=c_chicken)&&(<SRC.TARG.BODY>!=c_rat)
+	IF (<SRC.TARG.UID>==<SRC.UID>)
+		SRC.MESSAGE You can't stab yourself!
+		REMOVE
+		RETURN 1
+	ELSE
+		IF (<SRC.STAMINA>><EVAL <SRC.DEX>/10>)
+			IF (<SRC.TARG.DISTANCE><2)
+				IF (<SRC.DIR>=<SRC.TARG.DIR>)
+					SRC.TAG.BACKSTAB_PROBLEM=0	
+	//100
+				ELSEIF (<SRC.TARG.DIR>==0)
+					IF (<SRC.DIR>==1)||(<SRC.DIR>==7)
+						SRC.TAG.BACKSTAB_PROBLEM=1
+					ELSE
+						SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+					ENDIF
+		
+				ELSEIF (<SRC.TARG.DIR>==1)
+					IF (<SRC.DIR>==2)||(<SRC.DIR>==0)
+						SRC.TAG.BACKSTAB_PROBLEM=1
+					ELSE
+						SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+					ENDIF
+		
+				ELSEIF (<SRC.TARG.DIR>==2)
+					IF (<SRC.DIR>==3)||(<SRC.DIR>==1)
+						SRC.TAG.BACKSTAB_PROBLEM=1
+					ELSE
+						SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+					ENDIF
+		
+				ELSEIF (<SRC.TARG.DIR>==3)
+					IF (<SRC.DIR>==4)||(<SRC.DIR>==2)
+						SRC.TAG.BACKSTAB_PROBLEM=1
+					ELSE
+						SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+					ENDIF
+		
+				ELSEIF (<SRC.TARG.DIR>==4)
+					IF (<SRC.DIR>==5)||(<SRC.DIR>==3)
+						SRC.TAG.BACKSTAB_PROBLEM=1
+					ELSE
+						SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+					ENDIF
+		
+				ELSEIF (<SRC.TARG.DIR>==5)
+					IF (<SRC.DIR>==6)||(<SRC.DIR>==4)
+						SRC.TAG.BACKSTAB_PROBLEM=1
+					ELSE
+						SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+					ENDIF
+		
+				ELSEIF (<SRC.TARG.DIR>==6)
+					IF (<SRC.DIR>==7)||(<SRC.DIR>==5)
+						SRC.TAG.BACKSTAB_PROBLEM=1
+					ELSE
+						SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+					ENDIF
+		
+				ELSEIF (<SRC.TARG.DIR>==7)
+					IF (<SRC.DIR>==0)||(<SRC.DIR>==6)
+						SRC.TAG.BACKSTAB_PROBLEM=1
+					ELSE
+						SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+					ENDIF
+			
+			
+				ELSE
+					SRC.TAG.BACKSTAB_PROBLEM=Your victim will notice you!
+				ENDIF
+			ELSE
+				SRC.TAG.BACKSTAB_PROBLEM=You're not close enough!	
+			ENDIF
+		ELSE 
+			SRC.TAG.BACKSTAB_PROBLEM=You're too exhausted to do that!
+		ENDIF
+	ENDIF
+ELSE 
+	SRC.TAG.BACKSTAB_PROBLEM=You can not stab that!
+ENDIF
+VAR.ACTTMP <SRC.ACT.UID> 
+SRC.NEWITEM i_gold 
+SRC.ACT.MOREP <SRC.DAM> 
+VAR.DAMMIN <SRC.ACT.MOREX> 
+VAR.DAMMAX <SRC.ACT.MOREY> 
+SRC.ACT.MOREP <SRC.FINDLAYER.1.DAM> 
+VAR.DAMMIN <VAR.DAMMIN>+<SRC.ACT.MOREX> 
+VAR.DAMMAX <VAR.DAMMAX>+<SRC.ACT.MOREY> 
+SRC.ACT.REMOVE 
+SRC.ACT <VAR.ACTTMP> 
+VAR.DAM <eval {<VAR.DAMMIN> <VAR.DAMMAX>}> 
+VAR.ACTTMP <SRC.ACT.UID>
+SRC.NEWITEM i_gold
+SRC.ACT.MOREP=<SRC.TARG.ARMOR>
+VAR.ARMOR=<SRC.ACT.MOREX>
+SRC.ACT.MOREP <SRC.TARG.FINDLAYER(5).ARMOR>
+VAR.ARMOR=<VAR.ARMOR>+<SRC.ACT.MOREX>
+SRC.ACT.MOREP <SRC.TARG.FINDLAYER(6).ARMOR>
+VAR.ARMOR=<VAR.ARMOR>+<SRC.ACT.MOREX>
+SRC.ACT.MOREP <SRC.TARG.FINDLAYER(10).ARMOR>
+VAR.ARMOR=<VAR.ARMOR>+<SRC.ACT.MOREX>
+SRC.ACT.MOREP <SRC.TARG.FINDLAYER(13).ARMOR>
+VAR.ARMOR=<VAR.ARMOR>+<SRC.ACT.MOREX>
+SRC.ACT.MOREP <SRC.TARG.FINDLAYER(19).ARMOR>
+VAR.ARMOR=<VAR.ARMOR>+<SRC.ACT.MOREX>
+SRC.ACT.MOREP <SRC.TARG.FINDLAYER(20).ARMOR>
+VAR.ARMOR=<VAR.ARMOR>+<SRC.ACT.MOREX>
+SRC.ACT.MOREP <SRC.TARG.FINDLAYER(22).ARMOR>
+VAR.ARMOR=<VAR.ARMOR>+<SRC.ACT.MOREX>
+SRC.ACT.REMOVE //200
+SRC.ACT <VAR.ACTTMP>
+
+IF (!STRCMPI("<SRC.TAG.BACKSTAB_PROBLEM>","00"))
+	IF (<EVAL {1 10 0 <EVAL (<SRC.TAG.BACKSTAB>*3)+<SRC.DEX>+-<SRC.TARG.DEX>>}>==0)
+		SRC.FLAGS=<SRC.FLAGS>&~000800000
+		SRC.STAMINA=<SRC.STAMINA>+-(<SRC.DEX>/10)
+		SRC.UPDATE
+		SRC.ANIM 10
+		SRC.TARG.ANIM 20
+		SRC.SFX=<EVAL {571 1 572 1}>
+		SRC.TARG.BARK 03
+		SRC.TARG.POISON=<EVAL <SRC.FINDLAYER(1).MOREZ>*3>
+		SRC.TARG.DAMAGE=<EVAL ((((<VAR.DAM>*<SRC.ANATOMY>)/400)+((<SRC.STR>+<SRC.DEX>)/2)+(<SRC.TACTICS>/100)+<SRC.FOOD>+-<VAR.ARMOR>)+(<SRC.TAG.BACKSTAB>*3/2)+10)/2>
+		SRC.TARG.EMOTE scream when getting stabbed by <SRC.NAME>!
+		SRC.NEWITEM=i_backstabbed_blood
+		SRC.ACT.P=<SRC.TARG.P>
+		SRC.ACT <VAR.ACTTMP>
+		SRC.TARG.ATTACK
+		IF (<SRC.TARG.KARMA>>0)
+			SRC.KARMA=<SRC.KARMA>+-100
+		ELSE
+			SRC.KARMA=<SRC.KARMA>+50
+		ENDIF
+		IF (<EVAL {1 1 0 30}>==1)
+			SRC.DEX=<SRC.DEX>+1
+		ENDIF
+
+		IF (<EVAL {1 1 0 35}>==1)
+			SRC.INT=<SRC.INT>+1
+		ENDIF
+									
+		SRC.f_backstab_skillgain
+	ELSE
+		SRC.SYSMESSAGE You have been noticed when trying to stab your victim!
+		SRC.TARG.EMOTE dodge <SRC.NAME>'s hit!
+		SRC.FLAGS=<SRC.FLAGS>&~000800000
+		SRC.STAMINA=<SRC.STAMINA>+-(<SRC.DEX>/10)
+		SRC.UPDATE
+		SRC.TARG.ANIM 32
+		SRC.ANIM 13
+		SRC.TARG.ATTACK
+		SRC.SFX=<EVAL {568 1 569 1 570 1}>
+		IF (<SRC.TARG.KARMA>>0)
+			SRC.KARMA=<SRC.KARMA>+-100
+		ELSE
+			SRC.KARMA=<SRC.KARMA>+50
+		ENDIF
+			IF (<EVAL {1 1 0 30}>==1)
+			SRC.DEX=<SRC.DEX>+1
+		ENDIF
+
+		IF (<EVAL {1 1 0 35}>==1)
+			SRC.INT=<SRC.INT>+1
+		ENDIF
+		SRC.f_backstab_skillgain
+	ENDIF
+ELSEIF (!STRCMPI("<SRC.TAG.BACKSTAB_PROBLEM>","01"))
+	IF (<EVAL {1 10 0 <EVAL (<SRC.TAG.BACKSTAB>*3)+<SRC.DEX>+-<SRC.TARG.DEX>>}>==0)
+		SRC.FLAGS=<SRC.FLAGS>&~000800000
+		SRC.STAMINA=<SRC.STAMINA>+-(<SRC.DEX>/10)
+		SRC.UPDATE
+		SRC.ANIM 10
+		SRC.TARG.ANIM 20
+		SRC.SFX=<EVAL {571 1 572 1}>
+		SRC.TARG.BARK 03
+		SRC.TARG.POISON=<EVAL <SRC.FINDLAYER(1).MOREZ>*3>
+		SRC.TARG.DAMAGE=<EVAL ((((<VAR.DAM>*<SRC.ANATOMY>)/400)+((<SRC.STR>+<SRC.DEX>)/2)+(<SRC.TACTICS>/100)+<SRC.FOOD>+-<VAR.ARMOR>)+(<SRC.TAG.BACKSTAB>*3/2)+10)/2>
+		SRC.TARG.EMOTE scream when getting stabbed by <SRC.NAME>!
+		SRC.NEWITEM=i_backstabbed_blood
+		SRC.ACT.P=<SRC.TARG.P>
+		SRC.ACT <VAR.ACTTMP>
+		SRC.TARG.ATTACK
+		IF (<SRC.TARG.KARMA>>0)
+			SRC.KARMA=<SRC.KARMA>+-100
+		ELSE
+			SRC.KARMA=<SRC.KARMA>+50
+		ENDIF
+		IF (<EVAL {1 1 0 30}>==1)
+			SRC.DEX=<SRC.DEX>+1
+		ENDIF
+
+		IF (<EVAL {1 1 0 35}>==1)
+			SRC.INT=<SRC.INT>+1
+		ENDIF
+			
+									
+		SRC.f_backstab_skillgain
+	ELSE
+		SRC.SYSMESSAGE You have been noticed when trying to stab your victim!
+		SRC.TARG.EMOTE dodge <SRC.NAME>'s hit!
+		SRC.FLAGS=<SRC.FLAGS>&~000800000
+		SRC.STAMINA=<SRC.STAMINA>+-(<SRC.DEX>/10)
+		SRC.UPDATE
+		SRC.TARG.ANIM 32
+		SRC.ANIM 13
+		SRC.TARG.ATTACK
+		SRC.SFX=<EVAL {568 1 569 1 570 1}>
+		IF (<SRC.TARG.KARMA>>0)
+			SRC.KARMA=<SRC.KARMA>+-100
+		ELSE
+			SRC.KARMA=<SRC.KARMA>+50
+		ENDIF
+			IF (<EVAL {1 1 0 30}>==1)
+			SRC.DEX=<SRC.DEX>+1
+		ENDIF
+
+		IF (<EVAL {1 1 0 35}>==1)
+			SRC.INT=<SRC.INT>+1
+		ENDIF
+			
+		SRC.f_backstab_skillgain
+	ENDIF
+ELSE
+	SRC.MESSAGE <SRC.TAG.BACKSTAB_PROBLEM>
+	REMOVE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION f_backstab_skillgain]
+IF (<EVAL {1 1 0 <EVAL (<SRC.TAG.BACKSTAB>*7/8)+5>}>==1)
+	IF (<EVAL <SRC.TAG.BACKSTAB>><100)
+		SRC.TAG.BACKSTAB=<EVAL <SRC.TAG.BACKSTAB>>+1
+		SRC.backstab_increase
+	ELSE
+		RETURN 1
+	ENDIF
+ENDIF
+
+[EOF]

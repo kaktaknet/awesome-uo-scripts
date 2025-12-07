@@ -1,0 +1,175 @@
+//==============================================================//
+// Race System Script Files 3 of 3 By Samson (Aka Sanchezuk)	//
+//								//
+// To setup this race system, you need to put the 3 files in 	//
+// your scripts folder, add the stone in a room that no player 	//
+// can get too and set the new char login to that room. Then 	//
+// change the go co-ords to match your shard because this was	//
+// made for a custom map shard. Most race events are left empty //
+// so you can add your own later of you want.			//
+//								//
+// Feel free to change whatever you want, please dont remove	//
+// this header. Necromancy spells by Geist.			//
+//==============================================================//
+
+[EVENTS e_race_necromancer] 
+
+ON=@itemequip
+IF <ACT.TYPE>==t_armor 
+SYSMESSAGE You cannot wear this armor type.
+ACT.BOUNCE
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_bow 
+SYSMESSAGE You cannot use this weapon.
+ACT.BOUNCE
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_mace_sharp 
+SYSMESSAGE You cannot use this weapon.
+ACT.BOUNCE
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_sword 
+SYSMESSAGE You cannot use this weapon.
+ACT.BOUNCE
+RETURN 1 
+ENDIF
+
+//=============================================================================
+
+[EVENTS e_race_elf]
+
+//=============================================================================
+
+[EVENTS e_race_dwarf] 
+
+//=============================================================================
+
+[EVENTS e_race_halfling]
+
+//=============================================================================
+
+[EVENTS e_race_gnome]
+
+//=============================================================================
+
+[EVENTS e_race_half_elf] 
+
+//=============================================================================
+
+[EVENTS e_race_drow] 
+
+//=============================================================================
+
+[EVENTS e_race_barbarian] 
+ON=@Hit 
+f_beserklunge
+
+ON=@GetHit 
+f_beserklunge
+
+ON=@HitTry 
+f_beserklunge 
+
+//=============================================================================
+
+[FUNCTION f_beserklunge] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF ( <eval(RAND(10))> != 3) 
+RETURN 0 
+ENDIF 
+IF (<SRC.DISTANCE> < 3) 
+IF <eval RAND(100)>==3 
+VAR.X=<eval(rand(16))> 
+IF <eval(<var.x>)> < 8 
+VAR.X=8 
+ENDIF 
+VAR.Z=critically
+ELSE 
+VAR.X=<eval(rand(9))> 
+IF <eval(<var.x>)> < 1 
+VAR.X=1 
+ENDIF 
+VAR.Z=successfully
+ENDIF 
+IF <SRC.HITS> > (<VAR.X> * 2) 
+SRC.HITS=<SRC.HITS>+ -<VAR.X> 
+ENDIF 
+//SAY <NAME>'s beserk <VAR.Z> wounded <SRC.NAME> for <eval(<VAR.X>)> more damage! 
+SRC.SYSMESSAGE <NAME>'s beserk attack <VAR.Z> wounded you for <eval(<VAR.X>)> more damage! 
+SYSMESSAGE Your beserk attack <VAR.Z> wounded <SRC.NAME> for <eval(<VAR.X>)> more damage! 
+ENDIF
+
+//=========================================================================================
+
+[FUNCTION f_race_INITIALIZE_necromancer] 
+tag.racename=necromancer 
+tag.race=<eval(race_necromancer)> 
+
+events +e_race_necromancer
+
+
+[FUNCTION f_race_INITIALIZE_elf] 
+tag.racename=elf 
+tag.race=<eval(race_elf)> 
+
+events +e_race_elf
+
+
+[FUNCTION f_race_INITIALIZE_dwarf] 
+tag.racename=dwarf
+tag.race=<eval(race_dwarf)>
+
+events +e_race_Dwarf 
+
+
+[FUNCTION f_race_INITIALIZE_halfling] 
+tag.raceName=halfling 
+tag.race=<eval(race_halfling)> 
+
+events +e_race_halfling
+
+
+[FUNCTION f_race_INITIALIZE_gnome]
+tag.racename=gnome
+tag.race=<eval(race_gnome)>
+
+events +e_race_gnome
+
+
+[FUNCTION f_race_INITIALIZE_half_elf] 
+tag.racename=half_elf 
+tag.race=<eval(race_half_elf)> 
+
+events +e_race_Half_Elf
+
+
+[FUNCTION f_race_INITIALIZE_half_orc] 
+tag.racename=half_orc 
+tag.race=<eval(race_half_orc)> 
+
+events +e_race_Half_Orc 
+
+
+[FUNCTION f_race_INITIALIZE_drow] 
+tag.racename=drow 
+tag.race=<eval(race_drow)> 
+
+events +e_race_drow 
+
+
+[FUNCTION f_race_INITIALIZE_barbarian] 
+tag.racename=barbarian 
+tag.race=<eval(race_barbarian)> 
+
+events +e_race_barbarian 
+
+
+[FUNCTION f_race_INITIALIZE_half_daemon] 
+tag.racename=half_daemon 
+tag.race=<eval(race_half_daemon)> 
+
+events +e_race_half_daemon
+
+
+[EOF]

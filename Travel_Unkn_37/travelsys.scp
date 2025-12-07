@@ -1,0 +1,288 @@
+// Was written by GM Seth aka kOcTuK
+// Скрипт написан --------//-------- (заипалься писать это) :-)
+// the1@one.lv
+// irc.delfi.lv /query kOcTuK 
+// If you have more gametime, you have more places you can go to.
+
+[ITEMDEF i_travel_stone]
+ID=i_gravestone // Change this to the one you like(изменить на тот, который нравиться)
+NAME=Travel Stone
+WEIGHT=1000
+
+ON=@CREATE
+ATTR=08010
+
+ON=@DCLICK
+IF <SRC.FLAGS>&statf_war
+SRC.SYSMESSAGE Cant use the travel stone while fighting.
+return 1
+ELIF <DISTANCE>>2
+SRC.SYSMESSAGE You are too far away.
+return 1
+ELSE
+IF <SRC.ACCOUNT.TOTALCONNECTTIME><50000
+	SRC.DIALOG travelmenu_10
+	return 1
+ELIF <SRC.ACCOUNT.TOTALCONNECTTIME><100000
+	SRC.DIALOG travelmenu_50
+	return 1
+ELIF <SRC.ACCOUNT.TOTALCONNECTTIME><150000
+	SRC.DIALOG travelmenu_100
+ELIF <SRC.ACCOUNT.TOTALCONNECTTIME>>149999
+	SRC.DIALOG travelmenu_150
+	return 1
+ENDIF
+ENDIF
+
+[DIALOG travelmenu_10]
+0, 0
+PAGE 0
+gumppic 318 53 3504
+gumppic 319 149 3504
+gumppic 317 386 3507
+gumppic 318 28 3501
+gumppic 19 28 5528
+gumppic 558 28 3502
+gumppic 558 54 3505
+gumppic 558 146 3505
+gumppic 558 386 3508
+button 415 65 2117 2118 1 0 1
+text 437 61 1152 0
+button 132 178 2117 2118 1 0 2
+text 150 173 95 1
+button 206 75 2362 2363 1 0 3
+text 221 68 1101 2
+button 415 95 2117 2118 1 0 4
+text 437 91 1152 3
+text 411 378 1152 4
+gumppic 518 43 2529
+text 438 133 95 5
+text 446 165 95 6
+
+[DIALOG travelmenu_10 TEXT]
+Market
+Britain
+Minoc
+Newbie dungeon
+Made by GM Seth
+Lost Dream
+Welcome!
+
+
+[DIALOG travelmenu_10 BUTTON]
+on=1
+SRC.GO Market
+on=2
+SRC.GO Britain
+on=3
+SRC.GO Minoc
+on=4
+SRC.GO newbie dungeon
+
+[DIALOG travelmenu_50]
+0, 0
+PAGE 0
+gumppic 318 53 3504
+gumppic 319 149 3504
+gumppic 317 386 3507
+gumppic 318 28 3501
+gumppic 19 28 5528
+gumppic 558 28 3502
+gumppic 558 54 3505
+gumppic 558 146 3505
+gumppic 558 386 3508
+button 415 65 2117 2118 1 0 1
+text 437 61 1152 0
+button 132 178 2117 2118 1 0 2
+text 150 173 95 1
+button 206 75 2362 2363 1 0 3
+text 221 68 1101 2
+button 219 226 2360 2360 1 0 4
+text 208 193 32 3
+button 415 95 2117 2118 1 0 5
+text 437 91 1152 4
+text 411 378 1152 5
+gumppic 518 43 2529
+text 438 133 95 6
+text 446 165 95 7
+
+[DIALOG travelmenu_50 TEXT]
+Market
+Britain
+Minoc
+Bucs Den
+Newbie dungeon
+Made by GM Seth
+Lost Dream
+Welcome!
+
+
+[DIALOG travelmenu_50 BUTTON]
+on=1
+SRC.GO Market
+on=2
+SRC.GO Britain
+on=3
+SRC.GO Minoc
+on=4
+SRC.GO Bucs Den
+on=5
+SRC.GO newbie dungeon
+
+[DIALOG travelmenu_100]
+0, 0
+PAGE 0
+gumppic 318 53 3504
+gumppic 319 149 3504
+gumppic 317 386 3507
+gumppic 318 28 3501
+gumppic 19 28 5528
+gumppic 558 28 3502
+gumppic 558 54 3505
+gumppic 558 146 3505
+gumppic 558 386 3508
+button 415 65 2117 2118 1 0 1
+text 437 61 1152 0
+button 132 178 2117 2118 1 0 2
+text 150 173 95 1
+button 163 279 2117 2118 1 0 3
+text 181 275 455 2
+button 206 75 2362 2363 1 0 4
+text 221 68 1101 3
+button 219 226 2360 2360 1 0 5
+text 208 193 32 4
+button 241 340 2360 2360 1 0 6
+text 255 333 32 5
+button 415 95 2117 2118 1 0 7
+text 437 91 1152 6
+text 411 378 1152 7
+gumppic 518 43 2529
+button 233 105 2117 2118 1 0 8
+text 250 101 95 8
+text 438 133 95 9
+text 446 165 95 10
+
+[DIALOG travelmenu_100 TEXT]
+Market
+Britain
+Trinsic
+Minoc
+Bucs Den
+Serpents Hold
+Newbie dungeon
+Made by GM Seth
+Vesper
+Lost Dream
+Welcome!
+
+
+[DIALOG travelmenu_100 BUTTON]
+on=1
+SRC.GO Market
+on=2
+SRC.GO Britain
+on=3
+SRC.GO Trinsic
+on=4
+SRC.GO Minoc
+on=5
+SRC.GO Bucs Den
+on=6
+SRC.GO serpents hold
+on=7
+SRC.GO newbie dungeon
+on=8
+SRC.GO Vesper
+
+[DIALOG travelmenu_150]
+0, 0
+PAGE 0
+gumppic 317 386 3507
+gumppic 318 28 3501
+gumppic 318 53 3504
+gumppic 319 149 3504
+gumppic 19 28 5528
+gumppic 558 28 3502
+gumppic 558 54 3505
+gumppic 558 146 3505
+gumppic 558 386 3508
+button 415 65 2117 2118 1 0 1
+text 437 61 1152 0
+button 132 178 2117 2118 1 0 2
+text 150 173 95 1
+button 163 279 2117 2118 1 0 3
+text 181 275 455 2
+button 206 75 2362 2363 1 0 4
+text 221 68 1101 3
+button 219 226 2360 2360 1 0 5
+text 208 193 32 4
+button 67 118 2362 2363 1 0 6
+button 294 225 2360 2360 1 0 7
+text 308 219 32 5
+text 81 112 95 6
+button 241 340 2360 2360 1 0 8
+text 255 333 32 7
+text 415 240 95 8
+button 415 275 2117 2118 1 0 9
+text 437 271 1152 9
+button 415 305 2117 2118 1 0 10
+text 437 301 1152 10
+button 415 95 2117 2118 1 0 11
+text 437 91 1152 11
+text 411 378 1152 12
+gumppic 518 43 2529
+button 293 265 2360 2360 1 0 12
+text 310 260 32 13
+button 233 105 2117 2118 1 0 13
+text 250 101 95 14
+text 438 133 95 15
+text 446 165 95 16
+
+[DIALOG travelmenu_150 TEXT]
+Market
+Britain
+Trinsic
+Minoc
+Bucs Den
+Magincia
+Yew
+Serpents Hold
+T2A
+Delucia
+Papua
+Newbie dungeon
+Made by GM Seth
+Ocllo
+Vesper
+Lost Dream
+Welcome!
+
+[DIALOG travelmenu_150 BUTTON]
+on=1
+SRC.GO Market
+on=2
+SRC.GO Britain
+on=3
+SRC.GO Trinsic
+on=4
+SRC.GO Minoc
+on=5
+SRC.GO Bucs Den
+on=6
+SRC.GO Yew
+on=7
+SRC.GO Magincia
+on=8
+SRC.GO serpents hold
+on=9
+SRC.GO Delucia
+on=10
+SRC.GO Papua
+on=11
+SRC.GO newbie dungeon
+on=12
+SRC.GO ocllo
+on=13
+SRC.GO Vesper
+
+[EOF]

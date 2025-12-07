@@ -1,0 +1,1352 @@
+[comments] 
+**Script built by Tartaros (www.moria.cz)** 
+thanks to: Amlaruil, Belgar 
+some parts of the old house menu by Amlaruil(dispid selection) 
+Belgars paying function 
+if you redistribute this file, let me know and let this header intact at least please 
+Enjoy! 
+
+Features, principes: 
+this house menu can be used not only for multi houses but for static houses with own region or just for any region as well. The base is the brass sign, that on @click and @dclick raises a dialog. 
+If the menu is created as a multi-component, it is automatically linked to the multi. If you create it as a single item, it "simulates" the multi by creating an worldgem bit of the type t_multi. 
+The menu has 5 "ranks" of possible users: public, friend, coowner, owner, GameMaster - 0 to 5 as number. 
+UID of the owner is stored as More2 of the multi (his memory item as <tag.ownermemUID> on the brass sign), friends and coowners are stored as linked crystals in 2 belt pouches that are created when the menu is used 1st time. 
+The number of the friends and coowners is not limited, number of locked items is not limited as well (both can be done if you desire it and understand the script . 
+Locking of items: each item may be locked for one of the ranks ( only users on this rank and above may unlock it), or as "personal" (secure) lock (only the user who locked it and users of higher rank may unlock it). 
+Locked items can not be used or moved away, with an exception of door, that may be opened by all members of the house (friend and above), even if locked on the owners rank, and with an xception of the brass sign itself, that can not be unlocked, but can be locked (if locked as PUBLIC, everyone can open it, but the lock doesnt change the rights to individual functions - actually only the bank account may be used by public...) 
+Each member of the house gets an pouch in layer 101 that is used as container for memoryitems of individual houses. (not visible for players...) 
+These memoryitems are actually keys, so the members can not see (or copy)them, but they may open doors with them unless they have not been banned from the house. 
+
+
+
+Installation: 
+you only need to replace the standard i_sign_brass by this one, and every player should get the event e_housemenu(IMPORTANT!!). 
+
+Note: 
+this script has been running on my shard for 4 months without any found bug 
+
+[ITEMDEF 0bd1] 
+//brass sign 
+DEFNAME=i_sign_brass 
+TYPE=T_script 
+TDATA2=064 
+FLIP=1 
+RESOURCES=2 I_BOARD, 1 i_ingot_iron 
+CATEGORY=Decoration - Signs 
+SUBSECTION=Blank 
+DESCRIPTION=Brass Blank 
+DUPELIST=0bd2 
+
+on=@click 
+f_housemenu 
+return 1 
+
+on=@dclick 
+f_housemenu 
+return 1 
+
+[events e_housemenu] 
+on=@itemdclick 
+return <f_hm_evcheck> 
+
+on=@itemclick//optional 
+return <f_hm_evcheck> 
+
+
+
+[function f_eqhmkeylayer] 
+if (<findlayer.101>=0) 
+src.newitem i_memory_keyring 
+equip <src.act> 
+endif 
+
+[function f_housemenu] 
+src.f_eqhmkeylayer 
+TIMER=60*60*24*60 
+if (!<more2>)//not yet used, launching the basic setting 
+if (<link.isitem>=0)//its not a multi 
+src.newitem i_worldgem_bit 
+link=<src.act> 
+link.attr=0b0 
+link.p=<p> 
+link.type=t_multi 
+link.more1=<src.uid> 
+endif 
+link.more2=<uid>//refresh 
+link.region.tag.menu=<link> 
+src.try uid.<uid>.tag.lockit<uid>=1//sets the basic usability of the menu for friends and above 
+src.newitem i_pouch//friends 
+src.act.attr=attr_invis|attr_move_never 
+src.act.P=<P.x> <P.y> <eval <p.z>+22> 
+src.act.more1=1 
+more1=<src.act.UID> 
+src.act.link=<uid> 
+src.act.name=Friends 
+src.newitem i_pouch//coowners 
+src.act.attr=attr_invis|attr_move_never 
+src.act.P=<P.x> <P.y> <eval <p.z>+20> 
+src.act.more1=2 
+more2=<src.act.UID> 
+src.act.link=<uid> 
+src.act.name=Co-owners 
+src.newitem i_key_gold//memory owner 
+src.act.cont=<src.findlayer.101.uid> 
+src.act.more1=<link> 
+src.act.more2=3 
+src.act.link=<link> 
+src.act.name=owner:<name> 
+tag.ownermemUID=<src.act> 
+src.sysmessage This is now your house. 
+src.sysmessage If you got any keys, you can throw them away, you will not need them. 
+return 1 
+endif 
+
+var.itemlevel=<eval 0<tag.lockit<uid>>> 
+f_findrank <src.uid> 
+f_namelevel <var.phrank> 
+//src.say myrank:<var.phrank>, <var.namestr> 
+var.phranks=<var.namestr> 
+
+if (<var.itemlevel> <= <var.phrank>) 
+DIALOG house_menu 
+else 
+DIALOG dialog_sign 
+endif 
+return 1 
+
+[function f_namelevel] 
+if (<argn>=0) 
+var.namestr=Public 
+elseif (<argn>=1) 
+var.namestr=Friend 
+elseif (<argn>=2) 
+var.namestr=Coowner 
+elseif (<argn>=3) 
+var.namestr=Owner 
+elseif (<argn>=4) 
+var.namestr=GM 
+endif 
+
+[function f_findrank] 
+var.phrank=0 
+if (<src.uid.<argn>.isgm>) 
+var.phrank=4 
+elseif (<link.more1>=<argn>) 
+src.try uid.<tag.ownermemUID>.more1=<link> 
+src.try uid.<tag.ownermemUID>.morep=<p> 
+src.try uid.<tag.ownermemUID>.name=owner:<name> 
+var.phrank=3 
+else 
+var.theperson=<argn>//uid of the person being searched for (must not be SRC) 
+morey=<src.uid.<more1>.rescount> 
+morex=0 
+f_findrankloop <more1> 
+morey=<src.uid.<more2>.rescount> 
+morex=0 
+f_findrankloop <more2> 
+endif 
+//say rank:<var.phrank> 
+
+[function f_findrankloop] 
+if (<morex> < <morey>) 
+src.try uid.<args>.findcont.<morex>.link.name=<src.uid.<args>.name>:<name> 
+src.try uid.<args>.findcont.<morex>.name=<src.uid.<args>.findcont.<morex>.link.topobj.name> 
+src.try uid.<args>.findcont.<morex>.link.morep=<p> 
+src.try uid.<args>.findcont.<morex>.link.more1=<link> 
+if (<src.uid.<argn>.findcont.<morex>.link.topobj.uid>=<var.theperson>) 
+var.phrank=<src.uid.<argn>.more1> 
+endif 
+morex=<morex>+1 
+f_findrankloop <args> 
+endif 
+endif 
+
+[ITEMDEF i_memory_keyring]//used as key 
+id=i_pouch 
+layer=101 
+name=Key layer 
+TDATA2=03D 
+
+[ITEMDEF i_relating_crystal]//stored by the brass sign in an invis pouch 
+id=i_crystal_red 
+type=t_script 
+
+[DIALOG dialog_sign] 
+0,0 
+gumppic 100 100 100 
+htmlgump 120 120 100 60 0 0 0 
+
+[DIALOG dialog_sign TEXT] 
+<NAME> 
+
+[DIALOG house_menu] 
+0,0 
+resizepic 0 0 2620 290 360 
+gumppic 20 20 100 
+htmlgump 40 40 100 60 0 0 0 
+text 180 20 955 1 
+text 180 40 955 2 
+text 180 70 955 14 
+text 180 90 955 15 
+text 40 140 955 3 
+button 20 145 2104 2103 1 0 1 
+text 40 160 955 5 
+button 20 165 2104 2103 1 0 3 
+text 40 180 955 6 
+button 20 185 2104 2103 1 0 4 
+text 40 200 955 7 
+button 20 205 2104 2103 1 0 5 
+text 40 220 955 8 
+button 20 225 2104 2103 1 0 6 
+text 40 240 955 9 
+button 20 245 2104 2103 1 0 7 
+text 40 260 955 10 
+button 20 265 2104 2103 1 0 8 
+text 40 280 955 11 
+button 20 285 2104 2103 1 0 9 
+text 40 300 955 12 
+button 20 305 2104 2103 1 0 10 
+text 40 320 955 13 
+button 20 325 2104 2103 1 0 11 
+
+[DIALOG house_menu TEXT] 
+<NAME>//0 
+Owner: 
+<src.uid.<link.more1>.name> 
+Ban hostile person 
+<var.blankline> 
+Lock/Unlock item 
+Add a friend//5 
+List of friends 
+Add a coowner 
+List of coowners 
+Rename 
+Change the sign//10 
+<qval <tag.bankactivated> ? Open the bank : Activate bank (100 000gp)> 
+Transfer ownership 
+Your rank: 
+<var.phranks> 
+
+[DIALOG house_menu BUTTON] 
+on=1//ban 
+f_checkrights 0 
+if <var.rights> 
+src.newitem i_target_house 
+src.act.link=<uid> 
+src.act.more1=4 
+src.act.equip 
+endif 
+
+on=3//(un)lock item 
+f_checkrights 0 
+if <var.rights> 
+src.newitem i_target_house 
+src.act.name=lock item 
+src.act.link=<uid> 
+src.act.more1=12 
+src.act.more2=<var.phrank> 
+src.act.equip 
+endif 
+
+on=4//target friend 
+f_checkrights 1 
+if <var.rights> 
+src.newitem i_target_house 
+src.act.name=friend 
+src.act.link=<uid> 
+src.act.more1=1 
+src.act.equip 
+endif 
+
+on=5//friend list 
+f_checkrights 0 
+if <var.rights> 
+f_hmlist <more1> 
+endif 
+
+on=6//add coowner 
+f_checkrights 2 
+if <var.rights> 
+src.newitem i_target_house 
+src.act.name=coowner 
+src.act.link=<uid> 
+src.act.more1=2 
+src.act.equip 
+endif 
+
+on=7//coowner list 
+f_checkrights 0 
+if <var.rights> 
+f_hmlist <more2> 
+endif 
+
+on=8//rename 
+f_checkrights 1 
+if <var.rights> 
+dialog d_house_rename 
+endif 
+
+on=9//change dispid 
+f_checkrights 1 
+if <var.rights> 
+dialog HOUSE_MENU_SIGN_1 
+endif 
+
+on=10//bank 
+if (0<tag.bankactivated>) 
+src.bankself 
+else 
+src.pay 100000//Use you own 
+if (<var.enough>) 
+tag.bankactivated=1 
+src.sysmessage House terminal activated. 
+endif 
+endif 
+
+on=11//transfer ownership 
+f_checkrights 2 
+if <var.rights> 
+//src.say chci predat vlastnictvi domu. 
+src.newitem i_target_house 
+src.act.name=owner 
+src.act.link=<uid> 
+src.act.more1=3 
+src.act.equip 
+endif 
+
+[function f_checkrights] 
+var.rights= 
+f_findrank <src.uid> 
+if (<var.phrank> > <argn>) 
+var.rights=1 
+else 
+src.sysmessage You have no right for this. 
+endif 
+
+[function f_hmlist] 
+tag.what=<argn> 
+morex=<src.uid.<argn>.rescount> 
+morey=0 
+dialog d_hmlist 
+
+[DEFNAME qval_html] 
+gt > 
+
+[DIALOG d_hmlist] 
+0,0 
+resizepic 100 100 2620 200 210 
+text 160 120 955 7 
+text 240 270 955 0 
+button 270 155 2104 2103 1 0 1 
+text 120 150 955 1 
+button 270 175 2104 2103 1 0 2 
+text 120 170 955 2 
+button 270 195 2104 2103 1 0 3 
+text 120 190 955 3 
+button 270 215 2104 2103 1 0 4 
+text 120 210 955 4 
+button 270 235 2104 2103 1 0 5 
+text 120 230 955 5 
+button 270 255 2104 2103 1 0 6 
+text 120 250 955 6 
+button 120 125 2223 2103 1 0 7 
+button 270 <QVAL <morex> <var.gt> (<morey>+5) ? 125 : 2000> 2224 2103 1 0 8 
+
+[DIALOG d_hmlist TEXT] 
+odebrat 
+<QVAL <morex> <var.gt> <morey> ? <src.uid.<tag.what>.findcont.<morey>.link.topobj.name> : > 
+<QVAL <morex> <var.gt> <eval <morey>+1> ? <src.uid.<tag.what>.findcont.<eval <morey>+1>.link.topobj.name> : > 
+<QVAL <morex> <var.gt> <eval <morey>+2> ? <src.uid.<tag.what>.findcont.<eval <morey>+2>.link.topobj.name> : > 
+<QVAL <morex> <var.gt> <eval <morey>+3> ? <src.uid.<tag.what>.findcont.<eval <morey>+3>.link.topobj.name> : > 
+<QVAL <morex> <var.gt> <eval <morey>+4> ? <src.uid.<tag.what>.findcont.<eval <morey>+4>.link.topobj.name> : > 
+<QVAL <morex> <var.gt> <eval <morey>+5> ? <src.uid.<tag.what>.findcont.<eval <morey>+5>.link.topobj.name> : > 
+<src.uid.<tag.what>.name> : <morex> 
+
+[DIALOG d_hmlist BUTTON] 
+on=0 
+tag.what= 
+on=1 
+f_hmremove <morey> 
+on=2 
+f_hmremove <eval <morey>+1> 
+on=3 
+f_hmremove <eval <morey>+2> 
+on=4 
+f_hmremove <eval <morey>+3> 
+on=5 
+f_hmremove <eval <morey>+4> 
+on=6 
+f_hmremove <eval <morey>+5> 
+on=7 
+if (<morey> < 5) 
+dialog house_menu 
+tag.what= 
+else 
+morey=<eval <morey>-6> 
+dialog d_hmlist 
+endif 
+on=8 
+morey=<eval <morey>+6> 
+dialog d_hmlist 
+
+[function f_hmremove] 
+if <morex> > <argn> 
+f_checkrights <src.uid.<tag.what>.more> 
+if <var.rights> 
+src.try uid.<tag.what>.findcont.<argn>.link.topobj.sysmessage Byl jsi zbaven prav v domu <src.uid.<tag.what>.link.name> 
+src.try uid.<tag.what>.findcont.<argn>.link.remove 
+src.try uid.<tag.what>.findcont.<argn>.remove 
+f_hmlist <tag.what> 
+endif 
+else 
+dialog house_menu 
+endif 
+
+[itemdef i_target_house] 
+id=i_memory 
+type=t_eq_script 
+
+on=@timer 
+remove 
+return 0 
+
+on=@equip 
+if (<more1> < 4) 
+target 
+src.sysmessage Who should be the new <name>? 
+elseif (<more1>=4) 
+target 
+src.sysmessage Who do you want to ban? 
+elseif (<more1>=12) 
+target 
+src.sysmessage What do you want to lock/unlock? 
+endif 
+timer 60 
+return 1 
+
+on=@targon_char 
+src.targ.f_eqhmkeylayer 
+if (<more1> > 4) 
+src.sysmessage Do not target characters. 
+else 
+link.f_findrank <src.targ.uid> 
+if (<var.phrank>=0)&&(<more1>=4)&&(<src.targ.region.uid>=<link.link.region.UID>) 
+src.targ.go <link.P> 
+src.targ.sysmessage <src.name> has banned you. 
+elseif (<var.phrank>)//&&(<var.phrank> < 4) 
+src.sysmessage He is already member of the house. 
+elseif (<more1> = 1)||(<more1> = 2) 
+src.newitem i_key_gold 
+var.memoryuid=<src.act> 
+src.act.cont=<src.targ.findlayer.101.uid> 
+src.act.more1=<link.link> //as code for doors 
+src.act.more2=<more1> //rank 
+src.newitem i_relating_crystal 
+src.act.more1=<src.UID> 
+src.act.cont=<link.more<eval <more1>>> 
+src.act.link=<src.uid.<var.memoryuid>.uid> 
+src.try uid.<var.memoryuid>.link=<src.act> 
+src.sysmessage <src.targ.name> succesfully added as <name> 
+src.targ.sysmessage You are now <name> of the house <link.name>. 
+elseif (<more1>=3)//transfer of ownership, if the owner has been removed from the game,a new memory item must be created and set as tag.ownermemuid on the brass sign 
+src.try uid.<link.tag.ownermemUID>.cont=<src.targ.findlayer.101.UID> 
+link.link.more1=<src.targ.uid> 
+src.sysmessage Ownership transferred. 
+src.targ.sysmessage You are now owner of the house <link.name>. 
+endif 
+endif 
+remove 
+return 1 
+
+on=@targon_item 
+if (<more1> = 12) 
+var.itemlevel=<eval 0<link.tag.lockit<src.targ.uid>>> 
+var.itemuid=0 
+if (<var.itemlevel> > 4) 
+var.itemuid=<var.itemlevel> 
+link.f_findrank <var.itemlevel> 
+var.itemlevel=<var.phrank>+1 
+endif 
+if (<var.itemlevel> > <more2>)&&(<var.itemuid> != <src.uid>) 
+src.sysmessage You have no right for this. 
+elseif (<src.targ.link>=<link.link>)&&(<src.targ.baseid> != i_sign_brass) 
+src.targ.link= 
+src.targ.attr=<src.targ.attr>&~attr_move_never 
+src.sysmessage Item unlocked. 
+var.hmtargonlink=<link> 
+src.try uid.<var.hmtargonlink>.tag.lockit<src.targ.uid>= 
+if (<src.targ.type>=t_door_locked) 
+src.targ.type=t_door 
+endif 
+elseif ((<src.targ.link.isitem>)||(<src.targ.link.ischar>))&&(<src.targ.baseid> != i_sign_brass)//items already linked cannot be locked... 
+src.sysmessage You cant lock this. 
+else 
+f_namelevel <var.itemlevel> 
+dialog d_statask 
+endif 
+else 
+src.sysmessage Do not target items. 
+endif 
+return 1 
+
+[DIALOG d_statask] 
+0,0 
+resizepic 100 100 2620 300 <eval 110+(<more2>*20)> 
+text 120 120 955 0 
+text 140 145 955 6 
+button 120 150 2104 2103 1 0 6 
+text 140 165 955 1 
+button 120 170 2104 2103 1 0 1 
+text 140 185 955 2 
+button 120 190 2104 2103 1 0 2 
+text 140 205 955 3 
+button 120 <qval <more2> <var.gt>1 ? 210 : 2000> 2104 2103 1 0 3 
+text 140 225 955 4 
+button 120 <qval <more2> <var.gt>2 ? 230 : 2000> 2104 2103 1 0 4 
+text 140 245 955 5 
+button 120 <qval <more2> <var.gt>3 ? 250 : 2000> 2104 2103 1 0 5 
+
+
+[DIALOG d_statask TEXT] 
+On which rank should it be locked? 
+Public 
+Friend 
+<qval <more2> <var.gt>1 ? Co-owner : > 
+<qval <more2> <var.gt>2 ? Owner : > 
+<qval <more2> <var.gt>3 ? GM : > 
+Your personal 
+
+[DIALOG d_statask BUTTON] 
+on=0 
+remove 
+on=1 
+f_lock 0 
+on=2 
+f_lock 1 
+on=3 
+f_lock 2 
+on=4 
+f_lock 3 
+on=5 
+f_lock 4 
+on=6 
+if (<eval <src.uid>> = 0)||(<eval <src.uid>> = 1)||(<eval <src.uid>> = 2)||(<eval <src.uid>> = 3)||(<eval <src.uid>> = 4)||(<eval <src.uid>> = 5) 
+src.sysmessage You cant personal lock items...contact GM.//if UID of the player is 1 to 5, it cannot lock items, because this number is used for storing of ranks as well. 
+else 
+f_lock <src.uid> 
+endif 
+
+[function f_lock] 
+if (<src.targ.region.uid>=<link.link.region.uid>)&&(<src.targ.cont>=0) 
+src.targ.link=<link.link> 
+src.targ.attr=<src.targ.attr>|attr_move_never 
+src.targ.attr=<src.targ.attr>&~attr_move_always//if this flag was on, you can still equip the items...if it is important to you, store the flags as a second flag on the brass sign... 
+src.sysmessage Item locked. 
+src.try uid.<link>.tag.lockit<src.targ.uid>=<argn> 
+if (<src.targ.type>=t_door) 
+src.targ.type=t_door_locked 
+src.targ.more1=<link.link> 
+endif 
+else 
+src.sysmessage The item has to be in the house or in the vicinty. 
+endif 
+
+[function f_hm_evcheck] 
+if (<act.link.isitem>) 
+if (<act.link.type>=t_multi)&&(<act.baseid> != i_sign_brass) 
+var.itemlevel=<eval <uid.<act.link.more2>.tag.lockit<src.act>>> 
+var.itemuid=0 
+if (<var.itemlevel> > 4) 
+var.itemuid=<var.itemlevel> 
+try uid.<act.link.more2>.f_findrank <var.itemlevel> 
+var.itemlevel=<var.phrank>+1 
+endif 
+try uid.<act.link.more2>.f_findrank <uid> 
+//say itemlevel:<var.itemlevel>. charlevel:<var.phrank> 
+if (<act.type>=t_door_locked)||(<var.itemlevel> <= <var.phrank>)||(<var.itemuid>=<uid>) 
+//return 0 
+else 
+sysmessage You have no right for this. 
+return 1 
+endif 
+endif 
+endif 
+return 0 
+
+[DIALOG d_house_rename] // Main 
+0,0 // Position 
+resizepic 190 175 2620 330 120 
+resizepic 220 225 3000 270 22 
+text 265 195 995 0 // how? 
+text 355 255 0000 1 // OK 
+button 340 260 2104 2103 1 0 1 // Opens OK 
+textentry 225 226 253 25 0 0 2 // Text Input 
+
+[DIALOG d_house_rename TEXT] 
+Set new name of the house 
+OK 
+<NAME> 
+
+[DIALOG d_house_rename BUTTON] 
+ON=0 
+SRC.SYSMESSAGE The house has not been renamed. 
+ON=1 
+NAME <ARGTXT[0]> 
+RETURN 1 
+
+[DIALOG HOUSE_MENU_SIGN_1] 
+0,0 
+resizepic 0 130 2620 500 250 
+button 40 155 2103 2104 1 0 2 
+tilepic 50 150 2979 
+button 40 180 2103 2104 1 0 3 
+tilepic 50 175 2981 
+button 40 205 2103 2104 1 0 4 
+tilepic 50 200 2983 
+button 40 230 2103 2104 1 0 5 
+tilepic 50 225 2985 
+button 40 255 2103 2104 1 0 6 
+tilepic 50 250 2987 
+button 40 280 2103 2104 1 0 7 
+tilepic 50 275 2989 
+button 40 305 2103 2104 1 0 8 
+tilepic 50 300 2991 
+button 115 155 2103 2104 1 0 9 
+tilepic 75 150 2980 
+button 115 180 2103 2104 1 0 10 
+tilepic 75 175 2982 
+button 115 205 2103 2104 1 0 11 
+tilepic 75 200 2984 
+button 115 230 2103 2104 1 0 12 
+tilepic 75 225 2986 
+button 115 255 2103 2104 1 0 13 
+tilepic 75 250 2988 
+button 115 280 2103 2104 1 0 14 
+tilepic 75 275 2990 
+button 115 305 2103 2104 1 0 15 
+tilepic 75 300 2992 
+button 210 155 2103 2104 1 0 16 
+tilepic 220 150 2993 
+button 210 180 2103 2104 1 0 17 
+tilepic 220 175 2995 
+button 210 205 2103 2104 1 0 18 
+tilepic 220 200 2997 
+button 210 230 2103 2104 1 0 19 
+tilepic 220 225 2999 
+button 210 255 2103 2104 1 0 20 
+tilepic 220 250 3001 
+button 210 280 2103 2104 1 0 21 
+tilepic 220 275 3003 
+button 210 305 2103 2104 1 0 22 
+tilepic 220 300 3005 
+button 285 155 2103 2104 1 0 23 
+tilepic 245 150 2994 
+button 285 180 2103 2104 1 0 24 
+tilepic 245 175 2996 
+button 285 205 2103 2104 1 0 25 
+tilepic 245 200 2998 
+button 285 230 2103 2104 1 0 26 
+tilepic 245 225 3000 
+button 285 255 2103 2104 1 0 27 
+tilepic 245 250 3002 
+button 285 280 2103 2104 1 0 28 
+tilepic 245 275 3004 
+button 285 305 2103 2104 1 0 29 
+tilepic 245 300 3006 
+button 380 155 2103 2104 1 0 30 
+tilepic 390 150 3007 
+button 380 180 2103 2104 1 0 31 
+tilepic 390 175 3009 
+button 380 205 2103 2104 1 0 32 
+tilepic 390 200 3011 
+button 380 230 2103 2104 1 0 33 
+tilepic 390 225 3013 
+button 380 255 2103 2104 1 0 34 
+tilepic 390 250 3015 
+button 380 280 2103 2104 1 0 35 
+tilepic 390 275 3017 
+button 380 305 2103 2104 1 0 36 
+tilepic 390 300 3019 
+button 455 155 2103 2104 1 0 37 
+tilepic 415 150 3008 
+button 455 180 2103 2104 1 0 38 
+tilepic 415 175 3010 
+button 455 205 2103 2104 1 0 39 
+tilepic 415 200 3012 
+button 455 230 2103 2104 1 0 40 
+tilepic 415 225 3014 
+button 455 255 2103 2104 1 0 41 
+tilepic 415 250 3016 
+button 455 280 2103 2104 1 0 42 
+tilepic 415 275 3018 
+button 455 305 2103 2104 1 0 43 
+tilepic 415 300 3020 
+button 175 340 2466 2467 1 0 44 
+button 260 340 2469 2470 1 0 45 
+
+[DIALOG HOUSE_MENU_SIGN_1 TEXT] 
+
+[DIALOG HOUSE_MENU_SIGN_1 BUTTON] 
+ON=1 
+TIMER=<EVAL ((30*24*60*60)+60)> 
+DIALOG HOUSE_MENU_SIGN_1 
+
+ON=2 
+DISPID=0BA3 
+SRC.FIX 
+
+ON=3 
+DISPID=0BA5 
+SRC.FIX 
+
+ON=4 
+DISPID=0BA7 
+SRC.FIX 
+
+ON=5 
+DISPID=0BA9 
+SRC.FIX 
+
+ON=6 
+DISPID=0BAB 
+SRC.FIX 
+
+ON=7 
+DISPID=0BAD 
+SRC.FIX 
+
+ON=8 
+DISPID=0BAF 
+SRC.FIX 
+
+ON=9 
+DISPID=0BA4 
+SRC.FIX 
+
+ON=10 
+DISPID=0BA6 
+SRC.FIX 
+
+ON=11 
+DISPID=0BA8 
+SRC.FIX 
+
+ON=12 
+DISPID=0BAA 
+SRC.FIX 
+
+ON=13 
+DISPID=0BAC 
+SRC.FIX 
+
+ON=14 
+DISPID=0BAE 
+SRC.FIX 
+
+ON=15 
+DISPID=0BB0 
+SRC.FIX 
+
+ON=16 
+DISPID=0BB1 
+SRC.FIX 
+
+ON=17 
+DISPID=0BB3 
+SRC.FIX 
+
+ON=18 
+DISPID=0BB5 
+SRC.FIX 
+
+ON=19 
+DISPID=0BB7 
+SRC.FIX 
+
+ON=20 
+DISPID=0BB9 
+SRC.FIX 
+
+ON=21 
+DISPID=0BBB 
+SRC.FIX 
+
+ON=22 
+DISPID=0BBD 
+SRC.FIX 
+
+ON=23 
+DISPID=0BB2 
+SRC.FIX 
+
+ON=24 
+DISPID=0BB4 
+SRC.FIX 
+
+ON=25 
+DISPID=0BB6 
+SRC.FIX 
+
+ON=26 
+DISPID=0BB8 
+SRC.FIX 
+
+ON=27 
+DISPID=0BBA 
+SRC.FIX 
+
+ON=28 
+DISPID=0BBC 
+SRC.FIX 
+
+ON=29 
+DISPID=0BBE 
+SRC.FIX 
+
+ON=30 
+DISPID=0BBF 
+SRC.FIX 
+
+ON=31 
+DISPID=0BC1 
+SRC.FIX 
+
+ON=32 
+DISPID=0BC3 
+SRC.FIX 
+
+ON=33 
+DISPID=0BC5 
+SRC.FIX 
+
+ON=34 
+DISPID=0BC7 
+SRC.FIX 
+
+ON=35 
+DISPID=0BC9 
+SRC.FIX 
+
+ON=36 
+DISPID=0BCB 
+SRC.FIX 
+
+ON=37 
+DISPID=0BC0 
+SRC.FIX 
+
+ON=38 
+DISPID=0BC2 
+SRC.FIX 
+
+ON=39 
+DISPID=0BC4 
+SRC.FIX 
+
+ON=40 
+DISPID=0BC6 
+SRC.FIX 
+
+ON=41 
+DISPID=0BC8 
+SRC.FIX 
+
+ON=42 
+DISPID=0BCA 
+SRC.FIX 
+
+ON=43 
+DISPID=0BCC 
+SRC.FIX 
+
+ON=44 
+DIALOG HOUSE_MENU 
+
+ON=45 
+DIALOG HOUSE_MENU_SIGN_2 
+
+[DIALOG HOUSE_MENU_SIGN_2] 
+0,0 
+resizepic 0 130 2620 500 250 
+button 40 155 2103 2104 1 0 2 
+tilepic 50 150 3021 
+button 40 180 2103 2104 1 0 3 
+tilepic 50 175 3023 
+button 40 205 2103 2104 1 0 4 
+tilepic 50 200 3025 
+button 40 230 2103 2104 1 0 5 
+tilepic 50 225 3027 
+button 40 255 2103 2104 1 0 6 
+tilepic 50 250 3029 
+button 40 280 2103 2104 1 0 7 
+tilepic 50 275 3031 
+button 40 305 2103 2104 1 0 8 
+tilepic 50 300 3033 
+button 115 155 2103 2104 1 0 9 
+tilepic 75 150 3022 
+button 115 180 2103 2104 1 0 10 
+tilepic 75 175 3024 
+button 115 205 2103 2104 1 0 11 
+tilepic 75 200 3026 
+button 115 230 2103 2104 1 0 12 
+tilepic 75 225 3028 
+button 115 255 2103 2104 1 0 13 
+tilepic 75 250 3030 
+button 115 280 2103 2104 1 0 14 
+tilepic 75 275 3032 
+button 115 305 2103 2104 1 0 15 
+tilepic 75 300 3034 
+button 210 155 2103 2104 1 0 16 
+tilepic 220 150 3035 
+button 210 180 2103 2104 1 0 17 
+tilepic 220 175 3037 
+button 210 205 2103 2104 1 0 18 
+tilepic 220 200 3039 
+button 210 230 2103 2104 1 0 19 
+tilepic 220 225 3041 
+button 210 255 2103 2104 1 0 20 
+tilepic 220 250 3043 
+button 210 280 2103 2104 1 0 21 
+tilepic 220 275 3045 
+button 210 305 2103 2104 1 0 22 
+tilepic 220 300 3047 
+button 285 155 2103 2104 1 0 23 
+tilepic 245 150 3036 
+button 285 180 2103 2104 1 0 24 
+tilepic 245 175 3038 
+button 285 205 2103 2104 1 0 25 
+tilepic 245 200 3040 
+button 285 230 2103 2104 1 0 26 
+tilepic 245 225 3042 
+button 285 255 2103 2104 1 0 27 
+tilepic 245 250 3044 
+button 285 280 2103 2104 1 0 28 
+tilepic 245 275 3046 
+button 285 305 2103 2104 1 0 29 
+tilepic 245 300 3048 
+button 380 155 2103 2104 1 0 30 
+tilepic 390 150 3049 
+button 380 180 2103 2104 1 0 31 
+tilepic 390 175 3051 
+button 380 205 2103 2104 1 0 32 
+tilepic 390 200 3053 
+button 380 230 2103 2104 1 0 33 
+tilepic 390 225 3055 
+button 380 255 2103 2104 1 0 34 
+tilepic 390 250 3057 
+button 380 280 2103 2104 1 0 35 
+tilepic 390 275 3059 
+button 380 305 2103 2104 1 0 36 
+tilepic 390 300 3061 
+button 455 155 2103 2104 1 0 37 
+tilepic 415 150 3050 
+button 455 180 2103 2104 1 0 38 
+tilepic 415 175 3052 
+button 455 205 2103 2104 1 0 39 
+tilepic 415 200 3054 
+button 455 230 2103 2104 1 0 40 
+tilepic 415 225 3056 
+button 455 255 2103 2104 1 0 41 
+tilepic 415 250 3058 
+button 455 280 2103 2104 1 0 42 
+tilepic 415 275 3060 
+button 455 305 2103 2104 1 0 43 
+tilepic 415 300 3062 
+button 175 340 2466 2467 1 0 44 
+button 260 340 2469 2470 1 0 45 
+
+[DIALOG house_menu_sign_2 TEXT] 
+[DIALOG house_menu_sign_2 BUTTON] 
+ON=1 
+TIMER=<EVAL ((30*24*60*60)+60)> 
+DIALOG HOUSE_MENU_SIGN_2 
+
+ON=2 
+DISPID=0BCD 
+SRC.FIX 
+
+ON=3 
+DISPID=0BCF 
+SRC.FIX 
+
+ON=4 
+DISPID=0BD1 
+SRC.FIX 
+
+ON=5 
+DISPID=0BD3 
+SRC.FIX 
+
+ON=6 
+DISPID=0BD5 
+SRC.FIX 
+
+ON=7 
+DISPID=0BD7 
+SRC.FIX 
+
+ON=8 
+DISPID=0BD9 
+SRC.FIX 
+
+ON=9 
+DISPID=0BCE 
+SRC.FIX 
+
+ON=10 
+DISPID=0BD0 
+SRC.FIX 
+
+ON=11 
+DISPID=0BD2 
+SRC.FIX 
+
+ON=12 
+DISPID=0BD4 
+SRC.FIX 
+
+ON=13 
+DISPID=0BD6 
+SRC.FIX 
+
+ON=14 
+DISPID=0BD8 
+SRC.FIX 
+
+ON=15 
+DISPID=0BDA 
+SRC.FIX 
+
+ON=16 
+DISPID=0BDB 
+SRC.FIX 
+
+ON=17 
+DISPID=0BDD 
+SRC.FIX 
+
+ON=18 
+DISPID=0BDF 
+SRC.FIX 
+
+ON=19 
+DISPID=0BE1 
+SRC.FIX 
+
+ON=20 
+DISPID=0BE3 
+SRC.FIX 
+
+ON=21 
+DISPID=0BE5 
+SRC.FIX 
+
+ON=22 
+DISPID=0BE7 
+SRC.FIX 
+
+ON=23 
+DISPID=0BDC 
+SRC.FIX 
+
+ON=24 
+DISPID=0BDE 
+SRC.FIX 
+
+ON=25 
+DISPID=0BE0 
+SRC.FIX 
+
+ON=26 
+DISPID=0BE2 
+SRC.FIX 
+
+ON=27 
+DISPID=0BE4 
+SRC.FIX 
+
+ON=28 
+DISPID=0BE6 
+SRC.FIX 
+
+ON=29 
+DISPID=0BE8 
+SRC.FIX 
+
+ON=30 
+DISPID=0BE9 
+SRC.FIX 
+
+ON=31 
+DISPID=0BEB 
+SRC.FIX 
+
+ON=32 
+DISPID=0BED 
+SRC.FIX 
+
+ON=33 
+DISPID=0BEF 
+SRC.FIX 
+
+ON=34 
+DISPID=0BF1 
+SRC.FIX 
+
+ON=35 
+DISPID=0BF3 
+SRC.FIX 
+
+ON=36 
+DISPID=0BF5 
+SRC.FIX 
+
+ON=37 
+DISPID=0BEA 
+SRC.FIX 
+
+ON=38 
+DISPID=0BEC 
+SRC.FIX 
+
+ON=39 
+DISPID=0BEE 
+SRC.FIX 
+
+ON=40 
+DISPID=0BF0 
+SRC.FIX 
+
+ON=41 
+DISPID=0BF2 
+SRC.FIX 
+
+ON=42 
+DISPID=0BF4 
+SRC.FIX 
+
+ON=43 
+DISPID=0BF6 
+SRC.FIX 
+
+ON=44 
+DIALOG HOUSE_MENU_SIGN_1 
+
+ON=45 
+DIALOG HOUSE_MENU_SIGN_3 
+
+[DIALOG HOUSE_MENU_SIGN_3] 
+0,0 
+resizepic 0 130 2620 500 250 
+button 40 155 2103 2104 1 0 2 
+tilepic 50 150 3063 
+button 40 180 2103 2104 1 0 3 
+tilepic 50 175 3065 
+button 40 205 2103 2104 1 0 4 
+tilepic 50 200 3067 
+button 40 230 2103 2104 1 0 5 
+tilepic 50 225 3069 
+button 40 255 2103 2104 1 0 6 
+tilepic 50 250 3071 
+button 40 280 2103 2104 1 0 7 
+tilepic 50 275 3073 
+button 115 155 2103 2104 1 0 8 
+tilepic 75 150 3064 
+button 115 180 2103 2104 1 0 9 
+tilepic 75 175 3066 
+button 115 205 2103 2104 1 0 10 
+tilepic 75 200 3068 
+button 115 230 2103 2104 1 0 11 
+tilepic 75 225 3070 
+button 115 255 2103 2104 1 0 12 
+tilepic 75 250 3072 
+button 115 280 2103 2104 1 0 13 
+tilepic 75 275 3074 
+button 380 155 2103 2104 1 0 14 
+tilepic 390 150 3075 
+button 380 180 2103 2104 1 0 15 
+tilepic 390 175 3077 
+button 380 205 2103 2104 1 0 16 
+tilepic 390 200 3079 
+button 380 230 2103 2104 1 0 17 
+tilepic 390 225 3081 
+button 380 255 2103 2104 1 0 18 
+tilepic 390 250 3083 
+button 380 280 2103 2104 1 0 19 
+tilepic 390 275 3085 
+button 455 155 2103 2104 1 0 20 
+tilepic 415 150 3076 
+button 455 180 2103 2104 1 0 21 
+tilepic 415 175 3078 
+button 455 205 2103 2104 1 0 22 
+tilepic 415 200 3080 
+button 455 230 2103 2104 1 0 23 
+tilepic 415 225 3082 
+button 455 255 2103 2104 1 0 24 
+tilepic 415 250 3084 
+button 455 280 2103 2104 1 0 25 
+tilepic 415 275 3086 
+button 175 340 2466 2467 1 0 26 
+button 260 340 2469 2470 1 0 27 
+
+[DIALOG house_menu_sign_3 TEXT] 
+[DIALOG house_menu_sign_3 BUTTON] 
+ON=1 
+TIMER=<EVAL ((30*24*60*60)+60)> 
+DIALOG HOUSE_MENU_SIGN_3 
+
+ON=2 
+DISPID=0BF7 
+SRC.FIX 
+
+ON=3 
+DISPID=0BF9 
+SRC.FIX 
+
+ON=4 
+DISPID=0BFB 
+SRC.FIX 
+
+ON=5 
+DISPID=0BFD 
+SRC.FIX 
+
+ON=6 
+DISPID=0BFF 
+SRC.FIX 
+
+ON=7 
+DISPID=0C01 
+SRC.FIX 
+
+ON=8 
+DISPID=0BF8 
+SRC.FIX 
+
+ON=9 
+DISPID=0BFA 
+SRC.FIX 
+
+ON=10 
+DISPID=0BFC 
+SRC.FIX 
+
+ON=11 
+DISPID=0BFE 
+SRC.FIX 
+
+ON=12 
+DISPID=0C00 
+SRC.FIX 
+
+ON=13 
+DISPID=0C02 
+SRC.FIX 
+
+ON=14 
+DISPID=0C03 
+SRC.FIX 
+
+ON=15 
+DISPID=0C05 
+SRC.FIX 
+
+ON=16 
+DISPID=0C07 
+SRC.FIX 
+
+ON=17 
+DISPID=0C09 
+SRC.FIX 
+
+ON=18 
+DISPID=0C0B 
+SRC.FIX 
+
+ON=19 
+DISPID=0C0D 
+SRC.FIX 
+
+ON=20 
+DISPID=0C04 
+SRC.FIX 
+
+ON=21 
+DISPID=0C06 
+SRC.FIX 
+
+ON=22 
+DISPID=0C08 
+SRC.FIX 
+
+ON=23 
+DISPID=0C0A 
+SRC.FIX 
+
+ON=24 
+DISPID=0C0C 
+SRC.FIX 
+
+ON=25 
+DISPID=0C0E 
+SRC.FIX 
+
+ON=26 
+DIALOG HOUSE_MENU_SIGN_2 
+
+ON=27 
+DIALOG HOUSE_MENU_SIGN_1 
+
+[function pay] 
+if !(<args>) //empty command line? 
+var.enough=1 
+return 1 //then do nothing 
+endif 
+if (<src.isgm>) 
+sysmessage As a GM, you pay nothing. 
+var.enough=1 
+return 1 
+endif 
+var.enough=0 //if not enough gold, var.enough will be '0' 
+var.totalgold=<findlayer.21.rescount i_gold> + <bankbalance> 
+if (<eval <args>> > <var.totalgold>) //the amount to pay is more then you own?? 
+sysmessage You need <eval <args>> gp. //refuse transaction 
+else //you have enough to pay 
+var.enough=1 //allow you to check transaction later 
+if (<argn> > <src.findlayer.21.rescount i_gold>) 
+//say cannot be paid with backpack money alone <eval <argn>-<src.findlayer.21.rescount i_gold>> 
+goldtopack <eval <argn>-<src.findlayer.21.rescount i_gold>> //put the needed money in the backpack 
+endif 
+payamount <args> //pay the needed amount 
+endif 
+
+[function goldtopack] //move enough gold so that we can pay 
+//argn- amount of gold left to move 
+var.found=(<argn> - <src.findlayer.29.findid.i_gold.amount>) //amount found 
+if (<var.found> > 0) //pile is not big enough, so move it all 
+src.findlayer.29.findid.i_gold.cont=<src.findlayer.21.uid> // transfer to backpack 
+goldtopack <var.found> //get the next pile of gold 
+else //not entire pile needed 
+var.left=(0 - <var.found>) // get the amount of money left in this pile 
+if (<var.left>) 
+src.findlayer.29.findid.i_gold.amount <var.left> //set this amount 
+else 
+src.findlayer.29.findid.i_gold.remove 
+endif 
+src.newitem i_gold //create a new pile of gold 
+src.act.amount <args> //the needed amount 
+src.act.cont=<src.findlayer.21.uid> //place in backpack 
+endif //done 
+
+[function payamount] 
+var.counter=<eval <args>> //amount left to pay 
+if (<var.counter> > 65000) // more then 65000 left to pay?? 
+src.consume 65000 i_gold //consume 65000 first 
+var.counter=(<var.counter> - 65000) 
+payamount <var.counter> //then get the rest 
+else 
+src.consume <args> i_gold //consume the rest of the needed amount 
+endif // we are finished 
+
+
+[eof]

@@ -1,0 +1,380 @@
+// Maul notes
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Items			Req Tinker skill	Resources
+// Bag Rename Tool		60			45 i_ingot_iron
+// Hitching Post		90			100 i_ingot_iron
+// Trap				80			5 I_INGOT_SHADOW
+// UID Chest			95			100 i_ingot_iron
+// Potion Keg			65			8 i_BOARD, 1 i_BARREL_TAP, 1 i_BARREL_HOOPS
+// Sandstone Fireplace		95			350 i_ingot_iron
+// Sandstone Oven		95			350 i_ingot_iron
+// Trash Can			35			30 i_log
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[itemdef i_tinker_crafter]
+name=Tinker Crafter
+id=i_tinker_tools
+type=t_script
+
+ON=@CREATE
+ATTR=04
+COLOR=044
+// HITPOINTS={5000 6000}
+
+ON=@DCLICK 
+DIALOG d_Tink_crafter
+RETURN 1 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////
+// BEGIN GUMP 
+////////////////////////////////////////////////////////////////////
+
+[DIALOG d_Tink_crafter]
+0,0                                    	// Position
+resizepic 50 100 2600 560 300          	// Curved Grey background 
+
+////////////////////////////////////////////////////////////////////
+page 0                                 	// Page 0
+resizepic 66 155 5100 528 25          	// Square Grey box
+button 270 360 247 248 1 0 0           	// Okay, button 0
+
+////Headings/////////////////////////////////////////////////////////
+text 250 120 0 0			// menu heading
+text 285 133 0 1			// By Maul
+
+text 105 158 0 2                       	// 1
+text 215 158 0 3                       	// 2
+text 325 158 0 4                       	// 3
+text 435 158 0 5                       	// 4
+text 545 158 0 6                       	// 5
+
+button 80 159 5209 5003 0 1 1         	// 1
+button 190 159 5209 5003 0 2 2         	// 2
+button 300 159 5209 5003 0 3 3         	// 3
+button 410 159 5209 5003 0 4 4         	// 4
+button 520 159 5209 5003 0 5 5         	// 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                 	// Cheap
+
+/////////menu text and screen location
+
+text 115 200 0 7			// 
+text 115 225 0 8			// 
+text 115 250 0 9			// 
+text 115 275 0 10			// 
+text 115 300 0 11			// 
+text 115 325 0 12			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 6 		// 
+button 90 225 2714 2714 1 0 7		// 
+button 90 250 2714 2714 1 0 8		// 
+button 90 275 2714 2714 1 0 9		// 
+button 90 300 2714 2714 1 0 10		// 
+button 90 325 2714 2714 1 0 11		// 
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+page 2                                 	// Medium
+
+/////////menu text and screen location
+
+text 115 200 0 13			// 
+text 115 225 0 14			// 
+text 115 250 0 15			// 
+text 115 275 0 16			// 
+text 115 300 0 17			// 
+text 115 325 0 18			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 12 		// 
+button 90 225 2714 2714 1 0 13		// 
+button 90 250 2714 2714 1 0 14		// 
+button 90 275 2714 2714 1 0 15		// 
+button 90 300 2714 2714 1 0 16		// 
+button 90 325 2714 2714 1 0 17		// 
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+page 3                                 	// High
+
+/////////menu text and screen location
+
+text 115 200 0 19			// 
+text 115 225 0 20			// 
+text 115 250 0 21			// 
+text 115 275 0 22			// 
+text 115 300 0 23			// 
+text 115 325 0 24			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 18 		// 
+button 90 225 2714 2714 1 0 19		//
+button 90 250 2714 2714 1 0 20		// 
+button 90 275 2714 2714 1 0 21		// 
+button 90 300 2714 2714 1 0 22		// 
+button 90 325 2714 2714 1 0 23		// 
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+page 4                                 	// Exspensive
+
+/////////menu text and screen location
+
+text 115 200 0 25			// 
+text 115 225 0 26			// 
+text 115 250 0 27			// 
+text 115 275 0 28			// 
+text 115 300 0 29			// 
+text 115 325 0 30			//
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 24 		// 
+button 90 225 2714 2714 1 0 25		// 
+button 90 250 2714 2714 1 0 26		// 
+button 90 275 2714 2714 1 0 27		// 
+button 90 300 2714 2714 1 0 28		// 
+button 90 325 2714 2714 1 0 29		//
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+page 5                                 	// Items
+
+/////////menu text and screen location
+
+text 115 200 0 31			// 
+text 115 225 0 32			// 
+text 115 250 0 33			// 
+text 115 275 0 34			// 
+text 115 300 0 35			// 
+text 115 325 0 36			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 30 		// 
+button 90 225 2714 2714 1 0 31		//
+button 90 250 2714 2714 1 0 32		// 
+button 90 275 2714 2714 1 0 33		// 
+button 90 300 2714 2714 1 0 34		// 
+button 90 325 2714 2714 1 0 35		// 
+
+/////////////////////////////////////////////////////////////////////
+
+[DIALOG d_Tink_crafter TEXT]
+Tinker Crafter Tools.
+by Maul
+
+One
+Two
+Three
+Four
+Five
+
+///page 1
+Bag Rename Tool (45 iron ingots, 60 tinkering)
+Hitching Post (100 iron ingots, 90 tinkering)
+Trap (5 shadow ingots, 80 tinkering)
+UID Chest (100 iron ingots, 95 tinkering)
+Potion Keg (8 Boards/1 Barrel Tap/1 Barrel Hoop, 60 tinkering)
+Sandstone Fireplace (350 iron ingots, 95 tinkering)
+
+///page 2
+Sandstone Oven (350 iron ingots, 95 tinkering)
+Talking Trash Can (30 logs, 35 tinkering)
+Not used //			
+Not used //
+Not used //	
+Not used //		
+
+///page 3
+Not used //
+Not used //			
+Not used //			
+Not used //
+Not used //	
+Not used //
+
+///page 4
+Not used //
+Not used //			
+Not used //			
+Not used //
+Not used //	
+Not used //
+
+///page 5
+Not used //
+Not used //
+Not used //
+Not used //
+Not used // 
+Not used // 
+
+///////////////////////////////////////////////////////////////////////////////////
+
+[DIALOG d_Tink_crafter BUTTON]
+
+ONBUTTON=6
+IF (<SRC.TINKERING>>599) // Bag Rename Tool
+	if <src.restest 45 i_ingot_iron>
+		SRC.CONSUME=45 i_ingot_iron
+		SOUND 0F7
+		SRC.NEWITEM i_bag_rename_tool
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=7
+
+IF (<SRC.TINKERING>>899) // Hitching Post
+	if <src.restest 100 i_ingot_iron>
+		SRC.CONSUME=100 i_ingot_iron
+		SOUND 0F7
+		SRC.NEWITEM i_hitching_post
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=8
+IF (<SRC.TINKERING>>799) // Trap
+	if <src.restest 5 I_INGOT_SHADOW>
+		SRC.CONSUME=5 I_INGOT_SHADOW
+		SOUND 0F7
+		SRC.NEWITEM i_trap_w
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=9
+IF (<SRC.TINKERING>>949) // UID Chest
+	if <src.restest 100 i_ingot_iron>
+		SRC.CONSUME=100 i_ingot_iron
+		SOUND 0F7
+		SRC.NEWITEM I_uid_chest
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=10
+IF (<SRC.TINKERING>>649) // Potion Keg
+	if (<src.restest 8 i_BOARD> && <src.restest 1 i_BARREL_TAP> && <src.restest 1 i_BARREL_HOOPS>)
+		SRC.CONSUME=8 i_BOARD
+		SRC.CONSUME=1 i_BARREL_TAP
+		SRC.CONSUME=1 i_BARREL_HOOPS
+		SOUND 0F7
+		SRC.NEWITEM i_keg_potion
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=11
+IF (<SRC.TINKERING>>949) // Sandstone Fireplace
+	if <src.restest 350 i_ingot_iron>
+		SRC.CONSUME=350 i_ingot_iron
+		SOUND 0F7
+		SRC.NEWITEM 045d
+		SRC.ACT.BOUNCE
+		SRC.NEWITEM 045e
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=12
+IF (<SRC.TINKERING>>949) // Sandstone Oven
+	if <src.restest 350 i_ingot_iron>
+		SRC.CONSUME=350 i_ingot_iron
+		SOUND 0F7
+		SRC.NEWITEM 0461
+		SRC.ACT.BOUNCE
+		SRC.NEWITEM 0462
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=13
+IF (<SRC.TINKERING>>349) // Trash Can
+	if <src.restest 30 i_log>
+		SRC.CONSUME=30 i_log
+		SOUND 0F7
+		SRC.NEWITEM i_trash_can2
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+[eof]

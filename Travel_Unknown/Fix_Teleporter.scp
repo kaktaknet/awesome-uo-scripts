@@ -1,0 +1,47 @@
+//Scripted By Admin Remedy
+//Delayed Teleporter
+//Intall Notes: Set all teleporters to type t_new_teleporter
+
+[TYPEDEF t_new_teleporter]
+DEFNAME=T_NEW_TELEPORTER
+
+ON=@STEP
+IF !(0<SRC.FINDID.i_teleporter_fix>)
+	SRC.TAG.TELE
+	VAR.ACT <SRC.ACT>
+	SRC.NEWITEM i_teleporter_fix
+	SRC.ACT.TAG.MOREP <MOREP>
+	SRC.ACT.TAG.PX <P.X>
+	SRC.ACT.TAG.PY <P.Y>
+	SRC.ACT.EQUIP
+	SRC.ACT <VAR.ACT>
+ENDIF
+
+[ITEMDEF i_teleporter_fix]
+DEFNAME=i_teleporter_fix
+ID=i_memory
+NAME=teleporter
+TYPE=t_eq_script
+
+on=@Create
+TIMER=1
+
+ON=@TIMER
+IF !(<eval <CONT.TAG.TELE>>==01)&&(<eval <TAG.PX>>==<eval <CONT.P.X>>)&&(<eval <TAG.PY>>==<eval <CONT.P.Y>>)
+	CONT.SFX 501
+	CONT.MENU m_teleport
+	CONT.TAG.TELE 1
+ELSE
+	REMOVE
+ENDIF
+TIMER 10
+RETURN 1
+
+[MENU m_teleport]
+You are about to enter an unprotected area.
+ON=0 Yes
+SRC.GO <SRC.FINDID.i_teleporter_fix.TAG.MOREP>
+SRC.FINDID.i_teleporter_fix.REMOVE
+SRC.TAG.TELE
+
+[EOF]

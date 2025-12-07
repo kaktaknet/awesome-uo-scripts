@@ -1,0 +1,3208 @@
+//-------------------------- /////
+////Events System - by ClouD /////
+//--------------------------
+////E-mail: alexbastos@ism.com.br ////
+//--------------------------
+////ICQ: 133411911 ////
+//--------------------------
+////Note: Edit only the defs, if you're a begginer ////
+//--------------------------
+////You can edit FUNCTIONs at the end of file
+//--------------------------
+////Please, do not take this header out :D plz? ////
+//-------------------------- /////
+///Don't mess with it if you're newbie///
+
+[COMMENT brazil_flag]
+----------------
+----------------
+||     /\     ||
+||    /  \    ||
+||   /    \   ||
+||  /      \  ||
+|| /  ____  \ ||   Brazil!
+||/  |    |  \||
+||\  |    |  /||
+|| \ |____| / ||
+||  \      /  ||
+||   \    /   ||
+||    \  /    ||
+||     \/     ||
+----------------
+----------------
+
+[COMMENT event_sys] ///<-- SHOULD READ
+
+//////////////////////////////////
+
+Put this under [SPEECH spk_player]
+on=*[a-z]*
+if (<src.tag0.event.id>==2)
+try uid.<var0.juiz>.sysmessage @88 <src.tag0.event.charname>(<src>): <args>
+return 1
+endif
+
+ON=*[0-9]*
+IF (<args> > 9) && (<src.tag0.event.id>==2)
+try uid.<var0.juiz>.sysmessage @88 <src.tag0.event.charname>(<src>): <args>
+return 1
+ENDIF
+if (<src.tag0.event.id>==2) && !(<uid.<src.region.uid>.type>==t_multi)
+try uid.<var0.juiz>.sysmessage @88 <src.tag0.event.charname>(<src>): <args>
+return 1
+endif
+
+/////////////////////////////////
+
+This script is one of the most appreciated scripts of my shard, so I decided to make it usable
+by every one. It's easy to use and give your staff members a total freedom feeling. Any staff
+member just have to type .FFA/.CAMP/.SURV/.BW/.QUEST and then he'll pass through all the selected
+event arenas. When he finds the one he wishes to use, he just have to DCLICK the eventsave (a blue
+small ball) and then select the prize, the prizeamount and modes. Then he goes to a menu and click
+the button to start the event.
+When he clicks the button, he can log out and let the script take care of everything. If he doesn't
+he will incorporate the JUDGE, a character that says somethings at the event.
+
+Let me explain some things:
+In this is script there are currently 6 events programmed. And each one of then has an ID:
+
+Free For All = 1
+Survivor = 2
+Blood War = 3
+Camp = 4
+Fre For All (team) = 5
+Quest = 6
+CTF = 7
+
+To create an event arena you just have to type .EVENTSAVE <eventid>,<arena name>.
+
+I concil you to separate diferent MAPPLANES for each event, so this way it'll be more organized.
+
+Blocking Tags:
+
+There's a defname called blocked_tags_things. There you must set the amount of blocked tags, and
+the NAME of the blocked tags. Like this:
+
+blockedtags_number 2
+
+blockedtag1 put_some_tag_NAME_here
+blockedtag2 put_some_tag_NAME2_here
+and so on...
+
+Creating Team Arenas:
+
+If the event is an team event (Blood War or FFA team) a menu will appear asking you to put the 
+tags for the teams start points. After you've puted those tags, you should create the
+I_EVENT_BLOCKG and split the arena with those floors (note: don't touch the floors).
+When the team event opens each team will be able to stay only at it's side, and when the event
+closes to more people, they'll be able to attack each other.
+
+Note: Players can't attack another player with the same team id that they have.
+
+Creating other events Arenas:
+
+You just have to type the .eventsave <event id>,<arena name> and then.. well.. it's done
+
+Important things about the in-game work:
+
+When the staff member decides to start the event, the script will announce the event and give
+5 minutes for the players to get ready. After 2 minutes it'll announce again, and after 1 more
+minute it'll announce again. After the 5 minutes the event will be opened, so a message will
+appear saying that the players can type .ENTER to participate. When the event opens
+it'll give 1 more minute to let all players enter, and then, it closes and remove the safezone
+of the event arena, letting the players fight.
+
+When the player dies, if the event has no Event_LIFES or his event_lifepoints are 0, he'll exit 
+the event and it'll be announced to every one of the shard that he has died.
+
+Players can exit anytime by typing .EXIT, and they don't lose their loots, unless the staff member
+has activated the LOOTING MODE
+
+If there's only one player left in the event, he can type .exit to receive the prize and a tronphie,
+or if the opposite teams lose, all the members of the team can type .exit and receive the prize.
+
+Notes about the MODES:
+Modes are special caracteristics that can be incorporated at an event, so that it's more fun, or
+fair! 
+The script has 5 programmed modes, wich are: Iron Maiden, No Bow, No Spells, Newbie and Looting.
+And event can have more than 1 mode, but some modes don't work with some events. You don't have
+to worry about that, because the script won't let the modes to be used if the event doesn't support
+them.
+
+No Bow = Players can't use bows/crossbows
+No Spells = Players can't cast spells
+Iron Maiden = Players will receive certain itens to fight
+Newbie = Players will have the same stats and skills
+Looting = Players WILL LOSE THEIR LOOTS
+
+About the WebPage:
+The webpage that came with this script is automatically updated, with the infos about the events
+You just have to put in you sphere folder and a link in your website
+
+Players can see the event status by typing .EVENT in-game, too.
+
+Infos about the events:
+Blood War = An event where APKs fights with PKs until there are only one team left!
+
+Survivor = All players get naked, change their names, can't talk, and fight with each other.
+There can't be more than 1 player fighting with another. Just 1x1 fights.
+
+Camp = 1x1 Duel. Players can fight only one time at each Camp
+
+Free For All = All vs All
+
+Free For All (team) = Team vs Team
+
+Quest = humm... duh?
+
+CTF = there's a flag at the center of the arena. The first team that takes the flag to their base wins
+
+Info about QUEST:
+
+When you make a quest, put the event E_QUESTEND at the boss of the quest, otherwise the script
+won't consider it finished when the boss dies.
+
+IMPORTANT NOTE:
+Don't set the amount of Non-Stockable itens to more than 1, it'll bug
+
+HOPE YOU ENJOY! (and leave my credits)
+
+:D
+
+Any bugs, post at sphereserver.com or contact me at my e-mail.
+
+//Begin of Defs//
+///-----------///
+//Some things are not in defs, you should try looking for them, but almost everything is//
+
+[DEFNAME event_switches]
+minarmor 40 /// this is the minimum armor required to participate in a BLOOD WAR
+killsmin 2 ///minimum kills required to participate in a BLOOD WAR
+
+ctfreturntheflag_timer 5 ///time in minutes players have to return the banner to their bases.
+returntheflagtobase_2 1 ///time in minutes the flag will return to the center, after the player has died holding it
+
+[DEFNAME event_gump_txts]
+AnounceEvent Anounce Event
+justtronphie Just Tronphie
+prizename1 Power Scrolls
+prizename2 Rare Armors
+prizename3 Common Metals
+prizename4 Medium Metals
+prizename5 Rare Metals
+prizename6 Common Armors
+prizename7 Good Armors
+prizename8 Enchanted Armors
+prizename9 Swords
+prizename10 Fences
+prizename11 Special Weapons
+prizename12 Bows
+prizename13 Misc
+prizename14 Gold
+
+[DEFNAME prize_ids]
+power_scrolls { i_gold 1 } ///<-- just leave it as this if you don't have power scrolls
+
+rare_armors { i_enduriun_platemail_chest 1 i_enduriun_platemail_arms 1 i_enduriun_platemail_leggings 1 i_enduriun_platemail_gorget 1 i_enduriun_platemail_helm 1 i_enduriun_platemail_gloves 1 i_air_platemail_chest 1 i_air_platemail_arms 1 i_air_platemail_leggings 1 i_air_platemail_gloves 1 i_air_platemail_gorget 1 i_air_platemail_helm 1 i_bloodrock_platemail 1 i_bloodrock_platemail_arms 1 i_bloodrock_platemail_leggings 1 i_bloodrock_platemail_gorget 1 i_bloodrock_plate_helm 1 i_bloodrock_platemail_gauntlets 1 i_valorite_platemail 1 i_valorite_platemail_arms 1 i_valorite_platemail_leggings 1 i_valorite_platemail_gorget 1 i_valorite_plate_helm 1 i_valorite_platemail_gauntlets 1 i_blackrock_platemail 1 i_blackrock_platemail_arms 1 i_blackrock_platemail_leggings 1 i_blackrock_platemail_gorget 1 i_blackrock_plate_helm 1 i_blackrock_platemail_gauntlets 1 i_mytheril_platemail 1 i_mytheril_platemail_arms 1 i_mytheril_platemail_leggings 1 i_mytheril_platemail_gorget 1 i_mytheril_plate_helm 1 }
+common_metals { i_ingot_rusty 1 i_ingot_iron 1 i_ingot_old_copper 1 i_ingot_dull_copper 1 i_ingot_copper 1 i_ingot_bronze 1 }
+good_metals { i_ingot_shadow 1 i_ingot_silver 1 i_ingot_rose 1 i_ingot_gold 1 i_ingot_agapite 1 }
+rare_metals { i_ingot_verite 1 i_ingot_bloodrock 1 i_ingot_valorite 1 i_ingot_blackrock 1 i_ingot_mytheril 1 }
+
+common_armors { i_old_copper_platemail 1 i_old_copper_platemail_arms 1 i_old_copper_platemail_leggings 1 i_old_copper_platemail_gorget 1 i_old_copper_plate_helm 1 i_old_copper_platemail_gauntlets 1 i_dull_copper_platemail 1 i_dull_copper_platemail_arms 1 i_dull_copper_platemail_gorget 1 i_dull_copper_platemail_leggings 1 i_dull_copper_platemail_gauntlets 1 i_dull_copper_plate_helm 1 i_bronze_platemail 1 i_bronze_platemail_arms 1 i_bronze_platemail_leggings 1 i_bronze_platemail_gauntlets 1 i_bronze_platemail_gorget 1 i_bronze_plate_helm 1 }
+good_armors { i_golden_platemail 1 i_golden_platemail_arms 1 i_golden_platemail_leggings 1 i_golden_platemail_gorget 1 i_golden_plate_helm 1 i_golden_platemail_gauntlets 1 i_agapite_platemail 1 i_agapite_platemail_arms 1 i_agapite_platemail_gorget 1 i_agapite_platemail_leggings 1 i_agapite_platemail_gauntlets 1 i_agapite_plate_helm 1 i_verite_platemail 1 i_verite_platemail_arms 1 i_verite_platemail_leggings 1 i_verite_platemail_gauntlets 1 i_verite_platemail_gorget 1 i_verite_plate_helm 1 }
+
+swords_event { i_mytheril_sword_viking 1 i_copper_sword_viking 1 i_blackrock_sword_viking 1 i_valorite_sword_viking 1 i_verite_sword_viking 1 i_bloodrock_sword_viking 1 i_agapite_sword_viking 1 i_copper_sword_viking 1 }
+fence_event { i_mytheril_kryss 1 i_copper_kryss 1 i_rose_kryss 1 i_agapite_kryss 1 i_verite_kryss 1 i_bloodrock_kryss 1 i_blackrock_kryss 1 i_valorite_kryss 1 }
+special_weapons { i_gold 1 } //<-- put any special weapons you might have
+bows_event { i_mytheril_bow 1 i_valorite_bow 1 i_verite_bow 1 i_bloodrock_bow 1 i_blackrock_bow 1 i_copper_bow 1 i_shadow_bow 1 i_silver_bow 1 i_rose_bow 1 i_agapite_bow 1 i_gold_bow 1 i_bow_elven 1 }
+
+misc_prize { i_balron_dye 1 i_throwing_spear 1 }
+
+[DEFNAME messages_events]
+already_goingon @07a1 There's already an event going on.
+payattention Pay attention to the annoucements in-game.
+startsin_1 starts in 5 minutes
+startsin_2 starts in 3 minutes
+startsin_3 starts in 1 minute
+typenow Type .enter now
+30seconds 30 seconds left to close the event.
+closed closed! Fight begins!
+mode_notallowed This mode is not allowed at
+10secondstoannounce 10 seconds before announcing.
+youcancancel You can cancel the event by Double Clicking the
+
+alreadyentered @07ad You have already entered this event
+noevents @07ad There are no events now.
+notallowed @07ad You're not allowed right now
+musthave_armor @07ad You must have more armor to participate
+mustwaitfor_pk @07ad You must wait for a PK to enter
+mustwaitfor_apk @07ad You must wait for an APK to enter
+already2fighting @07a3 There are already 2 players fighting
+already_participated_camp @07a3 You've already participated in the Camp
+deadnotallowed @07a1 You can't enter in an event dead.
+already_participated @07ad You've already entered the event
+notentered @07a1 You didn't enter the event.
+cantexit @07a1 You can't exit yet
+nobowactivated @036 You can't use bows in this event
+alreadyfighting @036 is already fighting
+
+nospells @07ad No Spells Mode is activated
+campnext1 @07ad Next players, type .enter now!
+
+cantloot @07a1 You can't loot the corpse of another player
+invalidmagic @07a1 You can't cast this
+invalidskill @07a1 You can't use this skill
+cantshrink @07a1 You can't deshrink an animal at an event
+ownteam You can't attack a member of your team
+
+questfinished @07ad Quest finished!
+
+[DEFNAME judge_talking]
+onemoreminute One minute left.
+wait1camp Wait one minute
+wait2camp Wait 30 seconds
+typeexit @07ad Type .exit now
+wait3camp @07ad Camp closed
+cantypeexit @07ad You can type .exit
+
+[DEFNAME event_names]
+event1 Free For All
+event2 Survivor
+event3 Blood War
+event4 Camp
+event5 Free For All (team)
+event6 Quest
+event7 CTF
+
+[DEFNAME survivor_names]
+survname1 War Bush
+survname2 Bin Laden
+survname3 Eminem
+survname4 Bugger
+survname5 Bitch
+survname6 Snoop Dog
+survname7 Macho Man
+
+[DEFNAME tronphie_ids]
+tronphies { 0210b 02100 02109 020ec 0210a 020cd 020ce 020d2 020dc 020e4 020ed 020f9 020fa 020fe 020fd 020da 020d3 020d6 020d7 020d8 020d9 020f5 020f8 020de 020df 020e0 020e3 020e7 020e9 i_statue_stone_sm }
+
+[COMMENT blocked_tags_events]
+You must create a new def for every blocked tag you make. And all of them must be
+blockedtag<1 to anything> and in order, like: blockedtag1/blockedtag2/blocked3... and so on
+
+[DEFNAME blocked_tags_things]
+blockedtags_number 1
+
+blockedtag1 put_some_tag_NAME_here
+
+[DEFNAME event_settings]
+USECLOUDPVPSYS 0 //(1 = on, 0 = off; for checking if you use my pvp system)
+
+[TYPEDEF t_eventsave]
+ON=@DCLICK
+src.tag.gmname=<src.name>
+IF (<more1>==3) || (<more1>==5) 
+IF (<ISEMPTY <tag0.event.p2>>) || (<ISEMPTY <tag0.event.p3>>)
+src.sysmessage @07a1 Define the tags TAG.EVENT.P2 and TAG.EVENT.P3
+sdialog d_evento_arena
+return 1
+ENDIF
+ENDIF
+IF (<var0.event.current>)
+src.sysmessage <def.already_goingon>
+return 1
+ENDIF
+IF (<More1>==7)
+try uid.<tag0.uiddabandeira>.remove
+tag.uiddabandeira=
+ENDIF
+var.event.p2
+var.event.p3
+IF (<more2>)
+more2
+timer=-1
+var.evento.aberto
+var.juiz
+var.event.id
+var.modes.name=
+var.ironmaiden
+var.newbiemode
+var.nobow
+var.lootingmode
+var.nospells
+var.event.name.hp=<var0.event.name> canceled (<serv.rtime>)
+var.event.status.hp=Canceled by <src.tag.gmname>
+serv.b @07a1 <var0.event.name> canceled!
+try uid.<var0.camp_timer.uid>.more1
+return 1
+ENDIF
+if (strcmpi(<src.name>,Judge))
+src.judge
+ENDIF
+var.quest.chefemorto
+var.event.arena=<tag0.arena.name>
+var.event.id=<more1>
+var.prizename=[nenhum]
+var.prizeamount=1
+var.ironmaiden
+var.newbiemode
+var.nobow
+var.lootingmode
+var.nospells
+var.modes.name=
+var.event.name=<def.event<eval <more1>>>
+var.juiz=<src>
+IF (<more1>==1)
+sdialog d_evento 1
+ELIF (<more1>==2)
+sdialog d_evento 1
+ELIF (<more1>==3)
+sdialog d_evento 1
+f_fechar_chao
+ELIF (<more1>==4)
+f_criar_camp_uid
+var.juiz=<src>
+sdialog d_evento 1
+ELIF (<more1>==5)
+var.event.p2=<tag0.event.p2>
+var.event.p3=<tag0.event.p3>
+sdialog d_evento 1
+f_fechar_chao
+ELIF (<more1>==6)
+sdialog d_evento 1
+ELIF (<more1>==7)
+var.event.bandeirateam=
+var.event.p2=<tag0.event.p2>
+var.event.p3=<tag0.event.p3>
+serv.newitem=i_bandeira_ctf
+new.p=<p>
+new.attr=attr_move_never
+new.timer -1
+tag.uiddabandeira=<new>
+sdialog d_evento 1
+endif
+return 1
+
+ON=@timer
+IF !(<more2>)
+region.safe 1
+var.event.p=<p>
+var.event.name.hp=<var0.event.name> <def.startsin_1>.
+var.event.prize.hp=<eval <var0.prizeamount>> <var0.prizename>
+var.event.juiz.hp=Judge: <uid.<var0.juiz>.tag.gmname>
+var.event.arena.hp=<var0.event.arena>
+var.event.modes.hp=<var0.modes.name>
+var.event.status.hp=<def.payattention>
+f_checar_modos_broadcast
+serv.b @07ad <var0.event.name> <def.startsin_1>!
+serv.b @07ad Judge: <uid.<var0.juiz>.tag.gmname>
+more2=1
+timer=7
+return 1
+ELIF (<more2>==1)
+serv.b @07ad Prize: <eval <var0.prizeamount>> <var0.prizename>
+serv.b @07ad Arena: <var0.event.arena>
+more2=2
+timer=7
+return 1
+ELIF (<more2>==2)
+serv.b @07ad Modes: <var0.modes.name>
+more2=3
+timer=110
+return 1
+ELIF (<more2>==3)
+var.event.name.hp=<var0.event.name> <def.startsin_2>.
+serv.b @07ad <var0.event.name> <def.startsin_2>!
+serv.b @07ad Prize: <eval <var0.prizeamount>> <var0.prizename>
+serv.b @07ad Modes: <var0.modes.name>
+more2=4
+timer=60*2
+return 1
+ELIF (<more2>==4)
+var.event.name.hp=<var0.event.name> <def.startsin_3>.
+serv.b @07ad <var0.event.name> <def.startsin_3>!
+serv.b @07ad Prize: <eval <var0.prizeamount>> <var0.prizename>
+serv.b @07ad Modes: <var0.modes.name>
+more2=5
+timer=60
+return 1
+ELIF (<more2>==5)
+var.event.name.hp=<var0.event.name> opened! <def.typenow>!
+serv.b @07ad <var0.event.name> opened!
+serv.b @07ad <def.typenow>!
+var.evento.aberto=1
+try uid.<var0.juiz>.go <p>
+try uid.<var0.juiz>.say <def.onemoreminute>
+var.event.status.hp=<eval 0> players
+var.event.current
+more2=6
+timer=30
+return 1
+ELIF (<more2>==6)
+serv.b @07ad <def.30seconds>
+serv.b @07ad <def.typenow>!
+try uid.<var0.juiz>.go <p>
+try uid.<var0.juiz>.say <def.30seconds>
+more2=7
+timer=30
+return 1
+ELIF (<more2>==7)
+region.safe 0
+var.event.name.hp=<var0.event.name> closed.
+serv.b @07ad <var0.event.name> <def.closed>
+var.evento.aberto
+try uid.<var0.juiz>.go <p>
+try uid.<var0.juiz>.say <var0.event.name> <def.closed>
+try uid.<var0.camp_timer.uid>.more1
+timer=-1
+more2
+f_abrir_chao
+var.event.feitos=<eval <var0.event.feitos>+1>
+var.event.feitos.hp=<eval <var0.event.feitos>> Events
+f_ranking_total_events
+IF (<more1>==7)
+serv.allclients f_removerstone_ctf
+ENDIF
+return 1
+endif
+
+[DIALOG d_evento_arena]
+187,90
+resizepic 65 25 3600 360 250
+CHECKERTRANS 65 25 360 250
+dtext 150 40 1152 Team 1 and 2 start points
+dtext 80 80 2010 EVENT.P2
+resizepic 170 70 3500 230 40
+dtextentry 180 80 300 15 88 0
+dtext 80 130 2010 EVENT.P3
+resizepic 170 120 3500 230 40
+dtextentry 180 130 300 15 88 1
+button 100 205 093A 0939 1 0 1
+dtext 120 200 1152 Set
+
+[DIALOG d_evento_arena BUTTON]
+ON=1
+tag.event.p2=<argtxt[0]>
+tag.event.p3=<argtxt[1]>
+
+[DIALOG d_evento]
+37, 10
+PAGE 1
+resizepic 120 75 3600 440 400
+CHECKERTRANS 120 75 440 400
+dtext 150 100 2010 Prize:
+dtext 215 100 1152 <eval <var0.prizeamount>> <var0.prizename>
+dtext 150 130 2010 <var0.event.name> at <var0.event.arena>
+button 140 185 093A 0939 1 0 1
+dtext 155 180 0ad <def.prizename1>
+button 140 215 093A 0939 1 0 2
+dtext 155 210 0ad <def.prizename2>
+button 140 245 093A 0939 1 0 3
+dtext 155 240 0ad <def.prizename3>
+button 140 275 093A 0939 1 0 4
+dtext 155 270 0ad <def.prizename4>
+button 140 305 093A 0939 1 0 5
+dtext 155 300 0ad <def.prizename5>
+button 370 185 093A 0939 1 0 6
+dtext 385 180 0ad <def.prizename6>
+button 370 215 093A 0939 1 0 7
+dtext 385 210 0ad <def.prizename7>
+button 370 245 093A 0939 1 0 8
+dtext 385 240 0ad <def.prizename8>
+button 370 275 093A 0939 1 0 9
+dtext 385 270 0ad <def.prizename9>
+button 370 305 093A 0939 1 0 10
+dtext 385 300 0ad <def.prizename10>
+button 140 335 093A 0939 1 0 11
+dtext 155 330 0ad <def.prizename11>
+button 370 335 093A 0939 1 0 12
+dtext 385 330 0ad <def.prizename12>
+button 140 365 093A 0939 1 0 13
+dtext 155 360 0ad <def.prizename13>
+button 370 365 093A 0939 1 0 14
+dtext 385 360 0ad <def.prizename14>
+button 200 420 0939 093A 1 0 15
+button 215 420 0939 093A 1 0 16
+button 230 420 0939 093A 1 0 17
+button 245 420 0939 093A 1 0 18
+dtext 260 415 036 Amount
+button 315 420 0939 093A 1 0 19
+button 330 420 0939 093A 1 0 20
+button 345 420 0939 093A 1 0 21
+button 360 420 0939 093A 1 0 22
+button 500 435 4005 4006 0 2 23
+
+PAGE 2
+resizepic 120 75 3600 460 280
+CHECKERTRANS 120 75 460 400
+dtext 300 100 2010 Modos:
+dtext 170 150 32 Iron Maiden (FFA/BW/CAMP/QST/CTF) = <QVAL <var0.ironmaiden> ? On : Off>
+dtext 170 180 32 No Spells (FFA/BW/CAMP/QST/CTF) = <QVAL <var0.nospells> ? On : Off>
+dtext 170 210 32 No Bow (FFA/BW/CAMP/MB/QST/CTF) = <QVAL <var0.nobow> ? On : Off>
+dtext 170 240 32 Newbie (FFA/BW/CAMP/SURV/QST/CTF) = <QVAL <var0.newbiemode> ? On : Off>
+dtext 170 270 32 Looting (FFA/BW/CAMP) = <QVAL <var0.lootingmode> ? On : Off>
+button 150 155 093A 0939 1 0 24 //Iron Maiden
+button 150 185 093A 0939 1 0 25 //No Spells
+button 150 215 093A 0939 1 0 26 //No Bow
+button 150 245 093A 0939 1 0 31 //Newbie
+button 150 275 093A 0939 1 0 33 //Loot
+button 510 310 4005 4006 0 3 27
+button 140 310 4016 4015 0 1 28
+
+PAGE 3
+resizepic 120 125 3600 440 180
+CHECKERTRANS 120 75 440 400
+dtext 150 140 2010 Prize:
+dtext 215 140 1152 <eval <var0.prizeamount>> <var0.prizename>
+dtext 150 170 2010 <var0.event.name> at <var0.event.arena>
+dtext 170 230 1152 <def.AnounceEvent>
+button 150 235 093A 0939 1 0 29
+button 140 260 4016 4015 0 2 30
+dtext 170 210 1152 <def.justtronphie>
+button 150 215 093A 0939 1 0 32
+
+[DIALOG d_evento BUTTON]
+ON=1
+serv.newitem power_scrolls
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+ON=2
+serv.newitem rare_armors
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=3
+serv.newitem common_metals
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=4
+serv.newitem good_metals
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=5
+serv.newitem rare_metals
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=6
+serv.newitem common_armors
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=7
+serv.newitem good_armors
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=8
+serv.newitem <hval { 04905 04989 }>
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=9
+serv.newitem swords_event
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=10
+serv.newitem fence_event
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=11
+serv.newitem special_weapons
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=12
+serv.newitem bows_event
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=13
+serv.newitem misc_prize
+var.prize.id=<new.baseid>
+var.prizename=<new.name>
+new.remove
+sdialog d_evento 1
+
+on=14
+var.prize.id=i_gold
+var.prizename=gold coins
+sdialog d_evento 1
+
+ON=15
+IF (<eval <var0.prizeamount>-1000> < 1)
+var.prizeamount=1
+sdialog d_evento 1
+else
+var0.prizeamount -= 1000
+sdialog d_evento 1
+endif
+
+ON=16
+IF (<eval <var0.prizeamount>-100> < 1)
+var.prizeamount=1
+sdialog d_evento 1
+else
+var0.prizeamount -= 100
+sdialog d_evento 1
+endif
+
+ON=17
+IF (<eval <var0.prizeamount>-10> < 1)
+var.prizeamount=1
+sdialog d_evento 1
+else
+var0.prizeamount -= 10
+sdialog d_evento 1
+endif
+
+ON=18
+IF (<eval <var0.prizeamount>-1> < 1)
+var.prizeamount=1
+sdialog d_evento 1
+else
+var0.prizeamount -= 1
+sdialog d_evento 1
+endif
+
+ON=19
+var0.prizeamount += 1
+sdialog d_evento 1
+
+ON=20
+var0.prizeamount += 10
+sdialog d_evento 1
+
+ON=21
+var0.prizeamount += 100
+sdialog d_evento 1
+
+ON=22
+var0.prizeamount += 1000
+sdialog d_evento 1
+
+//////Modes
+
+on=24
+IF (<var0.event.id>==2)
+src.sysmessage @07a3 <def.mode_notallowed> <var0.event.name>
+sdialog d_evento 2
+ELIF !(<var0.ironmaiden>)
+var.ironmaiden=1
+var.modes.name .= , Iron Maiden
+sdialog d_evento 2
+else
+var.ironmaiden
+sdialog d_evento 2
+endif
+
+on=25
+IF (<var0.event.id>==2)
+src.sysmessage @07a3 <def.mode_notallowed> <var0.event.name>
+sdialog d_evento 2
+ELIF !(<var0.nospells>)
+var.nospells=1
+var.modes.name .= , No Spells
+sdialog d_evento 2
+else
+var.nospells
+sdialog d_evento 2
+endif
+
+on=26
+IF (<var0.event.id>==2)
+src.sysmessage @07a3 <def.mode_notallowed> <var0.event.name>
+sdialog d_evento 2
+ELIF !(<var0.nobow>)
+var.nobow=1
+var.modes.name .= , No Bow
+sdialog d_evento 2
+else
+var.nobow
+sdialog d_evento 2
+endif
+
+////anunciar
+
+ON=29
+timer=10
+src.sysmessage @036 <def.10secondstoannounce>
+src.sysmessage @036 <def.youcancancel> <name>.
+
+////Modes///
+
+on=31
+IF !(<var0.newbiemode>)
+var.newbiemode=1
+var.modes.name .= , Newbie
+sdialog d_evento 2
+else
+var.newbiemode
+sdialog d_evento 2
+endif
+
+////apenas trofeu////////
+
+on=32
+var.prize.id
+var.prizename=Tronphie
+sdialog d_evento 3
+
+on=33
+IF (<var0.event.id>==2) || (<var0.event.id>==7) || (<var0.event.id>==6)
+src.sysmessage @07a3 <def.mode_notallowed> <var0.event.name>
+sdialog d_evento 2
+ELIF !(<var0.lootingmode>)
+var.lootingmode=1
+var.modes.name .= , Looting
+sdialog d_evento 2
+else
+var.lootingmode
+sdialog d_evento 2
+endif
+
+
+/////////////Enter/////////////
+
+[plevel 1]
+enter
+exit
+
+[FUNCTION enter]
+IF (<isgm>)
+go <var0.event.p>
+return 1
+ENDIF
+IF (<DEF.USECLOUDPVPSYS>)
+IF (<findid.i_pvp_time>)
+sysmessage You can't go to an event in a PVP.
+return 1
+ENDIF
+ENDIF
+IF (<tag0.event.id>)
+sysmessage <def.alreadyentered>
+return 1
+ENDIF
+IF !(<var0.evento.aberto>)
+sysmessage <def.noevents>
+return 1
+endif
+IF (<hasblockedtags <def.blockedtags_number>>)
+sysmessage <def.notallowed>
+return 1
+ENDIF
+IF (<var0.event.id>==3) && (<var0.evento.aberto>==1) && (<ar> < <def.minarmor>) && !(<var0.ironmaiden>)
+sysmessage <def.musthave_armor>
+return 1
+ENDIF
+IF (<var0.event.id>==3) && (<var0.evento.aberto>==1) && (<kills> > <def.killsmin>) && (<var0.event.current.t2> > <var0.event.current.t1>) || (<var0.event.current.t2>)
+sysmessage <def.mustwaitfor_pk>
+return 1
+ENDIF
+IF (<var0.event.id>==3) && (<var0.evento.aberto>==1) && (<kills> < <eval <def.killsmin>+1>) && (<var0.event.current.t1> > <var0.event.current.t2>) || (<var0.event.current.t1>)
+sysmessage <def.mustwaitfor_apk>
+return 1
+ENDIF
+IF (<var0.event.id>==4) && (<var0.event.current>==2)
+sysmessage <def.already2fighting>
+return 1
+ENDIF
+IF (<var0.event.id>==4) && (<tag0.event.camp>==<var0.camp.uid>)
+sysmessage <def.already_participated_camp>
+return 1
+ENDIF
+IF (<flags>&statf_dead)
+sysmessage <def.deadnotallowed>
+return 1
+endif
+IF !(<findlayer.21>) && (<var0.evento.aberto>==1) && (<tag0.event.id>)
+serv.newitem=i_backpack
+new.cont=<uid>
+ENDIF
+IF (<Isgm>)
+go <var0.event.p>
+return 1
+ELIF (<tag0.event.id>)
+sysmessage <def.already_participated>
+return 1
+ENDIF
+IF (<findlayer.layer_dragging>)
+bounce <findlayer.layer_dragging>
+ENDIF
+spelleffect s_dispel,1000
+tag.event.lastp=<p>
+go 1,1
+tag.event.charname=<name>
+flags &= ~statf_hidden
+flags &= ~statf_invisible
+tag.event.lastflags=<flags>
+var.event.name.hp=<var0.event.name> going on
+IF (<var0.newbiemode>==1)
+unequipall
+tag.event.str=<ostr>
+tag.event.dex=<odex>
+tag.event.int=<oint>
+tag.event.mage=<magery>
+tag.event.wres=<wrestling>
+tag.event.tactics=<tactics>
+tag.event.heal=<healing>
+tag.event.archery=<archery>
+tag.event.swords=<swordsmanship>
+tag.event.mace=<macefighting>
+ostr=100
+odex=100
+oint=100
+hits=<maxhits>
+mana=<maxmana>
+stam=<maxstam>
+magery=80.0
+wrestling=50.0
+tactics=50.0
+healing=50.0
+archery=50.0
+swordsmanship=50.0
+macefighting=50.0
+equipall
+ENDIF
+IF (<var0.ironmaiden>==1)
+unequipall
+tag.event.bag=<findlayer.21>
+findlayer.21.cont=<findlayer.29>
+bankself
+serv.newitem=i_platemail_chest
+equip <new>
+serv.newitem=i_platemail_leggings
+equip <new>
+serv.newitem=i_platemail_gorget
+equip <new>
+serv.newitem=i_platemail_arms
+equip <new>
+serv.newitem=i_platemail_gloves
+equip <new>
+serv.newitem=i_platemail_helm
+equip <new>
+serv.newitem=i_katana_vanq
+new.attr=attr_identified
+equip <new>
+serv.newitem=i_halberd_vanq
+new.attr=attr_identified
+equip <new>
+serv.newitem=i_mace_vanq
+new.attr=attr_identified
+equip <new>
+serv.newitem=i_cape
+new.color=07a1
+equip <new>
+serv.newitem=i_potion_manatotal
+new.amount=25
+bounce <new>
+serv.newitem=i_potion_refreshtotal
+new.amount=7
+bounce <new>
+serv.newitem=i_spellbook
+new.more=0ffffffff
+new.more2=0ffffffff
+new.morep=0ffff,0ff
+bounce <new>
+serv.newitem=i_scroll_bagmagic
+new.amount=3
+bounce <new>
+serv.newitem=i_bow_vanq
+bounce <new>
+serv.newitem=i_arrow
+new.amount=80
+bounce <new>
+ENDIF
+IF (<var0.event.id>==1)
+tag.event.killed=0
+tag.surv.lifes=2
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p>
+events=+e_ffa
+tag.event.id=1
+var0.event.current += 1
+tag.name.hue=07ad
+var.event.status.hp=<eval <var0.event.current>> players
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+updatex
+ELIF (<var0.event.id>==2)
+unequipall
+dismount 1 1
+tag.event.hair=<findlayer.11.dispid>
+tag.event.haircolor=<findlayer.11.color>
+tag.event.beard=<findlayer.16.dispid>
+tag.event.beardcolor=<findlayer.16.color>
+findlayer.11.remove
+tag.event.killed=0
+tag.surv.lifes=2
+tag.event.bag=<findlayer.21>
+findlayer.21.cont=<findlayer.29>
+bankself
+removefromview
+moveto <var0.event.p>
+events=+e_surv
+tag.event.id=2
+var0.event.current += 1
+var.event.status.hp=<eval <var0.event.current>> players
+tag.name.hue={07a0 077a}
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+dorand 7
+name=<def.survname1>
+name=<def.survname2>
+name=<def.survname3>
+name=<def.survname4>
+name=<def.survname5>
+name=<def.survname6>
+name=<def.survname7>
+enddo
+flags |= statf_incognito|statf_criminal
+tag.event.bodycolor=<color>
+tag.event.oskin=<oskin>
+color=<eval {1 96}>
+oskin=<eval {1 96}>
+updatex
+ELIF (<var0.event.id>==3) && (<kills> < <eval <def.killsmin>+1>) && (<var0.event.current.t2> > <var0.event.current.t1>) || (<var0.event.current.t1>==<var0.event.current.t2>)
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p2>
+events=+e_bw
+tag.event.id=3
+var0.event.current += 1
+var0.event.current.t1 += 1
+tag.event.team=1
+tag.name.hue=07a0
+tag.team=1
+tag.team.name=APK
+var.event.status.hp=<eval <var0.event.current.t1>> APKS vs <eval <var0.event.current.t2>> PKS
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+findid.i_cape.f_testar_modos
+dismount 1 1
+updatex
+ELIF (<var0.event.id>==3) && (<kills> > <def.killsmin>) && (<var0.event.current.t1> > <var0.event.current.t2>) || (<var0.event.current.t1>==<var0.event.current.t2>)
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p3>
+events=+e_bw
+tag.event.id=3
+tag.team=2
+var0.event.current += 1
+var0.event.current.t2 += 1
+tag.event.team=2
+tag.name.hue=07a3
+var.event.status.hp=<eval <var0.event.current.t1>> APKS vs <eval <var0.event.current.t2>> PKS
+tag.team.name=PK
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+findid.i_cape.f_testar_modos
+dismount 1 1
+updatex
+ELIF (<var0.event.id>==4) && (<var0.event.current> < 3)
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p>
+events=+e_camp
+tag.event.id=4
+var0.event.current += 1
+tag.name.hue=07a1
+IF (<var0.event.current>==1)
+var.event.status.hp=<tag0.event.charname>
+ELIF (<var0.event.current>==2)
+var.event.status.hp=<var0.event.status.hp> VS <tag0.event.charname>
+ENDIF
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+serv.b @07ad <name> enters.
+dismount 1 1
+updatex
+ELIF (<var0.event.id>==5) && (<var0.event.current.t2> > <var0.event.current.t1>) || (<var0.event.current.t1>==<var0.event.current.t2>)
+tag.event.killed=0
+tag.surv.lifes=2
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p2>
+events=+e_ffa_time
+tag.event.id=5
+var0.event.current += 1
+var0.event.current.t1 += 1
+tag.event.team=1
+tag.name.hue=07a1
+tag.team=1
+tag.team.name=Team A
+var.event.status.hp=Team A (<eval <var0.event.current.t1>>) vs Team B (<eval <var0.event.current.t2>>)
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+findid.i_cape.f_testar_modos
+updatex
+ELIF (<var0.event.id>==5) && (<var0.event.current.t1> > <var0.event.current.t2>) || (<var0.event.current.t1>==<var0.event.current.t2>)
+tag.event.killed=0
+tag.surv.lifes=2
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p3>
+events=+e_ffa_time
+tag.event.id=5
+tag.team=2
+var0.event.current += 1
+var0.event.current.t2 += 1
+tag.event.team=2
+tag.name.hue=07ad
+var.event.status.hp=Team A (<eval <var0.event.current.t1>>) vs Team B (<eval <var0.event.current.t2>>)
+tag.team.name=Team B
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+findid.i_cape.f_testar_modos
+updatex
+ELIF (<var0.event.id>==6)
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p>
+events=+e_quest
+tag.event.id=6
+var0.event.current += 1
+tag.name.hue=07ad
+var.event.status.hp=<eval <var0.event.current>> players
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+updatex
+ELIF (<var0.event.id>==7) && (<var0.event.current.t2> > <var0.event.current.t1>) || (<var0.event.current.t1>==<var0.event.current.t2>)
+tag.event.killed=0
+tag.surv.lifes=2
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p2>
+stone 1
+events=+e_ctf
+tag.event.id=7
+var0.event.current += 1
+var0.event.current.t1 += 1
+tag.event.team=1
+tag.name.hue=07a0
+tag.team=1
+tag.team.name=Team A
+var.event.status.hp=Team A (<eval <var0.event.current.t1>>) vs Team B (<eval <var0.event.current.t2>>)
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+findid.i_cape.f_testar_modos
+updatex
+ELIF (<var0.event.id>==7) && (<var0.event.current.t1> > <var0.event.current.t2>) || (<var0.event.current.t1>==<var0.event.current.t2>)
+tag.event.killed=0
+tag.surv.lifes=2
+effect 1,i_gold,21,16
+removefromview
+moveto <var0.event.p3>
+stone 1
+events=+e_ctf
+tag.event.id=7
+tag.team=2
+var0.event.current += 1
+var0.event.current.t2 += 1
+tag.event.team=2
+tag.name.hue=07ad
+var.event.status.hp=Team A (<eval <var0.event.current.t1>>) vs Team B (<eval <var0.event.current.t2>>)
+tag.team.name=Team B
+tag.event.kills=<kills>
+tag.event.deaths=<deaths>
+tag.event.karma=<karma>
+tag.event.fame=<fame>
+findid.i_cape.f_testar_modos
+updatex
+ENDIF
+updatex
+
+/////////////////
+
+[FUNCTION exit]
+IF (<isgm>)
+return 1
+ENDIF
+IF (<FINDID.i_bandeira_ctf>)
+sysmessage @07ad You can't exit with the CTF Flag with you.
+return 1
+ENDIF
+IF !(<tag0.event.id>)
+sysmessage <def.notentered>
+return 1
+else
+IF (<var0.evento.aberto>==1)
+sysmessage <def.cantexit>
+return 1
+ENDIF
+IF (<findlayer.layer_dragging>)
+bounce <findlayer.layer_dragging>
+ENDIF
+IF (<var0.ironmaiden>==1)
+unequipall
+findlayer.21.remove
+try uid.<tag0.event.bag>.cont=<uid>
+equipall
+ENDIF
+IF (<var0.newbiemode>==1)
+ostr=<tag0.event.str>
+odex=<tag0.event.dex>
+oint=<tag0.event.int>
+hits=<maxhits>
+stam=<maxstam>
+mana=<maxmana>
+magery=<tag0.event.mage>
+wrestling=<tag0.event.wres>
+tactics=<tag0.event.tactics>
+healing=<tag0.event.heal>
+archery=<tag0.event.archery>
+swordsmanship=<tag0.event.swords>
+macefighting=<tag0.event.mace>
+ENDIF
+FORCHARMEMORYTYPE memory_harmedby
+remove
+ENDFOR
+FORCHARMEMORYTYPE memory_sawcrime
+remove
+ENDFOR
+FORCHARMEMORYTYPE memory_fight
+remove
+ENDFOR
+FORCHARMEMORYTYPE memory_aggreived
+remove
+ENDFOR
+FORCHARMEMORYTYPE memory_iaggressor
+remove
+ENDFOR
+FORCHARMEMORYTYPE memory_war_targ
+remove
+ENDFOR
+spelleffect 59,1000
+flags &= ~statf_war
+flags &= ~statf_criminal
+go 1,1
+criminal=0
+IF (<var0.event.current> > 1) && (<var0.event.id>==1)
+tag.name.hue=
+tag.event.id
+var0.event.current -= 1
+var.event.status.hp=<eval <var0.event.current>> players
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+removefromview
+moveto <tag0.event.lastp>
+addgold <eval (<tag0.event.killed>*1000)+500> <findlayer.29>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) wins <eval (<tag0.event.killed>*1000)+500> gps
+f_clear_eventtags
+bankself
+updatex
+return 1
+ELIF (<var0.event.current> > 1) && (<var0.event.id>==2)
+findlayer.21.remove
+tag.name.hue=
+tag.event.id=
+var0.event.current -= 1
+var.event.status.hp=<eval <var0.event.current>> players
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+name=<tag0.event.charname>
+color=<tag0.event.bodycolor>
+oskin=<tag0.event.oskin>
+flags=<tag0.event.lastflags>
+try uid.<tag0.event.bag>.cont=<uid>
+addgold <eval (<tag0.event.killed>*1000)+500> <findlayer.29>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) wins <eval (<tag0.event.killed>*1000)+500> gps
+equipall
+removefromview
+moveto <tag0.event.lastp>
+serv.newitem=<tag0.event.hair>
+new.cont=<uid>
+findlayer.11.color=<tag0.event.haircolor>
+serv.newitem=<tag0.event.beard>
+new.cont=<uid>
+findlayer.16.color=<tag0.event.beardcolor>
+f_clear_eventtags
+bankself
+updatex
+return 1
+ELIF (<var0.event.id>==3) && !(0<var0.event.current.t<eval <tag0.event.team>>>==<var0.event.current>)
+tag.name.hue=
+tag.event.id=
+var0.event.current -= 1
+try var.event.current.t<eval <tag0.event.team>>=<eval <var0.event.current.t<eval <tag0.event.team>>>-1>
+var.event.status.hp=<eval <var0.event.current.t1>> APKS vs <eval <var0.event.current.t2>> PKS
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+removefromview
+moveto <tag0.event.lastp>
+addgold 3000 <findlayer.29>
+f_clear_eventtags
+bankself
+updatex
+return 1
+ENDIF
+IF (<var0.event.id>==3) && (0<var0.event.current.t<eval <tag0.event.team>>>==<var0.event.current>)
+var0.event.current -= 1
+try var.event.current.t<eval <tag0.event.team>>=<eval <var0.event.current.t<eval <tag0.event.team>>>-1>
+var.event.name.hp=<var0.event.name> finished (<serv.rtime>)
+tag.event.id=
+tag.name.hue=
+var.event.status.hp=<tag0.team.name>s won the event.
+f_ultimos_eventos
+additem <var0.prize.id>,<var0.prizeamount>,<findlayer.29>
+serv.newitem=i_event_tronphie
+new.dispid=<hval { tronphies }>
+new.color={07a0 07ad}
+new.cont=<findlayer.29>
+removefromview
+moveto <tag0.event.lastp>
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) wins <eval <var0.prizeamount>> <var0.prizename>
+f_clear_eventtags
+bankself
+updatex
+return 1
+ENDIF
+IF (<var0.event.id>==4) && (<var0.event.current> > 1)
+serv.newitem=i_camp_next
+new.timer
+new.p=<var0.event.p>
+var0.event.current -= 1
+var.event.status.hp=<var0.event.camplast>
+tag.event.id=
+tag.event.camp=<var0.camp.uid>
+tag.name.hue=
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+removefromview
+moveto <tag0.event.lastp>
+addgold 3000 <findlayer.29>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) wins 3000 gps
+f_clear_eventtags
+bankself
+updatex
+return 1
+ENDIF
+IF (<var0.event.id>==5) && !(0<var0.event.current.t<eval <tag0.event.team>>>==<var0.event.current>)
+tag.name.hue=
+tag.event.id=
+var0.event.current -= 1
+try var.event.current.t<eval <tag0.event.team>>=<eval <var0.event.current.t<eval <tag0.event.team>>>-1>
+var.event.status.hp=Team A (<eval <var0.event.current.t1>>) vs Team B (<eval <var0.event.current.t2>>)
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+removefromview
+moveto <tag0.event.lastp>
+addgold <eval (<tag0.event.killed>*1000)+500> <findlayer.29>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) wins <eval (<tag0.event.killed>*1000)+500> gps
+f_clear_eventtags
+bankself
+updatex
+return 1
+ENDIF
+IF (<var0.event.id>==5) && (0<var0.event.current.t<eval <tag0.event.team>>>==<var0.event.current>)
+var0.event.current -= 1
+try var.event.current.t<eval <tag0.event.team>>=<eval <var0.event.current.t<eval <tag0.event.team>>>-1>
+var.event.name.hp=<var0.event.name> finished (<serv.rtime>)
+tag.event.id=
+tag.name.hue=
+var.event.status.hp=<tag0.team.name> won the event.
+f_ultimos_eventos
+additem <var0.prize.id>,<var0.prizeamount>,<findlayer.29>
+serv.newitem=i_event_tronphie
+new.dispid=<hval { tronphies }>
+new.color={07a0 07ad}
+new.cont=<findlayer.29>
+removefromview
+moveto <tag0.event.lastp>
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+addgold <eval (<tag0.event.killed>*1000)+500> <findlayer.29>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) wins <eval (<tag0.event.killed>*1000)+500> gps
+try uid.<var0.juiz>.sysmessage + <eval <var0.prizeamount>> <var0.prizename>
+f_clear_eventtags
+bankself
+updatex
+return 1
+ENDIF
+IF (<var0.event.id>==6) && !(<var0.quest.chefemorto>)
+var0.event.current -= 1
+var.event.status.hp=<eval <var0.event.current>> players
+tag.event.id=
+tag.name.hue=
+removefromview
+moveto <tag0.event.lastp>
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+f_clear_eventtags
+bankself
+updatex
+return 1
+ENDIF
+IF (<var0.event.id>==6) && (<var0.quest.chefemorto>)
+var0.event.current -= 1
+var.event.status.hp=Quest ended
+var.event.name.hp=<var0.event.name> finished (<serv.rtime>)
+f_ultimos_eventos
+tag.event.id=
+tag.name.hue=
+additem <var0.prize.id>,<var0.prizeamount>,<findlayer.29>
+serv.newitem=i_event_tronphie
+new.dispid=<hval { tronphies }>
+new.color={07a0 07ad}
+new.cont=<findlayer.29>
+removefromview
+moveto <tag0.event.lastp>
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) wins <eval <var0.prizeamount>> <var0.prizename>
+bankself
+updatex
+f_clear_eventtags
+return 1
+ENDIF
+IF (<var0.event.id>==7) && !(<var0.event.bandeirateam>==<tag0.event.team>)
+tag.name.hue=
+tag.event.id=
+var0.event.current -= 1
+try var.event.current.t<eval <tag0.event.team>>=<eval <var0.event.current.t<eval <tag0.event.team>>>-1>
+var.event.status.hp=Team A (<eval <var0.event.current.t1>>) vs Team B (<eval <var0.event.current.t2>>)
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+removefromview
+moveto <tag0.event.lastp>
+tag.team.name=
+addgold <eval (<tag0.event.killed>*1000)+500> <findlayer.29>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) ganha <eval (<tag0.event.killed>*1000)+500> gps
+f_clear_eventtags
+bankself
+updatex
+return 1
+ENDIF
+IF (<var0.event.id>==7) && (<var0.event.bandeirateam>==<tag0.event.team>)
+var0.event.current -= 1
+try var.event.current.t<eval <tag0.event.team>>=<eval <var0.event.current.t<eval <tag0.event.team>>>-1>
+var.event.name.hp=<var0.event.name> finished (<serv.rtime>)
+tag.event.id=
+tag.name.hue=
+var.event.status.hp=<tag0.team.name> wins the event.
+f_ultimos_eventos
+tag.team.name=
+additem <var0.prize.id>,<var0.prizeamount>,<findlayer.29>
+serv.newitem=i_event_tronphie
+new.dispid=<hval { 0210b 02100 02109 020ec 0210a 020cd 020ce 020d2 020dc 020e4 020ed 020f9 020fa 020fe 020fd 020da 020d3 020d6 020d7 020d8 020d9 020f5 020f8 020de 020df 020e0 020e3 020e7 020e9 i_statue_stone_sm }>
+new.color={07a0 07ad}
+new.cont=<findlayer.29>
+removefromview
+moveto <tag0.event.lastp>
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+addgold <eval (<tag0.event.killed>*1000)+500> <findlayer.29>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) ganha <eval (<tag0.event.killed>*1000)+500> gps
+try uid.<var0.juiz>.sysmessage + <eval <var0.prizeamount>> <var0.prizename>
+f_clear_eventtags
+bankself
+updatex
+return 1
+ENDIF
+IF (<var0.event.current>==1) && (<var0.event.id>!=6)
+var.event.current
+f_ultimos_eventos
+var.event.status.hp=<name> wins the event!
+var.event.name.hp=<var0.event.name> finished (<serv.rtime>)
+tag.event.id=
+tag.name.hue=
+additem <var0.prize.id>,<var0.prizeamount>,<findlayer.29>
+serv.newitem=i_event_tronphie
+new.dispid=<hval { tronphies }>
+new.color={07a0 07ad}
+new.cont=<findlayer.29>
+removefromview
+moveto <tag0.event.lastp>
+kills=<tag0.event.kills>
+deaths=<tag0.event.deaths>
+fame=<tag0.event.fame>
+karma=<tag0.event.karma>
+addgold <eval (<tag0.event.killed>*1000)+500> <findlayer.29>
+try uid.<var0.juiz>.sysmessage <var0.event.name>: <name> (<uid>) wins <eval (<tag0.event.killed>*1000)+500> gps
+try uid.<var0.juiz>.sysmessage + <eval <var0.prizeamount>> <var0.prizename>
+bankself
+updatex
+ENDIF
+IF (<var0.event.id>==2)
+findlayer.21.remove
+var.event.status.hp=<tag0.event.charname> wins the event!
+name=<tag0.event.charname>
+color=<tag0.event.bodycolor>
+oskin=<tag0.event.oskin>
+flags=<tag0.event.lastflags>
+try uid.<tag0.event.bag>.cont=<uid>
+tag.surv.lifes=
+tag.event.killed=
+serv.newitem=<tag0.event.hair>
+new.cont=<uid>
+findlayer.11.color=<tag0.event.haircolor>
+serv.newitem=<tag0.event.beard>
+new.cont=<uid>
+findlayer.16.color=<tag0.event.beardcolor>
+equipall
+ENDIF
+f_clear_eventtags
+
+////////////////////////
+
+[FUNCTION f_clear_eventtags]
+IF (<TAG0.EVENT.MOUNT>)
+BOUNCE <TAG0.EVENT.MOUNT>
+USEITEM <TAG0.EVENT.MOUNT>
+IF !(<FINDLAYER.25>)
+USEITEM <NEARMOUNTS>
+ENDIF
+FLAGS |= statf_onhorse
+ENDIF
+tag.event.str=
+tag.event.dex=
+tag.event.int=
+tag.event.mage=
+tag.event.wres=
+tag.event.tactics=
+tag.event.heal=
+tag.event.archery=
+tag.event.swords=
+tag.event.mace=
+TAG.EVENT.BAG=
+TAG.EVENT.BEARD=
+TAG.EVENT.BEARDCOLOR=
+TAG.EVENT.BODYCOLOR=
+TAG.EVENT.CHARNAME=
+TAG.EVENT.DEATHS=
+TAG.EVENT.FAME=
+TAG.EVENT.HAIR=
+TAG.EVENT.HAIRCOLOR=
+TAG.EVENT.KARMA=
+TAG.EVENT.KILLED=
+TAG.EVENT.KILLS=
+TAG.EVENT.LASTFLAGS=
+TAG.EVENT.LASTP=
+TAG.EVENT.OSKIN=
+TAG.SURV.LIFES=
+TAG.TEAM=
+TAG.TEAM.NAME=
+TAG.EVENT.TEAM=
+TAG.EVENT.MOUNT=
+events=-e_ffa
+events=-e_camp
+events=-e_surv
+events=-e_bw
+events=-e_ffa_time
+events=-e_quest
+events=-e_ctf
+IF !(<VAR0.EVENT.CURRENT>)
+var.event.arena
+var.event.id
+var.event.name
+var.event.p
+var.event.p2
+var.event.p3
+var.juiz
+var.modes.name
+var.prize.id
+var.prizename
+var.prizeamount
+var.ironmaiden
+var.newbiemode
+var.nobow
+var.nospells
+var.lootingmode
+VAR.EVENT.CURRENT
+ENDIF
+
+////////////////////
+
+[plevel 4]
+endevent
+
+[FUNCTION endevent]
+IF (<var0.event.current>)
+FORPLAYERS 200
+IF (<TAG0.EVENT.ID>)
+IF !(<ISONLINE>)
+FINDID.i_logout_timer.REMOVE
+ENDIF
+EXIT
+ENDIF
+ENDFOR
+var.evento.aberto
+var.juiz
+var.event.id
+var.modes.name=
+var.ironmaiden
+var.newbiemode
+var.lootingmode
+var.nobow
+var.nospells
+var.event.current
+ENDIF
+
+////////Events//////////
+
+[EVENTS e_quest]
+ON=@SpellCast
+IF (<var0.nospells>==1)
+sysmessage <def.nospells>
+action -1
+return 1
+ENDIF
+
+ON=@LOGOUT
+serv.newitem=i_logout_timer
+new.cont=<uid>
+
+ON=@LOGIN
+findid.i_logout_timer.remove
+
+ON=@HITTRY
+if (<var0.nobow>==1) && (<action>==skill_archery)
+action -1
+sysmessage <def.nobowactivated>
+return 1
+ENDIF
+IF !(<act.npc>)
+action -1
+return 1
+ENDIF
+
+ON=@ITEMDCLICK
+IF (<src.act.link>==04fffffff) && (<src.act.baseid>==i_corpse)
+return 0
+ELIF !(<src.act.link.npc>) && (<src.act.link>==<uid>) && (<src.act.baseid>==i_corpse)
+return 0
+ELIF !(<src.act.link.npc>) && !(<src.act.link>==<uid>) && (<src.act.baseid>==i_corpse)
+sysmessage <def.cantloot>
+return 1
+ENDIF
+
+ON=@ITEMTARGON_ITEM
+IF (<src.targ.link>==04fffffff) && (<src.targ.baseid>==i_corpse)
+return 0
+ELIF !(0<src.targ.link.npc>) && (<src.targ.link>==<uid>) && (<src.targ.baseid>==i_corpse)
+return 0
+ELIF !(0<src.targ.link.npc>) && !(<src.targ.link>==<src>) && (<src.targ.baseid>==i_corpse)
+src.sysmessage <def.cantloot>
+return 1
+ENDIF
+
+ON=@DEATH
+src.dismount 1 1
+
+ON=@DEATHCORPSE
+try uid.<argo.uid>.timer=700
+
+ON=@GetHit
+IF !(<act.npc>)
+return 1
+ENDIF
+
+ON=@click
+IF (<src.isgm>) && !(<isonline>)
+message @07a3 OFFLINE
+ENDIF
+
+[EVENTS e_ffa]
+ON=@SpellCast
+IF (<var0.nospells>==1)
+sysmessage <def.nospells>
+action -1
+return 1
+ENDIF
+IF (<ARGN1>==s_summon_creature) || (<ARGN1>==s_summon_daemon) || (<ARGN1>==s_blade_spirits) || (<ARGN1>==s_summon_elem_air) || (<ARGN1>==s_summon_elem_earth) || (<ARGN1>==s_summon_elem_fire) || (<ARGN1>==s_summon_elem_water) || (<ARGN1>==s_energy_vortex) || (<ARGN1>==s_invisibility
+action=-1
+sysmessage <def.invalidmagic>
+return 1
+endif
+
+ON=@LOGOUT
+serv.newitem=i_logout_timer
+new.cont=<src>
+
+ON=@LOGIN
+src.findid.i_logout_timer.remove
+
+ON=@SkillStart
+IF (<action>==SKILL_HIDING)
+sysmessage <def.invalidskill>
+action -1
+return 1
+ELIF (<action>==SKILL_STEALTH)
+sysmessage <def.invalidskill>
+action -1
+return 1
+endif
+
+ON=@HITTRY
+if (<var0.nobow>==1) && (<action>==skill_archery)
+action -1
+sysmessage <def.nobowactivated>
+return 1
+ENDIF
+
+ON=@DEATHCORPSE
+IF (<var0.lootingmode>==1)
+go 1,1
+serv.b @036,3 <var0.event.name>: <name> morre!
+exit
+serv.b @036,3 Left: <var0.event.status.hp>
+hits=<maxhits>
+ENDIF
+
+ON=@DEATH
+IF (<act.tag0.surv.lifes> < 3) && (<var0.event.current> > 2)
+act.tag0.surv.lifes += 1
+act.sysmessage @036 You've killed <name> and now has <eval <act.tag0.surv.lifes>> lifes.
+ENDIF
+IF !(<tag0.event.killed>)
+tag.event.killed=1
+ENDIF
+IF (<tag0.surv.lifes>) && (<var0.event.current> > 2)
+tag0.event.killed -= 1
+act.tag0.event.killed += 1
+tag0.surv.lifes -= 1
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+removefromview
+moveto <var0.event.p>
+update
+sysmessage @036 You still have <eval <tag0.surv.lifes>> lifes.
+action -1
+return 1
+ENDIF
+IF (<var0.event.current> > 2) && (<var0.lootingmode>==1)
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+ELIF (<var0.event.current>==2) && (<var0.lootingmode>==1)
+serv.b @036,3 <var0.event.name>: <act.name> wins the event.
+act.sysmessage <def.cantypeexit>
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+ELIF (<var0.event.current> > 2)
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+exit
+serv.b @036,3 <var0.event.name>: <name> dies!
+serv.b @036,3 Left: <eval <var0.event.current>>
+return 1
+ELIF (<var0.event.current>==2)
+serv.b @036,3 <var0.event.name>: <name> dies!
+serv.b @036,3 <var0.event.name>: <act.name> wins the event.
+act.sysmessage <def.cantypeexit>
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+exit
+return 1
+ENDIF
+
+ON=@ITEMDCLICK
+IF (<src.act.type>==t_figurine)
+src.sysmessage <def.cantshrink>
+return 1
+ENDIF
+
+on=@click
+IF (<src.isgm>) && !(<isonline>)
+message @07a3 OFFLINE
+ENDIF
+if (<src.isgm>)
+message @077a (<eval <tag0.surv.lifes>>,<eval <tag0.event.killed>>)
+endif
+
+[EVENTS e_surv]
+ON=@DEATH
+IF (<act.tag0.surv.lifes> < 3) && (<var0.event.current> > 2) && (<act.isplayer>)
+act.tag0.surv.lifes += 1
+act.sysmessage @036 You've killed <name> and now has <eval <act.tag0.surv.lifes>> lifes.
+ENDIF
+IF !(<tag0.event.killed>)
+tag.event.killed=1
+ENDIF
+IF (<tag0.surv.lifes>) && (<var0.event.current> > 2)
+tag0.event.killed -= 1
+act.tag0.event.killed += 1
+tag0.surv.lifes -= 1
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+dorand 7
+act.name=<def.survname1>
+act.name=<def.survname2>
+act.name=<def.survname3>
+act.name=<def.survname4>
+act.name=<def.survname5>
+act.name=<def.survname6>
+act.name=<def.survname7>
+enddo
+hits=<maxhits>
+action -1
+stone
+serv.newitem=i_surv_removestone
+equip <new>
+dorand 7
+act.name=<def.survname1>
+act.name=<def.survname2>
+act.name=<def.survname3>
+act.name=<def.survname4>
+act.name=<def.survname5>
+act.name=<def.survname6>
+act.name=<def.survname7>
+enddo
+sysmessage @036 You still have <eval <tag0.surv.lifes>> lifes.
+return 1
+ELIF (<var0.event.current> > 2)
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+exit
+serv.b @036,3 <var0.event.name>: <name> dies!
+serv.b @036,3 Left: <eval <var0.event.current>>
+return 1
+ELIF (<var0.event.current>==2)
+serv.b @036,3 <var0.event.name>: <tag0.event.charname> dies!
+serv.b @036,3 <var0.event.name>: <act.tag0.event.charname> wins the event.
+act.sysmessage <def.cantypeexit>
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+exit
+return 1
+ENDIF
+
+ON=@LOGOUT
+serv.newitem=i_logout_timer
+new.cont=<uid>
+
+ON=@LOGIN
+findid.i_logout_timer.remove
+
+ON=@SkillStart
+IF (<action>==SKILL_HIDING)
+sysmessage <def.invalidskill>
+action -1
+return 1
+ELIF (<action>==SKILL_STEALTH)
+sysmessage <def.invalidskill>
+action -1
+return 1
+endif
+
+ON=@HITTRY
+if (<var0.event.id>==2) && (<act.memoryfindtype.memory_war_targ.link>==<uid>)
+return 0
+ELIF (<var0.event.id>==2) && !(<act.memoryfindtype.memory_war_targ>)
+act.attack=<uid>
+return 0
+ELIF (<var0.event.id>==2) && (<act.memoryfindtype.memory_war_targ>) && (<act.memoryfindtype.memory_war_targ.link.distance> < 3)
+sysmessage @88 <act.name> <def.alreadyfighting>
+action -1
+return 1
+ELIF (<var0.event.id>==2) && (<act.memoryfindtype.memory_war_targ>) && (<act.memoryfindtype.memory_war_targ.link.distance> > 3)
+act.memoryfindtype.memory_war_targ.link=<uid>
+act.attack=<uid>
+endif
+
+on=@click
+IF (<src.isgm>) && !(<isonline>)
+message @07a3 OFFLINE
+ENDIF
+if (<src.isgm>)
+message @077a (<eval <tag0.surv.lifes>>,<eval <tag0.event.killed>>)
+message @077a (<tag0.event.charname>)
+endif
+
+[events e_bw]
+ON=@SpellCast
+IF (<var0.nospells>==1)
+sysmessage <def.nospells>
+action -1
+return 1
+ENDIF
+IF (<ARGN1>==s_summon_creature) || (<ARGN1>==s_summon_daemon) || (<ARGN1>==s_blade_spirits) || (<ARGN1>==s_summon_elem_air) || (<ARGN1>==s_summon_elem_earth) || (<ARGN1>==s_summon_elem_fire) || (<ARGN1>==s_summon_elem_water) || (<ARGN1>==s_energy_vortex) || (<ARGN1>==s_invisibility
+action=-1
+sysmessage <def.invalidmagic>
+return 1
+endif
+
+ON=@SkillStart
+IF (<action>==SKILL_HIDING)
+sysmessage <def.invalidskill>
+action -1
+return 1
+ELIF (<action>==SKILL_STEALTH)
+sysmessage <def.invalidskill>
+action -1
+return 1
+endif
+
+ON=@LOGOUT
+serv.newitem=i_logout_timer
+new.cont=<uid>
+
+ON=@LOGIN
+findid.i_logout_timer.remove
+
+ON=@HITTRY
+if (<var0.nobow>==1) && (<action>==skill_archery)
+action -1
+sysmessage <def.nobowactivated>
+return 1
+ENDIF
+IF (<act.tag0.team>==<tag0.team>)
+sysmessage <def.ownteam>
+action -1
+return 1
+ENDIF
+
+ON=@GetHit
+IF (<act.tag0.team>==<tag0.team>)
+return 1
+ENDIF
+
+ON=@DEATHCORPSE
+IF (<var0.lootingmode>==1)
+go 1,1
+serv.b @036,3 <var0.event.name>: <name> of <tag0.team.name> dies!
+exit
+serv.b @036,3 Left: <var0.event.status.hp>
+hits=<maxhits>
+ENDIF
+
+ON=@DEATH
+IF (<var0.event.current.t<eval <tag0.team>>> < <var0.event.current>) && (<var0.event.current.t<eval <tag0.team>>> > 1) && (<var0.lootingmode>==1)
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+ELIF (<var0.event.current.t<eval <tag0.team>>>==1) && (<var0.lootingmode>==1)
+serv.b @036,3 <var0.event.name>: <tag0.team.name> lose the event.
+region.allclients sysmessage <def.cantypeexit>
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+ELIF (<var0.event.current.t<eval <tag0.team>>> < <var0.event.current>) && (<var0.event.current.t<eval <tag0.team>>> > 1)
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+serv.b @036,3 <var0.event.name>: <tag0.team.name> <name> dies!
+exit
+serv.b @036,3 Left: <var0.event.status.hp>
+return 1
+ELIF (<var0.event.current.t<eval <tag0.team>>>==1)
+serv.b @036,3 <var0.event.name>: <tag0.team.name> <name> dies!
+serv.b @036,3 <var0.event.name>: <tag0.team.name>s loses the event.
+region.allclients sysmessage <def.cantypeexit>
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+exit
+return 1
+ENDIF
+
+ON=@ITEMDCLICK
+IF (<src.act.type>==t_figurine)
+src.sysmessage <def.cantshrink>
+return 1
+ENDIF
+
+ON=@click
+IF (<src.isgm>) && !(<isonline>)
+message @07a3 OFFLINE
+ENDIF
+
+[EVENTS e_camp]
+ON=@SpellCast
+IF (<var0.nospells>==1)
+sysmessage <def.nospells>
+action -1
+return 1
+ENDIF
+IF (<ARGN1>==s_summon_creature) || (<ARGN1>==s_summon_daemon) || (<ARGN1>==s_blade_spirits) || (<ARGN1>==s_summon_elem_air) || (<ARGN1>==s_summon_elem_earth) || (<ARGN1>==s_summon_elem_fire) || (<ARGN1>==s_summon_elem_water) || (<ARGN1>==s_energy_vortex) || (<ARGN1>==s_invisibility
+action=-1
+sysmessage <def.invalidmagic>
+return 1
+endif
+
+ON=@SkillStart
+IF (<action>==SKILL_HIDING)
+sysmessage <def.invalidskill>
+action -1
+return 1
+ELIF (<action>==SKILL_STEALTH)
+sysmessage <def.invalidskill>
+action -1
+return 1
+endif
+
+ON=@HITTRY
+if (<var0.nobow>==1) && (<action>==skill_archery)
+action -1
+sysmessage <def.nobowactivated>
+return 1
+ENDIF
+
+ON=@LOGOUT
+serv.newitem=i_logout_timer
+new.cont=<uid>
+
+ON=@LOGIN
+findid.i_logout_timer.remove
+
+ON=@DEATHCORPSE
+IF (<var0.lootingmode>==1)
+go 1,1
+serv.b @036,3 <var0.event.name>: <name> dies!
+exit
+hits=<maxhits>
+ENDIF
+
+ON=@DEATH
+var.event.camplast=<act.tag0.event.charname>
+IF (<var0.event.current>==2) && (<var0.lootingmode>==1)
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+act.go <var0.event.p>
+else
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+act.go=<var0.event.p>
+action -1
+exit
+serv.b @036,3 <var0.event.name>: <name> dies!
+return 1
+ENDIF
+
+ON=@click
+IF (<src.isgm>) && !(<isonline>)
+message @07a3 OFFLINE
+ENDIF
+
+ON=@ITEMDCLICK
+IF (<src.act.type>==t_figurine)
+src.sysmessage <def.cantshrink>
+return 1
+ENDIF
+
+[EVENTS e_ffa_time]
+ON=@SpellCast
+IF (<var0.nospells>==1)
+sysmessage <def.nospells>
+action -1
+return 1
+ENDIF
+IF (<ARGN1>==s_summon_creature) || (<ARGN1>==s_summon_daemon) || (<ARGN1>==s_blade_spirits) || (<ARGN1>==s_summon_elem_air) || (<ARGN1>==s_summon_elem_earth) || (<ARGN1>==s_summon_elem_fire) || (<ARGN1>==s_summon_elem_water) || (<ARGN1>==s_energy_vortex) || (<ARGN1>==s_invisibility
+action=-1
+sysmessage <def.invalidmagic>
+return 1
+endif
+
+ON=@SkillStart
+IF (<action>==SKILL_HIDING)
+sysmessage <def.invalidskill>
+action -1
+return 1
+ELIF (<action>==SKILL_STEALTH)
+sysmessage <def.invalidskill>
+action -1
+return 1
+endif
+
+ON=@HITTRY
+if (<var0.nobow>==1) && (<action>==skill_archery)
+action -1
+sysmessage <def.nobowactivated>
+return 1
+ENDIF
+IF (<act.tag0.team>==<tag0.team>)
+sysmessage <def.ownteam>
+action -1
+return 1
+ENDIF
+
+ON=@GetHit
+IF (<act.tag0.team>==<tag0.team>)
+return 1
+ENDIF
+
+ON=@LOGOUT
+serv.newitem=i_logout_timer
+new.cont=<uid>
+
+ON=@LOGIN
+findid.i_logout_timer.remove
+
+ON=@DEATHCORPSE
+IF (<var0.lootingmode>==1)
+go 1,1
+serv.b @036,3 <var0.event.name>: <name> of <tag0.team.name> dies!
+exit
+serv.b @036,3 Left: <var0.event.status.hp>
+hits=<maxhits>
+ENDIF
+
+ON=@DEATH
+IF (<act.tag0.surv.lifes> < 3) && (<var0.event.current.t<eval <tag0.team>>> < <var0.event.current>) && (<var0.event.current.t<eval <tag0.team>>> > 1)
+act.tag0.surv.lifes += 1
+act.sysmessage @036 You've killed <name> and now has <eval <act.tag0.surv.lifes>> lifes.
+ENDIF
+IF !(<tag0.event.killed>)
+tag.event.killed=1
+ENDIF
+IF (<tag0.surv.lifes>) && (<var0.event.current.t<eval <tag0.team>>> > 1)
+tag0.event.killed -= 1
+act.tag0.event.killed += 1
+tag0.surv.lifes -= 1
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+removefromview
+moveto <var0.event.p>
+update
+sysmessage @036 You still have <eval <tag0.surv.lifes>> lifes.
+return 1
+ENDIF
+IF (<var0.event.current.t<eval <tag0.team>>> < <var0.event.current>) && (<var0.event.current.t<eval <tag0.team>>> > 1) && (<var0.lootingmode>==1)
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+ELIF (<var0.event.current.t<eval <tag0.team>>>==1) && (<var0.lootingmode>==1)
+serv.b @036,3 <var0.event.name>: <tag0.team.name> lose the event.
+region.allclients sysmessage <def.cantypeexit>
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+ELIF (<var0.event.current.t<eval <tag0.team>>> < <var0.event.current>) && (<var0.event.current.t<eval <tag0.team>>> > 1)
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+serv.b @036,3 <var0.event.name>: <name> of <tag0.team.name> dies!
+exit
+serv.b @036,3 Left: <var0.event.status.hp>
+return 1
+ELIF (<var0.event.current.t<eval <tag0.team>>>==1)
+serv.b @036,3 <var0.event.name>: <name> do <tag0.team.name> dies!
+serv.b @036,3 <var0.event.name>: <tag0.team.name> lose the event.
+region.allclients sysmessage <def.cantypeexit>
+act.hits=<act.maxhits>
+act.emote=killed <name>
+act.mana=<act.maxmana>
+act.stam=<act.maxstam>
+hits=<maxhits>
+action -1
+exit
+return 1
+ENDIF
+
+ON=@ITEMDCLICK
+IF (<src.act.type>==t_figurine)
+src.sysmessage <def.cantshrink>
+return 1
+ENDIF
+
+ON=@click
+IF (<src.isgm>) && !(<isonline>)
+message @07a3 OFFLINE
+ENDIF
+if (<src.isgm>)
+message @077a (<eval <tag0.surv.lifes>>,<eval <tag0.event.killed>>)
+endif
+
+[EVENTS e_ctf]
+ON=@SpellCast
+IF (<var0.nospells>==1)
+sysmessage <def.nospells>
+action -1
+return 1
+ENDIF
+IF (<ARGN1>==s_summon_creature) || (<ARGN1>==s_summon_daemon) || (<ARGN1>==s_blade_spirits) || (<ARGN1>==s_summon_elem_air) || (<ARGN1>==s_summon_elem_earth) || (<ARGN1>==s_summon_elem_fire) || (<ARGN1>==s_summon_elem_water) || (<ARGN1>==s_energy_vortex) || (<ARGN1>==s_invisibility
+action=-1
+sysmessage <def.invalidmagic>
+return 1
+endif
+
+ON=@SkillStart
+IF (<action>==SKILL_HIDING) || (<action>==SKILL_STEALTH)
+sysmessage <def.invalidskill>
+action -1
+return 1
+endif
+
+ON=@HitTry
+if (<var0.nobow>==1) && (<action>==skill_archery)
+action -1
+sysmessage <def.nobowactivated>
+return 1
+ENDIF
+IF (<act.tag0.team>==<tag0.team>)
+sysmessage <def.ownteam>
+action -1
+return 1
+ENDIF
+
+ON=@GetHit
+IF (<act.tag0.team>==<tag0.team>)
+return 1
+ENDIF
+
+ON=@LOGOUT
+serv.newitem=i_logout_timer
+new.cont=<uid>
+
+ON=@LOGIN
+findid.i_logout_timer.remove
+
+ON=@DEATH
+IF (<FINDID.I_BANDEIRA_CTF>)
+LOCAL.BANDEIRA <FINDID.I_BANDEIRA_CTF.UID>
+FINDID.I_BANDEIRA_CTF.P=<P>
+TRY UID.<LOCAL.BANDEIRA>.TIMER=<eval 60*<def.returntheflagtobase_2>>
+TRY UID.<LOCAL.BANDEIRA>.ATTR=attr_move_never
+TRY UID.<LOCAL.BANDEIRA>.MORE2=1
+TRY UID.<LOCAL.BANDEIRA>.MORE1
+TRY UID.<LOCAL.BANDEIRA>.MOREP
+ENDIF
+hits=<maxhits>
+mana=<maxmana>
+stam=<maxstam>
+removefromview
+moveto <var0.EVENT.P<EVAL <tag0.EVENT.TEAM>+1>>
+update
+ACTION -1
+RETURN 1
+
+ON=@ITEMDCLICK
+IF (<src.act.type>==t_figurine)
+src.sysmessage <def.cantshrink>
+return 1
+ENDIF
+
+ON=@click
+IF (<src.isgm>) && !(<isonline>)
+message @07a3 OFFLINE
+ENDIF
+IF (<findid.i_bandeira_ctf>)
+message @07a1 (With the Flag)
+ENDIF
+
+////////////////////////
+
+[ITEMDEF i_bandeira_ctf]
+NAME=Bandeira de CTF
+ID=i_banner_1_part_1
+TYPE=t_normal
+WEIGHT=0
+
+ON=@Create
+color=07a1
+ATTR=attr_move_never
+
+ON=@Dclick
+IF !(<CONT>) && (<SRC.TAG0.EVENT.ID>==7)
+SERV.B @07ad,3,1 <SRC.NAME> (<SRC.TAG0.TEAM.NAME>) is with the flag!
+SRC.SYSMESSAGE @07ad,3,1 You have 5 minutes to put the flag in your base
+IF (<SRC.TAG0.EVENT.TEAM>==1)
+MOREP=<var0.EVENT.P3>
+ELIF (<SRC.TAG.EVENT.TEAM>==2)
+MOREP=<var0.EVENT.P2>
+ENDIF
+BOUNCE
+TIMER=<EVAL 60*5>
+MORE2=1
+MORE1=<SRC.TAG.EVENT.TEAM>
+RETURN 1
+ENDIF
+IF (<TOPOBJ.UID>==<src>)
+IF (<SRC.P.X>==<MOREX>) && (<SRC.P.Y>==<MOREY>)
+SERV.B @07ad,3,1 <SRC.NAME> (<SRC.TAG.TEAM.NAME>) put the flag in the base!
+var.event.bandeirateam=<src.tag.event.team>
+REGION.ALLCLIENTS Sysmessage @07a1,3,1 You can type .exit
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @07ad You must put the flag in your base.
+RETURN 1
+ENDIF
+ENDIF
+
+ON=@Timer
+IF (<MORE2>==1)
+SERV.B @07ad,3,1 The flag is back to the center of the arena.
+CONT.UPDATE
+P=<var0.EVENT.P>
+MORE2
+MORE1
+MOREP
+TIMER -1
+RETURN 1
+ENDIF
+TIMER -1
+return 1
+
+////////////////////////
+
+[ITEMDEF i_camp_next]
+NAME=Camp Next
+ID=i_handr_1
+TYPE=t_script
+LAYER=layer_special
+
+ON=@Create
+more1=0
+color=07a0
+attr=attr_invis|attr_decay
+
+ON=@Timer
+IF (<var0.event.current> > 1)
+region.safe 0
+try uid.<var0.juiz>.go <var0.event.p>
+try uid.<var0.juiz>.say FIGHT!
+var.evento.aberto
+remove
+return 1
+ENDIF
+IF !(<more1>)
+region.safe 1
+var.evento.aberto=1
+serv.b <def.campnext1>
+try uid.<var0.juiz>.go <p>
+try uid.<var0.juiz>.say <def.wait1camp>
+more1=1
+timer=30
+return 1
+ELIF (<more1>==1)
+try uid.<var0.juiz>.go <p>
+try uid.<var0.juiz>.say <def.wait2camp>
+serv.b <def.campnext1>
+more1=2
+more2=10
+timer=20
+return 1
+ELIF (<more1> > 1) && (<more1> < 12)
+try uid.<var0.juiz>.say <eval <more2>>
+more1=<eval <more1>+1>
+more2=<eval <more2>-1>
+timer=1
+return 1
+else
+serv.b <def.wait3camp>
+try uid.<var0.juiz>.go <var0.event.p>
+try uid.<var0.juiz>.say <def.typeexit>
+var.evento.aberto
+local.uid=<uid>
+FORCLIENTS 999
+IF (<tag0.event.id>==4) && !(<isgm>)
+serv.b @07ad <name> wins!
+ENDIF
+ENDFOR
+try uid.<local.uid>.remove
+return 1
+ENDIF
+
+/////Criar arena////
+
+[plevel 4]
+eventsave
+ffa
+surv
+bw
+camp
+quest
+ctf
+
+[FUNCTION eventsave]
+IF !(<argv[0]>)
+return 1
+ENDIF
+serv.newitem=i_worldgem_bit
+new.attr=attr_invis|attr_move_never
+new.p=<p>
+new.color=07a0
+new.type=t_eventsave
+new.more1=<argv[0]>
+new.tag.arena.name=<argv[1]>
+IF (<argv[0]>==1)
+new.name=FFAsave
+ELIF (<argv[0]>==2)
+new.name=SUsave
+ELIF (<argv[0]>==3)
+new.name=BWsave
+new.sdialog d_evento_arena
+src.sysmessage @07a1 Define the tags event.p2 and event.p3
+ELIF (<argv[0]>==4)
+new.name=CAMPsave
+ELIF (<argv[0]>==5)
+new.name=FFAsave
+new.sdialog d_evento_arena
+src.sysmessage @07a1 Define the tags event.p2 and event.p3
+ELIF (<argv[0]>==6)
+new.name=QUESTsave
+ELIF (<argv[0]>==7)
+new.name=CTFsave
+new.sdialog d_evento_arena
+src.sysmessage @07a1 Define the tags event.p2 and event.p3
+ENDIF
+
+[function ffa]
+goname FFAsave
+
+[function surv]
+goname SUsave
+
+[function bw]
+GONAME BWsave
+
+[function camp]
+goname CAMPsave
+
+[FUNCTION quest]
+goname QUESTsave
+
+[FUNCTION ctf]
+goname CTFsave
+
+/////////////
+
+[plevel 4]
+judge
+
+[function judge]
+resurrect
+unequipall
+findlayer.21.remove
+findlayer.25.remove
+name Judge
+privshow=0
+serv.newitem=i_hair_short
+equip <new>
+serv.newitem=i_shoes_plain
+equip <new>
+serv.newitem=i_pants_long
+new.color=0481
+equip <new>
+serv.newitem=i_shirt_fancy
+new.color=01
+equip <new>
+serv.newitem=i_doublet
+new.color=01
+equip <new>
+serv.newitem=i_club
+new.name=Cacetete
+equip <new>
+tag.name.hue=
+flags |= statf_incognito
+body=c_man
+obody c_man
+color=0400
+oskin=0400
+debug=0
+listen=0
+invul 1
+gm 1
+findlayer.21.remove
+allskills=100.0
+str=200
+dex=200
+int=200
+hits=200
+mana=200
+stam=200
+update
+
+///////////
+
+[plevel 4]
+showevent
+
+[function showevent]
+IF (<var0.event.current>)
+sysmessage @036 Name=<var0.event.name>
+sysmessage @036 PrizeAmount=<eval <var0.prizeamount>>
+sysmessage @036 Prize.Name=<var0.prizename>
+sysmessage @036 Event.P=<var0.event.p>
+sysmessage @036 Prize.Id=<var0.prize.id>
+sysmessage @036 EventID=<var0.event.id>
+sysmessage @036 Judge: <uid.<var0.juiz>.tag.gmname> (<var0.juiz>)
+sysmessage @036 Current: <var0.event.current>
+sysmessage @036 Current.T1=<eval <var0.event.current.t1>>
+sysmessage @036 Current.T2=<eval <var0.event.current.t2>>
+sysmessage @036 Modes: <eval <var0.ironmaiden>> / <eval <var0.nospells>> / <eval <var0.nobow>> / <eval <var0.newbiemode>> / <eval <var0.lootingmode>>
+ELSE
+sysmessage There are no events now.
+ENDIF
+
+///////////////
+
+[function dismount]
+findlayer.21.updatex
+if (<findlayer.25>)
+obj=<findlayer.25.more2>
+obj.p=<p>
+OBJ.SHRINK2
+findlayer.25.remove
+flags &= ~080000000
+BOUNCE <var0.SHRINK>
+IF (0<ARGN2>==1)
+TAG.EVENT.MOUNT=<var0.SHRINK>
+ENDIF
+IF (0<ARGN1>==1)
+TRY UID.<var0.SHRINK>.CONT=<FINDLAYER.29>
+BANKSELF
+TRY UID.<var0.SHRINK>.UPDATE
+FINDLAYER.29.UPDATEX
+SYSMESSAGE @07a1 Your mount has been sent to your bank.
+ENDIF
+findlayer.21.updatex
+updatex
+VAR.SHRINK
+endif
+
+///////////////////
+
+[events e_questend]
+ON=@Death
+serv.b <def.questfinished>
+region.allclients sysmessage <def.cantypeexit>
+var.quest.chefemorto=1
+
+//////LogOut Timer////////
+
+[itemdef i_logout_timer]
+NAME=Logout Timer
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@CREATE
+timer=<EVAL (<SERV.ClientLinger>)-1>
+attr=attr_invis|attr_decay
+
+ON=@TIMER
+cont.exit
+
+////////////////
+
+[itemdef i_event_blockg]
+NAME=floor
+ID=i_floor_marble
+TYPE=t_normal
+CAN=CAN_I_BLOCK
+
+ON=@create
+attr=attr_move_never|attr_static
+color=026
+
+[FUNCTION f_fechar_chao]
+FORITEMS 30
+IF (<baseid>==i_event_blockg) && (<color>==0ad)
+color=026
+nudgeup 1
+ENDIF
+ENDFOR
+
+[FUNCTION f_abrir_chao]
+FORITEMS 30
+IF (<baseid>==i_event_blockg) && (<color>==026)
+color=0ad
+nudgedown 1
+ENDIF
+ENDFOR
+
+////////////////////
+
+[PLEVEL 1]
+event
+
+[FUNCTION event]
+sysmessage @036 <var0.event.name.hp>
+sysmessage @036 Prize: <var0.event.prize.hp>
+sysmessage @036 <var0.event.juiz.hp>
+sysmessage @036 Arena: <var0.event.arena.hp>
+sysmessage @036 Modes: <var0.event.modes.hp>
+sysmessage @036 Status: <var0.event.status.hp>
+
+///////////
+
+[itemdef i_surv_removestone]
+NAME=Remove stone Surv
+ID=i_memory
+TYPE=t_eq_script
+layer=layer_special
+
+ON=@create
+attr=attr_invis|attr_decay
+timer=10
+
+on=@equip
+timer=10
+
+ON=@TIMER
+cont.stone 0
+remove
+return 1
+
+////////////////////
+
+[function f_testar_modos]
+IF (<var0.ironmaiden>==1) && (<topobj.tag0.team>==1) && (<var0.event.id>==5) || (<var0.event.id>==3)
+color=07a1
+ELIF (<var0.ironmaiden>==1) && (<topobj.tag0.team>==2) && (<var0.event.id>==5) || (<var0.event.id>==3)
+color=07ad
+ENDIF
+
+////////////////////
+
+[function f_ultimos_eventos]
+IF (<var0.event.id>==1) || (<var0.event.id>==2) || (<var0.event.id>==4)
+FOR 10 1
+IF !(<LOCAL._FOR>==1)
+TRY VAR.LASTEVENT.<EVAL <LOCAL._FOR>>=<var.LASTEVENT.<EVAL <LOCAL._FOR>-1>>
+ELSE
+var.lastevent.1=<var0.event.name> <rtime.day>/<rtime.month>: <tag0.event.charname> wins!
+ENDIF
+ENDFOR
+ELIF (<var0.event.id>==3) || (<var0.event.id>==5) || (<var0.event.id>==7)
+FOR 10 1
+IF !(<LOCAL._FOR>==1)
+TRY VAR.LASTEVENT.<EVAL <LOCAL._FOR>>=<var.LASTEVENT.<EVAL <LOCAL._FOR>-1>>
+ELSE
+var.lastevent.1=<var0.event.name> <rtime.day>/<rtime.month>: <tag0.team.name> win!
+ENDIF
+ENDFOR
+ENDIF
+
+///////////////////
+
+[FUNCTION f_ranking_total_events]
+IF (<more1>==1)
+var.event.ffa.total=<eval <var0.event.ffa.total>+1>
+var.ffasemtime.total=<eval <var0.event.ffa.total>> times
+ELIF (<more1>==2)
+var.event.surv.total=<eval <var0.event.surv.total>+1>
+var.survivor.total=<eval <var0.event.surv.total>> times
+ELIF (<more1>==3)
+var.event.bw.total=<eval <var0.event.bw.total>+1>
+var.bloodwar.total=<eval <var0.event.bw.total>> times
+ELIF (<more1>==4)
+var.event.camp.total=<eval <var0.event.camp.total>+1>
+var.camp.total=<eval <var0.event.camp.total>> times
+ELIF (<more1>==5)
+var.event.ffatime.total=<eval <var0.event.ffatime.total>+1>
+var.ffacomtime.total=<eval <var0.event.ffatime.total>> times
+ELIF (<more1>==6)
+var.event.quests.total=<eval <var0.event.quests.total>+1>
+var.quests.total=<eval <var0.event.quests.total>> times
+ELIF (<more1>==7)
+var.event.ctfs.total=<eval <var0.event.ctfs.total>+1>
+var.ctfs.total=<eval <var0.event.ctfs.total>> vezes
+ENDIF
+
+////////Itens Survivor///////////////
+
+[ITEMDEF i_canhao_surv_n]
+NAME=Canhao
+ID=01094
+TYPE=t_multi
+CATEGORY=Multis
+SUBSECTION=Eventos
+DESCRIPTION=Canhao Surv N
+MULTIREGION=0,0,0,0
+COMPONENT=i_cannon_full -1 2 0 0
+COMPONENT=0e8c -1 1 0 0
+COMPONENT=0e8d -1 0 0 0
+COMPONENT=i_chair_stool_bamboo 0 1 0 0
+TSPEECH=spk_canhao_n
+TAG.MAXDISTANCE=8
+
+ON=@Create
+attr=attr_move_never|attr_static
+
+ON=@Timer
+dispid=01094
+update
+return 1
+
+[SPEECH spk_canhao_n]
+ON=[0-9]
+IF (<var0.event.current> < 3)
+src.sysmessage Fight with your oponent!
+return 1
+ENDIF
+IF (<timer>)
+src.sysmessage Cannon is still hot.
+ELIF (<eval <args>> < <tag0.maxdistance>)
+serv.newitem=i_potion_ExplosionGreat
+new.removefromview
+new.p=<p>
+new.move 0,-<eval <args>>
+new.removefromview
+new.link=<src>
+new.morep=0,0
+new.more2=250.0
+new.timer 0
+timer=5
+update
+ENDIF
+
+[ITEMDEF i_canhao_surv_w]
+NAME=Canhao
+ID=0108d
+TYPE=t_multi
+CATEGORY=Multis
+SUBSECTION=Eventos
+DESCRIPTION=Canhao Surv W
+MULTIREGION=0,0,0,0
+COMPONENT=0e90 2 -1 0 0
+COMPONENT=0e8f 1 -1 0 0
+COMPONENT=0e8e 0 -1 0 0
+COMPONENT=i_chair_stool_bamboo 1 0 0 0
+TSPEECH=spk_canhao_w
+TAG.MAXDISTANCE=8
+
+ON=@Create
+attr=attr_move_never|attr_static
+
+ON=@Timer
+dispid=01094
+update
+return 1
+
+[SPEECH spk_canhao_w]
+ON=[0-9]
+IF (<var0.event.current> < 3)
+src.sysmessage Fight with your oponent!
+return 1
+ENDIF
+IF (<timer>)
+src.sysmessage Cannon is still hot.
+ELIF (<eval <args>> < <tag0.maxdistance>)
+serv.newitem=i_potion_ExplosionGreat
+new.removefromview
+new.p=<p>
+new.move -<eval <args>>
+new.removefromview
+new.link=<src>
+new.morep=0,0
+new.more2=250.0
+new.timer 0
+timer=5
+update
+ENDIF
+
+///////////////////
+
+[FUNCTION f_checar_modos_broadcast]
+var.modes.name=
+var.event.modes.hp=
+IF (<var0.ironmaiden>)
+var.modes.name .= , Iron Maiden
+var.event.modes.hp .= , Iron Maiden
+ENDIF
+IF (<var0.nobow>)
+var.modes.name .= , No Bow
+var.event.modes.hp .= , No Bow
+ENDIF
+IF (<var0.nospells>)
+var.modes.name .= , No Spells
+var.event.modes.hp .= , No Spells
+ENDIF
+IF (<var0.newbiemode>)
+var.modes.name .= , Newbie
+var.event.modes.hp .= , Newbie
+ENDIF
+IF (<var0.lootingmode>)
+var.modes.name .= , Looting
+var.event.modes.hp .= , Looting
+ENDIF
+IF !(<var0.ironmaiden>) && !(<var0.nobow>) && !(<var0.nospells>) && !(<var0.newbiemode>) && !(<var0.lootingmode>)
+var.modes.name=[none]
+var.event.modes.hp=[none]
+ENDIF
+
+[ITEMDEF i_throwing_spear] 
+NAME=Throwing Spear
+ID=i_spear 
+DAM=1
+SPEED=1
+SKILL=Fencing 
+REQSTR=1
+TWOHANDS=Y
+VALUE=300 
+
+WEIGHT=1 
+TDATA4=i_spear
+
+ON=@CREATE 
+COLOR=077a
+HITPOINTS=100
+
+ON=@DCLICK 
+LOCAL.HIT={1 3 5 7 9 11 13 15} 
+LOCAL.MISS={2 4 6 8 10 12 14 16} 
+TARGET Who do you want to throw the spear ?
+
+ON=@TARGON_CHAR 
+IF (<src.targ.distance> < 2)
+src.sysmessage @07a1 You're too close to throw the spear!
+return 1
+ELIF (<src.targ.distance> > 10)
+src.sysmessage @07a1 You're too far to throw the spear!
+ELIF (<local.hit> > <local.miss>) && (<src.targ.distance> < 7)
+src.targ.damage={30 45}
+src.targ.sysmessage @88 <src.name> hit you!
+serv.newitem=i_throwing_spear
+new.p=<src.targ.p>
+src.sysmessage @07a1 You hit <src.targ.name>!
+remove
+return 1
+ELIF (<local.hit> < <local.miss>) && (<src.targ.distance> < 7)
+src.sysmessage @036 You're too weak to throw the spear!
+src.findid.i_throwing_spear.unequip
+return 1
+endif
+
+ON=@TARGON_ITEM
+src.sysmessage @07a1 You can't throw this at an item!
+return 1
+
+[ITEMDEF i_balron_dye]
+DEFNAME=i_balron_dye
+NAME=magic dyeing tub (charges 03)
+ID=I_dye_tub
+TYPE=T_DYE_VAT
+WEIGHT=2
+
+ON=@Create
+COLOR={07a1 077a}
+MORE1=3
+
+ON=@DCLICK
+target
+return 1
+
+ON=@Targon_item
+if (<more1>=1)
+more1 -= 1
+src.emote=<src.targ.name> glows magically!
+name=magic dyeing tub (charges <eval <more1>>)
+remove
+else
+src.emote=<src.targ.name> glows magically!
+more1 -= 1
+name=magic dyeing tub (charges <eval <more1>>)
+endif
+
+ON=@TARGON_CHAR
+if (<more1>==1)
+more1 -= 1
+src.targ.emote=glows magically!
+name=magic dyeing tub (charges <eval <more1>>)
+remove
+else
+src.targ.emote=glows magically!
+more1 -= 1
+name=magic dyeing tub (charges <eval <more1>>)
+endif
+
+///////////////
+
+[function hasblockedtags]
+FOR <def.blockedtags_number>
+IF (<tag0.<def.blockedtag<eval <local._for>>>>)
+return 1
+ENDIF
+ENDFOR
+RETURN 0
+
+/////////////////
+
+[function equipall]
+equipweapon
+equiparmor
+
+[function unequipall]
+FOR 24
+IF (<LOCAL._FOR>!=9) && (<LOCAL._FOR>!=11) && (<LOCAL._FOR>!=15) && (<LOCAL._FOR>!=16) && (<LOCAL._FOR>!=18) && (<LOCAL._FOR>!=21) && (<LOCAL._FOR>!=23)
+IF (<FINDLAYER.<EVAL <LOCAL._FOR>>>)
+TRY FINDLAYER.<EVAL <LOCAL._FOR>>.UNEQUIP
+ENDIF
+ENDIF
+ENDFOR
+
+[FUNCTION addgold]
+IF (<ARGN1>)
+IF (<ARGN1> > 64999)
+SERV.NEWITEM i_gold
+NEW.AMOUNT 65000
+IF !(0<ARGN2>)
+BOUNCE <NEW>
+addgold <EVAL <ARGN1>-65000>
+ELSE
+NEW.CONT=<HVAL <ARGN2>>
+addgold <EVAL <ARGN1>-65000> <ARGN2>
+ENDIF
+ELSE
+SERV.NEWITEM i_gold
+NEW.AMOUNT <ARGN1>
+IF !(0<ARGN2>)
+BOUNCE <NEW>
+ELSE
+NEW.CONT=<HVAL <ARGN2>>
+ENDIF
+ENDIF
+ENDIF
+UPDATE
+
+[PLEVEL 4]
+addgold
+
+////////////////////////
+
+[ITEMDEF i_Enduriun_platemail_arms]
+NAME=Enduriun Platemail Arms
+ID=i_platemail_arms
+RESOURCES=40 i_bloodstone
+WEIGHT=20
+ARMOR=200
+REQSTR=100
+
+On=@Create
+HITPOINTS=99999999
+COLOR=0482
+
+ON=@EQUIP
+SRC.SFX 01eb
+SRC.EFFECT 3,01ed9,3,17,1
+
+[ITEMDEF i_Enduriun_platemail_leggings]
+NAME=Enduriun Platemail Legs
+ID=i_platemail_leggings
+RESOURCES=i_bloodstone
+WEIGHT=20
+ARMOR=200
+REQSTR=100
+
+On=@Create
+HITPOINTS=99999999
+COLOR=0482
+
+ON=@EQUIP
+SRC.SFX 01eb
+SRC.EFFECT 3,01ed9,3,17,1
+
+[ITEMDEF i_Enduriun_platemail_helm]
+NAME=Enduriun Platemail Helm
+ID=i_platemail_helm
+RESOURCES=i_bloodstone
+WEIGHT=20
+ARMOR=200
+REQSTR=100
+
+On=@Create
+HITPOINTS=99999999
+COLOR=0482
+
+ON=@EQUIP
+SRC.SFX 01eb
+SRC.EFFECT 3,01ed9,3,17,1
+
+[ITEMDEF i_Enduriun_platemail_gorget]
+NAME=Enduriun Platemail Gorget
+ID=i_platemail_gorget
+RESOURCES=i_bloodstone
+WEIGHT=20
+ARMOR=200
+REQSTR=100
+
+On=@Create
+HITPOINTS=99999999
+COLOR=0482
+
+ON=@EQUIP
+SRC.SFX 01eb
+SRC.EFFECT 3,01ed9,3,17,1
+
+[ITEMDEF i_Enduriun_platemail_gloves]
+NAME=Enduriun Platemail Gauntlets
+ID=i_platemail_gloves
+RESOURCES=i_bloodstone
+WEIGHT=20
+ARMOR=200
+REQSTR=100
+
+On=@Create
+HITPOINTS=99999999
+COLOR=0482
+
+ON=@EQUIP
+SRC.SFX 01eb
+SRC.EFFECT 3,01ed9,3,17,1
+
+[ITEMDEF i_Enduriun_platemail_chest]
+NAME=Enduriun Platemail
+ID=i_platemail_chest
+RESOURCES=i_bloodstone
+WEIGHT=20
+ARMOR=200
+REQSTR=100
+
+On=@Create
+HITPOINTS=99999999
+COLOR=0482
+
+ON=@EQUIP
+SRC.SFX 01eb
+SRC.EFFECT 3,01ed9,3,17,1
+
+//////////////
+
+[FUNCTION f_criar_camp_uid]
+serv.newitem=i_gold
+new.p=1,1
+var.camp.uid=<new>
+new.remove
+
+/////////////////
+
+[itemdef i_scroll_bagmagic]
+NAME=Scroll to a Bag Of Magic
+ID=i_scroll_heal
+TYPE=t_normal
+value=1200
+
+on=@create
+color=00
+
+on=@dclick
+serv.newitem=tm_BAG_OF_MAGIC
+bounce <new>
+src.say @07a3 An Nox Reg
+src.anim 17
+src.sfx snd_spell_gate_travel
+consume 1 i_scroll_bagmagic
+return 1
+
+[function f_removerstone_ctf]
+IF (<TAG0.EVENT.ID>==7) && (<FLAGS>&statf_stone)
+STONE 0
+ENDIF
+
+[ITEMDEF i_event_tronphie]
+NAME=tronphie
+ID=i_statue_stone_sm
+TYPE=t_normal
+
+ON=@Create
+NAME=<src.tag.event.charname>'s <var0.event.name> Tronphie
+MORE1=<src>
+
+ON=@Dclick
+IF (<SRC>==<MORE1>)
+COLOR={077a 07a9}
+ENDIF
+RETURN 1
+
+///////////////
+
+[FUNCTION NEARMOUNTS]
+FORCHARS 0
+IF !(<ISPLAYER>)
+IF (<ISMYPET>)
+RETURN <UID>
+ENDIF
+ENDIF
+ENDFOR
+
+[FUNCTION SHRINK2]
+SERV.NEWITEM=<ICON> 
+NEW.NAME=<NAME> 
+NEW.COLOR=<COLOR> 
+NEW.TAG.ID=<BASEID>
+NEW.TAG.STR=<STR>
+NEW.TAG.DEX=<DEX>
+NEW.TAG.INT=<INT>
+NEW.TAG.FAME=<FAME>
+NEW.TAG.KARMA=<KARMA>
+NEW.TAG.NAMEHUE=<tag0.NAME.HUE>
+NEW.TAG.HITS=<HITS>
+NEW.TAG.MANA=<MANA>
+NEW.TAG.STAM=<STAM>
+NEW.TYPE=t_shrink_fix
+VAR.SHRINK=<NEW>
+REMOVE
+
+[TYPEDEF t_shrink_fix]
+ON=@Dclick
+SERV.NEWNPC=<tag0.ID>
+NEW.P=<SRC.P>
+NEW.COLOR=<COLOR>
+NEW.STR=<tag0.STR>
+NEW.DEX=<tag0.DEX>
+NEW.INT=<tag0.INT>
+NEW.FAME=<tag0.FAME>
+NEW.KARMA=<tag0.KARMA>
+NEW.NAME=<NAME>
+NEW.HITS=<tag0.HITS>
+NEW.MANA=<tag0.MANA>
+NEW.STAM=<tag0.STAM>
+NEW.TAG.NAME.HUE=<tag0.NAMEHUE>
+SRC.TAME <NEW>
+NEW.UPDATE
+REMOVE
+RETURN 1
+
+[FUNCTION tame] //argn1: creature uid
+LOCAL.TMP <NEW>
+LOCAL.TMP2 <OBJ>
+OBJ <ARGN1>
+OBJ.FLAGS |= statf_pet
+SERV.NEWITEM i_memory
+NEW.LINK <UID>
+NEW.MORE2 <TIME>
+NEW.COLOR 042
+NEW.MOREP <OBJ.P>
+OBJ.EQUIP <NEW>
+NEW <LOCAL.TMP>
+OBJ <LOCAL.TMP2>
+
+[function additem]
+IF (0<ARGV[1]>)
+LOCAL.AMOUNT=<ARGV[1]>
+ELSE
+LOCAL.AMOUNT=1
+ENDIF
+WHILE (<LOCAL.AMOUNT>)
+SERV.NEWITEM=<ARGV[0]>
+IF (<SERV.ITEMDEF.<ARGV[0]>.CAN>&0100)
+IF (<LOCAL.AMOUNT> >= 65000)
+NEW.AMOUNT=65000
+LOCAL.AMOUNT -= 65000
+ELSE
+NEW.AMOUNT=<LOCAL.AMOUNT>
+LOCAL.AMOUNT=0
+ENDIF
+ELSE
+LOCAL.AMOUNT -= 1
+ENDIF
+IF (0<ARGV[2]>)
+NEW.CONT=<ARGV[2]>
+ELSE
+BOUNCE <NEW>
+ENDIF
+ENDWHILE
+UPDATE
+
+[EOF]

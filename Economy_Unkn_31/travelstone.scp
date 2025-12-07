@@ -1,0 +1,434 @@
+[ITEMDEF I_TRAVEL_STONE]
+//gravestone
+ID=0ed4
+NAME=Travel Stone
+TYPE=T_eq_script
+RESOURCES=4 i_rock_plain
+CATEGORY=Bane
+SUBSECTION=Travel Stone
+DESCRIPTION=Travel Stone
+
+On=@create
+COLOR=003c2
+
+on=@dclick
+DIALOG d_travel2
+MESSAGE=It costs 2000 gold to travel with this menu.
+Return 1
+
+[DIALOG d_travel2]
+0, 0
+PAGE 0
+PAGE 1
+resizepic 0 0 3600 400 220
+resizepic 35 42 3500 330 140
+button 61 68 210 211 0 2 0
+text 89 68 1152 1
+button 61 98 210 211 0 3 0
+text 89 98 1152 2
+text 100 18 1152 0
+PAGE 2
+resizepic 0 0 5054 620 500
+gumppic 0 0 5500
+gumppic 55 50 5528
+text 480 90 1152 4
+text 480 110 1152 5
+button 450 130 210 211 1 0 1
+text 480 130 1152 6
+button 450 150 210 211 1 0 2
+text 480 150 1152 7
+button 450 170 210 211 1 0 3
+text 480 170 1152 8
+button 450 190 210 211 1 0 4
+text 480 190 1152 9
+button 450 210 210 211 1 0 5
+text 480 210 1152 10
+button 450 230 210 211 1 0 6
+text 480 230 1152 11
+button 450 250 210 211 1 0 7
+text 480 250 1152 12
+button 450 270 210 211 1 0 8
+text 480 270 1152 13
+button 450 290 210 211 1 0 9
+text 480 290 1152 14
+button 450 310 210 211 1 0 10
+text 480 310 1152 15
+button 450 330 210 211 1 0 11
+text 480 330 1152 16
+button 450 350 210 211 1 0 12
+text 480 350 1152 17
+button 450 370 210 211 1 0 13
+text 480 370 1152 18
+button 450 390 210 211 1 0 14
+text 480 390 1152 19
+button 450 410 210 211 1 0 15
+text 480 410 1152 20
+button 450 430 210 211 1 0 16
+text 480 430 1152 21
+button 450 450 210 211 1 0 17
+text 480 450 1152 22
+button 450 470 210 211 0 1 0
+text 480 470 1152 23
+PAGE 3
+resizepic 0 0 5054 620 500
+gumppic 0 0 5500
+gumppic 55 50 5528
+text 480 90 1152 24
+text 480 110 1152 25
+button 450 130 210 211 1 0 18
+text 480 130 1152 26
+button 450 150 210 211 1 0 19
+text 480 150 1152 27
+button 450 170 210 211 1 0 20
+text 480 170 1152 28
+button 450 190 210 211 1 0 21
+text 480 190 1152 29
+button 450 210 210 211 1 0 22
+text 480 210 1152 30
+button 450 230 210 211 1 0 23
+text 480 230 1152 31
+button 450 250 210 211 1 0 24
+text 480 250 1152 32
+button 450 270 210 211 1 0 25
+text 480 270 1152 33
+button 450 290 210 211 1 0 26
+text 480 290 1152 34
+button 450 310 210 211 1 0 27
+text 480 310 1152 35
+button 450 330 210 211 1 0 28
+text 480 330 1152 36
+button 450 350 210 211 1 0 29
+text 480 350 1152 37
+button 450 370 210 211 1 0 30
+text 480 370 1152 38
+button 450 390 210 211 1 0 31
+text 480 390 1152 39
+button 450 410 210 211 0 1 0
+text 480 410 1152 23
+
+[DIALOG d_travel2 TEXT]
+<serv.servname> Travel Menu
+Cities
+Dungeons
+By Bane
+*Travel Menu*
+*Cities*
+Britain
+Bucaneer's Den
+Cove
+Jhelom
+Magincia
+Minoc
+Moonglow
+Njuhelm
+Occlo
+Serpents Hold
+Skara Brae
+Trinsic
+Vesper
+Wind 
+Yew
+Delucia
+Papua
+Back
+*Travel Menu*
+*Dungeons*
+Covetous
+Deceit
+Despise
+Destard
+Hythloth
+Shame
+Wrong
+City of the Dead
+Cyclops Valley
+Delucia Orc Fort
+Fire Dungeon
+Ice Dungeon
+Ophidian Lair
+Terathan Keep
+
+
+[DIALOG d_travel2 BUTTON]
+on=0
+MESSAGE=You cancel the travel menu.
+on=1
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Britain
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=2
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 2691,2233,2
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=3
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Cove
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=4
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Jhelom
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=5
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Magincia
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=6
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Minoc
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=7
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Moonglow
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=8
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 3756,1244,0
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=9
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Occlo
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=10
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 3021,3397,15
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=11
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Skara Brae
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=12
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Trinsic
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=13
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Vesper
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=14
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 1361,895,0
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=15
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Yew
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=16
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Delucia
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=17
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO Papua
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=18
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 2499,922,0
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=19
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 4111,434,5
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=20
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 1301,1080,0
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=21
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 1176,2639,0
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=22
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 4722,3825,0
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=23
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 514,1561,0
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=24
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 2044,238,10
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=25
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 5219,3689,12
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=26
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 5142,2904,51
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=27
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 5210,3632,0
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=28
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 2923,3406,8
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=29
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 1998,81,7
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=30
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 5767,2633,46
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+on=31
+IF <SRC.RESTEST 2000 i_gold>
+SRC.CONSUME=2000 i_gold
+SRC.GO 5418,3148,-60
+MESSAGE=That will 2,000 gold.  Thank you.
+Return 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+[eof]

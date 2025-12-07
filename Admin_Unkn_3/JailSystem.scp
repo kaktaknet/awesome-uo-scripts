@@ -1,0 +1,352 @@
+// This script has been made by -Ax- and belongs to sphere.
+// First of all, Use the function JAILSYSTEM.
+// It will create 5 jail stones in your jail.
+// It will also teleport you directly in jail to see what it looks like.
+// Then when you will want to Jail someone, use the function JAILING.
+// You will have the choice between 6 kind of jailing, Jail for 10mins, 30mins, 1h, 24h, 7days or forever.
+// Keep in mind that all of those timers are considered while the player is ONLINE only!!!
+// PS: the timer will NOT restart when the player will go offline then come back.
+// It will only starts at the place it was before the player went OFFLINE.
+// If you want to remove the jail timer of anyone, use the function ANTIJAILING.
+// Have fun, If you have ANY question. Private Message me on sphere. (UserName: alphanatix)
+
+// Here is the functions you need to add,
+
+[PLEVEL 4]
+antijailing
+jailing
+
+[PLEVEL 6]
+jailsystem
+
+// Here starts the script
+
+[FUNCTION jailsystem] // ONLY USE THIS FUNCTION ONCE !!!
+if !(<isgm>)
+src.sysmessage You cannot use this command
+ELSE
+src.newitem i_jail_stone_1h
+src.act.p=5285.1173,1
+src.newitem i_jail_stone_30mins
+src.act.p=5276,1173,1
+src.newitem i_jail_stone_24h
+src.act.p=5295,1173,1
+src.newitem i_jail_stone_1week
+src.act.p=5305,1173,1
+src.newitem i_jail_stone_10mins
+src.act.p=5281,1181
+src.go  jail
+src.forgive
+src.say Only use this function once, Use .Jailing to jail people, Use .antijailing to remove the jail timer.
+
+[FUNCTION antijailing]
+if !(<isgm>)
+src.sysmessage You cannot use this command
+ELSE
+TARGET To which person would you like to remove the Jail Timers?
+Return 1
+
+ON=@TARGON_CHAR
+SRC.FORGIVE
+SRC.CONSUME i_jail_timer
+SRC.CONSUME i_jail_timer2
+SRC.CONSUME i_jail_timer3
+SRC.CONSUME i_jail_timer4
+SRC.CONSUME i_jail_timer5
+src.sysmessage You are now free as a bird.
+Return 1
+ENDIF
+
+[FUNCTION jailing]
+if !(<isgm>)
+SRC.SYSMESSAGE You cannot use this command
+Return 1
+ELSE
+MENU m_jail
+ENDIF
+Return 1
+
+[MENU m_jail]
+Emprisonnement
+
+ON=1 Jail for 10 mins
+SRC.NEWITEM=i_jailwho
+SRC.ACT.MORE2=1
+SRC.ACT.EQUIP
+
+ON=2 Jail for 30 mins
+SRC.NEWITEM=i_jailwho
+SRC.ACT.MORE2=2
+SRC.ACT.EQUIP
+
+ON=3 Jail for 60 mins
+SRC.NEWITEM=i_jailwho
+SRC.ACT.MORE2=3
+SRC.ACT.EQUIP
+
+ON=4 Jail for 24 hours
+SRC.NEWITEM=i_jailwho
+SRC.ACT.MORE2=4
+SRC.ACT.EQUIP
+
+ON=5 Jail for 7 days
+SRC.NEWITEM=i_jailwho
+SRC.ACT.MORE2=5
+SRC.ACT.EQUIP
+
+ON=6 Jail forever
+SRC.NEWITEM=i_jailwho
+SRC.ACT.MORE2=6
+SRC.ACT.EQUIP
+
+[ITEMDEF i_jailwho]
+ID=i_memory
+NAME=Jail who?
+LAYER=layer_special
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_invis|attr_move_never|attr_static
+MORE2=0
+
+ON=@EQUIP
+TARGET Who do you want to jail?
+RETURN 1
+
+ON=@Targon_CHAR
+if (<MORE2>==1)
+SRC.TARG.GO JAIL9
+SRC.TARG.JAIL 10
+RETURN 1
+
+
+elseif (<MORE2>==2)
+SRC.TARG.GO JAIL5
+SRC.TARG.JAIL 10
+RETURN 1
+
+
+elseif (<MORE2>==3)
+SRC.TARG.GO JAIL6 
+SRC.TARG.JAIL 10
+RETURN 1
+
+
+elseif (<MORE2>==4)
+SRC.TARG.GO JAIL7
+SRC.TARG.JAIL 10
+RETURN 1
+
+
+elseif (<MORE2>==5)
+SRC.TARG.GO JAIL8
+SRC.TARG.JAIL 10
+RETURN 1
+
+
+elseif (<MORE2>==6)
+SRC.TARG.GO JAIL 10
+SRC.TARG.JAIL 10
+RETURN 1
+
+ELSE
+REMOVE
+endif
+
+//-------------------------------------
+
+[ITEMDEF i_jail_stone_1h] 
+ID=i_guildstone 
+NAME=Stone of jailing for 1 hour.
+TYPE=t_normal 
+ON=@CREATE 
+COLOR=color_o_mytheril 
+ATTR=08010 
+
+ON=@DCLICK 
+SRC.GO 5285,1163
+SRC.NEWITEM i_jail_timer 
+SRC.ACT.EQUIP=<SRC.UID> 
+SRC.SYSMESSAGE You have an hour to stay online.
+Return 1
+
+[ITEMDEF i_jail_timer] 
+ID=i_memory 
+NAME=Jail Timer 
+TYPE=t_eq_script 
+
+On=@EQUIP 
+MORE2=61 //jail time 
+TIMER=1 
+RETURN 1 
+
+ON=@TIMER 
+MORE2=<MORE2>-1
+IF <eval <MORE2>><1 
+CONT.FORGIVE 
+CONT.GO britain 
+REMOVE 
+ELSE 
+CONT.SYSMESSAGE (<eval <MORE2>>/60) minutes left in jail
+ENDIF 
+TIMER=60
+Return 1
+
+//------------
+
+
+[ITEMDEF i_jail_stone_30mins] 
+ID=i_guildstone 
+NAME=Stone of jailing for 30 minutes.
+TYPE=t_normal 
+ON=@CREATE 
+COLOR=color_o_mytheril 
+ATTR=08010 
+
+ON=@DCLICK 
+SRC.GO 5276,1164
+SRC.NEWITEM i_jail_timer2
+SRC.ACT.EQUIP=<SRC.UID>
+SRC.SYSMESSAGE You have an half hour to stay online.
+Return 1
+
+[ITEMDEF i_jail_timer2] 
+ID=i_memory 
+NAME=Jail Timer 
+TYPE=t_eq_script 
+
+On=@EQUIP 
+MORE2=31 //jail time 
+TIMER=1 
+RETURN 1 
+
+ON=@TIMER 
+MORE2=<MORE2>-1
+IF <eval <MORE2>><1 
+CONT.FORGIVE 
+CONT.GO britain 
+REMOVE 
+ELSE 
+CONT.SYSMESSAGE (<eval <MORE2>>/30) minutes left in jail.
+ENDIF 
+TIMER=60
+Return 1
+
+//--------------------------------------
+
+[ITEMDEF i_jail_stone_24h] 
+ID=i_guildstone 
+NAME=Stone of jailing for 24 hours.
+TYPE=t_normal 
+ON=@CREATE 
+COLOR=color_o_mytheril 
+ATTR=08010 
+
+ON=@DCLICK 
+SRC.GO 5295,1163
+SRC.NEWITEM i_jail_timer3
+SRC.ACT.EQUIP=<SRC.UID> 
+SRC.SYSMESSAGE You have 24 hours to stay online.
+Return 1
+
+[ITEMDEF i_jail_timer3] 
+ID=i_memory 
+NAME=Jail Timer 
+TYPE=t_eq_script 
+
+On=@EQUIP 
+MORE2=1441 //jail time 
+TIMER=1 
+RETURN 1 
+
+ON=@TIMER 
+MORE2=<MORE2>-1
+IF <eval <MORE2>><1 
+CONT.FORGIVE 
+CONT.GO britain 
+REMOVE 
+ELSE 
+CONT.SYSMESSAGE (<eval <MORE2>>/60x24) minutes left in jail.
+ENDIF 
+TIMER=60
+RETURN 1
+
+//---------------------------------------
+
+
+[ITEMDEF i_jail_stone_1week] 
+ID=i_guildstone 
+NAME=Stone of jailing for a week.
+TYPE=t_normal 
+ON=@CREATE 
+COLOR=color_o_mytheril 
+ATTR=08010 
+
+ON=@DCLICK 
+SRC.GO 5305,1163
+SRC.NEWITEM i_jail_timer4
+SRC.ACT.EQUIP=<SRC.UID> 
+SRC.SYSMESSAGE You have a week to stay online.
+Return 1
+
+[ITEMDEF i_jail_timer4] 
+ID=i_memory 
+NAME=Jail Timer 
+TYPE=t_eq_script 
+
+On=@EQUIP 
+MORE2=10081 //jail time 
+TIMER=1 
+RETURN 1 
+
+ON=@TIMER 
+MORE2=<MORE2>-1
+IF <eval <MORE2>><1 
+CONT.FORGIVE 
+CONT.GO britain 
+REMOVE 
+ELSE 
+CONT.SYSMESSAGE (<eval <MORE2>>/60x24x7) minutes left in jail.
+ENDIF 
+TIMER=60
+RETURN 1
+
+//---------------------------------------------------
+
+[ITEMDEF i_jail_stone_10mins] 
+ID=i_guildstone 
+NAME=Stone of jailing for 10 minutes.
+TYPE=t_normal 
+ON=@CREATE 
+COLOR=color_o_mytheril 
+ATTR=08010 
+
+ON=@DCLICK 
+SRC.NEWITEM i_jail_timer5
+SRC.ACT.EQUIP=<SRC.UID>
+SRC.SYSMESSAGE You have 10 minutes to stay in jail.
+Return 1
+
+[ITEMDEF i_jail_timer5] 
+ID=i_memory 
+NAME=Jail Timer 
+TYPE=t_eq_script 
+
+On=@EQUIP 
+MORE2=11 //jail time 
+TIMER=1 
+RETURN 1 
+
+ON=@TIMER 
+MORE2=<MORE2>-1
+IF <eval <MORE2>><1 
+CONT.FORGIVE 
+CONT.GO britain 
+REMOVE 
+ELSE 
+CONT.SYSMESSAGE (<eval <MORE2>>/10) minutes left in jail.
+ENDIF 
+TIMER=60
+Return 1
+
+[EOF]

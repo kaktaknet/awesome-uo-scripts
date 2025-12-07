@@ -1,0 +1,133 @@
+//defs.scp compiled by PySphere Release 17 from defs.py.
+//#prefix-local
+//#omit-original-code
+[defnames dam_flags]
+dam_god					00001
+dam_physical			00002
+dam_magic				00004
+dam_poison				00008
+dam_fire				00010
+dam_lightning			00020
+dam_drain				00040
+dam_general				00080
+dam_acidic				00100
+dam_cold				00200
+dam_slash				00400
+[events e_undead]
+on=@EnvironChange
+IF ((<?sector.isdark?>) || (<?flags?>&(<?statf_nightsight?>|<?statf_indoors?>)))
+IF !0<?tag.lightstr?>
+return(0)
+ENDIF
+anim(011)
+bark(4)
+str=0<?tag.lightstr?>
+hits=<?str?>
+tag.lightstr=0
+karma=0<?tag.lightkarma?>
+tag.lightkarma=
+fame=0<?tag.lightfame?>
+tag.lightfame=
+flags=<?flags?>&~<?statf_conjured?>
+return(0)
+ENDIF
+anim(014)
+bark(4)
+IF 0<?tag.lightstr?>
+return(0)
+ENDIF
+IF (<?flags?>&<?statf_conjured?>)
+remove
+return(1)
+ENDIF
+flags=<?flags?>|<?statf_conjured?>
+tag.lightstr=<?str?>
+str=1
+hits=1
+tag.lightkarma=<?karma?>
+karma=-2
+tag.lightfame=<?fame?>
+fame=10
+return(0)
+[itemdef i_hide_dragon_white]
+id=i_hide
+name="White Dragon Hides"
+value=500
+weight=5
+CATEGORY="Items by Professions"
+SUBSECTION="Tanner"
+DESCRIPTION="Dragon Hides White (Pile)"
+on=@create
+color=07a1
+amount=10
+on=@dclick
+say(Your backpack's name is <?findlayer(21).name?>)
+[chardef 0B6]
+defname=c_m_orc_bomber
+name="Orcish Bomber"
+sound=snd_MONSTER_ORC1
+icon=i_pet_orc_lbr
+can=MT_WALK|MT_RUN|MT_USEHANDS|MT_EQUIP
+dam=1,8
+armor=15
+resources=8 i_ribs_raw
+FOODTYPE=15 t_meat_raw
+DESIRES=i_gold,spk_orc
+SHELTER=r_caves,r_dungeon,r_orc_camp
+AVERSIONS=r_civilization
+TSPEECH=spk_orc
+CATEGORY=UO:3D & UO:LBR
+SUBSECTION=Orcs
+DESCRIPTION=Orcish Bomber
+on=@create
+NPC=brain_monster
+STR={147 215}
+DEX={91 115}
+INT={61 85}
+PARRYING={60.0 85.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={75.0 90.0}
+WRESTLING={60.0 85.0}
+SWORDSMANSHIP={60.0 85.0}
+FAME={100 499}
+KARMA={-2000 -2999}
+on=@death
+var.deathact=<?act.uid?>
+newitem(loot_orc_bomber)
+act.bounce
+f_explode(<?p?>)
+act=<?var.deathact?>
+on=@deathcorpse
+say(argo <?argo.uid?>)
+[function f_explode]
+ARG(pos,<?argv[0]?>)
+newitem(i_potion_explosionGreat)
+act.attr=<?attr_invis?>
+act.p=<?ARG(pos)?>
+act.link=<?var.deathact?>
+act.more2=0320
+act.morex=1
+act.timer=1
+[typedef t_MagicWeap_Prefix_Range_Accurate]
+on=@equip
+src.archery=<?src.archery?>+46
+src.TACTICS=<?src.tactics?>+50
+on=@unequip
+src.archery=<?src.archery?>-46
+src.TACTICS=<?src.tactics?>-50
+[typedef t_MagicWeap_Suffix_theFox]
+on=@equip
+src.maxhits=<?src.maxhits?>+3
+on=@unequip
+src.maxhits=<?src.maxhits?>-3
+[function f_MagicWeap_Prefix_Accurate]
+name=Accurate <?name?>
+events(+t_MagicWeap_Prefix_Range_Accurate)
+return(1)
+[function f_MagicWeap_Suffix_theFox]
+name=<?name?> of The Fox
+events(+t_MagicWeap_Suffix_theFox)
+return(1)
+[function f_test_accurate_fox]
+f_MagicWeap_Prefix_Accurate
+f_MagicWeap_Suffix_theFox

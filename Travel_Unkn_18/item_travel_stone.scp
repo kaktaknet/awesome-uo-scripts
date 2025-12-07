@@ -1,0 +1,374 @@
+//****************************
+//scripted by Admin Soulless**
+//****************************
+
+[ITEMDEF i_travel_stone]
+ID=I_GRAVESTONE_17
+NAME=Travel Stone
+DEFNAME=i_travel_stone
+type=t_sign_gump 
+
+ON=@CREATE
+COLOR=0069
+attr=010
+
+on=@dclick
+if <src.findid i_travel_delay>
+src.sysmessage You can not travel again so soon.
+return 1
+else
+SDIALOG d_travel_stone
+return 1
+endif
+
+[ITEMDEF i_travel_book]
+ID=I_spellbook
+NAME=Travel Book
+DEFNAME=i_travel_book
+type=t_spellbook
+
+ON=@CREATE
+COLOR=0069
+attr=010
+
+on=@dclick
+SDIALOG d_travel_stone
+Return 1
+
+//****************************
+//scripted by Admin Soulless**
+//****************************
+
+[DIALOG d_travel_stone]
+100,75
+nomove
+PAGE 1
+resizepic 0 0 3600 550 425
+resizepic 11 11 3000 530 405
+gumppic 10 9 5528
+button 398 22 1209 1210 0 1 
+dtext 419 19 1152 Towns
+button 398 42 1209 1210 0 2
+dtext 421 38 1152 Dungeons
+button 397 62 1209 1210 0 3
+dtext 422 59 1152 Special
+button 118 154 1209 1210 1 0 1
+dtext 100 133 1152 Britain
+button 195 51 1209 1210 1 0 2 
+dtext 181 31 1152 Minoc
+button 222 82 1209 1210 1 0 3
+dtext 205 62 1152 Vesper
+button 44 92 1209 1210 1 0 4
+dtext 32 75 1152 Yew
+button 280 196 1209 1210 1 0 5 
+dtext 253 175 1152 Magincia
+button 279 234 1209 1210 1 0 6 
+dtext 269 216 1152 Occlo 
+button 45 201 1209 1210 1 0 7 
+dtext 20 180 1152 Skara brae
+button 106 350 1209 1210 1 0 8 
+dtext 91 332 1152 Jeholm
+button 228 314 1209 1210 1 0 9 
+dtext 193 295 1152 Serps hold
+button 150 258 1209 1210 1 0 10 
+dtext 132 238 1152 Trinsic
+button 280 122 1209 1210 1 0 11 
+dtext 255 102 1152 Nujel'm
+button 339 112 1209 1210 1 0 12 
+dtext 306 89 1152 Moonglow
+button 173 116 1209 1210 1 0 13
+dtext 162 95 1152 Cove
+button 206 203 1209 1210 1 0 14 
+dtext 176 184 1152 Buccaneer's Den
+button 110 95 1209 1210 1 0 15
+dtext 100 75 1152 Wind
+dtext 100 390 069 <serv.servname> travel system
+PAGE 2
+resizepic 0 0 3600 550 425
+resizepic 11 11 3000 530 405
+gumppic 10 9 5528
+button 398 22 1209 1210 0 1
+dtext 419 19 1152 Towns
+button 398 42 1209 1210 0 2 
+dtext 421 38 1152 Dungeons
+button 397 62 1209 1210 0 3 
+dtext 422 59 1152 Special
+button 108 105 1209 1210 1 0 16 
+dtext 90 84 1152 Despise
+button 157 37 1209 1210 1 0 17 
+dtext 143 21 1152 Wrong
+button 44 152 1209 1210 1 0 18
+dtext 32 133 1152 Shame
+button 355 353 1209 1210 1 0 19
+dtext 342 333 1152 Hytloth
+button 89 246 1209 1210 1 0 20
+dtext 70 225 1152 Destard
+button 228 314 1209 1210 1 0 21 
+dtext 193 295 1152 Fire dungeon
+button 193 92 1209 1210 1 0 22
+dtext 180 71 1152 Covetous
+button 160 14 1209 1210 1 0 23 
+dtext 145 -1 1152 Ice Dungeon
+button 306 50 1209 1210 1 0 24
+dtext 294 33 1152 Deceit
+dtext 100 390 069 <serv.servname> travel system
+PAGE 3
+resizepic 0 0 3600 550 425
+resizepic 11 11 3000 530 405
+gumppic 10 9 5528
+button 398 22 1209 1210 0 1
+dtext 419 19 1152 Towns
+button 398 42 1209 1210 0 2
+dtext 421 38 1152 Dungeons
+button 397 62 1209 1210 0 3 
+dtext 422 59 1152 Special
+button 111 152 1209 1210 1 0 25
+dtext 103 133 1152 Vendor Shop
+button 245 35 1209 1210 1 0 26 
+dtext 231 15 1152 Upper Vesper
+button 144 88 1209 1210 1 0 27
+dtext 105 71 1152 Desert Cove
+button 68 160 1209 1210 1 0 28
+dtext 25 143 1152 Brigand Camp
+button 145 35 1209 1210 1 0 29
+dtext 80 15 1152 Northern Territory
+button 182 76 1209 1210 1 0 30
+dtext 155 58 1152 Great Plains
+button 90 210 1209 1210 1 0 31
+dtext 65 191 1152 Hedge Maze
+button 110 350 1209 1210 1 0 32
+dtext 95 332 1152 Duel Pits
+button 355 337 1209 1210 1 0 33
+dtext 285 317 1152 Daemon Compound
+button 150 255 1209 1210 1 0 34
+dtext 132 235 1152 Market Square
+button 173 125 1209 1210 1 0 35
+dtext 162 106 1152 Orc Fort
+button 150 200 1209 1210 1 0 36
+dtext 124 180 1152 Magus Keep
+button 192 18 1209 1210 1 0 37
+dtext 172 3 1152 Fire Hammer Cove
+button 312 60 1209 1210 1 0 38 
+dtext 300 42 1152 Ice Isle
+dtext 100 390 069 <serv.servname> travel system
+
+[DIALOG d_travel_stone BUTTON]
+
+ONBUTTON=1
+newitem i_travel_delay
+new.morep 1420,1698 //britain 
+new.equip
+
+ONBUTTON=2
+newitem i_travel_delay
+new.morep 3466,544 //Minoc
+new.equip
+
+ONBUTTON=3
+newitem i_travel_delay
+new.morep 2899,676 //Vesper
+new.equip
+
+ONBUTTON=4
+newitem i_travel_delay
+new.morep 546,992 //Yew
+new.equip
+
+ONBUTTON=5
+newitem i_travel_delay
+new.morep 3714,2220,20 //Magincia
+new.equip
+
+ONBUTTON=6
+newitem i_travel_delay
+new.morep 3650,2519 //Occlo
+new.equip
+
+ONBUTTON=7
+newitem i_travel_delay
+new.morep 632,2233 //Skara Brae
+new.equip
+
+ONBUTTON=8
+newitem i_travel_delay
+new.morep 1383,3815 //Jhelom
+new.equip
+
+ONBUTTON=9
+newitem i_travel_delay
+new.morep 3010,3371,15 //serps hold
+new.equip
+
+ONBUTTON=10
+newitem i_travel_delay
+new.morep 1867,2780 //Trinsic
+new.equip
+
+ONBUTTON=11
+newitem i_travel_delay
+new.morep 3732,1279 //Nujel'm
+new.equip
+
+ONBUTTON=12
+newitem i_travel_delay
+new.morep 4442,1172 //moonglow
+new.equip
+
+ONBUTTON=13
+newitem i_travel_delay
+new.morep 2275,1210 //cove
+new.equip
+
+ONBUTTON=14
+newitem i_travel_delay
+new.morep 2706,2163,0 //bucs den
+new.equip
+
+ONBUTTON=15
+newitem i_travel_delay
+new.morep 5214,170,25 //Wind
+new.equip
+
+ONBUTTON=16
+newitem i_travel_delay
+new.morep 1300,1081 //despise
+new.equip
+
+ONBUTTON=17
+newitem i_travel_delay
+new.morep 2044,236,13 //Wrong
+new.equip
+
+ONBUTTON=18
+newitem i_travel_delay
+new.morep 513,1562 //Shame
+new.equip
+
+ONBUTTON=19
+newitem i_travel_delay
+new.morep 4722,3824 //hytloth
+new.equip
+
+ONBUTTON=20
+newitem i_travel_delay
+new.morep 1176,2639 //destard
+new.equip
+
+ONBUTTON=21
+newitem i_travel_delay
+new.morep 2923,3408,9 //fire dungeon
+new.equip
+
+ONBUTTON=22
+newitem i_travel_delay
+new.morep 2499,921 //Covetous
+new.equip
+
+ONBUTTON=23
+newitem i_travel_delay
+new.morep 1999,81,5 //ice dungeon
+new.equip
+
+ONBUTTON=24
+newitem i_travel_delay
+new.morep 4110,434,5 //deceit
+new.equip
+
+ONBUTTON=25
+newitem i_travel_delay
+new.morep 1364,1776,15//Vendor Shop
+new.equip
+
+ONBUTTON=26
+newitem i_travel_delay
+new.morep 3023,217 //Upper Vesper
+new.equip
+
+ONBUTTON=27
+newitem i_travel_delay
+new.morep 1804,852,-1//Desert Cove
+new.equip
+
+ONBUTTON=28
+newitem i_travel_delay
+new.morep 883,1682 //Brigand Camp
+new.equip
+
+ONBUTTON=29
+newitem i_travel_delay
+new.morep 1836,356 //Great Plains
+new.equip
+
+ONBUTTON=30
+newitem i_travel_delay
+new.morep 2163,802 //Northern Territory
+new.equip
+
+ONBUTTON=31
+newitem i_travel_delay
+new.morep 1263,2231 //Hedge Maze
+new.equip
+
+ONBUTTON=32
+newitem i_travel_delay
+new.morep 5470,1163 //Duel Pits
+new.equip
+
+ONBUTTON=33
+newitem i_travel_delay
+new.morep 4597,3628,30 //Daemon Compound
+new.equip
+
+ONBUTTON=34
+newitem i_travel_delay
+new.morep 5694,627 //Market Square
+new.equip
+
+ONBUTTON=35
+newitem i_travel_delay
+new.morep 2186,1294//Orc Fort
+new.equip
+
+ONBUTTON=36
+newitem i_travel_delay
+new.morep 1903,2099 //Magus Keep
+new.equip
+
+ONBUTTON=37
+newitem i_travel_delay
+new.morep 2500,87 //Fire Hammer Cove
+new.equip
+ 
+ONBUTTON=38
+newitem i_travel_delay
+new.morep 4057,618 //ice isle
+new.equip
+
+[itemdef i_travel_delay]
+Name=travel delay
+id=i_memory
+type=t_eq_script
+
+on=@create
+more1=10
+
+on=@equip
+cont.sysmessage You will be sent to your desitnation shortly.
+timer=1 
+
+ON=@Timer 
+if ( <cont> ) 
+if ( <more1> ) 
+cont.message <EVAL(<more1>)>
+more1=<more1>-1 
+timer=1 
+return 1
+else 
+cont.go <morep>
+cont.sysmessage You have arrived in <region.name>
+remove 
+return 1
+endif 
+endif 
+
+[eof]

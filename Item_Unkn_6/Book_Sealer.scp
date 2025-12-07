@@ -1,0 +1,49 @@
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////////** Book Sealer **//////////////////////////
+///////////////////////////Crafted By: Bran Tyrewood///////////////////////
+/////////////////////////°http://sphereworld.6deex.net°//////////////////// 
+/////////////////////////////////////////////////////////////////////////// 
+
+[ITEMDEF i_book_sealer] 
+ID=0fbf 
+NAME=Book Sealer 
+TYPE=t_normal 
+WEIGHT=1.0 
+VALUE=2000 
+
+CATEGORY=Nuovi Items 
+SUBSECTION=Vari 
+DESCRIPTION=Book Sealer 
+
+ON=@Create 
+Color=0480 
+
+ON=@DClick 
+TARGET Select the book to seal. 
+Return 1 
+
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE You cannot do that! 
+Return 1 
+
+ON=@TARGON_ITEM 
+IF !(<src.targ.type>==t_book) 
+SRC.sysmessage You can seal only books! 
+Return 1 
+ENDIF 
+IF (STRCMPI(<SRC.TARG.AUTHOR>,<SRC.NAME>)==0) 
+IF !(<src.targ.more>==1) 
+src.targ.more=1 
+SRC.EMOTE seal the <src.targ.name> 
+Return 1 
+else 
+src.targ.more=0 
+SRC.EMOTE remove the seal 
+Return 1 
+endif 
+else 
+SRC.Sysmessage Only the owner can seal this book! 
+Return 1 
+ENDIF 
+
+[EOF]

@@ -1,0 +1,41 @@
+//elsetest.scp compiled by PySphere Release 17 from elsetest.py.
+//#prefix-local
+//#omit-original-code
+[function f_foo]
+ARG(x,<?argv[0]?>)
+ARG(y,<?argv[1]?>)
+IF <?x?>>0
+IF <?y?>>0
+say(y>0)
+ELSE
+say(y<=0)
+ENDIF
+say(x>0)
+ELSE
+say?> (x<=0)
+ENDIF
+say?> (moo)
+[function f_bar]
+ARG(x,<?argv[0]?>)
+ARG(y,<?argv[1]?>)
+IF <?x?>>0
+say(x>0)
+IF <?y?>>0
+say(y>0)
+ELIF <?y?><0
+say(y<0)
+ELSE
+say(y=0)
+ENDIF
+say(x>0 again)
+ELSE
+say(x<=0)
+IF <?y?>>0
+say(y>0)
+ELIF <?y?><0
+say(y<0)
+ELSE
+say(y=0)
+ENDIF
+say(x<=0 again)
+ENDIF

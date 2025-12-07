@@ -1,0 +1,664 @@
+[PLEVEL 4]
+
+
+jailtime
+
+
+jaillog
+
+
+
+
+
+[DEFNAME jailtime]
+
+
+jailcont04000xxxx
+
+
+
+
+
+[FUNCTION jailtime]
+
+
+SRC.FINDID.i_jailtime.REMOVE
+
+
+SRC.NEWITEM i_jailtime
+
+
+SRC.ACT.CONT <SRC.UID>
+
+
+SRC.ACT.TARGET Target player to jail.
+
+
+
+
+
+[ITEMDEF i_jailtime]
+
+
+ID=i_memory
+
+
+TYPE=t_eq_script
+
+
+NAME=Jail Time
+
+
+
+
+
+ON=@Create
+
+
+ATTR attr_decay
+
+
+TIMER 15
+
+
+
+
+
+ON=@TargOn_Ground
+
+
+TIMER 15
+
+
+TARGET Target player to jail.
+
+
+RETURN 1
+
+
+
+
+
+ON=@TargOn_Item
+
+
+TRIGGER @TargOn_Ground
+
+
+RETURN 1
+
+
+
+
+
+ON=@TargOn_Char
+
+
+IF (<SRC.TARG.NPC>)
+
+
+SRC.TARG.MESSAGE You can only jail players.
+
+
+TRIGGER @TargOn_Ground
+
+
+RETURN 1
+
+
+ELIF (<SRC.TARG.ACCOUNT.JAIL>)
+
+
+SRC.TARG.MESSAGE <SRC.TARG.NAME> is already jailed.
+
+
+TRIGGER @TargOn_Ground
+
+
+RETURN 1
+
+
+ELSE
+
+
+SRC.TARG.DIALOG d_jailtime
+
+
+REMOVE
+
+
+ENDIF
+
+
+RETURN 1
+
+
+
+
+
+[DIALOG d_jailtime]
+
+
+280,125
+
+
+resizepic 0 0 3600 240 350
+
+
+text <EVAL (240 / 2) - ((STRLEN(Jail Log Entry) * 8) / 2)> 15 1152 0
+
+
+
+
+
+text 20 40 1152 1
+
+
+text 130 40 482 2
+
+
+
+
+
+text 20 60 1152 3
+
+
+text 130 60 482 4
+
+
+
+
+
+text 20 80 1152 5
+
+
+
+
+
+text 20 170 1152 6
+
+
+htmlgump 20 195 200 100 7 1 1
+
+
+
+
+
+text 60 100 1152 8
+
+
+text 120 100 482 11
+
+
+text 60 120 1152 9
+
+
+text 120 120 482 12
+
+
+text 60 140 1152 10
+
+
+text 120 140 482 13
+
+
+
+
+
+button 35 100 5411 5411 1 0 1
+
+
+button 35 120 5411 5411 1 0 2
+
+
+button 35 140 5411 5411 1 0 3
+
+
+button 200 170 5411 5411 1 0 4
+
+
+button <EVAL (240 / 2) - 14> 305 4023 4024 1 0 5
+
+
+
+
+
+[DIALOG d_jailtime TEXT]
+
+
+Jail Log Entry
+
+
+Account
+
+
+<ACCOUNT>
+
+
+Player
+
+
+<NAME>
+
+
+Sentence:
+
+
+Reason:
+
+
+<TAG.JAIL.REASON>
+
+
+mins
+
+
+hours
+
+
+days
+
+
+<EVAL <TAG.JAIL.SENTENCE.MINS>>
+
+
+<EVAL <TAG.JAIL.SENTENCE.HOURS>>
+
+
+<EVAL <TAG.JAIL.SENTENCE.DAYS>>
+
+
+
+
+
+[DIALOG d_jailtime BUTTON]
+
+
+ONBUTTON 0
+
+
+TAG.JAIL.REASON
+
+
+TAG.JAIL.SENTENCE.MINS
+
+
+TAG.JAIL.SENTENCE.HOURS
+
+
+TAG.JAIL.SENTENCE.DAYS
+
+
+ONBUTTON 1
+
+
+INPDLG TAG.JAIL.SENTENCE.MINS 2
+
+
+ONBUTTON 2
+
+
+INPDLG TAG.JAIL.SENTENCE.HOURS 2
+
+
+ONBUTTON 3
+
+
+INPDLG TAG.JAIL.SENTENCE.DAYS 3
+
+
+ONBUTTON 4
+
+
+INPDLG TAG.JAIL.REASON 255
+
+
+ONBUTTON 5
+
+
+SRC.NEWITEM i_jail
+
+
+VAR.JAIL <SRC.ACT.UID>
+
+
+SRC.ACT.TAG.ACCOUNT <ACCOUNT>
+
+
+SRC.ACT.TAG.PLAYER <NAME>
+
+
+SRC.ACT.TAG.REASON <TAG.JAIL.REASON>
+
+
+SRC.ACT.TAG.SENTENCE.MINS <TAG.JAIL.SENTENCE.MINS>
+
+
+SRC.ACT.TAG.SENTENCE.HOURS <TAG.JAIL.SENTENCE.HOURS>
+
+
+SRC.ACT.TAG.SENTENCE.DAYS <TAG.JAIL.SENTENCE.DAYS>
+
+
+
+
+
+
+
+SRC.ACT.TAG.SENTENCE <EVAL (0<TAG.JAIL.SENTENCE.MINS> * 60) + (0<TAG.JAIL.SENTENCE.HOURS> * 60 * 60) + (0<TAG.JAIL.SENTENCE.DAYS> * 24 * 60 * 60)>
+
+
+
+
+
+
+SRC.ACT.CONT <VAR.jailcont>
+
+
+
+
+
+SRC.NEWITEM i_jail_countdown
+
+
+SRC.ACT.MOREP <P>
+
+
+SRC.ACT.LINK <VAR.JAIL>
+
+
+SRC.ACT.LINK.LINK <SRC.ACT.UID>
+
+
+
+
+SRC.ACT.TIMER <EVAL (0<TAG.JAIL.SENTENCE.MINS> * 60) + (0<TAG.JAIL.SENTENCE.HOURS> * 60 * 60) +
+
+
+
+
+
+
+(0<TAG.JAIL.SENTENCE.DAYS> * 24 * 60 * 60)>
+
+
+
+
+
+SRC.ACT.CONT <UID>
+
+
+
+
+
+TAG.JAIL.REASON
+
+
+TAG.JAIL.SENTENCE.MINS
+
+
+TAG.JAIL.SENTENCE.HOURS
+
+
+TAG.JAIL.SENTENCE.DAYS
+
+
+
+
+
+JAIL
+
+
+
+
+
+[ITEMDEF i_jail]
+
+
+ID=i_memory
+
+
+TYPE=t_script
+
+
+NAME=Jail
+
+
+
+
+
+ON=@Click
+
+
+MESSAGE <LINK.CONT.NAME>
+
+
+RETURN 1
+
+
+
+
+
+[ITEMDEF i_jail_countdown]
+
+
+ID=i_memory
+
+
+TYPE=t_eq_script
+
+
+NAME=Jail Countdown
+
+
+
+
+
+ON=@Create
+
+
+ATTR attr_decay
+
+
+TIMER 1
+
+
+
+
+
+ON=@Timer
+
+
+CONT.FORGIVE
+
+
+CONT.GO <MOREP>
+
+
+LINK.REMOVE
+
+
+
+
+
+[FUNCTION jaillog]
+
+
+SRC.TAG.JAILED 0
+
+
+SRC.ACT <VAR.jailcont>
+
+
+IF (<SRC.ACT.RESCOUNT>)
+
+
+SRC.ACT.DIALOG d_jaillog
+
+
+ENDIF
+
+
+
+
+
+[DIALOG d_jaillog]
+
+
+0,0
+
+
+resizepic 0 0 3600 340 300
+
+
+text <EVAL (340 / 2) - ((STRLEN(Jail Log) * 8) / 2)> 15 1152 0
+
+
+
+
+
+text 20 40 1152 1
+
+
+text 130 40 482 2
+
+
+
+
+
+text 20 60 1152 3
+
+
+text 130 60 482 4
+
+
+
+
+
+text 20 80 1152 5
+
+
+text 130 80 482 6
+
+
+
+
+
+text 20 100 1152 7
+
+
+text 130 100 482 8
+
+
+
+
+
+text 20 120 1152 9
+
+
+htmlgump 20 145 300 100 10 1 1
+
+
+
+
+
+button 25 255 4014 4016 1 0 1
+
+
+button 156 255 4008 4010 1 0 2
+
+
+button 286 255 4005 4007 1 0 3
+
+
+
+
+
+[DIALOG d_jaillog TEXT]
+
+
+Jail Log
+
+
+Account
+
+
+<FINDCONT.<SRC.TAG.JAILED>.TAG.ACCOUNT>
+
+
+Player
+
+
+<FINDCONT.<SRC.TAG.JAILED>.TAG.PLAYER>
+
+
+Jailed For <EVAL ((<FINDCONT.<SRC.TAG.JAILED>.TAG.SENTENCE> / 60) / 60) / 24> days, <EVAL ((<FINDCONT.<SRC.TAG.JAILED>.TAG.SENTENCE> - (<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.TAG.SENTENCE> / 60) / 60) / 24> * 60 * 60 * 24)) / 60) / 60> hours, <EVAL ((<FINDCONT.<SRC.TAG.JAILED>.TAG.SENTENCE> - (<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.TAG.SENTENCE> / 60) / 60) / 24> * 60 * 60 * 24)) - (<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.TAG.SENTENCE> - (<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.TAG.SENTENCE> / 60) / 60) / 24> * 60 * 60 * 24)) / 60) / 60> * 60 * 60)) / 60> mins
+Time Left
+<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.LINK.TIMER> / 60) / 60) / 24> days, <EVAL ((<FINDCONT.<SRC.TAG.JAILED>.LINK.TIMER> - (<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.LINK.TIMER> / 60) / 60) / 24> * 60 * 60 * 24)) / 60) / 60> hours, <EVAL ((<FINDCONT.<SRC.TAG.JAILED>.LINK.TIMER> - (<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.LINK.TIMER> / 60) / 60) / 24> * 60 * 60 * 24)) - (<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.LINK.TIMER> - (<EVAL ((<FINDCONT.<SRC.TAG.JAILED>.LINK.TIMER> / 60) / 60) / 24> * 60 * 60 * 24)) / 60) / 60> * 60 * 60)) / 60> mins
+Reason:
+
+
+<FINDCONT.<SRC.TAG.JAILED>.TAG.REASON>
+
+
+
+
+
+[DIALOG d_jaillog BUTTON]
+
+
+ONBUTTON 1
+
+
+IF (<EVAL 0<SRC.TAG.JAILED> - 1> >= 0)
+
+
+SRC.TAG.JAILED <EVAL 0<SRC.TAG.JAILED> - 1>
+
+
+DIALOG d_jaillog
+
+
+ELSE
+
+
+SRC.jaillog
+
+
+ENDIF
+
+
+ONBUTTON 2
+
+
+TRYP 0 FINDCONT.<SRC.TAG.JAILED>.LINK.CONT.FORGIVE
+
+
+TRYP 0 FINDCONT.<SRC.TAG.JAILED>.LINK.CONT.GO <FINDCONT.<SRC.TAG.JAILED>.LINK.MOREP>
+
+
+TRYP 0 FINDCONT.<SRC.TAG.JAILED>.LINK.REMOVE
+
+
+TRYP 0 FINDCONT.<SRC.TAG.JAILED>.REMOVE
+
+
+ONBUTTON 3
+
+
+IF (<FINDCONT.<EVAL 0<SRC.TAG.JAILED> + 1>.UID>)
+
+
+SRC.TAG.JAILED <EVAL 0<SRC.TAG.JAILED> + 1>
+
+
+DIALOG d_jaillog
+
+
+ELSE
+
+
+SRC.jaillog
+
+
+ENDIF

@@ -1,0 +1,42 @@
+/////razor\\\\
+[itemdef i_razor]
+id=i_knife_skinning
+name=razor blade
+category=Nightwing
+subsection=items
+description=razor
+
+ON=@CREATE
+color=00
+
+ON=@click
+
+ON=@DCLICK
+IF (<src.restest 1 01008>) //a wash basin
+src.consume i_hair_SHORT
+src.consume i_hair_LONG
+src.consume i_hair_PONYTAIL
+src.consume i_hair_MOHAWK
+src.consume i_hair_PAGEBOY
+src.consume i_hair_BUNS
+src.consume i_hair_AFRO
+src.consume i_hair_RECEDING
+src.consume i_hair_2_PIGTAILS
+src.consume i_hair_KRISNA
+src.consume i_hair_NONE
+src.consume i_beard_SHORT_MED
+src.consume i_beard_LONG_MED
+src.consume i_beard_VANDYKE
+src.consume i_beard_LONG
+src.consume i_beard_SHORT
+src.consume i_beard_GOATEE
+src.consume i_beard_MUSTACHE
+src.consume i_beard_NONE
+//src.remove RANDOM_FACIAL_HAIR 
+//src.remove RANDOM_MALE_HAIR   
+//src.remove RANDOM_FEMALE_HAIR 
+remove
+ELSE
+src.sysmessage you must have a wash basin in your bag to be able to trim your hair, <src.name>
+return 1
+ENDIF

@@ -1,0 +1,518 @@
+// This script has been made by -Ax- and belongs to sphere.
+// Those spell are equipped with the Probe detection. So the players will not be able to BugAbuse with them.
+// Have fun, If you have ANY question. Private Message me on sphere. (UserName: alphanatix)
+
+[ITEMDEF i_fx_tunnel] 
+ID=i_fx_heal_effect 
+NAME=Energy Movement 
+ON=@CREATE 
+TIMER=2 
+ON=@TIMER 
+REMOVE 
+Return 0 
+
+
+[ITEMDEF i_gold2] 
+ID=i_gold 
+ON=@CREATE 
+COLOR=0482 
+TIMER=1 
+ON=@TIMER 
+REMOVE 
+Return 1 
+
+//-------------------------------------- 
+
+[ITEMDEF i_scroll_light] 
+ID=i_scroll_night_sight 
+NAME=Scroll of Light Tunnel 
+TYPE=t_scroll 
+
+ON=@DCLICK 
+IF (<SRC.MAGERY>>49.9) 
+TargetG 
+Return 0 
+ELSE 
+SRC.SYSMESSAGE You are'nt good enough to cast this spell. 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_GROUND 
+src.newitem i_gold2 
+src.act.p=<src.targp> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target. 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+Return 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-20 -30} 
+SRC.SAY Uus Ort Tyn In Lor 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_light 
+SRC.ACT.P <SRC.TARGP> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARGP> 
+ENDIF 
+
+
+ON=@TARGON_CHAR 
+src.newitem i_gold2 
+src.act.p=<src.targ.p> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-20 -30} 
+SRC.SAY Uus Ort Tyn In Lor 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_light 
+SRC.ACT.P <SRC.TARG.P> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARG.P> 
+ENDIF 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You cannot cast this spell on an item. 
+Return 1 
+
+[ITEMDEF i_scroll_rez] 
+ID=i_scroll_resurrection 
+NAME=Scroll of Resurrection Tunnel 
+TYPE=t_scroll 
+
+ON=@DCLICK 
+IF (<SRC.MAGERY>>94.9) 
+IF !(<src.findlayer.21>) 
+src.sysmessage You need to wear the scroll to use it. 
+Return 1 
+Endif 
+TargetG 
+Return 0 
+ELSE 
+SRC.SYSMESSAGE You are'nt good enough to cast this spell. 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_GROUND 
+src.newitem i_gold2 
+src.act.p=<src.targp> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-80 -100} 
+SRC.SAY Uus Ort Tyn An Corp 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_rez 
+SRC.ACT.P <SRC.TARGP> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARGP> 
+ENDIF 
+
+ON=@TARGON_CHAR 
+src.newitem i_gold2 
+src.act.p=<src.targ.p> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target. 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-80 -1000} 
+SRC.SAY Uus Ort Tyn An Corp 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_rez 
+SRC.ACT.P <SRC.TARG.P> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARG.P> 
+ENDIF 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You cannot cast this spell on an item. 
+Return 1 
+
+[ITEMDEF i_scroll_healing] 
+ID=i_scroll_heal 
+NAME=Scroll of Healing Tunnel 
+TYPE=t_scroll 
+
+ON=@DCLICK 
+IF (<SRC.MAGERY>>79.9) 
+IF !(<src.findlayer.21>) 
+src.sysmessage You must wear the scroll to be able to use it. 
+Return 1 
+Endif 
+TargetG 
+Return 0 
+ELSE 
+SRC.SYSMESSAGE You are'nt good enough to cast this spell. 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_GROUND 
+src.newitem i_gold2 
+src.act.p=<src.targp> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-65 -75} 
+SRC.SAY Uus Ort Tyn In Mani 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_heal 
+SRC.ACT.P <SRC.TARGP> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARGP> 
+ENDIF 
+
+ON=@TARGON_CHAR 
+src.newitem i_gold2 
+src.act.p=<src.targ.p> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target. 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-65 -75} 
+SRC.SAY Uus Ort Tyn In Mani 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_heal 
+SRC.ACT.P <SRC.TARG.P> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARG.P> 
+ENDIF 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You can't cast this spell on an item. 
+Return 1 
+
+[ITEMDEF i_scroll_mana] 
+ID=i_scroll_polymorph 
+NAME=Scroll of Mana Tunnel 
+TYPE=t_scroll 
+
+ON=@DCLICK 
+IF (<SRC.MAGERY>>89.9) 
+IF !(<src.findlayer.21>) 
+src.sysmessage You must wear the scroll to use it. 
+Return 1 
+Endif 
+TargetG 
+Return 0 
+ELSE 
+SRC.SYSMESSAGE You are'nt good enough to cast this spell. 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_GROUND 
+src.newitem i_gold2 
+src.act.p=<src.targp> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target. 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-75 -80} 
+SRC.SAY Uus Ort Tyn Hur Wis 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_mana 
+SRC.ACT.P <SRC.TARGP> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARGP> 
+ENDIF 
+
+ON=@TARGON_CHAR 
+src.newitem i_gold2 
+src.act.p=<src.targ.p> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target. 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-75 -80} 
+SRC.SAY Uus Ort Tyn Hur Wis 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_mana 
+SRC.ACT.P <SRC.TARG.P> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARG.P> 
+ENDIF 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You cannot cast this spell on an item. 
+Return 1 
+
+[ITEMDEF i_scroll_protect] 
+ID=i_scroll_protection 
+NAME=Scroll of Protection Tunnel 
+TYPE=t_scroll 
+
+ON=@DCLICK 
+IF (<SRC.MAGERY>>69.9) 
+IF !(<src.findlayer.21>) 
+src.sysmessage You must wear the scroll to use it. 
+Return 1 
+Endif 
+TargetG 
+Return 0 
+ELSE 
+SRC.SYSMESSAGE You are'nt good enough to cast this spell. 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_GROUND 
+src.newitem i_gold2 
+src.act.p=<src.targp> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target. 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-40 -50} 
+SRC.SAY Uus Ort Tyn In Sanct 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_protect 
+SRC.ACT.P <SRC.TARGP> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARGP> 
+ENDIF 
+
+ON=@TARGON_CHAR 
+src.newitem i_gold2 
+src.act.p=<src.targ.p> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target. 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-40 -50} 
+SRC.SAY Uus Ort Tyn In Sanct 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_protect 
+SRC.ACT.P <SRC.TARG.P> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARG.P> 
+ENDIF 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You cannot cast this spell on an item. 
+Return 1 
+
+[ITEMDEF i_scroll_antidote] 
+ID=i_scroll_cure 
+NAME=Scroll of Cure Tunnel 
+TYPE=t_scroll 
+
+ON=@DCLICK 
+IF (<SRC.MAGERY>>59.9) 
+IF !(<src.findlayer.21>) 
+src.sysmessage You must wear the scroll to use it. 
+Return 1 
+Endif 
+TargetG 
+Return 0 
+ELSE 
+SRC.SYSMESSAGE You are'nt good enough to cast this spell. 
+RETURN 1 
+ENDIF 
+
+ON=@TARGON_GROUND 
+src.newitem i_gold2 
+src.act.p=<src.targp> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You don't have enough mana to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-30 -40} 
+SRC.SAY Uus Ort Tyn An Nox 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_cure 
+SRC.ACT.P <SRC.TARGP> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARGP> 
+ENDIF 
+
+ON=@TARGON_CHAR 
+src.newitem i_gold2 
+src.act.p=<src.targ.p> 
+if !(<src.act.canseelos>) 
+src.sysmessage You can't see the target 
+src.act.remove 
+return 1 
+elseif (<SRC.MANA> < 30) 
+SRC.SYSMESSAGE You are'nt good enough to cast this spell. 
+src.act.remove 
+RETURN 1 
+ELSE 
+Remove 
+SRC.MANA=<SRC.MANA> + {-30 -40} 
+SRC.SAY Uus Ort Tyn An Nox 
+SRC.ANIM 17 
+SRC.NEWITEM i_tunnel_cure 
+SRC.ACT.P <SRC.TARG.P> 
+SRC.SOUND 0214 
+SRC.NEWITEM i_fx_tunnel 
+SRC.ACT.P <SRC.TARG.P> 
+ENDIF 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE You cannot cast this spell on an item. 
+Return 1 
+
+//------------------------------------------- 
+
+[ITEMDEF i_tunnel_light] 
+ID=i_moongate_red 
+NAME=Light Tunnel 
+ON=@CREATE 
+TIMER=30 
+COLOR=0482 
+ON=@TIMER 
+REMOVE 
+RETURN 1 
+ON=@STEP 
+SRC.SPELLEFFECT 6,1000 
+SRC.SOUND 01e0 
+Return 0 
+
+[ITEMDEF i_tunnel_rez] 
+ID=i_moongate_red 
+NAME=Resurrection Tunnel 
+ON=@CREATE 
+TIMER=30 
+COLOR=0482 
+ON=@TIMER 
+REMOVE 
+RETURN 1 
+ON=@STEP 
+SRC.SPELLEFFECT 59,1000 
+SRC.SOUND 01e0 
+Return 0 
+
+[ITEMDEF i_tunnel_heal] 
+ID=i_moongate_red 
+NAME=Heal tunnel 
+ON=@CREATE 
+TIMER=30 
+COLOR=0482 
+ON=@TIMER 
+REMOVE 
+RETURN 1 
+ON=@STEP 
+SRC.SPELLEFFECT 29,1000 
+SRC.SOUND 01e0 
+Return 0 
+
+[ITEMDEF i_tunnel_mana] 
+ID=i_moongate_red 
+NAME=Mana Tunnel 
+ON=@CREATE 
+TIMER=30 
+COLOR=0482 
+ON=@TIMER 
+REMOVE 
+RETURN 1 
+ON=@STEP 
+src.mana = <src.int> 
+SRC.SOUND 01e0 
+RETURN 0 
+
+[ITEMDEF i_tunnel_protect] 
+ID=i_moongate_red 
+NAME=Protection Tunnel 
+ON=@CREATE 
+TIMER=30 
+COLOR=0482 
+ON=@TIMER 
+REMOVE 
+RETURN 1 
+ON=@STEP 
+SRC.SPELLEFFECT 15,1000 
+SRC.SOUND 01e0 
+Return 0 
+
+[ITEMDEF i_tunnel_cure] 
+ID=i_moongate_red 
+NAME=Cure Tunnel 
+ON=@CREATE 
+TIMER=30 
+COLOR=0482 
+ON=@TIMER 
+REMOVE 
+RETURN 1 
+ON=@STEP 
+SRC.SPELLEFFECT 11,1000 
+SRC.SOUND 01e0 
+Return 0 
+
+
+[EOF]

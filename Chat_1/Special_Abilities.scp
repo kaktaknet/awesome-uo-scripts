@@ -1,0 +1,903 @@
+// ############################################################ 
+// RW's Special Abilities: Sphere-based UO Emu Servers 
+// Designed By: Dubious Advocate and DigiAnimus
+// You are free to use this, repost it, chop it up, spindle, 
+// and mutilate to your heart's content. If you use it without 
+// any change then don't claim it as your own. If you do try 
+// to claim full credit for this script then the boogey man will 
+// get you. Or eventually you'll grow up and feel really silly 
+// about what a dumb kid you used to be. I expect I will sleep 
+// well at night no matter what. 
+// 
+// ------------------------------------------------------------ 
+// Installing this script - 
+// Installing it is the easy part. Just copy it into your 
+// scripts directory. 
+// ------------------------------------------------------------ 
+// Developer Notes - 
+// Functions are listed first, then the events that call them 
+// You will see where the messages are currently displayed over 
+// the characters, and where there is code commented out to just 
+// display the messages to the characters involved. Most shards 
+// will want to switch the comments. 
+// 
+// FILE LAST UPDATED: August 5, 2001 
+// 
+Version=0.54 
+
+// ######################################################## 
+// Special Ability Events 
+// e_Beserk_Lunge 
+// e_Blood_Feeder 
+// e_Charm_Wolf 
+// e_Corrupted_Creature 
+// e_Disdained_Weapon 
+// e_Dumb_Luck 
+// e_Glowbug 
+// e_LifeBite 
+// e_LifeClaw 
+// e_Night_Vision 
+// e_Polymorph_Self 
+// e_Superior_Concentration 
+// e_Superior_Dodge 
+// e_Unnatural_Constitution 
+// 
+// ######################################################## 
+VERSION=0.55 
+
+
+// ######################################################## 
+// These events are associated with items that are considered 
+// to be "unique" to a race. I took the approach that "unique" 
+// just means when an elf uses an elf item they get a bonus. 
+// Otherwise as with the AD&D 3E philosophy anyway can pick it 
+// up and use it in its "normal" form. 
+
+[FUNCTION f_EnforceRacialEquip] 
+IF <SRC.TAG.RACE> == <eval(Race_<args>)> 
+ATTR=<ATTR>|attr_magic 
+MOREY=40.0 
+ENDIF 
+[FUNCTION f_EnforceRacialUnequip] 
+IF <SRC.TAG.RACE> == <eval(Race_<args>)> 
+ATTR=<ATTR>&~attr_magic 
+MOREY=0.0 
+ENDIF 
+
+
+// ######################################################## 
+[FUNCTION f_BeserkLunge] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF ( <eval(RAND(10))> != 3) 
+RETURN 0 
+ENDIF 
+IF (<SRC.DISTANCE> < 3) 
+IF <eval RAND(100)>==3 
+VAR.X=<eval(rand(16))> 
+IF <eval(<var.x>)> < 8 
+VAR.X=8 
+ENDIF 
+VAR.Z=critically 
+ELSE 
+VAR.X=<eval(rand(9))> 
+IF <eval(<var.x>)> < 1 
+VAR.X=1 
+ENDIF 
+VAR.Z=successfully 
+ENDIF 
+IF <SRC.HITS> > (<VAR.X> * 2) 
+SRC.HITS=<SRC.HITS>+ -<VAR.X> 
+ENDIF 
+SAY <NAME>'s beserken attack <VAR.Z> wounded <SRC.NAME> for an additional <eval(<VAR.X>)>! 
+// SRC.SYSMESSAGE <NAME>'s beserken attack <VAR.Z> wounded you for <eval(VAR.X)>! 
+// SYSMESSAGE Your beserken attack <VAR.Z> wounded <SRC.NAME> for <eval(VAR.X)>! 
+ENDIF 
+
+
+// ######################################################## 
+[FUNCTION f_BloodFeeder_Eat] 
+IF <ACT.TYPE> != t_blood 
+RETURN 0 
+ENDIF 
+IF <ACT.COLOR> >= 1401 && 1447 >= <ACT.COLOR> // green_colors 
+ACT.REMOVE 
+MESSAGE You eat the undead blood but it does nothing for you 
+RETURN 1 
+ENDIF 
+IF <FOOD> > 30 
+MESSAGE You are too full 
+RETURN 1 
+ENDIF 
+ACT.REMOVE 
+MESSAGE You abate your hunger 
+FOOD=<FOOD>+<ACT.AMOUNT> 
+IF (<STAMINA>+3) < <DEX> 
+STAMINA=<STAMINA>+3 
+ENDIF 
+RETURN 1 
+
+[FUNCTION f_BloodFeeder_SpellEffect] 
+IF ( <argn> == ID(s_heal) ) || ( <argn> == ID(s_greater_heal) ) 
+IF <FOOD> > 2 
+FOOD=<FOOD>+-2 
+ENDIF 
+SAY <NAME> feels a greater thirst for blood. 
+// MESSAGE You feel a greater thirst for blood. 
+RETURN 1 
+ENDIF 
+
+
+// ######################################################## 
+[FUNCTION f_CharmWolf] 
+RETURN 0 
+
+
+// ######################################################## 
+[FUNCTION f_CorruptedCreature] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF ((<SRC.FINDLAYER(layer_hand1).ATTR>&attr_blessed)==attr_blessed) || ((<SRC.FINDLAYER(layer_hand2).ATTR>&attr_blessed)==attr_blessed) 
+HITS=<eval(<HITS>)> + -<eval(<ARGN>-<AC>)/3)> 
+IF (<eval(RAND(10))>==3) 
+EFFECT=3,i_fx_curse,6,15,1 
+SOUND=snd_SPELL_POISON 
+ENDIF 
+SAY <SRC.NAME>'s blessed item sears <NAME>'s flesh 
+// SRC.SYSMESSAGE Your blessed item sears <NAME>'s flesh 
+// SYSMESSAGE <SRC.NAME>'s blessed item sears your flesh 
+ENDIF 
+
+
+// ######################################################## 
+[FUNCTION f_DisdainedWeapon_Unequip] 
+IF <SRC.TAG.RACE>== RACE_Elf 
+// Elves hate Axes 
+IF (<ACT.TYPE>==t_weapon_axe) || (<ACT.TYPE>==t_weapon_mace_sharp) 
+IF <SRC.TAG.DISDAINED_MACEFIGHTING> 
+SRC.MACEFIGHTING= <SRC.TAG.DISDAINED_MACEFIGHTING> 
+SRC.TAG.DISDAINED_MACEFIGHTING= 0 
+ENDIF 
+IF <SRC.TAG.DISDAINED_SWORDSMANSHIP> 
+SRC.SWORDSMANSHIP= <SRC.TAG.DISDAINED_SWORDSMANSHIP> 
+SRC.TAG.DISDAINED_SWORDSMANSHIP= 0 
+ENDIF 
+MESSAGE You feel relief at dropping such a weapon 
+ENDIF 
+ELSEIF <SRC.TAG.RACE>== RACE_Drow 
+// Drow hate Polearms 
+IF (<ACT.BASEID>==i_spear) || (<ACT.BASEID>==i_halberd) || (<ACT.BASEID>==i_bardiche) || (<ACT.BASEID>==i_pitchfork) || (<ACT.BASEID>==i_staff_quarter) || (<ACT.BASEID>==i_staff_gnarled) || (<ACT.BASEID>==i_staff_black) || (<ACT.BASEID>==i_shepherds_crook) 
+IF <SRC.TAG.DISDAINED_FENCING> 
+SRC.FENCING= <SRC.TAG.DISDAINED_FENCING> 
+SRC.TAG.DISDAINED_FENCING= 0 
+ENDIF 
+IF <SRC.TAG.DISDAINED_SWORDSMANSHIP> 
+SRC.SWORDSMANSHIP= <SRC.TAG.DISDAINED_SWORDSMANSHIP> 
+SRC.TAG.DISDAINED_SWORDSMANSHIP= 0 
+ENDIF 
+IF <SRC.TAG.DISDAINED_MACEFIGHTING> 
+SRC.MACEFIGHTING= <SRC.TAG.DISDAINED_MACEFIGHTING> 
+SRC.TAG.DISDAINED_MACEFIGHTING= 0 
+ENDIF 
+MESSAGE You feel relief at dropping such a weapon 
+ENDIF 
+ELSEIF <SRC.TAG.RACE>== RACE_HalfOrc 
+// Halforcs hate 1-Handers 
+IF (! <ACT.TWOHANDS>) && (<ACT.TYPE>==t_weapon_sword) || (<ACT.TYPE>==t_weapon_axe) || (<ACT.TYPE>==t_weapon_fence) || (<ACT.TYPE>==t_weapon_mace_crook) || (<ACT.TYPE>==t_weapon_mace_pick) || (<ACT.TYPE>==t_weapon_mace_smith) || (<ACT.TYPE>==t_weapon_mace_sharp) || (<ACT.TYPE>==t_weapon_mace_staff) 
+IF <SRC.TAG.DISDAINED_SWORDSMANSHIP> 
+SRC.SWORDSMANSHIP=<SRC.TAG.DISDAINED_SWORDSMANSHIP> 
+SRC.TAG.DISDAINED_SWORDSMANSHIP= 0 
+ENDIF 
+IF <SRC.TAG.DISDAINED_FENCING> 
+SRC.FENCING=<SRC.TAG.DISDAINED_FENCING> 
+SRC.TAG.DISDAINED_FENCING= 0 
+ENDIF 
+IF <SRC.TAG.DISDAINED_MACEFIGHTING> 
+SRC.MACEFIGHTING=<SRC.TAG.DISDAINED_MACEFIGHTING> 
+SRC.TAG.DISDAINED_MACEFIGHTING= 0 
+ENDIF 
+MESSAGE You feel relief at dropping such a weapon 
+ENDIF 
+ELSEIF <SRC.TAG.RACE>== RACE_Vampire 
+// Vampires hate 2-Handers 
+IF (<ACT.TWOHANDS>) && ((<ACT.TYPE> != t_weapon_bow) && (<ACT.TYPE> != t_weapon_xbow) && (<ACT.TYPE> != t_shield)) 
+IF <SRC.TAG.DISDAINED_SWORDSMANSHIP> 
+SRC.SWORDSMANSHIP=<SRC.TAG.DISDAINED_SWORDSMANSHIP> 
+SRC.TAG.DISDAINED_SWORDSMANSHIP= 0 
+ENDIF 
+IF <SRC.TAG.DISDAINED_FENCING> 
+SRC.FENCING=<SRC.TAG.DISDAINED_FENCING> 
+SRC.TAG.DISDAINED_FENCING= 0 
+ENDIF 
+IF <SRC.TAG.DISDAINED_MACEFIGHTING> 
+SRC.MACEFIGHTING=<SRC.TAG.DISDAINED_MACEFIGHTING> 
+SRC.TAG.DISDAINED_MACEFIGHTING= 0 
+ENDIF 
+MESSAGE You feel relief at dropping such a weapon 
+ENDIF 
+ENDIF 
+
+[FUNCTION f_DisdainedWeapon_Equip] 
+IF <SRC.TAG.RACE>== RACE_Elf 
+// Elves hate Axes 
+IF (<ACT.TYPE>==t_weapon_axe) || (<ACT.TYPE>==t_weapon_mace_sharp) 
+IF (! <SRC.TAG.DISDAINED_SWORDSMANSHIP>) 
+SRC.TAG.DISDAINED_SWORDSMANSHIP=<SRC.SWORDSMANSHIP> 
+SRC.SWORDSMANSHIP=<SRC.TAG.DISDAINED_SWORDSMANSHIP> / 2 
+ENDIF 
+IF (! <SRC.TAG.DISDAINED_MACEFIGHTING>) 
+SRC.TAG.DISDAINED_MACEFIGHTING=<SRC.MACEFIGHTING> 
+SRC.MACEFIGHTING=<SRC.TAG.DISDAINED_MACEFIGHTING> / 2 
+ENDIF 
+MESSAGE You disdain this distasteful weapon 
+ENDIF 
+ELSEIF <SRC.TAG.RACE>== RACE_Drow 
+// Drow hate Polearms 
+IF (<ACT.BASEID>==i_spear) || (<ACT.BASEID>==i_halberd) || (<ACT.BASEID>==i_bardiche) || (<ACT.BASEID>==i_pitchfork) || (<ACT.BASEID>==i_staff_quarter) || (<ACT.BASEID>==i_staff_gnarled) || (<ACT.BASEID>==i_staff_black) || (<ACT.BASEID>==i_shepherds_crook) 
+IF (! <SRC.TAG.DISDAINED_SWORDSMANSHIP>) 
+SRC.TAG.DISDAINED_SWORDSMANSHIP= <SRC.SWORDSMANSHIP> 
+SRC.SWORDSMANSHIP=<SRC.TAG.DISDAINED_SWORDSMANSHIP> / 2 
+ENDIF 
+IF (! <SRC.TAG.DISDAINED_FENCING>) 
+SRC.TAG.DISDAINED_FENCING= <SRC.FENCING> 
+SRC.FENCING=<SRC.TAG.DISDAINED_FENCING> / 2 
+ENDIF 
+IF (! <SRC.TAG.DISDAINED_MACEFIGHTING>) 
+SRC.TAG.DISDAINED_MACEFIGHTING= <SRC.MACEFIGHTING> 
+SRC.MACEFIGHTING=<SRC.TAG.DISDAINED_MACEFIGHTING> / 2 
+ENDIF 
+MESSAGE You disdain this distasteful weapon 
+ENDIF 
+ELSEIF <SRC.TAG.RACE>== RACE_HalfOrc 
+// Halforcs hate 1-Handers 
+IF (! <ACT.TWOHANDS>) && (<ACT.TYPE>==t_weapon_sword) || (<ACT.TYPE>==t_weapon_axe) || (<ACT.TYPE>==t_weapon_fence) || (<ACT.TYPE>==t_weapon_mace_crook) || (<ACT.TYPE>==t_weapon_mace_pick) || (<ACT.TYPE>==t_weapon_mace_smith) || (<ACT.TYPE>==t_weapon_mace_sharp) || (<ACT.TYPE>==t_weapon_mace_staff) 
+IF (! <SRC.TAG.DISDAINED_SWORDSMANSHIP>) 
+SRC.TAG.DISDAINED_SWORDSMANSHIP= <SRC.SWORDSMANSHIP> 
+SRC.SWORDSMANSHIP=<SRC.TAG.DISDAINED_SWORDSMANSHIP> / 2 
+ENDIF 
+IF (! <SRC.TAG.DISDAINED_FENCING>) 
+SRC.TAG.DISDAINED_FENCING= <SRC.FENCING> 
+SRC.FENCING=<SRC.TAG.DISDAINED_FENCING> / 2 
+ENDIF 
+IF (! <SRC.TAG.DISDAINED_MACEFIGHTING>) 
+SRC.TAG.DISDAINED_MACEFIGHTING= <SRC.MACEFIGHTING> 
+SRC.MACEFIGHTING=<SRC.TAG.DISDAINED_MACEFIGHTING> / 2 
+ENDIF 
+MESSAGE You disdain this distasteful weapon 
+ENDIF 
+ELSEIF <SRC.TAG.RACE>== RACE_Vampire 
+// Vampires hate 2-Handers 
+IF (<ACT.TWOHANDS>) && ((<ACT.TYPE> != t_weapon_bow) && (<ACT.TYPE> != t_weapon_xbow) && (<ACT.TYPE> != t_shield)) 
+IF (! <SRC.TAG.DISDAINED_SWORDSMANSHIP>) 
+SRC.TAG.DISDAINED_SWORDSMANSHIP= <SRC.SWORDSMANSHIP> 
+SRC.SWORDSMANSHIP=<SRC.TAG.DISDAINED_SWORDSMANSHIP> / 2 
+ENDIF 
+IF (! <SRC.TAG.DISDAINED_FENCING>) 
+SRC.TAG.DISDAINED_FENCING= <SRC.FENCING> 
+SRC.FENCING=<SRC.TAG.DISDAINED_FENCING> / 2 
+ENDIF 
+IF (! <SRC.TAG.DISDAINED_MACEFIGHTING>) 
+SRC.TAG.DISDAINED_MACEFIGHTING= <SRC.MACEFIGHTING> 
+SRC.MACEFIGHTING=<SRC.TAG.DISDAINED_MACEFIGHTING> / 2 
+ENDIF 
+SRC.MESSAGE You disdain this distasteful weapon 
+ENDIF 
+ENDIF 
+
+
+// ######################################################## 
+// Dumb Luck functions 
+
+[FUNCTION f_DumbLuck_SkillFail] 
+IF ( <eval(RAND(100))> != 12) 
+RETURN 0 
+ENDIF 
+VAR.X=id(<ACTION>) 
+VAR.Y=<EVAL( { 1 10 })> 
+f_BumpSkill 
+SAY Dumb Luck! <NAME> experience an epiphany in skill! 
+// SYSMESSAGE Dumb Luck! You experience an epiphany in skill 
+
+[FUNCTION f_DumbLuck_SkillSuccess] 
+IF ( <eval(RAND(100))> != 12) 
+RETURN 0 
+ENDIF 
+VAR.X= <ACTION> 
+VAR.Y= <EVAL({ 1 10})> 
+f_BumpSkill 
+SAY Dumb Luck! <NAME> experience an epiphany in skill! 
+// SYSMESSAGE Dumb Luck! You experience an epiphany in skill 
+
+[FUNCTION f_DumbLuck_Death] 
+IF ( <eval(RAND(10))> != 3) 
+RETURN 0 
+ENDIF 
+VAR.X=<eval(RAND(100))> 
+IF <VAR.X>==3 
+hits=<str> 
+VAR.X=with a Full Heal! 
+ELSEIF <VAR.X>>90 
+hits=<str>/4 
+VAR.X=with a generous Heal! 
+ELSE 
+hits=5 
+VAR.X=but just barely... 
+ENDIF 
+effect=3,i_fx_HEAL_EFFECT 
+sound=snd_SPELL_HEAL 
+SAY Dumb Luck! <NAME> evaded Death itself <VAR.X> 
+// SRC.SYSMESSAGE Dumb Luck! <NAME> evaded Death itself <VAR.X> 
+// SYSMESSAGE Dumb Luck! You have evaded Death itself <VAR.X> 
+VAR.X=0 
+RETURN 1 
+
+[FUNCTION f_DumbLuck_GetHit] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF ( <eval(RAND(10))> != 3) 
+RETURN 0 
+ENDIF 
+VAR.X=<eval({1 3})> 
+HITS=<eval(<HITS>+ -<VAR.X>)> 
+SAY Dumb Luck! <NAME>'s damage was reduced to <eval(<VAR.X>)> 
+// SRC.SYSMESSAGE Dumb Luck! <NAME>'s damage was reduced to <VAR.X> 
+// SYSMESSAGE Dumb Luck! Your damage was reduced to <VAR.X> 
+RETURN 1 
+
+[FUNCTION f_DumbLuck_HitOther] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF ( <eval(RAND(100))> != 3) 
+RETURN 0 
+ENDIF 
+var.x=<eval({1 15})> 
+IF <SRC.HITS> > <VAR.X> 
+SRC.HITS=<SRC.HITS>+ -<VAR.X> 
+ENDIF 
+SAY Dumb Luck! <NAME> inflicted <eval(<var.x>)> additional damage 
+// SYSMESSAGE Dumb Luck! You inflicted additional <eval(<var.x>)> damage 
+
+
+
+// ######################################################## 
+[FUNCTION f_Glowbug_EnvironChange] 
+IF <SECTOR.isDark> && ! <CONT.FINDID.i_light_source.SERIAL> 
+CONT.EQUIPHALO 
+ELSE 
+IF <CONT.FINDID.i_light_source.SERIAL> 
+CONT.FINDID.i_light_source.REMOVE 
+ENDIF 
+ENDIF 
+
+
+// ######################################################## 
+[FUNCTION f_LifeBite] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF ( <eval(RAND(10))> != 3) 
+RETURN 0 
+ENDIF 
+IF (<SRC.DISTANCE> < 3) 
+VAR.Y= 
+IF <eval(RAND(100))>==3 
+SRC.DEX=<SRC.DEX>+-5 
+VAR.Z=critically 
+ELSE 
+VAR.Z=successfully 
+ENDIF 
+IF <eval(RAND(50))>==3 
+SRC.FLAGS=<SRC.FLAGS>|STATF_Poisoned 
+SRC.SPELLEFFECT=s_poison 1000 
+VAR.Y=, poisoning as well 
+ENDIF 
+VAR.X=<eval(rand(9))> + 1 
+IF <eval(<VAR.X>)> < 3 
+VAR.X=3 
+ENDIF 
+SRC.HITS=<eval(<SRC.HITS> + -<VAR.X>)> 
+HITS=<eval(<HITS> + <VAR.X>)> 
+IF <KARMA> > -9999 
+KARMA=<KARMA>+ -1 
+ENDIF 
+SAY <NAME> <VAR.Z> bit <SRC.NAME><VAR.Y> 
+// SRC.SYSMESSAGE <NAME> <VAR.Z> bit you<VAR.Y> 
+// SYSMESSAGE You <VAR.Z> bit <SRC.NAME><VAR.Y> 
+ENDIF 
+
+
+// ######################################################## 
+[FUNCTION f_LifeClaw] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF ( <eval(RAND(10))> != 3) 
+RETURN 0 
+ENDIF 
+IF (<SRC.DISTANCE> < 3) 
+VAR.Y= 
+IF <eval RAND(100)>==3 
+SRC.DEX=<SRC.DEX>+-5 
+VAR.Z=critically 
+ELSE 
+VAR.Z=successfully 
+ENDIF 
+IF <eval RAND(50)>==3 
+SRC.FLAGS=<SRC.FLAGS>|STATF_Poisoned 
+SRC.SPELLEFFECT=s_poison 1000 
+VAR.Y=, poisoning as well 
+ENDIF 
+VAR.X=<eval(rand(9))> + 1 
+IF <eval(<VAR.X>)> < 3 
+VAR.X=3 
+ENDIF 
+SRC.HITS=<eval(<SRC.HITS> + -<VAR.X>)> 
+HITS=<eval(<HITS> + <VAR.X>)> 
+IF <KARMA> > -9999 
+KARMA=<KARMA>+ -1 
+ENDIF 
+SAY <NAME> <VAR.Z> clawed <SRC.NAME><VAR.Y>! 
+// SRC.SYSMESSAGE <NAME> <VAR.Z> clawed you<VAR.Y>! 
+// SYSMESSAGE You <VAR.Z> clawed <SRC.NAME><VAR.Y>! 
+ENDIF 
+
+
+// ######################################################## 
+[FUNCTION f_NightVision] 
+IF <sector.isdark> 
+IF (<FLAGS>&statf_nightsight)!=statf_nightsight) 
+SPELLEFFECT=s_night_sight 1000 
+MESSAGE Night Vision! Your eyes adjust easily to the gloom 
+TAG.NIGHTSIGHT_STATUS=1 
+ENDIF 
+ELSE 
+IF <TAG.NIGHTSIGHT_STATUS> 
+FLAGS=<FLAGS>&~statf_nightsight 
+MESSAGE Your eyes hurt slightly but adjust to the brightening light 
+TAG.NIGHTSIGHT_STATUS=0 
+ENDIF 
+ENDIF 
+
+
+// ######################################################## 
+// f_Race_Polymorph 
+// SRC.TAG.Polymorph=99 // warty toad 
+// SRC.TAG.Polymorph=71 // Were Wolf 
+// SRC.TAG.Polymorph=81 // Dire Bat 
+
+[FUNCTION f_Race_Polymorph_Enable] 
+// Free their horse, if any 
+IF (<findlayer(25).id> >0) 
+anim=9 
+newnpc <findlayer(25).more1> 
+act.body=<findlayer(25).more1> 
+act.p=<p> 
+act.link=<link> 
+act.color=<findlayer(25).color> 
+findlayer(25).remove 
+ENDIF 
+
+//Backup current stats 
+TAG.STR=<STR> 
+TAG.DEX=<DEX> 
+TAG.INT=<INT> 
+TAG.FAME=<FAME> 
+TAG.KARMA=<KARMA> 
+TAG.NAME=<NAME> 
+TAG.TITLE=<TITLE> 
+
+//Backup current skills 
+TAG.WRESTLING=<WRESTLING> 
+TAG.TACTICS=<TACTICS> 
+
+IF <TAG.Polymorph>==11 
+BODY=c_wolf 
+NAME=wolf 
+// TITLE= 
+FAME=200 
+KARMA=-300 
+
+STR=80 
+DEX=75 
+INT=25 
+MANA=0 
+
+WRESTLING=50.0 
+TACTICS=50.0 
+ELSEIF <TAG.Polymorph>==12 
+BODY=c_bird 
+NAME=bird 
+// TITLE= 
+FAME=200 
+KARMA=-300 
+
+STR=25 
+DEX=75 
+INT=25 
+MANA=0 
+
+WRESTLING=50.0 
+TACTICS=50.0 
+ELSEIF <TAG.Polymorph>==13 
+BODY=c_rat 
+
+NAME=rat 
+// TITLE= 
+KARMA=-3000 
+FAME=3000 
+
+STR=<eval(RACE_STRMAX_Werven)> 
+DEX=<eval(RACE_DEXMAX_Werven)> 
+INT=25 
+MANA=0 
+
+WRESTLING=104.0 
+TACTICS=104.0 
+ELSEIF <TAG.Polymorph>==71 
+BODY=c_wolf 
+COLOR=color_Werven_skin 
+
+NAME=werewolf 
+// TITLE= 
+KARMA=-3000 
+FAME=3000 
+
+STR=<eval(RACE_STRMAX_Werven)> 
+DEX=<eval(RACE_DEXMAX_Werven)> 
+INT=25 
+MANA=0 
+
+WRESTLING=104.0 
+TACTICS=104.0 
+ELSEIF <TAG.Polymorph>==72 
+BODY=c_bird 
+COLOR=colors_black 
+
+NAME=werebat 
+// TITLE= 
+KARMA=-3000 
+FAME=3000 
+
+STR=<eval(RACE_STRMAX_Werven)> 
+DEX=<eval(RACE_DEXMAX_Werven)> 
+INT=25 
+STAMINA=<DEX> 
+HITPOINTS=<STR> 
+MANA=0 
+
+WRESTLING=104.0 
+TACTICS=104.0 
+ELSEIF <TAG.Polymorph>==73 
+BODY=c_rat_giant 
+COLOR=colors_black 
+
+NAME=wererat 
+// TITLE= 
+KARMA=-3000 
+FAME=3000 
+
+STR=<eval(RACE_STRMAX_Werven)> 
+DEX=<eval(RACE_DEXMAX_Werven)> 
+INT=25 
+MANA=0 
+
+WRESTLING=104.0 
+TACTICS=104.0 
+ELSEIF <TAG.Polymorph>==81 
+BODY=c_wolf 
+COLOR=colors_black 
+
+NAME=direwolf 
+// TITLE= 
+KARMA=-3000 
+FAME=3000 
+
+STR=<eval(RACE_STRMAX_Vampire)> 
+DEX=<eval(RACE_DEXMAX_Vampire)> 
+INT=25 
+MANA=0 
+
+WRESTLING=104.0 
+TACTICS=104.0 
+ELSEIF <TAG.Polymorph>==82 
+BODY=c_bird 
+COLOR=colors_black 
+
+NAME=direbat 
+// TITLE= 
+KARMA=-3000 
+FAME=3000 
+
+STR=<eval(RACE_STRMAX_Vampire)> 
+DEX=<eval(RACE_DEXMAX_Vampire)> 
+INT=25 
+MANA=0 
+
+WRESTLING=104.0 
+TACTICS=104.0 
+ELSEIF <TAG.Polymorph>==83 
+BODY=c_rat_giant 
+COLOR=colors_black 
+
+NAME=direrat 
+// TITLE= 
+KARMA=-3000 
+FAME=3000 
+
+STR=<eval(RACE_STRMAX_Vampire)> 
+DEX=<eval(RACE_DEXMAX_Vampire)> 
+INT=25 
+MANA=0 
+
+WRESTLING=104.0 
+TACTICS=104.0 
+ELSE // <TAG.Polymorph>==99 
+BODY=c_bullfrog 
+COLOR=colors_brown 
+NAME=warty toad 
+TITLE=Yuk!! 
+STR=15 
+DEX=15 
+INT=15 
+STAMINA=<DEX> 
+HITPOINTS=<STR> 
+MANA=0 
+ENDIF 
+UPDATE 
+
+[FUNCTION f_Race_Polymorph_Disable] 
+SRC.MESSAGE Your body returns to its original form 
+SRC.TAG.Polymorph=0 
+
+//restore body and original stats 
+SRC.BODY=<SRC.OBODY> 
+SRC.COLOR=<SRC.OSKIN> 
+SRC.STR=<SRC.TAG.STR> 
+SRC.DEX=<SRC.TAG.DEX> 
+SRC.INT=<SRC.TAG.INT> 
+
+SRC.FAME=<SRC.TAG.FAME> 
+SRC.KARMA=<SRC.TAG.KARMA> 
+SRC.NAME=<SRC.TAG.NAME> 
+SRC.TITLE=<SRC.TAG.TITLE> 
+
+SRC.WRESTLING=<SRC.TAG.WRESTLING> 
+SRC.TACTICS=<SRC.TAG.TACTICS> 
+
+SRC.UPDATE 
+
+IF <HITS> > <STR> 
+HITS=<STR> 
+ENDIF 
+IF <STAMINA> > <DEX> 
+STAMINA=<DEX> 
+ENDIF 
+IF <MANA> > <INT> 
+MANA=<INT> 
+ENDIF 
+// zero out temp flags 
+SRC.TAG.NAME=0 
+SRC.TAG.STR=0 
+SRC.TAG.DEX=0 
+SRC.TAG.INT=0 
+SRC.TAG.FAME=0 
+SRC.TAG.KARMA=0 
+SRC.TAG.TITLE=0 
+
+
+// ######################################################## 
+[FUNCTION f_SuperiorConcentration] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF STRMATCH(<ACTION>,Skill_Magery) 
+IF <INT> > (<eval(<SRC.INT> + 20)> 
+SAY <NAME>'s concentration remains unbroken by <SRC.NAME>'s attack 
+// SRC.SYSMESSAGE <NAME>'s concentration remains unbroken by your attack 
+// SYSMESSAGE Your concentration remains unbroken by <SRC.NAME>'s attack 
+RETURN 1 
+ENDIF 
+ENDIF 
+
+
+// ######################################################## 
+[FUNCTION f_SuperiorDodge] 
+IF (<SERIAL>==<SRC.SERIAL>) 
+RETURN 0 
+ENDIF 
+IF ( <eval(RAND(10))> != 3) 
+RETURN 0 
+ENDIF 
+SAY <NAME> evaded <SRC.NAME>'s blow 
+// SRC.SYSMESSAGE <NAME> evaded your blow 
+// SYSMESSAGE You evade <SRC.NAME>'s blow 
+RETURN 1 
+
+
+// ######################################################## 
+[FUNCTION f_UnnaturalConstitution] 
+IF ! <CONT.FINDID.i_light_source.SERIAL> 
+CONT.EQUIPHALO 
+ENDIF 
+
+IF (<CONT.mana> > 2) 
+// CONT.SAY <cont.name> hits <CONT.hitpoints>/<CONT.str>) stam (<CONT.stamina> < <CONT.dex>) mana (<CONT.mana> < <CONT.int>) 
+CONT.mana=<CONT.mana>+ -2 
+VAR.X=3 
+IF <CONT.stamina> < <CONT.dex> 
+CONT.stamina=<CONT.stamina> + <VAR.X> 
+VAR.X=2 
+ENDIF 
+IF <CONT.hitpoints> < <CONT.str> 
+CONT.hitpoints=<CONT.hitpoints> + <VAR.X> 
+ENDIF 
+ENDIF 
+
+IF (<CONT.hitpoints> < <CONT.str>) || (<CONT.stamina> < <CONT.dex>) 
+TIMER=2 
+RETURN 1 
+ENDIF 
+CONT.FINDID.i_light_source.REMOVE 
+TIMER=-1 
+RETURN 1 
+
+
+
+// ######################################################## 
+// Events Enforcing Racial Characteristics 
+// e_Beserk_Lunge 
+// e_Blood_Feeder 
+// e_Charm_Wolf 
+// e_Corrupted_Creature 
+// e_Disdained_Weapon 
+// e_Dumb_Luck 
+// e_Glowbug 
+// e_LifeBite 
+// e_LifeClaw 
+// e_Night_Vision 
+// e_Polymorph_Self 
+// e_Superior_Concentration 
+// e_Superior_Dodge 
+// e_Unnatural_Constitution 
+// 
+// ######################################################## 
+VERSION=0.55 
+
+
+[events e_Beserk_Lunge] 
+ON=@Hit 
+f_BeserkLunge 
+ON=@GetHit 
+f_BeserkLunge 
+ON=@HitTry 
+f_BeserkLunge 
+
+
+[events e_Blood_Feeder] 
+ON=@ItemDClick 
+f_BloodFeeder_Eat 
+ON=@SpellEffect 
+f_BloodFeeder_SpellEffect 
+
+
+[events e_Charm_Wolf] 
+ON=@Targon_Char 
+RETURN 0 
+
+
+[events e_Corrupted_Creature] 
+ON=@GetHit 
+f_CorruptedCreature 
+
+
+[events e_Disdained_Weapon] 
+ON=@ItemUnequip 
+// NPCs have no restriction on items 
+IF <BRAIN> 
+RETURN 0 
+ENDIF 
+// GMs have no restriction on items 
+// IF <isGM> 
+// RETURN 0 
+// ENDIF 
+f_DisdainedWeapon_Unequip 
+
+ON=@ItemEquip 
+// NPCs have no restriction on items 
+IF <BRAIN> 
+RETURN 0 
+ENDIF 
+// GMs have no restriction on items 
+// IF <isGM> 
+// RETURN 0 
+// ENDIF 
+f_DisdainedWeapon_Equip 
+
+
+[events e_Dumb_Luck] 
+ON=@SkillFail 
+f_DumbLuck_SkillFail 
+ON=@SkillSuccess 
+f_DumbLuck_SkillSuccess 
+ON=@Death 
+f_DumbLuck_Death 
+ON=@GETHIT 
+f_DumbLuck_GetHit 
+ON=@HIT 
+f_DumbLuck_HitOther 
+
+
+[events e_Glowbug] 
+ON=@ENVIRONCHANGE 
+f_Glowbug_EnvironChange 
+
+
+[events e_LifeBite] 
+ON=@Hit 
+f_LifeBite 
+ON=@GetHit 
+f_LifeBite 
+ON=@HitTry 
+f_LifeBite 
+
+
+[events e_LifeClaw] 
+ON=@Hit 
+f_LifeClaw 
+ON=@GetHit 
+f_LifeClaw 
+ON=@HitTry 
+f_LifeClaw 
+
+
+[events e_Night_Vision] 
+ON=@Click 
+f_NightVision 
+ON=@DClick 
+f_NightVision 
+ON=@ENVIRONCHANGE 
+f_NightVision 
+
+
+[events e_Polymorph_Self] 
+f_PolymorphSelf 
+
+
+[events e_Superior_Concentration] 
+ON=@GETHIT 
+f_SuperiorConcentration 
+
+
+[events e_Superior_Dodge] 
+ON=@SpellEffect 
+f_SuperiorDodge 
+ON=@GETHIT 
+f_SuperiorDodge 
+
+
+[events e_Unnatural_Constitution] 
+ON=@GetHit 
+IF <FINDID.m_Unnatural_Constitution.TIMER> < 1 
+FINDID.m_Unnatural_Constitution.TIMER=2 
+ENDIF 
+
+[ITEMDEF m_Unnatural_Constitution] 
+ID=i_memory 
+WEIGHT=0 
+NAME=Unnatural Constitution memory 
+TYPE=t_eq_script 
+LAYER=layer_special 
+
+ON=@Create 
+ATTR=attr_newbie 
+TIMER=-1 
+ON=@Timer 
+f_UnnaturalConstitution 
+
+
+
+[EOF]

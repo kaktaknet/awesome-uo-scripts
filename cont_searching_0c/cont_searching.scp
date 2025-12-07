@@ -1,0 +1,2509 @@
+[defname searchversion]
+//Ankron's staff of container searching.
+Version V0.C
+//
+//Features:
+//
+//The search and result windows have been combined
+//Charactor Inventory Searching-NEW
+//Child Container Searching
+//Windows Style interface
+//String searching
+//Searching based on color, name, baseid, id, dispid, type, attr.
+//Search help menu gump
+//
+//
+//Fixed in this version:
+//
+//Better Search Parsing for ATTR and memory
+//
+//Known Bugs:
+//
+//Currently doesn't handle over 279 items. This is an issue with The scroller script.
+//Doesn't search for attr with "&" Might be added in the next version
+//
+//
+//Instructions on this scripts use...
+//
+//Plop the script in your sphere 55i script dirrectory then type ".add i_search_staff"
+//Then dclick the staff and target a container. Next type in the word or letter with
+//wild cards then choose name, type, ect. then click ok. Depending on the container
+//this might take a bit. If you want to look at a player's bank or base level of it
+//cause they can't organise worth a crap, use this command...
+//".xfindlayer.29.dialog d_search_" another command you can use on players is
+//".xfindletter word/number here". Any way enjoy.
+//
+//Credits
+//
+//This version contains the html fix by Catalan Mistral and the string matching lesson by 
+//Terran... Kudos to you. It also contains my scroller script. Version 0.C.
+//
+//This lesson comes from Terran's string Functions lesson, on http://www.cs.rit.edu/
+//this script uses string patterns to find things, keep in mind this does not apply to attr and memory
+//so here...
+//
+//Pattern What it matches Examples of valid matches *
+//
+//test The string "test", and only that string. 
+// Remember, that this is a case-insensitive compare,
+// so any combination of uppercase and lowercase
+// letters will work. "test", "Test", etc 
+//
+//t* The letter "t" followed by any number of any 
+// character "test", "truffle", "tom", "tagalong",
+// "tslkjask", "telephone", "timbuktu", "timmy", "tisls"
+//
+//t??? The letter "t" followed by any three other characters
+// "test", "tris", "targ", "till", "tops", "tell", "tool",
+// "time" 
+//??t? Two characters, followed by a "t", followed by one
+// other character "with", "both", "mntv" 
+//
+//t[a-e]st "t", followed by any character between a and e, 
+// followed by "st" "tast", "tbst", "tcst", "tdst", "test"
+//
+//t[aeiouy]st "t", followed by a, e, i, o, u, or y, followed by "st"
+// "tast", "test", "tist", "tost", "tust", "tyst" 
+//
+//t[^a]s* "t", followed by any character that is not "a", 
+// followed by "s", followed by any other characters "toss",
+// "tussle", "test", "tuscon", "tis", "tush" 
+//
+//[^ab]* Any string that doesn't begin with "a" or "b" Too many
+// to list here. :)
+//
+//[ab]* Any string that DOES begin with "a" or "b" Same 
+//
+
+[dialog d_search_help]
+0,0
+page 0
+page 1
+//Start help Page
+//Start BackDrop
+resizepic 0 0 <eval 013be> 580 478
+//end Back Drop
+//start Text
+htmlgump 15 10 455 20 0 0 0
+htmlgump 15 30 90 20 1 0 0
+htmlgump 105 30 200 20 11 0 0
+htmlgump <eval 105+205> 30 135 20 21 0
+htmlgump 15 60 90 60 2 1 0
+htmlgump 15 <eval 60+65> 90 60 3 1 0
+htmlgump 15 <eval 60+65*2> 90 60 4 1 0
+htmlgump 15 <eval 60+65*3> 90 60 5 1 0
+htmlgump 15 <eval 60+65*4> 90 60 6 1 0
+htmlgump 15 <eval 60+65*5> 90 60 7 1 0
+htmlgump 105 60 200 60 12 1 1
+htmlgump 105 <eval 60+65> 200 60 13 1 0
+htmlgump 105 <eval 60+65*2> 200 60 14 1 0
+htmlgump 105 <eval 60+65*3> 200 60 15 1 0
+htmlgump 105 <eval 60+65*4> 200 60 16 1 0
+htmlgump 105 <eval 60+65*5> 200 60 17 1 0
+htmlgump <eval 105+205> <eval 60> 135 60 22 1 0
+htmlgump <eval 105+205> <eval 60+65> 135 60 23 1 1
+htmlgump <eval 105+205> <eval 60+65*2> 135 60 24 1 1
+htmlgump <eval 105+205> <eval 60+65*3> 135 60 25 1 0
+htmlgump <eval 105+205> <eval 60+65*4> 135 60 26 1 0
+htmlgump <eval 105+205> <eval 60+65*5> 135 60 27 1 0
+htmlgump <eval 105+205+140> 60 105 388 31 1 1
+//end text
+//Start Buttons
+button 50 <eval 60+65*6> <eval 0fa5> <eval 0fa7> 0 2
+button 10 <eval 60+65*6> <eval 0fae> <eval 0fb0> 1 0 0
+//End Buttons
+page 2
+//Start BackDrop
+resizepic 0 0 <eval 013be> 580 478
+//end Back Drop
+//start Text
+htmlgump 15 10 455 20 0 0 0
+htmlgump 15 30 90 20 1 0 0
+htmlgump 105 30 200 20 11 0 0
+//
+htmlgump <eval 105+205> 30 135 20 21 0
+htmlgump 15 60 90 60 9 1 0
+htmlgump 15 <eval 60+65> 90 60 10 1 0
+htmlgump 105 60 200 60 19 1 0
+htmlgump 105 <eval 60+65> 200 60 20 1 0
+htmlgump <eval 105+205> <eval 60> 135 60 29 1 0
+htmlgump <eval 105+205> <eval 60+65> 135 60 30 1 0
+htmlgump <eval 105+205+140> 60 105 388 31 1 1
+//end text
+//Start Buttons
+//button 50 <eval 60+65*6> <eval 0fa5> <eval 0fa7> 0 2 
+button 10 <eval 60+65*6> <eval 0fae> <eval 0fb0> 0 1 
+//End Buttons
+//End help Page
+
+[dialog d_search_help Text]
+<var.big><var.center><var.BFONT_LRED>S<var.Bfont_DRED>t<var.BFONT_LGREEN>r<var.BFONT_GREEN>i<var.BFONT_DGREEN>n<var.BFONT_LBLUE>g <var.BFONT_BLUE>P<var.BFONT_DBLUE>a<var.BFONT_LYELLOW>t<var.BFONT_YELLOW>t<var.BFONT_DYELLOW>e<var.BFONT_LPURPLE>r <var.BFONT_PURPLE>M<var.BFONT_DPURPLE>a<var.BFONT_LCYAN>t<var.BFONT_CYAN>c<var.BFONT_LRED>h<var.BFONT_DCYAN>i<var.BFONT_LRED>n<var.BFONT_RED>g <var.Bfont_DRED>b<var.BFONT_LGREEN>y <var.BFONT_GREEN>T<var.BFONT_DGREEN>e<var.BFONT_LBLUE>r<var.BFONT_BLUE>r<var.BFONT_DBLUE>a<var.BFONT_LYELLOW>n <var.BFONT_BLACK>[Search Help]
+<var.center>Pattern //patterns
+<var.center>test
+<var.center>t*
+<var.center>t???
+<var.center>??t?
+<var.center>t[a-e]st
+<var.center>t[aeiouy]st
+<var.center>t[^a]s*
+<var.center>[^ab]*
+<var.center>[ab]*
+<var.center>What it matches //what matches
+The string "test", and only that string. Remember, that this is a case-insensitive compare, so any combination of uppercase and lowercase letters will work.
+The letter "t" followed by any number of any character
+The letter "t" followed by any three other characters
+Two characters, followed by a "t", followed by one other character
+"t", followed by any character between a and e, followed by "st"
+"t", followed by a, e, i, o, u, or y, followed by "st"
+"t", followed by any character that is not "a", followed by "s", followed by any other characters
+Any string that DOESN'T begin with "a" or "b"
+Any string that DOES begin with "a" or "b"
+Examples *
+"test", "Test", etc
+"test", "truffle", "tom", "tagalong", "tslkjask", "telephone", "timbuktu", "timmy", "tisls"
+"test", "tris", "targ", "till", "tops", "tell", "tool", "time"
+"with", "both", "mntv"
+"tast", "tbst", "tcst", "tdst", "test"
+"tast", "test", "tist", "tost", "tust", "tyst"
+"toss", "tussle", "test", "tuscon", "tis", "tush"
+"obe lincoln", "fase ball", "Opples and bannonos", ect
+"abe lincoln", "base ball", "Apples and bannanas", ect
+* NOTE: Quotes are not part of the match string, but are used to separate the string from other examples. Nonsense words are used to show that everything matches, not only real words. If used in the search at all, the script will fail to find that item, so avoid them at all costs. Also avoid nameing objects with qoutes, that'll get messy too.
+
+[dialog d_search_help Button]
+on=0
+src.dialog d_search
+
+//Catalan Mistral's Html Fix
+
+[DEFNAME htmlgump_vars]
+BFONT_SIZE1 <basefont SIZE="1">
+BFONT_SIZE4 <basefont SIZE="4">
+BFONT_SIZE7 <basefont SIZE="7">
+BFONT_white <basefont color="#ffffff">
+BFONT_LGRAY <basefont color="#aaaaaa">
+BFONT_GRAY <basefont color="#888888">
+BFONT_DGRAY <basefont color="#444444">
+BFONT_BLACK <basefont color="#000011">
+BFONT_LRED <basefont color="#ff0000">
+BFONT_RED <basefont color="#880000">
+Bfont_DRED <basefont color="#440000">
+BFONT_LGREEN <basefont color="#00ff00">
+BFONT_GREEN <basefont color="#008800">
+BFONT_DGREEN <basefont color="#004400">
+BFONT_LBLUE <basefont color="#0000ff">
+BFONT_BLUE <basefont color="#000088">
+BFONT_DBLUE <basefont color="#000044">
+BFONT_LYELLOW <basefont color="#ffff88">
+BFONT_YELLOW <basefont color="#ffff00">
+BFONT_DYELLOW <basefont color="#888800">
+BFONT_LPURPLE <basefont color="#ff88ff">
+BFONT_PURPLE <basefont color="#ff00ff">
+BFONT_DPURPLE <basefont color="#880088">
+BFONT_LCYAN <basefont color="#88ffff">
+BFONT_CYAN <basefont color="#00ffff">
+BFONT_DCYAN <basefont color="#008888">
+BFONT <BASEFONT
+BFONTE </BASEFONT>
+
+DIV_RIGHT <div align="right">
+DIV_LEFT <div align="left">
+DIV_END </DIV> 
+CENTER <CENTER>
+CENTERE </CENTER>
+BR <BR>
+
+L1 <
+R1 >
+
+B <B>
+BE </B>
+BIG <BIG>
+BIGE </BIG>
+SMALL <SMALL>
+SMALLE </SMALL>
+EM <EM>
+EME </EM>
+U <U>
+UE </U>
+H1 <H1>
+H1E </H1>
+H2 <H2>
+H2E </H2>
+H3 <H3>
+H3E </H3>
+H4 <H4>
+H4E </H4>
+H5 <H5>
+H5E </H5>
+H6 <H6>
+H6E </H6>
+A <a
+AE </a>
+
+//Ankron's UO scroll bar for sphere 55i
+//
+//This little thing allows for graphics in scrolling gumps.
+//
+//Known bugs:
+//
+// It does not yet handle over 279 items, I haven't figured that part out yet.
+//
+//Example Item
+
+[itemdef i_contlist]
+id=2475
+
+on=@click
+src.tag.scrolllines=(<rescount>-1)
+init_scroll
+dialog d_scroller
+return 1
+
+//End Example Item
+
+[dialog d_scroller]
+0,0
+//Start Main Window
+//Start BackDrop
+resizepic 0 0 <eval 013be> 400 358
+resizepic 10 30 <eval 0bb8> 355 318
+//End Backdrop
+//Start Text
+Htmlgump 10 5 355 20 0 0 0 //Title
+Htmlgump 70 30 295 20 1 0 0 //First Line
+Htmlgump 70 50 295 20 2 0 0
+Htmlgump 70 70 295 20 3 0 0
+Htmlgump 70 90 295 20 4 0 0
+Htmlgump 70 110 295 20 5 0 0
+Htmlgump 70 130 295 20 6 0 0
+Htmlgump 70 150 295 20 7 0 0
+Htmlgump 70 170 295 20 8 0 0
+Htmlgump 70 190 295 20 9 0 0
+Htmlgump 70 210 295 20 10 0 0
+Htmlgump 70 230 295 20 11 0 0
+Htmlgump 70 250 295 20 12 0 0
+Htmlgump 70 270 295 20 13 0 0
+Htmlgump 70 290 295 20 14 0 0
+Htmlgump 70 310 295 20 15 0 0
+//End Text
+//End Main Window
+//Start Slider
+// start scroll bar
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21> <eval 0ff> <eval 0ff> 1 0 1 //scoll space 1
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+52> <eval 0ff> <eval 0ff> 1 0 2 //scoll space 2
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21+(31*2)> <eval 0ff> <eval 0100> 1 0 3 //scoll space 3
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21+(31*3)> <eval 0ff> <eval 0100> 1 0 4 //scoll space 4
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21+(31*4)> <eval 0ff> <eval 0100> 1 0 5 //scoll space 5
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21+(31*5)> <eval 0ff> <eval 0100> 1 0 6 //scoll space 6
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21+(31*6)> <eval 0ff> <eval 0100> 1 0 7 //scoll space 7
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21+(31*7)> <eval 0ff> <eval 0100> 1 0 8 //scoll space 8
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21+(31*8)> <eval 0ff> <eval 0100> 1 0 9 //scoll space 9
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+21+(31*9)> <eval 0ff> <eval 0100> 1 0 10 //scoll space 10
+// End Scroll Bar
+//Start Slider Controlls
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>> <eval 0fa> <eval 0fb> 1 0 11 //up Button
+gumppic <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+0<src.tag.scrollspace>> <eval 0fe> //Scroller Picture
+button <eval 0<src.tag.xloc>> <eval 0<src.tag.yloc>+15+(31*10)> <eval 0fc> <eval 0fd> 1 0 12 //Down Button
+//End Slider Controlls
+//end slider
+//
+
+[dialog d_scroller text]
+<var.center><name> //Enter a name for this Menu
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>>.uid>","0")?:<findcont.<eval 0<tag.scrollslot>>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+1>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+1>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+2>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+2>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+3>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+3>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+4>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+4>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+5>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+5>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+6>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+6>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+7>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+7>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+8>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+8>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+9>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+9>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+10>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+10>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+11>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+11>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+12>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+12>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+13>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+13>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+14>.name>","0")?:<findcont.<eval 0<tag.scrollslot>+14>.name>>
+<qval strmatch("<findcont.<eval 0<tag.scrollslot>+15>.uid>","0")?:<findcont.<eval 0<tag.scrollslot>+15>.name>>
+
+[dialog d_scroller button]
+//start slider Buttons
+on=1
+src.tag.scrollspace=21
+barclick
+dialog d_scroller
+
+on=2
+src.tag.scrollspace=52
+barclick
+dialog d_scroller
+
+ON=3
+src.tag.scrollspace=<eval 21+(31*2)>
+barclick
+dialog d_scroller
+
+ON=4
+src.tag.scrollspace=<eval 21+(31*3)>
+barclick
+dialog d_scroller
+
+ON=5
+src.tag.scrollspace=<eval 21+(31*4)>
+barclick
+dialog d_scroller
+
+ON=6
+src.tag.scrollspace=<eval 21+(31*5)>
+barclick
+dialog d_scroller
+
+ON=7
+src.tag.scrollspace=<eval 21+(31*6)>
+barclick
+dialog d_scroller
+
+ON=8
+src.tag.scrollspace=<eval 21+(31*7)>
+barclick
+dialog d_scroller
+
+ON=9
+src.tag.scrollspace=<eval 21+(31*8)>
+barclick
+dialog d_scroller
+
+ON=10
+src.tag.scrollspace=<eval 21+(31*9)>
+barclick
+dialog d_scroller
+
+on=11
+scrollup
+dialog d_scroller
+
+on=12
+scrolldown
+dialog d_scroller
+//end slider buttons
+//Start your buttons here
+//End you buttons here
+
+//Start Slider Funcs
+
+[function init_scroll]
+//This function sets the starting variables of the slider
+src.tag.maxscroll=<eval <src.act.rescount>-1> //The Maximum pixels that the slider can move
+src.tag.scrollspace=21 //The starting position of the slider
+src.tag.xloc=370 //This is the x position on the x,y plot
+src.tag.yloc=5 //This is the y position on the x,y plot
+src.tag.scrollslot 0
+
+[function barclick]
+if (<src.act.rescount><2)
+src.tag.scrollspace=21
+error
+elif <src.tag.scrolllines><279
+src.tag.totalclicks=<eval (31*9)/<src.tag.scrolllines>>
+src.tag.scrollclicked=<eval ((21+(31*9))-0<src.tag.scrollspace>)/0<src.tag.totalclicks>>
+if 0<src.tag.scrollclicked>><src.act.rescount>
+var.scrollmove=<eval 0<src.tag.scrollclicked>-<src.act.rescount>)>
+src.tag.totalclicks=<eval 0<src.tag.totalclicks>-(0<src.tag.totalclicks>*0<var.scrollmove>)>
+src.tag.scrollclicked=<eval 0<src.tag.scrollclicked>-0<var.scrollmove>>
+endif
+src.tag.scrollslot=<eval <src.act.rescount>-0<src.tag.scrollclicked>+1>
+endif
+if 0<src.tag.scrollslot><0
+src.tag.scrollslot=0
+endif
+
+[function scrollup]
+if (0<src.tag.scrollspace>=21)|(<src.act.rescount><2)
+error
+elif 0<src.tag.scrollspace>>21
+if <src.tag.scrolllines><279
+src.tag.totalclicks=<eval (31*9)/<src.tag.scrolllines>>
+src.tag.scrollclicked=<eval ((21+(31*9))-0<src.tag.scrollspace>)/0<src.tag.totalclicks>>
+if 0<src.tag.scrollclicked>><src.act.rescount>
+var.scrollmove=<eval 0<src.tag.scrollclicked>-<src.act.rescount>)>
+src.tag.totalclicks=<eval 0<src.tag.totalclicks>-(0<src.tag.totalclicks>*0<var.scrollmove>)>
+src.tag.scrollclicked=<eval 0<src.tag.scrollclicked>-0<var.scrollmove>>
+endif
+src.tag.scrollspace=<eval 0<src.tag.scrollspace>-0<src.tag.totalclicks>>
+if 0<src.tag.scrollclicked>>(<src.tag.scrolllines>-2)
+src.tag.scrollspace=21
+endif
+src.tag.scrollslot=<eval <src.act.rescount>-0<src.tag.scrollclicked>+2>
+else
+src.tag.totalclicks=<eval <src.tag.scrolllines>/(31*9)>
+endif
+endif
+if 0<src.tag.scrollslot><0
+src.tag.scrollslot=0
+endif
+
+[function scrolldown]
+if (0<src.tag.scrollspace>=<eval 21+(31*9)>)|(<src.act.rescount><2)
+error
+elif 0<src.tag.scrollspace><<eval 21+(31*9)>
+if <src.tag.scrolllines><(31*9)
+if <src.tag.scrolllines>>19
+src.tag.totalclicks=<eval ((31*9)/<src.tag.scrolllines>)>
+else
+src.tag.totalclicks=<eval (31*9)/<src.tag.scrolllines>>
+endif
+src.tag.scrollclicked=<eval ((21+(31*9))-0<src.tag.scrollspace>)/0<src.tag.totalclicks>>
+if 0<src.tag.scrollclicked>><src.act.rescount>
+var.scrollmove=<eval 0<src.tag.scrollclicked>-<src.act.rescount>)>
+src.tag.totalclicks=<eval 0<src.tag.totalclicks>+(0<src.tag.totalclicks>*0<var.scrollmove>)>
+src.tag.scrollclicked=<eval 0<src.tag.scrollclicked>-0<var.scrollmove>>
+endif
+src.tag.scrollslot=<eval <src.act.rescount>-0<src.tag.scrollclicked>>
+src.tag.scrollspace=<eval 0<src.tag.scrollspace>+0<src.tag.totalclicks>>
+if 0<src.tag.scrollclicked><2
+src.tag.scrollspace=<eval 21+(31*9)>
+endif
+else
+src.tag.totalclicks=<eval <src.tag.scrolllines>/(31*9)>
+endif
+if 0<src.tag.scrollslot><1
+scrolldown
+endif
+endif
+
+[function error]
+//
+//This function makes a click sound that only the user can hear.
+//
+var.act=<src.act.uid>
+src.tag.mapplane=<src.mapplane>
+src.newitem=i_gold
+try src.act.p <src.p.x>,<src.p.y>,0,40
+src.act.morep=<src.act.region.flags>
+src.act.region.flags=<src.region.flags>
+src.mapplane 40
+sfx 81
+src.mapplane=<src.tag.mapplane>
+src.act.region.flags=<src.act.morep>
+src.act.remove
+if 0<src.tag.scrollslot><0
+src.tag.scrollslot=0
+endif
+src.act=<var.act>
+//End Slider Funcs
+
+//Ankron's Staff of Container Searching
+
+[itemdef i_search_staff]
+id=0e81
+name=Game Master's Staff Of Searching
+type=t_normal
+
+on=@create
+hitpoints=9999
+
+ON=@DCLICK
+Target What would you like to search for items?
+return 1
+
+on=@damage
+hitpoints=9999
+return 1
+
+on=@targon_char
+var.cont
+if <src.account.plevel>>1
+src.tag.startcheck 1
+src.tag.radio=0
+var.found=0
+src.act=0
+src.dialog d_search
+src.sysmessage You begin your search of the item.
+else
+src.sysmessage you cannot use this item!
+remove
+endif
+return 1
+
+on=@targon_item
+if <src.account.plevel>>1
+if strmatch("<src.targ.type>", "t_container")
+src.tag.startcheck 1
+src.tag.radio=0
+var.found=0
+src.act=0
+src.dialog d_search
+src.sysmessage You begin your search of the item.
+else
+src.sysmessage you can only search containers.
+endif
+else
+src.sysmessage you cannot use this item!
+remove
+return 1
+
+[Function findletter]
+try try var.count<uid> 0
+try try var.count<uid> <eval 0<try var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+try src.tag.<eval 0<var.count<uid>>>.search
+try try var.count<uid> 0
+findx <args>
+
+[function findx]
+if (<eval 0<var.count<uid>>>=0)&&(0<src.targ.uid>=<uid>)
+src.newitem=i_contlist
+src.tag.contlist=<src.act.uid>
+endif
+try var.what <findcont.<eval 0<var.count<uid>>>.<var.searchparms>>
+if 0<var.count<uid>> < <rescount>
+if 0<var.found>>279
+src.act=<src.tag.contlist>
+src.act.name=results: <var.u><eval 0<var.found>><var.ue> instances of: <var.u><args><var.ue> with parms: <var.u><var.searchparms><var.ue>
+src.tag.scrolllines=(<src.act.rescount>-1)
+src.act.p=1,1
+src.act.attr=082
+src.act.timer=600
+src.act.init_scroll
+src.tag.xloc=<eval 383+160> //This is the x position on the x,y plot
+src.tag.yloc=20
+src.dialog d_search
+src.tag.search=<args>
+src.sysmessage Search results were greater than 279
+src.sysmessage These search results will decay in 10.
+ERROR
+try var.count<uid>
+Elif (strmatch("ATTR", "<var.searchparms>"))
+IF (strmatch("<args>", "<findcont.<eval 0<var.count<uid>>>.attr>"))
+src.newitem 02007
+src.act.link=<findcont.<eval 0<var.count<uid>>>.uid>
+src.act.cont=<src.tag.contlist>
+var.found=<eval 0<var.found>+1>
+if strmatch("*container*", "<findcont.<eval 0<var.count<uid>>>.type>")
+if <findcont.<eval 0<var.count<uid>>>.rescount>!=0
+try findcont.<eval 0<var.count<uid>>>.findletter <args>
+endif
+endif
+ELIF (<findcont.<eval 0<var.count<uid>>>.attr>&<args>)
+src.newitem 02007
+src.act.link=<findcont.<eval 0<var.count<uid>>>.uid>
+src.act.cont=<src.tag.contlist>
+var.found=<eval 0<var.found>+1>
+if strmatch("*container*", "<findcont.<eval 0<var.count<uid>>>.type>")
+if <findcont.<eval 0<var.count<uid>>>.rescount>!=0
+try findcont.<eval 0<var.count<uid>>>.findletter <args>
+endif
+endif
+ENDIF
+elif (strmatch("Memory", "<var.searchparms>"))
+IF (strmatch("<args>", "<findcont.<eval 0<var.count<uid>>>.COLOR>"))
+src.newitem 02007
+src.act.link=<findcont.<eval 0<var.count<uid>>>.uid>
+src.act.cont=<src.tag.contlist>
+var.found=<eval 0<var.found>+1>
+if strmatch("*container*", "<findcont.<eval 0<var.count<uid>>>.type>")
+if <findcont.<eval 0<var.count<uid>>>.rescount>!=0
+try findcont.<eval 0<var.count<uid>>>.findletter <args>
+endif
+endif
+ELIF (<findcont.<eval 0<var.count<uid>>>.COLOR>&<args>)
+src.newitem 02007
+src.act.link=<findcont.<eval 0<var.count<uid>>>.uid>
+src.act.cont=<src.tag.contlist>
+var.found=<eval 0<var.found>+1>
+if strmatch("*container*", "<findcont.<eval 0<var.count<uid>>>.type>")
+if <findcont.<eval 0<var.count<uid>>>.rescount>!=0
+try findcont.<eval 0<var.count<uid>>>.findletter <args>
+endif
+endif
+ENDIF
+elif strmatch("<args>", "<var.what>")
+src.newitem 02007
+src.act.link=<findcont.<eval 0<var.count<uid>>>.uid>
+src.act.cont=<src.tag.contlist>
+var.found=<eval 0<var.found>+1>
+if strmatch("*container*", "<findcont.<eval 0<var.count<uid>>>.type>")
+if <findcont.<eval 0<var.count<uid>>>.rescount>!=0
+try findcont.<eval 0<var.count<uid>>>.findletter <args>
+endif
+endif
+endif
+try try var.count<uid> <eval 0<var.count<uid>>+1>
+findx <args>
+elif (0<var.found>=0)&&((<src.targ.uid>=<uid>))
+src.sysmessage No "<var.searchparms>"'s were found matching <args>.
+src.act=<src.tag.contlist>
+src.tag.contlist
+src.act.remove
+src.act=0
+src.dialog d_search
+try var.count<uid>
+elif (<src.targ.uid>=<uid>)
+src.act=<src.tag.contlist>
+src.act.name=results: <var.u><eval 0<var.found>><var.ue> instances of: <var.u><args><var.ue> with parms: <var.u><var.searchparms><var.ue>
+src.tag.scrolllines=(0<var.found>-1)
+src.act.p=1,1
+src.act.attr=082
+src.act.timer=600
+src.act.init_scroll
+src.tag.xloc=<eval 383+160> //This is the x position on the x,y plot
+src.tag.yloc=20
+src.dialog d_search
+src.sysmessage Found <eval 0<var.found>> results.
+src.sysmessage These search results will decay in 10 minutes.
+try var.count<uid>
+endif
+
+[dialog d_search_]
+0,0
+//Start Main Window
+//Start BackDrop
+resizepic 0 0 <eval 013be> 300 200
+resizepic 10 10 <eval 0bb8> 280 180
+//END BACKDROP
+//START TEXT
+TEXT 20 20 0 0
+TEXT 30 80 0 1
+TEXT 30 100 0 2
+TEXT 30 120 0 3
+TEXT 30 140 0 4
+TEXT 140 80 0 5
+TEXT 140 100 0 6
+TEXT 140 120 0 9
+TEXT 20 160 0 8
+//end text
+//start pictures
+gumppic 13 53 1143
+//end Pictures
+//start data entry/buttons
+button 280 0 <eval 0a94> <eval 0a95> 1 0 0
+textentry 23 57 248 50 0770 0 7 0
+radio 20 80 <eval 093a> <eval 0939> 1 0
+radio 20 100 <eval 093a> <eval 0939> 0 1
+radio 20 120 <eval 093a> <eval 0939> 0 2
+radio 20 140 <eval 093a> <eval 0939> 0 3
+radio 120 80 <eval 093a> <eval 0939> 0 4
+radio 120 100 <eval 093a> <eval 0939> 0 5
+radio 120 120 <eval 093a> <eval 0939> 0 6
+button 200 80 <eval 0907> <eval 0908> 1 0 1
+//end data entry/buttons
+//end main window
+
+[dialog d_search_ text]
+What would you like to search for?
+Name
+Type
+ATTR
+Baseid
+ID
+Color
+*
+*=Wild card, []=followed, [^]=not
+dispid
+
+[dialog d_search_ button]
+on=1
+if <argchk[0]>=1
+var.searchparms=name
+ELIF <argchk[1]>=1
+var.searchparms=type
+ELIF <argchk[2]>=1
+var.searchparms=attr
+ELIF <argchk[3]>=1
+var.searchparms=baseid
+ELIF <argchk[4]>=1
+var.searchparms=id
+ELIF <argchk[5]>=1
+var.searchparms=color
+ELIF <argchk[6]>=1
+var.searchparms=dispid
+endif
+var.found=0
+src.targ.findletter <argtxt[0]>
+
+[dialog d_search]
+0,0
+page 0
+//Start Main Window
+//Start BackDrop
+resizepic 0 0 <eval 013be> 580 478
+page 1
+resizepic <eval 10+160> 30 <eval 0bb8> 355 333
+//End Backdrop
+//start main buttons
+button <eval 380+160> 0 <eval 0a94> <eval 0a95> 1 0 0
+//end main buttons
+//Start Text
+Htmlgump <eval 10+160> 5 355 20 0 0 0 //Title
+Htmlgump <eval 10+160> 370 355 100 57 1 1 //search results
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+27> 295 20 1 0 0 //First Line
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+47> 295 20 2 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+67> 295 20 3 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+87> 295 20 4 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+107> 295 20 5 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+127> 295 20 6 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+147> 295 20 7 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+167> 295 20 8 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+187> 295 20 9 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+207> 295 20 10 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+227> 295 20 11 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+247> 295 20 12 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+267> 295 20 13 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+287> 295 20 14 0 0
+Htmlgump <eval 70+160> <eval 0<tag.yloc>+307> 295 20 15 0 0
+//End Text
+//End Main Window
+//Start Slider
+// start scroll bar
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21> <eval 0ff> <eval 0ff> 1 0 1 //scoll space 1
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+52> <eval 0ff> <eval 0ff> 1 0 2 //scoll space 2
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21+(31*2)> <eval 0ff> <eval 0100> 1 0 3 //scoll space 3
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21+(31*3)> <eval 0ff> <eval 0100> 1 0 4 //scoll space 4
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21+(31*4)> <eval 0ff> <eval 0100> 1 0 5 //scoll space 5
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21+(31*5)> <eval 0ff> <eval 0100> 1 0 6 //scoll space 6
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21+(31*6)> <eval 0ff> <eval 0100> 1 0 7 //scoll space 7
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21+(31*7)> <eval 0ff> <eval 0100> 1 0 8 //scoll space 8
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21+(31*8)> <eval 0ff> <eval 0100> 1 0 9 //scoll space 9
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+21+(31*9)> <eval 0ff> <eval 0100> 1 0 10 //scoll space 10
+// End Scroll Bar
+//Start Slider Controlls
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>> <eval 0fa> <eval 0fb> 1 0 11 //up Button
+gumppic <eval 0<tag.xloc>> <eval 0<tag.yloc>+0<tag.scrollspace>> <eval 0fe> //Scroller Picture
+button <eval 0<tag.xloc>> <eval 0<tag.yloc>+15+(31*10)> <eval 0fc> <eval 0fd> 1 0 12 //Down Button
+//End Slider Controlls
+//end slider
+//start list buttons
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+27> <qval 0<act.findcont.<eval 0<tag.scrollslot>>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 201
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+47> <qval 0<act.findcont.<eval 0<tag.scrollslot>+1>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 202
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+67> <qval 0<act.findcont.<eval 0<tag.scrollslot>+2>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 203
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+87> <qval 0<act.findcont.<eval 0<tag.scrollslot>+3>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 204
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+107> <qval 0<act.findcont.<eval 0<tag.scrollslot>+4>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 205
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+127> <qval 0<act.findcont.<eval 0<tag.scrollslot>+5>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 206
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+147> <qval 0<act.findcont.<eval 0<tag.scrollslot>+6>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 207
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+167> <qval 0<act.findcont.<eval 0<tag.scrollslot>+7>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 208
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+187> <qval 0<act.findcont.<eval 0<tag.scrollslot>+8>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 209
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+207> <qval 0<act.findcont.<eval 0<tag.scrollslot>+9>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 210
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+227> <qval 0<act.findcont.<eval 0<tag.scrollslot>+10>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 211
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+247> <qval 0<act.findcont.<eval 0<tag.scrollslot>+11>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 212
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+267> <qval 0<act.findcont.<eval 0<tag.scrollslot>+12>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 213
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+287> <qval 0<act.findcont.<eval 0<tag.scrollslot>+13>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 214
+button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+307> <qval 0<act.findcont.<eval 0<tag.scrollslot>+14>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 215
+//button <eval 0<tag.xloc>-350> <eval 0<tag.yloc>+327> <qval 0<act.findcont.<eval 0<tag.scrollslot>+15>.uid>=0? 60994:<eval 04b9>> <eval 04ba> 1 0 216
+//end list buttons
+//Start help Buttons
+text 40 <eval 105+205+140> 0 49
+button 10 <eval 60+65*6> <eval 0fa5> <eval 0fa7> 1 0 400
+//End Buttons
+//Start Search Menu
+//Start BackDrop
+resizepic 5 40 <eval 0bb8> 155 275
+resizepic 5 <EVAL 215+100> <eval 0bb8> 155 125
+//End Backdrop
+//Start Text
+htmlgump 15 40 140 40 50 0 0
+htmlgump 40 120 100 20 52 0 0
+htmlgump 40 <eval 160+160> 160 20 53 0 0
+htmlgump 30 <eval 180+160> 160 20 54 0 0
+htmlgump 30 <eval 200+160> 160 20 55 0 0
+htmlgump 30 <eval 220+160> 160 20 56 0 0
+htmlgump 20 400 120 40 58 0 0
+TEXT 40 150 0 59
+TEXT 40 170 0 60
+TEXT 40 190 0 61
+TEXT 40 210 0 62
+TEXT 40 230 0 63
+TEXT 40 250 0 64
+TEXT 40 270 0 65
+TEXT 40 290 0 66
+//Start Data entry
+gumppic 30 90 <eval 098d>
+textentry 35 90 248 50 0770 0 51 0
+group 0
+checkbox 10 120 <eval 0d2> <eval 0d3> <tag.startcheck> 0
+group 1
+radio 20 155 <eval 093a> <eval 0939> <qval (0<tag.radio2>=0)|((0<tag.radio2>=7)&&(<targ.ischar>=0))?1:0> 1
+radio 20 175 <eval 093a> <eval 0939> <qval 0<tag.radio2>=1?1:0> 2
+radio 20 195 <eval 093a> <eval 0939> <qval 0<tag.radio2>=2?1:0> 3
+radio 20 215 <eval 093a> <eval 0939> <qval 0<tag.radio2>=3?1:0> 4
+radio 20 235 <eval 093a> <eval 0939> <qval 0<tag.radio2>=4?1:0> 5
+radio 20 255 <eval 093a> <eval 0939> <qval 0<tag.radio2>=5?1:0> 6
+radio 20 275 <eval 093a> <eval 0939> <qval 0<tag.radio2>=6?1:0> 7
+radio 20 295 <qval <targ.ischar>=1?<eval 093a>:60994> <eval 0939> <qval (0<tag.radio2>=11)&&(<targ.ischar>=1)?1:0> 11
+group 2
+radio 10 <eval 185+160> <eval 093a> <eval 0939> <qval 0<tag.radio>=0?1:0> 8
+radio 10 <eval 205+160> <eval 093a> <eval 0939> <qval 0<tag.radio>=1?1:0> 9
+radio 10 <eval 225+160> <eval 093a> <eval 0938> <qval 0<tag.radio>=2?1:0> 10
+//end group
+//End Data Entry
+button 100 150 <eval 0907> <eval 0908> 1 0 500
+//End Search Menu
+
+[dialog d_search text]
+<var.center>Sphere Container Search Engine <var.version> //Enter a name for this Menu
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>>.uid>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+1>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+1>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+1>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+2>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+2>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+2>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+3>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+3>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+3>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+4>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+4>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+4>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+5>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+5>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+5>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+6>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+6>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+6>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+7>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+7>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+7>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+8>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+8>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+8>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+9>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+9>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+9>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+10>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+10>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+10>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+11>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+11>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+11>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+12>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+12>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+12>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+13>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+13>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+13>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+14>.name>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+14>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+14>.link.<var.searchparms>><var.ue>>
+<qval strmatch("<act.findcont.<eval 0<tag.scrollslot>+15>.uid>","0")?:Name; <var.u><act.findcont.<eval 0<tag.scrollslot>+15>.name><var.ue> <var.searchparms>; <var.u><act.findcont.<eval 0<tag.scrollslot>+15>.link.<var.searchparms>><var.ue>>
+<var.big><var.center><var.BFONT_LRED>S<var.Bfont_DRED>t<var.BFONT_LGREEN>r<var.BFONT_GREEN>i<var.BFONT_DGREEN>n<var.BFONT_LBLUE>g <var.BFONT_BLUE>P<var.BFONT_DBLUE>a<var.BFONT_LYELLOW>t<var.BFONT_YELLOW>t<var.BFONT_DYELLOW>e<var.BFONT_LPURPLE>r <var.BFONT_PURPLE>M<var.BFONT_DPURPLE>a<var.BFONT_LCYAN>t<var.BFONT_CYAN>c<var.BFONT_LRED>h<var.BFONT_DCYAN>i<var.BFONT_LRED>n<var.BFONT_RED>g <var.Bfont_DRED>b<var.BFONT_LGREEN>y <var.BFONT_GREEN>T<var.BFONT_DGREEN>e<var.BFONT_LBLUE>r<var.BFONT_BLUE>r<var.BFONT_DBLUE>a<var.BFONT_LYELLOW>n <var.BFONT_BLACK>[Search Help]
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+Get Search Help
+What would you like to search for?
+*
+Child Containers
+I want to...
+Edit...
+Bounce...
+Delete...
+<qval <act>=0?No Current Search Results:<act.name>>
+...When I click the blue edit buttons
+Name
+Type
+ATTR
+Baseid
+ID
+Color
+Dispid
+<qval <targ.ischar>=1?Memory:>
+
+[dialog d_search button]
+//start slider Buttons
+on=0
+act.remove
+on=1
+tag.scrollspace=21
+barclick
+dialog d_search
+on=2
+tag.scrollspace=52
+barclick
+dialog d_search
+
+ON=3
+tag.scrollspace=<eval 21+(31*2)>
+barclick
+dialog d_search
+
+ON=4
+tag.scrollspace=<eval 21+(31*3)>
+barclick
+dialog d_search
+
+ON=5
+tag.scrollspace=<eval 21+(31*4)>
+barclick
+dialog d_search
+
+ON=6
+tag.scrollspace=<eval 21+(31*5)>
+barclick
+dialog d_search
+
+ON=7
+tag.scrollspace=<eval 21+(31*6)>
+barclick
+dialog d_search
+
+ON=8
+tag.scrollspace=<eval 21+(31*7)>
+barclick
+dialog d_search
+
+ON=9
+tag.scrollspace=<eval 21+(31*8)>
+barclick
+dialog d_search
+
+ON=10
+tag.scrollspace=<eval 21+(31*9)>
+barclick
+dialog d_search
+
+on=11
+scrollup
+dialog d_search
+
+on=12
+scrolldown
+dialog d_search
+//end slider buttons
+//Start your buttons here
+on=201
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=202
+var.num=1
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=203
+var.num=2
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=204
+var.num=3
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=205
+var.num=4
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=206
+if <argchk[8]>=1
+var.num=5
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=207
+var.num=6
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=208
+var.num=7
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=209
+var.num=8
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=210
+var.num=9
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=211
+var.num=10
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=212
+var.num=11
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=213
+var.num=12
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=214
+var.num=13
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=215
+var.num=14
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+on=216
+var.num=17
+if <argchk[8]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.info
+act.remove
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[9]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.bounce
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+elif <argchk[10]>=1
+try act.findcont.<eval 0<tag.scrollslot>+0<var.num>>.link.remove
+act.remove
+var.found=0
+
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+
+endif
+
+on=400
+tag.startcheck=<argchk[0]>
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+tag.radio2=0
+elif <argchk[2]>=1
+tag.radio2=1
+elif <argchk[3]>=1
+tag.radio2=2
+elif <argchk[4]>=1
+tag.radio2=3
+elif <argchk[5]>=1
+tag.radio2=4
+elif <argchk[6]>=1
+tag.radio2=5
+elif <argchk[7]>=1
+tag.radio2=6
+elif <argchk[11]>=1
+tag.radio2=11
+endif
+dialog d_search_help
+//End you buttons here
+on=500
+tag.startcheck <argchk[0]>
+if <argchk[8]>=1
+tag.radio=0
+elif <argchk[9]>=1
+tag.radio=1
+elif <argchk[10]>=1
+tag.radio=2
+endif
+if <argchk[1]>=1
+var.searchparms=Name
+tag.radio2=0
+elif <argchk[2]>=1
+var.searchparms=Type
+tag.radio2=1
+elif <argchk[3]>=1
+var.searchparms=Attr
+tag.radio2=2
+elif <argchk[4]>=1
+var.searchparms=Baseid
+tag.radio2=3
+elif <argchk[5]>=1
+var.searchparms=ID
+tag.radio2=4
+elif <argchk[6]>=1
+var.searchparms=Color
+tag.radio2=5
+elif <argchk[7]>=1
+var.searchparms=Dispid
+tag.radio2=6
+elif <argchk[11]>=1
+var.searchparms=Color
+tag.radio2=11
+endif
+var.found=0
+targ.findletter <argtxt[0]>
+
+[EOF]

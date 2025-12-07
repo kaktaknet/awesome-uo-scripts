@@ -1,0 +1,2393 @@
+OK a biggie this. I'll try to fit it on here, if not Ill post a link & Kell can slap me later :) 
+
+
+
+The Deus Ovis House Menu. 
+
+This menu has been running without problems for over 5 months now on a 50-100 player shard. 
+
+Before you start, PLEASE make backups of all teh scripts you are about to modify. 
+
+I offer no warranty, guarantees or support on this script, you use it at your own free will. 
+
+Points to note are : 
+
+House decay is enabled. This is initially set on=@create, in the timer=. Using the housemenu refreshes the house. 
+
+To alter the decay rate, edit the multi timer AND the wooden signs below. 
+
+To disable decay, change the timers to -1. 
+
+
+
+
+
+
+
+You may use this script freely, but I do ask for some recognition if you use it :) 
+
+Intellectual Copyright remains with Deus Ovis, 2000, whilst Copyrights to the actual Sphere scripts and scripting language belong to Menasoft. 
+
+
+
+
+
+open up sphereitemb2 and replace the definitions 0bcf and 0bd1 with the following ones : 
+
+
+
+
+
+
+
+code:--------------------------------------------------------------------------------
+
+[ITEMDEF 0bcf]
+
+//wooden sign
+
+TYPE=T_SIGN_GUMP
+
+//type=t_script
+
+FLIP=1
+
+TDATA2=067
+
+RESOURCES=2 I_BOARD, 1 i_ingot_iron
+
+CATEGORY=Decoration - Signs
+
+SUBSECTION=Blank
+
+DESCRIPTION=Wooden Blank
+
+DUPELIST=0bd0
+
+on=@click
+
+src.sysmessage the house of <link.more1.name>
+
+if (<link.timer>>=1209600)
+
+src.sysmessage the house is like new!
+
+endif
+
+if (<link.timer>>=604800) && (<link.timer><<1209600)
+
+src.sysmessage the house is suffering from neglect!
+
+endif
+
+if (<link.timer><<604800)
+
+src.sysmessage the house is grealy neglected
+
+endif
+
+if (<link.timer><=86400) 
+
+src.sysmessage the house could collapse at any time!
+
+endif
+
+
+
+
+
+
+
+on=@dclick
+
+
+
+IF (<SRC.UID>==<LINK.MORE1>) || (<src.isgm>==1)
+
+var.owner=<link.more1>
+
+link.timer=1814400
+
+src.sysmessage The house is refreshed by your return!
+
+
+
+dialog d_housemenu
+
+return 1
+
+else
+
+src.message This is not your house!
+
+return 1
+
+
+
+on=@targon_char
+
+IF (<morex>=10)
+
+tag.coowner1=<src.targ.uid>
+
+link.tag.coowner1=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner1>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=11)
+
+tag.coowner2=<src.targ.uid>
+
+link.tag.coowner2=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner2>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=12)
+
+link.tag.coowner3=<src.targ.uid>
+
+tag.coowner3=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner3>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=13)
+
+tag.coowner4=<src.targ.uid>
+
+link.tag.coowner4=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner4>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=14)
+
+tag.coowner5=<src.targ.uid>
+
+link.tag.coowner5=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner5>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=15)
+
+tag.coowner6=<src.targ.uid>
+
+link.tag.coowner6=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner6>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=16)
+
+link.more=<src.targ.uid>
+
+src.message=<src.uid.<src.targ.uid>.name> is the new owner!
+
+link.tag.coowner1=0
+
+link.tag.coowner2=0
+
+link.tag.coowner3=0
+
+link.tag.coowner4=0
+
+link.tag.coowner5=0
+
+link.tag.coowner6=0
+
+
+
+return 1
+
+endif
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+
+
+code:--------------------------------------------------------------------------------
+
+[ITEMDEF 0bd1]
+
+//brass sign
+
+DEFNAME=i_sign_brass
+
+TYPE=T_SIGN_GUMP
+
+//type=t_script
+
+TDATA2=064
+
+FLIP=1
+
+RESOURCES=2 I_BOARD, 1 i_ingot_iron
+
+CATEGORY=Decoration - Signs
+
+SUBSECTION=Blank
+
+DESCRIPTION=Brass Blank
+
+DUPELIST=0bd2
+
+
+
+
+
+on=@click
+
+if (<link.timer>>=1209600)
+
+src.sysmessage the house is like new!
+
+endif
+
+if (<link.timer>>=604800) && (<link.timer><=1209599)
+
+src.sysmessage the house is suffering from neglect!
+
+endif
+
+if (<link.timer><=604799) && (<link.timer>>=86401) 
+
+src.sysmessage the house is grealy neglected
+
+endif
+
+if (<link.timer><=86400) 
+
+src.sysmessage the house could collapse at any time!
+
+endif
+
+
+
+
+
+
+
+on=@dclick
+
+
+
+IF (<SRC.UID>==<LINK.MORE1>) || (<src.isgm>==1)
+
+var.owner=<link.more1>
+
+link.timer=1814400
+
+src.sysmessage The house is refreshed by your return!
+
+
+
+
+
+dialog d_housemenu
+
+return 1
+
+else
+
+src.message This is not your house!
+
+return 1
+
+
+
+on=@targon_char
+
+IF (<morex>=10)
+
+//tag.coowner1=<src.targ.uid>
+
+link.tag.coowner1=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner1>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=11)
+
+//tag.coowner2=<src.targ.uid>
+
+link.tag.coowner2=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner2>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=12)
+
+link.tag.coowner3=<src.targ.uid>
+
+//tag.coowner3=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner3>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=13)
+
+//tag.coowner4=<src.targ.uid>
+
+link.tag.coowner4=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner4>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=14)
+
+//tag.coowner5=<src.targ.uid>
+
+link.tag.coowner5=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner5>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=15)
+
+//tag.coowner6=<src.targ.uid>
+
+link.tag.coowner6=<src.targ.uid>
+
+src.say <src.uid.<link.tag.coowner6>.name> is a co-owner.
+
+dialog d_housemenu
+
+return 1
+
+else
+
+IF (<morex>=16)
+
+link.more=<src.targ.uid>
+
+src.message=<src.uid.<src.targ.uid>.name> is the new owner!
+
+link.tag.coowner1=0
+
+link.tag.coowner2=0
+
+link.tag.coowner3=0
+
+link.tag.coowner4=0
+
+link.tag.coowner5=0
+
+link.tag.coowner6=0
+
+
+
+return 1
+
+endif
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+
+
+Now create a blank text file spherehouse_c.scp and paste the following : 
+
+
+
+
+
+code:--------------------------------------------------------------------------------
+
+[SPEECH spk_house_cmds]
+
+DEFNAME=spk_house_cmds
+
+
+
+on=I wish to move this North
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=10
+
+src.message Target Item to move.
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+endif
+
+
+
+on=I wish to move this South
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=11
+
+src.message Target Item to move.
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+endif
+
+
+
+on=I wish to move this West
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=13
+
+src.message Target Item to move.
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+endif
+
+
+
+on=I wish to move this East
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=12
+
+src.message Target Item to move.
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+endif
+
+
+
+on=I wish to move this up
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=14
+
+src.message Target Item to move.
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+endif
+
+
+
+on=I wish to move this down
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=15
+
+src.message Target Item to move.
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+endif
+
+
+
+
+
+ON=*I wish to lock this down*
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=1
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+endif
+
+
+
+ON=*I wish to release this*
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=2
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+endif
+
+
+
+ON=*I wish to remove this*
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=3
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+
+
+endif
+
+
+
+//ON=*remove thyself*
+
+//IF (<SRC.UID>==<MORE>) || (<src.uid>==<tag.coowner1>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+//morex=4
+
+//target
+
+//return 1
+
+
+
+ON=*I wish to open my bank box*
+
+IF (<SRC.UID>==<MORE>) || (<tag.coowner1>==<src.uid>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+IF (<src.region.flags>==01192) || (<src.region.flags>==01092)
+
+src.bankself
+
+endif
+
+
+
+endif
+
+
+
+ON=*remove thyself*
+
+IF (<SRC.UID>==<MORE>) || (<src.uid>==<tag.coowner1>) || (<tag.coowner2>==<src.uid>) || (<tag.coowner3>==<src.uid>) || (<tag.coowner4>==<src.uid>) || (<tag.coowner5>==<src.uid>) || (<tag.coowner6>==<src.uid>)
+
+morex=4
+
+tag.region=<region.uid>
+
+target
+
+return 1
+
+
+
+on=*fatgit*
+
+say Fatgit 0wnz j00
+
+
+
+on=*Who is the owner*
+
+IF (<src.isgm>=1)
+
+say <src.uid.<more>.name> is my owner - account <src.uid.<more>.account>
+
+else
+
+say <src.uid.<more>.name> is my owner
+
+
+
+on=*what time is it*
+
+say The time, sponsored by UKOnline, is <LOCALTIME>
+
+
+
+on=*I 0wn j00*
+
+say No, Fatgit 0wnz you!
+
+
+
+on=*I wish to place a strongbox*
+
+
+
+IF !(<more>==<src.uid>)
+
+src.sysmessage Only the owner may place a strongbox
+
+return 1
+
+endif
+
+
+
+if !(<tag.strongbox>==1)
+
+src.newitem=i_strongbox
+
+src.act.bounce
+
+src.act.attr=010
+
+
+
+src.act.drop
+
+src.sysmessage now double click to claim ownership!
+
+tag.strongbox=1
+
+else
+
+src.sysmessage This house already has a strongbox.
+
+return 1
+
+endif
+
+
+
+[itemdef i_strongbox]
+
+DEFNAME=i_strong_box
+
+TYPE=T_CONTAINER
+
+ID=i_box_brass
+
+NAME=strong box
+
+TDATA2=04b
+
+
+
+on=@create
+
+src.sysmessage Please double click the box to set owner!
+
+
+
+
+
+
+
+ON=@dclick 
+
+if (<more1>==0)
+
+more1=<src.uid>
+
+endif
+
+IF !(<more1>==<src.uid>)
+
+  IF !(<more2>==<src.uid>)
+
+    IF !(<src.isgm>)
+
+      SRC.SYSMESSAGE this is not your container!
+
+      return 1
+
+    ENDIF
+
+  ENDIF
+
+endif
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+Next we need to create spherehouse.scp : 
+
+
+
+
+
+code:--------------------------------------------------------------------------------
+
+
+
+[ITEMDEF i_lockdown]
+
+ID=i_memory
+
+NAME lockdown
+
+TYPE t_eq_script
+
+
+
+ON=@dclick
+
+target
+
+timer=5
+
+
+
+ON=@timer 
+
+src.say hmm
+
+
+
+
+
+on=@targon_item
+
+IF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>)
+
+src.message Item must not be in your pack!
+
+return 1
+
+endif
+
+
+
+if (<src.targ.region.flags>==01192) || (<src.targ.region.flags>==01092)
+
+IF !(<src.targ.attr>==010
+
+src.targ.attr=010
+
+src.message Locked Down
+
+remove
+
+return 1
+
+elseif (<src.targ.attr>==010)
+
+src.targ.attr=0
+
+src.message=Released
+
+remove
+
+return 1
+
+else 
+
+return 1
+
+remove
+
+src.message lockdown not possible.
+
+endif
+
+else
+
+remove
+
+src.message You can only lockdown in a house!
+
+return 1
+
+endif
+
+
+
+
+
+
+
+[dialog d_housemenu]
+
+0, 0
+
+resizepic 100 100 2620 270 240 //Page 0: Background 
+
+resizepic 110 110 3000 250 220
+
+
+
+page 1 
+
+resizepic 100 100 2620 270 250 //Page 0: Background 
+
+resizepic 110 110 3000 250 230 // background white
+
+button 120 160 1209 1210 1 0 1 //re-key
+
+button 120 200 1209 1210 0 3 //re-deed 
+
+button 120 240 1209 1210 1 0 3 //bank
+
+Button 120 280 1209 1210 0 2 /add co-owner
+
+button 120 320 1209 1210 0 4 //change owner
+
+
+
+text 120 115 0 0
+
+text 160 155 0 1
+
+text 160 195 0 2 
+
+text 160 235 0 3 
+
+text 160 275 0 4 
+
+text 160 315 0 14
+
+
+
+
+
+page 2 
+
+resizepic 100 100 2620 270 240 //Page 0: Background 
+
+resizepic 110 110 3000 250 220 // background white
+
+text 120 115 0 5 // text Add Remove Name
+
+button 120 140 1209 1210 1 0 11 //button add co-owner 1
+
+Button 160 140 1209 1210 1 0 12 //button remove co-owner 1
+
+text 200 135 0 6 // co owner name
+
+button 120 170 1209 1210 1 0 13 //button add co-owner 2
+
+Button 160 170 1209 1210 1 0 14 //button remove co-owner 2
+
+text 200 165 0 7 // co owner name2
+
+button 120 200 1209 1210 1 0 15 //button add co-owner 3
+
+Button 160 200 1209 1210 1 0 16 //button remove co-owner 3
+
+text 200 195 0 8 // co owner name 3
+
+button 120 230 1209 1210 1 0 17 //button add co-owner 4
+
+Button 160 230 1209 1210 1 0 18 //button remove co-owner 4
+
+text 200 225 0 9 //co-owner name 4
+
+button 120 260 1209 1210 1 0 19 //button add co-owner 5
+
+Button 160 260 1209 1210 1 0 20 //button remove co-owner 5
+
+text 200 255 0 10 //co owner name 5
+
+button 120 290 1209 1210 1 0 21 //button add co-owner 6
+
+Button 160 290 1209 1210 1 0 22 //button remove co-owner 6
+
+text 200 285 0 11 //co owner name 6
+
+
+
+page 3
+
+resizepic 100 100 2620 370 240 //Page 0: Background 
+
+resizepic 110 110 3000 350 220
+
+button 120 160 1209 1210 1 0 0 //no
+
+button 120 190 1209 1210 1 0 2 //yes
+
+text 160 155 0 12
+
+text 160 185 0 13
+
+
+
+page 4 //transfer
+
+resizepic 100 100 2620 370 240 //Page 0: Background 
+
+resizepic 110 110 3000 350 220 //
+
+button 120 160 1209 1210 1 0 23 //no
+
+button 120 190 1209 1210 1 0 24 //yes
+
+text 160 155 0 15
+
+text 160 185 0 16
+
+
+
+[dialog d_housemenu TEXT]
+
+House Of <src.uid.<var.owner>.name> //0
+
+Create a new key (100gp) //1
+
+Demolish House for Deed //2
+
+Not In Use //3
+
+Co-Owner Menu //4
+
+Add Rem. Name //5
+
+<src.uid.<link.tag.coowner1>.name> //6
+
+<src.uid.<link.tag.coowner2>.name> //7
+
+<src.uid.<link.tag.coowner3>.name> //8
+
+<src.uid.<link.tag.coowner4>.name> //9
+
+<src.uid.<link.tag.coowner5>.name> //10
+
+<src.uid.<link.tag.coowner6>.name> //11
+
+No, I don't want to redeed the house. //12
+
+Yes, I want to re-deed the house. //13
+
+Transfer Ownership //14
+
+No, I Don't want to transfer ownership //15
+
+Yes, I do want to transfer ownership //16
+
+
+
+
+
+[dialog d_housemenu BUTTON]
+
+onbutton=0
+
+morex=0
+
+return 1
+
+
+
+
+
+onbutton=1
+
+//change locks
+
+//src.message Please click on the door to the house.
+
+//target
+
+IF !(<src.restest 100 i_gold>)
+
+src.message Sorry you cannot afford this option.
+
+return 1
+
+endif
+
+src.consume=100 i_gold
+
+IF (<SRC.UID>==<LINK.MORE1>) || (<src.isgm>==1)
+
+SRC.NEWITEM=i_key_copper
+
+src.act.attr=04
+
+src.act.link=<link>
+
+SRC.ACT.MORE1=<more1>
+
+var.test=<link>-1
+
+SRC.ACT.BOUNCE
+
+
+
+SRC.NEWITEM=i_key_copper
+
+src.act.attr=04
+
+src.act.link=<link>
+
+SRC.ACT.MORE1=<more1>
+
+var.test=<link>-1
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+SRC.SYSMESSAGE You have successfuly changed the house locks.
+
+dialog d_housemenu
+
+ELSE
+
+SRC.SYSMESSAGE Only the owner may change the house locks.
+
+
+
+ONBUTTON=2
+
+
+
+
+
+IF (<link.baseID>==i_multi_house_stone_plaster_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_stone_plaster_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+RETURN 1
+
+elseIF (<link.baseid>==i_multi_house_stone_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_stone_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+return 1
+
+elseIF (<link.baseid>==i_multi_shop_stone_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_shop_stone_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+return 1
+
+elseIF (<link.baseid>==i_multi_house_stone_brick_small)
+
+
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_stone_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_quad)
+
+link.remove
+
+SRC.NEWITEM=i_deed_quad
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_marble_keep)
+
+link.remove
+
+SRC.NEWITEM=i_deed_marble_keep
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_large_marble_house)
+
+link.remove
+
+SRC.NEWITEM=i_deed_large_marble_house
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_marble_shrine_north)
+
+link.remove
+
+SRC.NEWITEM=i_deed_marble_shrine_north
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_Large_2_Story_Log_Cabin)
+
+link.remove
+
+SRC.NEWITEM=i_deed_Large_2_Story_Log_Cabin
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_Large_farm_house)
+
+link.remove
+
+SRC.NEWITEM=i_deed_Large_farm_house
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_small_marble_house)
+
+link.remove
+
+SRC.NEWITEM=i_deed_small_marble_house
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_wood_and_plaster_house)
+
+link.remove
+
+SRC.NEWITEM=i_deed_wood_and_plaster_house
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_large_stone_shop)
+
+link.remove
+
+SRC.NEWITEM=i_deed_Large_stone_shop
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_2_story_brick_and_terrace)
+
+link.remove
+
+SRC.NEWITEM=i_deed2_Story_brick_and_terrace
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_evil_tower)
+
+link.remove
+
+SRC.NEWITEM=i_deed_evil_tower
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_small_rattan_house)
+
+link.remove
+
+SRC.NEWITEM=i_deed_small_rattan_house
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_west_wood_and_plaster_house)
+
+link.remove
+
+SRC.NEWITEM=i_deed_west_wood_and_plaster_house
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_weaver_cottage)
+
+link.remove
+
+SRC.NEWITEM=i_deed_weaver_cottage
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_small_sandstone_cottage)
+
+link.remove
+
+SRC.NEWITEM=i_deed_small_sandstone_cottage
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_single_story_log_cabin)
+
+link.remove
+
+SRC.NEWITEM=i_single_story_log_cabin
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_Large_castle)
+
+link.remove
+
+SRC.NEWITEM=i_deed_Large_castle
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_raised_rattan_house_with_moat)
+
+link.remove
+
+SRC.NEWITEM=i_deed_raised_rattan_house_with_moat
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_sea_shop)
+
+link.remove
+
+SRC.NEWITEM=i_deed_sea_shop
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+
+
+elseIF (<link.baseid>==i_multi_house_stone_wood_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_stone_wood_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_house_wood_thatched_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_wood_thatched_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_house_3room)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_3room
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_house_wood_plaster_2story)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_wood_plaster_2story
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_house_stone_plaster_2story)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_stone_plaster_2story
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_tower)
+
+link.remove
+
+SRC.NEWITEM=i_deed_tower
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_castle)
+
+link.remove
+
+SRC.NEWITEM=i_deed_castle
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_keep)
+
+link.remove
+
+SRC.NEWITEM=i_deed_keep
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_shop_blacksmithy_large)
+
+link.remove
+
+SRC.NEWITEM=i_deed_shop_blacksmithy_large
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_shop_marble_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_shop_marble_small
+
+
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_villa_2story)
+
+link.remove
+
+SRC.NEWITEM=i_deed_villa_2story
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_house_patio_sand)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_patio_sand
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+
+
+elseIF (<link.baseid>==i_multi_house_patio_marble)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_patio_marble
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+return 1
+
+elseIF (<link.baseid>==i_multi_cabin_log_2story)
+
+link.remove
+
+SRC.NEWITEM=i_deed_cabin_log_2story
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+return 1
+
+elseIF (<link.baseid>==i_multi_house_stone_wood_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_stone_wood_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+elseIF (<link.baseid>==i_multi_house_wood_thatched_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_wood_thatched_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+elseIF (<link.baseid>==i_multi_house_wood_plaster_small)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_wood_plaster_small
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+elseIF (<link.baseid>==i_multi_tower_wizard)
+
+link.remove
+
+SRC.NEWITEM=i_deed_tower_wizard
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+
+
+
+
+elseIF (<link.baseid>==i_multi_house_wheat_cottage)
+
+link.remove
+
+SRC.NEWITEM=i_deed_house_wheat_cottage
+
+SRC.ACT.CONT <SRC.FINDLAYER(29).UID>
+
+else
+
+src.message Sorry this cant be re-deeded. Please contact a GM if this is your house
+
+RETURN 1
+
+
+
+onbutton=3
+
+return 1
+
+//if !(<src.region.uid>==(link.region.uid>)
+
+//src.sysmessage you are not in your house!
+
+//return 1
+
+//endif
+
+//SRC.BANKSELF
+
+//dialog d_housemenu
+
+//RETURN 1
+
+
+
+onbutton=4
+
+//co-owner
+
+
+
+//morex=5
+
+//target
+
+//return 1
+
+
+
+onbutton=11
+
+//add coowner 1
+
+morex=10
+
+target
+
+return 1
+
+
+
+onbutton=12
+
+//remove coowner1
+
+src.message=<src.uid.<link.tag.coowner1>.name> is no longer a co-owner!
+
+//tag.coowner1=0
+
+link.tag.coowner1=0
+
+dialog d_housemenu
+
+
+
+onbutton=13
+
+//add coowner 2
+
+morex=11
+
+target
+
+return 1
+
+
+
+onbutton=14
+
+//remove coowner2
+
+
+
+src.message=<src.uid.<link.tag.coowner2>.name> is no longer a co-owner!
+
+//tag.coowner2=0
+
+link.tag.coowner2=0
+
+dialog d_housemenu
+
+
+
+onbutton=15
+
+//add coowner 3
+
+
+
+morex=12
+
+target
+
+return 1
+
+
+
+onbutton=16
+
+//remove coowner3 
+
+
+
+src.message=<src.uid.<link.tag.coowner3>.name> is no longer a co-owner!
+
+link.tag.coowner3=0
+
+//tag.coowner3=0
+
+dialog d_housemenu
+
+
+
+onbutton=17
+
+//add coowner 4
+
+
+
+morex=13
+
+target
+
+return 1
+
+
+
+onbutton=18
+
+//remove coowner 4
+
+
+
+src.message=<src.uid.<link.tag.coowner4>.name> is no longer a co-owner!
+
+//tag.coowner4=0
+
+link.tag.coowner4=0
+
+dialog d_housemenu
+
+
+
+onbutton=19
+
+//add coowner 5
+
+
+
+morex=14
+
+target
+
+return 1
+
+
+
+onbutton=20
+
+//remove coowner 5
+
+
+
+src.message=<src.uid.<link.tag.coowner5>.name> is no longer a co-owner!
+
+//tag.coowner5=0
+
+link.tag.coowner5=0
+
+dialog d_housemenu
+
+
+
+onbutton=21
+
+//add coowner 6
+
+
+
+morex=15
+
+target
+
+return 1
+
+
+
+onbutton=22
+
+//remove coowner 6
+
+
+
+src.message=<src.uid.<link.tag.coowner6>.name> is no longer a co-owner!
+
+//tag.coowner6=0
+
+link.tag.coowner6=0
+
+dialog d_housemenu
+
+
+
+ONbutton=23
+
+dialog d_housemenu
+
+return 1
+
+
+
+onbutton=24
+
+morex=16
+
+src.message Target the new owner.
+
+target
+
+return 1
+
+
+
+[function housemenu]
+
+if !(<src.targ.region.uid>==<tag.region>)
+
+src.message You are no longer in your house!
+
+return 1
+
+endif
+
+if !(<src.targ.region.uid>==<tag.region>)
+
+src.message You are no longer in your house!
+
+return 1
+
+endif
+
+
+
+if (<morex>==3)
+
+IF !(<src.targ.cont>==0)
+
+src.sysmessage you cannot lock that down!
+
+return 1
+
+endif
+
+IF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+
+src.message Item must not be in your pack!
+
+return 1
+
+endif
+
+if (<src.targ.region.flags>==01192) || (<src.targ.region.flags>==01092)
+
+IF (<src.targ.baseid>==i_strongbox)
+
+tag.strongbox=0
+
+endif
+
+src.targ.remove
+
+morex=0
+
+else
+
+src.message You may only remove items in a house!
+
+morex=0
+
+endif
+
+endif
+
+
+
+IF (<morex>=1)
+
+IF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+
+src.message Item must not be in your pack!
+
+return 1
+
+endif
+
+        if ((<SRC.TARG.P.X>==0) && (<SRC.TARG.P.Y>==0))
+
+        src.message You cannot lock down items you are wearing
+
+        return 1
+
+        endif
+
+
+
+if (<src.targ.region.flags>==01192) || (<src.targ.region.flags>==01092)
+
+if (<src.targ.attr>==<src.targ.attr>|attr_move_always)
+
+ 
+
+SRC.TARG.ATTR=<SRC.TARG.ATTR>&~attr_move_always
+
+endif
+
+src.targ.attr=<SRC.TARG.ATTR>|attr_move_never
+
+
+
+src.message Locked Down
+
+ELSE
+
+src.message You can only lockdown in a house!
+
+return 1
+
+endif
+
+endif
+
+
+
+if (<morex>=2)
+
+if (<src.targ.region.flags>==01192) || (<src.targ.region.flags>==01092)
+
+IF (<SRC.TARG.CONT.CONT.UID>==<SRC.UID>) || (<src.targ.cont.type>==t_eq_trade_window)
+
+src.message Item must not be in your pack!
+
+return 1
+
+else
+
+SRC.TARG.ATTR=<SRC.TARG.ATTR>&~attr_move_never
+
+src.message Released
+
+return 1
+
+endif
+
+else
+
+src.message You can only release in a house!
+
+return 1 
+
+endif
+
+
+
+endif
+
+IF (<morex>=10)
+
+//move north
+
+IF !(<src.targ.region.uid>==<region.uid>)
+
+src.message That item is not in the house
+
+return 1
+
+endif
+
+if (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_script) || (<src.targ.type>==t_sign_gump)
+
+src.sysmessage This cannot be moved by a player
+
+return 1
+
+endif
+
+src.targ.move 0,-1
+
+return 1
+
+endif
+
+
+
+IF (<morex>=11)
+
+//move south
+
+IF !(<src.targ.region.uid>==<region.uid>)
+
+src.message That item is not in the house
+
+return 1
+
+endif
+
+if (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_script) || (<src.targ.type>==t_sign_gump)
+
+src.sysmessage This cannot be moved by a player
+
+return 1
+
+endif
+
+src.targ.move 0,1
+
+return 1
+
+endif
+
+
+
+IF (<morex>=12)
+
+//move east
+
+IF !(<src.targ.region.uid>==<region.uid>)
+
+src.message That item is not in the house
+
+return 1
+
+endif
+
+if (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_script) || (<src.targ.type>==t_sign_gump)
+
+src.sysmessage This cannot be moved by a player
+
+return 1
+
+endif
+
+src.targ.move 1,0
+
+return 1
+
+endif
+
+
+
+IF (<morex>=13)
+
+//move west
+
+IF !(<src.targ.region.uid>==<region.uid>)
+
+src.message That item is not in the house
+
+return 1
+
+endif
+
+if (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_script) || (<src.targ.type>==t_sign_gump)
+
+src.sysmessage This cannot be moved by a player
+
+return 1
+
+endif
+
+src.targ.move -1,0
+
+return 1
+
+endif
+
+
+
+IF (<morex>=14)
+
+//move up
+
+IF !(<src.targ.region.uid>==<region.uid>)
+
+src.message That item is not in the house
+
+return 1
+
+endif
+
+if (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_script) || (<src.targ.type>==t_sign_gump)
+
+src.sysmessage This cannot be moved by a player
+
+return 1
+
+endif
+
+src.targ.move 0,0,1
+
+return 1
+
+endif
+
+
+
+IF (<morex>=15)
+
+//move down
+
+IF !(<src.targ.region.uid>==<region.uid>)
+
+src.message That item is not in the house
+
+return 1
+
+endif
+
+if (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_script) || (<src.targ.type>==t_sign_gump)
+
+src.sysmessage This cannot be moved by a player
+
+return 1
+
+endif
+
+src.targ.move 0,0,-1
+
+return 1
+
+endif
+
+
+
+
+
+IF (<morex>=10)
+
+//move north
+
+IF !(<src.targ.region.uid>==<region.uid>)
+
+src.message That item is not in the house
+
+return 1
+
+endif
+
+if (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_script) || (<src.targ.type>==t_sign_gump)
+
+src.sysmessage This cannot be moved by a player
+
+return 1
+
+endif
+
+src.targ.move 0,-1
+
+return 1
+
+endif
+
+
+
+IF (<morex>=11)
+
+//move south
+
+IF !(<src.targ.region.uid>==<region.uid>)
+
+src.message That item is not in the house
+
+return 1
+
+endif
+
+if (<src.targ.type>==t_door) || (<src.targ.type>==t_door_locked) || (<src.targ.type>==t_script) || (<src.targ.type>==t_sign_gump)
+
+src.sysmessage This cannot be moved by a player
+
+return 1
+
+endif
+
+src.targ.move 0,1
+
+return 1
+
+endif
+
+
+
+[plevel 6]
+
+housemenu
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+Thats the complicated part done :) 
+
+
+
+Now we need to add a few lines to EVERY house multi in sphereitem_multis.scp and any custom houses you have added. 
+
+You need to add the following just after the components are listed (like this) : 
+
+
+
+
+
+code:--------------------------------------------------------------------------------
+
+MULTIREGION=-14,-16,14,17
+
+COMPONENT=06F1,-6,-1,0,0
+
+COMPONENT=06EF,13,-2,0,0
+
+COMPONENT=06ED,13,-1,0,0
+
+COMPONENT=06E5,10,4,0,0
+
+COMPONENT=06F3,-6,-2,0,0
+
+COMPONENT=06ED,-4,-10,20,0
+
+COMPONENT=0BD1,14,-4,1,0
+
+COMPONENT=06EF,6,-2,0,0
+
+COMPONENT=06ED,6,-1,0,0
+
+COMPONENT=06E5,-9,-8,20,0
+
+COMPONENT=06E5,-9,4,0,0
+
+COMPONENT=06E5,-9,4,20,0
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+Paste the following into each multi : 
+
+
+
+code:--------------------------------------------------------------------------------
+
+TSPEECH spk_house_cmds
+
+
+
+ON=@Create
+
+TIMER=-1
+
+MOREY=425
+
+MOREZ=3
+
+tag.coowner1=0
+
+tag.coowner2=0
+
+tag.coowner3=0
+
+tag.coowner4=0
+
+tag.coowner5=0
+
+tag.coowner6=0
+
+
+
+
+
+ON=@targon_char
+
+if (<morex>=4)
+
+if (<src.targ.region.flags>==01192) || (<src.targ.region.flags>==01092)
+
+src.targ.p=<link.p>
+
+src.update
+
+else
+
+src.message You may only eject someone from your house!
+
+morex=0
+
+endif
+
+endif
+
+
+
+on=@targon_item
+
+housemenu

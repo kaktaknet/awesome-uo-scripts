@@ -1,0 +1,628 @@
+[COMMENT info on Consocio]
+
+List of features:
+	Chat system -	Usage
+			".chat ?" - Provides info on how to use the OOC channel.
+			".chat on" - Turns on the chat channel.
+			".chat off" - Turns off the chat channel. Cannot send or listen if turned off.
+			".chat <ARGS>" - Sends a message to the OOC channel, visable to anybody that has it turned on.
+			".chatmute" - Mutes a player from the OOC channel. GM only.
+			".staff <ARGS>" - Sends a message to all staff members online.
+	Private messaging 
+			".msg" - Prompts message to send and gives list of online people to send to.
+			".msg <name>" - Checks if the player to send to is online. Then prompts message to send.
+			".reply <ARGS>" - Sends the argument to the player that last messaged you.
+			".private" - Makes you unable to be seen on the online list and unavailable for messages.
+	Online list
+			".online" - Lists players online. 
+
+Installation:
+
+Easy enough, just pop this script in anywhere and then open spheretables.scp. Add the commands
+reply, chat, msg, private and online under PLEVEL 1 and staff and chatmute under PLEVEL 3 
+(Or wherever you want to put it, players shouldn't have access to them tho.)
+
+Script is untested in a live shard environment and has only been used on my testserver, hence I do not guarantee it to be bugfree.
+Comments, suggestions and bug reports are gladly accepted at klas.nyholm at comcast.net (at = @, avoiding spambots.)
+I hold no responsibility for the use of this script and it should be tested before put to use on a live shard.
+
+
+[DEFNAME Online_uid]
+online_private 0400041af // Change this to UID of item with the name that will display when private.
+
+[FUNCTION private]
+DOSWITCH <TAG.PRIVATE>
+BEGIN
+TAG.PRIVATE=1
+SYSMESSAGE You are now in private mode.
+END
+BEGIN
+TAG.PRIVATE=
+SYSMESSAGE You have left private mode.
+END
+ENDDO
+
+[FUNCTION staff]
+IF !(STRCMPI(<ARGS>,))
+	SYSMESSAGE Please enter a message to send over the staff channel.
+	RETURN 1
+ENDIF
+VAR.MSGNAME=<SRC.NAME>
+SERV.ALLCLIENTS f_staffmsg <ARGS>
+f_clear_msgtag
+RETURN 1
+
+[FUNCTION chat]
+IF !(STRCMPI(<ARGS>,))
+	DOSWITCH <TAG.OOCCHAT>
+	BEGIN
+	TAG.OOCCHAT=1
+	SYSMESSAGE You've disabled the OOC channel.
+	END
+	BEGIN
+	TAG.OOCCHAT=
+	SYSMESSAGE You've enabled the OOC channel.
+	END
+	ENDDO
+	RETURN 1
+ENDIF
+
+IF !(STRCMPI(<ARGS>,?))
+	SYSMESSAGE - Usage
+	SYSMESSAGE Type .chat yourmessage to broadcast on the OOC channel.
+	SYSMESSAGE Type .chat to toggle the OOC channel on/off (On by default)
+	RETURN 1
+ENDIF
+
+IF !(STRCMPI(<ARGS>,on))
+	TAG.OOCCHAT=
+	SYSMESSAGE You have enabled the OOC Channel. Type .chat off to turn it back off again.
+	RETURN 1
+ENDIF
+
+IF !(STRCMPI(<ARGS>,off))
+	TAG.OOCCHAT=1
+	SYSMESSAGE You have turned off the OOC channel. Type .chat on to turn it back on again.
+	RETURN 1
+ENDIF
+
+IF (0<TAG.MUTED>) // If muted from chat.
+	SYSMESSAGE You have been blocked from this channel.
+	RETURN 1
+ENDIF
+IF (0<TAG.OOCCHAT>) // If channel has been turned off.
+	SYSMESSAGE Turn on the chat before you can send messages to it.
+	RETURN 1
+ENDIF
+
+VAR.MSGNAME=<SRC.NAME>
+SERV.ALLCLIENTS f_ooc <ARGS>
+f_clear_msgtag
+
+
+[FUNCTION chatmute]
+SRC.NEWITEM=i_chat_muter
+SRC.ACT.TIMER=45
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.CONT=<SRC.UID>
+SRC.ACT.DCLICK
+
+[ITEMDEF i_chat_muter]
+ID=i_memory
+NAME=A chat muting timer
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_DECAY
+
+ON=@DCLICK
+TARGET Whom do you wish to mute?
+RETURN 1
+
+On=@TARGON_ITEM 
+LINK.SYSMESSAGE You cannot mute that!
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+LINK.SYSMESSAGE You cannot mute that!
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BRAIN>) // Cannot mute NPC's.
+	LINK.SYSMESSAGE You cannot mute that!
+	REMOVE
+	RETURN 1
+ELIF (0<SRC.TARG.TAG.MUTED>) // If already muted.
+	SRC.TARG.TAG.MUTED=
+	SRC.TARG.SYSMESSAGE You can now talk on the OOC channel again.
+	LINK.SYSMESSAGE You have unmuted <SRC.TARG.NAME> from the OOC channel.
+	REMOVE
+	RETURN 1
+ENDIF
+
+SRC.TARG.TAG.MUTED=1 // If not muted.
+SRC.TARG.SYSMESSAGE You have been blocked from the OOC channel.
+SRC.SYSMESSAGE You have muted <SRC.TARG.NAME> from the OOC channel.
+REMOVE
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[FUNCTION reply]
+IF !(0<TAG.REPLYTO>) // If no message has been recivied, nobody to reply to.
+	SYSMESSAGE @41 Somebody has to message you before you can reply!
+RETURN 1
+ENDIF
+
+VAR.SENDTEXT=<ARGS>
+VAR.SENDERNAME=<NAME>
+VAR.REPLYTO=<UID>
+SERV.ALLCLIENTS f_msg_send <TAG.REPLYTO>
+SOUND 74
+SYSMESSAGE Message sent!
+f_clear_msgtag
+
+[FUNCTION msg]
+IF !(STRCMPI(<ARGS>,)) // If no ARG, display list of people.
+	msg_online
+	RETURN 1
+ELSE
+	VAR.ONLINECHECK=0 // See if player is online when a name is supplied.
+	SERV.ALLCLIENTS f_onlinecheck <ARGS> // Name supplied. 
+ENDIF
+IF (0<VAR.ONLINECHECK>) // 1 if player is online.
+	TAG.TEMPSENDERNAME=<NAME>
+	TAG.TEMPREPLYTO=<UID>
+	TAG.TEMPSENDTO=<ARGS>
+	DIALOG d_message2
+	RETURN 1
+ELSE // Player is not online.
+	SYSMESSAGE There is no such player or the player is offline/in private mode!
+	RETURN 1
+ENDIF
+
+[DIALOG d_message] 
+200,200 
+resizepic 0 0 3600 330 140 
+page 0 
+text 20 20 1152 0 
+gumppic 30 50 1143 
+textentry  40 52 250 20 32 0 1 
+button 120 90 249 248 1 0 1 //okay 
+button 210 90 243 241 1 0 2 //cancel 
+
+[DIALOG d_message text] 
+Write your message here.
+<VAR.BLANKLINE>
+
+[DIALOG d_message button] 
+on=1 
+SRC.TAG.TEXTSEND=<argtxt[0]> 
+f_sender
+RETURN 1 
+on=2 
+RETURN 1 
+
+[DIALOG d_message2] 
+200,200 
+resizepic 0 0 3600 330 140 
+page 0 
+text 20 20 1152 0 
+gumppic 30 50 1143 
+textentry  40 52 250 20 32 0 1 
+button 120 90 249 248 1 0 1 //okay 
+button 210 90 243 241 1 0 2 //cancel 
+
+[DIALOG d_message2 text] 
+Type in your message to send to <SRC.TAG.TEMPSENDTO>
+<VAR.BLANKLINE>
+
+[DIALOG d_message2 button] 
+ON=0
+f_clear_msgtag
+RETURN 1
+on=1 
+VAR.SENDERNAME=<SRC.TAG.TEMPSENDERNAME> // Move info to Global VAR's.
+VAR.REPLYTO=<SRC.TAG.TEMPREPLYTO>
+VAR.SENDTO=<SRC.TAG.TEMPSENDTO>
+VAR.SENDTEXT=<argtxt[0]> 
+SERV.ALLCLIENTS f_msg_send_name <VAR.SENDTO>
+SRC.SYSMESSAGE Message sent!
+SRC.SOUND 74
+DIALOG d_message2
+RETURN 1 
+on=2 
+f_clear_msgtag
+RETURN 1 
+
+[FUNCTION msg_online] // Needs a new function to call the msg dialog instead of online players.
+SRC.TAG.ClientCounter=0 
+SRC.TAG.Maxclientscounter=0 
+VAR.Counter=200 
+f_erasevars 
+SERV.ALLCLIENTS f_client_counter 
+
+SRC.TAG.ClientCounter=1 
+dialog d_msg_online 
+
+
+[DIALOG d_msg_online]
+0,0
+DORIGIN 50 0
+IF (<SRC.TAG.MAXCLIENTSCOUNTER> > 19)
+	resizepic 0 0 3600 300 550
+ELSE
+	resizepic 0 0 3600 300 <EVAL((<SRC.TAG.MAXCLIENTSCOUNTER>*20)+150)>
+ENDIF
+dtext +0 *25 1152 Select a recipient: // Heading.
+dtext +0 *25 180 <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>>.UID>.name>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+1>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+1>.UID>.name> : <VAR.BLANKLINE>> 
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+2>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+2>.UID>.name> : <VAR.BLANKLINE>> 
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+3>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+3>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+4>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+4>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+5>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+5>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+6>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+6>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+7>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+7>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+8>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+8>.UID>.name> : <VAR.BLANKLINE>> 
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+9>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+9>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+10>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+10>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+11>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+11>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+12>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+12>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+13>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+13>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+14>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+14>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+15>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+15>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+16>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+16>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+17>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+17>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+18>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+18>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+19>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+19>.UID>.name>  : <VAR.BLANKLINE>>
+dtext +0 <EVAL((<SRC.TAG.MAXCLIENTSCOUNTER>*20)+70)> 1152 <SERV.STATCLIENTS> Online players
+button 35 55 2362 2361 1 0 1 // Blue buttons by name.
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+1>.UID>>)
+	button 35 75 2362 2361 1 0 2
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+2>.UID>>)
+	button 35 95 2362 2361 1 0 3
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+3>.UID>>)
+	button 35 115 2362 2361 1 0 4
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+4>.UID>>)
+	button 35 135 2362 2361 1 0 5
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+5>.UID>>)
+	button 35 155 2362 2361 1 0 6
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+6>.UID>>)
+	button 35 175 2362 2361 1 0 7
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+7>.UID>>)
+	button 35 195 2362 2361 1 0 8
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+8>.UID>>)
+	button 35 215 2362 2361 1 0 9
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+9>.UID>>)
+	button 35 235 2362 2361 1 0 10
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+10>.UID>>)
+	button 35 255 2362 2361 1 0 11
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+11>.UID>>)
+	button 35 275 2362 2361 1 0 12
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+12>.UID>>)
+	button 35 295 2362 2361 1 0 13
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+13>.UID>>)
+	button 35 315 2362 2361 1 0 14
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+14>.UID>>)
+	button 35 335 2362 2361 1 0 15
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+15>.UID>>)
+	button 35 355 2362 2361 1 0 16
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+16>.UID>>)
+	button 35 375 2362 2361 1 0 17
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+17>.UID>>)
+	button 35 395 2362 2361 1 0 18
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+18>.UID>>)
+	button 35 415 2362 2361 1 0 19
+ENDIF
+IF (<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+19>.UID>>)
+	button 35 435 2362 2361 1 0 20
+ENDIF
+IF (<SRC.TAG.MAXCLIENTSCOUNTER> > 19)
+button 220 <EVAL((<SRC.TAG.MAXCLIENTSCOUNTER>*20)+90)> 4502 4502 1 0 21 // Arrow
+button 25 <EVAL((<SRC.TAG.MAXCLIENTSCOUNTER>*20)+90)> 4508 4508 1 0 22 // Arrow
+ENDIF
+
+[DIALOG d_msg_online button] 
+ONBUTTON=0
+f_clear_msgtag
+TAG.ClientCounter=
+TAG.Maxclientcounter
+ONBUTTON=1
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>>.UID>.UID> // Who to send to?
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=2 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+1>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=3 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+2>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=4 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+3>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=5 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+4>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=6 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+5>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=7 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+6>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=8 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+7>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=9 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+8>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=10 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+9>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=11
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+10>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=12
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+11>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=13 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+12>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=14 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+13>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=15 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+14>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=16 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+15>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=17
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+16>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=18
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+17>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=19 
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+18>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=20
+	VAR.MSGSENDUID=<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+19>.UID>.UID> 
+	DIALOG d_message
+	RETURN 1
+ONBUTTON=21  
+IF (<EVAL(<TAG.ClientCounter>+20)> <= <EVAL(<TAG.Maxclientscounter>)>)
+	TAG.ClientCounter=<eval <TAG.ClientCounter>+20> 
+ENDIF
+DIALOG d_msg_online 
+
+ONBUTTON=22 
+TAG.ClientCounter=<eval <SRC.TAG.ClientCounter>-20> 
+if <TAG.ClientCounter><1 
+TAG.ClientCounter=1 
+ENDIF 
+DIALOG d_msg_online 
+
+[FUNCTION f_sender]
+VAR.SENDTEXT=<SRC.TAG.TEXTSEND> // Move to global VAR's.
+VAR.SENDERNAME=<SRC.NAME>
+VAR.REPLYTO=<SRC.UID>
+SRC.SYSMESSAGE Message sent!
+SRC.SOUND 74
+SERV.ALLCLIENTS f_msg_send <VAR.MSGSENDUID> // Execute the message.
+f_clear_msgtag
+
+[FUNCTION f_onlinecheck]
+IF (<SRC.ISGM>) // Everybody is online to GM's.
+  IF !(STRCMPI(<NAME>,<args>))
+	VAR.ONLINECHECK=1
+  ENDIF
+ENDIF
+IF !(0<TAG.PRIVATE>) // Private = Offline
+  IF !(STRCMPI(<NAME>,<args>))
+	VAR.ONLINECHECK=1
+  ENDIF
+ENDIF
+RETURN 0
+
+[FUNCTION f_reply_unhide] // Leave private mode if you send a message.
+IF (0<SRC.TAG.PRIVATE>)
+	SRC.TAG.PRIVATE=
+	SRC.SYSMESSAGE You leave private mode.
+ENDIF
+
+[FUNCTION f_msg_send]
+f_reply_unhide
+IF (<UID>==<ARGS>) // If UID is supplied.
+	VAR.OLDACT=<ACT>
+	TAG.REPLYTO=<VAR.REPLYTO> // Set person to reply to.
+	SYSMESSAGE @41 <VAR.SENDERNAME> :
+	SYSMESSAGE @10 <VAR.SENDTEXT>
+	SOUND 66
+	RETURN 1
+ENDIF
+[FUNCTION f_msg_send_name]
+f_reply_unhide
+IF !(STRCMPI(<NAME>, <args>)) // If name is supplied.
+	TAG.REPLYTO=<VAR.REPLYTO> 
+	SYSMESSAGE @41 <VAR.SENDERNAME> :
+	SYSMESSAGE @10 <VAR.SENDTEXT>
+	SOUND 66
+ 	RETURN 1
+ENDIF
+
+[FUNCTION f_staffmsg]
+IF !(<SRC.ACCOUNT.PLEVEL><3)  // Check to see if recipient is staff or not.
+	SYSMESSAGEUA 32,0,1,1 *Staff* - *<VAR.MSGNAME>* - <ARGS>
+	RETURN 1
+ELSE
+	RETURN 1
+ENDIF
+
+[FUNCTION f_ooc]
+IF !(0<TAG.OOCCHAT>) // Check if OOC channel is turned on.
+	SYSMESSAGEUA 4,0,1,1 *OOC* - *<VAR.MSGNAME>* - <ARGS>
+	RETURN 1
+ENDIF
+
+[FUNCTION f_clear_msgtag]  // Clean up after us.
+VAR.MSGSENDUID=
+VAR.SENDTEXT=
+VAR.SENDERNAME=
+VAR.REPLYTO=
+VAR.SUA_COLOR=
+VAR.MSGNAME=
+SRC.TAG.TEXTSEND=
+SRC.TAG.TEMPSENDERNAME=
+SRC.TAG.TEMPREPLYTO=
+SRC.TAG.TEMPSENDTO=
+SRC.TAG.ClientCounter=
+SRC.TAG.Maxclientscounter=
+
+
+////////////////////////
+
+[function online] 
+SRC.TAG.ClientCounter=0 
+SRC.TAG.Maxclientscounter=0 
+VAR.Counter=200 
+f_erasevars 
+SERV.ALLCLIENTS f_client_counter 
+SRC.TAG.ClientCounter=1 
+dialog d_online 
+
+
+[function f_client_counter] 
+// IF (<SRC.UID> == <UID>) // Enable if players shouldn't see themselves on the list.
+IF (<SRC.ACCOUNT.PLEVEL> > 3) // GM's can see everybody.
+	SRC.TAG.Maxclientscounter=<eval <SRC.TAG.Maxclientscounter>> +1
+	SRC.TRY VAR.ClientNumber.<eval <SRC.TAG.Maxclientscounter>>.UID=<UID>
+ELIF (0<TAG.PRIVATE>)							// If private, we don't show name.
+	SRC.TAG.Maxclientscounter=<eval <SRC.TAG.Maxclientscounter>> +1 // We still count him, but define UID ourselves.
+	SRC.TRY VAR.ClientNumber.<eval <SRC.TAG.Maxclientscounter>>.UID=<DEF.online_private> // We set the UID to an item with the name we want displayed.
+ELIF !(<ISGM>) // If target is not a GM, we return the UID.
+	SRC.TAG.Maxclientscounter=<eval <SRC.TAG.Maxclientscounter>> +1
+	SRC.TRY VAR.ClientNumber.<eval <SRC.TAG.Maxclientscounter>>.UID=<UID>
+ENDIF
+
+
+[function f_erasevars] 
+FOR <VAR.COUNTER>
+	VAR.Counter=<EVAL(<VAR.Counter> +(-1))> 
+	TRYP 0 VAR.ClientNumber.<EVAL(<VAR.Counter>)>.UID=
+ENDFOR
+
+[DIALOG d_online] 
+0,0
+DORIGIN 50 0
+IF (<SRC.TAG.MAXCLIENTSCOUNTER> > 19)
+	resizepic 0 0 3600 300 550
+ELSE
+	resizepic 0 0 3600 300 <EVAL((<SRC.TAG.MAXCLIENTSCOUNTER>*20)+150)>
+ENDIF
+dtext +0 *25 1152 Player Name: // Heading.
+dtext +0 *25 180 <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>>.UID>.name>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+1>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+1>.UID>.name> : <VAR.BLANKLINE>> 
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+2>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+2>.UID>.name> : <VAR.BLANKLINE>> 
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+3>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+3>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+4>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+4>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+5>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+5>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+6>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+6>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+7>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+7>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+8>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+8>.UID>.name> : <VAR.BLANKLINE>> 
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+9>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+9>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+10>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+10>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+11>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+11>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+12>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+12>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+13>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+13>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+14>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+14>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+15>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+15>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+16>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+16>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+17>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+17>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+18>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+18>.UID>.name> : <VAR.BLANKLINE>>
+dtext +0 *20 180 <QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+19>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+19>.UID>.name>  : <VAR.BLANKLINE>>
+dtext +0 <EVAL((<SRC.TAG.MAXCLIENTSCOUNTER>*20)+70)> 1152 <SERV.STATCLIENTS> Online players
+IF (<SRC.TAG.MAXCLIENTSCOUNTER> > 19)
+button 220 <EVAL((<SRC.TAG.MAXCLIENTSCOUNTER>*20)+90)> 4502 4502 1 0 21 // Arrow
+button 25 <EVAL((<SRC.TAG.MAXCLIENTSCOUNTER>*20)+90)> 4508 4508 1 0 22 // Arrow
+ENDIF
+
+[DIALOG d_online TEXT] 
+Player name:
+<UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>>.UID>.name>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+1>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+1>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+2>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+2>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+3>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+3>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+4>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+4>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+5>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+5>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+6>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+6>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+7>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+7>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+8>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+8>.UID>.name> : <VAR.BLANKLINE>> 
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+9>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+9>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+10>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+10>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+11>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+11>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+12>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+12>.UID>.name> : <VAR.BLANKLINE>> 
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+13>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+13>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+14>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+14>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+15>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+15>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+16>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+16>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+17>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+17>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+18>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+18>.UID>.name> : <VAR.BLANKLINE>>
+<QVAL <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+19>.UID>> ? <UID.<VAR.ClientNumber.<eval <SRC.TAG.ClientCounter>+19>.UID>.name>  : <VAR.BLANKLINE>>
+<SERV.STATCLIENTS> Online players
+
+[DIALOG d_online button] 
+ONBUTTON=0
+TAG.ClientCounter=
+TAG.Maxclientscounter=
+ONBUTTON=1 
+IF (<EVAL(<TAG.ClientCounter>+20)> <=<EVAL(<TAG.Maxclientscounter>)>)
+	TAG.ClientCounter=<eval <TAG.ClientCounter>+20> 
+ENDIF
+DIALOG d_online 
+ONBUTTON=2 
+TAG.ClientCounter=<eval <TAG.ClientCounter>-20> 
+if <TAG.ClientCounter><1 
+TAG.ClientCounter=1 
+ENDIF 
+DIALOG d_online 
+
+[EOF]

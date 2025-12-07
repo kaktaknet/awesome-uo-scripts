@@ -1,0 +1,117 @@
+[ITEMDEF i_holzfass]
+name=Holzfass [leer]
+id=01940
+type=t_script
+value={200 300}
+weight=20
+resources=8 i_board, 1 i_barrel_tap, 1 i_barrel_hoops
+skillmake=tinkering 65.0,t_tinker_tools
+
+ON=@CREATE
+tag.anzahl=0
+tag.sorte=0
+tag.kraft=0
+
+ON=@CLICK
+if (<tag.anzahl> > 0)
+src.sysmessage Inhalt: <eval <tag.anzahl>> Einheiten
+endif
+
+return 0
+
+ON=@DCLICK
+if !(<cont.topobj.uid> == <src.uid>)
+src.sysmessage Das Holzfass befindet sich zur Zeit nicht in eurem Rucksack!
+return 1
+endif
+
+if !(<src.action> == -1)
+src.sysmessage In moment koennt Ihr das Holzfass nicht benutzten!
+return 1
+endif
+
+target Mit was fuer einem Trank moechtet Ihr das Holzfass befuellen?
+return 1
+
+ON=@TARGON_ITEM
+if !(<src.targ.topobj.uid> == <src.uid>)
+src.sysmessage Der Gegenstand befindet sich zur Zeit nicht in eurem Rucksack!
+return 1
+endif
+
+if (<src.targ.baseid> == i_bottle_empty)
+
+if (<tag.anzahl> <= 0)
+src.sysmessage Das Holzfass ist in moment leider noch leer!
+return 1
+endif
+
+src.sound=576
+src.newitem=<tag.sorte>
+src.act.more2=<tag.kraft>
+src.act.bounce
+tag.anzahl=<tag.anzahl>+(-1)
+src.consume i_bottle_empty
+
+if (<tag.anzahl> <= 0)
+tag.sorte=0
+tag.kraft=0
+color=0
+name=Holzfass [leer]
+src.sysmessage Das Holzfass ist nun wieder leer!
+endif
+
+return 1
+endif
+
+if (<src.targ.type> == t_potion)
+
+if ((<tag.anzahl> > 0) && !(<src.targ.baseid> == <tag.sorte>))
+src.sysmessage Ihr koennt nur eine Sorte von Traenken in ein Holzfass fuellen!
+return 1
+endif
+
+if (<tag.anzahl> >= 100) // << Hier ist die max. Anzahl von Tränken pro Fass...
+src.sysmessage Das Holzfass ist leider bereits voll!
+return 1
+endif
+
+if (<tag.anzahl> <= 0)
+tag.sorte=<src.targ.baseid>
+endif
+
+// Hier werden die Farben eines Trankes zugeordnet...
+if (<src.targ.id> == 0f06)
+color=2305
+elseif (<src.targ.id> == 0f07)
+color=1547
+elseif (<src.targ.id> == 0f08)
+color=1354
+elseif (<src.targ.id> == 0f09)
+color=2301
+elseif (<src.targ.id> == 0f0a)
+color=1447
+elseif (<src.targ.id> == 0f0b)
+color=1654
+elseif (<src.targ.id> == 0f0c)
+color=1747
+elseif (<src.targ.id> == 0f0d)
+color=1247
+endif
+
+if ((<src.targ.more2> < <tag.kraft>) || (<tag.anzahl> <= 0))
+tag.kraft=<src.targ.more2>
+endif
+
+src.sound=576
+tag.anzahl=<tag.anzahl>+1
+name=Holzfass [<src.targ.name>]
+src.targ.remove
+src.newitem=i_bottle_empty
+src.act.bounce
+
+return 1
+endif
+
+src.sysmessage Dieser Gegendstand kann nicht zusammen mit dem Holzfass benutzt werden!
+return 1

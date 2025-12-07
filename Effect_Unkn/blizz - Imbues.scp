@@ -1,0 +1,528 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//v0.2
+
+//Info:
+//Imbues are "power-ups" for your weapons.
+//They simply give any enchanted weapon (Magical as in Ruin - Vanq) a special effect and extra damage.
+
+//Installation:
+//Add this section to the bottom of the [SKILLCLASS 0] section in spheretables.scp
+
+ON=@LOGIN
+IF !(<SRC.ISEVENT.e_imbue>)
+	SRC.EVENTS +e_imbue
+ENDIF
+
+//This section you have added will give any player who logs in the imbue event.
+//e_imbue is used to give the extra damage and special effects to your enchanted/magical weapons.
+//This next part can stay within this script.
+
+[EVENTS e_imbue]
+ON=@HIT
+VAR.OLD_ACT=<ACT>
+IF (<EVAL <FINDLAYER.(1).MORE2>>==1) || (<EVAL <FINDLAYER.(2).MORE2>>==1)
+	SRC.EFFECT=1,1
+	SRC.SOUND=SND_SPELL_LIGHTNING
+	VAR.X=<EVAL {1 5}>
+	SRC.DAMAGE=<VAR.X> 0001 <UID>
+	SYSMESSAGE=Your weapon inflicts <EVAL <VAR.X>> extra damage to <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==2) || (<EVAL <FINDLAYER.(2).MORE2>>==2)
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.SOUND=SND_SPELL_LIGHTNING
+	VAR.X=<EVAL {5 10}>
+	SRC.DAMAGE=<VAR.X> 0001 <UID>
+	SYSMESSAGE=Your weapon inflicts <EVAL <VAR.X>> extra damage to <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==3) || (<EVAL <FINDLAYER.(2).MORE2>>==3)
+	SRC.POISON=30.0
+	SRC.EFFECT=3,i_fx_curse_effect,15,15,1
+	SRC.SOUND=SND_SPELL_POISON
+	SYSMESSAGE=Your weapon poisons <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==4) || (<EVAL <FINDLAYER.(2).MORE2>>==4)
+	SRC.POISON=60.0
+	SRC.EFFECT=3,i_fx_curse_effect,15,15,1
+	SRC.SOUND=SND_SPELL_POISON
+	SYSMESSAGE=Your weapon poisons <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==5) || (<EVAL <FINDLAYER.(2).MORE2>>==5)
+	SRC.POISON=90.0
+	SRC.EFFECT=3,i_fx_curse_effect,15,15,1
+	SRC.SOUND=SND_SPELL_POISON
+	SYSMESSAGE=Your weapon poisons <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==6) || (<EVAL <FINDLAYER.(2).MORE2>>==6)
+	SRC.EFFECT=3,i_fx_explode,15,15,1
+	SRC.SOUND=SND_SPELL_EXPLOSION
+	VAR.X=<EVAL {10 15}>
+	SRC.DAMAGE=<VAR.X> 0001 <UID>
+	SYSMESSAGE=Your weapon inflicts <EVAL <VAR.X>> extra damage to <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==7) || (<EVAL <FINDLAYER.(2).MORE2>>==7)
+	SRC.EFFECT=3,i_fire_column,15,15,1
+	SRC.SOUND=SND_SPELL_FLAMESTRIKE
+	VAR.X=<EVAL {15 20}>
+	SRC.DAMAGE=<VAR.X> 0001 <UID>
+	SYSMESSAGE=Your weapon inflicts <EVAL <VAR.X>> extra damage to <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==8) || (<EVAL <FINDLAYER.(2).MORE2>>==8)
+	SRC.EFFECT=3,i_fx_curse_effect,15,15,1
+	EFFECT=3,i_fx_heal_effect,15,15,1
+	SRC.SOUND=SND_SPELL_MANA_VAMPIRE
+	VAR.X=<EVAL {1 5}>
+	SRC.DAMAGE=<VAR.X> 0001 <UID>
+	HITPOINTS=<HITPOINTS> +<VAR.X>
+	IF (<HITPOINTS> > <STR>)
+		HITPOINTS=<STR>
+	ENDIF
+	SYSMESSAGE=Your weapon drains <EVAL <VAR.X>> hitpoints from <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==9) || (<EVAL <FINDLAYER.(2).MORE2>>==9)
+	SRC.EFFECT=3,i_fx_curse_effect,15,15,1
+	SRC.SOUND=SND_SPELL_HARM
+	VAR.X=<EVAL {3 8}>
+	SRC.DAMAGE=<VAR.X> 0001 <UID>
+	SYSMESSAGE=Your weapon inflicts <EVAL <VAR.X>> extra damage to <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==10) || (<EVAL <FINDLAYER.(2).MORE2>>==10)
+	SRC.EFFECT=3,i_fx_curse_effect,15,15,1
+	SRC.SOUND=SND_SPELL_MANA_DRAIN
+	VAR.X=<EVAL {20 25}>
+	IF (<SRC.MANA> < <VAR.X>)
+		VAR.X=<VAR.X> +-<SRC.MANA>
+		SRC.MANA=0
+	ELSE
+		SRC.MANA=<SRC.MANA> +-<VAR.X>
+	ENDIF
+	MANA=<MANA> +<VAR.X>
+	IF (<MANA> > <INT>)
+		MANA=<INT>
+	ENDIF
+	SYSMESSAGE=Your weapon drains <EVAL <VAR.X>> mana from <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==11) || (<EVAL <FINDLAYER.(2).MORE2>>==11)
+	SRC.EFFECT=3,i_fire_column,15,15,1
+	SRC.NEWITEM=i_fx_explode
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=3
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.NEWITEM=i_fx_explode
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=3
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.NEWITEM=i_fx_explode
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=3
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=i_fx_explode
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=3
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=ne
+	SRC.ACT.MOVE=ne
+	SRC.ACT.MOVE=ne
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=se
+	SRC.ACT.MOVE=se
+	SRC.ACT.MOVE=se
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=sw
+	SRC.ACT.MOVE=sw
+	SRC.ACT.MOVE=sw
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=nw
+	SRC.ACT.MOVE=nw
+	SRC.ACT.MOVE=nw
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0
+	VAR.X=<EVAL {20 25}>
+	SRC.DAMAGE=<VAR.X> 0001 <UID>
+	SYSMESSAGE=Your weapon inflicts <EVAL <VAR.X>> extra damage to <SRC.NAME>.
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==12) || (<EVAL <FINDLAYER.(2).MORE2>>==12)
+	SRC.NEWNPC=c_bear_grizzly
+	VAR.OLD_UID=<SRC.ACT.UID>
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.ATTACK
+	SRC.ACT.BARK=2
+	SRC.NEWITEM=i_memory
+	SRC.ACT.COLOR=02
+	SRC.ACT.LINK=<UID>
+	SRC.ACT.CONT=<VAR.OLD_UID>
+	SYSMESSAGE=Your weapon summons a <SERV.UID.<VAR.OLD_UID>.NAME> to attack <SRC.NAME>.
+	VAR.OLD_UID=
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==13) || (<EVAL <FINDLAYER.(2).MORE2>>==13)
+	SRC.NEWNPC=c_alligator
+	VAR.OLD_UID=<SRC.ACT.UID>
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.ATTACK
+	SRC.ACT.BARK=2
+	SRC.NEWITEM=i_memory
+	SRC.ACT.COLOR=02
+	SRC.ACT.LINK=<UID>
+	SRC.ACT.CONT=<VAR.OLD_UID>
+	SYSMESSAGE=Your weapon summons a <SERV.UID.<VAR.OLD_UID>.NAME> to attack <SRC.NAME>.
+	VAR.OLD_UID=
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==14) || (<EVAL <FINDLAYER.(2).MORE2>>==14)
+	SRC.NEWNPC=c_pig_big
+	VAR.OLD_UID=<SRC.ACT.UID>
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.ATTACK
+	SRC.ACT.BARK=2
+	SRC.NEWITEM=i_memory
+	SRC.ACT.COLOR=02
+	SRC.ACT.LINK=<UID>
+	SRC.ACT.CONT=<VAR.OLD_UID>
+	SYSMESSAGE=Your weapon summons a <SERV.UID.<VAR.OLD_UID>.NAME> to attack <SRC.NAME>.
+	VAR.OLD_UID=
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==15) || (<EVAL <FINDLAYER.(2).MORE2>>==15)
+	SRC.NEWNPC=c_panther
+	VAR.OLD_UID=<SRC.ACT.UID>
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.ATTACK
+	SRC.ACT.BARK=2
+	SRC.NEWITEM=i_memory
+	SRC.ACT.COLOR=02
+	SRC.ACT.LINK=<UID>
+	SRC.ACT.CONT=<VAR.OLD_UID>
+	SYSMESSAGE=Your weapon summons a <SERV.UID.<VAR.OLD_UID>.NAME> to attack <SRC.NAME>.
+	VAR.OLD_UID=
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==16) || (<EVAL <FINDLAYER.(2).MORE2>>==16)
+	SRC.NEWNPC=c_wolf
+	VAR.OLD_UID=<SRC.ACT.UID>
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.ATTACK
+	SRC.ACT.BARK=2
+	SRC.NEWITEM=i_memory
+	SRC.ACT.COLOR=02
+	SRC.ACT.LINK=<UID>
+	SRC.ACT.CONT=<VAR.OLD_UID>
+	SYSMESSAGE=Your weapon summons a <SERV.UID.<VAR.OLD_UID>.NAME> to attack <SRC.NAME>.
+	VAR.OLD_UID=
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==17) || (<EVAL <FINDLAYER.(2).MORE2>>==17)
+	SRC.NEWNPC=c_walrus
+	VAR.OLD_UID=<SRC.ACT.UID>
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.ATTACK
+	SRC.ACT.BARK=2
+	SRC.NEWITEM=i_memory
+	SRC.ACT.COLOR=02
+	SRC.ACT.LINK=<UID>
+	SRC.ACT.CONT=<VAR.OLD_UID>
+	SYSMESSAGE=Your weapon summons a <SERV.UID.<VAR.OLD_UID>.NAME> to attack <SRC.NAME>.
+	VAR.OLD_UID=
+ELSEIF (<EVAL <FINDLAYER.(1).MORE2>>==18) || (<EVAL <FINDLAYER.(2).MORE2>>==18)
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.NEWITEM=i_fx_field_fire_ns
+	ELSE
+		SRC.NEWITEM=i_fx_field_fire
+	ENDIF
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=15
+	SRC.ACT.TYPE=t_spell
+	SRC.ACT.MOREX=28
+	SRC.ACT.MOREY=1000
+	SRC.ACT.MOREP=28 1000 1
+	SRC.ACT.P=<SRC.P>
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.NEWITEM=i_fx_field_fire_ns
+	ELSE
+		SRC.NEWITEM=i_fx_field_fire
+	ENDIF
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=15
+	SRC.ACT.TYPE=t_spell
+	SRC.ACT.MOREX=28
+	SRC.ACT.MOREY=1000
+	SRC.ACT.MOREP=28 1000 1
+	SRC.ACT.P=<SRC.P>
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.ACT.MOVE=0 1
+	ELSE
+		SRC.ACT.MOVE=1 0
+	ENDIF
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.NEWITEM=i_fx_field_fire_ns
+	ELSE
+		SRC.NEWITEM=i_fx_field_fire
+	ENDIF
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=15
+	SRC.ACT.TYPE=t_spell
+	SRC.ACT.MOREX=28
+	SRC.ACT.MOREY=1000
+	SRC.ACT.MOREP=28 1000 1
+	SRC.ACT.P=<SRC.P>
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.ACT.MOVE=0 2
+	ELSE
+		SRC.ACT.MOVE=2 0
+	ENDIF
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.NEWITEM=i_fx_field_fire_ns
+	ELSE
+		SRC.NEWITEM=i_fx_field_fire
+	ENDIF
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=15
+	SRC.ACT.TYPE=t_spell
+	SRC.ACT.MOREX=28
+	SRC.ACT.MOREY=1000
+	SRC.ACT.MOREP=28 1000 1
+	SRC.ACT.P=<SRC.P>
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.ACT.MOVE=0 3
+	ELSE
+		SRC.ACT.MOVE=3 0
+	ENDIF
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.NEWITEM=i_fx_field_fire_ns
+	ELSE
+		SRC.NEWITEM=i_fx_field_fire
+	ENDIF
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=15
+	SRC.ACT.TYPE=t_spell
+	SRC.ACT.MOREX=28
+	SRC.ACT.MOREY=1000
+	SRC.ACT.MOREP=28 1000 1
+	SRC.ACT.P=<SRC.P>
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.ACT.MOVE=0 -1
+	ELSE
+		SRC.ACT.MOVE=-1 0
+	ENDIF
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.NEWITEM=i_fx_field_fire_ns
+	ELSE
+		SRC.NEWITEM=i_fx_field_fire
+	ENDIF
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=15
+	SRC.ACT.TYPE=t_spell
+	SRC.ACT.MOREX=28
+	SRC.ACT.MOREY=1000
+	SRC.ACT.MOREP=28 1000 1
+	SRC.ACT.P=<SRC.P>
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.ACT.MOVE=0 -2
+	ELSE
+		SRC.ACT.MOVE=-2 0
+	ENDIF
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.NEWITEM=i_fx_field_fire_ns
+	ELSE
+		SRC.NEWITEM=i_fx_field_fire
+	ENDIF
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=15
+	SRC.ACT.TYPE=t_spell
+	SRC.ACT.MOREX=28
+	SRC.ACT.MOREY=1000
+	SRC.ACT.MOREP=28 1000 1
+	SRC.ACT.P=<SRC.P>
+	IF (<DIR>==7) || (<DIR>==0) || (<DIR>==1) || (<DIR>==4)
+		SRC.ACT.MOVE=0 -3
+	ELSE
+		SRC.ACT.MOVE=-3 0
+	ENDIF
+	SYSMESSAGE=Your weapon casts a fire field upon <SRC.NAME>.
+ENDIF
+ACT=<VAR.OLD_ACT>
+VAR.OLD_ACT=
+
+[ITEMDEF i_imbue]
+DEFNAME=i_imbue
+NAME=Imbue
+ID=i_scroll_blank
+TYPE=t_normal
+
+ON=@CREATE
+MORE={1 18}
+COLOR=06
+
+ON=@CLICK
+IF (<EVAL <MORE>>==1)
+	MESSAGE=Lightning <NAME>
+ELSEIF (<EVAL <MORE>>==2)
+	MESSAGE=Electric Tornado <NAME>
+ELSEIF (<EVAL <MORE>>==3)
+	MESSAGE=Poison <NAME>
+ELSEIF (<EVAL <MORE>>==4)
+	MESSAGE=Greater Poison <NAME>
+ELSEIF (<EVAL <MORE>>==5)
+	MESSAGE=Deadly Poison <NAME>
+ELSEIF (<EVAL <MORE>>==6)
+	MESSAGE=Explosion <NAME>
+ELSEIF (<EVAL <MORE>>==7)
+	MESSAGE=Flamestrike <NAME>
+ELSEIF (<EVAL <MORE>>==8)
+	MESSAGE=Life Drain <NAME>
+ELSEIF (<EVAL <MORE>>==9)
+	MESSAGE=Harm <NAME>
+ELSEIF (<EVAL <MORE>>==10)
+	MESSAGE=Mana Drain <NAME>
+ELSEIF (<EVAL <MORE>>==11)
+	MESSAGE=Armageddon <NAME>
+ELSEIF (<EVAL <MORE>>==12)
+	MESSAGE=Grizzly Bear <NAME>
+ELSEIF (<EVAL <MORE>>==13)
+	MESSAGE=Alligator <NAME>
+ELSEIF (<EVAL <MORE>>==14)
+	MESSAGE=Boar <NAME>
+ELSEIF (<EVAL <MORE>>==15)
+	MESSAGE=Panther <NAME>
+ELSEIF (<EVAL <MORE>>==16)
+	MESSAGE=Wolf <NAME>
+ELSEIF (<EVAL <MORE>>==17)
+	MESSAGE=Walrus <NAME>
+ELSEIF (<EVAL <MORE>>==18)
+	MESSAGE=Fire Field <NAME>
+ENDIF
+RETURN 1
+
+ON=@DCLICK
+TARGET=Select a weapon to imbue.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_bow) || (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_mace_staff) || (<SRC.TARG.TYPE>==t_weapon_mace_crook) || (<SRC.TARG.TYPE>==t_weapon_mace_pick) || (<SRC.TARG.TYPE>==t_weapon_axe) || (<SRC.TARG.TYPE>==t_weapon_xbow)
+	IF (0<SRC.TARG.MOREY>)
+		IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>) || (<SRC.TARG.TOPOBJ.UID>==<SRC.TARG.UID>)
+			IF !(0<SRC.TARG.MORE2>)
+				SRC.TARG.COLOR=06
+				SRC.MESSAGE=The <SRC.TARG.NAME> glows a bright blue.
+				IF (<EVAL <MORE>>==1)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning)
+				ELSEIF (<EVAL <MORE>>==2)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Electric Tornado)
+				ELSEIF (<EVAL <MORE>>==3)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Poison)
+				ELSEIF (<EVAL <MORE>>==4)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Greater Poison)
+				ELSEIF (<EVAL <MORE>>==5)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Deadly Poison)
+				ELSEIF (<EVAL <MORE>>==6)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion)
+				ELSEIF (<EVAL <MORE>>==7)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike)
+				ELSEIF (<EVAL <MORE>>==8)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Life Drain)
+				ELSEIF (<EVAL <MORE>>==9)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Harm)
+				ELSEIF (<EVAL <MORE>>==10)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Mana Drain)
+				ELSEIF (<EVAL <MORE>>==11)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Armageddon)
+				ELSEIF (<EVAL <MORE>>==12)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Grizzly Bear)
+				ELSEIF (<EVAL <MORE>>==13)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Alligator)
+				ELSEIF (<EVAL <MORE>>==14)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Boar)
+				ELSEIF (<EVAL <MORE>>==15)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Panther)
+				ELSEIF (<EVAL <MORE>>==16)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Wolf)
+				ELSEIF (<EVAL <MORE>>==17)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Walrus)
+				ELSEIF (<EVAL <MORE>>==18)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Fire Field)
+				ENDIF
+				SRC.TARG.MORE2=<MORE>
+				REMOVE
+			ELSE
+				SRC.SYSMESSAGE=This weapon is already imbued.
+			ENDIF
+		ELSE
+			SRC.SYSMESSAGE=To imbue a weapon it must belong to you.
+		ENDIF
+	ELSE
+		SRC.SYSMESSAGE=To imbue a weapon it must be magical.
+	ENDIF
+ELSE
+	SRC.SYSMESSAGE=You can only imbue a weapon.
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[EOF]

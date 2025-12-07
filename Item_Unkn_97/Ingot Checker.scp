@@ -1,0 +1,250 @@
+//*********************************************************************
+//*                         Created for/by UOCraZed.                  *
+//*                 Ideas by: Achilles  ||  Scripted by: ByTcH        *
+//*               Bug Reports & comments or suggestions should be     *
+//*                  posted to the UOCraZed message boards.           *
+//*								      *
+//*                    This file should only be downloaded            *
+//*                from the UOCraZed Website!  It is the only         *
+//*                way to be sure you have the newest version!        *
+//*********************************************************************
+// 
+//
+//      |&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|
+//      |&|              Support Links                |&|
+//      |&|    UOC Website: www.gamegrazed.net/uoc    |&|
+//      |&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|
+//
+
+[DIALOG d_check_ignot]
+0,0
+gumppic 125 100 1228
+text 150 103 295 0
+text 150 150 598 1
+text 170 200 087 2
+text 170 220 087 3
+text 170 240 087 4
+text 170 260 087 5
+text 170 280 087 6
+text 170 300 087 7
+text 350 225 464 8
+text 400 250 973 9
+text 300 363 196 10
+button 150 204 1209 1210 1 0 1
+button 150 224 1209 1210 1 0 2
+button 150 244 1209 1210 1 0 3
+button 150 264 1209 1210 1 0 4
+button 150 284 1209 1210 1 0 5
+button 150 304 1209 1210 1 0 6
+
+[DIALOG d_check_ignot TEXT]
+<SERV.NAME> Check System!
+Choose the amount you wish to make into a check:
+500 Iron Ingot
+500 Blackrock Ingot
+500 Shaddow Ingot
+500 Burning Ingot
+500 Mazda Ingot
+500 Rhenium Ingot
+Script Made By
+Anthony Aka Mini Grim
+v1.0
+
+[DIALOG d_check_ignot BUTTON]
+ON=0
+SRC.SYSMESSAGE Menu Closed.
+ON=1
+IF <SRC.RESTEST 500 I_ingot_iron>
+SRC.CONSUME=500 I_ingot_iron
+SRC.NEWITEM i_check_iron
+SRC.ACT.BOUNCE
+ELSE
+SRC.SYSMESSAGE You Lack Sufficient Funds...
+ON=2
+IF <SRC.RESTEST 500 I_ingot_blackrock>
+SRC.CONSUME=500 I_ingot_blackrock
+SRC.NEWITEM i_check_blackrock
+SRC.ACT.BOUNCE
+ELSE
+SRC.SYSMESSAGE You Lack Sufficient Funds...
+ON=3
+IF <SRC.RESTEST 500 I_ingot_shadow>
+SRC.CONSUME=500 I_ingot_shadow
+SRC.NEWITEM i_check_shadow
+SRC.ACT.BOUNCE
+ELSE
+SRC.SYSMESSAGE You Lack Sufficient Funds...
+ON=4
+IF <SRC.RESTEST 500 I_ingot_burning>
+SRC.CONSUME=500 I_ingot_burning
+SRC.NEWITEM i_check_burning
+SRC.ACT.BOUNCE
+ELSE
+SRC.SYSMESSAGE You Lack Sufficient Funds...
+ON=5
+IF <SRC.RESTEST 500 I_ingot_mazda>
+SRC.CONSUME=500 I_ingot_mazda
+SRC.NEWITEM i_check_mazda
+SRC.ACT.BOUNCE
+ELSE
+SRC.SYSMESSAGE You Lack Sufficient Funds...
+ON=6
+IF <SRC.RESTEST 500 I_ingot_Rhenium>
+SRC.CONSUME=500 I_ingot_Rhenium
+SRC.NEWITEM i_check_Rhenium
+SRC.ACT.BOUNCE
+ELSE
+SRC.SYSMESSAGE You Lack Sufficient Funds...
+
+
+[ITEMDEF i_check_iron]
+ID=i_deed
+NAME=check for 500 Iron Ingots
+
+ON=@CREATE
+COLOR=00fd
+ATTR=ATTR_NEWBIE
+
+[ITEMDEF i_check_blackrock]
+ID=i_deed
+NAME=check for 500 blackrock ingots
+
+ON=@CREATE
+COLOR=00fd
+ATTR=ATTR_NEWBIE
+
+[ITEMDEF i_check_shadow]
+ID=i_deed
+NAME=check for 500 shadow ingots
+
+ON=@CREATE
+COLOR=00fd
+ATTR=ATTR_NEWBIE
+
+[ITEMDEF i_check_burning]
+ID=i_deed
+NAME=check for 500 burning ingots
+
+ON=@CREATE
+COLOR=00fd
+ATTR=ATTR_NEWBIE
+
+[ITEMDEF i_check_mazda]
+ID=i_deed
+NAME=check for 500 Mazda ingots
+
+ON=@CREATE
+COLOR=00fd
+ATTR=ATTR_NEWBIE
+
+[ITEMDEF i_check_Rhenium]
+ID=i_deed
+NAME=check for 500 Rhenium Ingots
+
+ON=@CREATE
+COLOR=00fd
+ATTR=ATTR_NEWBIE
+
+
+[CHARDEF c_check_Ingot]
+NAME=Ingot Check Maker
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=jobbanker
+TSPEECH=jobchktllr1
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+COLOR=colors_skin
+STR={71 85}
+DEX={66 80}
+INT={66 80}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+ITEMNEWBIE=i_shirt_fancy
+COLOR=colors_green
+ITEMNEWBIE=i_pants_long
+COLOR=colors_yellow
+ITEMNEWBIE=random_shoes
+COLOR=colors_neutral
+
+SWORDSMANSHIP={15.0 38.0}
+ITEMID={50.0 70.0}
+TACTICS={15.0 38.0}
+
+NPC=BRAIN_BANKER
+NEED=i_gold
+
+CATEGORY=Anthony
+SUBSECTION=Check Npcs
+DESCRIPTION=Ingot Checker
+
+
+[SPEECH jobCHKTLLR1]
+ON=*Check*
+ON=*Cheque*
+	DIALOG d_check_ignot
+
+ON=*Swap*
+IF <SRC.RESTEST 1 i_check_iron>
+SRC.CONSUME 1 i_check_iron
+SRC.NEWITEM i_ingot_iron
+SRC.ACT.AMOUNT 500
+SRC.ACT.CONT <SRC.FINDLAYER.29.UID> 
+SRC.SYSMESSAGE You deposit the 500 Iron Ingots into your bank.
+ELSE
+IF <SRC.RESTEST 1 i_check_blackrock>
+SRC.CONSUME 1 i_check_blackrock
+SRC.NEWITEM i_ingot_blackrock
+SRC.ACT.AMOUNT 500
+SRC.ACT.CONT <SRC.FINDLAYER.29.UID> 
+SRC.SYSMESSAGE You deposit the 500 blackrock Ingots into your bank.
+ELSE
+IF <SRC.RESTEST 1 i_check_shadow>
+SRC.CONSUME 1 i_check_shadow
+SRC.NEWITEM i_ingot_shadow
+SRC.ACT.AMOUNT 500
+SRC.ACT.CONT <SRC.FINDLAYER.29.UID> 
+SRC.SYSMESSAGE You deposit the 500 shadow Ingots into your bank.
+ELSE
+IF <SRC.RESTEST 1 i_check_burning>
+SRC.CONSUME 1 i_check_burning
+SRC.NEWITEM i_ingot_burning
+SRC.ACT.AMOUNT 500
+SRC.ACT.CONT <SRC.FINDLAYER.29.UID> 
+SRC.SYSMESSAGE You deposit the 500 burning Ingots into your bank.
+ELSE
+IF <SRC.RESTEST 1 i_check_mazda>
+SRC.CONSUME 1 i_check_mazda
+SRC.NEWITEM i_ingot_mazda
+SRC.ACT.AMOUNT 500
+SRC.ACT.CONT <SRC.FINDLAYER.29.UID> 
+SRC.SYSMESSAGE You deposit the 500 mazda Ingots into your bank.
+ELSE
+IF <SRC.RESTEST 1 i_check_Rhenium>
+SRC.CONSUME 1 i_check_Rhenium
+SRC.NEWITEM i_Ingot_Rhenium
+SRC.ACT.AMOUNT 500
+SRC.ACT.CONT <SRC.FINDLAYER.29.UID> 
+SRC.SYSMESSAGE You deposit the 500 Rhenium into your bank.
+ELSE
+RETURN 0
+ENDIF
+
+[EOF]

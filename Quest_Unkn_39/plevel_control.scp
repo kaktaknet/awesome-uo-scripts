@@ -1,0 +1,130 @@
+//Cut and paste the code below (NOT THE EVENTS!) into your ON=@Login for players (Spheretables.scp)
+//Put it at the end of everything else, so it runs fine; without problems.
+//Be sure to remove the code after you paste it!
+
+//////////////////////////////// THIS IS THE CODE YOU CUT/PASTE //////////////////////////
+IF (<SRC.ACCOUNT.PLEVEL> == 07)
+ SRC.EVENTS = +e_administrator_events
+ SRC.ALLSHOW = 0
+ SRC.PRIVSHOW = 0
+ENDIF
+IF (<SRC.ACCOUNT.PLEVEL> == 06)
+ SRC.EVENTS = +e_administrator_events
+ SRC.ALLSHOW = 0
+ SRC.PRIVSHOW = 0
+ENDIF
+IF (<SRC.ACCOUNT.PLEVEL> == 05)
+ SRC.EVENTS = +e_developer_events
+ SRC.ALLSHOW = 0
+ SRC.PRIVSHOW = 0
+ENDIF
+IF (<SRC.ACCOUNT.PLEVEL> == 04)
+ SRC.EVENTS = +e_gm_events
+ SRC.ALLSHOW = 0
+ SRC.PRIVSHOW = 0
+ENDIF
+IF (<SRC.ACCOUNT.PLEVEL> == 03)
+ SRC.EVENTS = +e_seer_events
+ SRC.ALLSHOW = 0
+ SRC.PRIVSHOW = 0
+ENDIF
+IF (<SRC.ACCOUNT.PLEVEL> == 02)
+ SRC.EVENTS = +e_counselor_events
+ SRC.ALLSHOW = 0
+ SRC.PRIVSHOW = 0
+ENDIF
+///////////////////////////////// END OF CODE ///////////////////////////////////////////
+
+//After you do the 'code thing', edit the PLEVEL commands to what you want your couneslors, GMs, ecetera, to use. This provides extra security.
+
+[EVENTS e_counselor_events]
+
+ON=@Hit
+RETURN 1
+
+ON=@GetHit
+RETURN 1
+
+ON=@SkillStart
+SRC.SYSMESSAGE="You may not interfere with gameplay as counselor."
+RETURN 1
+
+ON=@itemPICKUP_PACK
+SRC.SYSMESSAGE="You may not interfere with gameplay as counselor."
+RETURN 1
+
+ON=@itemPICKUP_GROUND
+SRC.SYSMESSAGE="You may not interfere with gameplay as counselor."
+RETURN 1
+
+ON=@Itemunequip
+SRC.SYSMESSAGE="You may not interfere with gameplay as counselor."
+RETURN 1
+
+ON=@DClick
+SRC.SYSMESSAGE="You may not interfere with gameplay as counselor."
+RETURN 1
+
+[EVENTS e_seer_events]
+
+ON=@Hit
+RETURN 1
+
+ON=@GetHit
+RETURN 1
+
+ON=@SkillStart
+SRC.SYSMESSAGE="You may not interfere with gameplay as Supreme counselor."
+RETURN 1
+
+ON=@itemPICKUP_PACK
+SRC.SYSMESSAGE="You may not interfere with gameplay as Supreme counselor."
+RETURN 1
+
+ON=@itemPICKUP_GROUND
+SRC.SYSMESSAGE="You may not interfere with gameplay as Supreme counselor."
+RETURN 1
+
+ON=@Itemunequip
+SRC.SYSMESSAGE="You may not interfere with gameplay as Supreme counselor."
+RETURN 1
+
+ON=@DClick
+SRC.SYSMESSAGE="You may not interfere with gameplay as Supreme counselor."
+RETURN 1
+
+[EVENTS e_gm_events]
+
+ON=@Hit
+RETURN 1
+
+ON=@GetHit
+RETURN 1
+
+[EVENTS e_developer_events]
+
+ON=@itemPICKUP_PACK
+SRC.SYSMESSAGE="You may not interfere with gameplay as Game Master."
+RETURN 1
+
+ON=@itemPICKUP_GROUND
+SRC.SYSMESSAGE="You may not interfere with gameplay as Game Master."
+RETURN 1
+
+ON=@SkillStart
+SRC.SYSMESSAGE="You may not interfere with gameplay as Game Master."
+RETURN 1
+
+ON=@Hit
+RETURN 1
+
+ON=@GetHit
+RETURN 1
+
+[EVENTS e_administrator_events]
+
+ON=@Hit
+RETURN 1
+
+ON=@GetHit
+RETURN 1

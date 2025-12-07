@@ -1,0 +1,812 @@
+[ITEMDEF I_Klasse_Yora]   
+DEFNAME=i_klasse_Yora
+NAME=Yorawandler
+ID=i_rune_alchem_6 
+  
+ON=@CREATE   
+COLOR=0  
+  
+ON=@STEP
+SRC.SKILLCLASS=magier
+SRC.STR=(<SRC.STR>+5)
+SRC.DEX=(<SRC.DEX>+5)
+SRC.INT=(<SRC.INT>+10)   
+SRC.EVENTS=e_class_Yora
+SRC.tag.class=Yora
+SRC.EVENTS -Class_undeclared 
+SRC.EVENTS=e_armor_noplate
+SRC.EVENTS=e_armor_noring
+SRC.MEDITATION=(<SRC.MEDITATION>+50)   
+SRC.INSCRIPTION=(<SRC.INSCRIPTION>+50)   
+SRC.MAGERY=(<SRC.MAGERY>+50)   
+SRC.GO britain  
+SRC.sysmessage Du bist von nun an ein Yora
+SRC.sound=snd_spell_heal   
+  
+CATEGORY=Nina  
+SUBSECTION=Klassen   
+DESCRIPTION=Yora
+  
+[events e_class_Yora]   
+ON=@SPELLCAST
+RETURN 1
+
+// ON=@SPELLCAST 38
+
+	IF (<ARGN>==38) && (<SRC.TARG.FINDID.I_RUNE_POISEN>)
+	SRC.TARG.FLAGS=00
+	ENDIF
+
+//ON=@itemEQUIP
+//IF (<SRC.ACT.TYPE>==t_weapon_sword) || (<SRC.ACT.TYPE>==t_weapon_mace_smith) || (<SRC.ACT.TYPE>==t_weapon_bow) || (<SRC.ACT.TYPE>==t_weapon_xbow) || (<SRC.ACT.TYPE>==t_weapon_mace_sharp)
+//	SRC.SYSMESSAGE Das koennen Magier nicht benutzen !
+//	SRC.ACT.UNEQUIP
+//ENDIF
+
+
+
+[CHARDEF drowven]
+DEFNAME=C_H_Drowvendor
+NAME=#NAMES_HUMANMALE the Barber
+ID=C_MAN
+AVERSIONS=t_TRAP,t_eerie_stuff
+DESIRES=i_gold,e_notoriety
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_shopkeep
+TSPEECH=spk_needs
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=Drowvendor
+
+ON=@Create
+NPC=brain_vendor
+COLOR=colors_skin
+NEED=i_gold
+
+STR={66 80}
+DEX=90
+INT={66 80}
+
+FENCING={15.0 38.0}
+PARRYING={45.0 68.0}
+SWORDSMANSHIP={15.0 38.0}
+WRESTLING={15.0 38.0}
+MACEFIGHTING={15.0 38.0}
+MAGICRESISTANCE={45.0 68.0}
+TACTICS={45.0 68.0}
+
+ITEMNEWBIE=i_lantern
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRestock
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_pants
+COLOR=colors_all
+ITEM=random_shoes
+COLOR=colors_neutral
+ITEM=random_coin_purse
+
+//************schwerter**********
+
+SELL=i_Mytheril_sword_long,10
+ATTR=attr_decay
+SELL=i_BlackRock_sword_long,10
+ATTR=attr_decay
+
+SELL=i_scimitar_charltin,10
+ATTR=attr_decay
+SELL=i_Mytheril_scimitar,10
+ATTR=attr_decay
+
+SELL=i_BlackRock_scimitar,10
+ATTR=attr_decay
+SELL=i_sword_viking_granit,10
+ATTR=attr_decay
+
+SELL=i_Mytheril_sword_viking,10
+ATTR=attr_decay
+SELL=i_BlackRock_sword_viking,10
+ATTR=attr_decay
+
+//************rüstungen************
+
+//************Blackrock************
+SELL=i_BLACKROCK_PLATEMAIL,10
+ATTR=attr_decay
+SELL=i_BLACKROCK_PLATEMAIL_ARMS,10
+ATTR=attr_decay
+SELL=i_BLACKROCK_PLATEMAIL_leggings,10
+ATTR=attr_decay
+SELL=i_BLACKROCK_PLATE_HELM,10
+ATTR=attr_decay
+SELL=DEFNAME=i_BLACKROCK_PLATEMAIL_GORGET,10
+ATTR=attr_decay
+SELL=i_BLACKROCK_PLATEMAIL_GAUNTLETS,10
+ATTR=attr_decay
+SELL=i_BLACKROCK_FEMALE_PLATEMAIL,10
+ATTR=attr_decay
+SELL=DEFNAME=i_BLACKROCK_CHAINMAIL_COIF,10
+ATTR=attr_decay
+SELL=i_BLACKROCK_CHAINMAIL_LEGGINGS,10
+ATTR=attr_decay
+SELL=i_BLACKROCK_CHAINMAIL_TUNIC,10
+ATTR=attr_decay
+SELL=i_BLACKROCK_HEATER_SHIELD,10
+ATTR=attr_decay
+
+//*************Invul*****************
+
+
+//*************Lederrüstungen*****************
+
+SELL=i_leather_sleeves_invulnerability,10
+ATTR=attr_decay
+SELL=i_leather_gorget_invulnerability,10
+ATTR=attr_decay
+SELL=i_leather_leggings_invulnerability,10
+ATTR=attr_decay
+SELL=i_leather_tunic_invulnerability,10
+ATTR=attr_decay
+SELL=i_leather_gloves_invulnerability,10
+ATTR=attr_decay
+SELL=i_leather_cap_invulnerability,10
+ATTR=attr_decay
+SELL=i_leather_shorts_invulnerability,10
+ATTR=attr_decay
+SELL=i_leather_armor_invulnerability_female,10
+ATTR=attr_decay
+SELL=i_leather_skirt_invulnerability,10
+ATTR=attr_decay
+SELL=i_leather_bustier_invulnerability,10
+ATTR=attr_decay
+i_leather_sleeves_invulnerability
+
+
+
+
+[ITEMDEF i_goldbrand]
+Name=Goldbrand
+ID=09c7
+TYPE=T_BOOZE
+VALUE={20 30}
+WEIGHT=1
+
+ON=@CREATE 
+Color=color_o_gold
+
+CATEGORY=Nina
+SUBSECTION=Alk
+DESCRIPTION=Goldbrand
+
+[ITEMDEF i_weiswein]
+Name=Weisswein
+ID=09c7
+TYPE=T_BOOZE
+VALUE={20 30}
+WEIGHT=1
+
+ON=@CREATE 
+Color=0481
+
+CATEGORY=Nina
+SUBSECTION=Alk
+DESCRIPTION=Weißwein
+
+
+[ITEMDEF i_rotwein]
+Name=Rotwein
+ID=09c7
+TYPE=T_BOOZE
+VALUE={23 35}
+WEIGHT=1
+
+ON=@CREATE 
+Color=0494
+
+CATEGORY=Nina
+SUBSECTION=Alk
+DESCRIPTION=Rotwein
+
+
+
+[ITEMDEF I_RASSE_cat] 
+NAME=Katzenmensch
+ID=i_moongate_red
+
+ON=@CREATE 
+COLOR=0f 
+
+ON=@STEP 
+SRC.EVENTS=e_race_cat
+SRC.tag.race=Katzenmensch
+SRC.title= Katzenmensch
+SRC.NEWITEM=i_gold 
+SRC.act.amount=1000 
+SRC.act.bounce 
+SRC.GO Britain 
+SRC.sysmessage Du bist von nun an ein Katzenmensch
+SRC.sound=snd_spell_heal 
+SRC.COLOR=color_o_gold  
+SRC.OSKIN=color_o_gold
+
+
+CATEGORY=Nina 
+SUBSECTION=Gates 
+DESCRIPTION=Katzenmensch
+
+[events e_race_cat] 
+
+ON=@itemDCLICK 
+IF <SRC.STR> > 90 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=90
+ENDIF
+ENDIF 
+IF <SRC.INT> > 90 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=90
+ENDIF
+ENDIF 
+IF <SRC.DEX> > 90 // Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=90
+ENDIF
+ENDIF 
+
+ON=@SPELLCAST
+
+IF <ARGN>==02 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==41 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==52 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==29 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==04 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==35 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==44 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==45 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==56 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==15 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==07 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==32 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==40 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+
+IF <ARGN>==65 //spell-ID
+RETURN 0 //spell zulassen
+ENDIF
+
+SRC.SYSMESSAGE Das kannst du nicht zaubern !
+RETURN 1 // alle anderen spells verhindern
+
+
+//Hammer 
+[ITEMDEF gm_hammer]
+DEFNAME=i_gm_hammer
+ID=4020
+NAME=Gm Hammer
+TYPE=T_WEAPON_MACE_SMITH
+WEIGHT=1
+CATEGORY=Nina
+SUBSECTION=Itmes
+DESCRIPTION=Gm Hammer
+
+ON=@Create
+COLOR=color_o_gold
+HITPOINTS={700 800}
+
+ON=@DCLICK 
+IF <SRC.BLACKSMITHING> > 999
+	SRC.SYSMESSAGE Was moechtest du Reparieren ?
+	TARGET 
+		ELSE
+		SRC.SYSMESSAGE Du bist kein gm schmied !
+		RETURN 1
+	ENDIF
+RETURN 1 
+
+ON=@TARGON_ITEM 
+IF <SRC.TARG.HITPOINTS> > 60
+	SRC.SYSMESSAGE Das ist schon Heile !
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE der gegenstand hatte noch <SRC.TARG.HITPOINTS> Hitpoints
+	SRC.TARG.HITPOINTS={150 500}
+	SRC.EMOTE Repariert die <SRC.TARG.NAME>
+	src.effect=3,0376a,1,30,1
+	src.EFFECT 2,0376a,1,15,1
+
+ELSE
+	SRC.SYSMESSAGE Das kanst du nicht reparieren !		
+	RETURN 1
+ENDIF
+ON=@TARGON_CHAR 
+SRC.SYSMESSAGE Bei Lebewessen kann man nichts Reparieren 
+RETURN 1
+
+[ITEMDEF 0403C]
+DEFNAME=i_Holz_klein
+NAME=Holz klein - by sarah
+TYPE=T_SHIP
+VALUE=100000
+MULTIREGION=-5,-5,6,5
+COMPONENT=06AD,5,0,0,0
+COMPONENT=06AD,0,-3,0,0
+COMPONENT=0BD1,6,3,0,0
+CATEGORY=Nina
+SUBSECTION=häuser
+DESCRIPTION=Holz klein - by sarah
+
+[ITEMDEF i_deed_Holz]
+DEFNAME=i_deed_Holz
+NAME=Deed to a Holz klein by sarah
+ID=i_Deed
+RESOURCES=i_deed, i_Holz_klein
+
+ON=@Create
+MORE=i_Holz_klein
+
+CATEGORY=Nina
+SUBSECTION=Deeds
+DESCRIPTION=Deed to Holz klein - by sarah
+
+
+[ITEMDEF 0403D]
+DEFNAME=i_Marbel_Shop
+NAME=Marbel Shop
+TYPE=T_SHIP
+VALUE=300000
+MULTIREGION=-9,-6,10,7
+COMPONENT=0870,10,1,0,0
+COMPONENT=0BD1,8,2,1,0
+CATEGORY=Nina
+SUBSECTION=häuser
+DESCRIPTION=Marbel Shop
+
+[ITEMDEF i_deed_Marbel_Shop]
+DEFNAME=i_deed_Marbel_Shop
+NAME=Deed to a Marbel Shop
+ID=i_Deed
+RESOURCES=i_deed, i_Marbel_Shop
+
+ON=@Create
+MORE=i_Marbel_Shop
+
+CATEGORY=Nina
+SUBSECTION=Deeds
+DESCRIPTION=Deed to Marbel Shop
+ 
+[ITEMDEF i_deed_Paladin_Kirche]
+DEFNAME=i_deed_Paladin_Kirche
+NAME=Deed to a Paladin Kirche
+ID=i_Deed
+RESOURCES=i_deed, i_Paladin_Kirche
+
+ON=@Create
+MORE=i_Paladin_Kirche
+
+CATEGORY=Nina
+SUBSECTION=Deeds
+DESCRIPTION=Deed to Paladin Kirche
+
+[ITEMDEF 0403E]
+DEFNAME=i_Paladin_Kirche
+NAME=Paladin Kirche
+TYPE=T_SHIP
+VALUE=400000
+MULTIREGION=-10,-4,10,5
+COMPONENT=0BD2,6,-1,11,0
+COMPONENT=06EF,5,0,5,0
+COMPONENT=06ED,5,1,5,0
+CATEGORY=Nina
+SUBSECTION=häuser
+DESCRIPTION=Paladin Kirche
+
+[ITEMDEF 04040]
+DEFNAME=i_Horrorraum
+NAME=Horrorraum
+TYPE=T_SHIP
+VALUE=50000
+MULTIREGION=-4,-4,4,4
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=Horrorraum
+
+[ITEMDEF i_deed_Horrorraum]
+DEFNAME=i_deed_Horrorraum
+NAME=Deed to a Horrorraum
+ID=i_Deed
+RESOURCES=i_deed, i_Horrorraum
+
+ON=@Create
+MORE=i_Horrorraum
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to Horrorraum
+
+[ITEMDEF 04041]
+DEFNAME=i_aka1links
+NAME=aka1links
+TYPE=T_SHIP
+VALUE=900000
+MULTIREGION=-25,-31,26,32
+COMPONENT=067D,-1,-26,20,0
+COMPONENT=067B,-3,9,20,0
+COMPONENT=0679,-4,9,20,0
+COMPONENT=067D,-14,-7,20,0
+COMPONENT=0683,-12,8,0,0
+COMPONENT=0681,-12,9,0,0
+COMPONENT=067B,-18,10,20,0
+COMPONENT=0679,-19,10,20,0
+COMPONENT=0679,-13,9,20,0
+COMPONENT=067B,-12,9,20,0
+COMPONENT=0BD1,-5,10,21,0
+COMPONENT=0BD1,-14,10,21,0
+COMPONENT=0BD1,-20,11,23,0
+COMPONENT=0BD2,-11,11,3,0
+COMPONENT=0BD2,-13,-8,20,0
+COMPONENT=067F,-1,-27,20,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=aka1links
+
+[ITEMDEF i_deed_aka1links]
+DEFNAME=i_deed_aka1links
+NAME=Deed to a aka1links
+ID=i_Deed
+RESOURCES=i_deed, i_aka1links
+
+ON=@Create
+MORE=i_aka1links
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to aka1links
+
+[ITEMDEF 04042]
+DEFNAME=i_aka2rechts
+NAME=aka2rechts
+TYPE=T_SHIP
+VALUE=9000
+MULTIREGION=-26,-28,26,29
+COMPONENT=0677,-10,10,21,0
+COMPONENT=0675,-11,10,21,0
+COMPONENT=0675,-4,26,21,0
+COMPONENT=0677,-3,26,21,0
+COMPONENT=0BD1,-5,27,21,0
+COMPONENT=0675,-7,-8,21,0
+COMPONENT=067D,-13,-5,21,0
+COMPONENT=0675,-5,-9,1,0
+COMPONENT=067B,-5,-6,1,0
+COMPONENT=067F,-13,-6,21,0
+COMPONENT=067B,-7,-5,21,0
+COMPONENT=0BD1,-9,27,42,0
+COMPONENT=0BD0,9,-28,2,0
+COMPONENT=0675,-8,26,41,0
+COMPONENT=0677,-7,26,41,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=aka2rechts
+
+[ITEMDEF i_deed_aka2rechts]
+DEFNAME=i_deed_aka2rechts
+NAME=Deed to a aka2rechts
+ID=i_Deed
+RESOURCES=i_deed, i_aka2rechts
+
+ON=@Create
+MORE=i_aka2rechts
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to aka2rechts
+
+[ITEMDEF 04043]
+DEFNAME=i_landorshaus
+NAME=landorshaus
+TYPE=T_SHIP
+VALUE=22
+MULTIREGION=-14,-8,14,9
+COMPONENT=0675,0,8,0,0
+COMPONENT=067D,-2,3,0,0
+COMPONENT=067D,3,-5,0,0
+COMPONENT=0675,6,0,0,0
+COMPONENT=0677,-9,-2,0,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=landorshaus
+
+[ITEMDEF i_deed_landorshaus]
+DEFNAME=i_deed_landorshaus
+NAME=Deed to a landorshaus
+ID=i_Deed
+RESOURCES=i_deed, i_landorshaus
+
+ON=@Create
+MORE=i_landorshaus
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to landorshaus
+
+[ITEMDEF 04044]
+DEFNAME=i_ventrue1
+NAME=ventrue1
+TYPE=T_SHIP
+VALUE=2
+MULTIREGION=-5,-5,5,6
+COMPONENT=067D,4,3,5,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=ventrue1
+
+[ITEMDEF i_deed_ventrue1]
+DEFNAME=i_deed_ventrue1
+NAME=Deed to a ventrue1
+ID=i_Deed
+RESOURCES=i_deed, i_ventrue1
+
+ON=@Create
+MORE=i_ventrue1
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to ventrue1
+
+[ITEMDEF 04045]
+DEFNAME=i_xanhaustrinsic
+NAME=xanhaustrinsic
+TYPE=T_SHIP
+VALUE=2
+MULTIREGION=-18,-11,18,11
+COMPONENT=06A7,1,5,19,0
+COMPONENT=06AD,-2,-7,19,0
+COMPONENT=06A7,1,-3,19,0
+COMPONENT=06AD,-4,1,19,0
+COMPONENT=06AD,6,1,19,0
+COMPONENT=06AD,3,-7,19,0
+COMPONENT=0BD2,5,6,9,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=xanhaustrinsic
+
+[ITEMDEF i_deed_xanhaustrinsic]
+DEFNAME=i_deed_xanhaustrinsic
+NAME=Deed to a xanhaustrinsic
+ID=i_Deed
+RESOURCES=i_deed, i_xanhaustrinsic
+
+ON=@Create
+MORE=i_xanhaustrinsic
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to xanhaustrinsic
+
+
+[ITEMDEF 0404A]
+DEFNAME=i_Posten1
+NAME=Posten1
+TYPE=T_SHIP
+VALUE=50000
+MULTIREGION=-5,-5,6,5
+COMPONENT=06EF,4,0,5,0
+COMPONENT=0BD1,5,2,5,0
+COMPONENT=06ED,4,1,5,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=Posten1
+
+// This is the script for the deed. Change [####] to next ID #
+// in your sphereitems2.scp.
+
+[ITEMDEF i_deed_Posten1]
+DEFNAME=i_deed_Posten1
+NAME=Deed to a Posten1
+ID=i_Deed
+RESOURCES=i_deed, i_Posten1
+
+ON=@Create
+MORE=i_Posten1
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to Posten1
+
+
+[ITEMDEF 04047]
+DEFNAME=i_posten2
+NAME=posten2
+TYPE=T_SHIP
+VALUE=50000
+MULTIREGION=-5,-5,5,5
+COMPONENT=06E7,1,3,5,0
+COMPONENT=0BD2,-1,4,5,0
+COMPONENT=06E5,0,3,5,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=posten2
+
+// This is the script for the deed. Change [####] to next ID #
+// in your sphereitems2.scp.
+
+[ITEMDEF i_deed_posten2]
+DEFNAME=i_deed_posten2
+NAME=Deed to a posten2
+ID=i_Deed
+RESOURCES=i_deed, i_posten2
+
+ON=@Create
+MORE=i_posten2
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to posten2
+
+
+[ITEMDEF 04048]
+DEFNAME=i_Sarah2
+NAME=Sarah2
+TYPE=T_SHIP
+VALUE=500000
+MULTIREGION=-11,-9,12,9
+COMPONENT=06AD,-4,2,0,0
+COMPONENT=06AD,-4,1,20,0
+COMPONENT=06AD,-4,-4,0,0
+COMPONENT=06E7,0,5,0,0
+COMPONENT=06E5,-1,5,0,0
+COMPONENT=0BD2,-2,6,0,0
+COMPONENT=06AD,2,1,0,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=Sarah2
+
+// This is the script for the deed. Change [####] to next ID #
+// in your sphereitems2.scp.
+
+[ITEMDEF i_deed_Sarah2]
+DEFNAME=i_deed_Sarah2
+NAME=Deed to a Sarah2
+ID=i_Deed
+RESOURCES=i_deed, i_Sarah2
+
+ON=@Create
+MORE=i_Sarah2
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to Sarah2
+
+[ITEMDEF 0404B]
+DEFNAME=i_britbruecke
+NAME=britbruecke
+TYPE=T_SHIP
+VALUE=1
+MULTIREGION=-14,-9,15,9
+COMPONENT=01FF5,7,0,16,0
+COMPONENT=01FF7,7,-1,16,0
+COMPONENT=0677,7,2,37,0
+COMPONENT=0677,-1,1,37,0
+COMPONENT=0675,-2,1,37,0
+COMPONENT=0675,6,2,37,0
+COMPONENT=0BD1,5,3,38,0
+COMPONENT=0BD1,-3,3,38,0
+COMPONENT=01FF6,8,6,16,0
+COMPONENT=01FF8,8,3,16,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=britbruecke
+
+// This is the script for the deed. Change [####] to next ID #
+// in your sphereitems2.scp.
+
+[ITEMDEF i_deed_britbruecke]
+DEFNAME=i_deed_britbruecke
+NAME=Deed to a britbruecke
+ID=i_Deed
+RESOURCES=i_deed, i_britbruecke
+
+ON=@Create
+MORE=i_britbruecke
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to britbruecke
+
+[ITEMDEF 0404C]
+DEFNAME=i_drow1
+NAME=drow1
+TYPE=T_SHIP
+VALUE=50000
+MULTIREGION=-11,-18,10,18
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=drow1
+
+// This is the script for the deed. Change [####] to next ID #
+// in your sphereitems2.scp.
+
+[ITEMDEF i_deed_drow1]
+DEFNAME=i_deed_drow1
+NAME=Deed to a drow1
+ID=i_Deed
+RESOURCES=i_deed, i_drow1
+
+ON=@Create
+MORE=i_drow1
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to drow1
+
+[EVENTS e_bauzeit]
+
+ON=@LOGOUT
+src.go jail
+
+
+[EOF]

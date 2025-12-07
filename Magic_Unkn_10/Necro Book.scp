@@ -1,0 +1,2695 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//To use this script, you need the files:  NecroSpells.scp, Necro Book.scp, NecroChars.scp and NecroAddOns.scp.
+//Once that you have them all, you can create a necro book using:  .add i_necro_book
+//and just dclick it to open up the dialog and play with the custom made spells!
+//Thanks to Marachus for doing the [DIALOG D_Necro_Book] and [DIALOG D_Necro_Book TEXT] sections of this script.
+
+//Please do not remove this header..
+
+//Enjoy!
+
+[ITEMDEF i_NecroSupply] 
+DEFNAME=i_NecroSupply
+ID=i_gravestone_18
+NAME=Necro Book Supplier
+TYPE=t_normal
+
+ON=@DCLICK
+IF <SRC.RESTEST 1 i_necro_book>
+SRC.SAY Is being Greedy!
+ELSE
+	IF (<SRC.COLOR>==0386)
+	SRC.NEWITEM=i_Necro_Book
+	SRC.ACT.Bounce
+	ELSE
+	SRC.SAY *You are not a Necromancer*
+	ENDIF
+ENDIF
+ 
+
+[FUNCTION Necromancy_Gain]
+IF (<NECROMANCY><55.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(30)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(30))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(30))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(30))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(30))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(30))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><60.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(40)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(40))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(40))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(40))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(40))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(35))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><65.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(50)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(50))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(50))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(50))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(50))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(50))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><70.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(60)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(60))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(60))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(60))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(60))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(60))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><75.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(70)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(70))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(70))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(70))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(70))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(70))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><80.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(85)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(85))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(85))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(85))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(85))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(85))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><85.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(100)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(100))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(100))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(100))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(100))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(100))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><90.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(125)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(125))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(125))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(125))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(125))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(125))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><95.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(150)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(150))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(150))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(150))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(150))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(150))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<NECROMANCY><100.0)
+
+IF (<ARGS>==1)
+IF (<EVAL RAND(200)>==1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==2)
+IF (<EVAL ((RAND(200))/2)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==3)
+IF (<EVAL ((RAND(200))/3)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==4)
+IF (<EVAL ((RAND(200))/4)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==5)
+IF (<EVAL ((RAND(200))/5)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+IF (<ARGS>==6)
+IF (<EVAL ((RAND(200))/6)><=1)
+NECROMANCY=<NECROMANCY>+0.1
+ENDIF
+ENDIF
+
+ENDIF
+
+[ITEMDEF i_Necro_Book] 
+NAME=Necro Book 
+ID=i_spellbook 
+TYPE=t_spellbook
+WEIGHT=0 
+TWOHANDS=N
+
+CATEGORY=Special 
+SUBSECTION=Magical items 
+DESCRIPTION=Book of the Dead 
+
+ON=@Create 
+ATTR=0400e
+AMOUNT=1 
+COLOR=03 
+
+ON=@DCLICK 
+SRC.SYSMESSAGE The Book Opens! 
+DIALOG D_Necro_Book 
+RETURN 1 
+
+[DIALOG D_Necro_Book] 
+150, 200 
+page 0 //Page 0: Background of book 
+gumppic 100 10 2203 //Background: open book 
+
+page 1 //Page 1- Circles 1 and 2
+ 
+text 170 15 0 0
+text 330 15 0 0
+text 155 37 0 1
+text 310 37 0 2
+
+text 145 80 990 7
+text 305 80 990 11
+text 145 110 989 8
+text 305 110 989 12
+text 145 140 988 9
+text 305 140 988 13
+text 145 170 987 10
+text 305 170 987 14
+
+tilepic 120 60 6929
+tilepic 135 60 6930
+tilepic 150 60 6929
+tilepic 165 60 6930
+tilepic 180 60 6929
+tilepic 195 60 6930
+tilepic 210 60 6929
+tilepic 225 60 6930
+
+tilepic 280 60 6929
+tilepic 295 60 6930
+tilepic 310 60 6929
+tilepic 325 60 6930
+tilepic 340 60 6929
+tilepic 355 60 6930
+tilepic 370 60 6929
+tilepic 385 60 6930
+
+button 127 83 1209 1210 0 4
+button 127 113 1209 1210 0 4
+button 127 143 1209 1210 0 5
+button 127 173 1209 1210 0 5
+
+button 287 83 1209 1210 0 6
+button 287 113 1209 1210 0 6
+button 287 143 1209 1210 0 7
+button 287 173 1209 1210 0 7
+
+text 160 190 0 56
+text 320 190 0 56
+button 145 195 2103 2104 0 16
+button 305 195 2103 2104 0 16  
+
+button 394 14 2206 2206 0 2 //page flip 
+
+page 2 //Page 2: Circles 3 and 4
+
+text 170 15 0 0
+text 330 15 0 0
+text 153 37 0 3
+text 309 37 0 4
+
+text 145 80 990 15
+text 305 80 990 19
+text 145 110 989 16
+text 305 110 989 20
+text 145 140 988 17
+text 305 140 988 21
+text 145 170 987 18
+text 305 170 987 22
+
+tilepic 120 60 6929
+tilepic 135 60 6930
+tilepic 150 60 6929
+tilepic 165 60 6930
+tilepic 180 60 6929
+tilepic 195 60 6930
+tilepic 210 60 6929
+tilepic 225 60 6930
+
+tilepic 280 60 6929
+tilepic 295 60 6930
+tilepic 310 60 6929
+tilepic 325 60 6930
+tilepic 340 60 6929
+tilepic 355 60 6930
+tilepic 370 60 6929
+tilepic 385 60 6930
+
+button 127 83 1209 1210 0 8
+button 127 113 1209 1210 0 8
+button 127 143 1209 1210 0 9
+button 127 173 1209 1210 0 9
+
+button 287 83 1209 1210 0 10
+button 287 113 1209 1210 0 10
+button 287 143 1209 1210 0 11
+button 287 173 1209 1210 0 11
+
+text 160 190 0 56
+text 320 190 0 56
+button 145 195 2103 2104 0 16
+button 305 195 2103 2104 0 16 
+
+button 123 15 2205 2205 0 1 //page flip 
+button 394 14 2206 2206 0 3 //page flip 
+
+page 3 //Page 3: Circles 5 and 6
+text 170 15 0 0
+text 330 15 0 0
+text 153 37 0 5
+text 312 37 0 6
+
+text 145 80 990 23
+text 305 80 990 27
+text 145 110 989 24
+text 305 110 989 28
+text 145 140 988 25
+text 305 140 988 29
+text 145 170 987 26
+text 305 170 987 30
+
+tilepic 120 60 6929
+tilepic 135 60 6930
+tilepic 150 60 6929
+tilepic 165 60 6930
+tilepic 180 60 6929
+tilepic 195 60 6930
+tilepic 210 60 6929
+tilepic 225 60 6930
+
+tilepic 280 60 6929
+tilepic 295 60 6930
+tilepic 310 60 6929
+tilepic 325 60 6930
+tilepic 340 60 6929
+tilepic 355 60 6930
+tilepic 370 60 6929
+tilepic 385 60 6930
+
+button 127 83 1209 1210 0 12
+button 127 113 1209 1210 0 12
+button 127 143 1209 1210 0 13
+button 127 173 1209 1210 0 13
+
+button 287 83 1209 1210 0 14
+button 287 113 1209 1210 0 14
+button 287 143 1209 1210 0 15
+button 287 173 1209 1210 0 15
+
+text 160 190 0 56
+text 320 190 0 56
+button 145 195 2103 2104 0 17
+button 305 195 2103 2104 0 17 
+
+button 123 15 2205 2205 0 2 //page flip 
+button 394 14 2206 2206 0 4 //page flip
+
+page 4 //Page 4: Spells 1 and 2 
+
+text 160 15 236 1
+text 306 15 236 1
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//light
+
+text 195 62 0 7
+button 137 53 2245 2245 1 4 10
+
+//text 185 50 36 158
+//text 185 76 36 163
+
+//text 137 120 36 129
+//text 149 120 0 57
+//text 137 145 0 58
+//text 137 170 0 59
+text 140 110 3 165
+text 150 130 0 158
+text 150 150 0 163
+
+//mana drain
+
+text 358 55 0 32
+text 358 75 0 41
+button 297 53 2292 2292 1 4 11
+
+//text 345 50 36 156
+//text 345 63 36 157
+//text 345 76 36 158
+
+//text 297 120 36 130
+//text 311 120 0 60
+//text 297 145 0 61
+//text 297 170 0 62
+text 300 110 3 165
+text 310 130 0 156
+text 310 150 0 157
+text 310 170 0 158
+
+button 123 15 2205 2205 0 3 //page flip 
+button 394 14 2206 2206 0 5 //page flip
+
+
+page 5 //page 5: spells 3 and 4
+
+text 160 15 236 1
+text 306 15 236 1
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//restore
+
+text 195 62 0 9
+button 137 53 2243 2243 1 5 12
+
+//text 185 50 36 161
+//text 185 76 36 162
+
+//text 137 120 36 131
+//text 150 120 0 63
+//text 137 145 0 64
+//text 137 170 0 65
+text 140 110 3 165
+text 150 130 0 161
+text 150 150 0 162
+
+//scath
+
+text 358 62 0 10
+button 297 53 2251 2251 1 5 13
+
+//text 345 50 36 159
+//text 345 76 36 164
+
+//text 297 120 36 132
+//text 311 120 0 66
+//text 297 145 0 67
+//text 297 170 0 68
+text 300 110 3 165
+text 310 130 0 159
+text 310 150 0 164
+
+button 123 15 2205 2205 0 4 //page flip 
+button 394 14 2206 2206 0 6 //page flip
+
+page 6 //page 6: spells 5 and 6
+
+text 160 15 236 2
+text 300 15 236 2
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//total protection
+
+text 190 55 0 33
+text 190 75 0 42
+button 137 53 2265 2265 1 6 14
+
+//text 185 50 36 161
+//text 185 76 36 162
+
+//text 137 120 36 133
+//text 148 120 0 69
+//text 137 145 0 70
+//text 137 170 0 71
+text 140 110 3 165
+text 150 130 0 161
+text 150 150 0 162
+
+//summon undead
+
+text 358 55 0 34
+text 358 75 0 43
+button 297 53 2279 2279 1 6 15
+
+//text 345 50 36 157
+//text 345 76 36 158
+
+//text 297 120 36 134
+//text 311 120 0 72
+//text 297 145 0 73
+//text 297 170 0 74
+text 300 110 3 165
+text 310 130 0 157
+text 310 150 0 158
+
+button 123 15 2205 2205 0 5 //page flip 
+button 394 14 2206 2206 0 7 //page flip
+
+page 7 //page 7: spells 7 and 8
+
+text 160 15 236 2
+text 300 15 236 2
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//wasp swarm
+
+text 195 55 0 35
+text 195 75 0 44
+button 137 53 2272 2272 1 7 16
+
+//text 185 50 36 164
+//text 185 76 36 159
+
+//text 137 120 36 135
+//text 151 120 0 75
+//text 137 145 0 76
+//text 137 170 0 77
+text 140 110 3 165
+text 150 130 0 164
+text 150 150 0 159
+
+//curse
+
+text 358 62 0 14
+button 297 53 2266 2266 1 7 17
+
+//text 345 50 36 163
+//text 345 76 36 157
+
+//text 297 120 36 136
+//text 311 120 0 78
+//text 297 145 0 79
+//text 297 170 0 80
+text 300 110 3 165
+text 310 130 0 163
+text 310 150 0 157
+
+button 123 15 2205 2205 0 6 //page flip 
+button 394 14 2206 2206 0 8 //page flip
+
+page 8 //page 8: spells 9 and 10
+
+text 160 15 236 3
+text 306 15 236 3
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//purify
+
+text 195 62 0 15
+button 137 53 2280 2280 1 8 18
+
+//text 185 50 36 163
+//text 185 76 36 161
+
+//text 137 120 36 137
+//text 151 120 0 81
+//text 137 145 0 82
+//text 137 170 0 83
+text 140 110 3 165
+text 150 130 0 163
+text 150 150 0 161
+
+//invis
+
+text 348 62 0 16
+button 297 53 2283 2283 1 8 19
+
+//text 345 50 36 156
+//text 345 76 36 158
+
+//text 297 120 36 138
+//text 307 120 0 84
+//text 297 145 0 85
+//text 297 170 0 86
+text 300 110 3 165
+text 310 130 0 156
+text 310 150 0 158
+
+button 123 15 2205 2205 0 7 //page flip 
+button 394 14 2206 2206 0 9 //page flip
+
+page 9 //page 9: spells 11 and 12
+
+text 160 15 236 3
+text 306 15 236 3
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//firebolt
+
+text 195 62 0 17
+button 137 53 2294 2294 1 9 20
+
+//text 185 50 36 159
+//text 185 63 36 160
+//text 185 76 36 158
+
+//text 137 120 36 139
+//text 151 120 0 87
+//text 137 145 0 88
+//text 137 170 0 89
+text 140 110 3 165
+text 150 130 0 159
+text 150 150 0 160
+text 150 170 0 158
+
+//web
+
+text 358 62 0 18
+button 297 53 2240 2240 1 9 21
+
+//text 345 50 36 157
+//text 345 76 36 162
+
+//text 297 120 36 140
+//text 316 120 0 90
+//text 297 145 0 91
+//text 297 170 0 92
+text 300 110 3 165
+text 310 130 0 157
+text 310 150 0 162
+
+button 123 15 2205 2205 0 8 //page flip 
+button 394 14 2206 2206 0 10 //page flip
+
+page 10 //page 10: spells 13 and 14
+
+text 160 15 236 4
+text 300 15 236 4
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//make rune
+
+text 195 55 0 36
+text 195 75 0 45
+button 137 53 2284 2284 1 10 22
+
+//text 185 50 36 156
+//text 185 76 36 158
+
+//text 137 120 36 141
+//text 147 120 0 93
+//text 137 145 0 94
+//text 137 170 0 95
+text 140 110 3 165
+text 150 130 0 156
+text 150 150 0 158
+
+//shrink
+
+text 358 62 0 20
+button 297 53 2260 2260 1 10 23
+
+//text 345 50 36 156
+//text 345 76 36 163
+
+//text 297 120 36 142
+//text 311 120 0 96
+//text 297 145 0 97
+//text 297 170 0 98
+text 300 110 3 165
+text 310 130 0 156
+text 310 150 0 163
+
+button 123 15 2205 2205 0 9 //page flip 
+button 394 14 2206 2206 0 11 //page flip
+
+page 11 //page 11: spells 15 and 16
+
+text 160 15 236 4
+text 300 15 236 4
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//gate travel
+
+text 195 55 0 37
+text 195 75 0 46
+button 137 53 2291 2291 1 11 24
+
+//text 185 50 36 156
+//text 185 76 36 158
+
+//text 137 120 36 143
+//text 147 120 0 99
+//text 137 145 0 100
+//text 137 170 0 101
+text 140 110 3 165
+text 150 130 0 156
+text 150 150 0 158
+
+//halluc
+
+text 358 55 0 51
+text 358 75 0 52
+button 297 53 2270 2270 1 11 25
+
+//text 345 50 36 159
+//text 345 76 36 163
+
+//text 295 120 36 144
+//text 309 120 0 102
+//text 297 145 0 103
+//text 297 170 0 104
+text 300 110 3 165
+text 310 130 0 159
+text 310 150 0 163
+
+button 123 15 2205 2205 0 10 //page flip 
+button 394 14 2206 2206 0 12 //page flip
+
+page 12 //page 12: spells 17 and 18
+
+text 160 15 236 5
+text 306 15 236 5
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//deathflame
+
+text 187 62 0 23
+button 137 53 2290 2290 1 12 26
+
+//text 185 50 36 160
+//text 185 63 36 163
+//text 185 76 36 158
+
+//text 137 120 36 145
+//text 149 120 0 105
+//text 137 145 0 106
+//text 137 170 0 107
+text 140 110 3 165
+text 150 130 0 160
+text 150 150 0 163
+text 150 170 0 158
+
+//animate dead
+
+text 358 55 0 39
+text 358 75 0 48
+button 297 53 2293 2293 1 12 27
+
+//text 345 50 36 156
+//text 345 63 36 161
+//text 345 76 36 158
+
+//text 297 120 36 146
+//text 311 120 0 108
+//text 297 145 0 109
+//text 297 170 0 110
+text 300 110 3 165
+text 310 130 0 156
+text 310 150 0 161
+text 310 170 0 158
+
+button 123 15 2205 2205 0 11 //page flip 
+button 394 14 2206 2206 0 13 //page flip
+
+page 13 //page 13: spells 19 and 20
+
+text 160 15 236 5
+text 306 15 236 5
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//ressurection
+
+text 184 62 0 25
+button 137 53 2298 2298 1 13 28
+
+//text 185 50 36 156
+//text 185 63 36 162
+//text 185 76 36 163
+
+//text 137 120 36 147
+//text 151 120 0 111
+//text 137 145 0 112
+//text 137 170 0 113
+text 140 110 3 165
+text 150 130 0 156
+text 150 150 0 162
+text 150 170 0 163
+
+//stone
+
+text 358 62 0 26
+button 297 53 2263 2263 1 13 29
+
+//text 345 50 36 156
+//text 345 63 36 162
+//text 345 76 36 158
+
+button 123 15 2205 2205 0 12 //page flip 
+button 394 14 2206 2206 0 14 //page flip
+
+//text 297 120 36 148
+//text 311 120 0 114
+//text 297 145 0 115
+//text 297 170 0 116
+text 300 110 3 165
+text 310 130 0 156
+text 310 150 0 162
+text 310 170 0 158
+
+page 14 //page 14: spells 21 and 22
+
+text 160 15 236 6
+text 306 15 236 6
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//chameleon
+
+text 190 62 0 27
+button 137 53 2274 2274 1 14 30
+
+//text 185 50 36 156
+//text 185 63 36 164
+//text 185 76 36 163
+
+//text 137 120 36 149
+//text 151 120 0 117
+//text 137 145 0 118
+//text 137 170 0 119
+text 140 110 3 165
+text 150 130 0 156
+text 150 150 0 164
+text 150 170 0 163
+
+//mind blast
+
+text 358 55 0 40
+text 358 75 0 49
+button 297 53 2276 2276 1 14 31
+
+//text 345 50 36 156
+//text 345 63 36 160
+//text 345 76 36 159
+
+//text 297 120 36 150
+//text 311 120 0 120
+//text 297 145 0 121
+//text 297 170 0 122
+text 300 110 3 165
+text 310 130 0 156
+text 310 150 0 160
+text 310 170 0 159
+
+button 123 15 2205 2205 0 13 //page flip 
+button 394 14 2206 2206 0 15 //page flip
+
+page 15 //page 15: spells 23 and 24
+
+text 160 15 236 6
+text 306 15 236 6
+
+gumppic 140 80 93
+gumppic 300 80 93
+
+//flamewave
+
+text 185 62 0 29
+button 137 53 2282 2282 1 15 32
+
+//text 185 50 36 160
+//text 185 63 36 163
+//text 185 76 36 158
+
+//text 137 120 36 151
+//text 151 120 0 123
+//text 137 145 0 124
+//text 137 170 0 125
+text 140 110 3 165
+text 150 130 0 160
+text 150 150 0 163
+text 150 170 0 158
+
+//polymorph
+
+text 347 62 0 30
+button 297 53 2295 2295 1 15 33
+
+//text 345 50 36 156
+//text 345 63 36 161
+//text 345 76 36 162
+
+//text 297 120 36 152
+//text 311 120 0 126
+//text 297 145 0 127
+//text 297 170 0 128
+text 300 110 3 165
+text 310 130 0 156
+text 310 150 0 161
+text 310 170 0 162
+
+button 123 15 2205 2205 0 14 //page flip 
+button 394 14 2206 2206 0 16 //page flip
+
+page 16 //quickcast pages
+
+text 160 15 236 53
+text 289 15 236 54
+
+button 123 15 2205 2205 0 15 //page flip 
+button 394 14 2206 2206 0 17
+
+button 133 40 2103 2104 1 16 10
+button 133 60 2103 2104 1 16 11
+button 133 80 2103 2104 1 16 12
+button 133 100 2103 2104 1 16 13
+button 133 120 2103 2104 1 16 14
+button 133 140 2103 2104 1 16 15
+button 133 160 2103 2104 1 16 16
+button 133 180 2103 2104 1 16 17
+button 290 40 2103 2104 1 16 18
+button 290 60 2103 2104 1 16 19
+button 290 80 2103 2104 1 16 20
+button 290 100 2103 2104 1 16 21
+button 290 120 2103 2104 1 16 22
+button 290 140 2103 2104 1 16 23
+button 290 160 2103 2104 1 16 24
+button 290 180 2103 2104 1 16 25
+
+text 149 35 0 7
+text 149 55 0 8
+text 149 75 0 9
+text 149 95 0 10
+text 149 115 0 11
+text 149 135 0 12
+text 149 155 0 13
+text 149 175 0 14
+text 306 35 0 15
+text 306 55 0 16
+text 306 75 0 17
+text 306 95 0 18
+text 306 115 0 19
+text 306 135 0 20
+text 306 155 0 21
+text 306 175 0 22
+
+
+page 17 //quickcast page 2
+
+text 160 15 236 55
+
+button 123 15 2205 2205 0 16 //page flip 
+
+//left
+
+button 133 40 2103 2104 1 17 26
+button 133 60 2103 2104 1 17 27
+button 133 80 2103 2104 1 17 28
+button 133 100 2103 2104 1 17 29
+button 133 120 2103 2104 1 17 30
+button 133 140 2103 2104 1 17 31
+button 133 160 2103 2104 1 17 32
+button 133 180 2103 2104 1 17 33
+
+text 149 35 0 23
+text 149 55 0 24
+text 149 75 0 25
+text 149 95 0 26
+text 149 115 0 27
+text 149 135 0 28
+text 149 155 0 29
+text 149 175 0 30
+
+//right
+
+gumppic 320 25 5104 
+gumppic 300 25 5104  
+gumppic 320 80 5104 
+gumppic 300 25 5104 
+gumppic 300 115 5104 
+gumppic 320 115 5104 
+gumppic 298 23 5100 
+gumppic 305 23 5101 
+gumppic 305 23 5101 
+gumppic 405 23 5102 
+gumppic 298 28 5103 
+gumppic 298 60 5103 
+gumppic 298 115 5103 
+gumppic 298 203 5106 
+gumppic 305 203 5107 
+gumppic 320 203 5107 
+gumppic 405 203 5108 
+gumppic 405 28 5105 
+gumppic 405 60 5105 
+gumppic 405 115 5105 3 
+gumppic 265 -23 12 //man
+gumppic 265 -23 60970 //deathshroud 
+gumppic 264 -11 50984
+
+text 314 160 32 155
+text 293 180 32 31
+text 307 60 32 153
+text 296 90 32 154
+
+
+[DIALOG D_Necro_Book TEXT]
+INDEX
+First Circle 
+Second Circle 
+Third Circle
+Fourth Circle 
+Fifth Circle //id 5
+Sixth Circle
+Light
+Mana Drain
+Restore
+Scath //id 10
+Total Protection
+Summon Undead
+Wasp Swarm
+Curse
+Purify //id 15
+Invisibilty
+Firebolt 
+Web
+Create Rune
+Shrink // id 20
+Gate Travel
+Hallucination
+DeathFlame
+Animate Dead
+Ressurection //id 25
+Stone
+Chameleon
+Mind Blast
+FlameWave
+PolyMorph //id 30
+Necromancy = <SRC.Necromancy>
+Mana
+Total
+Summon
+Wasp //id 35
+Create
+Gate
+Death-
+Animate
+Mind // id 40
+Drain
+Protection
+Undead
+Swarm 
+Rune //id 45
+Travel
+Flame
+Dead
+Blast 
+Wave //id 50
+Halluc-
+ination
+Quickcast 1-2
+Quickcast 3-4
+Quickcast 5-6 //id 55
+Quickcast
+reates a ring//id 57
+of light around
+caster.
+teals some of the  //id 60
+Mana from target, 
+giving it to caster.
+artially renews//id 63
+the health of
+its caster.
+its enemy with//id 66
+a small, but
+painful, blast.
+mproved version//id 69
+of the low-level 
+mage spell.
+ummons a random//id 72
+undead creature to
+do your bidding.
+amages enemy //id 75
+with weak, but 
+numerous, fireballs.
+ame as Mage 
+spell: reduces 
+opponents stats.
+aken from Frost//id 81
+Elves, removes any 
+status ailments.
+dentical to Mage//id 84
+spell; wears off if 
+caster moves.
+amages enemy//id 87
+with a blast of
+fire.
+raps enemy in //id 90
+a magical spider's
+web.
+dentical to the//93
+Mage spell of
+Mark.
+educes the size //id 96
+of a pet so it can
+be put in backpack.
+dentical to Mage//id 99
+spell. Use with 
+Create Rune.
+auses the target//id 102
+to become confused 
+see disoriented.
+haotic Magic that//id 105
+can devestate or 
+just tingle target.
+evives dead 
+enemies, making 
+them your servant.
+rings a fallen//id 111
+comrade back from
+the dead.
+etrifies an //id 114
+enemy, preventing
+any actions.
+aster blends //id 117
+with surroundings
+as they move.
+amages enemy //id 120
+based on their
+intelligence.
+ummons a pillar//id 123
+fire that ravages
+the battlefield.
+llows caster to//id 126
+take the form of
+many creatures.
+C //id 129
+S
+P
+H
+I
+S
+D
+S
+T
+I
+D 
+W
+I
+R
+I
+C
+C
+R
+B
+P
+C
+D
+S
+A
+Eternal Myst //id 153
+Necromancy Book
+Your
+Obsidian //id 156
+Pumice
+Blackmoor
+Bloodspawn
+Volcanic Ash //id 160
+Dead Wood
+Pig Iron
+Brimstone
+Batwing
+Reagents: //id 165
+
+[DIALOG D_Necro_Book BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE You put your Necromancy Book away.
+ONBUTTON=10 //light (Brimstones, Blackmoor)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Brimstone and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blackmoor
+SRC.CONSUME 1 i_reag_brimstone
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=500)
+	IF (<SRC.MANA>>=5)
+		SRC.NEWITEM=i_necro_light_rune
+		SRC.ACT.EQUIP
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF 
+
+ONBUTTON=11 //mana drain (Obsidian, Pumice, Blackmoor)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_pumice>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian, Pumice and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian and Pumice.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pumice>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Pumice and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Pumice.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blackmoor
+SRC.CONSUME 1 i_reag_pumice
+SRC.CONSUME 1 i_reag_obsidian
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=500)
+	IF (<SRC.MANA>>=5)
+		
+		SRC.NEWITEM=i_Mana_Drain
+		SRC.ACT.P=<P>
+		SRC.ACT.LINK = <SRC.UID>
+		SRC.ACT.TRIGGER=@DCLICK
+		
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=12 //restore (Dead Wood, Pig Iron)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_dead_wood>)
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Dead Wood and Pig Iron.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Dead Wood.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Pig Iron.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_dead_wood
+SRC.CONSUME 1 i_reag_pig_iron
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=500)
+	IF (<SRC.MANA>>=15)
+		SRC.NEWITEM=i_restore
+		SRC.ACT.P=<SRC.P>
+		SRC.ACT.TRIGGER=@DCLICK
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+	
+ONBUTTON=13 //scath (Bloodspawn, Batwings)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+IF !(<SRC.RESTEST 1 i_reag_batwing>)
+SRC.SYSMESSAGE You lack Bloodspawn and Batwing.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Bloodspawn.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_batwing>)
+SRC.SYSMESSAGE You lack Batwing.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_batwing
+SRC.CONSUME 1 i_reag_blood_spawn
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=500)
+	IF (<SRC.MANA>>=10)
+		SRC.NEWITEM=i_Scath
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=14 //total protection (Dead Wood, Pig Iron)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_dead_wood>)
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Dead Wood and Pig Iron.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Dead Wood.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Pig Iron.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_dead_wood
+SRC.CONSUME 1 i_reag_pig_iron
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=500)
+	IF (<SRC.MANA>>=25) 
+		SRC.ANIM 16
+		SRC.SAY In Vas Sanct 
+		SRC.SOUND=0214
+		SRC.FIX
+		SRC.Necromancy_Gain 2
+		SRC.SPELLEFFECT=15 1000
+		SRC.SPELLEFFECT=7 1000
+		SRC.SPELLEFFECT=36 1000		
+		SRC.MANA=(<SRC.MANA>-25)
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=15 //summon undead (Pumice, Blackmoor)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_pumice>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Pumice and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Pumice.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blackmoor
+SRC.CONSUME 1 i_reag_pumice
+ENDIF
+IF (<REGION.FLAGS>&04000)
+SRC.SYSMESSAGE Undeads aren't welcome in-town.
+RETURN 1
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+
+SRC.NEWITEM=i_necro_summon_undead_rune
+SRC.ACT.EQUIP
+
+ONBUTTON=16 //wasp swarm (Batwings, Bloodspawn)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_batwing>)
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+SRC.SYSMESSAGE You lack Batwing and Bloodspawn.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Batwing.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+SRC.SYSMESSAGE You lack Bloodspawn.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blood_spawn
+SRC.CONSUME 1 i_reag_batwing
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=15)
+		SRC.NEWITEM=i_Swarm
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK
+		SRC.FIX
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power*
+	ENDIF
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell*
+ENDIF
+
+ONBUTTON=17 //curse (Pumice, Brimstones)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+IF !(<SRC.RESTEST 1 i_reag_pumice>)
+SRC.SYSMESSAGE You lack Brimstone and Pumice.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pumice>)
+SRC.SYSMESSAGE You lack Pumice.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_brimstone
+SRC.CONSUME 1 i_reag_pumice
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=20)
+		SRC.NEWITEM=i_Necro_Curse
+		SRC.ACT.P=<SRC.P>
+		SRC.ACT.TRIGGER=@DCLICK
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=18 //purify (Dead Wood, Brimstones)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+IF !(<SRC.RESTEST 1 i_reag_dead_wood>)
+SRC.SYSMESSAGE You lack Brimstone and Dead Wood.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_dead_wood>)
+SRC.SYSMESSAGE You lack Dead Wood.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_brimstone
+SRC.CONSUME 1 i_reag_dead_wood
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=25)
+		SRC.NEWITEM=i_Purify
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=19 //invisibility (Obsidian, Blackmoor)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blackmoor
+SRC.CONSUME 1 i_reag_obsidian
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+
+MORE1=<EVAL (Rand(1075)>
+IF !(<MORE1><<SRC.NECROMANCY>)
+SOUND=92
+SRC.SYSMESSAGE The spell fizzles.
+SRC.SAY An Lor Ylem
+SRC.MANA=(<SRC.MANA>-30)
+RETURN 1
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=30)
+		SRC.NEWITEM=i_Inv
+		SRC.ACT.LINK=<UID>
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK
+		SRC.ANIM 17
+		SRC.SAY An Lor Ylem
+		SRC.FIX 
+		SRC.MANA=(<SRC.MANA>-30) 
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=20 //firebolt (Bloodspawn, Blackmoor, Volcanic Ash)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+IF !(<SRC.RESTEST 1 i_reag_volcanic_ash>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Bloodspawn, Volcanic Ash and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Bloodspawn and Volcanic Ash.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Bloodspawn and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Bloodspawn.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_volcanic_ash>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Volvanic Ash and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Volcanic Ash.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blood_spawn
+SRC.CONSUME 1 i_reag_volcanic_ash
+SRC.CONSUME 1 i_reag_blackmoor
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=30)
+		SRC.NEWITEM=i_fire_bolt
+		SRC.ACT.P=<SRC.P>
+		SRC.ACT.TRIGGER=@DCLICK
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=21 //web (Pumice, Pig Iron)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_pumice>)
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Pumice and Pig Iron.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Pumice.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Pig Iron.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_pumice
+SRC.CONSUME 1 i_reag_pig_iron
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=25)
+		SRC.NEWITEM=i_Web
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=22 //create rune (Blackmoor, Obsidian)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blackmoor
+SRC.CONSUME 1 i_reag_obsidian
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=30)
+		SRC.NEWITEM=i_necro_create_rune_rune
+		SRC.ACT.EQUIP
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=23 //shrink (Obsidian, Brimstones)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Obsidian and Brimstone.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_brimstone
+SRC.CONSUME 1 i_reag_obsidian
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=20)
+		SRC.NEWITEM=i_Shrink
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK 
+		SRC.FIX 
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=24 //gate travel (Blackmoor, Obsidian)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blackmoor
+SRC.CONSUME 1 i_reag_obsidian
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=35)
+		SRC.NEWITEM=i_gatey
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK 
+		SRC.FIX 
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=25 //hallucination (Bloodspawn, Brimstones)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Bloodspawn and Brimstone.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Bloodspawn.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_brimstone
+SRC.CONSUME 1 i_reag_blood_spawn
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=35)
+		SRC.NEWITEM=i_Halluc
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK
+		SRC.FIX 
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=26 //deathflame (Blackmoor, Volcanic Ash, Brimstones)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_volcanic_ash>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Volcanic Ash, Brimstone and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Volcanic Ash and Brimstone.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Volcanic Ash and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Volcanic Ash.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Brimstone and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_blackmoor
+SRC.CONSUME 1 i_reag_brimstone
+SRC.CONSUME 1 i_reag_volcanic_ash
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=40)
+		SRC.NEWITEM=i_DF
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK
+		SRC.FIX
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=27 //animate dead (Obsidian, Dead Wood, Blackmoor)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_dead_wood>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian, Dead Wood and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian and Dead Wood.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_dead_wood>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Dead Wood and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Dead Wood.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_obsidian
+SRC.CONSUME 1 i_reag_dead_wood
+SRC.CONSUME 1 i_reag_blackmoor
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=40)
+		SRC.NEWITEM=i_Animate
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK  
+		SRC.FIX 
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=28 //resurrection (Obsidian, Pig Iron, Brimstones)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Obsidian, Pig Iron and Brimstone.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian and Pig Iron.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Obsidian and Brimstone.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Pig Iron and Brimstone.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Pig Iron.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_obsidian
+SRC.CONSUME 1 i_reag_pig_iron
+SRC.CONSUME 1 i_reag_brimstone
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=40)
+		SRC.NEWITEM=i_Ress
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK 
+		SRC.FIX
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=29 //stone (Obsidian, Pig Iron, Blackmoor)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian, Pig Iron and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian and Pig Iron.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Obsidian and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Pig Iron and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Pig Iron.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_obsidian
+SRC.CONSUME 1 i_reag_pig_iron
+SRC.CONSUME 1 i_reag_blackmoor
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=45)
+		SRC.NEWITEM=i_CastStone
+		SRC.ACT.P=<P>
+		SRC.ACT.TRIGGER=@DCLICK
+		SRC.FIX
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=30 //chameleon (Obsidian, Batwings, Brimstones)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_batwing>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Obsidian, Batwing and Brimstone.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian and Batwing.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Obsidian and Brimstone.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_batwing>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Batwing and Brimstone.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Batwing.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_obsidian
+SRC.CONSUME 1 i_reag_batwing
+SRC.CONSUME 1 i_reag_brimstone
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.COLOR>==07FFF)
+SRC.MESSAGE You are already under the effects of chameleon!
+RETURN 1
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=40)
+		SRC.NEWITEM=i_necro_chameleon_rune
+		SRC.ACT.LINK=<SRC.UID>
+		SRC.ACT.EQUIP
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=31 //mind blast (Obsidian, Volcanic Ash, Blood Spawn)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_volcanic_ash>)
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+SRC.SYSMESSAGE You lack Obsidian, Volcanic Ash and Bloodspawn.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian and Volcanic Ash.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+SRC.SYSMESSAGE You lack Obsidian and Bloodspawn.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_volcanic_ash>)
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+SRC.SYSMESSAGE You lack Volcanic Ash and Bloodspawn.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Volcanic Ash.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blood_spawn>)
+SRC.SYSMESSAGE You lack Bloodspawn.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_obsidian
+SRC.CONSUME 1 i_reag_volcanic_ash
+SRC.CONSUME 1 i_reag_blood_spawn
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=45)
+		SRC.NEWITEM=i_necro_mindblast_rune
+		SRC.ACT.EQUIP
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=32 //flame wave (Volcanic Ash, Brimstones, Blackmoor)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_volcanic_ash>)
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Volcanic Ash, Brimstone and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Volcanic Ash and Brimstone.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Volcanic Ash and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Volcanic Ash.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_brimstone>)
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Brimstone and Blackmoor.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Brimstone.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_blackmoor>)
+SRC.SYSMESSAGE You lack Blackmoor.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_volcanic_ash
+SRC.CONSUME 1 i_reag_brimstone
+SRC.CONSUME 1 i_reag_blackmoor
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=60)
+		SRC.NEWITEM=i_Flamewav
+		SRC.ACT.P=<SRC.P>
+		SRC.ACT.TRIGGER=@DCLICK
+		SRC.FIX
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+ONBUTTON=33 //polymorph (Obsidian, Dead Wood, Pig Iron)
+
+IF (<REGION.FLAGS>&01)
+SRC.SYSMESSAGE An anti-magic field blocks your spell.
+RETURN 1
+ENDIF
+IF (<SRC.FLAGS>&04)
+SRC.SYSMESSAGE You cannot cast while paralyzed.
+RETURN 1
+ENDIF
+IF !(<SRC.ISGM>)
+IF !(<SRC.RESTEST 1 i_reag_obsidian>)
+IF !(<SRC.RESTEST 1 i_reag_dead_wood>)
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Obsidian, Dead Wood and Pig Iron.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian and Dead Wood.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Obsidian and Pig Iron.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Obsidian.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_dead_wood>)
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Dead Wood and Pig Iron.
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You lack Dead Wood.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_reag_pig_iron>)
+SRC.SYSMESSAGE You lack Pig Iron.
+RETURN 1
+ENDIF
+SRC.CONSUME 1 i_reag_pig_iron
+SRC.CONSUME 1 i_reag_obsidian
+SRC.CONSUME 1 i_reag_dead_wood
+ENDIF
+IF (<SRC.TAG.POLYED>==1)
+SRC.SYSMESSAGE You are already polymorphed!
+RETURN 1
+ENDIF
+IF (<SRC.FINDLAYER(1)>) && !(<SRC.FINDLAYER(1).BASEID>==i_necro_book)
+SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+IF (<SRC.Necromancy>>=600)
+	IF (<SRC.MANA>>=50)
+		SRC.NEWITEM=i_PolyMorph
+		SRC.ACT.P=<SRC.P>
+		SRC.ACT.LINK=<SRC.UID>
+		SRC.ACT.TRIGGER=@DCLICK 
+		SRC.FIX
+	ELSE 
+		SRC.MESSAGE *You Lack Magical Power* 
+	ENDIF 
+ELSE
+	SRC.MESSAGE *You are Puzzled by this Spell* 
+ENDIF
+
+[EOF]

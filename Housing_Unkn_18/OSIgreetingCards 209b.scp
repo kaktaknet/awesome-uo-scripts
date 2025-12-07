@@ -1,0 +1,47 @@
+[ITEMDEF greetingcard9]
+DEFNAME=i_deed_greeting_card9
+// UPDATED DEC, 11th 2002
+// Greeting cards 2.09b OSI STYLE
+// If you downloaded my other ones i suggest you replace them with this script.
+// OSI Greeting cards by Kenton
+// Same as the greeting cards on OSI
+// Enjoy them give them out to players as gifts or what ever..
+// some people like items like this..
+// http://kentonsscripts.cjb.net
+
+NAME=Greeting Card
+ID=i_deed
+VALUE={2000 5000}
+
+CATEGORY=Provisions - Deeds
+SUBSECTION=Greeting Cards
+DESCRIPTION=Greeting Cards
+
+ON=@DCLICK 
+COLOR={2 90}
+dialog d_partchment_rename 
+return 1 
+
+[dialog d_partchment_rename] 
+200,200 
+resizepic 0 0 3600 330 140 
+page 0 
+text 20 20 1152 0 
+gumppic 30 50 1143 
+textentry 40 52 250 20 32 0 1 
+button 120 90 249 248 1 0 1 //okay 
+button 210 90 243 241 1 0 2 //cancel 
+
+[dialog d_partchment_rename text] 
+What would you like write on it? 
+<src.targ.name> 
+
+[dialog d_partchment_rename button] 
+on=1 
+src.targ.name=<argtxt[0]> 
+src.sysmessage You Write: <argtxt[0]> 
+return 1 
+on=2 
+return 1 
+
+[EOF]

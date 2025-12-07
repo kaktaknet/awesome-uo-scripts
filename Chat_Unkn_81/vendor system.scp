@@ -1,0 +1,971 @@
+
+  /////////
+ //ITEMS//
+/////////
+
+[ITEMDEF m_snl_rent]
+NAME	= Rented Shop or Living room
+ID	= i_memory
+TYPE	= t_eq_script
+
+ON=@CREATE
+   ATTR=010
+   TIMER=-1
+
+[ITEMDEF i_sign_rental]
+  ID=i_sign_brass
+  TYPE=t_script
+  TDATA2=064
+  FLIP=1
+  DUPELIST=0bd2
+
+ON=@DCLICK
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+   //Is room rented?
+     IF (<MORE2> == 0)
+        MENU mnu_snl_rental
+        RETURN 1
+     ENDIF 
+   //Is room rented to player?
+     IF (<MORE2> == <SRC.UID>)
+     //For living or shop?
+       IF (<TAG.SNL> == 0)
+          MENU mnu_snl_lrented
+          RETURN 1
+       ENDIF
+       MENU mnu_snl_srented
+       return 1
+     ENDIF
+
+   if ( (0<SRC.TAG.SNL>)  && <SRC.ISGM> )
+      if ( <TAG.PRICE> < SRC.TAG.SNL> )
+         src.sysmessage Shop daily price changed from <eval <tag.price>> to <src.tag.snl>.
+         return 1
+      endif
+   endif
+
+
+   VAR.MSG	= <eval (<TIMER> / (60*60))>
+   if ( <VAR.MSG> < 24 )
+      VAR.MSG	= <eval <var.msg>> hours
+   else
+      VAR.MSG	= <eval (<var.msg>/24)> days
+   endif
+   SRC.SYSMESSAGE This structure is already occupied by <SRC.UID.<MORE2>.name>, paid for <VAR.MSG>.
+   return 1
+
+
+ON = @CREATE
+     ATTR = 010
+     NAME = FOR RENT
+     COLOR = 0298
+
+ON=@TIMER
+   //On lease termination
+     //Check for door open
+       IF (<LINK.TYPE> = t_door_snl_open)
+          LINK.TYPE = t_door_argh_open
+       ENDIF
+     TRY UID.<MORE2>.SYSMESSAGE Your lease at <REGION.NAME> has just expired.
+     TRY UID.<TAG.PLAYERMEM>.REMOVE
+     MORE2	= 0              //Reset owner
+     NAME      = FOR RENT     //Reset name
+     COLOR     = 0298
+     //Case of shop rental
+       IF (<TAG.SNL> == 1)
+          // IF (<LINK.TYPE> = t_door_open)
+          //     LINK.USE
+          // ENDIF
+         //Reset sign acording to Orientation (0 - ew, 1 - ns)
+           IF (<TAG.ORI> == 0)
+               DISPID=i_sign_brass
+           ENDIF
+           IF (<TAG.ORI> == 1)
+               DISPID=i_sign_brass_2
+           ENDIF
+         TAG.SNL   = 0
+         //LINK.TYPE = t_door_snl
+         TRY UID.<TAG.VENDOR>.REMOVE
+         TAG.VENDOR = 0
+         TRY UID.<TAG.LOCK1>.REMOVE
+         TAG.LOCK1 = 0
+         TRY UID.<TAG.LOCK2>.REMOVE
+         TAG.LOCK2 = 0
+         TRY UID.<TAG.LOCK3>.REMOVE
+         TAG.LOCK3 = 0
+         TAG.LOCKS = 0   
+       ENDIF
+     TIMER = -1
+     RETURN 1
+
+ON=@TARGON_ITEM
+   IF ((<TAG.LOCK1> == <SRC.TARG.UID>)||(<TAG.LOCK2> == <SRC.TARG.UID>)||(<TAG.LOCK3> == <SRC.TARG.UID>))
+      //Decreasing numer of locks
+        TAG.LOCKS=(<TAG.LOCKS> -1)
+      //Cleaning lock flags
+        IF (<TAG.LOCK1> == <SRC.TARG.UID>)
+            TAG.LOCK1 = <TAG.LOCK2>
+            TAG.LOCK2 = <TAG.LOCK3>
+            TAG.LOCK3 = 0
+        ENDIF
+        IF (<TAG.LOCK2> == <SRC.TARG.UID>)
+           TAG.LOCK2 = <TAG.LOCK3>
+           TAG.LOCK3 = 0
+        ENDIF
+        IF (<TAG.LOCK3> == <SRC.TARG.UID>)
+           TAG.LOCK3 = 0
+        ENDIF      
+      SRC.TARG.ATTR = 02
+      SRC.TARG.BOUNCE
+      RETURN 1
+   ENDIF
+   IF (<TAG.LOCKS> == 3)
+       SRC.SYSMESSAGE You can't lock any more items.
+       RETURN 1
+   ENDIF
+   //Check distance
+     VAR.P = <SRC.P>
+     SRC.P = <P>
+     IF !(<SRC.TARG.DISTANCE> < 4)
+        SRC.SYSMESSAGE <TARG.DISTANCE> That placement is too far.
+        SRC.P = <VAR.P>
+        RETURN 1
+     ENDIF
+     SRC.P = <VAR.P>
+   //Disable exploits
+     IF (<SRC.TARG.ATTR> == 010)|(<SRC.TARG.TYPE> == t_corpse)|(<SRC.TARG.ATTR> == 00))
+         SRC.SYSMESSAGE You cant lock that down
+         RETURN 1
+     ENDIF
+   IF (<TAG.LOCKS> == 2)
+       TAG.LOCKS = 3
+       TAG.LOCK3 = <SRC.TARG.UID>
+   ENDIF
+   IF (<TAG.LOCKS> == 1)
+       TAG.LOCKS = 2
+       TAG.LOCK2 = <SRC.TARG.UID>
+   ENDIF
+   IF (<TAG.LOCKS> == 0)
+       TAG.LOCKS = 1
+       TAG.LOCK1 = <SRC.TARG.UID>
+   ENDIF
+   SRC.TARG.ATTR = 010
+   SRC.TARG.TIMER = -1
+   SRC.SYSMESSAGE Item has been locked down.
+
+  /////////
+ //TYPES//
+/////////
+
+[TYPEDEF t_door_snl]
+
+ON = @DCLICK
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+     //is it rented as shop?
+       //IF (<LINK.TAG.SNL> == 1)
+       //   TYPE = t_door
+       //   USE
+       //   TIMER = 5
+       //   TYPE = t_door_snl_open
+       //   RETURN 1
+       //ENDIF
+     //is it rented to player?
+       IF (<LINK.MORE2> == <SRC.UID>)
+          TYPE = t_door
+          USE
+          TYPE = t_door_snl_open
+          TIMER = -1
+          RETURN 1
+       ENDIF
+     SRC.SYSMESSAGE Door doesnt budge.
+     RETURN 1
+
+[TYPEDEF t_door_snl_open]
+
+ON = @DCLICK
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+     //is it rented as shop?
+       //IF (<LINK.TAG.SNL> == 1)
+       //   TYPE = t_door
+       //   USE
+       //   TYPE = t_door_snl
+       //   RETURN 1
+       //ENDIF
+     //is it rented to player?
+       IF (<LINK.MORE2> == <SRC.UID>)
+          TYPE = t_door
+          USE
+          TYPE = t_door_snl
+          TIMER = -1
+          RETURN 1
+       ENDIF
+     SRC.SYSMESSAGE Door doesnt budge.
+     RETURN 1
+
+[TYPEDEF t_door_argh]
+
+ON = @DCLICK
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+     TYPE = t_door
+     USE
+     TYPE = t_door_argh_open
+     TIMER = -1
+     RETURN 1
+
+[TYPEDEF t_door_argh_open]
+
+ON = @DCLICK
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+     TYPE = t_door
+     USE
+     TYPE = t_door_argh
+     TIMER = -1
+     RETURN 1
+
+  /////////
+ //MENUS//
+/////////
+
+
+[MENU mnu_snl_rental]
+Rent structure (<REGION.NAME>)		// <menu name>
+
+ON = 0 Rent the room for living (<eval <TAG.PRICE>>gp)	// 0 <menu text>
+   //check if has other room
+     IF ( <SRC.FINDID( m_inn_rent ).uid> )
+        SRC.SYSMESSAGE You are not allowed more than one rented room.
+        RETURN 1
+     ENDIF
+     IF ( <SRC.FINDID( m_snl_rent ).uid> )
+        SRC.SYSMESSAGE You are not allowed more than one rented room.
+        RETURN 1
+     ENDIF
+   //check if has house
+     IF ( <SRC.MEMORYFINDTYPE(memory_guard).uid> )
+        SRC.SYSMESSAGE House owners are not allowed to rent rooms for living.
+        RETURN 1
+     ENDIF
+  //Check money
+    IF ( !<SRC.RESTEST <eval <TAG.PRICE>> i_gold> )
+       SRC.SYSMESSAGE You dont have enough money on you.
+       RETURN 1
+    ENDIF
+  //Process rental
+    SRC.SYSMESSAGE You rent the room at <REGION.NAME>.
+    SRC.SYSMESSAGE WARNING: DOOR DOES NOT AUTO CLOSE.
+    MORE2		= <SRC.UID>		// link sign to player
+    TAG.SNL       = 0               // living tag
+    SRC.NEWITEM	= m_snl_rent	// add memory item
+    TAG.PLAYERMEM = <SRC.ACT.UID>
+    SRC.ACT.LINK	= <UID>		// link memory to sign
+    SRC.ACT.EQUIP
+    TIMER	= 5*24*60*60	// 5 days
+    SRC.CONSUME <eval (<TAG.PRICE>)> i_gold
+  //Case of lazy GM or door open from previous rents
+    IF (<LINK.TYPE> == t_door_argh_open)
+       LINK.TYPE = t_door
+       LINK.USE
+       LINK.TIMER = -1
+    ENDIF
+    LINK.TYPE = t_door_snl
+  //Show new status
+    NAME = Occupied
+    COLOR = 028
+
+ON = 0 Rent the room for shop (<eval <TAG.PRICE>*(5)>gp)	// 0 <menu text>
+   //check if has other room
+     IF ( <SRC.FINDID( m_inn_rent ).uid> )
+        SRC.SYSMESSAGE You are not allowed more than one rented room.
+        RETURN 1
+     ENDIF
+     IF ( <SRC.FINDID( m_snl_rent ).uid> )
+        SRC.SYSMESSAGE You are not allowed more than one rented room.
+        RETURN 1
+     ENDIF
+  //Check money
+    IF ( !<SRC.RESTEST <eval <TAG.PRICE>*(5)> i_gold> )
+       SRC.SYSMESSAGE You dont have enough money on you.
+       RETURN 1
+    ENDIF
+  //Process rental
+    SRC.SYSMESSAGE You rent the shop at <REGION.NAME>.
+    MORE2		= <SRC.UID>		// link sign to player
+    TAG.SNL       = 1               // shop tag
+    SRC.NEWITEM	= m_snl_rent	// add memory item
+    TAG.PLAYERMEM = <SRC.ACT.UID>
+    SRC.ACT.LINK	= <UID>		// link memory to sign
+    SRC.ACT.EQUIP
+    TIMER	= 5*24*60*60	// 5 days
+    SRC.CONSUME <eval (<TAG.PRICE>)*(5)> i_gold
+  //Case of lazy GM or door open from previous rents
+    IF (<LINK.TYPE> == t_door_argh_open)
+       LINK.TYPE = t_door
+       LINK.USE
+       LINK.TIMER = -1
+    ENDIF
+    LINK.TYPE = t_door_argh
+  //Show new status
+    NAME = <SRC.NAME>'s shop
+    COLOR = 00
+  //Setup vendor
+    SRC.NEWNPC { C_H_PLAYER_VENDOR 1 C_H_PLAYER_VENDOR_F 1 }
+    SRC.ACT.TAG.VENDOR_COLOR	= 010
+    SRC.ACT.TAG.VENDOR_TITLE	= player vendor
+    TAG.VENDOR = <SRC.ACT.UID> // keep the vendors uid for later use.
+    SRC.ACT.FINDLAYER(layer_bankbox).MORE1	= 300
+    SRC.ACT.FOOD = 32000
+    SRC.ACT.HOME = <MOREP>
+    SRC.ACT.GO <MOREP>
+    SRC.NEWITEM=i_memory
+    SRC.ACT.COLOR=memory_ipet
+    SRC.ACT.LINK=<SRC.UID>
+    SRC.ACT.LAYER=layer_special
+    SRC.ACT.CONT=<TAG.VENDOR>
+    RETURN 1
+
+[MENU mnu_snl_lrented]
+Rented room at <REGION.NAME>,  <eval (<timer>/(60*60))> hours left	// <menu name>
+
+ON = 0 Extend rent time by 24 hours
+     //check if has house
+       IF ( <SRC.MEMORYFINDTYPE(memory_guard).uid> )
+          SRC.SYSMESSAGE Lease extension refused.
+          RETURN 1
+       ENDIF
+     //check if reached time limit
+       IF (<TIMER> > <eval(60*60*24*7)>)
+            SRC.SYSMESSAGE Lease cannot be prolongued any further
+            RETURN 1
+       ENDIF
+     //check if has enough money
+       IF ( !<SRC.RESTEST <eval ((<TAG.PRICE>)/5)> i_gold> )
+          SRC.SYSMESSAGE You dont have enough money on you.
+          RETURN 1
+       ENDIF
+     //Process extension
+       SRC.CONSUME <eval (<TAG.PRICE>)/(5)> i_gold
+       TIMER	= <eval (<TIMER> + (24*60*60))>
+       SRC.SYSMESSAGE Room rent extended.
+
+ON = 0 Free the room
+     //Reset room
+       MORE2 = 0            //Reset owner
+       NAME  = FOR RENT     //Reset name
+       COLOR = 0298         //Reset colour
+       //Check for door open
+         IF (<LINK.TYPE> = t_door_snl_open)
+             LINK.TYPE = t_door
+             LINK.USE
+             LINK.TYPE = t_door_snl
+             LINK.TIMER = -1
+         ENDIF
+     //Process release
+       SRC.FINDID.m_snl_rent..remove
+       SRC.SYSMESSAGE Room is now free
+
+[MENU mnu_snl_srented]
+Rented shop at <REGION.NAME>,  <eval (<timer>/(60*60))> hours left	// <menu name>
+
+ON = 0 Extend rent time by 24 hours
+     //check if reached time limit
+       IF (<TIMER> > <eval(60*60*24*7)>)
+            SRC.SYSMESSAGE Lease cannot be prolongued any further
+            RETURN 1
+       ENDIF
+     //check if has enough money
+       IF ( !<SRC.RESTEST <eval ((<TAG.PRICE>))> i_gold> )
+          SRC.SYSMESSAGE You dont have enough money on you.
+          RETURN 1
+       ENDIF
+     //Process extension
+       SRC.CONSUME <eval (<TAG.PRICE>)> i_gold
+       TIMER	= <eval (<TIMER> + (24*60*60))>
+     //Extend vendor
+       SRC.ACT = <TAG.VENDOR>
+       SRC.ACT.FINDLAYER(layer_bankbox).MORE1 = <eval <SRC.ACT.FINDLAYER(layer_bankbox).MORE1>+(50))>
+     SRC.SYSMESSAGE Shop rent extended.
+
+ON = 0 Access comercial menu
+     DIALOG d_menu_shop
+
+ON = 0 Lock/Unlock Item. (<EVAL (3 - <TAG.LOCKS>>) Remaining
+     TARGET
+
+ON = 0 Free the room
+     //Process release
+       SRC.FINDID.m_snl_rent..remove
+     //Reset room
+       MORE2     = 0            //Reset owner
+       NAME      = FOR RENT     //Reset name
+       COLOR     = 0298         //Reset colour
+       TAG.SNL   = 0            //Reset shop tag
+       //Sign reset acording to Orientation (0 - ew, 1 - ns)
+         IF (<TAG.ORI> == 0)
+             DISPID=i_sign_brass
+             TRY UID.<SRC.UID>.RESEND
+         ENDIF
+         IF (<TAG.ORI> == 1)
+             DISPID=i_sign_brass_2
+             TRY UID.<SRC.UID>.RESEND
+         ENDIF
+       //Check for door
+         IF (<LINK.TYPE> = t_door_argh_open)
+            LINK.USE
+            TIMER = -1
+         ENDIF
+         LINK.TYPE = t_door_snl
+     //Delete vendor
+       TRY UID.<TAG.VENDOR>.REMOVE
+       TAG.VENDOR = 0
+         TRY UID.<TAG.LOCK1>.REMOVE
+         TAG.LOCK1 = 0
+         TRY UID.<TAG.LOCK2>.REMOVE
+         TAG.LOCK2 = 0
+         TRY UID.<TAG.LOCK3>.REMOVE
+         TAG.LOCK3 = 0
+         TAG.LOCKS = 0
+     SRC.SYSMESSAGE Shop is now free
+
+[MENU mnu_snl_srented_signs_ew]
+Select shop Sign
+ON=i_sign_brass Brass Sign
+   DISPID=i_sign_brass
+   TRY UID.<SRC.UID>.RESEND
+ON=0bbf Armourer
+   DISPID 0bbf
+   TRY UID.<SRC.UID>.RESEND
+ON=0ba3 Bakery
+   DISPID=0ba3
+   TRY UID.<SRC.UID>.RESEND
+ON=0bc7 Blacksmith
+   DISPID=0bc7
+   TRY UID.<SRC.UID>.RESEND
+ON=0bcd Bowyer
+   DISPID=0bcd
+   TRY UID.<SRC.UID>.RESEND
+ON=0bbd Fletcher
+   DISPID=0bbd
+   TRY UID.<SRC.UID>.RESEND
+ON=0bc1 Jeweler
+   DISPID=0bc1
+   TRY UID.<SRC.UID>.RESEND
+ON=0bad Mage
+   DISPID=0bad
+   TRY UID.<SRC.UID>.RESEND
+ON=0bcb Provisioner
+   DISPID=0bcb
+   TRY UID.<SRC.UID>.RESEND
+ON=0bc5 Reagent Shop
+   DISPID=0bc5
+   TRY UID.<SRC.UID>.RESEND
+ON=0ba5 Tailor
+   DISPID=0ba5
+   TRY UID.<SRC.UID>.RESEND
+ON=0ba7 Tinker
+   DISPID=0ba7
+   TRY UID.<SRC.UID>.RESEND
+ON=0baf Woodworker
+   DISPID=0baf
+   TRY UID.<SRC.UID>.RESEND
+
+[MENU mnu_snl_srented_signs_ns]
+Select shop Sign
+ON=i_sign_brass Brass Sign
+   DISPID=i_sign_brass_2
+   TRY UID.<SRC.UID>.RESEND
+ON=0bbf Armourer
+   DISPID 0bc0
+   TRY UID.<SRC.UID>.RESEND
+ON=0ba3 Bakery
+   DISPID=0ba4
+   TRY UID.<SRC.UID>.RESEND
+ON=0bc7 Blacksmith
+   DISPID=0bc8
+   TRY UID.<SRC.UID>.RESEND
+ON=0bcd Bowyer
+   DISPID=0bce
+   TRY UID.<SRC.UID>.RESEND
+ON=0bbd Fletcher
+   DISPID=0bbe
+   TRY UID.<SRC.UID>.RESEND
+ON=0bc1 Jeweler
+   DISPID=0bc2
+   TRY UID.<SRC.UID>.RESEND
+ON=0bad Mage
+   DISPID=0bae
+   TRY UID.<SRC.UID>.RESEND
+ON=0bcb Provisioner
+   DISPID=0bcc
+   TRY UID.<SRC.UID>.RESEND
+ON=0bc5 Reagent Shop
+   DISPID=0bc6
+   TRY UID.<SRC.UID>.RESEND
+ON=0ba5 Tailor
+   DISPID=0ba6
+   TRY UID.<SRC.UID>.RESEND
+ON=0ba7 Tinker
+   DISPID=0ba8
+   TRY UID.<SRC.UID>.RESEND
+ON=0baf Woodworker
+   DISPID=0bb0
+   TRY UID.<SRC.UID>.RESEND
+
+  //////////////////
+ //SPECIAL DIALOG//
+//////////////////
+
+[dialog d_menu_shop]
+361,256
+resizepic 0 0 5120 180 120
+text 30 3 455 0
+button 7 34 2362 2361 1 0 1 // Go
+text 24 30 455 1
+button 7 54 2362 2361 1 0 2 // Summon
+text 24 50 455 2
+button 7 74 2362 2361 1 0 3 // SummonCage
+text 24 70 455 3
+button 7 94 2362 2361 1 0 4 // Jail
+text 24 90 455 4
+
+[dialog d_menu_shop text]
+Comercial Menu
+Change shop name
+Change sign type
+Change vendor's title
+Access Bank Account
+
+[dialog d_menu_shop button]
+on=1
+     INPDLG NAME 15
+on=2
+     //Orientation (0 - ew, 1 - ns)
+       IF (<TAG.ORI> == 0)
+           MENU mnu_snl_srented_signs_ew
+       ENDIF
+       IF (<TAG.ORI> == 1)
+           MENU mnu_snl_srented_signs_ns
+       ENDIF
+on=3
+     SRC.ACT=<TAG.VENDOR>
+     INPDLG SRC.ACT.TAG.VENDOR_TITLE 15
+on=4
+     SRC.BANK
+
+  ////////
+ //INNS//
+////////
+
+[TYPEDEF t_DOOR_INN_open]
+
+ON = @DClick
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+     TYPE=t_door
+     USE
+     TYPE=t_door_INN
+     return 1
+     
+[TYPEDEF t_DOOR_INN]
+ON = @DCLICK
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+   // is it rented to player?
+   IF ( <LINK> == <SRC.UID> )
+     MENU mnu_inn_rented
+     return 1
+   ENDIF
+
+   // Already rented?
+   IF ( <LINK> != 04fffffff )
+      SRC.SYSMESSAGE The room is already taken and the door is locked.
+      return 1
+   ENDIF
+
+   //check if has other room
+   IF ( <SRC.FINDID( m_inn_rent ).uid> )
+      SRC.SYSMESSAGE You are not allowed more than one rented room.
+      RETURN 1
+   ENDIF
+     
+   //check if has house
+   IF ( <SRC.MEMORYFINDTYPE(memory_guard).uid> )
+      SRC.SYSMESSAGE House owners are not allowed to rent rooms.
+      RETURN 1
+   ENDIF
+
+   MENU mnu_inn_rent
+   RETURN 1   
+
+
+[MENU mnu_inn_rent]
+Rent <NAME> (<REGION.NAME>)		// <menu name>
+
+ON = 0 Rent the room (<eval <MORE2>>gp)	// 0 <menu text>
+  IF ( !<SRC.RESTEST <eval <MORE2>> i_gold> )
+     SRC.SYSMESSAGE You dont have enough money on you.
+     RETURN 1
+  ENDIF
+  SRC.SYSMESSAGE You rent the room at <REGION.NAME>.
+  LINK		= <SRC.UID>		// link door to player
+  SRC.NEWITEM	= m_inn_rent		// add memory item
+  SRC.ACT.LINK	= <UID>			// link memory to the door
+  SRC.ACT.TIMER	= 5*24*60*60		// 5 days
+  SRC.ACT.EQUIP
+  SRC.CONSUME <eval (<MORE2>)> i_gold
+
+
+[MENU mnu_inn_rented]
+Rented room at <REGION.NAME>,  <eval (<SRC.FINDID( m_inn_rent ).timer>/(60*60))> hours left	// <menu name>
+
+ON = 0 Extend rent time by 24 hours
+     IF (<SRC.FINDID.m_inn_rent.timer> > <eval(60*60*24*7)>)
+          SRC.SYSMESSAGE Lease cannot be prolongued any further
+          RETURN 1
+     ENDIF
+     IF ( !<SRC.RESTEST <eval ((<MORE2>)/5)> i_gold> )
+        SRC.SYSMESSAGE You dont have enough money on you.
+        RETURN 1
+     ENDIF
+     SRC.CONSUME <eval ((<MORE2>)/5)> i_gold
+     SRC.FINDID.m_inn_rent.timer	= <eval (<SRC.FINDID( m_inn_rent ).timer> + (24*60*60))>
+     SRC.SYSMESSAGE Room rent extended.
+  
+ON = 0 Free the room
+  LINK		= 04fffffff
+  SRC.FINDID.m_inn_rent..remove
+  SRC.SYSMESSAGE Room is now free.
+   
+ON = 0 Open door
+   TYPE = t_door
+   USE
+   TYPE = t_door_INN_open
+
+
+
+[ITEMDEF m_inn_rent]
+NAME	= rented inn room
+ID	= i_memory
+TYPE	= t_eq_script
+
+ON=@TIMER
+   // On lease termination
+   CONT.SYSMESSAGE Your lease of a room at <LINK.REGION.NAME> has just expired.
+   LINK.LINK	= 04fffffff
+   REMOVE
+   return 1
+
+  ////////////////////
+ //SHOP TYPE RENTAL//
+////////////////////
+
+[ITEMDEF i_sign_rental_s]
+  ID=i_sign_brass
+  TYPE=t_script
+  TDATA2=064
+  FLIP=1
+  DUPELIST=0bd2
+
+ON=@DCLICK
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+   //Is shop/stand rented?
+     IF (<MORE2> == 0)
+        MENU mnu_s_rental
+        RETURN 1
+     ENDIF 
+   //Is shop/stand rented to player?
+     IF (<MORE2> == <SRC.UID>)
+       MENU mnu_snl_srented
+       return 1
+     ENDIF
+
+   if ( (0<SRC.TAG.SNL>)  && <SRC.ISGM> )
+      if ( <TAG.PRICE> < SRC.TAG.SNL> )
+         src.sysmessage Shop daily price changed from <eval <tag.price>> to <src.tag.snl>.
+         return 1
+      endif
+   endif
+
+   VAR.MSG	= <eval (<TIMER> / (60*60))>
+   if ( <VAR.MSG> < 24 )
+      VAR.MSG	= <eval <var.msg>> hours
+   else
+      VAR.MSG	= <eval (<var.msg>/24)> days
+   endif
+   SRC.SYSMESSAGE This structure is already occupied by <SRC.UID.<MORE2>.name>, paid for <VAR.MSG>.
+   return 1
+
+ON = @CREATE
+     ATTR = 010
+     NAME = FOR RENT
+     COLOR = 0298
+
+ON=@TIMER
+   //On lease termination
+     //IF DOOR EXISTS, Check for door open
+       IF !(<LINK> == 04ffffffff)
+         IF (<LINK.TYPE> = t_door_snl_open)
+            LINK.TYPE = t_door_argh_open
+         ENDIF
+       endif
+     TRY UID.<MORE2>.SYSMESSAGE Your lease at <REGION.NAME> has just expired.
+     TRY UID.<TAG.PLAYERMEM>.REMOVE
+     MORE2	= 0              //Reset owner
+     NAME      = FOR RENT     //Reset name
+     COLOR     = 0298
+         //Reset sign acording to Orientation (0 - ew, 1 - ns)
+           IF (<TAG.ORI> == 0)
+               DISPID=i_sign_brass
+           ENDIF
+           IF (<TAG.ORI> == 1)
+               DISPID=i_sign_brass_2
+           ENDIF
+         TRY UID.<TAG.VENDOR>.REMOVE
+         TAG.VENDOR = 0
+         TRY UID.<TAG.LOCK1>.REMOVE
+         TAG.LOCK1 = 0
+         TRY UID.<TAG.LOCK2>.REMOVE
+         TAG.LOCK2 = 0
+         TRY UID.<TAG.LOCK3>.REMOVE
+         TAG.LOCK3 = 0
+         TAG.LOCKS = 0
+     TIMER = -1
+     RETURN 1
+
+ON=@TARGON_ITEM
+   IF ((<TAG.LOCK1> == <SRC.TARG.UID>)||(<TAG.LOCK2> == <SRC.TARG.UID>)||(<TAG.LOCK3> == <SRC.TARG.UID>))
+      //Decreasing numer of locks
+        TAG.LOCKS=(<TAG.LOCKS> -1)
+      //Cleaning lock flags
+        IF (<TAG.LOCK1> == <SRC.TARG.UID>)
+            TAG.LOCK1 = <TAG.LOCK2>
+            TAG.LOCK2 = <TAG.LOCK3>
+            TAG.LOCK3 = 0
+        ENDIF
+        IF (<TAG.LOCK2> == <SRC.TARG.UID>)
+           TAG.LOCK2 = <TAG.LOCK3>
+           TAG.LOCK3 = 0
+        ENDIF
+        IF (<TAG.LOCK3> == <SRC.TARG.UID>)
+           TAG.LOCK3 = 0
+        ENDIF      
+      SRC.TARG.ATTR = 02
+      SRC.TARG.BOUNCE
+      RETURN 1
+   ENDIF
+   IF (<TAG.LOCKS> == 3)
+       SRC.SYSMESSAGE You can't lock any more items.
+       RETURN 1
+   ENDIF
+   //Check distance
+     VAR.P = <SRC.P>
+     SRC.P = <P>
+     IF !(<SRC.TARG.DISTANCE> < 4)
+        SRC.SYSMESSAGE <TARG.DISTANCE> That placement is too far.
+        SRC.P = <VAR.P>
+        RETURN 1
+     ENDIF
+     SRC.P = <VAR.P>
+   //Disable exploits
+     IF (<SRC.TARG.ATTR> == 010)|(<SRC.TARG.TYPE> == t_corpse)|(<SRC.TARG.ATTR> == 00))
+         SRC.SYSMESSAGE You cant lock that down
+         RETURN 1
+     ENDIF
+   IF (<TAG.LOCKS> == 2)
+       TAG.LOCKS = 3
+       TAG.LOCK3 = <SRC.TARG.UID>
+   ENDIF
+   IF (<TAG.LOCKS> == 1)
+       TAG.LOCKS = 2
+       TAG.LOCK2 = <SRC.TARG.UID>
+   ENDIF
+   IF (<TAG.LOCKS> == 0)
+       TAG.LOCKS = 1
+       TAG.LOCK1 = <SRC.TARG.UID>
+   ENDIF
+   SRC.TARG.ATTR = 010
+   SRC.TARG.TIMER = -1
+   SRC.SYSMESSAGE Item has been locked down.
+   RETURN 1
+
+[MENU mnu_s_rental]
+Rent structure (<REGION.NAME>)		// <menu name>
+
+ON = 0 Rent the room for shop (<eval <TAG.PRICE>*(5)>gp)	// 0 <menu text>
+   //check if has other room
+     IF ( <SRC.FINDID( m_snl_rent ).uid> )
+        SRC.SYSMESSAGE You are not allowed more than one rental.
+        RETURN 1
+     ENDIF
+  //Check money
+    IF ( !<SRC.RESTEST <eval <TAG.PRICE>*(5)> i_gold> )
+       SRC.SYSMESSAGE You dont have enough money on you.
+       RETURN 1
+    ENDIF
+  //Process rental
+    SRC.SYSMESSAGE You rent the shop at <REGION.NAME>.
+    MORE2		= <SRC.UID>		// link sign to player
+    SRC.NEWITEM	= m_snl_rent	// add memory item
+    TAG.PLAYERMEM = <SRC.ACT.UID>
+    SRC.ACT.LINK	= <UID>		// link memory to sign
+    SRC.ACT.EQUIP
+    TIMER	= 5*24*60*60	// 5 days
+    SRC.CONSUME <eval (<TAG.PRICE>)*(5)> i_gold
+  //Case of lazy GM or door open from previous rents
+    IF !(<LINK> == 04ffffffff)
+      IF (<LINK.TYPE> == t_door_argh_open)
+         LINK.TYPE = t_door
+         LINK.USE
+         LINK.TIMER = -1
+      ENDIF
+      LINK.TYPE = t_door_argh
+    ENDIF
+  //Show new status
+    NAME = <SRC.NAME>'s shop
+    COLOR = 00
+  //Setup vendor
+    SRC.NEWNPC { C_H_PLAYER_VENDOR 1 C_H_PLAYER_VENDOR_F 1 }
+    SRC.ACT.TAG.VENDOR_COLOR	= 010
+    SRC.ACT.TAG.VENDOR_TITLE	= player vendor
+    TAG.VENDOR = <SRC.ACT.UID> // keep the vendors uid for later use.
+    SRC.ACT.FINDLAYER(layer_bankbox).MORE1	= 300
+    SRC.ACT.FOOD = 32000
+    SRC.ACT.HOME = <MOREP>
+    SRC.ACT.GO <MOREP>
+    SRC.NEWITEM=i_memory
+    SRC.ACT.COLOR=memory_ipet
+    SRC.ACT.LINK=<SRC.UID>
+    SRC.ACT.LAYER=layer_special
+    SRC.ACT.CONT=<TAG.VENDOR>
+    RETURN 1
+
+
+  ///////////////////
+ //Rentable Chests//
+///////////////////
+
+//Type//
+//MOREX	-	Price
+//LINK	-	Serial of owner
+
+[TYPEDEF t_container_rent]
+ON = @DCLICK
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE Get a life...
+      return 1
+   endif
+      IF (<LINK> == <SRC.UID>)
+         MENU mnu_chest_manage
+         RETURN 1
+      ENDIF
+      IF (<LINK> == 04fffffff)
+         MENU mnu_chest_rental
+         RETURN 1
+      ENDIF
+      SRC.SYSMESSAGE This chest does not belong to you.
+      RETURN 1
+
+ON = @TIMER
+     TRY UID.<LINK>.SYSMESSAGE Your lease of <name> at <REGION.NAME> has just expired.
+     LINK.FINDID.m_chest_rent.remove
+     LINK = 04fffffff		//Reset owner
+     COLOR     = 0298
+     TIMER = -1
+     RETURN 1
+
+//Menus//
+
+[MENU mnu_chest_rental]
+Rent chest in (<REGION.NAME>)		// <menu name>
+
+ON = 0 Rent the chest for 5 days at (<eval <MOREX>*(5)>gp)	// 0 <menu text>
+   //check if has other chest
+     IF ( <SRC.FINDID( m_chest_rent ).uid> )
+        SRC.SYSMESSAGE You are not allowed more than one chest rental.
+        RETURN 1
+     ENDIF
+  //Check money
+    IF ( !<SRC.RESTEST <eval <MOREX>*(5)> i_gold> )
+       SRC.SYSMESSAGE You dont have enough money on you.
+       RETURN 1
+    ENDIF
+  //Process rental
+    SRC.SYSMESSAGE You rent the chest at <REGION.NAME>.
+    LINK		= <SRC.UID>		// link chest to player
+    SRC.NEWITEM	= m_chest_rent	// add memory item
+    MORE1		= <SRC.ACT.UID>	// UID of player memory
+    SRC.ACT.LINK	= <UID>		// link memory to sign
+    SRC.ACT.EQUIP
+    TIMER	= 5*24*60*60	// 5 days
+    SRC.CONSUME <eval (<MOREX>)*(5)> i_gold
+  //Show new status
+    COLOR = 028
+    RETURN 1
+
+[MENU mnu_chest_manage]
+Rented chest at <REGION.NAME>,  <eval (<timer>/(60*60))> hours left	// <menu name>
+
+ON = 0 Open chest
+     //Open the chest.
+	TYPE = T_CONTAINER
+	USE
+	TYPE = T_CONTAINER_RENT
+	RETURN 1
+
+ON = 0 Extend rent time by 24 hours
+     //check if reached time limit
+       IF (<TIMER> > <eval(60*60*24*7)>)
+            SRC.SYSMESSAGE Lease cannot be prolongued any further
+            RETURN 1
+       ENDIF
+     //check if has enough money
+       IF ( !<SRC.RESTEST <eval ((<MOREX>)/5)> i_gold> )
+          SRC.SYSMESSAGE You dont have enough money on you.
+          RETURN 1
+       ENDIF
+     //Process extension
+       SRC.CONSUME <eval (<MOREX>)/(5)> i_gold
+       TIMER	= <eval (<TIMER> + (24*60*60))>
+       SRC.SYSMESSAGE Room rent extended.
+
+ON = 0 Free the chest
+     //Reset room
+       LINK = 04fffffff      //Reset owner
+       COLOR = 0298         //Reset colour
+     //Process release
+       SRC.FINDID.m_chest_rent.remove
+       SRC.SYSMESSAGE chest is now free
+
+//Memory item
+
+[ITEMDEF m_chest_rent]
+NAME	= Rented chest
+ID	= i_memory
+TYPE	= t_eq_script
+
+ON=@CREATE
+   ATTR=010
+   TIMER=-1
+
+[EOF]

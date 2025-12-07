@@ -1,0 +1,800 @@
+// ############################################################ 
+// RW's Special Abilities: Sphere-based UO Emu Servers 
+// Designed By: Dubious Advocate and DigiAnimus
+// You are free to use this, repost it, chop it up, spindle, 
+// and mutilate to your heart's content. If you use it without 
+// any change then don't claim it as your own. If you do try 
+// to claim full credit for this script then the boogey man will 
+// get you. Or eventually you'll grow up and feel really silly 
+// about what a dumb kid you used to be. I expect I will sleep 
+// well at night no matter what. 
+// 
+// ------------------------------------------------------------ 
+// Installing this script - 
+// Installing it is the easy part. Just copy it into your 
+// scripts directory. 
+// 
+// FILE LAST UPDATED: July 26, 2001 
+// 
+Version=0.54 
+
+
+[ITEMDEF i_stone_Class] 
+DEFNAME=i_stone_Class 
+ID=0edc 
+NAME=Monument of the Classes 
+WEIGHT=0 
+
+CATEGORY=Unique Items 
+SUBSECTION=GM Tools 
+DESCRIPTION=Class Monument 
+
+ON=@Create 
+COLOR=2118 
+ATTR=014 
+
+ON=@DCLICK 
+SRC.SFX 555 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_List] 
+0,0 
+resizepic 0 0 2600 500 400 
+gumppic 180 120 1418 
+page 0 
+text 55 17 1157 0 
+text 145 37 904 1 
+text 145 57 904 2 
+text 145 77 904 3 
+text 145 107 32 4 
+text 145 127 904 5 
+text 145 147 904 6 
+text 55 37 1152 7 
+text 55 57 1152 8 
+text 55 77 1152 9 
+text 55 97 1152 10 
+text 55 117 1152 11 
+text 55 137 1152 12 
+text 55 157 1152 13 
+text 55 177 1152 14 
+text 55 197 1152 15 
+text 55 217 1152 16 
+text 55 237 1152 17 
+text 55 257 1152 18 
+text 55 277 1152 19 
+text 55 297 1152 20 
+text 55 317 1152 21 
+text 55 337 1152 22 
+text 55 357 1152 23 
+button 35 40 1209 1210 1 0 1 
+button 35 60 1209 1210 1 0 2 
+button 35 80 1209 1210 1 0 3 
+button 35 100 1209 1210 1 0 4 
+button 35 120 1209 1210 1 0 5 
+button 35 140 1209 1210 1 0 6 
+button 35 160 1209 1210 1 0 7 
+button 35 180 1209 1210 1 0 8 
+button 35 200 1209 1210 1 0 9 
+button 35 220 1209 1210 1 0 10 
+button 35 240 1209 1210 1 0 11 
+button 35 260 1209 1210 1 0 12 
+button 35 280 1209 1210 1 0 13 
+button 35 300 1209 1210 1 0 14 
+button 35 320 1209 1210 1 0 15 
+button 35 340 1209 1210 1 0 16 
+button 35 360 1209 1210 1 0 16 
+
+[DIALOG d_Class_List TEXT] 
+Professions of the Land 
+Here shall ye select the Profession by which 
+thee makes thine way in this world. On these 
+pages of stone willst thee learn and choose. 
+Thine oath is thine bond! 
+Once pledged ye canst not 
+revoke thy avowed profession. 
+AntiPaladin 
+Artisan 
+Bard 
+Beserker 
+Cleric 
+Druid 
+Hunter 
+Mage 
+Monk 
+Necromancer 
+Paladin 
+Ranger 
+Shaman 
+Sorceror 
+Thief 
+Warrior 
+Witch 
+
+[DIALOG d_Class_List BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+ONBUTTON=1 
+DIALOG d_class_AntiPaladin 
+ONBUTTON=2 
+DIALOG d_class_Artisan 
+ONBUTTON=3 
+DIALOG d_class_Bard 
+ONBUTTON=4 
+DIALOG d_class_Beserker 
+ONBUTTON=5 
+DIALOG d_class_Cleric 
+ONBUTTON=6 
+DIALOG d_class_Druid 
+ONBUTTON=7 
+DIALOG d_class_Hunter 
+ONBUTTON=8 
+DIALOG d_class_Mage 
+ONBUTTON=9 
+DIALOG d_class_Monk 
+ONBUTTON=10 
+DIALOG d_class_Necromancer 
+ONBUTTON=11 
+DIALOG d_class_Paladin 
+ONBUTTON=12 
+DIALOG d_class_Ranger 
+ONBUTTON=13 
+DIALOG d_class_Shaman 
+ONBUTTON=14 
+DIALOG d_class_Sorceror 
+ONBUTTON=15 
+DIALOG d_class_Thief 
+ONBUTTON=16 
+DIALOG d_class_Warrior 
+ONBUTTON=17 
+DIALOG d_class_Witch 
+
+
+[DIALOG d_Class_AntiPaladin] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5588 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_AntiPaladin TEXT] 
+The AntiPaladin 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be an AntiPaladin!" 
+Return to List 
+
+[DIALOG d_Class_AntiPaladin BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_AntiPaladin 
+SRC.SYSMESSAGE=*POOF* Yer an AntiPaladin 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Artisan] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5582 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Artisan TEXT] 
+The Artisan 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be an Artisan!" 
+Return to List 
+
+[DIALOG d_Class_Artisan BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Artisan 
+SRC.SYSMESSAGE=*POOF* Yer an Artisan 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Bard] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5554 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Bard TEXT] 
+The Bard 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Bard!" 
+Return to List 
+
+[DIALOG d_Class_Bard BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Bard 
+SRC.SYSMESSAGE=*POOF* Yer a Bard 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Beserker] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5568 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Beserker TEXT] 
+The Beserker 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Beserker!" 
+Return to List 
+
+[DIALOG d_Class_Beserker BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Beserker 
+SRC.SYSMESSAGE=*POOF* Yer a Beserker 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Cleric] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5564 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Cleric TEXT] 
+The Cleric 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Cleric!" 
+Return to List 
+
+[DIALOG d_Class_Cleric BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Cleric 
+SRC.SYSMESSAGE=*POOF* Yer a Cleric 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Druid] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5550 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Druid TEXT] 
+The Druid 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Druid!" 
+Return to List 
+
+[DIALOG d_Class_Druid BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Druid 
+SRC.SYSMESSAGE=*POOF* Yer a Druid 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Hunter] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5561 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Hunter TEXT] 
+The Hunter 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Hunter!" 
+Return to List 
+
+[DIALOG d_Class_Hunter BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Hunter 
+SRC.SYSMESSAGE=*POOF* Yer a Hunter 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Mage] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5570 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Mage TEXT] 
+The Mage 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Mage!" 
+Return to List 
+
+[DIALOG d_Class_Mage BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Mage 
+SRC.SYSMESSAGE=*POOF* Yer a Mage 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Monk] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5546 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Monk TEXT] 
+The Monk 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Monk!" 
+Return to List 
+
+[DIALOG d_Class_Monk BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Monk 
+SRC.SYSMESSAGE=*POOF* Yer a Monk 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Necromancer] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5576 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Necromancer TEXT] 
+The Necromancer 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Necromancer!" 
+Return to List 
+
+[DIALOG d_Class_Necromancer BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Necromancer 
+SRC.SYSMESSAGE=*POOF* Yer a Necromancer 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Paladin] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5548 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Paladin TEXT] 
+The Paladin 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Paladin!" 
+Return to List 
+
+[DIALOG d_Class_Paladin BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Paladin 
+SRC.SYSMESSAGE=*POOF* Yer a Paladin 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Ranger] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5552 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Ranger TEXT] 
+The Ranger 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be an Ranger!" 
+Return to List 
+
+[DIALOG d_Class_Ranger BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Ranger 
+SRC.SYSMESSAGE=*POOF* Yer a Ranger 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Shaman] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5585 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Shaman TEXT] 
+The Shaman 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Shaman!" 
+Return to List 
+
+[DIALOG d_Class_Shaman BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Shaman 
+SRC.SYSMESSAGE=*POOF* Yer a Shaman 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Sorceror] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5585 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Sorceror TEXT] 
+The Sorceror 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Sorceror!" 
+Return to List 
+
+[DIALOG d_Class_Sorceror BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Sorceror 
+SRC.SYSMESSAGE=*POOF* Yer a Sorceror 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Thief] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5572 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Thief TEXT] 
+The Thief 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Thief!" 
+Return to List 
+
+[DIALOG d_Class_Thief BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Thief 
+SRC.SYSMESSAGE=*POOF* Yer a Thief 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Warrior] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5578 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Warrior TEXT] 
+The Warrior 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Warrior!" 
+Return to List 
+
+[DIALOG d_Class_Warrior BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Warrior 
+SRC.SYSMESSAGE=*POOF* Yer a Warrior 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[DIALOG d_Class_Witch] 
+0,0 
+resizepic 0 0 3600 525 315 
+gumppic 40 40 5558 
+text 120 68 126 0 
+text 25 110 81 1 
+text 25 130 81 2 
+text 25 150 81 3 
+text 25 170 81 4 
+text 25 190 81 5 
+button 90 220 92 52 1 0 1 
+text 140 220 126 6 
+button 425 280 2469 2470 1 0 2 
+text 300 280 81 7 
+
+[DIALOG d_Class_Witch TEXT] 
+The Witch 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+xxx xxxx xxx xxxx xxx xxxx xxx xxxx xxx xxxx 
+"I wish to be a Witch!" 
+Return to List 
+
+[DIALOG d_Class_Witch BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_CLASS_INITIALIZE_Witch 
+SRC.SYSMESSAGE=*POOF* Yer a Witch 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_class_list 
+RETURN 1 
+
+
+[EOF]

@@ -1,0 +1,44 @@
+[XXXX] 
+//SCRIPTED by Lysdexic 
+//edited by Theol 
+ID=1172 
+NAME=Transport to your ship!!(1000gp) 
+TYPE=11 
+
+
+ONTRIGGER=DCLICK 
+IF <SRC.RESTEST 1000 GOLD> 
+SRC.MESSAGE Please target your ship key... 
+return 0 
+else 
+SRC.SYSMESSAGE You need 1000gp to use this! 
+return 1 
+
+ONTRIGGER=TARGON_ITEM 
+IF (<SRC.TARG.CONT.CONT.UID> !=<SRC.UID> ) && (<SRC.RESTEST 1000 GOLD>) 
+SRC.SYSMESSAGE The key must be in your pack and you must have 1000gp. 
+RETURN 1 
+ENDIF 
+IF <UID.<SRC.TARG.MORE>.MORE>!=<SRC.SERIAL> 
+SRC.SYSMESSAGE That is not your boat!! 
+RETURN 1 
+ENDIF 
+IF (<UID.<SRC.TARG.MORE>.TYPE>=49) 
+VAR.P=<UID.<SRC.TARG.MORE>.P> 
+SRC.P=<VAR.P> 
+SRC.MOVE=0,1,5 
+SRC.RESYNC 
+SRC.FIX 
+SRC.SOUND=01ed 
+SRC.EFFECT=3,03728,6,15,1 
+SRC.SYSMESSAGE You arrive on the boat. 
+SRC.CONSUME 1000 gold 
+RETURN 1 
+ENDIF 
+ELSE 
+SRC.SYSMESSAGE That is not a boat key! 
+RETURN 1 
+
+ONTRIGGER=TARGON_CHAR 
+SRC.SYSMESSAGE Does that look like a key to you? 
+RETURN 1

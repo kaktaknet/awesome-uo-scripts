@@ -1,0 +1,82 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Mordaunt's Movement Based Anti AFKMacro Sweeper v1.0
+//
+//Credit goes to Rasta, whos AFK Function has been altered and implemented
+//This system, though not fool proof will check player for movement every <x> minutes
+//Depending upon what you set the timers for, should the player not have moved within the
+//set time, a pop up menu appears (Rasta's AFK System) and should the player not check 
+//the box within the set time, the player is then disconnected.
+//
+//Although player can get around this system by Macroing for their character to move every
+//now and again, I did it htis way as I beleive that the best way of policing this, is still on a 
+//personal level by shard staff, as circumstances may be taken into consideration.
+//
+//To use this simply add the event e_macro_check to all players on login (or add it to an 
+//event already on all players)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[EVENTS e_macro_check]
+ON=@LOGIN
+SRC.NEWITEM i_macro_dev
+SRC.ACT.EQUIP
+ 
+ON=@LOGOUT //added to ensure only 1 macro devise is equipped to the character
+IF (<SRC.RESTEST 1 i_macro_dev>)
+SRC.CONSUME=1 i_macro_dev
+ENDIF
+ 
+[ITEMDEF i_macro_dev] 
+NAME=Macro Dev 
+id=i_memory 
+type=t_eq_script 
+ 
+layer=30
+WEIGHT=0 
+ 
+ON=@EQUIP
+CONT.TAG.PX=<CONT.P.X>
+CONT.TAG.PY=<CONT.P.Y>
+CONT.TAG.PZ=<CONT.P.Z>
+TIMER=15*60 //set for delay time to pop up (currently 15 mins)
+ 
+ON=@TIMER
+IF !(0<CONT.RESTEST 1 i_afkmacro>)
+   IF (<CONT.P.X>==<eval <CONT.TAG.PX>>) && (<CONT.P.Y>==<eval <CONT.TAG.PY>>) && (<CONT.P.Z>==<eval <CONT.TAG.PZ>> )
+     cont.afkmacro
+   ENDIF
+ENDIF
+CONT.TAG.PX=
+CONT.TAG.PY=
+CONT.TAG.PZ=
+TIMER=15*60 //set for delay time to pop up, this one ensures the event loops
+CONT.TAG.PX=<CONT.P.X>
+CONT.TAG.PY=<CONT.P.Y>
+CONT.TAG.PZ=<CONT.P.Z>
+RETURN 1
+ 
+//Rasta's AFK Function with a few minor changes 
+[FUNCTION afkmacro]
+NEWITEM=i_afkmacro
+ACT.CONT=<UID>
+TAG.AFKMACRO=1
+MENU m_afkmacro
+ 
+[itemdef i_afkmacro]
+ID=i_memory
+Name=Afkmacro Mem
+TYPE=T_EQ_SCRIPT
+ 
+ON=@Create
+TIMER=10*60 //set to time player has to click the pop up
+ 
+ON=@TIMER
+if (0<eval <cont.tag.afkmacro> == 1>)
+CONT.DISCONNECT
+ENDIF
+REMOVE
+RETURN 1
+ 
+[menu m_afkmacro]
+Anti AFKMacro Sweeper [Please click to continue]
+ON=0 Yes, I am here
+SRC.TAG.AFKMACRO=
+SRC.CONSUME=1 i_afkmacro

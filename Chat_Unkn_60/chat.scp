@@ -1,0 +1,302 @@
+//||||||||||||||||||||||||||||||||||||||||||||\\
+//|-------------------------------------------\\
+//|__________________________________________|\\
+//|          Chat System 55i                 |\\
+//| PLAYER FUNCTIONS:Chaton, Chatoff, Chat, C|\\
+//|	STAFF FUNCTIONS: mute, unmute        |\\
+//| Send all bugs, comments, and questions to|\\
+//|michaelleejones104@hotmail.com            |\\
+//|	LEAVE THIS HEADER IN PLEASE          |\\
+//|        Created by Nightwing              |\\
+//|__________________________________________|\\
+//--------------------------------------------\\
+//||||||||||||||||||||||||||||||||||||||||||||\\
+
+	//\\// |º| (-, -|- \\//\\// |º| //\\// (-,
+
+//////////////////////////////////////
+[plevel 1]
+chatoff
+chaton
+chat
+c
+
+[plevel 2]
+mute
+unmute
+
+[itemdef i_stone_chat]
+name=chat dialog stone
+type=t_normal
+id=i_gravestone_17
+
+on=@create
+color=0ff
+
+on=@dclick
+IF (<src.account.plevel>==1) || (<src.account.plevel>==0)
+src.dialog d_chat
+ELSE
+src.dialog d_staffchat
+ENDIF
+
+[function c]
+IF (<src.restest 1 i_mute>=1)
+	src.sysmessage you are muted from <serv.servname>'s chat system and may not use it, <src.name>
+ELIF (<src.restest 1 i_mute>=1) && (<src.account.plevel>==1) && (!<src.restest 1 i_chat>=1)
+	src.sysmessage Say .chaton to use this.
+ELIF (!<src.restest 1 i_mute>=1) && (<src.account.plevel>==1) && (<src.restest 1 i_chat>=1) && (<src.karma> <1) || (<src.kills> >1)
+	src.sayua 33 0FF 1 1 [CHAT] *<src.name>*: <args>
+ELIF (!<src.restest 1 i_mute>=1) && (<src.account.plevel>==1) && (<src.restest 1 i_chat>=1) && (<src.karma> >1) && (<src.kills> <1) 
+	src.sayua 100 0FF 1 1 [CHAT] *<src.name>*: <args>
+ELIF (<src.account.plevel> >1) && (<src.restest 1 i_staffchat>=1)
+	src.sayua 200 0FF 1 1  [CHAT] (STAFF) *<src.name>*: <args>
+ELSE
+src.sysmessage say .chaton to use chat.
+return 1
+endif
+
+[function chatoff]
+IF (<src.account.plevel>==0) || (<src.account.plevel>==1)
+src.consume 1 i_chat
+src.sysmessage chat turned off.
+ELSE
+src.consume 1 i_staffchat
+src.sysmessage chat turned off.
+endif
+
+[function mute]
+src.newitem i_muter
+src.act.equip
+
+[function unmute]
+src.newitem i_unmuter
+src.act.equip
+
+[function chat]
+IF (!<src.restest 1 i_mute>)
+	IF (<src.account.plevel>==0) || (<src.account.plevel>==1)		
+		IF  (!<src.restest 1 i_chat>)
+		src.sysmessage @100 Say .chaton to use this.
+		ELIF (<src.restest 1 i_chat>) && (<src.karma> <1) //good
+		src.sayua 100 0FF 1 1 [CHAT] *<src.name>*: <args>
+		ELSE 
+		src.sayua 33 0FF 1 1 [CHAT] *<src.name>*: <args>
+		ENDIF
+	ELSE
+	src.sayua 200 0FF 1 1  [CHAT] (STAFF) *<src.name>*: <args>
+	ENDIF
+		
+ELSE
+src.sysmessage @100 You are banned from <serv.servname>'s chat system, <src.name>, and may not use it!
+RETURN 1
+ENDIF
+
+[function chaton]
+IF (<src.account.plevel>==1) || (<src.account.plevel>==0) && (!<src.restest 1 i_mute>)
+src.dialog d_chat
+ELIF  (<src.account.plevel>==1) || (!<src.account.plevel>) && (<src.restest 1 i_mute>)
+src.sysmessage you are muted from chat, <src.name>.
+ELSE
+src.dialog d_staffchat
+ENDIF
+
+[itemdef i_staffchat]
+id=i_memory
+name=staff chat
+type=t_eq_script
+
+on=@create
+attr=0094
+
+on=@equip
+IF (<src.account.plevel> <2)
+src.sysmessage you must be staff to use this type of chat.
+return 1
+else
+return 0
+endif
+
+[itemdef i_chat]
+id=i_memory
+name=chat
+type=t_eq_script
+
+on=@create
+attr=0094
+
+on=@equip
+IF (<src.account.plevel> >2)
+src.sysmessage you must be a player to use this.
+return 1
+ELIF (!<src.account.plevel> >2) && (<src.restest 1 i_mute>)
+src.sysmessage you are muted and may not use this
+ELSE
+endif
+
+
+[itemdef i_muter]
+id=i_memory
+name=muter
+type=t_eq_script
+
+on=@equip
+IF (<src.account.plevel> <2)
+src.sysmessage you must be staff to equip this
+return 1
+ELSE
+target=whom do you wish to mute from the <serv.servname> chat system?
+
+on=@targon_char
+IF (<src.targ.account.plevel> <<src.account.plevel>)
+return 1
+src.sysmessage you may not mute staff whos plevel is higher than yours.
+ELSE
+src.targ.newitem i_mute
+src.targ.act.equip
+serv.allclients sysmessage <src.targ.name> has been muted from <serv.servname>'s chat system.
+return 1
+src.consume i_muter
+endif
+
+[itemdef i_mute]
+name=mute
+id=i_memory
+type=t_eq_script
+
+on=@create
+attr=00094
+
+on=@equip
+src.sysmessage @150 you are now muted from <serv.servname>'s chat system.
+
+[itemdef i_unmuter]
+name=unmuter
+id=i_memory
+type=t_eq_script
+
+on=@create
+attr=04090
+
+on=@equip
+target
+
+on=@targon_char
+src.targ.sysmessage you are now unbanned from <serv.servname>'s chat system.
+src.targ.consume 1 i_mute
+src.targ.consume 1 i_unmuter
+serv.allclients sysmessage <src.targ.name> is unbanned from <serv.servname>'s chat system.
+return 1
+
+[DIALOG d_chat]
+50,50
+nomove
+noclose
+PAGE 0
+resizepic 8 2 3500 450 150
+text 200 37 95 0 //name
+text 57 87 1153 1 //chat off
+button 95 109 2117 2118 1 0 1
+text 293 87 1153 2 //chat on
+button 334 111 2117 2118 1 0 2
+text 190 15 32 3 //server name
+text 204 97 1153 4 //help
+button 212 124 2117 2118 1 0 3
+button 189 64 243 241 1 1 0 //cancel
+
+[DIALOG d_chat TEXT]
+<src.name>
+Turn on chat
+Turn off chat
+<serv.servname>
+Help
+
+
+[DIALOG d_chat BUTTON]
+on=1
+IF (<src.restest 1 i_chat>) 
+src.sysmessage you already have chat enabled.
+return 1
+elif (!<src.restest 1 i_chat>=1) && (<src.account.plevel> >1)
+return 1
+src.sysmessage this is for players, not staff. use staff chat instead.
+else
+src.newitem i_chat
+src.act.equip
+src.sysmessage chat enabled.
+endif
+on=2
+IF (!<src.restest 1 i_chat>=1) || (!<src.restest 1 i_staffchat>=1)
+src.sysmessage you need to have chat enabled before disabling it.
+return 1
+elif (<src.restest 1 i_chat>=1) || (<src.restest 1 i_staffchat>=1) && (<src.account.plevel> >2)
+src.sysmessage this is for players, not staff. use staff chat instead.
+else
+src.consume 1 i_chat
+src.sysmessage chat disabled.
+ENDIF
+on=3
+IF (<src.account.plevel> <2)
+src.sysmessage USAGE: .chaton, .chatoff, .chat message
+ELSE
+src.sysmessage USAGE: .chaton, .chatoff, .chat message, .mute, .unmute
+endif
+
+[DIALOG d_staffchat]
+50,50
+noclose
+PAGE 0
+resizepic 8 2 3500 450 150
+text 200 37 95 0 //name
+text 57 87 1153 1 //chaton
+button 95 109 2117 2118 1 0 1 
+text 293 87 1153 2 //chatoff
+button 334 111 2117 2118 1 0 2
+text 190 15 32 3 //server name
+text 204 92 1153 4 //help
+button 212 119 2117 2118 1 0 3
+button 189 64 243 241 1 1 0 //cancel
+text 54 15 1153 5 //mute
+button 65 38 2117 2118 1 0 4
+text 319 15 1153 6 //unmute
+button 336 39 2117 2118 1 0 5
+
+[DIALOG d_staffchat TEXT]
+<src.name>
+Turn on chat
+Turn off chat
+<serv.servname>
+Help
+Mute
+Unmute
+
+[DIALOG d_staffchat BUTTON]
+on=1
+IF (<src.restest 1 i_staffchat>=1) 
+src.sysmessage you already have chat enabled.
+return 1
+else
+src.newitem i_staffchat
+src.act.equip
+src.sysmessage chat system enabled.
+endif
+on=2
+IF (!<src.restest 1 i_staffchat>=1)
+src.sysmessage you need to have chat enabled before disabling it.
+return 1
+else
+src.consume 10 i_staffchat
+src.consume 10 i_muter
+src.consume 10 i_chat
+src.consume 10 i_unmuter
+src.consume 10 i_mute
+src.sysmessage chat disabled.
+endif
+on=3
+src.sysmessage USAGE: .chaton, .chatoff, .chat message, .mute, .unmute
+on=4
+src.newitem i_muter
+src.act.equip
+on=5
+src.newitem i_unmuter
+src.act.equip

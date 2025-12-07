@@ -1,0 +1,20 @@
+//def_array.scp compiled by PySphere Release 17 from def_array.py.
+//#prefix-local
+//#omit-original-code
+[defnames def_test_array]
+test_array_0			'qwer'
+test_array_1			'asdf'
+test_array_2			'zxcv'
+test_array_3			'tyuiop'
+test_array_4			'ghjkl'
+test_array_5			'bnm'
+test_array_min		0
+test_array_max		5
+[function f_test_def_array]
+ARG(num,<?argv[0]?>)
+IF <?ARG(num)?>><?test_array_min?> && <?ARG(num)?><<?test_array_max?>
+ARG(val,<?test_array[<?ARG(num)?>]?>)
+say(That one is <?ARG(val)?>)
+ELSE
+say(You should pass a number between <?test_array_min?> and <?test_array_max?>.)
+ENDIF

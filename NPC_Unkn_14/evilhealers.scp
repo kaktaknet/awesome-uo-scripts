@@ -1,0 +1,264 @@
+//Evil Healers, v2.0
+//By Rudenid
+//Part of the "Evil Human NPC" collection
+//which will most likely never be released in full...
+//By the way, these are the weakest NPCs in the collection
+//And are basically pushovers themselves, but they can become
+//really annoying when they're near some other NPC.
+//They now know how to dispel a player's pets, resurrect a corpse that they step on, and heal an NPC's pets
+//The ACTION checking is also fixed now.
+
+[EVENTS e_evilhealer]
+
+ON=@NPCSeeWantItem
+IF (<ACT.TYPE> = t_corpse)
+	IF (<ACT.LINK> = 04fffffff)
+		TAG.REALTARGET=<ACT.UID>
+	ENDIF
+ENDIF
+
+ON=@ItemStep
+IF (<ACT.TYPE> = t_corpse)
+	IF (<ACT.LINK> = 04fffffff)
+		TAG.REALTARGET=<ACT.UID>
+	ENDIF
+ENDIF
+
+ON=@NPCSeeNewPlayer
+
+DORAND 3
+SAY In Jux Sanct
+SAY Uus Sanct
+SAY Flam Sanct
+ENDDO
+
+ANIM 17
+SPELLEFFECT s_magic_reflection, 100.0
+SPELLEFFECT s_protection, 100.0
+SPELLEFFECT s_reactive_armor, 100.0
+ATTACK
+
+ON=@HitTry
+FLEE
+IF (<SRC.NPC>)
+	IF (<SRC.KARMA> < 0)
+		RETURN 1
+	ELSE
+		RETURN 0
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+
+ON=@Hit
+FLEE
+IF (<SRC.NPC>)
+	IF (<SRC.KARMA> < 0)
+		RETURN 1
+	ELSE
+	RETURN 0
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+
+ON=@GetHit
+
+if (<SRC.FLAGS> & statf_conjured)
+	SAY An Ort
+	ANIM 16
+	SRC.SPELLEFFECT 41, 100.0
+	RETURN 1
+elseif (<FLAGS>&statf_poisoned)
+	SAY An Nox
+	ANIM 16
+	SPELLEFFECT s_cure, 100.0
+	SFX 480
+elseif (<HITS> < <STR>-25)
+	DORAND 4
+	BEGIN
+		SAY In Vas Mani
+		ANIM 17
+		SPELLEFFECT s_greater_heal, 50.0
+		SFX 514
+	END
+	BEGIN
+		SAY In Mani
+		ANIM 17
+		SPELLEFFECT s_heal, 50.0
+		SFX 514
+	END
+	SYSMESSAGE No heal
+	SYSMESSAGE No heal
+	ENDDO
+
+endif
+
+FLEE
+IF (<SRC.NPC>)
+	IF (<SRC.KARMA> < 0)
+		RETURN 1
+	ELSE
+		RETURN 0
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+
+ON=@SkillStart
+IF ((<ACTION>=019)||(<ACTION>=skill_magery))
+	//They are casting a spell...
+
+	MANA=1000
+
+	IF (<EVAL <TAG.REALTARGET>> != 0)
+		ACT=<EVAL <TAG.REALTARGET>>
+		ACTARG1=59
+		TAG.REALTARGET=
+		RETURN 0
+	ENDIF
+
+	IF ((<ACT.NPC> != 0)&&(<ACT.KARMA> < 0)&&(!(<ACT.MEMORYFINDTYPE.memory_ipet>)||(<ACT.MEMORYFINDTYPE.memory_ipet.LINK.NPC> != 0)))
+		//It is on an NPC...
+
+		//It is harmful
+		IF (<ACTARG1> = 12)
+			ACTARG1=11	//Change the spell to cure
+		ELSEIF (<ACTARG1> = 20)
+			ACTARG1=11
+		ELSEIF (<ACTARG1> = 38)
+			ACTARG1=11
+		ENDIF
+
+	ELSE
+		IF ((<ACTARG1> != 12)&&(<ACTARG1> != 20)&&(<ACTARG1> != 38))
+			//They are casting a healing spell on a player or a non-red...
+
+			IF (<ACT.FLAGS> & statf_freeze)
+				ACT=<UID>
+			ELSE
+				DORAND 4
+				ACTARG1=12
+				ACTARG1=20
+				ACTARG1=38
+				ACT=<UID>
+				ENDDO
+			ENDIF
+
+		ENDIF
+
+		IF (<ACT.FLAGS> & statf_conjured)
+			ACTARG1=41	//Dispel it.
+		ENDIF
+	ENDIF
+
+	IF (<ACTARG1> == 11)
+		IF !(<ACT.FLAGS> & statf_poisoned)
+			ACTARG1=29
+		ENDIF
+	ENDIF
+
+	IF (<ACTARG1> == 29)
+		IF (<ACT.HITS> == <ACT.STR>)
+			DORAND 3
+			ACTARG1=7
+			ACTARG1=36
+			ACTARG1=15
+			ENDDO
+		ENDIF
+	ENDIF
+ENDIF
+
+[CHARDEF C_H_EVILHEALER]
+DEFNAME=C_H_EVILHEALER
+NAME=#NAMES_HUMANMALE the Evil Healer
+ID=C_MAN
+DESIRES=t_corpse
+AVERSIONS=t_TRAP,t_lavabomb,i_fx_field_fire,i_fx_field_fire_ns,i_fx_poison_field,i_fx_field_paralyze,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_rehello
+TSPEECH=spk_needs
+TSPEECH=spk_human_default
+
+TEVENTS=e_evilhealer
+
+ON=@Create
+NPC=11
+COLOR=colors_skin
+STR={81 105}
+DEX={81 95}
+INT=1000
+
+KARMA={-5000 -3001}
+FAME={2000 4000}
+
+ANATOMY={85.0 98.0}
+FORENSICS={35.0 58.0}
+HEALING={95.0 100.0}
+MAGERY=100.0
+SPIRITSPEAK={55.0 78.0}
+WRESTLING={75.0 98.0}
+TACTICS={65.0 95.0}
+
+ITEMNEWBIE=i_spellbook
+MORE1=012094c48
+MORE2=0828
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRestock
+ITEM=RANDOM_LIGHT
+ITEM=i_robe
+COLOR=colors_yellow
+ITEM=i_sandals
+ITEM=random_coin_purse
+
+[CHARDEF C_H_EVILHEALER_F]
+DEFNAME=C_H_EVILHEALER_F
+NAME=#NAMES_HUMANFEMALE the Evil Healer
+ID=C_WOMAN
+DESIRES=t_corpse
+AVERSIONS=t_TRAP,t_lavabomb,i_fx_field_fire,i_fx_field_fire_ns,i_fx_poison_field,i_fx_field_paralyze,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_rehello
+TSPEECH=spk_needs
+TSPEECH=spk_human_default
+
+TEVENTS=e_evilhealer
+
+ON=@Create
+NPC=11
+COLOR=colors_skin
+STR={81 105}
+DEX={81 95}
+INT=1000
+
+KARMA={-5000 -3001}
+FAME={2000 4000}
+
+ANATOMY={85.0 98.0}
+FORENSICS={35.0 58.0}
+HEALING={95.0 100.0}
+MAGERY=100.0
+SPIRITSPEAK={55.0 78.0}
+WRESTLING={75.0 98.0}
+TACTICS={65.0 95.0}
+
+ITEMNEWBIE=i_spellbook
+MORE1=012094c48
+MORE2=0828
+
+ITEMNEWBIE=random_female_hair
+COLOR=colors_hair
+
+ON=@NPCRestock
+ITEM=RANDOM_LIGHT
+ITEM=i_robe
+COLOR=colors_yellow
+ITEM=i_sandals
+ITEM=random_coin_purse

@@ -1,0 +1,195 @@
+/////////////////////////////////////////////// //////////////////////////
+//                       Lady Krysta's Simple Trash System V.1a                                         // 
+//                  ***PLEASE DO NOT REMOVE THIS HEADER***                              // 
+//               Please report all bugs to idontseedeadpeople@yahoo.com               //
+//                                 *******Installation Instructions*******                          //
+//           Put this script in your sphere/scripts folder, Restart the server           //
+//                 And voila! Your set to use My simple little trash system.                //
+//            Just .add i_trash_stone into the game anywhere for the players       //    
+//     Also go into spherenewb.scp and under [NEWBIE MALE_DEFUALT]     //  
+//    And [NEWBIE FEMALE_DEFAULT] Add in ITEMNEWBIE=i_trash_bag   //
+//                                                      *****NOTE*****                                                 //
+//           You will have to edit this script a bit to work with your scripts          //
+//                             And your likings, Have fun with it. ~Krysta                          //
+/////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_trash_bag]
+ID=i_bag
+TYPE=t_normal
+NAME=Trash Bag
+
+CATEGORY=KRYSTA
+SUBSECTION=Trash System
+DESCRIPTION=Trash bag
+
+ON=@Create
+MORE=100
+ATTR=0800c
+
+ON=@CLICK
+SRC.SYSMESSAGE You have to dbl click to trash a corpse
+
+ON=@DClick
+TARGET Select a Corpse To Trash
+RETURN 1
+
+ON=@TARGON_ITEM
+	IF !(<SRC.TARG.LINK>=04fffffff)
+		SRC.SYSMESSAGE You cannot trash a players corpse.
+		RETURN 1
+	ELSE
+	IF !(<SRC.TARG.baseid>=i_corpse)
+		SRC.SYSMESSAGE You can only trash npc corpses
+		RETURN 1
+	ELSE
+		SRC.TARG.REMOVE
+		SRC.SYSMESSAGE Thanks for cleaning up <SERV.NAME>, Take this reward.
+		SRC.NEWITEM=i_trash_ticket
+		SRC.ACT.AMOUNT={1 10}
+		SRC.ACT.CONT=<CONT.UID>
+		VAR.X=RAND(25)
+		RETURN 1
+            	ELSE
+		SRC.SYSMESSAGE You can't do that.
+		RETURN 1
+                                     ENDIF
+
+//////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_trash_stone]
+NAME=Trash Ticket System
+ID=i_gravestone_17
+TYPE=0 
+CATEGORY=KRYSTA
+SUBSECTION=Trash System
+DESCRIPTION=Trash Ticket Stone
+
+on=@create 
+color=099b 
+
+ON=@DClick
+SFX 556
+SRC.DIALOG D_trash_S
+
+[DIALOG d_trash_S]
+//trash Stone by Lady Krysta
+0,0
+resizepic 0 0 3600 607 440 // Curved Grey background
+resizepic 90 85 2620 425 315 // Gold trimmed box
+NoMove
+NoClose
+text 120 15 175 0 
+text 145 48 175 1 
+text 120 96 1152 2 
+text 120 126 1152 3
+text 120 156 1152 4 
+text 120 186 1152 5 
+text 120 216 1152 6 
+text 120 246 1152 7 
+text 120 276 1152 8 
+text 120 325 267 9
+text 120 400 175 10
+button 104 98 1209 1210 1 0 1
+button 104 128 1209 1210 1 0 2
+button 104 158 1209 1210 1 0 3
+button 104 188 1209 1210 1 0 4
+button 104 218 1209 1210 1 0 5
+button 104 248 1209 1210 1 0 6
+button 104 278 1209 1210 1 0 7
+button 104 327 1209 1210 1 0 8 
+
+//**Change everything below to fit your likings**//
+
+[DIALOG D_trash_S TEXT] 
+Welcome To <SERV.NAME> Trash System
+Cash In Your Trash Tickets For Items.
+Bracelet Of Power - (3000 tickets)
+Earrings Of Intelligence - (3000 tickets)
+Ring Of Speed - (3000 tickets)
+Crook Of Taming (4000 tickets)
+Cloak Of Light - (3000 tickets)
+Wings (7000 tickets)
+1k Exp (10000 tickets)
+Exit
+The Trash System Was Created By Lady Krysta
+
+[DIALOG d_trash_s BUTTON] 
+ONBUTTON=0 
+SRC.MESSAGE Oh, No Trash Tickets Eh?
+ONBUTTON=1 //Bracelet Of Power
+IF <SRC.RESTEST 3000 I_TRASH_TICKET> 
+SRC.CONSUME=3000 I_TRASH_TICKET 
+SRC.NEWITEM I_bracelet_power
+SRC.ACT.BOUNCE
+ELSE 
+SRC.MESSAGE You do not have enough trash tickets!  
+ENDIF 
+ONBUTTON=2 //Earrings Of Intelligence
+IF <SRC.RESTEST 3000 I_TRASH_TICKET> 
+SRC.CONSUME=3000 I_TRASH_TICKET
+SRC.NEWITEM i_earrings_int
+SRC.Act.Bounce 
+ELSE 
+SRC.MESSAGE You do not have enough trash tickets! 
+ENDIF 
+ONBUTTON=3 //ring of speed
+IF <SRC.RESTEST 3000 I_TRASH_TICKET> 
+SRC.CONSUME=3000 I_TRASH_TICKET
+SRC.NEWITEM I_ring_speed
+SRC.Act.Bounce 
+ELSE 
+SRC.MESSAGE You do not have enough trash tickets! 
+ENDIF 
+ONBUTTON=4 //Taming Crook
+IF <SRC.RESTEST 4000 I_TRASH_TICKET> 
+SRC.CONSUME=4000 I_TRASH_TICKET
+SRC.NEWITEM I_CROOK_OF_TAMING
+SRC.Act.Bounce 
+ELSE 
+SRC.MESSAGE You do not have enough trash tickets! 
+ENDIF 
+ONBUTTON=5 //cloak of light
+IF <SRC.RESTEST 3000 I_TRASH_TICKET> 
+SRC.CONSUME=3000 I_TRASH_TICKET
+SRC.NEWITEM I_cloak_light
+SRC.Act.Bounce 
+ELSE 
+SRC.MESSAGE You do not have enough trash tickets! 
+ENDIF 
+ONBUTTON=6 //wings
+IF <SRC.RESTEST 7000 I_TRASH_TICKET> 
+SRC.CONSUME=7000 I_TRASH_TICKET 
+SRC.NEWITEM I_WINGS
+SRC.Act.Bounce 
+ELSE 
+SRC.MESSAGE You do not have enough trash tickets! 
+ENDIF 
+ONBUTTON=7 //1000 EXP
+IF <SRC.RESTEST 10000 I_TRASH_TICKET> 
+SRC.CONSUME=10000 I_TRASH_TICKET 
+SRC.NEWITEM I_deed_exp1
+SRC.Act.Bounce 
+ELSE 
+SRC.MESSAGE You do not have enough trash tickets! 
+ENDIF 
+ONBUTTON=8 //Exit 
+SFX 312
+
+CATEGORY=KRYSTA
+SUBSECTION=Trash System
+DESCRIPTION=Trash Stone
+
+[ITEMDEF i_TRASH_TICKET]
+NAME=Trash Ticket%s
+ID=0f10
+WEIGHT=0
+
+ON=@CREATE
+COLOR=0999
+
+CATEGORY=KRYSTA
+SUBSECTION=Trash System
+DESCRIPTION=Trash Ticket
+//////////////////////////////////////////////////////////////////////////
+
+[EoF] 

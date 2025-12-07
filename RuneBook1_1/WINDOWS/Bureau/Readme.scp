@@ -1,0 +1,301 @@
+// TO INSTALL:
+
+
+
+1.)     Open your Sphereskill.scp file.
+
+2.)     Search for the skilldef "sm_inscription" (should be the first def), and ADD to the scripts end with the following scripts below by itemdef number.
+
+3.)     Pause and Resync your server.
+
+
+
+ON=i_runebook Make a Runebook
+
+IF (<INSCRIPTION><=30)
+
+SYSMESSAGE You do not have the skill to make this item.
+
+RETURN 1
+
+ELSEIF (<RESTEST 8 i_scroll_blank>) && (<RESTEST 1 i_rune_marker>) && (<RESTEST 1 i_scroll_recall>) && (<RESTEST 1 i_scroll_gate_travel>) && (<INSCRIPTION><=500)
+
+SRC.NEWITEM i_runebook
+
+SRC.ACT.BOUNCE
+
+SRC.ACT.MORE 5
+
+SRC.ACT.MORE2 5
+
+CONSUME 8 i_scroll_blank
+
+CONSUME 1 i_rune_marker
+
+CONSUME 1 i_scroll_recall
+
+CONSUME 1 i_scroll_gate_travel
+
+RETURN 1
+
+ELSEIF (<RESTEST 8 i_scroll_blank>) && (<RESTEST 1 i_rune_marker>) && (<RESTEST 1 i_scroll_recall>) && (<RESTEST 1 i_scroll_gate_travel>) && (<INSCRIPTION><=600)
+
+SRC.NEWITEM i_runebook
+
+SRC.ACT.BOUNCE
+
+SRC.ACT.MORE 6
+
+SRC.ACT.MORE2 6
+
+CONSUME 8 i_scroll_blank
+
+CONSUME 1 i_rune_marker
+
+CONSUME 1 i_scroll_recall
+
+CONSUME 1 i_scroll_gate_travel
+
+RETURN 1
+
+ELSEIF (<RESTEST 8 i_scroll_blank>) && (<RESTEST 1 i_rune_marker>) && (<RESTEST 1 i_scroll_recall>) && (<RESTEST 1 i_scroll_gate_travel>) && (<INSCRIPTION><=700)
+
+SRC.NEWITEM i_runebook
+
+SRC.ACT.BOUNCE
+
+SRC.ACT.MORE 7
+
+SRC.ACT.MORE2 7
+
+CONSUME 8 i_scroll_blank
+
+CONSUME 1 i_rune_marker
+
+CONSUME 1 i_scroll_recall
+
+CONSUME 1 i_scroll_gate_travel
+
+RETURN 1
+
+ELSEIF (<RESTEST 8 i_scroll_blank>) && (<RESTEST 1 i_rune_marker>) && (<RESTEST 1 i_scroll_recall>) && (<RESTEST 1 i_scroll_gate_travel>) && (<INSCRIPTION><=800)
+
+SRC.NEWITEM i_runebook
+
+SRC.ACT.BOUNCE
+
+SRC.ACT.MORE 8
+
+SRC.ACT.MORE2 8
+
+CONSUME 8 i_scroll_blank
+
+CONSUME 1 i_rune_marker
+
+CONSUME 1 i_scroll_recall
+
+CONSUME 1 i_scroll_gate_travel
+
+RETURN 1
+
+ELSEIF (<RESTEST 8 i_scroll_blank>) && (<RESTEST 1 i_rune_marker>) && (<RESTEST 1 i_scroll_recall>) && (<RESTEST 1 i_scroll_gate_travel>) && (<INSCRIPTION><=900)
+
+SRC.NEWITEM i_runebook
+
+SRC.ACT.BOUNCE
+
+SRC.ACT.MORE 9
+
+SRC.ACT.MORE2 9
+
+CONSUME 8 i_scroll_blank
+
+CONSUME 1 i_rune_marker
+
+CONSUME 1 i_scroll_recall
+
+CONSUME 1 i_scroll_gate_travel
+
+RETURN 1
+
+ELSEIF (<RESTEST 8 i_scroll_blank>) && (<RESTEST 1 i_rune_marker>) && (<RESTEST 1 i_scroll_recall>) && (<RESTEST 1 i_scroll_gate_travel>) && (<INSCRIPTION><=1000)
+
+SRC.NEWITEM i_runebook
+
+SRC.ACT.BOUNCE
+
+SRC.ACT.MORE 10
+
+SRC.ACT.MORE2 10
+
+CONSUME 8 i_scroll_blank
+
+CONSUME 1 i_rune_marker
+
+CONSUME 1 i_scroll_recall
+
+CONSUME 1 i_scroll_gate_travel
+
+RETURN 1
+
+ELSEIF (<RESTEST 8 i_scroll_blank>) && (<RESTEST 1 i_rune_marker>) && (<RESTEST 1 i_scroll_recall>) && (<RESTEST 1 i_scroll_gate_travel>) && (<INSCRIPTION>>=1000)
+
+SRC.NEWITEM i_runebook
+
+SRC.ACT.BOUNCE
+
+SRC.ACT.MORE 10
+
+SRC.ACT.MORE2 10
+
+CONSUME 8 i_scroll_blank
+
+CONSUME 1 i_rune_marker
+
+CONSUME 1 i_scroll_recall
+
+CONSUME 1 i_scroll_gate_travel
+
+RETURN 1
+
+ELSE
+
+SYSMESSAGE You lack the required resources to make this item.
+
+RETURN 1
+
+ENDIF
+
+
+
+// Second Section
+
+
+
+// TO INSTALL:
+
+
+
+1.)     Open your Sphereitemb6.scp file.
+
+2.)     Search for the item number "01f14", and replace the default scripts with the following scripts below by itemdef number.
+
+3.)     Pause and Resync your server.
+
+
+
+
+
+[ITEMDEF 01f14]
+
+DEFNAME=i_rune_marker
+
+TYPE=t_rune
+
+VALUE={16 20}
+
+WEIGHT=1
+
+
+
+CATEGORY=Provisions - Alchemy & Magic
+
+SUBSECTION=Magical Items
+
+DESCRIPTION=Recall Rune
+
+DUPELIST=01f15,01f16,01f17
+
+
+
+ON=@DCLICK
+
+INPDLG NAME 32
+
+RETURN 1
+
+
+
+ON=@SpellEffect
+
+IF (<ARGN>==32) && (<SRC.MAPPLANE>==<MOREM>)
+
+RETURN 0
+
+ELSEIF (<ARGN>==32) && !(<SRC.MAPPLANE>==<MOREM>)
+
+SRC.MESSAGE You cannot recall to another facet.
+
+RETURN 1
+
+ELSEIF (<ARGN>==45) && (<MAPPLANE>==1)
+
+COLOR 032
+
+MORE2 0115
+
+UPDATEX
+
+RETURN 0
+
+ELSEIF (<ARGN>==45) && (<CONT.CONT.MAPPLANE>==1)
+
+COLOR 032
+
+MORE2 0115
+
+UPDATEX
+
+RETURN 0
+
+ELSEIF (<ARGN>==45)
+
+MORE2 10
+
+RETURN 0
+
+ELSE
+
+RETURN 0
+
+ENDIF
+
+
+
+ON=@Click
+
+IF (<MOREX>==0)
+
+MESSAGE an unmarked recall rune
+
+RETURN 1
+
+ENDIF
+
+IF (<MOREM>==1)
+
+MESSAGE a recall rune for <NAME> (Felucca)
+
+MORE2 0115
+
+RETURN 1
+
+ENDIF
+
+IF (<MOREM>==0)
+
+MESSAGE a recall rune for <NAME> (Trammel)
+
+MORE2 10
+
+RETURN 1
+
+ENDIF
+
+
+
+ON=@Timer
+
+TIMER -1
+
+RETURN 1

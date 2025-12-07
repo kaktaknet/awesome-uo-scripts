@@ -1,0 +1,36 @@
+//***!...This script was created from scratch by Admin Daniel...!***//
+//***!...and is in conjunction with The World of UO race stones...!***//
+
+[ITEMDEF i_race_remover]
+ID=0ed6
+NAME=Race Changing Stone
+
+CATEGORY=Admin Daniel
+SUBSECTION=Stones
+DESCRIPTION=Race Changing Stone
+
+on=@Create
+COLOR=00497
+
+on=@click
+SRC.MESSAGE This costs 500,000gc and will reset your stats and skills...!
+
+on=@dclick
+IF <SRC.RESTEST 500000 I_GOLD> 
+SRC.CONSUME=500000 i_gold
+SRC.TAG.RACE -SRC.TAG.RACE
+SRC.GO 1276 549 30
+SRC.STR=10
+SRC.DEX=10
+SRC.INT=10
+SRC.HITPOINTS=10
+SRC.STAMINA=10
+SRC.MANA=10
+SRC.ALLSKILLS=10.0
+SRC.KARMA=1
+SRC.FAME=1
+ELSE
+SRC.MESSAGE You don't have enough gold to change your race...!
+ENDIF
+
+[EOF]

@@ -1,0 +1,398 @@
+/////////////////////////////
+//           \!/           //
+//          (o o)	   //
+//           (_)     	   //
+//bY  ViMaS 		   //
+//to   Tierras-báldias     //
+//Duels SYSTEM             //
+//Version 1.1  	           //
+/////////////////////////////
+//                         //
+//-------------------------/////////////////////////////////////////////////////////////////
+//In The Game,Link i_Ress1 ,I_Ress2 and i_Torneo_Salida_arena  With                       //
+// i_Entrada_Combate                                                                      //
+//----------------------------------------------------------------------------------------// 
+////////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_Entrada_Torneo]
+Name=To The Duels
+TYPE=t_telepad
+id=0f6c
+
+On=@Create
+Color=0481
+attr=010
+
+CATEGORY= ViMaS_
+SUBSECTION=Torneos
+DESCRIPTION=Entrada a Torneos Automaticos
+
+on=@step
+SRC.tag.killcount=<SRC.KILLS>
+SRC.tag.karmacount=<SRC.Karma>
+SRC.tag.Famecount=<SRC.Fame>
+src.go 5519 1128
+
+[ITEMDEF i_Entrada_Combate]
+Name=Enter To the Arena.
+ID=I_gravestone_17
+TYPE=t_script
+
+CATEGORY= ViMaS_
+SUBSECTION=Torneos
+DESCRIPTION=Entrada a Torneos Automaticos
+
+On=@create
+Timer=1
+More1=0
+
+On=@Dclick
+If (<More1>==0)
+	More1=1
+	Timer=250
+	Dialog d_Torneo_menu
+	src.sysmessage Don't Close the Menu, Or you need Wait some Time :).
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	Return 1
+Else
+	Src.Sysmessage You Must Wait <timer> seconds Or The end of the actual Challenger.
+	return 1
+EndIf
+
+On=@Timer
+Speak I'm On Now!! :)
+More1=0
+Return 1
+EndIf
+
+
+[EVENTS e_Torneo_auto_sin_loot]
+ON=@Death
+SRC.KILLS=<SRC.tag.killcount>
+SRC.Karma=<SRC.tag.Karmacount>
+SRC.Fame=<SRC.tag.Famecount>
+SRC.tag.killcount=
+SRC.tag.Karmacount=
+SRC.tag.Famecount=
+Src.Tag.Reto=
+src.Tag.PReto=
+Src.Tag.UReto=
+src.go 5510 1128
+src.events -e_Torneo_auto_sin_loot
+
+ON=@Click
+Speak <name> Vs <tag.Preto>
+
+///////------------------------------------------------------------#####################################################
+
+[EVENTS e_Torneo_auto_Con_loot]
+ON=@Death
+SRC.KILLS=<SRC.tag.killcount>
+SRC.Karma=<SRC.tag.Karmacount>
+SRC.Fame=<SRC.tag.Famecount>
+SRC.tag.killcount=
+SRC.tag.Karmacount=
+SRC.tag.Famecount=
+Src.Tag.Reto=
+src.Tag.PReto=
+Src.Tag.UReto=
+
+ON=@Click
+Speak <name> Vs <tag.Preto>
+///////------------------------------------------------------------#####################################################
+
+[ITEMDEF i_Torneo_Salida]
+Name=Exit
+TYPE=t_telepad
+id=0f6c
+
+On=@Create
+Color=0481
+
+CATEGORY= ViMaS_
+SUBSECTION=Torneos
+DESCRIPTION=Salida de Torneos Automaticos
+
+on=@step
+src.go Star Chamber ////////////////////////Coords
+endif
+
+[ITEMDEF i_Torneo_Salida_arena]
+Name=Exit From the arena
+TYPE=t_telepad
+id=0f6c
+
+On=@Create
+Color=0480
+Timer=60
+CATEGORY= ViMaS_
+SUBSECTION=Torneos
+DESCRIPTION=Salida de Torneos Automaticos de la arena
+
+on=@step
+Src.Tag.Reto=
+src.Tag.PReto=
+Src.Tag.UReto=
+SRC.karma=<src.tag.karmacount>
+src.kills=<src.tag.killscount>
+src.fame=<Src.tag.Famecount>
+SRC.tag.killcount=
+SRC.tag.Karmacount=
+SRC.tag.Famecount=
+src.EVENTS -e_Torneo_auto_con_loot
+src.EVENTS -e_Torneo_auto_sin_loot
+src.go 5519 1128
+Link.Timer=0
+Link.More1=0
+Return 1
+
+
+[DIALOG d_torneo_Menu]
+50, 50
+PAGE 0
+resizepic 1 1 5054 390 200
+text 45 25 037 0
+text 45 50 037 1
+text 45 75 255 2
+text 70 104 0 3
+text 70 134 0 4
+text 275 170 10 5
+button 45 110 2362 2360 1 0 1
+button 45 140 2360 2362 1 0 2
+
+[DIALOG d_torneo_Menu Text]
+Welcome to the Duels System
+Of Tierras Baldias
+What do you do??:
+Duel With Looting
+Duel Without Looting
+By ViMaS
+[DIALOG d_torneo_Menu Button]
+ON=0
+Src.sysmessage Don't Do any??
+
+ON=1
+src.sysmessage Ok...
+src.retar_con_loot
+
+ON=2
+Src.sysmessage Ok...
+src.Retar_sin_Loot
+
+[FUNCTION Retar_Con_loot] 
+SRC.NEWITEM=i_reto 
+SRC.ACT.MORE2=50
+SRC.ACT.MORE1=1 
+SRC.ACT.EQUIP
+SRC.ACT.DCLICK                
+RETURN 1
+
+
+[FUNCTION Retar_Sin_loot] 
+SRC.NEWITEM=i_reto 
+SRC.ACT.MORE2=50 
+SRC.ACT.MORE1=0 
+SRC.ACT.EQUIP
+SRC.ACT.DCLICK                
+RETURN 1
+
+
+[ITEMDEF i_reto]        
+ID=i_memory
+TYPE=t_eq_script
+NAME=Reto
+
+ON=@DCLICK     
+If (<MORE1>==0)              
+TARGET Who you want to challenge WITHOUT Loot?  
+RETURN 1
+Else
+TARGET Who you want to challenge WITH Loot?
+RETURN 1
+
+ON=@TARGON_ITEM    
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	SRC.SYSMESSAGE Bad Enemy..
+	TARGET :)
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	return 1     
+
+ON=@TARGON_CHAR  
+If (<src.targ.UID>==<src.UID>)
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage Ummm.....
+	src.sysmessage Don't Do that :(
+	TARGET :)
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	src.sysmessage 
+	return 1
+Else
+	Link=<SRC.UID>
+	CONT=<SRC.Targ.UID>
+	CONT.Tag.Reto=1         
+	CONT.Tag.PReto=<src.Name>
+	CONT.Tag.UReto=<SRC.UID>
+	Link.Tag.Reto=1
+	Link.Tag.PReto=<cont.Name>
+	Link.Tag.UReto=<cont.UID>
+	Link.Sysmessage You Duel With <cont.name>.
+if (<More1>==0)
+	Cont.Sysmessage You Has Been Invited to Duel with <src.name>.With Looting.
+Else
+	Cont.Sysmessage You Has Been Invited to Duel with  <src.name>.Without Looting.
+EndIf
+
+CONT.Sysmessage The combat start In 50 Seconds...
+Link.Sysmessage The combat start In 50 Seconds...
+Cont.Sysmessage To Cancel The Duel, Write .Rechazar_reto
+Link.Sysmessage To Stop the Duel, Write .Parar_reto
+Timer=0
+RETURN 1
+EndIf
+
+ON=@TIMER   
+IF (<MORE2> == 0)             
+	CONT.SYSMESSAGE Is your Turn,Good Luck :)
+	Link.SYSMESSAGE Is your Turn,Good Luck :)
+		If (<MORE1>==0)
+			CONT.EVENTS +e_Torneo_auto_sin_loot
+			Link.EVENTS +e_Torneo_auto_sin_loot
+		Else
+			CONT.EVENTS +e_Torneo_auto_con_loot
+			Link.EVENTS +e_Torneo_auto_con_loot
+		EndIf
+	Link.go 5494 1128
+	CONT.go 5494 1128
+	REMOVE
+	RETURN 1
+ENDIF                        
+If (<Cont.tag.Rechazado>==1)
+	Link.Tag.Rechazado=
+	remove
+	Return 1
+else
+	MORE2=<MORE2>+(-1)          
+	TIMER=1                  
+	RETURN 1
+EndIf
+
+
+[PLEVEL 1]
+Rechazar_reto
+Parar_reto
+
+[FUNCTION Rechazar_reto]
+SRC.NEWITEM=i_reto_Rechazo
+SRC.ACT.EQUIP
+SRC.ACT.DCLICK                
+RETURN 1
+
+[FUNCTION Parar_reto]
+SRC.NEWITEM=i_reto_Parado
+SRC.ACT.EQUIP
+SRC.ACT.DCLICK                
+RETURN 1
+
+[ITEMDEF i_reto_rechazo]        
+ID=i_Memory
+TYPE=t_eq_script
+NAME=Rechazo de Reto
+
+ON=@DCLICK            
+Link=<Src.Tag.UReto>
+If (<src.Tag.Reto>==1)
+	SRC.Sysmessage You reject the Duel with <Src.Tag.PReto>...
+	Link.Sysmessage <src.name> reject your Duel.
+	Src.Tag.Rechazado=1
+	Link.Tag.Reto=   
+	Link.Tag.PReto=
+	Link.Tag.UReto=
+	Src.Tag.Reto=
+	src.Tag.PReto=
+	Src.Tag.UReto=
+	Remove
+	Return 1
+Else
+	Src.sysmessage You Aren't Challenged.
+	Remove
+	Return 1
+EndIf
+
+
+[ITEMDEF i_reto_Parado]        
+ID=i_Memory
+TYPE=t_eq_script
+NAME=Paro de Reto
+
+ON=@DCLICK            
+Link=<Src.Tag.UReto>
+If (<src.Tag.Reto>==1)
+	SRC.Sysmessage You stop the Duel With <Src.Tag.PReto>...
+	Link.Sysmessage <src.name> Stop the Duel...
+	Link.Tag.Rechazado=1
+	Link.Tag.Reto=   
+	Link.Tag.PReto=
+	Link.Tag.UReto=
+	Src.Tag.Reto=
+	src.Tag.PReto=
+	Src.Tag.UReto=
+	Remove
+	Return 1
+Else
+	Src.sysmessage You don't are the Challenger.
+	Remove
+	Return 1
+EndIf
+
+[ITEMDEF i_Ress1]
+Name=Resurrect
+id=05
+TYPE=38
+
+On=@Create
+Color=0480
+attr=010
+
+CATEGORY= ViMaS_
+SUBSECTION=Torneos
+DESCRIPTION=Ress
+
+on=@dclick
+src.resurrect
+src.hits=<src.str>
+src.go 5519 1128
+Link.More1=1
+Link.Timer=30
+
+[ITEMDEF i_Ress2]
+Name=Resurrect
+id=04
+TYPE=38
+
+On=@Create
+Color=0480
+attr=010
+
+CATEGORY= ViMaS_
+SUBSECTION=Torneos
+DESCRIPTION=Ress
+
+on=@dclick
+src.resurrect
+src.hits=<src.str>
+src.go 5519 1128
+Link.More1=1
+Link.Timer=30

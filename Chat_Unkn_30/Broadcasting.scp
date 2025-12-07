@@ -1,0 +1,69 @@
+// Scripted by Exercisto
+
+// If you don't like the timer you can easily change it.
+
+[DEFNAME BC_MESSAGES]
+BC_MESSAGE_1 Avril Lavigne is HOT.
+BC_MESSAGE_2 So is Elisha Cuthbert.
+BC_MESSAGE_3 Ahum, this was scripted by Exercisto.
+BC_MESSAGE_4 Surprised? Why?
+BC_MESSAGE_5 Right.
+BC_MESSAGE_6 Did I mention Avril is a hottie?
+BC_MESSAGE_7 Why the hell did I make 10 messages in the first place?
+BC_MESSAGE_8 I'm getting typing blisters, I am.
+BC_MESSAGE_9 *Yawns*
+BC_MESSAGE_10 Well, as you can see. You can type almost everything here.
+
+[ITEMDEF I_BROADCAST_BOLD]
+ID=I_VIRTSTONE_6
+NAME=Broadcast Stone
+
+ON=@CLICK
+MESSAGE @0480 [Font: Bold]
+MESSAGE @07a1 Broadcast Stone
+RETURN 1
+
+ON=@DCLICK
+TIMER=0
+
+ON=@CREATE
+TIMER=0
+TAG.MESSAGE=1
+
+ON=@TIMER
+IF (<TAG.MESSAGE>==11)
+TAG.MESSAGE=1
+ENDIF
+
+SERV.B @07a1 Auto Message: <DEF.BC_MESSAGE_<EVAL <TAG.MESSAGE>>>
+TAG.MESSAGE=<TAG.MESSAGE>+1
+TIMER=60*5
+RETURN 1 
+
+[ITEMDEF I_BROADCAST_NORMAL]
+ID=I_VIRTSTONE_2
+NAME=Broadcast Stone
+
+ON=@CLICK
+MESSAGE @0480 [Font: Normal]
+MESSAGE @07a1 Broadcast Stone
+RETURN 1
+
+ON=@DCLICK
+TIMER=0
+
+ON=@CREATE
+TIMER=0
+TAG.MESSAGE=1
+
+ON=@TIMER
+IF (<TAG.MESSAGE>==11)
+TAG.MESSAGE=1
+ENDIF
+
+SERV.ALLCLIENTS SYSMESSAGE @07a1 Auto Message: <DEF.BC_MESSAGE_<EVAL <TAG.MESSAGE>>>
+TAG.MESSAGE=<TAG.MESSAGE>+1
+TIMER=60*5
+RETURN 1
+
+[EOF]

@@ -1,0 +1,265 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//To use this script, put this file inside your Script folder, and then you'll need to add this script into a @LOGIN trigger :)
+
+// ON=@LOGIN
+// SRC.EVENTS -e_gravestone
+// SRC.EVENTS +e_gravestone
+
+//This Trigger: @LOGIN can be added under the CHARDEFS of your players (Male:0190 and Female:0191),
+//under a general skillclass, or under an event that all of your players have set on them.
+//Remove the comment // so the scripts can work properly :)
+
+//Please do not remove this header..
+
+//Enjoy!
+
+[EVENTS e_gravestone]
+
+ON=@DEATH
+HOME=<P>
+DORAND 2
+VAR.STONE=0
+VAR.STONE=1
+ENDDO
+DORAND 8
+VAR.TEMPORARY=slained
+VAR.TEMPORARY=killed
+VAR.TEMPORARY=hacked
+VAR.TEMPORARY=jacked
+VAR.TEMPORARY=murdered
+VAR.TEMPORARY=owned
+VAR.TEMPORARY=mauled
+VAR.TEMPORARY=mawed
+ENDDO
+
+IF (<VAR.STONE>==0)
+
+SRC.NEWITEM=i_deathstone_0_1
+SRC.ACT.NAME=Here lies <src.name>, <src.title> <VAR.TEMPORARY> by <SRC.MEMORYFINDTYPE.(0010).LINK.NAME>, <SRC.MEMORYFINDTYPE.(0010).LINK.TITLE>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 0 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+SRC.ACT.COLOR 078C
+
+SRC.NEWITEM=i_deathstone_0_2
+SRC.ACT.NAME=Here lies <src.name>, <src.title> <VAR.TEMPORARY> by <SRC.MEMORYFINDTYPE.(0010).LINK.NAME>, <SRC.MEMORYFINDTYPE.(0010).LINK.TITLE>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 1 0 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+SRC.ACT.COLOR 078C
+
+SRC.NEWITEM=i_flesh_torso
+SRC.ACT.NAME=Torso of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 1 0 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_HEAD_2
+SRC.ACT.NAME=Head of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 0 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_RIGHT_ARM
+SRC.ACT.NAME=Right arm of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 1 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_left_arm
+SRC.ACT.NAME=Left arm of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 0 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_left_leg
+SRC.ACT.NAME=Left leg of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 2 0 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_right_leg
+SRC.ACT.NAME=Right leg of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 2 1 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+ELSE
+
+SRC.NEWITEM=i_deathstone_1_1
+SRC.ACT.NAME=Here lies <src.name>, <src.title> <VAR.TEMPORARY> by <SRC.MEMORYFINDTYPE.(0010).LINK.NAME>, <SRC.MEMORYFINDTYPE.(0010).LINK.TITLE>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 0 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+SRC.ACT.COLOR 078C
+
+SRC.NEWITEM=i_deathstone_1_2
+SRC.ACT.NAME=Here lies <src.name>, <src.title> <VAR.TEMPORARY> by <SRC.MEMORYFINDTYPE.(0010).LINK.NAME>, <SRC.MEMORYFINDTYPE.(0010).LINK.TITLE>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 -1 1
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+SRC.ACT.COLOR 078C
+
+SRC.NEWITEM=i_flesh_torso
+SRC.ACT.NAME=Torso of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 0 1
+SRC.ACT.FLIP
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_HEAD_2
+SRC.ACT.NAME=Head of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 -1 1
+SRC.ACT.FLIP
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_RIGHT_ARM
+SRC.ACT.NAME=Right arm of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 1 -1 1
+SRC.ACT.FLIP
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_left_arm
+SRC.ACT.NAME=Left arm of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 -1 1
+SRC.ACT.FLIP
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_left_leg
+SRC.ACT.NAME=Left leg of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 0 1 1
+SRC.ACT.FLIP
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+SRC.NEWITEM=i_flesh_right_leg
+SRC.ACT.NAME=Right leg of <SRC.NAME>
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE 1 1 1
+SRC.ACT.FLIP
+SRC.ACT.ATTR=0012
+SRC.ACT.TIMER 3600
+
+ENDIF
+
+RETURN 0
+
+[ITEMDEF i_deathstone_0_1]
+DEFNAME=i_deathstone
+ID=0EE2
+WEIGHT=9999
+
+ON=@step
+if (<src.body> == c_ghost_man) || (<src.body> == c_ghost_woman)
+src.menu resmenu
+else
+endif
+
+ON=@timer
+remove
+RETURN 1
+
+ON=@DCLICK
+if (<src.body> == c_ghost_man) || (<src.body> == c_ghost_woman)
+TRIGGER=@STEP
+RETURN 1
+
+[ITEMDEF i_deathstone_0_2]
+DEFNAME=i_deathstone
+ID=0EE0
+WEIGHT=9999
+
+ON=@step
+if (<src.body> == c_ghost_man) || (<src.body> == c_ghost_woman)
+src.menu resmenu
+else
+endif
+
+ON=@timer
+remove
+RETURN 1
+
+ON=@DCLICK
+if (<src.body> == c_ghost_man) || (<src.body> == c_ghost_woman)
+TRIGGER=@STEP
+RETURN 1
+
+[ITEMDEF i_deathstone_1_1]
+DEFNAME=i_deathstone
+ID=0EDF
+WEIGHT=9999
+
+ON=@step
+if (<src.body> == c_ghost_man) || (<src.body> == c_ghost_woman)
+src.menu resmenu
+else
+endif
+
+ON=@timer
+remove
+RETURN 1
+
+ON=@DCLICK
+if (<src.body> == c_ghost_man) || (<src.body> == c_ghost_woman)
+TRIGGER=@STEP
+RETURN 1
+
+[ITEMDEF i_deathstone_1_2]
+DEFNAME=i_deathstone
+ID=0EE1
+WEIGHT=9999
+
+ON=@step
+if (<src.body> == c_ghost_man) || (<src.body> == c_ghost_woman)
+src.menu resmenu
+else
+endif
+
+ON=@timer
+remove
+RETURN 1
+
+ON=@DCLICK
+if (<src.body> == c_ghost_man) || (<src.body> == c_ghost_woman)
+TRIGGER=@STEP
+RETURN 1
+
+[ITEMDEF i_statloss]
+DEFNAME=i_statloss
+ID=i_gold
+WEIGHT=9999
+
+ON=@DCLICK
+SRC.STR=<SRC.STR>+-1
+SRC.DEX=<SRC.DEX>+-1
+SRC.INT=<SRC.INT>+-1
+
+[MENU RESMENU]
+Choose an option between the following:
+ON=0 Resurrect with -1 all stats.
+SRC.RESURRECT
+SRC.NEWITEM=i_statloss
+act.bounce
+act.trigger=@dclick
+act.remove

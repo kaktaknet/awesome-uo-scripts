@@ -1,0 +1,161 @@
+////////////////////////////////////////////////////////////////////////////////////
+//Graphic Moongate Sytem v1.2b
+//Scripted by Mordaunt
+//Credit to -Ax- who's mapdlg equations were used to plot the moongate on the gump
+//Covers Towngates only, Tram/Fel Version
+////////////////////////////////////////////////////////////////////////////////////
+
+[itemdef i_moongate_SS]
+NAME=moongate
+ID=i_moongate_blue
+TYPE=0
+
+ON=@step
+IF (<ARGN1>==0)
+SRC.NEWITEM i_mem_moongate
+SRC.ACT.EQUIP
+RETURN 1
+ENDIF
+
+[ITEMDEF i_mem_moongate]
+ID=i_handr_1
+NAME=moongate memory
+TYPE=t_EQ_script
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=attr_decay
+
+ON=@EQUIP
+TIMER=8
+IF (<SRC.MAP>=0)
+CONT.DIALOG moongatemenu1
+SFX=snd_spell_gate_travel
+ELSEIF (<SRC.MAP>=1)
+CONT.DIALOG moongatemenu2
+SFX=snd_spell_gate_travel
+RETURN 1
+ENDIF
+ENDIF
+
+ON=@TIMER
+IF <CONT.RESTEST 1 i_mem_moongate>
+CONT.CONSUME i_mem_moongate
+RETURN 1
+ENDIF
+
+
+ON=@UNEQUIP
+CONT.DIALOGCLOSE moongatemenu1
+CONT.DIALOGCLOSE moongatemenu2
+RETURN 1
+
+[DIALOG moongatemenu1] 
+90,90 
+resizepic 0 0 5120 403 454 
+dtext 20 10 455 Moongate Menu: Choose your destination (Tram)
+gumppic 10 29 5528 
+button <EVAL (10+((1336*100)/1337))> <EVAL (10+((1997*100)/1067))> 2117 2118 1 0 1  //brit
+dtext <EVAL (10+((1336*100)/1337))> <EVAL (((1997*100)/1067)-5)> 80 Britain	
+button <EVAL (10+((4467*100)/1337))> <EVAL (10+((1283*100)/1067))> 2117 2118 1 0 2//Moonglow
+dtext <EVAL (((4467*100)/1337)-20)> <EVAL (((1283*100)/1067)-5)> 80 Moonglow
+button <EVAL (10+((1499*100)/1337))> <EVAL (10+((3771*100)/1067))> 2117 2118 1 0 3//Jhelom
+dtext <EVAL (10+((1499*100)/1337))> <EVAL (((3771*100)/1067)-5)> 80 Jhelom
+button <EVAL (10+((771*100)/1337))> <EVAL (10+((753*100)/1067))> 2117 2118 1 0 4//Yew
+dtext <EVAL (10+((771*100)/1337))> <EVAL (((753*100)/1067)-5)> 80 Yew
+button <EVAL (10+((1828*100)/1337))> <EVAL (10+((2948*100)/1067))> 2117 2118 1 0 5//Trinsic
+dtext <EVAL (10+((1828*100)/1337))> <EVAL (((2948*100)/1067)-5)> 80 Trinsic
+button <EVAL (10+((643*100)/1337))> <EVAL (10+((2067*100)/1067))>  2117 2118 1 0 6//Skara Brae
+dtext <EVAL (10+((643*100)/1337))> <EVAL (20+((2067*100)/1067))> 80 Skara Brae
+button <EVAL (10+((3564*100)/1337))> <EVAL (10+((2140*100)/1067))> 2117 2118 1 0 7//Magincia
+dtext <EVAL (10+((3564*100)/1337))> <EVAL (((2140*100)/1067)-5)> 80 Magincia
+dtext 20 410 455 You are in <REGION.NAME>. 
+button 20 430 2117 2118 1 0 8
+dtext 40 430 80 Press for Fellucia
+
+[DIALOG moongatemenu1 BUTTON] 
+ON=1
+GO 1336,1997,5,0
+SRC.CONSUME i_mem_moongate
+
+ON=2
+GO 4467,1283,5,0
+SRC.CONSUME i_mem_moongate
+
+ON=3
+GO 1499,3771,5,0
+SRC.CONSUME i_mem_moongate
+
+ON=4
+GO 771,753,5,0
+SRC.CONSUME i_mem_moongate
+
+ON=5
+GO 1828,2948,-20,0
+SRC.CONSUME i_mem_moongate
+
+ON=6
+GO 643,2067,5,0
+SRC.CONSUME i_mem_moongate
+
+ON=7
+GO 3564,2140,34,0
+SRC.CONSUME i_mem_moongate
+
+ON=8
+SRC.DIALOG moongatemenu2
+
+[DIALOG moongatemenu2] 
+90,90 
+resizepic 0 0 5120 403 454 
+dtext 20 10 80 Moongate Menu: Choose your destination (Fel)
+gumppic 10 29 5528 
+button <EVAL (10+((1336*100)/1337))> <EVAL (10+((1997*100)/1067))> 2117 2118 1 0 1  //brit
+dtext <EVAL (10+((1336*100)/1337))> <EVAL (((1997*100)/1067)-5)> 80 Britain	
+button <EVAL (10+((4467*100)/1337))> <EVAL (10+((1283*100)/1067))> 2117 2118 1 0 2//Moonglow
+dtext <EVAL (((4467*100)/1337)-20)> <EVAL (((1283*100)/1067)-5)> 80 Moonglow
+button <EVAL (10+((1499*100)/1337))> <EVAL (10+((3771*100)/1067))> 2117 2118 1 0 3//Jhelom
+dtext <EVAL (10+((1499*100)/1337))> <EVAL (((3771*100)/1067)-5)> 80 Jhelom
+button <EVAL (10+((771*100)/1337))> <EVAL (10+((753*100)/1067))> 2117 2118 1 0 4//Yew
+dtext <EVAL (10+((771*100)/1337))> <EVAL (((753*100)/1067)-5)> 80 Yew
+button <EVAL (10+((1828*100)/1337))> <EVAL (10+((2948*100)/1067))> 2117 2118 1 0 5//Trinsic
+dtext <EVAL (10+((1828*100)/1337))> <EVAL (((2948*100)/1067)-5)> 80 Trinsic
+button <EVAL (10+((643*100)/1337))> <EVAL (10+((2067*100)/1067))>  2117 2118 1 0 6//Skara Brae
+dtext <EVAL (10+((643*100)/1337))> <EVAL (20+((2067*100)/1067))> 80 Skara Brae
+button <EVAL (10+((3564*100)/1337))> <EVAL (10+((2140*100)/1067))> 2117 2118 1 0 7//Magincia
+dtext <EVAL (10+((3564*100)/1337))> <EVAL (((2140*100)/1067)-5)> 80 Magincia
+dtext 20 410 455  You are in <REGION.NAME>. 
+button 20 430 2117 2118 1 0 8
+dtext 40 430 80 Press for Trammel
+
+[DIALOG moongatemenu2 BUTTON] 
+ON=1
+GO 1336,1997,5,1
+SRC.CONSUME i_mem_moongate
+
+ON=2
+GO 4467,1283,5,1
+SRC.CONSUME i_mem_moongate
+
+ON=3
+GO 1499,3771,5,1
+SRC.CONSUME i_mem_moongate
+
+ON=4
+GO 771,753,5,1
+SRC.CONSUME i_mem_moongate
+
+ON=5
+GO 1828,2948,-20,1
+SRC.CONSUME i_mem_moongate
+
+ON=6
+GO 643,2067,5,1
+SRC.CONSUME i_mem_moongate
+
+ON=7
+GO 3564,2140,34,1
+SRC.CONSUME i_mem_moongate
+
+ON=8
+SRC.DIALOG moongatemenu1

@@ -1,0 +1,303 @@
+//***OSI Town Moongates (55i)
+//*Created By Sir Zaryar 
+//***Built For Sphere v. 55i 
+
+[TYPEDEF t_OSI_moongate] 
+ON=@DCLICK 
+f_OSI_moongate 
+return 1 
+
+[FUNCTION f_OSI_moongate] 
+IF (<DISTANCE><=2) 
+IF (<SRC.MAPPLANE>=2) 
+IF (<SRC.CLIENTVER>>=3.0.0) 
+DIALOG d_OSI_moongate_Ilsh 
+ELSE 
+DIALOG d_OSI_moongate_tram 
+ENDIF 
+ELSEIF (<SRC.MAPPLANE>=1) 
+DIALOG d_OSI_moongate_fel 
+ELSEIF (<SRC.MAPPLANE>=0) 
+DIALOG d_OSI_moongate_tram 
+ELSE 
+SRC.SYSMESSAGE You are in a non recognized area! Please Page Staff! 
+ENDIF 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+
+[DIALOG d_OSI_moongate_tram] 
+157,77 
+resizepic 105 60 5054 400 270 
+
+text 110 65 0 2 
+
+button 112 295 4005 4007 1 0 0 //Cancel 
+text 145 295 0 1 
+button 112 265 4005 4007 1 0 1 //Okay 
+text 145 265 0 0 
+
+button 114 95 2117 2118 1 0 202 // Trammel 
+button 114 120 2117 2118 1 0 203 // Felucca 
+button 114 145 2117 2118 1 0 204 // Ilshenar 
+
+text 134 95 62 3 // Trammel 
+text 134 120 0 4 // Felucca 
+text 134 145 0 5 // Ilshenar 
+group 1 
+radio 325 95 210 211 0 1 
+radio 325 120 210 211 0 2 
+radio 325 145 210 211 0 3 
+radio 325 170 210 211 0 4 
+radio 325 195 210 211 0 5 
+radio 325 220 210 211 0 6 
+radio 325 245 210 211 0 7 
+radio 325 270 210 211 0 8 
+radio 325 295 210 211 0 9 
+
+text 350 95 0 11 
+text 350 120 0 12 
+text 350 145 0 13 
+text 350 170 0 14 
+text 350 195 0 15 
+text 350 220 0 16 
+text 350 245 0 17 
+text 350 270 0 18 
+text 350 295 0 19 
+
+[DIALOG d_OSI_moongate_tram TEXT] 
+OKAY 
+CANCEL 
+Pick your destination: 
+Trammel 
+Felucca 
+Ilshenar // 5 
+. 
+. 
+. 
+. 
+. // 10 
+Moonglow 
+Britain 
+Jhelom 
+Yew 
+Minoc // 15 
+Trinsic 
+Skara Brae 
+Magincia 
+Haven 
+Biccaneer's Den // 20 
+Compassion 
+Honesty 
+Honor 
+Humility 
+Justice // 25 
+Sacrifice 
+Spirituality 
+Valor 
+Chaos 
+. //30 
+
+[DIALOG d_OSI_moongate_tram BUTTON] 
+ON=0 
+
+ON=1 
+IF (<DISTANCE><=2) 
+IF (<argchk[1]>) 
+SRC.GO 4469,1283,5,0 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[2]>) 
+SRC.GO 1336,1997,5,0 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[3]>) 
+SRC.GO 1499,3772,5,0 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[4]>) 
+SRC.GO 771,752,5,0 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[5]>) 
+SRC.GO 2701,692,5,0 
+SRC.SPELLEFFECT 44 
+EMDIF 
+IF (<argchk[6]>) 
+SRC.GO 1828,2948,-20,0 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[7]>) 
+SRC.GO 643,2067,5,0 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[8]>) 
+SRC.GO 3563,2139,34,0 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[9]>) 
+SRC.GO 3764,2772,50,0 
+SRC.SPELLEFFECT 44 
+ENDIF 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+ON=202 
+IF (<DISTANCE><=2) 
+DIALOG d_OSI_moongate_tram 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+ON=203 
+IF (<DISTANCE><=2) 
+DIALOG d_OSI_moongate_fel 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+ON=204 
+IF (<DISTANCE><=2) 
+DIALOG d_OSI_moongate_tram 
+SRC.SYSMESSAGE Sphere 55i can't support Ilshenar 
+ENDIF 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+
+[DIALOG d_OSI_moongate_fel] 
+157,77 
+resizepic 105 60 5054 400 270 
+
+text 110 65 0 2 
+
+button 112 295 4005 4007 1 0 0 //Cancel 
+text 145 295 0 1 
+button 112 265 4005 4007 1 0 1 //Okay 
+text 145 265 0 0 
+
+button 114 95 2117 2118 1 0 202 // Trammel 
+button 114 120 2117 2118 1 0 203 // Felucca 
+button 114 145 2117 2118 1 0 204 // Ilshenar 
+
+text 134 95 0 3 // Trammel 
+text 134 120 62 4 // Felucca 
+text 134 145 0 5 // Ilshenar 
+group 1 
+radio 325 95 210 211 0 1 
+radio 325 120 210 211 0 2 
+radio 325 145 210 211 0 3 
+radio 325 170 210 211 0 4 
+radio 325 195 210 211 0 5 
+radio 325 220 210 211 0 6 
+radio 325 245 210 211 0 7 
+radio 325 270 210 211 0 8 
+radio 325 295 210 211 0 9 
+
+text 350 95 0 11 
+text 350 120 0 12 
+text 350 145 0 13 
+text 350 170 0 14 
+text 350 195 0 15 
+text 350 220 0 16 
+text 350 245 0 17 
+text 350 270 0 18 
+text 350 295 0 20 
+
+[DIALOG d_OSI_moongate_fel TEXT] 
+OKAY 
+CANCEL 
+Pick your destination: 
+Trammel 
+Felucca 
+Ilshenar // 5 
+. 
+. 
+. 
+. 
+. // 10 
+Moonglow 
+Britain 
+Jhelom 
+Yew 
+Minoc // 15 
+Trinsic 
+Skara Brae 
+Magincia 
+Haven 
+Biccaneer's Den // 20 
+Compassion 
+Honesty 
+Honor 
+Humility 
+Justice // 25 
+Sacrifice 
+Spirituality 
+Valor 
+Chaos 
+. //30 
+
+[DIALOG d_OSI_moongate_fel BUTTON] 
+ON=0 
+
+ON=1 
+IF (<DISTANCE><=2) 
+IF (<argchk[1]>) 
+SRC.GO 4469,1283,5,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[2]>) 
+SRC.GO 1336,1997,5,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[3]>) 
+SRC.GO 1499,3772,5,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[4]>) 
+SRC.GO 771,752,5,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[5]>) 
+SRC.GO 2701,692,5,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[6]>) 
+SRC.GO 1828,2948,-20,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[7]>) 
+SRC.GO 643,2067,5,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[8]>) 
+SRC.GO 3563,2139,34,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+IF (<argchk[9]>) 
+SRC.GO 2711,2234,0,1 
+SRC.SPELLEFFECT 44 
+ENDIF 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+
+ON=202 
+IF (<DISTANCE><=2) 
+DIALOG d_OSI_moongate_tram 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+ON=203 
+IF (<DISTANCE><=2) 
+DIALOG d_OSI_moongate_fel 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+ON=204 
+IF (<DISTANCE><=2) 
+DIALOG d_OSI_moongate_tram 
+SRC.SYSMESSAGE Sphere 55i can't support Ilshenar 
+ENDIF 
+ELSE 
+SRC.SYSMESSAGE You can't reach that. 
+ENDIF 
+[EOF]

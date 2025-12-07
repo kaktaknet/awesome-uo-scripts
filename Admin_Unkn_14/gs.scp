@@ -1,0 +1,53 @@
+/// i made this to change guild char color ... 									/////
+/// if the player use the comand .gcor 1										 ////
+/// his tag.gcor=027 ... 												/////
+/// advice ... dont allow players put what color they want because it may crash other players.   ////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+[plevel 1]
+gcor
+
+[function gcor]
+if <argn1>=1
+tag.gcor=027
+else
+if <argn1>=2
+tag.gcor=044
+else
+if <argn1>=3
+tag.gcor=0480
+else
+if <argn1>=4
+tag.gcor=0482
+else
+if <argn1>=5
+tag.gcor=0481
+else
+tag.gcor=060
+endif
+
+[function check_guild]
+if <memoryfindtype.memory_guild.link.uid> == <src.memoryfindtype.memory_guild.link.uid>
+sysmessage <args>
+endif
+
+
+/////////////////////////////////////////////////
+///	 		sphere_sppech.scp 	//////
+////////////////////////////////////////////////
+///		after [speech spk_player]	//////
+////////////////////////////////////////////////
+
+
+ON=(*
+IF STRMATCH("<memoryfindtype.memory_guild.link.Master>","<name>")
+serv.allclients check_guild @07ad GM <memoryfindtype.memory_guild.link.name> : <name> <args>) :D
+RETURN 1
+else
+if <memoryfindtype.memory_guild.link.uid>
+serv.allclients check_guild @<tag.gcor> GC <memoryfindtype.memory_guild.link.name> : <name> <args>) :D
+RETURN 1
+endif
+
+////////////////////////////////////////

@@ -1,0 +1,137 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Readme</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-size: 20.0pt">Spell Efficiency 
+system v1.1</span></u></b></p>
+<p class="MsoNormal"><span style="font-size: 10.0pt">By Ankron</span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">Table of contents</p>
+<p class="MsoNormal"><span style="font-family: Times New \(W1\)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#tou" style="color: blue; text-decoration: underline; text-underline: single">
+Terms of use</a></span></p>
+<p class="MsoNormal"><span style="font-family: Times New \(W1\)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Introduction" style="color: blue; text-decoration: underline; text-underline: single">
+Introduction</a></span></p>
+<p class="MsoNormal"><span style="font-family: Times New \(W1\)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Install" style="color: blue; text-decoration: underline; text-underline: single">
+Install</a></span></p>
+<p class="MsoNormal"><span style="font-family: Times New \(W1\)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#command" style="color: blue; text-decoration: underline; text-underline: single">
+Commanding</a></span></p>
+<p class="MsoNormal"><span style="font-family: Times New \(W1\)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Scripting_with_Mana_Efficiency" style="color: blue; text-decoration: underline; text-underline: single">
+Scripting with Mana Efficiency</a></span></p>
+<p class="MsoNormal"><span style="font-family: Times New \(W1\)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Revisions" style="color: blue; text-decoration: underline; text-underline: single">
+Revisions</a></span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><a name="tou"><b><u>Terms of use</u></b><u>:</u></a></p>
+<p class="MsoNormal">Give me credit, and please don’t redistribute with out 
+asking first.</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><a name="Introduction"><b><u>Introduction:</u></b></a></p>
+<p class="MsoNormal">What this script does:</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">This script allows you to reduce your mana usage by 
+percentages. If the chars percentage goes over 100, then that chars mana will 
+increase every time you cast. Like wise, if you decrease the mana below 0 it 
+will increase the amount of mana you need for a spell. IE Lets say I have -100% 
+efficiency and a spell requires 100 mana, I’ll wind up using 200 mana. This 
+makes it so you can level the playing fields with high powered mages. Ie a 
+newbie is now in game, and I want him to have a fair fight with a high powered 
+mage. So I set the high powered mage to -50% mana. Now the higher mage will need 
+more mana to do the spell.</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><a name="Install"><b><u>Install</u></b></a><b><u> 
+Instructions</u></b></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">1.) drop this script and the chardefs in your scripts 
+directoryunless you’ve edited the sphere chars.</p>
+<p class="MsoNormal">2.) Add tevents=e_manauserto all custom chardefs before the 
+@create. Other wise you'll have chars using free mana all </p>
+<p class="MsoNormal">&nbsp;&nbsp;&nbsp; the time. before you add a tevent, it 
+should look something like this...</p>
+<p class="MsoNormal">&nbsp;</p>
+<blockquote>
+  <p class="MsoNormal">[CHARDEF 0401]</p>
+  <p class="MsoNormal">DEFNAME=C_H_VENDOR</p>
+  <p class="MsoNormal">NAME=#NAMES_HUMANMALE the Vendor</p>
+  <p class="MsoNormal">ID=C_MAN</p>
+  <p class="MsoNormal">HIREDAYWAGE=50</p>
+  <p class="MsoNormal">DESIRES=i_gold,e_notoriety</p>
+  <p class="MsoNormal">AVERSIONS=t_TRAP,t_eerie_stuff</p>
+</blockquote>
+<blockquote>
+  <p class="MsoNormal">after you add a tevent it should look like this...</p>
+  <p class="MsoNormal">&nbsp;</p>
+  <p class="MsoNormal">[CHARDEF 0401]</p>
+  <p class="MsoNormal">DEFNAME=C_H_VENDOR</p>
+  <p class="MsoNormal">NAME=#NAMES_HUMANMALE the Vendor</p>
+  <p class="MsoNormal">ID=C_MAN</p>
+  <p class="MsoNormal">HIREDAYWAGE=50</p>
+  <p class="MsoNormal">DESIRES=i_gold,e_notoriety</p>
+  <p class="MsoNormal">AVERSIONS=t_TRAP,t_eerie_stuff</p>
+  <p class="MsoNormal">&nbsp;</p>
+  <p class="MsoNormal">TEVENTS=e_manauser</p>
+  <p class="MsoNormal">On=@create</p>
+  <p class="MsoNormal">…</p>
+  <p class="MsoNormal">&nbsp;</p>
+  <p class="MsoNormal">This makes it possible to add the event to all exsisting 
+  charactors</p>
+  <p class="MsoNormal">with out having to rebuild the shard.</p>
+</blockquote>
+<p class="MsoNormal">3.) finally resync the shard</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><a name="command"><b><u>Using the command:</u></b></a></p>
+<p class="MsoNormal">The main command is “.spelleff x”. Where the x is can be 
+any number. IE</p>
+<p class="MsoNormal">1, -2, +50. </p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">If there is a “–“ in the argument it will decrease the mana 
+efficiency by the amount following the “-“. IE if I have 50% already, and I type 
+in “.spelleff -40” I’ll have 50%-40% which equals 10% effeciancy.</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">If there is a “+“ in the argument it will increase the mana 
+efficiency by the amount following the “+“.IE if I have 50% already, and I type 
+in “.spelleff +40” I’ll have 50%+40% which equals 90% effeciancy.</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">If I type in “.mana use” with any number and no “+” or “-“, 
+my mana efficiency will be that number.</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><a name="Scripting_with_Mana_Efficiency"><b><u>Scripting 
+with Mana Efficiency</u></b></a></p>
+<p class="MsoNormal">It works almost the same as the commands above. How ever 
+this doesn’t work with “Multiple” math functions so you’ll have to use 
+“tag.spelleff” in these instances. To check it you would always use “tag.spelleff”.</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><a name="Revisions"><b><u>Revisions:</u></b></a></p>
+<p class="MsoNormal">Changed the name to spell efficiency from mana-reduction</p>
+<p class="MsoNormal">Changed “tag.manareduction” to “tag.spelleff”</p>
+<p class="MsoNormal">Added default char files for sphere to save time in adding 
+the system.</p>
+<p class="MsoNormal">Added a help file</p>
+<p class="MsoNormal">Added a stat gain script for spell efficiency</p>
+<p class="MsoNormal">Command changed from mana reduction to mana use.</p>
+
+</body>
+
+</html>

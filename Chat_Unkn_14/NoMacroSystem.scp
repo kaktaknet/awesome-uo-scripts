@@ -1,0 +1,186 @@
+//No macro system, scripted by exer
+
+[PLEVEL 2]
+nomacro
+
+[FUNCTION nomacro]
+IF (<eval 0<var.nomacro>>==1)
+serv.allclients nomacroequip
+RETURN 0
+
+ELSE
+src.message No macro system is currently off
+RETURN 1
+ENDIF
+
+[ITEMDEF i_nomacro_stone]
+DEFNAME=i_nomacro_stone
+ID=i_grave_stone
+NAME=No Macro Stone
+TYPE=t_script
+WEIGHT=99999
+
+ON=@CREATE
+COLOR=2015
+
+ON=@CLICK
+IF (<eval 0<var.nomacro>>==0)
+name No Macro System is currently: OFF
+RETURN 0
+
+ELSE
+name No Macro System is currently: ON
+RETURN 0
+
+ENDIF
+
+
+ON=@DCLICK
+IF (<src.isgm>)
+src.message Only gm may use this stone.
+RETURN 1
+
+ELSE
+IF (<src.targ.topobj.uid> != <src.uid>)
+src.message The stone must be in your backpack to be used.
+RETURN 1
+
+ELSEIF (<eval 0<var.nomacro>>==0)
+src.message No Macro System has been turned ON
+var.nomacro=1
+timer=1800
+RETURN 0
+
+ELSE
+var.nomacro=0
+src.message No Macro System has been turned OFF
+timer=0
+RETURN 0
+
+ENDIF
+ENDIF
+ENDIF
+
+ON=@DROPON_GROUND
+src.message You can't drop this on the ground because the stone will be 
+deleted.
+bounce
+RETURN 0
+
+ON=@TIMER
+var.nomacro=1
+timer=1800
+nomacro
+RETURN 0
+
+
+[FUNCTION nomacroequip]
+IF (<account.plevel>>1) || (<tag.ispk>==1)
+RETURN 1
+
+ELSEIF (<region.flags>==<region.flags>&region_flag_nobuilding)
+RETURN 1
+
+ELSE
+newitem i_nomacro
+act.equip
+sysmessage Checking for macro'ers
+RETURN 0
+
+ENDIF
+ENDIF
+
+
+[ITEMDEF i_nomacro]
+DEFNAME i_nomacro
+NAME=No Macroing Item [DO NOT REMOVE]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+timer=60
+
+ON=@EQUIP
+DIALOG d_nomacro
+src.events=+e_nomacro_event
+
+ON=@TIMER
+IF (<eval 0<cont.tag.macrotime>> <5)
+cont.tag.macrotime=<eval 0<cont.tag.macrotime> + 1>
+cont.message You have been caught macroing!
+cont.disconnect
+RETURN 1
+
+ELSE
+cont.jail
+cont.go jail
+cont.stone
+cont.message You have been caugh too many time at macroing.
+RETURN 0
+
+ENDIF
+
+
+[EVENTS e_nomacro_event]
+ON=@ITEMDCLICK
+src.sysmessage If you have made an action during the minute,or if your gump 
+had been cancelled, use .macrorestore because you will be jailed.
+DIALOG d_nomacro
+RETURN 0
+
+ON=@SKILLSTART
+src.sysmessage If you have made an action during the minute,or if your gump 
+had been cancelled, use .macrorestore because you will be jailed.
+DIALOG d_nomacro
+RETURN 0
+
+ON=@SPELLCAST
+src.sysmessage If you have made an action during the minute,or if your gump 
+had been cancelled, use .macrorestore because you will be jailed.
+DIALOG d_nomacro
+RETURN 0
+
+
+[FUNCTION macrorestore]
+IF (<src.restest 1 i_nomacro>)
+DIALOG d_nomacro
+RETURN 0
+
+ELSE
+src.sysmessage Not a valid command or format
+RETURN 1
+
+ENDIF
+
+
+[DIALOG d_nomacro]
+0,0
+nomove
+noclose
+resizepic 0 0 3600 330 200
+text 95 20 90 0                //title
+text 25 50 80 1                //line 1
+text 25 70 80 2                //line 2
+text 25 90 80 3                //line 3
+text 25 110 80 4               //line 4
+button <eval RAND(400)> <eval RAND(400)> 2411 2410 1 0 1 //Macro stopper
+text 20 135 70 5               //click here!
+text 20 150 70 6               //line of location
+
+[DIALOG d_nomacro TEXT]
+No Macroing Menu
+We are actually looking for macroers.
+If you are not macroing, then you should
+click the button. If you ARE macroing,
+then boo hoo.
+CLICK THE BUTTON!
+(anywhere on your UO screen)
+
+[DIALOG d_nomacro BUTTON]
+ONBUTTON=0
+DIALOG d_nomacro
+
+ONBUTTON=1
+src.consume 1 i_nomacro
+src.events=-e_nomacro_event
+RETURN 0

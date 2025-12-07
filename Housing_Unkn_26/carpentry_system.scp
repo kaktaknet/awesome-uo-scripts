@@ -1,0 +1,765 @@
+// Maul notes
+
+// Started Adding Anvils, Forges, Spinning wheels, Looms. Not in yet.
+
+// added house parts to create houses
+// each house part is made from logs and iron
+// each house is made up of so many house parts
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Items				Resources
+// 1 house part (req 95 carp)		300 logs, 245 iron ingots
+// Deed to a Anvil
+// Deed to a Forge
+// Deed to a Spinning Wheel
+// Deed to a Loom
+
+//////////////////////////////////////////////////////////////////////
+
+// house type				money value	house parts value
+// Small Stone and Plaster House	$50,370		20
+// Small Stone House			$52,900		20
+// Small Brick House			$50,370		20
+// Small Wood House			$50,370		20
+
+// Small Wood and Plaster House		$50,370		20
+// Small Wood House Thatched Roof	$50,370		20
+// Small Stone Shop			$69,690		28
+// Small Marble Shop			$72,450		30
+// Wheat Cottage			$86,250		32
+// Sandstone Patio House		$104,535	42
+
+// Two Story Log Cabin			$112,470	46
+// Two Story Villa			$156,975	62
+// Three Room House			$166,175	68
+// Large Black Smithy			$207,000	82
+// Large Marble Patio House		$220,800	88
+// Two Story Wood & Plaster House	$221,260	88
+
+// Two Story Stone & Plaster House	$221,260	88
+// Tower				$498,180	200
+// Keep					$764,980	304
+// Castle				$1,176,220	472
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Money value of house parts is 2500 gp
+[ITEMDEF i_house_part]
+DEFNAME=i_house_part
+NAME=House Part
+ID=i_table_leg_unfinished_2
+
+SKILLMAKE=CARPENTRY 95.0, t_carpentry
+RESOURCES=i_log 300, i_ingot_iron 245
+VALUE={9000 11000}
+
+CATEGORY=Maul
+SUBSECTION=Houses
+DESCRIPTION=House Parts
+
+ON=@Create
+COLOR=05
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[itemdef i_house_hammer]
+name=Carpenter's Crafting Hammer
+id=i_hammer
+type=t_script
+
+ON=@CREATE
+ATTR=04
+COLOR=044
+// HITPOINTS={5000 6000}
+
+ON=@DCLICK 
+DIALOG d_Carp_crafter
+RETURN 1 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////
+// BEGIN GUMP 
+////////////////////////////////////////////////////////////////////
+
+[DIALOG d_Carp_crafter]
+0,0                                    	// Position
+resizepic 50 100 2600 560 300          	// Curved Grey background 
+
+////////////////////////////////////////////////////////////////////
+page 0                                 	// Page 0
+resizepic 66 155 5100 528 25          	// Square Grey box
+button 270 360 247 248 1 0 0           	// Okay, button 0
+
+////Headings/////////////////////////////////////////////////////////
+text 180 120 0 0			// menu heading
+text 200 133 0 1			// By Maul
+
+text 105 158 0 2                       	// 1
+text 215 158 0 3                       	// 2
+text 325 158 0 4                       	// 3
+text 435 158 0 5                       	// 4
+text 545 158 0 6                       	// 5
+
+button 80 159 5209 5003 0 1 1         	// 1
+button 190 159 5209 5003 0 2 2         	// 2
+button 300 159 5209 5003 0 3 3         	// 3
+button 410 159 5209 5003 0 4 4         	// 4
+button 520 159 5209 5003 0 5 5         	// 5
+
+/////////////////////////////////////////////////////////////////////
+page 1                                 	// Cheap
+
+/////////menu text and screen location
+
+text 115 200 0 7			// 
+text 115 225 0 8			// 
+text 115 250 0 9			// 
+text 115 275 0 10			// 
+text 115 300 0 11			// 
+text 115 325 0 12			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 6 		// 
+button 90 225 2714 2714 1 0 7		// 
+button 90 250 2714 2714 1 0 8		// 
+button 90 275 2714 2714 1 0 9		// 
+button 90 300 2714 2714 1 0 10		// 
+button 90 325 2714 2714 1 0 11		// 
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+page 2                                 	// Medium
+
+/////////menu text and screen location
+
+text 115 200 0 13			// 
+text 115 225 0 14			// 
+text 115 250 0 15			// 
+text 115 275 0 16			// 
+text 115 300 0 17			// 
+text 115 325 0 18			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 12 		// 
+button 90 225 2714 2714 1 0 13		// 
+button 90 250 2714 2714 1 0 14		// 
+button 90 275 2714 2714 1 0 15		// 
+button 90 300 2714 2714 1 0 16		// 
+button 90 325 2714 2714 1 0 17		// 
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+page 3                                 	// High
+
+/////////menu text and screen location
+
+text 115 200 0 19			// 
+text 115 225 0 20			// 
+text 115 250 0 21			// 
+text 115 275 0 22			// 
+text 115 300 0 23			// 
+text 115 325 0 24			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 18 		// 
+button 90 225 2714 2714 1 0 19		//
+button 90 250 2714 2714 1 0 20		// 
+button 90 275 2714 2714 1 0 21		// 
+button 90 300 2714 2714 1 0 22		// 
+button 90 325 2714 2714 1 0 23		// 
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+page 4                                 	// Exspensive
+
+/////////menu text and screen location
+
+text 115 200 0 25			// 
+text 115 225 0 26			// 
+text 115 250 0 27			// 
+text 115 275 0 28			// 
+text 115 300 0 29			// 
+text 115 325 0 30			//
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 24 		// 
+button 90 225 2714 2714 1 0 25		// 
+button 90 250 2714 2714 1 0 26		// 
+button 90 275 2714 2714 1 0 27		// 
+button 90 300 2714 2714 1 0 28		// 
+button 90 325 2714 2714 1 0 29		//
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+page 5                                 	// Items
+
+/////////menu text and screen location
+
+text 115 200 0 31			// 
+text 115 225 0 32			// 
+text 115 250 0 33			// 
+text 115 275 0 34			// 
+text 115 300 0 35			// 
+text 115 325 0 36			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 30 		// 
+button 90 225 2714 2714 1 0 31		//
+button 90 250 2714 2714 1 0 32		// 
+button 90 275 2714 2714 1 0 33		// 
+button 90 300 2714 2714 1 0 34		// 
+button 90 325 2714 2714 1 0 35		// 
+
+/////////////////////////////////////////////////////////////////////
+
+[DIALOG d_Carp_crafter TEXT]
+95 Carp skill is required to use this hammer.
+Carp crafting by Maul
+
+Cheap
+Medium
+High
+Exspensive
+Items
+
+///page 1
+300 logs, 245 iron ingots = 1 house part (req 95 carp)
+20 house parts = Small Stone and Plaster House deed				
+20 house parts = Small Stone House deed			
+20 house parts = Small Brick House deed	
+20 house parts = Small Wood House deed
+42 house parts = Wizards Tower deed
+
+///page 2
+20 house parts = Small Wood and Plaster House deed
+20 house parts = Small Wood House Thatched Roof deed
+28 house parts = Small Stone Shop deed	
+30 house parts = Small Marble Shop deed	
+32 house parts = Wheat Cottage deed		
+42 house parts = Sandstone Patio House deed			
+
+///page 3
+46 house parts = Two Story Log Cabin deed	
+62 house parts = Two Story Villa deed		
+68 house parts = Three Room House deed	
+82 house parts = Large Black Smithy deed	
+88 house parts = Large Marble Patio House deed
+88 house parts = Two Story Wood & Plaster House deed	
+
+///page 4
+88 house parts = Two Story Stone & Plaster House deed
+200 house parts = Tower deed			
+304 house parts = Keep deed			
+472 house parts = Castle deed
+Not used //	
+Not used //
+
+///page 5
+Deed to a Anvil
+Deed to a Forge
+Deed to a Spinning Wheel
+Deed to a Loom
+Not used // 
+Not used // 
+
+///////////////////////////////////////////////////////////////////////////////////
+
+[DIALOG d_Carp_crafter BUTTON]
+
+ONBUTTON=6
+IF (<SRC.carpentry>>949) // House Part
+	if (<src.restest 245 i_ingot_iron> && <src.restest 300 i_log>)
+		SRC.CONSUME=245 i_ingot_iron
+		SRC.CONSUME=300 i_log
+		SOUND 0F7
+		SRC.NEWITEM i_house_part
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=7
+
+IF (<SRC.carpentry>>949) // Small Stone and Plaster House
+	if <src.restest 20 i_house_part>
+		SRC.CONSUME=20 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_house_stone_plaster_small
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=8
+IF (<SRC.carpentry>>949) // Small Stone House
+	if <src.restest 20 i_house_part>
+		SRC.CONSUME=20 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_House_stone_small
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=9
+IF (<SRC.carpentry>>949) // Small Brick House
+	if <src.restest 20 i_house_part>
+		SRC.CONSUME=20 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_House_stone_brick_small
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=10
+IF (<SRC.carpentry>>949) // Small Wood House
+	if <src.restest 20 i_house_part>
+		SRC.CONSUME=20 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_House_stone_wood_small
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=11
+IF (<SRC.carpentry>>949) // Wizards Tower
+	if <src.restest 42 i_house_part>
+		SRC.CONSUME=42 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_tower_wizard
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=12
+IF (<SRC.carpentry>>949) // Small Wood and Plaster House
+	if <src.restest 20 i_house_part>
+		SRC.CONSUME=20 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_House_wood_plaster_small
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=13
+IF (<SRC.carpentry>>949) // Small Wood House Thatched Roof
+	if <src.restest 20 i_house_part>
+		SRC.CONSUME=20 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_House_wood_thatched_small
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=14
+IF (<SRC.carpentry>>949) // Small Stone Shop
+	if <src.restest 28 i_house_part>
+		SRC.CONSUME=28 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_shop_stone_small
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=15
+IF (<SRC.carpentry>>949) // Small Marble Shop
+	if <src.restest 30 i_house_part>
+		SRC.CONSUME=30 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_shop_marble_small
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=16
+IF (<SRC.carpentry>>949) // Wheat Cottage
+	if <src.restest 32 i_house_part>
+		SRC.CONSUME=32 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_house_wheat_cottage
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=17
+IF (<SRC.carpentry>>949) // Sandstone Patio House
+	if <src.restest 42 i_house_part>
+		SRC.CONSUME=42 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_house_patio_sand
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=18
+IF (<SRC.carpentry>>949) // Two Story Log Cabin
+	if <src.restest 46 i_house_part>
+		SRC.CONSUME=46 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_cabin_log_2story
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=19
+IF (<SRC.carpentry>>949) // Two Story Villa
+	if <src.restest 62 i_house_part>
+		SRC.CONSUME=62 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_villa_2story
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=20
+IF (<SRC.carpentry>>949) // Three Room House
+	if <src.restest 68 i_house_part>
+		SRC.CONSUME=10 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_house_3room
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=21
+IF (<SRC.carpentry>>949) // Large Black Smithy
+	if <src.restest 82 i_house_part>
+		SRC.CONSUME=82 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_shop_blacksmithy_large
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=22
+IF (<SRC.carpentry>>949) // Large Marble Patio House
+	if <src.restest 88 i_house_part>
+		SRC.CONSUME=88 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_house_patio_marble
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=23
+IF (<SRC.carpentry>>949) // Two Story Wood & Plaster House
+	if <src.restest 88 i_house_part>
+		SRC.CONSUME=88 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_house_wood_plaster_2story
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=24
+IF (<SRC.carpentry>>949) // Two Story Stone & Plaster House
+	if <src.restest 88 i_house_part>
+		SRC.CONSUME=88 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_house_stone_plaster_2story
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=25
+IF (<SRC.carpentry>>949) // Tower
+	if <src.restest 200 i_house_part>
+		SRC.CONSUME=200 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_tower
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=26
+IF (<SRC.carpentry>>949) // Keep
+	if <src.restest 304 i_house_part>
+		SRC.CONSUME=304 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_keep
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=27
+IF (<SRC.carpentry>>949) // Castle
+	if <src.restest 472 i_house_part>
+		SRC.CONSUME=472 i_house_part
+		SOUND 0F7
+		SRC.NEWITEM i_deed_Castle
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=28
+SRC.MESSAGE This is not used
+RETURN 1
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=29
+SRC.MESSAGE This is not used
+RETURN 1
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=30
+IF (<SRC.carpentry>>649) // Anvil deed
+	if (<src.restest 150 i_ingot_iron> && <src.restest 150 i_log>)
+		SRC.CONSUME=150 i_ingot_iron
+		SRC.CONSUME=150 i_log
+		SOUND 0F7
+		SRC.NEWITEM i_deed_anvil
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=31
+IF (<SRC.carpentry>>649) // Forge deed
+	if (<src.restest 150 i_ingot_iron> && <src.restest 150 i_log>)
+		SRC.CONSUME=150 i_ingot_iron
+		SRC.CONSUME=150 i_log
+		SOUND 0F7
+		SRC.NEWITEM I_DEED_FORGE
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=32
+IF (<SRC.carpentry>>899) // Spinning Wheel
+	if <src.restest 250 i_log>)
+		SRC.CONSUME=250 i_log
+		SOUND 0F7
+		SRC.NEWITEM i_deed_spinwheel
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=33
+IF (<SRC.carpentry>>899) // Loom
+	if <src.restest 250 i_log>)
+		SRC.CONSUME=250 i_log
+		SOUND 0F7
+		SRC.NEWITEM i_loom_deed
+		SRC.ACT.BOUNCE
+		RETURN 0
+	else
+		SRC.MESSAGE You do not have enough resources to create this.
+	endif
+ELSE
+	SRC.MESSAGE You do not have enough skill to create this.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+[eof]

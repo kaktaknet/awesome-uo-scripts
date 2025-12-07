@@ -1,0 +1,1337 @@
+// Kentons Champion Spawns System, 2.09h
+// ---- UPDATED JULY 10th 2003 ----
+// I CHANGED SOME THINGS AND ADDED SOME THINGS -NEW MINNIONS & MORE-
+// ALSO A FEW BUG's ARE FIXED IN THIS VERSION!!!!
+// I SUGGEST GETTING THIS NEW UPDATED VERSION AND REPLACING YOUR OLD ON WITH IT
+// ALL YOU HAVE TO DO TO UPDATE IS PUT THIS SCRIPT IN REPLACE OF YOUR OLD ONE.
+// RYSNC YOUR SERVER/Respawn your Champion/Minnions AND BOOM YOUR DONE!!
+//
+// Ok im not exactly sure how OSI's work,
+// And i dont care.. This is my system of champion spawns..
+// All you have to do to install this is put it in a file called Champions.scp
+// Spawn the first lvl champion & a few of his minnions..
+//   CATEGORY=Civilized
+//   SUBSECTION=Champions
+//   DESCRIPTION=champone
+// i suggest making it so the champion only spawns once every 12 hours or more..
+// cause it will take a skilled player more then 8 hours to finnish this system..
+// the loot is fair and the big reward is the Champion sheild. more like a trophy
+// to show off what lvl champ they killed.. and so on..
+// Edit this how you want this is not the finnal version..
+// ill be updating it soon i hope if time is on my side :P
+// If you use this please leave this header & dont claim it as your own, anyways
+// what ever
+// http://kentonsscripts.cjb.net
+
+
+[CHARDEF c_m_minnion]
+DEFNAME=c_m_minnion
+//DEFNAME2=c_terathan_drone
+NAME=Champions Minnion
+ID=c_terathan_drone
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_mongbat
+TEVENTS=e_Monster_Name
+
+DAM=1,2
+ARMOR=150
+RESOURCES=3 i_ribs_raw
+
+//ALIGNMENT=EVIL
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=5 t_meat_raw
+SHELTER=r_forests,r_jungle,r_spooky,r_swamp,r_dungeon
+DESIRES=i_gold
+
+ON=@Create
+COLOR=0455
+STR={450 600}
+DEX={260 380}
+INT={600 1400}
+
+PARRYING={100.0 150.0}
+MAGICRESISTANCE={500.0 1400.0}
+TACTICS={500.0 900.0}
+WRESTLING={500.0 1000.0}
+
+NPC=brain_monster
+
+FAME={100 300}
+KARMA={-1000 -1999}
+
+ITEM=i_gold,{1200 3000}
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+
+CATEGORY=Monsters
+SUBSECTION=Miscellaneous
+DESCRIPTION=minnions1
+
+[CHARDEF c_m_minnion2]
+DEFNAME=c_m_minnion2
+//DEFNAME2=C_M_OPHIDIAN_KNIGHT
+NAME=Champions Minnion
+ID=C_M_OPHIDIAN_KNIGHT
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_mongbat
+TEVENTS=e_Monster_Name
+
+DAM=1,8
+ARMOR=150
+RESOURCES=3 i_ribs_raw
+
+//ALIGNMENT=EVIL
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=5 t_meat_raw
+SHELTER=r_forests,r_jungle,r_spooky,r_swamp,r_dungeon
+DESIRES=i_gold
+
+ON=@Create
+COLOR=0455
+STR={600 800}
+DEX={260 380}
+INT={600 1400}
+
+PARRYING={100.0 150.0}
+MAGICRESISTANCE={500.0 1400.0}
+TACTICS={500.0 900.0}
+WRESTLING={500.0 1000.0}
+
+NPC=brain_monster
+
+FAME={100 300}
+KARMA={-1000 -1999}
+
+ITEM=i_gold,{3000 5000}
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+
+CATEGORY=Monsters
+SUBSECTION=Miscellaneous
+DESCRIPTION=minnions2
+
+[CHARDEF c_m_minnion3]
+DEFNAME=c_m_minnion3
+//DEFNAME2=c_terathan_drone
+NAME=Champions Minnion
+ID=c_m_raith
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_mongbat
+TEVENTS=e_Monster_Name
+
+DAM=3,9
+ARMOR=200
+RESOURCES=3 i_ribs_raw
+
+//ALIGNMENT=EVIL
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=5 t_meat_raw
+SHELTER=r_forests,r_jungle,r_spooky,r_swamp,r_dungeon
+DESIRES=i_gold
+
+ON=@Create
+COLOR=01
+STR={700 1000}
+DEX={260 380}
+INT={600 1400}
+
+PARRYING={100.0 150.0}
+MAGICRESISTANCE={500.0 1400.0}
+TACTICS={500.0 900.0}
+WRESTLING={500.0 1000.0}
+
+NPC=brain_monster
+
+FAME={100 300}
+KARMA={-1000 -1999}
+
+ITEM=i_gold,{1200 3000}
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+
+CATEGORY=Monsters
+SUBSECTION=Miscellaneous
+DESCRIPTION=minnions3
+
+[CHARDEF c_h_campspawn1] 
+DEFNAME=c_h_champspawn1
+NAME=#NAMES_HUMANMALE The Champion 1st lvl
+ID=C_MAN 
+DAM=100,150
+ARMOR=500
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=0 
+STR={1500 2500} 
+DEX={8500 9500} 
+INT={5000 6000} 
+
+MAGICRESISTANCE={900.0 900.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ1_HEATER_SHIELD
+ITEM=i_gold,{2500 4500} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Champions 
+DESCRIPTION=champone
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=5000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID> 
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn2] 
+DEFNAME=c_h_champspawn2
+NAME=#NAMES_HUMANMALE The Champion 2nd lvl
+ID=C_MAN 
+DAM=250,350 
+ARMOR=600 
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=0455
+STR={2000 3000} 
+DEX={8500 9500} 
+INT={5000 6000} 
+
+MAGICRESISTANCE={900.0 900.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ2_HEATER_SHIELD
+ITEM=i_gold,{5000 6000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn3
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=5000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID> 
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn3] 
+DEFNAME=c_h_champspawn3
+NAME=#NAMES_HUMANMALE The Champion 3rd lvl
+ID=C_MAN 
+DAM=250,350
+ARMOR=700
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=56
+STR={2000 3000} 
+DEX={8500 9500} 
+INT={5000 6000} 
+
+MAGICRESISTANCE={900.0 900.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ3_HEATER_SHIELD
+ITEM=i_gold,{8000 15000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn4
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=6000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID> 
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn4] 
+DEFNAME=c_h_champspawn4
+NAME=#NAMES_HUMANMALE The Champion 4th lvl
+ID=C_MAN 
+DAM=150,300
+ARMOR=800
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=75 
+STR={4000 5000} 
+DEX={8500 9500} 
+INT={5000 6000} 
+
+MAGICRESISTANCE={900.0 900.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ4_HEATER_SHIELD
+ITEM=i_gold,{6000 8000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn5
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=7000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID> 
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn5] 
+DEFNAME=c_h_champspawn5
+NAME=#NAMES_HUMANMALE The Champion 5th lvl
+ID=C_MAN 
+DAM=150,200 
+ARMOR=900
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=0480
+STR={6500 8500} 
+DEX={8509 9509} 
+INT={5009 6009} 
+
+MAGICRESISTANCE={900.0 900.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ5_HEATER_SHIELD
+ITEM=i_gold,{12000 14000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn6
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=9000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn6] 
+DEFNAME=c_h_champspawn6
+NAME=#NAMES_HUMANMALE The Champion 6th lvl
+ID=C_MAN 
+DAM=150,200 
+ARMOR=900
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=0480
+STR={7500 9500} 
+DEX={8509 9509} 
+INT={5009 6009} 
+
+MAGICRESISTANCE={900.0 900.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ6_HEATER_SHIELD
+ITEM=i_gold,{12000 14000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn7
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=9000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn7] 
+DEFNAME=c_h_champspawn7
+NAME=#NAMES_HUMANMALE The Champion 7th lvl
+ID=C_MAN 
+DAM=150,200 
+ARMOR=900
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=23
+STR={9500 9900} 
+DEX={8509 9509} 
+INT={5009 6009} 
+
+MAGICRESISTANCE={900.0 900.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ7_HEATER_SHIELD
+ITEM=i_gold,{12000 14000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn8
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=9000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn8] 
+DEFNAME=c_h_champspawn8
+NAME=#NAMES_HUMANMALE The Champion 8th lvl
+ID=C_MAN 
+DAM=150,200 
+ARMOR=1000
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=0482
+STR={9000 10000} 
+DEX={8509 9509} 
+INT={5009 6009} 
+
+MAGICRESISTANCE={999.0 999.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ8_HEATER_SHIELD
+ITEM=i_gold,{12000 14000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn9
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=9000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn9] 
+DEFNAME=c_h_champspawn9
+NAME=#NAMES_HUMANMALE The Champion 9th lvl
+ID=C_MAN 
+DAM=150,200 
+ARMOR=1500
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=95
+STR={12000 30000} 
+DEX={8509 9509} 
+INT={5009 6009} 
+
+MAGICRESISTANCE={900.0 900.0} 
+TACTICS={900.0 900.0} 
+WRESTLING={900.0 900.0} 
+SWORDSMANSHIP={900.0 900.0} 
+PARRYING={900.0 900.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ9_HEATER_SHIELD
+ITEM=i_gold,{12000 14000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.NEWNPC=c_h_campspawn10
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=9000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=2 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+[CHARDEF c_h_campspawn10] 
+DEFNAME=c_h_champspawn10
+NAME=#NAMES_HUMANMALE 10th The Champion finnal
+ID=C_MAN 
+DAM=500,700 
+ARMOR=5000
+DESIRES=i_gold,e_notoriety 
+SHELTER=r_desert 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+FOODTYPE=5 t_food 
+
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_RUN|MT_FLY
+//ALIGNMENT=EVIL 
+
+TSPEECH=spk_human_prime 
+TSPEECH=spk_human_default 
+
+ON=@Create 
+COLOR=1
+STR={20000 30000} 
+DEX={8500 9500} 
+INT={5000 6000} 
+
+MAGICRESISTANCE={5000.0 5000.0} 
+TACTICS={9000.0 9000.0} 
+WRESTLING={9000.0 9000.0} 
+SWORDSMANSHIP={9000.0 9000.0} 
+PARRYING={9000.0 9000.0} 
+
+NPC=BRAIN_MONSTER 
+
+KARMA={-5000 -7000} 
+FAME={1500 2000} 
+
+ITEMNEWBIE=random_male_hair 
+COLOR=colors_hair 
+ITEMNEWBIE=random_facial_hair 
+COLOR=match_hair 
+
+ON=@NPCRestock 
+ITEM=i_champ10_HEATER_SHIELD
+ITEM=i_gold,{45000 65000} 
+ITEM=random_pants 
+COLOR=colors_all 
+ITEM=random_boots 
+ITEM=i_scimitar 
+ITEM=random_jewel 
+ITEM=i_shirt_fancy 
+COLOR=colors_all 
+ITEM=random_chest_armor 
+ITEM=random_leg_armor 
+ITEM=random_gloves 
+ITEM=random_head_armor 
+ITEM=random_shield 
+ITEM=random_gorget 
+ITEM=i_facet_moonstone_fel
+ITEM=i_facet_moonstone_tram
+ITEM=I_WANTED_POSTER
+
+CATEGORY=Civilized 
+SUBSECTION=Bandits (Evil) 
+DESCRIPTION=madman
+
+on=@Death
+SRC.EMOTE You Have Defeated ME! Now try my minnions! Muahahahahahaha...
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3 
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=3
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=4
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=4
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=5
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion2
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=5
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=6
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=6
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion3
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=5
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion3
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=5
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+SRC.NEWNPC=c_m_minnion3
+SRC.ACT.P=<P> 
+SRC.ACT.MOVE_NPC 
+SRC.ACT.HOME=<P> 
+SRC.ACT.HOMEDIST=1
+SRC.ACT.NEWITEM=i_spawn_killer 
+SRC.ACT.ACT.TIMER=1000
+SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+
+
+[ITEMDEF i_champ1_HEATER_SHIELD]
+DEFNAME=i_champ1_HEATER_SHIELD
+NAME=1st lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=18
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=25.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+
+[ITEMDEF i_champ2_HEATER_SHIELD]
+DEFNAME=i_champ2_HEATER_SHIELD
+NAME=2nd lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=28
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=35.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+
+[ITEMDEF i_champ3_HEATER_SHIELD]
+DEFNAME=i_champ3_HEATER_SHIELD
+NAME=3rd lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=38
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=45.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+
+[ITEMDEF i_champ4_HEATER_SHIELD]
+DEFNAME=i_champ4_HEATER_SHIELD
+NAME=4th lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=48
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=55.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+
+[ITEMDEF i_champ5_HEATER_SHIELD]
+DEFNAME=i_champ5_HEATER_SHIELD
+NAME=5th lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=58
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=65.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+[ITEMDEF i_champ6_HEATER_SHIELD]
+DEFNAME=i_champ6_HEATER_SHIELD
+NAME=6th lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=78
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=70.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+[ITEMDEF i_champ7_HEATER_SHIELD]
+DEFNAME=i_champ6_HEATER_SHIELD
+NAME=7th lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=78
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=80.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+[ITEMDEF i_champ8_HEATER_SHIELD]
+DEFNAME=i_champ6_HEATER_SHIELD
+NAME=8th lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=78
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=85.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+[ITEMDEF i_champ9_HEATER_SHIELD]
+DEFNAME=i_champ6_HEATER_SHIELD
+NAME=9th lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=78
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=90.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+[ITEMDEF i_champ10_HEATER_SHIELD]
+DEFNAME=i_champ6_HEATER_SHIELD
+NAME=10th lvl Champion Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=78
+REQSTR=30
+WEIGHT=8
+
+ON=@Create
+	MOREY=160.0
+	ATTR=attr_magic
+	HITPOINTS=200
+	COLOR=0481
+
+[ITEMDEF i_spawn_killer] 
+ID=i_gold 
+TYPE=t_eq_script 
+NAME=[DO NOT REMOVE] 
+
+ON=@CREATE 
+ATTR=attr_decay|attr_invis|attr_newbie 
+    
+ON=@TIMER 
+CONT.REMOVE

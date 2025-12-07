@@ -1,0 +1,686 @@
+///////////////////////////////////////////////////////////////////////////////////////////
+//Name : Masonry Skill
+//Author : Marox
+//Contact : marox_gm@hotmail.com
+//Description : Masonry is a NEW skill, which means it doesnt use any existing skills. It 
+//has skillgain from 0.1 to 100, but there is one difference. Having 1 in masonry means 
+//having
+//0.1, having 10 means having 1.0, having 100 means having 10.0 and so on. Basically you 
+//have to divide by 10 when your looking at the skill amount. You can check your masonry //skill by
+//clicking ONCE the masonry tool, or you can type .MASONRYCHECK which also players can.
+//
+//NOTE FOR GMS : This is NOT a "SphereSkill" so you can't originally type .masonry 310 to 
+//set your skill to 31.0, however I have included that function. You can type .masonry X (x 
+//being whatever amount you want to set it to.. for example 995 for 99.5). To set others 
+//masonry skill you must type .set masonry x
+//In order to check ANOTHER players masonry skill you have to type this : .MasonryTarg
+//
+//
+//INSTALLATION : You might want to make i_masonry_chisel craftable by tinkerers, or sold by 
+//NPC's, since thats the item required to use masonry (like tinker tools for tinkering.)
+//Also, you must put the i_stone_brick mineable or somehow obtainable because thats the //resource needed to craft things with Masonry.
+//
+//
+//Additional Notes : Some craftable buildings by Masonry might not work for you, if so, you //may replace them withother Multi's or just remove them from the craftables sections.
+//
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+[FUNCTION MSNGHC] 
+IF (<EVAL <TAG.MASONRY1>><=150) && ((RAND(2)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>150) && (<EVAL <TAG.MASONRY1>><=225) && (rand(10)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>225) && (<EVAL <TAG.MASONRY1>><=325) && (rand(20)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>325) && (<EVAL <TAG.MASONRY1>><=425) && (rand(30)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>425) && (<EVAL <TAG.MASONRY1>><=525) && (rand(40)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>525) && (<EVAL <TAG.MASONRY1>><=625) && (rand(50)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>625) && (<EVAL <TAG.MASONRY1>><=725) && (rand(60)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>725) && (<EVAL <TAG.MASONRY1>><=825) && (rand(70)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>725) && (<EVAL <TAG.MASONRY1>><=925) && (rand(80)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>>925) && (<EVAL <TAG.MASONRY1>><=1000) && (rand(90)==1) 
+MSNAKS
+RETURN 1
+ELSEIF (<EVAL <TAG.MASONRY1>>==1000) 
+RETURN 1
+ENDIF
+
+
+
+[ITEMDEF i_masonry_wait]
+ID=i_memory
+
+ON=@EQUIP
+LINK=<SRC.UID>
+TIMER=3
+
+ON=@TIMER
+LINK.CONSUME 20 i_masonry_wait
+REMOVE
+RETURN 1
+
+[ITEMDEF i_masonrycheck_memory]
+ID=i_memory
+
+ON=@EQUIP
+TARGET Whoose skill do you wish to view?
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE <SRC.TARG.NAME>'s skill in Masonry is : <EVAL <SRC.TARG.TAG.MASONRY1>>
+REMOVE
+RETURN 1
+
+
+[FUNCTION MASONRYMAKE]
+IF (<RESTEST 1 i_masonry_wait>)
+MESSAGE Masonry crafting failed!
+RETURN 1
+ELSE
+ANIM=9
+MSNGHC
+NEWITEM=<ARGS>
+ACT.BOUNCE
+NEWITEM=i_masonry_wait
+ACT.EQUIP
+
+
+[PLEVEL 4]
+MASONRY
+MasonryTarg
+
+[FUNCTION MASONRY]
+TAG.MASONRY1=<EVAL <ARGS>>
+
+[FUNCTION MASONRYTARG]
+NEWITEM=i_masonrycheck_memory
+ACT.EQUIP
+RETURN 1
+
+
+[FUNCTION MSNAKS]
+TAG.MASONRY1=<EVAL <TAG.MASONRY1>> + 1
+MESSAGE Your skill in Masonry has increased by 1. It is now <EVAL <TAG.MASONRY1>>.
+
+
+[PLEVEL 1]
+MASONRYCHECK
+
+[FUNCTION MASONRYCHECK]
+MESSAGE Your Masonry skill is : <EVAL <TAG.MASONRY1>>.
+RETURN 1
+
+
+[ITEMDEF i_masonry_statue1]
+DEFNAME=i_masonry_statue1
+ID=i_Statue_stone_sm_3
+RESOURCES=9 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_statue2]
+DEFNAME=i_masonry_statue2
+ID=0139b
+RESOURCES=9 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_statue3]
+DEFNAME=i_masonry_statue3
+ID=0139c
+RESOURCES=9 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_statue4]
+DEFNAME=i_masonry_statue4
+ID=0139d
+RESOURCES=9 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+
+[ITEMDEF i_masonry_statue5]
+DEFNAME=i_masonry_statue5
+ID=i_bust_stone_small
+RESOURCES=9 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+
+[ITEMDEF i_masonry_statue6]
+DEFNAME=i_masonry_statue6
+ID=01f18
+RESOURCES=9 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_serpent]
+DEFNAME=i_masonry_serpent
+ID=i_serpent_crest
+RESOURCES=15 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+
+
+[ITEMDEF i_masonry_chair_stone]
+DEFNAME=i_masonry_chair_stone
+ID=i_chair_stone
+RESOURCES=16 i_stone_brick
+SKILLMAKE=TINKERING 0
+DUPELIST=01219,0121a,0121b
+
+[ITEMDEF i_masonry_bench_marble]
+DEFNAME=i_masonry_bench_marble
+ID=i_bench_marble
+RESOURCES=10 i_stone_brick
+SKILLMAKE=TINKERING 0
+DUPELIST=045a
+
+[ITEMDEF i_masonry_bench_stone]
+DEFNAME=i_masonry_bench_stone
+ID=i_bench_5
+RESOURCES=10 i_stone_brick
+SKILLMAKE=TINKERING 0
+DUPELIST=03e00
+
+[ITEMDEF i_masonry_table_stone]
+DEFNAME=i_masonry_table_stone
+ID=i_table_stone_end
+RESOURCES=15 i_stone_brick
+SKILLMAKE=TINKERING 0
+DUPELIST=01202,01204,01205
+
+
+[ITEMDEF i_masonry_table_marble]
+DEFNAME=i_masonry_table_marble
+ID=i_table_marble_end
+RESOURCES=15 i_stone_brick
+SKILLMAKE=TINKERING 0
+DUPELIST=01dc2,01dc4,01dc5
+
+[ITEMDEF i_masonry_flower_pot]
+DEFNAME=i_masonry_flower_pot
+ID=i_pot_small_flower
+RESOURCES=3 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_flower_pot_large]
+DEFNAME=i_masonry_flower_pot_large
+ID=i_pot_flower_large
+RESOURCES=4 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_vase_large]
+DEFNAME=i_masonry_vase_large
+ID=0b45
+RESOURCES=5 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_vase_small]
+DEFNAME=i_masonry_vase_small
+ID=0b46
+RESOURCES=3 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_vase2_large]
+DEFNAME=i_masonry_vase2_large
+ID=0b47
+RESOURCES=4 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_vase2_small]
+DEFNAME=i_masonry_vase2_small
+ID=0b48
+RESOURCES=3 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_basin]
+DEFNAME=i_masonry_basin
+ID=i_basin
+RESOURCES=3 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+[ITEMDEF i_masonry_fountain_br_deed]
+DEFNAME=i_masonry_fountain_br_deed
+NAME=brown fountain deed
+ID=i_deed
+RESOURCES=1 i_masonry_part
+SKILLMAKE=TINKERING 0
+
+ON=@Create
+MORE=i_multi_fount_brown
+
+[ITEMDEF i_masonry_fountain_wh_deed]
+DEFNAME=i_masonry_fountain_wh_deed
+NAME=white fountain deed
+ID=i_deed
+RESOURCES=1 i_masonry_part
+SKILLMAKE=TINKERING 0
+
+ON=@Create
+MORE=i_multi_fount_white
+
+[ITEMDEF i_masonry_pentagram_deed]
+DEFNAME=i_masonry_pentagram_deed
+NAME=pentagram deed
+ID=i_deed
+RESOURCES=1 i_masonry_part
+SKILLMAKE=TINKERING 0
+
+ON=@Create
+MORE=i_multi_pentagram
+
+[ITEMDEF i_masonry_bath_deed]
+DEFNAME=i_masonry_bath_deed
+NAME=bath deed
+ID=i_deed
+RESOURCES=2 i_masonry_part
+SKILLMAKE=TINKERING 0
+
+ON=@Create
+MORE=i_multi_bath
+
+[ITEMDEF i_masonry_floral_keep_deed]
+DEFNAME=i_masonry_floral_keep_deed
+NAME=floral keep deed
+ID=i_deed
+RESOURCES=12 i_masonry_part
+SKILLMAKE=TINKERING 0
+
+ON=@Create
+MORE=i_multi_floral
+
+[ITEMDEF i_masonry_marble_keep_deed]
+DEFNAME=i_masonry_marble_keep_deed
+NAME=marble keep deed
+ID=i_deed
+RESOURCES=20 i_masonry_part
+SKILLMAKE=TINKERING 0
+
+ON=@Create
+MORE=i_multi_marble_keep
+
+
+[ITEMDEF i_masonry_marble_small_deed]
+DEFNAME=i_masonry_marble_small_deed
+NAME=small marble tower deed
+ID=i_deed
+RESOURCES=5 i_masonry_part
+SKILLMAKE=TINKERING 0
+
+ON=@Create
+MORE=i_multi_small_marble
+
+
+[ITEMDEF i_masonry_tower_small_deed]
+DEFNAME=i_masonry_tower_small_deed
+NAME=small stone tower deed
+ID=i_deed
+RESOURCES=6 i_masonry_part
+SKILLMAKE=TINKERING 0
+
+ON=@Create
+MORE=i_multi_small_tower
+
+
+[ITEMDEF i_masonry_part]
+DEFNAME=i_masonry_part
+NAME=masonry house part
+ID=i_deed
+TYPE=t_script
+RESOURCES=300 i_stone_brick
+SKILLMAKE=TINKERING 0
+
+
+
+[ITEMDEF i_stone_brick]
+DEFNAME=i_stone_brick
+NAME=Stone Brick
+ID=i_ingot_iron
+TYPE=t_script
+SKILLMAKE=MINING 70.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Masoner
+DESCRIPTION=Stone Brick
+
+ON=@CREATE
+COLOR=007a1
+
+
+[SKILLMENU sm_masonry]
+Masonry
+
+ON=i_masonry_flower_pot Pots and Vases
+SKILLMENU=sm_vases
+
+ON=i_masonry_chair_stone Seating
+SKILLMENU=sm_stone_seating
+
+ON=i_masonry_table_Stone Tables
+SKILLMENU=sm_stone_tables
+
+ON=i_deed Deeds
+SKILLMENU=sm_masonry_deeds
+
+ON=i_deed Statues and Other
+SKILLMENU=sm_masonry_statues
+
+
+[SKILLMENU sm_masonry_statues]
+Statues and Other
+
+ON=i_masonry_statue1 <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 450) && (<RESTEST 9 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_statue1
+SRC.CONSUME 9 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_statue2 <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 450) && (<RESTEST 9 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_statue2
+SRC.CONSUME 9 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_statue3 <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 450) && (<RESTEST 9 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_statue3
+SRC.CONSUME 9 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_statue4 <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 450) && (<RESTEST 9 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_statue4
+SRC.CONSUME 9 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_statue5 <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 450) && (<RESTEST 9 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_statue5
+SRC.CONSUME 9 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_statue6 <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 450) && (<RESTEST 9 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_statue6
+SRC.CONSUME 9 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_serpent <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 570) && (<RESTEST 15 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_serpent
+SRC.CONSUME 15 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+[SKILLMENU sm_masonry_deeds]
+Masonry Deeds
+
+ON=i_masonry_part <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 900) && (<RESTEST 300 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_part
+SRC.CONSUME 300 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+ON=i_masonry_tower_small_deed <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 950) && (<RESTEST 6 i_masonry_part>)
+SRC.MASONRYMAKE=i_masonry_tower_small_deed
+SRC.CONSUME 6 i_masonry_part
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+ON=i_masonry_marble_small_deed <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 950) && (<RESTEST 5 i_masonry_part>)
+SRC.MASONRYMAKE=i_masonry_marble_small_deed
+SRC.CONSUME 5 i_masonry_part
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+ON=i_masonry_marble_keep_deed <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 1000) && (<RESTEST 20 i_masonry_part>)
+SRC.MASONRYMAKE=i_masonry_marble_keep_deed
+SRC.CONSUME 20 i_masonry_part
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+ON=i_masonry_floral_keep_deed <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 1000) && (<RESTEST 12 i_masonry_part>)
+SRC.MASONRYMAKE=i_masonry_floral_keep_deed
+SRC.CONSUME 12 i_masonry_part
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_bath_deed <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 940) && (<RESTEST 2 i_masonry_part>)
+SRC.MASONRYMAKE=i_masonry_bath_deed
+SRC.CONSUME 2 i_masonry_part
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+ON=i_masonry_pentagram_deed <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 920) && (<RESTEST 1 i_masonry_part>)
+SRC.MASONRYMAKE=i_masonry_pentagram_deed
+SRC.CONSUME 1 i_masonry_part
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+
+ON=i_masonry_fountain_wh_deed <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 930) && (<RESTEST 1 i_masonry_part>)
+SRC.MASONRYMAKE=i_masonry_fountain_wh_deed
+SRC.CONSUME 1 i_masonry_part
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+ON=i_masonry_fountain_br_deed <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 930) && (<RESTEST 1 i_masonry_part>)
+SRC.MASONRYMAKE=i_masonry_fountain_br_deed
+SRC.CONSUME 1 i_masonry_part
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+
+
+[SKILLMENU sm_stone_tables]
+Tables
+
+ON=i_masonry_table_stone <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 700) && (<RESTEST 17 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_table_stone
+SRC.CONSUME 17 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_table_marble <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 800) && (<RESTEST 17 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_table_marble
+SRC.CONSUME 17 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+[SKILLMENU sm_stone_seating]
+Seating
+
+ON=i_masonry_chair_stone <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 600) && (<RESTEST 16 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_chair_stone
+SRC.CONSUME 16 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_bench_marble <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 300) && (<RESTEST 10 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_bench_marble
+SRC.CONSUME 10 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+ON=i_masonry_bench_stone <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 200) && (<RESTEST 10 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_bench_stone
+SRC.CONSUME 10 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+[SKILLMENU sm_vases]
+Vases and Pots
+
+ON=i_masonry_flower_pot <name> (<resmake>) 
+IF (<RESTEST 3 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_flower_pot
+SRC.CONSUME 3 i_Stone_brick
+ELSE
+SYSMESSAGE You lack the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_flower_pot_large <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 100) && (<RESTEST 4 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_flower_pot_large
+SRC.CONSUME 4 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_vase_large <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 150) && (<RESTEST 5 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_vase_large
+SRC.CONSUME 5 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_vase_small <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 110) && (<RESTEST 3 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_vase_small
+SRC.CONSUME 3 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_vase2_large <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 150) && (<RESTEST 4 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_vase2_large
+SRC.CONSUME 4 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_vase2_small <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 50) && (<RESTEST 3 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_vase2_small
+SRC.CONSUME 3 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+ON=i_masonry_basin <name> (<resmake>) 
+IF (<EVAL <TAG.MASONRY1>> >= 70) && (<RESTEST 3 i_stone_brick>)
+SRC.MASONRYMAKE=i_masonry_basin
+SRC.CONSUME 3 i_Stone_brick
+ELSE
+SYSMESSAGE You either lack enough skill or the resources to make this!
+RETURN 1
+ENDIF
+
+
+
+[ITEMDEF i_masonry_chisel]
+DEFNAME=i_masonry_chisel
+ID=i_mallet_and_chisel
+NAME=Mallet and Chisel
+TYPE=t_masonry
+
+
+
+[TYPEDEF t_masonry]
+
+ON=@CLICK
+MESSAGE [Your Masonry Skill : <EVAL <SRC.TAG.MASONRY1>>]
+RETURN 0
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+SRC.SKILLMENU sm_masonry
+RETURN 1
+
+ELSE
+SRC.MESSAGE You must be carrying the item to use!
+RETURN 1

@@ -1,0 +1,43 @@
+[itemdef i_repair_stone]
+
+id=i_grave_stone
+
+
+
+
+
+on=@dclick
+
+if <src.restest 1000 i_gold>
+
+src.sysmessage What do you wish to repair?
+
+target
+
+else
+
+src.sysmessage You lack 1000 gold!
+
+endif
+
+
+
+on=@targon_item
+
+if (<src.targ.type>==t_weapon_sword )||(<src.targ.type>== t_weapon_bow) ||(<src.targ.type>== t_weapon_fence)||(<src.targ.type>==t_weapon_mace)||(<src.targ.type>==t_armor)||(<src.targ.type>==t_shield)||(<src.targ.type>==t_leather_armor)
+
+src.targ.more1h=<src.targ.more1l>
+
+src.consume=1000 i_gold
+
+else
+
+src.sysmessage You can only repair armor and weapons!
+
+endif
+
+return 1
+
+
+
+[eof]

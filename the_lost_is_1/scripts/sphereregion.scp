@@ -1,0 +1,432 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Friday, April 28, 2000
+//
+VERSION=0.55
+
+[REGIONRESOURCE mr_nothing]
+// there is nothing here
+REAP=i_unused
+REGEN=60*60*10	// maybe something here later.		//=60*60*10
+
+[REGIONRESOURCE mr_fish1]
+// fishing default
+// t_water
+SKILL_LO=1.0
+SKILL_HI=1.0
+AMOUNT_LO=9
+AMOUNT_HI=30
+REAP=i_fish_big_1
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_fish2]
+// fishing default
+// t_water
+SKILL_LO=30.0
+SKILL_HI=30.0
+REAP=i_fish_big_2
+AMOUNT_LO=9
+AMOUNT_HI=30
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_fish3]
+// fishing default
+// t_water
+SKILL_LO=30.0
+SKILL_HI=30.0
+AMOUNT_LO=9
+AMOUNT_HI=30
+REAP=i_fish_big_3
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_fish4]
+// fishing default
+// t_water
+SKILL_LO=40.0
+SKILL_HI=50.0
+AMOUNT_LO=9
+AMOUNT_HI=30
+REAP=i_fish_big_4
+REGEN=20*60*10
+
+//Neue Fische:
+[REGIONRESOURCE mr_temp_str] 
+// fishing default 
+// t_water 
+SKILL_LO=70.0 
+SKILL_HI=100.0 
+AMOUNT_LO=1 
+AMOUNT_HI=1 
+REAP=i_temp_str 
+REGEN=60*60*10 
+
+[REGIONRESOURCE mr_temp_dex] 
+// fishing default 
+// t_water 
+SKILL_LO=70.0 
+SKILL_HI=100.0 
+AMOUNT_LO=1 
+AMOUNT_HI=1 
+REAP=i_temp_dex 
+REGEN=60*60*10 
+
+[REGIONRESOURCE mr_temp_int] 
+// fishing default 
+// t_water 
+SKILL_LO=70.0 
+SKILL_HI=100.0 
+AMOUNT_LO=1 
+AMOUNT_HI=1 
+REAP=i_temp_int 
+REGEN=60*60*10 
+
+[REGIONRESOURCE mr_healing] 
+// fishing default 
+// t_water 
+SKILL_LO=75.0 
+SKILL_HI=100.0 
+AMOUNT_LO=1 
+AMOUNT_HI=1 
+REAP=i_fish_healing 
+REGEN=60*60*10 
+
+[REGIONRESOURCE mr_entgiftung] 
+// fishing default 
+// t_water 
+SKILL_LO=80.0 
+SKILL_HI=100.0 
+AMOUNT_LO=1 
+AMOUNT_HI=1 
+REAP=i_fish_entgiftung 
+REGEN=60*60*10 
+
+[REGIONRESOURCE mr_sunken_chest_1] 
+// fishing default 
+// t_water 
+SKILL_LO=85.0 
+SKILL_HI=100.0 
+AMOUNT_LO=1 
+AMOUNT_HI=1 
+REAP=i_sunken_chest_1 
+REGEN=60*60*10 
+
+[REGIONRESOURCE mr_sunken_chest_2] 
+// fishing default 
+// t_water 
+SKILL_LO=95.0 
+SKILL_HI=100.0 
+AMOUNT_LO=1 
+AMOUNT_HI=1 
+REAP=i_sunken_chest_2 
+REGEN=60*60*10 
+
+[REGIONRESOURCE mr_sunken_chest_3] 
+// fishing default 
+// t_water 
+SKILL_LO=100.0 
+SKILL_HI=100.0 
+AMOUNT_LO=1 
+AMOUNT_HI=1 
+REAP=i_sunken_chest_3 
+REGEN=60*60*10 
+//Ende der neuen Fische/Schätze
+
+[REGIONRESOURCE mr_tree]
+// lumberjacking default
+// t_tree
+SKILL_LO=1.0
+SKILL_HI=80.0
+AMOUNT_LO=9
+AMOUNT_HI=30
+REAP=i_log
+REGEN=20*60*10
+
+//Darkwood , avel
+[REGIONRESOURCE mr_tree_dark]
+// lumberjacking 
+// t_tree
+SKILL_LO=70.0
+SKILL_HI=100.0
+AMOUNT_LO=4
+AMOUNT_HI=10
+REAP=i_log_dark
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_grass]
+// grazing animals
+// t_grass
+AMOUNT_LO=9
+AMOUNT_HI=30
+REGEN=20*60*10
+REAP=i_hay_sheaf
+
+[REGIONTYPE r_default]
+// Unclaimed regions.
+ON=@ENTER
+	SRC.MIDILIST=midi_britain1,midi_ForestA,midi_JungleA,midi_MountainA,midi_Plains,midi_Victory
+
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_britain1,midi_ForestA,midi_JungleA,midi_MountainA,midi_Plains,midi_Victory
+
+[REGIONTYPE r_default_rock t_rock]
+// Random rocks
+RESOURCES=1.0 mr_nothing               // default=140.0 
+RESOURCES=120.0 mr_iron			// default=500.0 
+RESOURCES=100.0 mr_rusty			
+RESOURCES=80.0 mr_old_copper	 	 
+RESOURCES=80.0 mr_dull_copper		
+RESOURCES=50.0 mr_bronze		
+RESOURCES=50.0 mr_copper  		
+RESOURCES=35.0 mr_gold
+RESOURCES=30.0 mr_rose
+RESOURCES=25.0 mr_agapite
+RESOURCES=25.0 mr_shadow
+RESOURCES=25.0 mr_defense			//added
+RESOURCES=25.0 mr_bloodrock
+RESOURCES=25.5 mr_granit			//added
+RESOURCES=25.0 mr_silver
+RESOURCES=25.0 mr_charltin			//added
+RESOURCES=25.5 mr_ligten			//added
+RESOURCES=25.5 mr_verite
+RESOURCES=20.5 mr_guarding			//added
+RESOURCES=20.5 mr_hardening			//added
+RESOURCES=20.5 mr_Valorite
+RESOURCES=15.5 mr_forti				//added
+RESOURCES=15.0 mr_mytheril
+RESOURCES=7.0 mr_blackrock			
+RESOURCES=6.0 mr_diamond			//added 
+RESOURCES=5.0 mr_starnin			//added
+RESOURCES=5.0 mr_crystal			//added "eis erz"
+RESOURCES=5.0 mr_invulnerability		//added
+RESOURCES=5.0 mr_firin				//added "feuer erz"
+RESOURCES=5.0 mr_unholy				//vamps,daywalker
+RESOURCES=5.0 mr_teran				//Drows
+RESOURCES=5.0 mr_siir				//Lichtelfen
+RESOURCES=5.0 mr_naturee			//Waldelfen
+
+[REGIONTYPE r_default_water t_water]
+// Not really ocean area.
+RESOURCES=0.1 mr_nothing
+RESOURCES=200.0 mr_fish1
+RESOURCES=150.0 mr_fish2
+RESOURCES=80.0 mr_fish3
+RESOURCES=40.0 mr_fish4
+RESOURCES=15.0 mr_temp_str
+RESOURCES=15.0 mr_temp_dex
+RESOURCES=15.0 mr_temp_int
+RESOURCES=14.0 mr_healing
+RESOURCES=13.0 mr_entgiftung
+RESOURCES=3.0 mr_sunken_chest_1
+RESOURCES=2.0 mr_sunken_chest_2
+RESOURCES=1.0 mr_sunken_chest_3
+
+[REGIONTYPE r_default_tree t_tree]
+// All tress produce wood by default.
+RESOURCES=100.0 mr_tree
+RESOURCES=30.0 mr_tree_dark		//
+
+
+[REGIONTYPE r_default_grass t_grass]
+// All grass can be eaten by default.
+RESOURCES=100.0 mr_grass
+
+[REGIONTYPE r_water t_water]
+// Water/Ocean boat sounds
+RESOURCES=0.1 mr_nothing
+RESOURCES=200.0 mr_fish1
+RESOURCES=150.0 mr_fish2
+RESOURCES=80.0 mr_fish3
+RESOURCES=40.0 mr_fish4
+RESOURCES=15.0 mr_temp_str
+RESOURCES=15.0 mr_temp_dex
+RESOURCES=15.0 mr_temp_int
+RESOURCES=14.0 mr_healing
+RESOURCES=13.0 mr_entgiftung
+RESOURCES=6.0 mr_sunken_chest_1
+RESOURCES=6.0 mr_sunken_chest_2
+RESOURCES=5.0 mr_sunken_chest_3
+
+//[REGIONTYPE i_water]
+//RESOURCES=0.1 mr_nothing
+//RESOURCES=100.0 mr_fish1
+//RESOURCES=50.0 mr_fish2
+//RESOURCES=20.0 mr_fish3
+//RESOURCES=10.0 mr_fish4
+
+
+ON=@REGPERIODIC
+	src.SFX={025,1,026,1,027,1,010,1,011,1,012,1,013,1}
+
+[REGIONTYPE r_brit t_rock]
+// Britain
+// Random rocks
+RESOURCES=1.0 mr_nothing               // default=140.0 
+RESOURCES=120.0 mr_iron			// default=500.0 
+RESOURCES=100.0 mr_rusty			
+RESOURCES=80.0 mr_old_copper	 	 
+RESOURCES=80.0 mr_dull_copper		
+RESOURCES=50.0 mr_bronze		
+RESOURCES=50.0 mr_copper  		
+RESOURCES=35.0 mr_gold
+RESOURCES=30.0 mr_rose
+RESOURCES=25.0 mr_agapite
+RESOURCES=25.0 mr_shadow
+RESOURCES=25.0 mr_defense			//added
+RESOURCES=25.0 mr_bloodrock
+RESOURCES=25.5 mr_granit			//added
+RESOURCES=25.0 mr_silver
+RESOURCES=25.0 mr_charltin			//added
+RESOURCES=25.5 mr_ligten			//added
+RESOURCES=25.5 mr_verite
+RESOURCES=20.5 mr_guarding			//added
+RESOURCES=20.5 mr_hardening			//added
+RESOURCES=20.5 mr_Valorite
+RESOURCES=15.5 mr_forti				//added
+RESOURCES=15.0 mr_mytheril
+RESOURCES=7.0 mr_blackrock			
+RESOURCES=6.0 mr_diamond			//added 
+RESOURCES=5.0 mr_starnin			//added
+RESOURCES=5.0 mr_crystal			//added "eis erz"
+RESOURCES=5.0 mr_invulnerability		//added
+RESOURCES=5.0 mr_firin				//added "feuer erz"
+RESOURCES=5.0 mr_unholy				//vamps,daywalker
+RESOURCES=5.0 mr_teran				//Drows
+RESOURCES=5.0 mr_siir				//Lichtelfen
+RESOURCES=5.0 mr_naturee			//Waldelfen
+
+ON=@ENTER
+	SRC.MESSAGE Willkommen in Britain <SRC.NAME>!
+	SRC.MIDILIST=midi_britain1,midi_britain2
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_britain1,midi_britain2
+
+[REGIONTYPE r_brit_castle]
+// Lord brit castle.
+ON=@ENTER
+	SRC.MIDILIST=midi_LBCastle
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_LBCastle
+
+[REGIONTYPE r_guard_tower]
+// Guard tower.
+ON=@ENTER
+	SRC.MIDILIST=midi_ForestA
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_ForestA
+
+[REGIONTYPE r_black_castle]
+// Lord Blackthorne's Castle
+ON=@ENTER
+	SRC.MIDILIST=midi_BtCastle
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_BtCastle
+
+[REGIONTYPE r_bucs_den]
+// Bucs den
+
+ON=@ENTER
+	IF <SRC.KILLS> > 5
+		SRC.MESSAGE Welcome to Bucs Den <SRC.NAME> You are a murderer and you feel at home here
+		SRC.MIDILIST=midi_BucsDen
+		RETURN 1
+	ELSE
+		SRC.MIDILIST=midi_BucsDen
+	ENDIF
+
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_BucsDen
+
+
+[REGIONTYPE r_spooky t_rock]
+// Spooky outdoor area.
+// Random rocks
+RESOURCES=1.0 mr_nothing               // default=140.0 
+RESOURCES=120.0 mr_iron			// default=500.0 
+RESOURCES=100.0 mr_rusty			
+RESOURCES=80.0 mr_old_copper	 	 
+RESOURCES=80.0 mr_dull_copper		
+RESOURCES=50.0 mr_bronze		
+RESOURCES=50.0 mr_copper  		
+RESOURCES=35.0 mr_gold
+RESOURCES=30.0 mr_rose
+RESOURCES=25.0 mr_agapite
+RESOURCES=25.0 mr_shadow
+RESOURCES=25.0 mr_defense			//added
+RESOURCES=25.0 mr_bloodrock
+RESOURCES=25.5 mr_granit			//added
+RESOURCES=25.0 mr_silver
+RESOURCES=25.0 mr_charltin			//added
+RESOURCES=25.5 mr_ligten			//added
+RESOURCES=25.5 mr_verite
+RESOURCES=20.5 mr_guarding			//added
+RESOURCES=20.5 mr_hardening			//added
+RESOURCES=20.5 mr_Valorite
+RESOURCES=15.5 mr_forti				//added
+RESOURCES=15.0 mr_mytheril
+RESOURCES=7.0 mr_blackrock			
+RESOURCES=6.0 mr_diamond			//added 
+RESOURCES=5.0 mr_starnin			//added
+RESOURCES=5.0 mr_crystal			//added "eis erz"
+RESOURCES=5.0 mr_invulnerability		//added
+RESOURCES=5.0 mr_firin				//added "feuer erz"
+RESOURCES=5.0 mr_unholy				//vamps,daywalker
+RESOURCES=5.0 mr_teran				//Drows
+RESOURCES=5.0 mr_siir				//Lichtelfen
+RESOURCES=5.0 mr_naturee			//Waldelfen
+
+ON=@ENTER
+	SRC.MIDILIST=midi_Approach
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_Approach
+
+[REGIONTYPE r_dungeon t_rock]
+// Dungeon sounds same day or night.
+// Shadow ore is only found here.
+RESOURCES=100.0 mr_nothing
+RESOURCES=30.0 mr_iron
+RESOURCES=5.0 mr_shadow
+
+ON=@REGPERIODIC
+	src.SFX={021f,1,0243,1,0244,1,0245,1}
+
+[REGIONTYPE r_plains]
+// Plains night and day.
+ON=@REGPERIODIC
+	src.SFX={0a,1,0b,1}
+
+[REGIONTYPE r_forests]
+// Forest Day and night.
+
+ON=@REGPERIODIC
+	IF <src.sector.ISNIGHTTIME>
+		src.SFX={00,2,01,2,02,2,07d,1}
+	ELSE
+		src.SFX={08,10,09,10,0219,1,07d,1}
+	ENDIF
+
+[REGIONTYPE r_jungle]
+// Jungle Day and night.
+
+ON=@REGPERIODIC
+	IF <src.sector.ISNIGHTTIME>
+		src.SFX={0c,2,0d,2,0b3,1}
+	ELSE
+		src.SFX={03,2,04,2,05,2,0b3,1}
+	ENDIF
+
+[REGIONTYPE r_swamp t_rock]
+// Swamp Day and night.
+// Never anything to mine here.
+
+ON=@REGPERIODIC
+	src.SFX={0e,10,0f,10,022,1,023,1,024,1,0267,1}
+
+[EOF]
+

@@ -1,0 +1,204 @@
+// This script is a workaround for the bug in sphere that allows you to get
+// any resource at any skill level (eg, in Mining).
+// This can be easily adapted to work for other resources, like lumberjacking
+// or fishing (just copy the triggers in the pickaxe to the hatchet/fishing pole)
+//
+// In sphere up to v0.55i, there's no way to get information on a static tile. This
+// makes it quite hard to solve this problem, so I'm quite proud of this :)
+// In fact, the technique presented here can be used in several other
+// situations, for instance, to obtain information in the objects at a certain
+// position.
+//
+// This works as follows:
+// 1) The miner uses the pickaxe on the ground
+// 2) A "probe" item is placed there, and distance/line of sight are tested
+// 3) That item is reused, being equiped on the player, storing the player position
+// 4) An @itemStep trigger is added to the player, which is moved to the
+// point targetted by the player. This trigger filters its activity and will
+// only activate on a spawn type (t_rock, t_tree, t_water).
+// 5) When triggered by such a spawn item, the event checks the SKILL of the player
+// and adjusts the resource found in the spawn. It then moves the player back to its
+// original position.
+// 6) If the action failed, then no spawn is added and no trigger is activated. Therefore,
+// the item on 3) takes care of moving the player back to its original position
+//
+// NOTES: Because there is no UPDATE, the player doesn't realize he is being moved. If
+// anything, he might notice a little rubber-banding being put back one square if
+// he tries to mine, fails and moves quickly.
+
+
+
+[DEFNAME min_mr]
+min_mr_copper 0.1
+min_mr_iron 45.0
+// (*) ADD MINIMUM LEVELS FOR OTHER ORES HERE
+
+default_mining_mr mr_copper // THIS IS THE DEFAULT RESOURCE TO OBTAIN
+
+
+
+
+[FUNCTION resource_targon_ground]
+if ( <SRC.findlayer(layer_horse.uid> )
+src.sysmessage You can't do that on horse.
+return 1
+endif
+
+if ( <src.findid(i_resprobe).uid> ) // we are still to be relocated
+return 1
+endif
+
+if ( <SRC.ACTION> != -1 )
+SRC.ACTION = -1 // cancel current activity
+endif
+
+SRC.NEWITEM i_resprobe // Load the probe item that will send us back
+SRC.ACT.P = <SRC.TARGP> // place it at the mining point
+SRC.ACT.MOREP = <SRC.P>
+
+if ( <SRC.ACT.DISTANCE> > 3 ) // check for distance to mining point
+src.sysmessage You are too far away.
+SRC.ACT.REMOVE
+return 1
+endif
+
+if ( !<SRC.ACT.CANSEELOS> ) // check for line of sight to mining point
+src.sysmessage You can't get there.
+SRC.ACT.REMOVE
+return 1
+endif
+
+SRC.ACT.ATTR = <SRC.ACT.ATTR>|attr_invis
+SRC.ACT.EQUIP
+
+SRC.EVENTS +e_probe
+SRC.P = <SRC.TARGP> // move the character WITHOUT updating. Notice that
+// it'll be moved back in at most 1sec, not noticeable
+
+
+
+
+[EVENTS e_probe]
+// here, SRC.ACT is the item being stepped on - the spawn
+ON = @itemStep
+if ( 0 )
+elseif ( <SRC.ACT.TYPE> == t_rock )
+elseif ( <SRC.ACT.TYPE> == t_tree )
+elseif ( <SRC.ACT.TYPE> == t_water )
+else
+return 0
+endif
+
+SRC.EVENTS -e_probe
+SRC.TAG.PROBE = <SRC.ACT.UID>
+SRC.P = <SRC.FINDID(i_resprobe).MOREP> // restore original position
+
+SRC.FINDID(i_resprobe).remove
+
+if ( <SRC.isgm> ) // just a message for GMs, remove these 3 lines on final version
+src.sysmessage <SRC.ACTION>:: <SRC.ACT.TYPE>, <SRC.ACT.AMOUNT> <SRC.ACT.MORE1>
+endif
+
+// ADD tests for skill here!
+if ( 0)
+elseif ( <SRC.ACT.TYPE> == t_rock )
+if ( 0 )
+elseif ( (<SRC.ACT.MORE1> == mr_copper) && (<src.mining> < min_mr_copper) )
+elseif ( (<SRC.ACT.MORE1> == mr_iron) && (<src.mining> < min_mr_iron) )
+// (*) ADD OTHER TESTS HERE
+elseif ( (<SRC.ACT.MORE1> == mr_nothing) )
+else
+return 0 // it's ok, we can mine
+endif
+
+SRC.ACT.MORE1 = default_mining_mr // REPLACE the current mining resource
+return 0
+elseif ( <SRC.ACT.TYPE> == t_tree )
+return 0
+elseif ( <SRC.ACT.TYPE> == t_water )
+return 0
+endif
+return 0
+
+
+
+
+[ITEMDEF i_resprobe]
+ID = i_memory
+TYPE = t_eq_script
+LAYER = layer_special
+
+ON = @Create
+TIMER = 1
+MORE2 = 0
+ATTR = attr_move_never
+
+ON = @Timer
+// allow this to run twice, if we don't stop the action
+if ( (<CONT.ACTION> != -1) && (<MORE2> == 0) )
+MORE2 = 1
+TIMER = 1
+return 1
+endif
+CONT.P = <MOREP>
+CONT.UPDATE
+remove
+return 1
+
+
+
+
+[ITEMDEF 0f39]
+//Shovel (unique type of unequipable item)
+//LAYER=0
+DEFNAME=i_shovel
+TYPE=T_WEAPON_MACE_PICK
+FLIP=1
+WEIGHT=5
+CATEGORY=Items by Professions
+SUBSECTION=Miner
+DESCRIPTION=Shovel
+SKILLMAKE=TINKERING 20.0,t_tinker_tools
+RESOURCES=4 i_ingot_iron,1 i_log
+DUPELIST=0f3a
+ON = @Create
+HITPOINTS={31 60}
+ON = @DClick
+return <resource_dclick>
+ON = @Targon_item
+SRC.SYSMESSAGE You can't mine that.
+return 1
+ON = @Targon_char
+SRC.SYSMESSAGE You can't mine that.
+return 1
+ON = @Targon_ground
+return <resource_targon_ground>
+
+
+[ITEMDEF 0e85] //PickAxe
+CATEGORY = Provisions - Weapons
+SUBSECTION = Axes
+DESCRIPTION = PickAxe
+
+DEFNAME = i_pickaxe
+TYPE = T_WEAPON_MACE_PICK
+FLIP = 1
+DAM = 1,10
+REQSTR = 25
+TWOHANDS = N
+WEIGHT = 11
+SKILLMAKE = TINKERING 42.1,t_tinker_tools
+RESOURCES = 4 i_ingot_iron, 1 i_log
+DUPELIST = 0e86
+ON = @Create
+HITPOINTS={31 60}
+ON = @DClick
+return <resource_dclick>
+ON = @Targon_item
+SRC.SYSMESSAGE You can't mine that.
+return 1
+ON = @Targon_char
+SRC.SYSMESSAGE You can't mine that.
+return 1
+ON = @Targon_ground
+return <resource_targon_ground>

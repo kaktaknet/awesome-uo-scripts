@@ -1,0 +1,268 @@
+//-------------------------------------------------------------------------------------------------------
+//_______________________________________________________________________________________________________
+//type .j for the main command, .forgive to unjail them, and .add i_jail_stone to test the system.      |
+//send any bugs, requests, comments, and questions to michaelleejones104@hotmail.com                    |
+//and leave this header here please.                                                                    |
+//CREATED BY                                                                                            |
+//\\// |º| (-, |-| -|- \\//\\// |º| //\\// (-,                                                          |
+//Nightwing                                                                                             |
+//_______________________________________________________________________________________________________
+//-------------------------------------------------------------------------------------------------------
+
+[plevel 4]
+j
+
+[function j]
+dialog d_jail
+
+[itemdef i_jail_stone]
+name=jail test stone
+id=i_gravestone_17
+type=t_eq_script
+
+on=@create
+color=0b57j
+
+on=@dclick
+src.newitem i_jail
+src.act.equip
+src.timer=60
+
+[plevel 1]
+forgive
+
+[function forgive]
+src.sysmessage who do you wish to release from jail?
+targ
+
+on=@targon_char
+src.targ.tag.jail=0
+src.targ.consume i_jail
+src.targ.sysmessage you have been forgiven, <src.targ.name>.
+src.targ.go=src.targ.tag.where
+src.targ.update
+src.update
+return 1
+
+[DIALOG d_jail]
+50,50
+PAGE 0
+resizepic 0 0 3600 500 300
+resizepic 138 181 83 0 0
+gumppic 17 34 2445
+gumppic 17 90 2445
+gumppic 17 149 2445
+gumppic 366 27 2445
+gumppic 366 146 2445
+gumppic 366 85 2445
+text 52 34 1152 0 //X,Y
+text 45 90 1152 1
+text 35 150 1152 2
+text 408 28 1152 3
+text 395 85 1152 4
+text 385 148 1152 5 
+button 135 33 2472 2473 1 0 1001
+button 135 89 2472 2473 1 0 1002
+button 135 148 2472 2473 1 0 1003
+button 323 28 2472 2473 1 0 1004
+button 323 85 2472 2473 1 0 1005
+button 323 146 2472 2473 1 0 1006
+text 205 100 32 6
+gumppic 115 191 1143
+text 205 193 162 7
+button 205 138 1144 1145 1 0 1007
+
+
+[DIALOG d_jail TEXT]
+Jail //0
+Forgive//1
+Edit time//2
+Kill//3
+Resurrect//4
+Disconnect//5
+Jail Menu//6
+<src.name>//7
+
+
+[DIALOG d_jail BUTTON]
+on=1001
+src.newitem i_jail1
+src.act.equip
+on=1002
+src.newitem i_jail2
+src.act.equip
+on=1003
+src.newitem i_jail3
+src.act.equip
+on=1004
+src.newitem i_jail4
+src.act.equip
+on=1005
+src.newitem i_jail5
+src.act.equip
+src.equip
+on=1006
+src.newitem i_jail6
+src.act.equip
+on=1007
+return 1
+
+[itemdef i_jail]
+name=jail timer
+type=t_eq_script
+id=i_memory
+
+on=@equip
+src.tag.jail=1
+src.sysmessage you are in here for approxomately <eval <src.timer /60>> minutes
+timer=30
+src.events=+e_jail
+src.tag.where=src.p
+src.go jail
+link=<src.uid>
+
+on=@timer
+link.go=cont.tag.where
+link.events=
+link.timer=
+link.tag.where=
+link.message you're free now.
+link.consume i_jail
+link.tag.jail=1
+
+[events e_jail]
+on=@click
+IF (<src.tag.jail>=0) 
+src.name=<src.name> 
+ELSE
+message [jailed]
+endif
+
+on=@gethit
+IF (<src.tag.jail>=0) 
+return 0
+ELSE
+return 1
+ENDIF
+
+on=@spelleffect
+IF (<src.tag.jail>=0) 
+return 0
+ELSE
+return 1
+ENDIF
+
+on=@spellcast
+IF (<src.tag.jail>=0) 
+return 0
+ELSE
+return 1
+ENDIF
+
+[itemdef i_jail1]
+name=jail1
+id=i_memory
+type=t_eq_script
+
+on=@create
+attr=04194
+
+on=@equip
+target=Whom do you wish to jail?
+
+on=@targon_char
+src.targ.newitem i_jail
+src.targ.act.equip
+src.targ.events +e_jail
+src.sysmessage how long do you want <src.targ.name> to be in jail for?
+src.targ.timer=<argn>
+src.targ.tag.where=<src.targ.p>
+src.update
+return 1
+
+
+[itemdef i_jail2]
+name=jail2
+id=i_memory
+type=t_eq_script
+on=@create
+attr=04194
+on=@equip
+//
+src.sysmessage whom do you wish to forgive?
+target
+
+on=@targon_char
+src.targ.tag.jail=0
+src.targ.consume i_jail
+src.targ.sysmessage you have been forgiven, <src.targ.name>.
+src.targ.go=src.targ.tag.where
+src.targ.update
+src.update
+return 1
+
+[itemdef i_jail3]
+name=jail3
+id=i_memory
+type=t_eq_script
+on=@create
+attr=04194
+on=@equip
+//
+src.sysmessage how long do you want <src.targ.name> to be in jail for?
+target
+
+
+on=@targon_char
+src.targ.timer=<args>
+src.targ.sysmessage you are now in jail for <eval <src.timer>> minutes.
+src.targ.update
+src.update
+return 1
+
+[itemdef i_jail4]
+name=jail4
+id=i_memory
+type=t_eq_script
+on=@create
+attr=04194
+on=@equip
+//
+src.sysmessage whom do you wish to kill?
+target
+
+on=@targon_char
+src.targ.kill
+src.targ.update
+src.update
+return 1
+
+[itemdef i_jail5]
+name=jail5
+id=i_memory
+type=t_eq_script
+on=@create
+attr=04194
+on=@equip
+//
+src.cast 59
+
+[itemdef i_jail6]
+name=jail6
+id=i_memory
+type=t_eq_script
+on=@create
+attr=04194
+
+on=@equip
+//
+src.sysmessage Whom do you wish to disconnect?
+target
+
+on=@targon_char
+src.targ.disconnect
+src.targ.update
+src.update
+//
+return 1
+[eof] 

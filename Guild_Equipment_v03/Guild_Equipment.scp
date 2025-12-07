@@ -1,0 +1,569 @@
+/////////////////////////
+//// Guild Equipment ////
+/////////////////////////
+//Version 0.3
+
+//Scripted using EditPlus v2.11 with Swindler's SphereScript Syntax module installed
+//Built for & tested on Sphere 0.55i
+
+//Created by Warpe– Dragon
+//http://warped.ods.org
+//warped_dragon@hotmail.com
+//ICQ: 86428337
+//AIM: Warped Dragon
+//MSN: Use Email...
+//YIM: Not Telling
+
+//Please don't remove this header//
+
+//INSTALLATION: Drop it into the script directory, Restart server
+
+//USEAGE: Set the Defname options below this header to suit your liking or needs
+
+//If you have problems, suggestions or questions about this script,
+//please don't hesitate to email me.
+
+//Have fun!
+
+
+//Version History:
+
+//v0.3
+//- Added a TYPEDEF for the regular guild chest. Simply set any container item to type t_guild_chest, 
+//  and link it to the guildstone with the linker item.
+//- Added a TYPEDEF for the secure guild chest. Simple set any container item to type t_guild_schest, 
+//  and link it to the guildstone with the linker item. Link the keys to the item same as you would to 
+//  the regular guild secure chest.
+
+//v0.2
+//- Added a new type of guild chest. Designed with gold stockpiles in mind, it won't open for any one 
+//  guild member. Instead, you can distribute up to five keys which must be used together to open it.
+//  Parts of it inspired by Amlaruil's Rune Chamber script. The Stronbox must be linked to the guildstone
+//  like a normel guild chest, and the keys must be linked to the strongbox. The first time a key is 
+//  double-clicked, it will prompt you to link it to a strongbox. Once it is linked, it is now needed to
+//  open that box.
+
+//v0.1
+//- First public release.
+//- The Guild Doors and Guild Chests are made to be used only be members of a guild. Use the i_guild_linker
+//  to link the doors and chests to the guildstone, and your done!
+
+[DEFNAME Guild_Equipment_Options]
+//0 = off, 1 = on
+
+//Door Options
+GE_Door_ID_North	0675	//ID used for the north-south facing door
+GE_Door_ID_West		067d	//ID used for the east-west facing door
+GE_Door_Color		01	//Color used for the doors
+GE_Door_Sound_Open	01eb	//Sound used when door is opened
+GE_Door_Sound_Fail	41	//Sound used when non-member attempts to open door
+GE_Door_Timer		10	//Time in seconds door stays open
+
+//Chest Options
+GE_Chest_ID_North	09ab	//ID used for the north-south facing chest
+GE_Chest_ID_West	0e7c	//ID used for the east-west facing chest
+GE_Chest_Color		0	//Color used for the chests
+
+//Special Chest Options
+GE_SChest_ID_North	09ab	//ID used for the north-south facing chest
+GE_SChest_ID_West	0e7c	//ID used for the east-west facing chest
+GE_SChest_Color		0	//Color used for the chests
+GE_SChest_Color_Act	0480	//Color used for chests that have been unlocked (all keys activated)
+GE_SChest_Key_ID	0100f	//ID used for the keys
+GE_SChest_Key_Color	0	//Default Color used for the keys
+GE_SChest_Key_Color_Act	0480	//Color used for Activated keys
+GE_SChest_Sound_Act	511	//Sound used when key is activated
+GE_SChest_Sound_DeAct	500	//Sound used when key is deactivated
+
+//Linker Item options
+GE_Linker_ID		01869	//ID used for the guild linker Item
+GE_Linker_Color		0	//Color used for the Linker Item.
+
+
+[ITEMDEF i_guild_schest_north]
+NAME=Guild Strongbox
+ID=GE_SChest_ID_North
+TYPE=t_container
+
+CATEGORY=Warped
+SUBSECTION=Guild Equipment
+DESCRIPTION=Guild Strongbox (North)
+
+ON=@CREATE
+TIMERD=1
+
+ON=@TIMER
+TYPE=t_guild_schest
+TIMER=-1
+RETURN 1
+
+
+[ITEMDEF i_guild_schest_west]
+NAME=Guild Strongbox
+ID=GE_SChest_ID_West
+TYPE=t_container
+
+CATEGORY=Warped
+SUBSECTION=Guild Equipment
+DESCRIPTION=Guild Strongbox (West)
+
+ON=@CREATE
+TIMERD=1
+
+ON=@TIMER
+TYPE=t_guild_schest
+TIMER=-1
+RETURN 1
+
+
+[TYPEDEF t_guild_schest]
+ON=@CREATE
+COLOR=GE_SChest_Color
+LINK=0
+MORE1=0
+MORE2=0
+
+ON=@DCLICK
+IF (<LINK> == 0)
+	//Chest is unlinked, anyone can open
+	TYPE=t_container
+	OPEN
+	TYPE=t_guild_schest
+	RETURN 1
+
+ELSE
+	IF (0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> != <LINK>) && (!<SRC.ISGM>)
+		//Not a guild member or GM, cannot open
+		SRC.SYSMESSAGE You are not a member of <LINK.NAME>!
+		RETURN 1
+
+	ELSEIF (((0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> == <LINK>) && (<MORE1> == <MORE2>)) || (<SRC.ISGM>))
+		//Is guild member or GM, can open chest
+		SRC.MESSAGE You are permitted to open the Guild Strongbox
+		TYPE=t_container
+		OPEN
+		TYPE=t_guild_schest
+		RETURN 1
+
+	ELSEIF (<MORE1> != <MORE2>)
+		SRC.SYSMESSAGE Not all of the keys have been activated!
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+
+[ITEMDEF i_guild_schest_key]
+//Key to the Strongbox
+ID=GE_SChest_Key_ID
+NAME=Key to a Guild Strongbox
+TYPE=t_script
+
+CATEGORY=Warped
+SUBSECTION=Guild Equipment
+DESCRIPTION=Guild Strongbox Key
+
+ON=@CREATE
+LINK=0
+TIMER=-1
+TAG.Number=0
+TAG.Active=0
+COLOR=GE_SChest_Key_Color
+
+ON=@DCLICK
+IF (<CONT.UID> != <SRC.FINDLAYER(Layer_Pack).UID>)
+	SRC.SYSMESSAGE This must be in your backpack to use!
+	RETURN 1
+
+ELSE
+	IF (<LINK> == 0)
+		//If link is 0, we need to link it to a box
+		TARGET Select the Strongbox to link this to
+
+	ELSEIF (<TAG.Active> == 1)
+		SRC.SYSMESSAGE Key deactivated
+
+		IF (<LINK.MORE1> == <LINK.MORE2>)
+			LINK.COLOR=GE_SChest_Color
+			LINK.SAY Chest Locked!
+
+		ENDIF
+
+		LINK.MORE1=(<LINK.MORE1> + (-<HVAL (<TAG.Number>)>))
+		COLOR=GE_SChest_Key_Color
+		TAG.Active=0
+		SRC.SFX GE_SChest_Sound_DeAct
+
+	ELSE
+		TAG.Active=1
+		LINK.MORE1=(<LINK.MORE1> + <HVAL (<TAG.Number>)>)
+		SRC.SYSMESSAGE Key activated
+		COLOR=GE_SChest_Key_Color_Act
+		SRC.SFX GE_SChest_Sound_Act
+
+		IF (<LINK.MORE1> == <LINK.MORE2>)
+			LINK.COLOR=GE_SChest_Color_Act
+			LINK.SAY Chest Unlocked!
+
+		ENDIF
+
+	ENDIF
+
+ENDIF
+
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.LINK> == 0)
+	SRC.SYSMESSAGE That chest has not been linked to a guildstone!
+
+ELSEIF ((<SRC.TARG.MORE2> > 0) && (<SRC.TARG.MORE1> == <SRC.TARG.MORE2>))
+	SRC.SYSMESSAGE You cannot link a key while the chest is unlocked!
+
+ELSEIF ((<SRC.TARG.TYPE> == t_guild_schest) && ((0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> == <SRC.TARG.LINK>) || (<SRC.ISGM>)))
+	IF (<SRC.TARG.MORE2> < 10)
+		LINK=<SRC.TARG.UID>
+		TAG.Number=<SRC.TARG.MORE2>
+
+		IF (<EVAL (<TAG.Number>)> == 0)
+			TAG.Number=1
+
+		ENDIF
+
+		SRC.TARG.MORE2=(<SRC.TARG.MORE2> + <HVAL (<TAG.Number>)>)
+		SRC.SYSMESSAGE The Key is now Linked
+	
+	ELSE
+		SRC.SYSMESSAGE You cannot link more then five keys!
+
+	ENDIF
+
+ELSEIF (0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> != <SRC.TARG.LINK>)
+	SRC.SYSMESSAGE You are not a member of <SRC.TARG.LINK.NAME>!
+
+ELSE
+	SRC.SYSMESSAGE That is not a guild strongbox!
+
+ENDIF
+
+RETURN 1
+
+
+[ITEMDEF i_guild_door_north]
+//I'm rather proud of this...
+NAME=Guild Door
+ID=GE_Door_ID_North
+TYPE=t_script
+
+CATEGORY=Warped
+SUBSECTION=Guild Equipment
+DESCRIPTION=Guild Doors (North)
+
+ON=@CREATE
+COLOR=GE_Door_Color
+LINK=0
+TAG.Stored=0
+TAG.Stored_UID=0
+TAG.Orig_ID=0
+TAG.Orig_Color=0
+
+ON=@DCLICK
+IF (<LINK> == 0)
+	//Door is unlinked, anyone can open
+	SRC.SYSMESSAGE The door opens at your touch.
+	TAG.Orig_Color=<COLOR>
+	TAG.Orig_ID=<DISPID>
+	MOVE s
+	NUDGEUP 10
+	COLOR=0
+	DISPID=i_door_magical
+	UPDATE
+	SAY Enter and be welcome, <SRC.NAME>.
+	SFX GE_Door_Sound_Open
+	TIMER=GE_Door_Timer
+
+ELSE
+	IF (0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> != <LINK>) && (!<SRC.ISGM>)
+		//Not a guild member or GM, cannot open
+		SRC.SYSMESSAGE You are not a member of <LINK.NAME>!
+		TAG.Stored=1
+		SRC.NEWITEM 01ed9
+		TAG.Stored_UID=<SRC.ACT.UID>
+		SRC.ACT.P=<P>
+		SRC.ACT.MOVE s
+		SRC.ACT.NUDGEUP 10
+		SRC.ACT.SAY You shall not pass!
+		SFX GE_Door_Sound_Fail
+		TIMER=GE_Door_Timer
+
+	ELSEIF ((0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> == <LINK>) || (<SRC.ISGM>))
+		//Is guild member or GM, can open door
+		SRC.SYSMESSAGE The door opens at your touch.
+		TAG.Orig_Color=<COLOR>
+		TAG.Orig_ID=<DISPID>
+		MOVE s
+		NUDGEUP 10
+		COLOR=0
+		DISPID=i_door_magical
+		UPDATE
+		SAY Enter and be welcome, <SRC.NAME>.
+		SFX GE_Door_Sound_Open
+		TIMER=GE_Door_Timer
+
+	ENDIF
+
+ENDIF
+
+RETURN 1
+
+ON=@TIMER
+IF (<TAG.Stored> == 1)
+	TRY UID.<TAG.Stored_UID>.REMOVE 
+	TAG.Stored_UID=0
+	TAG.Stored=0
+
+ELSE
+	MOVE n
+	NUDGEDOWN 10
+	COLOR=<TAG.Orig_Color>
+	DISPID=<TAG.Orig_ID>
+	TAG.Orig_Color=0
+	TAG.Orig_ID=0
+	UPDATE
+
+ENDIF
+
+TIMER=-1
+RETURN 1
+
+
+[ITEMDEF i_guild_door_west]
+NAME=Guild Door
+ID=GE_Door_ID_West
+TYPE=t_script
+
+CATEGORY=Warped
+SUBSECTION=Guild Equipment
+DESCRIPTION=Guild Doors (West)
+
+ON=@CREATE
+COLOR=GE_Door_Color
+LINK=0
+TAG.Stored=0
+TAG.Stored_UID=0
+TAG.Orig_ID=0
+TAG.Orig_Color=0
+
+ON=@DCLICK
+IF (<LINK> == 0)
+	//Door is unlinked, anyone can open
+	SRC.SYSMESSAGE The door opens at your touch.
+	TAG.Orig_Color=<COLOR>
+	TAG.Orig_ID=<DISPID>	
+	MOVE e
+	NUDGEUP 10
+	COLOR=0
+	DISPID=01ef4
+	UPDATE
+	SAY Enter and be welcome, <SRC.NAME>.
+	SFX GE_Door_Sound_Open
+	TIMER=GE_Door_Timer
+
+ELSE
+	IF (0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> != <LINK>) && (!<SRC.ISGM>)
+		//Not a guild member or GM, cannot open
+		SRC.SYSMESSAGE You are not a member of <LINK.NAME>!
+		TAG.Stored=1
+		SRC.NEWITEM 01eec
+		TAG.Stored_UID=<SRC.ACT.UID>
+		SRC.ACT.P=<P>
+		SRC.ACT.NUDGEUP 10
+		SRC.ACT.MOVE e
+		SRC.ACT.SAY You shall not pass!
+		SFX GE_Door_Sound_Fail
+		TIMER=GE_Door_Timer
+
+	ELSEIF ((0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> == <LINK>) || (<SRC.ISGM>))
+		//Is guild member or GM, can open door
+		SRC.SYSMESSAGE The door opens at your touch.
+		TAG.Orig_Color=<COLOR>
+		TAG.Orig_ID=<DISPID>
+		MOVE e
+		NUDGEUP 10
+		COLOR=0
+		DISPID=01ef4
+		UPDATE
+		SAY Enter and be welcome, <SRC.NAME>.
+		SFX GE_Door_Sound_Open
+		TIMER=GE_Door_Timer
+
+	ENDIF
+
+ENDIF
+
+RETURN 1
+
+ON=@TIMER
+IF (<TAG.Stored> == 1)
+	TRY UID.<TAG.Stored_UID>.REMOVE 
+	TAG.Stored_UID=0
+	TAG.Stored=0
+
+ELSE
+	MOVE w
+	NUDGEDOWN 10
+	COLOR=<TAG.Orig_Color>
+	DISPID=<TAG.Orig_ID>
+	TAG.Orig_Color=0
+	TAG.Orig_ID=0
+	UPDATE
+
+ENDIF
+
+TIMER=-1
+RETURN 1
+
+
+[ITEMDEF i_guild_chest_north]
+NAME=Guild Chest
+ID=GE_Chest_ID_North
+TYPE=t_container
+
+CATEGORY=Warped
+SUBSECTION=Guild Equipment
+DESCRIPTION=Guild Chest (North)
+
+ON=@CREATE
+TIMERD=1
+
+ON=@TIMER
+TYPE=t_guild_chest
+TIMER=-1
+RETURN 1
+
+
+[ITEMDEF i_guild_chest_west]
+NAME=Guild Chest
+ID=GE_Chest_ID_West
+TYPE=t_container
+
+CATEGORY=Warped
+SUBSECTION=Guild Equipment
+DESCRIPTION=Guild Chest (West)
+
+ON=@CREATE
+TIMERD=1
+
+ON=@TIMER
+TYPE=t_guild_chest
+TIMER=-1
+RETURN 1
+
+
+[TYPEDEF t_guild_chest]
+ON=@CREATE
+COLOR=GE_Chest_Color
+LINK=0
+
+ON=@DCLICK
+IF (<LINK> == 0)
+	//Chest is unlinked, anyone can open
+	TYPE=t_container
+	OPEN
+	TYPE=t_guild_chest
+	RETURN 1
+
+ELSE
+	IF (0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> != <LINK>) && (!<SRC.ISGM>)
+		//Not a guild member or GM, cannot open
+		SRC.SYSMESSAGE You are not a member of <LINK.NAME>!
+		RETURN 1
+
+	ELSEIF ((0<SRC.MEMORYFINDTYPE.(memory_guild).LINK> == <LINK>) || (<SRC.ISGM>))
+		//Is guild member or GM, can open chest
+		SRC.MESSAGE You are permitted to open the Guild Chest
+		TYPE=t_container
+		OPEN
+		TYPE=t_guild_chest
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+
+[ITEMDEF i_guild_linker]
+//This is basicly a replacement of the .link function,
+//simply because it's really easy to screw up (and delete the guildstone) when using .link
+//This has built-in protection agaisnt such screw ups
+ID=GE_Linker_ID
+TYPE=t_script
+NAME=Guild Item Linker
+
+CATEGORY=Warped
+SUBSECTION=Guild Equipment
+DESCRIPTION=Guild Item Linker
+
+ON=@CREATE
+COLOR=GE_Linker_Color
+TAG.Guildstone_UID=0
+TAG.Switch=0
+
+ON=@DCLICK
+IF (<CONT.UID> != <SRC.FINDLAYER(Layer_Pack).UID>)
+	SRC.SYSMESSAGE This must be in your backpack to use!
+	RETURN 1
+
+ELSE
+	IF (<TAG.Switch> == 0)
+		TAG.Switch=1
+		TARGET Select the Guildstone
+		RETURN 1
+
+	ELSEIF (<TAG.Switch> == 1)
+		TARGET Select the Guildstone
+		RETURN 1
+
+	ELSEIF (<TAG.Switch> == 2)
+		TARGET Select the Item
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<TAG.Switch> == 1)
+	IF (<SRC.TARG.TYPE> == t_stone_guild)
+		TAG.Guildstone_UID=<SRC.TARG.UID>
+		SRC.SYSMESSAGE Guildstone UID Recorded
+		TAG.Switch=2
+		TARGET Select the Item
+		RETURN 1
+		
+	ELSE
+		SRC.SYSMESSAGE That is not a guildstone!
+		TAG.Switch=0
+		RETURN 1
+
+	ENDIF
+
+ELSEIF (<TAG.Switch> == 2)
+	IF (<SRC.TARG.TYPE> == t_stone_guild)
+		SRC.SYSMESSAGE Not the guildstone you fool!
+		TAG.Switch=0
+		TAG.Guildstone_UID=0
+		RETURN 1
+
+	ELSE
+		SRC.TARG.LINK=<TAG.Guildstone_UID>
+		SRC.SYSMESSAGE Item has been linked to Guildstone
+		TAG.Switch=0
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+[EOF]

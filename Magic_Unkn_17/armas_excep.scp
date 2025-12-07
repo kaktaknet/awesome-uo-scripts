@@ -1,0 +1,122 @@
+[function tirarstam]
+if (<src.stam>>85)
+SRC.stam (<SRC.stam>+(-85))
+return 0
+else
+src.stam 0
+return 0
+
+[function tirarmana]
+if (<src.mana>>65)
+SRC.MANA (<SRC.MANA>+(-65))
+return 0
+else
+src.mana 0
+return 0
+
+[function tirarmana2]
+if (<src.mana>>85)
+SRC.MANA (<SRC.MANA>+(-85))
+return 0
+else
+src.mana 0
+return 0
+
+[ITEMDEF i_bard_exep] 
+NAME=Exceptional Bardiche
+ID=i_bardiche
+DAM=22, 33 
+SPEED=30
+REQSTR=100
+WEIGHT=1
+RESOURCES=150 i_log,50 i_ingot_iron
+SKILLMAKE=280.0 Blacksmithing
+
+ON=@Create 
+HITPOINTS={100 200}
+
+ON=@CLICK
+MESSAGE @077c,1 Speed: <speed> / Damage: <dam>
+
+ON=@DAMAGE
+if (<region.flags>==02000) || (<region.flags>==06000) || (<region.flags>==02001) || (<region.flags>==02481) || (<region.flags>==06481 || (<region.flags>==06480)) || (<region.flags>==07fff) || (<region.flags>==024bf) || (<region.flags>==024be) || (<region.flags>==02bbf) || (<region.flags>==06c8e) || (<region.flags>==02580)
+return 1
+endif
+IF !(RAND(17) 
+src.say <SRC.NAME> levou um Hyper Power Blow!
+SRC.TIrarmana2
+SRC.STAMINA 0
+return 0
+ELSEIF !(RAND(15))
+src.say <SRC.NAME> levou um Power Blow!
+SRC.TIrarmana
+SRC.tirarstam
+return 0
+ELSE
+ENDIF
+
+[ITEMDEF i_mace_exep] 
+NAME=Exceptional War Mace
+ID=i_mace_war
+DAM=15, 25
+SPEED=40
+REQSTR=100
+WEIGHT=1
+RESOURCES=150 i_log,50 i_ingot_iron
+SKILLMAKE=280.0 Blacksmithing
+
+ON=@Create 
+HITPOINTS={100 200}
+
+ON=@CLICK
+MESSAGE @077c,1 Speed: <speed> / Damage: <dam>
+
+ON=@DAMAGE
+if (<region.flags>==02000) || (<region.flags>==06000) || (<region.flags>==02001) || (<region.flags>==02481) || (<region.flags>==06481 || (<region.flags>==06480)) || (<region.flags>==07fff) || (<region.flags>==024bf) || (<region.flags>==024be) || (<region.flags>==02bbf) || (<region.flags>==06c8e) || (<region.flags>==02580)
+return 1
+endif
+IF !(RAND(18)
+src.say <SRC.NAME> levou um Hyper Power Blow!
+SRC.TIrarmana2
+SRC.STAMINA 0
+return 0
+ELSEIF !(RAND(15))
+src.say <SRC.NAME> levou um Power Blow!
+SRC.TIrarmana
+SRC.tirarstam
+return 0
+ELSE
+ENDIF
+
+[ITEMDEF i_fork_exep] 
+NAME=Exceptional War Fork
+ID=i_war_fork
+DAM=10, 23
+SPEED=45
+REQSTR=100
+WEIGHT=1
+RESOURCES=150 i_log,50 i_ingot_iron
+SKILLMAKE=280.0 Blacksmithing
+
+ON=@Create 
+HITPOINTS={100 200}
+
+ON=@CLICK
+message @077c,1 Speed: <speed> / Damage: <dam>
+
+ON=@DAMAGE
+if (<region.flags>==02000) || (<region.flags>==06000) || (<region.flags>==02001) || (<region.flags>==02481) || (<region.flags>==06481 || (<region.flags>==06480)) || (<region.flags>==07fff) || (<region.flags>==024bf) || (<region.flags>==024be) || (<region.flags>==02bbf) || (<region.flags>==06c8e) || (<region.flags>==02580)
+return 1
+endif
+IF !(RAND(20) 
+src.say <SRC.NAME> levou um Hyper Power Blow!
+src.tirarmana2
+SRC.STAMINA 0
+return 0
+ELSEIF !(RAND(17))
+src.say <SRC.NAME> levou um Power Blow!
+SRC.TIrarmana
+SRC.tirarstam
+return 0
+ELSE
+ENDIF

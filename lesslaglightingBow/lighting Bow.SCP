@@ -1,0 +1,55 @@
+###################################################################
+##################  Scripted by Big_boy_uk89  ##################### 
+##################  Any Bugs Email Me at      #####################
+##################  Bennett_3001@hotmail.com  #####################
+###################################################################
+//Less Lagg Lighting Bow
+
+[ITEMDEF i_lighting_Bow]
+DEFNAME=i_Lgihting_Bow
+NAME=Lighting Bow
+ID=i_bow
+DAM=10,20
+SPEED=1
+SKILL=Archery
+REQSTR=30
+TWOHANDS=Y
+WEIGHT=6
+VALUE=500 
+TDATA3=i_arrow
+TDATA4=i_FX_ENERGY_RAY
+CATEGORY=Other
+SUBSECTION=Weapons
+DESCRIPTION=Lighting Bow
+
+ON=@Create
+HITPOINTS={1000 2010}
+COLOR=00a7b
+
+ON=@EQUIP
+SRC.Say What the hell a Storm Is HERE i Best Kill Some thing While i got the power!
+SRC.TACTICS=<SRC.TACTICS>+5.0
+SRC.ARCHERY=<SRC.ARCHERY>+5.0
+SRC.effect 1,1,1,1
+SRC.effect 1,1,1,1
+SRC.effect 1,1,1,1
+RETURN 0
+
+ON=@UNEQUIP
+SRC.TACTICS=<SRC.TACTICS>+(-5.0)
+SRC.ARCHERY= <SRC.ARCHERY>+(-5.0)
+SRC.SAY The Clouds Clear and the Storm Have past.
+SRC.effect 1,1,1,1
+SRC.effect 1,0,10,10
+RETURN 0
+
+ON=@Damage
+IF (RAND(45) == 0)
+SRC.HITS=(<SRC.HITS> / 2)
+SRC.effect 1,1,1,1
+SRC.effect 1,1,1,1
+SRC.effect 1,1,1,1
+Color=0153
+SAYU HELL YEA SUPER NOVA HIT!
+RETURN 0
+[EOF]

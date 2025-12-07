@@ -1,0 +1,160 @@
+/////////////////////////////////////////////////////////////////////////////////
+//// Banner
+//// Hellforge Dragon quest by Maul
+////
+//// Modify this script if you wish but please do not remove this banner.
+////////////////////////////////////////////////////////////////////////////////////////////
+//// Note: This is a very simple quest, modify the reward item to what you wish. Just spawn
+//// the dragon someplace out of the way, and then place the reward collection stone in
+//// another out of the way spot, that way players have to search for both the dragon and
+//// the stone. Have fun.
+///////////////////////////////////dragon////////////////
+
+[CHARDEF Hell_Forge_Dragon]
+DEFNAME=Hell_Forge_Dragon
+NAME=Hell Forge Dragon
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=1,2
+ARMOR=10
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+RESOURCES=99 i_ribs_raw,8 i_reag_dragon_blood,20 i_hide
+SHELTER=r_caves,r_dungeon_rock
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+NPC=brain_dragon
+STR={7 8} //  STR={795 825}
+DEX={86 105}
+INT={385 425}
+
+PARRYING={55.0 95.0}
+MAGERY={99.0 100.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={99.0 100.0}
+WRESTLING={90.0 93.0}
+TAMING=110.0
+
+FAME={5000 10000}
+KARMA={-5999 -6999}
+
+ON=@NPCRestock
+ITEM=i_dragon_sword
+
+CATEGORY=Maul
+SUBSECTION=Special Items
+DESCRIPTION=H/F Dragon
+
+///////////////////////////////////////sword/////////////
+
+[ITEMDEF i_dragon_sword]
+NAME=Enchanted Dragon Sword (Quest Item)
+ID=i_sword_viking
+
+ON=@CREATE
+COLOR=00022
+
+CATEGORY=Maul
+SUBSECTION=Quest Items
+DESCRIPTION=Dragon Sword
+
+
+
+/////////////////////////////////////////stone///////////
+
+[ITEMDEF i_dragon_sword_stone]
+NAME=Stone of the Dragon
+ID=01507
+
+ON=@CREATE
+COLOR=07c5  // Change to the color you desire
+ATTR=0010
+
+ON=@DCLICK
+SRC.SFX 555
+DIALOG d_x_dragon_stone
+RETURN 1
+
+
+////////////////////////////////////////////////////////////////////
+// BEGIN GUMP 
+////////////////////////////////////////////////////////////////////
+
+[DIALOG d_x_dragon_stone]
+0,0                                    	// Position
+resizepic 50 100 2600 530 300          	// Curved Grey background 
+
+////////////////////////////////////////////////////////////////////
+page 0                                 	// Page 0
+resizepic 66 155 5100 498 25          	// Square Grey box
+button 270 366 247 248 1 0 0           	// Okay, button 0
+
+////Headings/////////////////////////////////////////////////////////
+text 180 120 0 0			// menu heading
+text 260 133 0 1			// By Apophis
+
+text 125 158 0 2                       	// Quest Info
+text 260 158 0 3                       	// Claim Prize
+
+button 180 159 5209 5003 0 1 1         	// Opens Quest Info
+button 310 159 5209 5003 0 2 2         	// Opens Claim Prize
+
+/////////////////////////////////////////////////////////////////////
+page 1                                 	// Actions Page
+
+/////////menu text and screen location
+
+text 105 200 0 5			// Access My Bank Box
+text 105 225 0 6			// Read my Fame
+
+/////////////////////////////////////////////////////////////////////
+page 2                                 	// Items Page
+
+/////////menu text and screen location
+
+text 105 200 0 7			// Claim Prize
+
+////////button types and screen location
+
+button 80 200 2714 2714 1 0 4		// Claim Prize
+
+///////////////////////////////////////////////////////////////////////
+
+[DIALOG d_x_dragon_stone TEXT]
+Enchanted Dragon Stone V1.00// Menu heading
+By Maul
+
+Quest Info
+Claim Prize
+
+///page 1
+Access My Bank Box 			// Item 1
+Read my Fame/Karma 			// item 2
+
+///page 2
+Full SpellBook 15K			// item 3
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_x_dragon_stone BUTTON]
+
+ONBUTTON=4 					// Random Magical Fire Armor
+IF <SRC.RESTEST i_dragon_sword>
+SRC.CONSUME=i_dragon_sword
+SRC.NEWITEM={i_hell_forge_Shield 1 i_Kraken_Shield 1 i_flame_sword 1 i_bow_Lightening 1 i_Death_Shroud 1}
+SRC.ACT.BOUNCE
+MESSAGE You have recieved your reward. Thank thee!
+SOUND 0F7
+RETURN 1
+ELSE
+MESSAGE You haven't slain the Hell Forge Dragon, you cannot be rewarded without the Dragon Sword. 
+ENDIF
+RETURN 1
+
+CATEGORY=Maul
+SUBSECTION=Quest Items
+DESCRIPTION=Stone of the Dragon
+
+[EOF]

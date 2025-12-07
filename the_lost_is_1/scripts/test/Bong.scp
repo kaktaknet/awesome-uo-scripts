@@ -1,0 +1,56 @@
+
+[ITEMDEF i_bong]
+ID=0e28
+NAME=selbstgebastelte Bong
+WEIGHT=5
+CATEGORY=Atlan
+SUBSECTION=drugs
+DESCRIPTION=bong
+ON=@Create
+COLOR=1301
+
+ON=@DCLICK
+If (<src.findid.i_mem_rauschdauer.amount>==0)
+IF (<SRC.restest 1 i_dope>
+SRC.SAY ** Zieht kraeftig am Bong **
+say *blubba*
+SOUND=220
+
+Var.STA1=(<src.str>/2)
+Var.STA2=(<src.str>/5)
+Src.STAM=(<VAR.STA1>+<VAR.STA2>)
+SRC.NEWITEM i_mem_rauschdauer
+SRC.ACT.TIMER=60
+SRC.ACT.EQUIP
+SRC.FLAGS=<SRC.FLAGS>|statf_hallucinating
+SRC.CONSUME 1 i_Dope
+ELSE
+SRC.MESSAGE Du hast kein Dope
+Endif
+ELSE
+SRC.MESSAGE Du bist zu breit um dir nen Kopf zu stopfen
+ENDIF
+
+[itemdef i_mem_rauschdauer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Rausch Dauer
+ON=@EQUIP
+ATTR=attr_decay
+ON=@TIMER
+CONT.EMOTE Deine Gedanken werden wieder klar
+CONT.FLAGS=<CONT.FLAGS>&~statf_hallucinating
+REMOVE
+Return 1
+
+[ITEMDEF i_dope]
+ID=0c81
+Type=t_normal
+Name=gramm Orange Butt
+Color=01c6
+
+CATEGORY=Atlan
+SUBSECTION=drugs
+DESCRIPTION=Orange Butt
+
+[EOF]

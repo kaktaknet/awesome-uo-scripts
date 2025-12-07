@@ -1,0 +1,163 @@
+// Potion Keg.
+
+// Scripted by Fusion.
+
+// A.K.A Jdog
+
+// Please do not remove this header.
+
+
+// ** Usage **
+// Double-click the keg to bring up a target. Target a potion to add 
+// that particular potion to the keg. Targetting the keg will bring up
+// an extraction for menu.
+
+
+[ITEMDEF i_keg_potion]
+NAME=empty potion keg
+ID=i_KEG_WOOD
+TYPE=t_script
+VALUE={225 350}
+WEIGHT=40
+RESOURCES=8 i_BOARD, 1 i_BARREL_TAP, 1 i_BARREL_HOOPS
+SKILLMAKE=TINKERING 65.0,t_tinker_tools
+
+CATEGORY=Unique Items
+SUBSECTION=Tinker
+DESCRIPTION=empty potion Keg
+
+ON=@Click
+IF (0<TAG.AMOUNT><=0)
+NAME=an empty keg potion
+MESSAGE <NAME>
+RETURN 1
+ELSE
+MESSAGE <EVAL <TAG.AMOUNT>> <NAME>
+RETURN 1
+ENDIF
+
+ON=@DClick
+VAR.MAX=<AMOUNT> + <EVAL <TAG.AMOUNT>>
+VAR.FULL=<EVAL <TAG.AMOUNT>>
+VAR.CONSUME=200
+VAR.NEWAMT=<EVAL <VAR.CONSUME>> +- <EVAL <TAG.AMOUNT>> 
+VAR.TAGAMT=<EVAL <TAG.AMOUNT>> + <EVAL <VAR.NEWAMT>>
+TARGET
+RETURN 1
+
+ON=@Targon_Item
+IF (<SRC.TARG.BASEID>==i_keg_potion)
+MENU m_keg
+RETURN 1
+ENDIF
+IF !(<SRC.TARG.TYPE>==t_potion) 
+SRC.SYSMESSAGE That item is not a potion or a keg.
+RETURN 1
+ENDIF
+IF (<VAR.MAX>>=201)
+SRC.SYSMESSAGE The keg can only hold 200 potions.
+VAR.MAX=
+RETURN 1
+ENDIF
+IF (<SRC.TARG.AMOUNT>>=201)
+SRC.SYSMESSAGE The keg cannot hold more than 200 potions.
+RETURN 1
+ELSE
+TAG.ID=<SRC.TARG.BASEID>
+TAG.AMOUNT=<SRC.TARG.AMOUNT> + <EVAL <TAG.AMOUNT>>
+TAG.NAME=<SRC.TARG.NAME>
+NAME=<TAG.NAME> keg
+IF (<TAG.AMOUNT>>200)
+SRC.SYSMESSAGE You've tried to insert more potions than the keg can hold.
+SRC.TARG.CONSUME=<EVAL <VAR.NEWAMT>>
+TAG.AMOUNT=<EVAL <VAR.TAGAMT>>
+SRC.NEWITEM=i_bottle_empty
+SRC.ACT.AMOUNT=<EVAL <VAR.NEWAMT>>
+SRC.ACT.BOUNCE
+RETURN 1 
+ENDIF
+SRC.TARG.REMOVE
+SRC.SOUND=snd_Z_END_LIQUID
+SRC.SYSMESSAGE You fill the keg.
+SRC.NEWITEM=i_bottle_empty
+SRC.ACT.AMOUNT=<TAG.AMOUNT>
+SRC.ACT.BOUNCE
+RETURN 1
+ENDIF
+
+
+
+[MENU m_keg]
+Deduct how many potions from the keg?
+ON=0 1
+IF (0<TAG.AMOUNT><=0)
+SRC.SYSMESSAGE The keg is empty.
+RETURN 1
+ENDIF
+IF (<SRC.FINDID.i_bottle_empty.AMOUNT> < 1)
+SRC.SYSMESSAGE You do not have enough empty bottles.
+RETURN 1
+ENDIF
+IF (<SRC.FINDID.i_bottle_empty>)
+SRC.FINDID.i_bottle_empty.CONSUME 1
+SRC.SOUND=snd_Z_END_LIQUID
+SRC.NEWITEM=<TAG.ID>
+SRC.ACT.NAME=<TAG.NAME>
+SRC.ACT.AMOUNT=1
+SRC.ACT.BOUNCE
+TAG.AMOUNT=<TAG.AMOUNT> - 1
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You do not any empty bottles.
+RETURN 1
+ENDIF
+
+ON=0 10
+IF (0<TAG.AMOUNT><=0)
+SRC.SYSMESSAGE The keg is empty.
+RETURN 1
+ENDIF
+IF (<SRC.FINDID.i_bottle_empty.AMOUNT> < 10)
+SRC.SYSMESSAGE You do not have enough empty bottles.
+RETURN 1
+ENDIF
+IF (<SRC.FINDID.i_bottle_empty>)
+SRC.FINDID.i_bottle_empty.CONSUME 10
+SRC.SOUND=snd_Z_END_LIQUID
+SRC.NEWITEM=<TAG.ID>
+SRC.ACT.NAME=<TAG.NAME>
+SRC.ACT.AMOUNT=10
+SRC.ACT.BOUNCE
+TAG.AMOUNT=<TAG.AMOUNT> - 10
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You do not any empty bottles.
+RETURN 1
+ENDIF
+
+ON=0 50
+IF (0<TAG.AMOUNT><=0)
+SRC.SYSMESSAGE The keg is empty.
+RETURN 1
+ENDIF
+IF (<SRC.FINDID.i_bottle_empty.AMOUNT> < 50)
+SRC.SYSMESSAGE You do not have enough empty bottles.
+RETURN 1
+ENDIF
+IF (<SRC.FINDID.i_bottle_empty>)
+SRC.FINDID.i_bottle_empty.CONSUME 50
+SRC.SOUND=snd_Z_END_LIQUID
+SRC.NEWITEM=<TAG.ID>
+SRC.ACT.NAME=<TAG.NAME>
+SRC.ACT.AMOUNT=50
+SRC.ACT.BOUNCE
+TAG.AMOUNT=<TAG.AMOUNT> - 50
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You do not any empty bottles.
+RETURN 1
+ENDIF
+
+ON=0 Cancel
+SRC.SYSMESSAGE The process of extracting the potions has been cancelled.
+RETURN 1

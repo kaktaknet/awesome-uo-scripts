@@ -1,0 +1,175 @@
+[ITEMDEF i_ldt3_marker]
+
+NAME=DO NOT REMOVE!
+
+ID=i_memory
+
+TYPE=t_eq_script
+
+
+
+ON=@CREATE
+
+ATTR=ATTR_INVIS|ATTR_NEWBIE
+
+
+
+[ITEMDEF i_limuse_dytub3]
+
+ID=0fab
+
+TYPE=T_DYE_VAT
+
+NAME=Limited Use Dying Tub (3)
+
+WEIGHT=10
+
+CATEGORY=Items by Professions
+
+SUBSECTION=Tailor
+
+DESCRIPTION=Limited Use Tub (3)
+
+
+
+ON=@DCLICK
+
+IF <SRC.RESTEST 3 i_ldt3_marker>
+
+SRC.CONSUME 3 i_ldt3_marker
+
+REMOVE
+
+RETURN 1
+
+ELSEIF <SRC.RESTEST 2 i_ldt3_marker>
+
+SRC.NEWITEM  i_ldt3_marker
+
+SRC.ACT.BOUNCE
+
+SRC.SYSMESSAGE This is the last use of this tub.
+
+RETURN 0
+
+ELSEIF <SRC.RESTEST 1 i_ldt3_marker>
+
+SRC.NEWITEM i_ldt3_marker
+
+SRC.ACT.BOUNCE
+
+SRC.SYSMESSAGE There is 1 more use of this tub.
+
+RETURN 0
+
+ELSE
+
+SRC.NEWITEM i_ldt3_marker
+
+SRC.ACT.BOUNCE
+
+SRC.SYSMESSAGE There are 2 more uses of this tub.
+
+RETURN 0
+
+ENDIF
+
+
+
+
+
+[ITEMDEF i_ldt5_marker]
+
+NAME=DO NOT REMOVE!
+
+ID=i_memory
+
+TYPE=t_eq_script
+
+
+
+ON=@CREATE
+
+ATTR=ATTR_INVIS|ATTR_NEWBIE
+
+
+
+[ITEMDEF i_limuse_dytub5]
+
+ID=0fab
+
+TYPE=T_DYE_VAT
+
+NAME=Limited Use Dying Tub (5)
+
+WEIGHT=10
+
+CATEGORY=Items by Professions
+
+SUBSECTION=Tailor
+
+DESCRIPTION=Limited Use Tub (5)
+
+
+
+ON=@DCLICK
+
+IF <SRC.RESTEST 5 i_ldt5_marker>
+
+SRC.CONSUME 5 i_ldt5_marker
+
+REMOVE
+
+RETURN 1
+
+ELSEIF <SRC.RESTEST 4 i_ldt5_marker>
+
+SRC.SYSMESSAGE This is the last use of this item.
+
+SRC.NEWITEM i_ldt5_marker
+
+SRC.ACT.BOUNCE
+
+RETURN 0
+
+ELSEIF <SRC.RESTEST 3 i_ldt5_marker>
+
+SRC.NEWITEM i_ldt5_marker
+
+SRC.ACT.BOUNCE
+
+SRC.SYSMESSAGE There are 1 more uses of this tub.
+
+RETURN 0
+
+ELSEIF <SRC.RESTEST 2 i_ldt5_marker>
+
+SRC.NEWITEM i_ldt5_marker
+
+SRC.ACT.BOUNCE
+
+SRC.SYSMESSAGE There are 2 more uses of this tub.
+
+RETURN 0
+
+ELSEIF <SRC.RESTEST 1 i_ldt5_marker>
+
+SRC.NEWITEM i_ldt5_marker
+
+SRC.ACT.BOUNCE
+
+SRC.SYSMESSAGE There is 3 more use of this tub.
+
+RETURN 0
+
+ELSE
+
+SRC.NEWITEM i_ldt5_marker
+
+SRC.ACT.BOUNCE
+
+SRC.SYSMESSAGE There are 4 more uses of this tub.
+
+RETURN 0
+
+ENDIF

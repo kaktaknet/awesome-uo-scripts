@@ -1,0 +1,166 @@
+//CREATED BY RASZITH
+
+[ITEMDEF i_furn_tub_charges_5]
+ID=i_dye_tub
+NAME=Furniture Dye Tub
+type=t_furn_tub_charged
+
+ON=@CREATE
+more=5
+
+[ITEMDEF i_furn_tub_charges_10]
+ID=i_dye_tub
+NAME=Furniture Dye Tub
+type=t_furn_tub_charged
+
+ON=@CREATE
+more=10
+
+[TYPEDEF t_furn_tub_charged]
+ON=@CLICK
+IF (<more>=10)
+	NAME a full furniture dye tub
+	RETURN 0
+ELIF (<more>=9)
+	NAME a mostly full furniture dye tub
+	RETURN 0
+ELIF (<more>=8)
+	NAME a nearly full furniture dye tub
+	RETURN 0
+ELIF (<more>=7)
+	NAME a close to full furniture dye tub
+	RETURN 0
+ELIF (<more>=6)
+	NAME a above half filled furniture dye tub
+	RETURN 0
+ELIF (<more>=5)
+	NAME a half filled furniture dye tub
+	RETURN 0
+ELIF (<more>=4)
+	NAME a below half filled furniture dye tub
+	RETURN 0
+ELIF (<more>=3)
+	NAME a close to empty furniture dye tub
+	RETURN 0
+ELIF (<more>=2)
+	NAME a nearly empty furniture dye tub
+	RETURN 0
+ELIF (<more>=1)
+	NAME a mostly empty furniture dye tub
+	RETURN 0
+ELIF (<more>=0)
+	NAME a empty furniture dye tub
+	RETURN 0
+ENDIF
+
+ON=@DCLICK
+IF (<CONT.UID>==<SRC.FINDLAYER(21).UID>)
+	IF (<more>==0)
+		SRC.SYSMESSAGE There is no more dye left in this tub.
+		RETURN 1
+	ELSE
+		TARGET What would you like to use this on?
+		RETURN 1
+	ENDIF
+ELSE
+SRC.SYSMESSAGE This must be in your backpack to use.
+RETURN 1
+ENDIF
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE You can't color people.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>!=t_table) && (<SRC.TARG.TYPE>!=t_chair) && (<SRC.TARG.TYPE>!=t_container)
+ 	SRC.SYSMESSAGE That is not a peice of furniture.
+ 	RETURN 1	
+ELSE
+	SRC.TARG.COLOR=<color>
+	more=(<more>+-1)
+	SRC.TARG.UPDATE
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_dye_tub_charges_5] 
+ID=i_dye_tub
+name=dye tub
+type=t_dye_tub_charged
+
+ON=@CREATE
+more=5
+
+[ITEMDEF i_dye_tub_charges_10] 
+ID=i_dye_tub
+name=dye tub
+type=t_dye_tub_charged
+
+ON=@CREATE
+more=10
+
+[TYPEDEF t_dye_tub_charged]
+ON=@CLICK
+IF (<more>=10)
+	NAME a full dye tub
+	RETURN 0
+ELIF (<more>=9)
+	NAME a mostly full dye tub
+	RETURN 0
+ELIF (<more>=8)
+	NAME a nearly full dye tub
+	RETURN 0
+ELIF (<more>=7)
+	NAME a close to full dye tub
+	RETURN 0
+ELIF (<more>=6)
+	NAME a above half filled dye tub
+	RETURN 0
+ELIF (<more>=5)
+	NAME a half filled dye tub
+	RETURN 0
+ELIF (<more>=4)
+	NAME a below half filled dye tub
+	RETURN 0
+ELIF (<more>=3)
+	NAME a close to empty dye tub
+	RETURN 0
+ELIF (<more>=2)
+	NAME a nearly empty dye tub
+	RETURN 0
+ELIF (<more>=1)
+	NAME a mostly empty dye tub
+	RETURN 0
+ELIF (<more>=0)
+	NAME a empty dye tub
+	RETURN 0
+ENDIF
+
+ON=@DCLICK
+IF (<CONT.UID>==<SRC.FINDLAYER(21).UID>)
+	IF (<more>==0)
+		SRC.SYSMESSAGE There is no more dye left in this tub.
+		RETURN 1
+	ELSE
+		TARGET What would you like to use this on?
+		RETURN 1
+	ENDIF
+ELSE
+SRC.SYSMESSAGE This must be in your backpack to use.
+RETURN 1
+ENDIF
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE You can't color people.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_clothing)
+	SRC.TARG.COLOR=<color>
+	more=(<more>+-1)
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE That is not made out of cloth.
+	RETURN 1
+ENDIF
+
+[EOF]

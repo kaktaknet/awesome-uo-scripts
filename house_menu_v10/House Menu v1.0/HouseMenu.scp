@@ -1,0 +1,1920 @@
+///////////////////////////////////////////////////////////////////
+//////  SCRIPT COPYRIGHT 2005 LORD ZEROFIZ OF ALTERED CHAOS  //////
+//////              http://www.alteredchaos.net		     //////
+//////                zerofiz@alteredchaos.net               //////
+///////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////
+/////////////////////////.ed"""" """$$$$be.////////////////////////
+///////////////////////-"           ^""**$$$e./////////////////////
+/////////////////////."                   '$$$c////////////////////
+/////////////////////                      "4$$b///////////////////
+///////////////////d  3                     $$$$///////////////////
+///////////////////$  *                   .$$$$$$//////////////////
+//////////////////.$  ^c           $$$$$e$$$$$$$$./////////////////
+//////////////////d$L  4.         4$$$$$$$$$$$$$$b/////////////////
+//////////////////$$$$b ^ceeeee.  4$$ECL.F*$$$$$$$/////////////////
+//////e$""=.//////$$$$P d$$$$F $ $$$$$$$$$- $$$$$$/////////////////
+/////z$$b. ^c/////3$$$F "$$$$b   $"$$$$$$$  $$$$*"//////.=""$c/////
+////4$$$$L   \/////$$P"  "$$b   .$ $$$$$...e$$////////.=  e$$$.////
+////^*$$$$$c  %..///*c    ..    $$ 3$$$$$$$$$$eF/////zP  d$$$$$////
+//////"**$$$ec   "\///%ce""    $$$  $$$$$$$$$$*////.r" =$$$$P""////
+////////////"*$b.  "c//*$e.    *** d$$$$$"L$$////.d"  e$$***"//////
+//////////////^*$$c ^$c $$$      4J$$$$$% $$$/.e*".eeP"////////////
+/////////////////"$$$$$$"'$=e....$*$$**$cz$$" "..d$*"//////////////
+///////////////////"*$$$  *=%4.$ L L$ P3$$$F $$$P"/////////////////
+//////////////////////"$   "%*ebJLzb$e$$$$$b $P"///////////////////
+////////////////////////%..      4$$$$$$$$$$ "/////////////////////
+/////////////////////////$$$e   z$$$$$$$$$$%///////////////////////
+//////////////////////////"*$c  "$$$$$$$P"/////////////////////////
+///////////////////////////."""*$$$$$$$$bc/////////////////////////
+////////////////////////.-"    .$***$$$"""*e.//////////////////////
+/////////////////////.-"    .e$"/////"*$c  ^*b.////////////////////
+//////////////.=*""""    .e$*"//////////"*bc  "*$e..///////////////
+////////////.$"        .z*"///////////////^*$e.   "*****e./////////
+////////////$$ee$c   .d"/////////////////////"*$.        3.////////
+////////////^*$E")$..$"/////////////////////////*   .ee==d%////////
+///////////////$.d$$$*///////////////////////////*  J$$$e*/////////
+////////////////"""""/////////////////////////////"$$$"////////////
+///////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+
+
+[DEFNAME HOUSEMENUSETTINGS]
+HouseDecayEnabled	0		//1=ON 0=OFF
+HouseDecayTimer		2678400		//1 MONTH IN SECONDS
+LogErrors		1		//1=ON 0=OFF
+SYSMessageColor		@50		//YELLOW
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//###############################################   ITEM DEFINITIONS   ###################################################//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////
+//######### RESCRIPTED HOUSE SIGNS #########//
+//////////////////////////////////////////////
+[ITEMDEF 0bd1]
+DEFNAME=i_sign_brass
+TYPE=T_SCRIPT
+FLIP=1
+CATEGORY=Decoration - Signs
+SUBSECTION=Blank
+DESCRIPTION=Brass Blank
+DUPELIST=0bd2
+
+ON=@CREATE
+TIMER=-1
+ATTR=04010
+
+ON=@DCLICK
+ IF !(<LINK>==04FFFFFFF)
+  IF !(<LINK.TAG0.OWNER>)
+   IF !(<SRC.TAG0.MYHOUSE1>)
+    LINK.TAG.OWNER=<SRC.UID>
+    LINK.TAG.OWNERNAME=<SRC.NAME>
+    SRC.TAG.MYHOUSE1=<LINK>
+    SRC.SYSMESSAGE <DEF.SYSMessageColor> You are now the owner of a <LINK.NAME>!
+    IF (<DEF.HouseDecayEnabled>)
+     TIMER=<DEF.HouseDecayTimer>
+    ENDIF
+    DIALOG D_HOUSE_MENU_SYSTEM
+   ELSEIF !(<SRC.TAG0.MYHOUSE2>)
+    LINK.TAG.OWNER=<SRC.UID>
+    LINK.TAG.OWNERNAME=<SRC.NAME>   
+    SRC.TAG.MYHOUSE2=<LINK>
+    SRC.SYSMESSAGE <DEF.SYSMessageColor> You are now the owner of a <LINK.NAME>!
+    IF (<DEF.HouseDecayEnabled>)
+     TIMER=<DEF.HouseDecayTimer>
+    ENDIF
+    DIALOG D_HOUSE_MENU_SYSTEM
+   ELSE
+    SRC.SYSMESSAGE <DEF.SYSMessageColor> You already own two houses!
+     IF (<LINK>==<SRC.TAG0.MYHOUSE1>)
+      SRC.TAG.MYHOUSE1=
+     ELSEIF (<LINK>==<SRC.TAG0.MYHOUSE2>)
+      SRC.TAG.MYHOUSE2=
+     ENDIF
+    F_REDEED_HOUSE
+   ENDIF    
+  ELSE
+   IF !(STRCMP(<LINK.TAG0.OWNER>,<SRC.UID>)) || !(STRCMP(<LINK.TAG0.COOWNER>,<SRC.UID>))
+    IF (<DEF.HouseDecayEnabled>)
+     TIMER=<DEF.HouseDecayTimer>
+    ENDIF
+    DIALOG D_HOUSE_MENU_SYSTEM
+   ELSE
+    SRC.SYSMESSAGE <DEF.SYSMessageColor> This is not your house!
+   ENDIF
+  ENDIF
+ ELSE
+  IF (<DEF.LogErrors>)
+   SERV.LOG -----------: BEGIN ERROR :-----------
+   SERV.LOG By: <SRC.NAME>
+   SERV.LOG Location: <P> 
+   SERV.LOG Reason: No House Linked to Brass Sign
+   SERV.LOG ------------: END ERROR :------------
+  ENDIF
+ ENDIF
+RETURN 1
+
+ON=@TIMER
+F_REMOVE_OLD_KEYS <LINK>
+LINK.REMOVE
+RETURN 1
+
+[ITEMDEF 0bd2]
+DEFNAME=i_sign_brass_2
+DUPEITEM=0bd1
+
+
+//////////////////////////////////////////////
+//########### HOUSE TRANSFER ITEM ##########//
+//////////////////////////////////////////////
+[ITEMDEF I_HOUSE_TRANSFER]
+TYPE=T_EQ_SCRIPT
+ID=I_MEMORY
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+TARGET <DEF.SYSMessageColor> Target New House Owner:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target another player.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISPLAYER>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target another player.
+ REMOVE
+ELSE
+ IF (<SRC.TARG.UID>==<LINK.TAG.OWNER>)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You already own this house!
+  REMOVE
+ ELSE
+  LINK.TAG.OWNER=<SRC.TARG.UID>
+  LINK.TAG.OWNERNAME=<SRC.TARG.NAME>
+  LINK.TAG.COOWNER=
+  LINK.TAG.COOWNERNAME=
+  LINK.TAG.FRIEND1=
+  LINK.TAG.FRIEND1NAME=
+  LINK.TAG.FRIEND2=
+  LINK.TAG.FRIEND2NAME=  
+  LINK.TAG.FRIEND3=
+  LINK.TAG.FRIEND3NAME=
+  LINK.TAG.FRIEND4=
+  LINK.TAG.FRIEND4NAME=
+  LINK.TAG.FRIEND5=
+  LINK.TAG.FRIEND5NAME=
+  SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You have been made owner of this house.
+  REMOVE
+ ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target another player.
+REMOVE
+RETURN 1
+
+
+//////////////////////////////////////////////
+//############## CO-OWNER ITEM #############//
+//////////////////////////////////////////////
+[ITEMDEF I_HOUSE_ADD_COOWNER]
+TYPE=T_EQ_SCRIPT
+ID=I_MEMORY
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target Your New Co-Owner:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISPLAYER>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+ REMOVE
+ELSE
+ IF (<SRC.TARG.UID>==<LINK.TAG.OWNER>)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You are the owner of this house!
+  REMOVE
+ ELSE
+  LINK.TAG.COOWNER=<SRC.TARG.UID>
+  LINK.TAG.COOWNERNAME=<SRC.TARG.NAME>
+  SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You have been made co-owner of this house.
+  REMOVE
+ ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+
+//////////////////////////////////////////////
+//############## FRIEND ITEM 1 #############//
+//////////////////////////////////////////////
+[ITEMDEF I_HOUSE_ADD_FRIEND_1]
+TYPE=T_EQ_SCRIPT
+ID=I_MEMORY
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target a person to be a friend of this house:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISPLAYER>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+ REMOVE
+ELSE
+ IF (<SRC.TARG.UID>==<LINK.TAG.OWNER>)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You are the owner of this house!
+  REMOVE
+ ELSE
+  LINK.TAG.FRIEND1=<SRC.TARG.UID>
+  LINK.TAG.FRIEND1NAME=<SRC.TARG.NAME>
+  SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You have been made a friend of this house.
+  REMOVE
+ ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+//////////////////////////////////////////////
+//############## FRIEND ITEM 2 #############//
+//////////////////////////////////////////////
+[ITEMDEF I_HOUSE_ADD_FRIEND_2]
+TYPE=T_EQ_SCRIPT
+ID=I_MEMORY
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target a person to be a friend of this house:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISPLAYER>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+ REMOVE
+ELSE
+ IF (<SRC.TARG.UID>==<LINK.TAG.OWNER>)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You are the owner of this house!
+  REMOVE
+ ELSE
+  LINK.TAG.FRIEND2=<SRC.TARG.UID>
+  LINK.TAG.FRIEND2NAME=<SRC.TARG.NAME>
+  SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You have been made a friend of this house.
+  REMOVE
+ ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+//////////////////////////////////////////////
+//############## FRIEND ITEM 3 #############//
+//////////////////////////////////////////////
+[ITEMDEF I_HOUSE_ADD_FRIEND_3]
+TYPE=T_EQ_SCRIPT
+ID=I_MEMORY
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target a person to be a friend of this house:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISPLAYER>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+ REMOVE
+ELSE
+ IF (<SRC.TARG.UID>==<LINK.TAG.OWNER>)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You are the owner of this house!
+  REMOVE
+ ELSE
+  LINK.TAG.FRIEND3=<SRC.TARG.UID>
+  LINK.TAG.FRIEND3NAME=<SRC.TARG.NAME>
+  SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You have been made a friend of this house.
+  REMOVE
+ ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+//////////////////////////////////////////////
+//############## FRIEND ITEM 4 #############//
+//////////////////////////////////////////////
+[ITEMDEF I_HOUSE_ADD_FRIEND_4]
+TYPE=T_EQ_SCRIPT
+ID=I_MEMORY
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target a person to be a friend of this house:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISPLAYER>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+ REMOVE
+ELSE
+ IF (<SRC.TARG.UID>==<LINK.TAG.OWNER>)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You are the owner of this house!
+  REMOVE
+ ELSE
+  LINK.TAG.FRIEND4=<SRC.TARG.UID>
+  LINK.TAG.FRIEND4NAME=<SRC.TARG.NAME>
+  SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You have been made a friend of this house.
+  REMOVE
+ ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+//////////////////////////////////////////////
+//############## FRIEND ITEM 5 #############//
+//////////////////////////////////////////////
+[ITEMDEF I_HOUSE_ADD_FRIEND_5]
+TYPE=T_EQ_SCRIPT
+ID=I_MEMORY
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target a person to be a friend of this house:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISPLAYER>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+ REMOVE
+ELSE
+ IF (<SRC.TARG.UID>==<LINK.TAG.OWNER>)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You are the owner of this house!
+  REMOVE
+ ELSE
+  LINK.TAG.FRIEND5=<SRC.TARG.UID>
+  LINK.TAG.FRIEND5NAME=<SRC.TARG.NAME>
+  SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You have been made a friend of this house.
+  REMOVE
+ ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a player.
+REMOVE
+RETURN 1
+
+
+//////////////////////////////////////////////
+//############## CHANGE LOCKS ##############//
+//////////////////////////////////////////////
+[ITEMDEF I_CHANGE_LOCKS]
+ID=I_MEMORY
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target the door in which to change:
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.REGION.TYPE>==<LINK>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> This door is not to your house.
+ELSE
+ IF !(<SRC.TARG.TYPE>==T_DOOR_LOCKED)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> This is not a door.
+ ELSE
+  SRC.NEWITEM I_KEY_COPPER
+  SRC.ACT.MORE1=<SRC.ACT.UID>
+  SRC.ACT.LINK=<LINK>
+  SRC.ACT.ATTR=06
+  SRC.ACT.BOUNCE
+  SRC.TARG.MORE1=<SRC.ACT.UID>
+ ENDIF
+ENDIF
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You must target a door.
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a door.
+REMOVE
+RETURN 1
+
+
+//////////////////////////////////////////////
+//################ NEW KEYS ################//
+//////////////////////////////////////////////
+[ITEMDEF I_CREATE_NEW_KEY]
+ID=I_MEMORY
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target the door you wish to make a key to:
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.REGION.TYPE>==<LINK>)
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> This door is not to your house.
+ELSE
+ IF !(<SRC.TARG.TYPE>==T_DOOR_LOCKED)
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> This is not a door.
+ ELSE
+  SRC.NEWITEM I_KEY_COPPER
+  SRC.ACT.MORE1=<SRC.TARG.MORE1>
+  SRC.ACT.LINK=<LINK>
+  SRC.ACT.ATTR=06
+  SRC.ACT.BOUNCE
+ ENDIF
+ENDIF
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You must target a door.
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a door.
+REMOVE
+RETURN 1
+
+
+
+//////////////////////////////////////////////
+//################ LOCK DOWN ###############//
+//////////////////////////////////////////////
+[ITEMDEF I_LOCK_DOWN]
+ID=I_MEMORY
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target the item in which to lock down:
+RETURN 1
+
+
+ON=@TARGON_ITEM
+IF (!(<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE1>)) || (!(<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE2>))
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> This item is not to your house.
+ REMOVE
+ELSE
+ SRC.TARG.ATTR=<SRC.TARG.ATTR>|attr_move_never
+ REMOVE
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You must target an item.
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target an item.
+REMOVE
+RETURN 1
+
+
+//////////////////////////////////////////////
+//############### UNLOCK ITEM ##############//
+//////////////////////////////////////////////
+[ITEMDEF I_UNLOCK_ITEM]
+ID=I_MEMORY
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target the item in which to unlock:
+RETURN 1
+
+
+ON=@TARGON_ITEM
+IF (!(<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE1>)) || (!(<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE2>))
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> This item is not to your house.
+ REMOVE
+ELSE
+ SRC.TARG.ATTR=<SRC.TARG.ATTR> & ~attr_move_never
+ REMOVE
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You must target an item.
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target an item.
+REMOVE
+RETURN 1
+
+
+//////////////////////////////////////////////
+//######### GARBAGE CAN PLACEMENT ##########//
+//////////////////////////////////////////////
+[ITEMDEF I_GARBAGE_CAN_PLACEMENT]
+ID=I_MEMORY
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target yourself over the location you wish to place the trash barrel:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You must target yourself on the location.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.UID>==<SRC.TARG.UID>)
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE1>) || (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE2>)
+  SRC.NEWITEM I_GARBAGE_CAN
+  SRC.ACT.P <SRC.TARG.P>
+  SRC.ACT.LINK <SRC.REGION.TYPE>
+  REMOVE
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You cannot place a garbage can outside of your house.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You cannot target other people with this.
+ REMOVE
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target yourself over the location.
+REMOVE
+RETURN 1
+
+//////////////////////////////////////////////
+//############### GARBAGE CAN ##############//
+//////////////////////////////////////////////
+[ITEMDEF I_GARBAGE_CAN]
+ID=I_BARREL_OPEN
+TYPE=T_CONTAINER
+
+ON=@CREATE
+COLOR=003C2
+ATTR=010
+
+ON=@DCLICK
+EMPTY
+
+
+//////////////////////////////////////////////
+//######## SECURE_CHEST PLACEMENT ##########//
+//////////////////////////////////////////////
+[ITEMDEF I_SECURE_CHEST_PLACEMENT]
+ID=I_MEMORY
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target yourself on the location you wish to place the chest:
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.TARG.SYSMESSAGE <DEF.SYSMessageColor> You must target yourself on the location.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.UID>==<SRC.TARG.UID>)
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE1>) || (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE2>)
+  SRC.NEWITEM I_SECURE_CHEST
+  SRC.ACT.P <SRC.TARG.P>
+  SRC.ACT.LINK <SRC.REGION.TYPE>
+  REMOVE
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You cannot place a chest outside of your house.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You cannot target other people with this.
+ REMOVE
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target yourself over the location.
+REMOVE
+RETURN 1
+
+//////////////////////////////////////////////
+//############## SECURE CHESTS #############//
+//////////////////////////////////////////////
+[ITEMDEF I_SECURE_CHEST]
+ID=I_CHEST_METAL
+TYPE=T_CONTAINER
+NAME=Secure Chest
+
+ON=@CREATE
+ATTR=010
+
+ON=@DCLICK
+IF ((<SRC.UID>==<LINK.TAG.OWNER>) || (<SRC.UID>==<LINK.TAG0.COOWNER>) || (<SRC.UID>==<LINK.TAG0.FRIEND1>) || (<SRC.UID>==<LINK.TAG0.FRIEND2>) || (<SRC.UID>==<LINK.TAG0.FRIEND3>) || (<SRC.UID>==<LINK.TAG0.FRIEND4>) || (<SRC.UID>==<LINK.TAG0.FRIEND5>))
+ RETURN 0 
+ELSE
+ RETURN 1
+ENDIF
+
+//////////////////////////////////////////////
+//############## REMOVE ITEM ###############//
+//////////////////////////////////////////////
+[ITEMDEF I_REMOVE_ITEM]
+ID=I_MEMORY
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+TARGET <DEF.SYSMessageColor> Target the the secure chest or trash barrel you wish to remove:
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID>==I_SECURE_CHEST) || (<SRC.TARG.BASEID>==I_GARBAGE_CAN)
+ IF (<SRC.TARG.LINK>==<SRC.REGION.TYPE>)
+  SRC.TARG.REMOVE
+  REMOVE
+ ELSE 
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You can only use this inside your house.
+  REMOVE
+ ENDIF
+ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You can only remove secure chests or trash barrels.
+  REMOVE 
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a secure chest or trash barrel.
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE <DEF.SYSMessageColor> You must target a secure chest or trash barrel.
+REMOVE
+RETURN 1
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//###############################################   GUMP DEFINITION   ####################################################//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[DIALOG D_HOUSE_MENU_SYSTEM]
+100,10
+
+NOMOVE
+
+
+
+resizepic 50 0 9550 400 450			//MAIN BACKGROUND
+resizepic 100 24 9568 300 80			//TOP BACKGROUND
+resizepic 74 185 9568 350 225			//BOTTOM BACKGROUND
+
+gumppic 0 25 10440				//DRAGON LEFT
+gumppic 417 25 10441				//DRAGON RIGHT
+
+text 92 5 800 0					//VERSION INFORMATION 	
+text 115 197 800 1				//RENAME HOUSE		
+text 115 223 800 2				//CO-OWNER OPTIONS		
+text 140 248 800 3				//ADD CO-OWNER
+text 280 248 800 4				//REMOVE CO-OWNER
+text 115 273 800 5				//FRIENDS OPTIONS
+text 115 298 800 6				//TRANSFER OWNERSHIP
+text 115 323 800 7				//CREATE KEY
+text 115 348 800 8				//CHANGE LOCKS
+text 130 30 800 9				//OWNER HEADING
+text 275 30 800 10				//CO-OWNER HEADING
+text 130 45 100 11				//OWNER NAME
+
+IF !(<LINK.TAG0.COOWNER>)
+ text 275 45 100 12				//CO-OWNER NAME (IF NONE)
+ELSE
+ text 275 45 100 13				//CO-OWNER NAME
+ENDIF
+
+text 130 65 800 14 				//HOUSE NAME HEADING
+text 130 80 100 15				//HOUSE NAME
+text 74 415 800 16				//HOUSE DECAY HEADING
+
+IF (<DEF.HouseDecayEnabled>)
+ text 175 415 100 17				//HOUSE DECAY TEXT (ENABLED)
+ text 250 415 800 18				//TIME LEFT BEFORE DECAY
+ text 345 415 100 19				//THE TIME ITSELF
+ELSE
+ text 200 415 100 20				//HOUSE DECAY TEXT (DISABLED)
+ENDIF
+
+
+button 90 200 9702 9703 1 0 2			//RENAME HOUSE BUTTON	
+gumppic 90 226 9765				//CO-OWNER OPTIONS 'BUTTON' IMAGE
+
+button 115 251 9702 9703 1 0 12			//ADD CO-OWNER
+button 255 251 9702 9703 1 0 13			//REMOVE CO-OWNER
+
+button 90 276 9702 9703 1 0 3			//FRIENDS OPTIONS BUTTON
+
+button 90 301 9702 9703 1 0 4			//TRANSFER OWNERSHIP BUTTON
+
+button 90 326 9702 9703 1 0 11			//CREATE KEY BUTTON
+
+button 90 351 9702 9703 1 0 1			//CHANGE LOCKS BUTTON
+
+button 74 111 65002 65002 1 0 7			//BANKING BUTTON
+
+button 226 111 65003 65003 1 0 8		//CHANGE SIGN BUTTON
+
+button 375 111 65005 65005 1 0 6		//REDEED BUTTON
+
+CHECKERTRANS 0 0 400 450
+
+[DIALOG D_HOUSE_MENU_SYSTEM TEXT]
+- Altered Chaos House Menu System v1.0 -
+Rename House
+Co-Owner Options
+Add Co-Owner
+Remove Co-Owner
+Friend Options
+Transfer Ownership
+Create Newbied Key
+Change Locks
+
+_Owner_
+_Co-Owner_
+
+<LINK.TAG.OWNERNAME>
+
+None
+<LINK.TAG.COOWNERNAME>
+
+_House Name_
+<NAME>
+
+House Decay:
+
+Enabled
+Time Left:
+<EVAL((((<TIMER>/60)/60)/24) )> Days
+
+Disabled
+
+
+[DIALOG D_HOUSE_MENU_SYSTEM BUTTON]
+
+ONBUTTON=1
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ F_CHANGE_LOCKS <LINK>
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can change the locks.
+ENDIF
+
+ONBUTTON=2
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ DIALOG D_RENAME_HOUSE
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can rename his house.
+ENDIF
+
+ONBUTTON=3
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ DIALOG D_FRIEND_MENU
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can alter friends of this house.
+ENDIF
+
+ONBUTTON=4
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ F_TRANSFER_HOUSE
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can transfer his house.
+ENDIF
+
+
+ONBUTTON=6
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ DIALOG D_REDEED_HOUSE
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can redeed his house.
+ENDIF
+
+ONBUTTON=7
+SRC.BANK
+
+ONBUTTON=8
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ DIALOG D_HOUSE_SIGN
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can change the sign.
+ENDIF
+
+
+ONBUTTON=11
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ F_CREATE_NEW_KEYS <LINK>
+ELSE
+ IF !(STRCMP(<SRC.UID>,<LINK.TAG0.COOWNER>)) 
+  F_CREATE_NEW_KEYS <LINK> 
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner or co-owner can create new keys.
+ ENDIF
+ENDIF
+
+ONBUTTON=12
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF !(<LINK.TAG0.COOWNER>)
+  F_HOUSE_ADD_COOWNER
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You must remove your current co-owner.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can set the co-owner of his house.
+ENDIF
+
+ONBUTTON=13
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF (<LINK.TAG0.COOWNER>)
+  LINK.TAG.COOWNER=
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You have no co-owner currently set.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can set the co-owner of his house.
+ENDIF
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[DIALOG D_HOUSE_SIGN]
+100,10
+
+NOMOVE
+
+resizepic 50 0 9550 400 450			//MAIN BACKGROUND
+gumppic 0 25 10440				//DRAGON LEFT
+gumppic 417 25 10441				//DRAGON RIGHT
+
+////////////////////////////////////////	FIRST COLUMN        //////////////////////////////////////////////////
+button 85 25 2103 2104 1 0 1
+tilepic 95 20 2979
+button 85 50 2103 2104 1 0 2
+tilepic 95 45 2981
+button 85 75 2103 2104 1 0 3
+tilepic 95 70 2983
+button 85 100 2103 2104 1 0 4
+tilepic 95 95 2985
+button 85 125 2103 2104 1 0 5
+tilepic 95 120 2987
+button 85 150 2103 2104 1 0 6
+tilepic 95 145 2989
+button 85 175 2103 2104 1 0 7
+tilepic 95 170 2991
+button 85 200 2103 2104 1 0 8
+tilepic 95 195 2993
+button 85 225 2103 2104 1 0 9
+tilepic 95 220 2995
+button 85 250 2103 2104 1 0 10
+tilepic 95 245 2997
+button 85 275 2103 2104 1 0 11
+tilepic 95 270 2999
+button 85 300 2103 2104 1 0 12
+tilepic 95 295 3001
+button 85 325 2103 2104 1 0 13
+tilepic 95 320 3003
+button 85 350 2103 2104 1 0 14
+tilepic 95 345 3005
+button 85 375 2103 2104 1 0 15
+tilepic 95 370 3007
+button 85 400 2103 2104 1 0 16
+tilepic 95 395 3009
+///////////////////////////////////////		SECOND COLUMN        //////////////////////////////////////////////////
+button 160 25 2103 2104 1 0 17
+tilepic 120 20 2980
+button 160 50 2103 2104 1 0 18
+tilepic 120 45 2982
+button 160 75 2103 2104 1 0 19
+tilepic 120 70 2984
+button 160 100 2103 2104 1 0 20
+tilepic 120 95 2986
+button 160 125 2103 2104 1 0 21
+tilepic 120 120 2988
+button 160 150 2103 2104 1 0 22
+tilepic 120 145 2990
+button 160 175 2103 2104 1 0 23
+tilepic 120 170 2992
+button 160 200 2103 2104 1 0 24
+tilepic 120 195 2994
+button 160 225 2103 2104 1 0 25
+tilepic 120 220 2996
+button 160 250 2103 2104 1 0 26
+tilepic 120 245 2998
+button 160 275 2103 2104 1 0 27
+tilepic 120 270 3000
+button 160 300 2103 2104 1 0 28
+tilepic 120 295 3002
+button 160 325 2103 2104 1 0 29
+tilepic 120 320 3004
+button 160 350 2103 2104 1 0 30
+tilepic 120 345 3006
+button 160 375 2103 2104 1 0 31
+tilepic 120 370 3008
+button 160 400 2103 2104 1 0 32
+tilepic 120 395 3010
+
+
+////////////////////////////////////////	THIRD COLUMN        //////////////////////////////////////////////////
+button 200 25 2103 2104 1 0 33
+tilepic 210 20 3011
+button 200 50 2103 2104 1 0 34
+tilepic 210 45 3013
+button 200 75 2103 2104 1 0 35
+tilepic 210 70 3015
+button 200 100 2103 2104 1 0 36
+tilepic 210 95 3017
+button 200 125 2103 2104 1 0 37
+tilepic 210 120 3019
+button 200 150 2103 2104 1 0 38
+tilepic 210 145 3021
+button 200 175 2103 2104 1 0 39
+tilepic 210 170 3023
+button 200 200 2103 2104 1 0 40
+tilepic 210 195 3025
+button 200 225 2103 2104 1 0 41
+tilepic 210 220 3027
+button 200 250 2103 2104 1 0 42
+tilepic 210 245 3029
+button 200 275 2103 2104 1 0 43
+tilepic 210 270 3031
+button 200 300 2103 2104 1 0 44
+tilepic 210 295 3033
+button 200 325 2103 2104 1 0 45
+tilepic 210 320 3035
+button 200 350 2103 2104 1 0 46
+tilepic 210 345 3037
+button 200 375 2103 2104 1 0 47
+tilepic 210 370 3039
+button 200 400 2103 2104 1 0 48
+tilepic 210 395 3041
+////////////////////////////////////////	FOURTH COLUMN        //////////////////////////////////////////////////
+button 275 25 2103 2104 1 0 49
+tilepic 235 20 3012
+button 275 50 2103 2104 1 0 50
+tilepic 235 45 3014
+button 275 75 2103 2104 1 0 51
+tilepic 235 70 3016
+button 275 100 2103 2104 1 0 52
+tilepic 235 95 3018
+button 275 125 2103 2104 1 0 53
+tilepic 235 120 3020
+button 275 150 2103 2104 1 0 54
+tilepic 235 145 3022
+button 275 175 2103 2104 1 0 55
+tilepic 235 170 3024
+button 275 200 2103 2104 1 0 56
+tilepic 235 195 3026
+button 275 225 2103 2104 1 0 57
+tilepic 235 220 3028
+button 275 250 2103 2104 1 0 58
+tilepic 235 245 3030
+button 275 275 2103 2104 1 0 59
+tilepic 235 270 3032
+button 275 300 2103 2104 1 0 60
+tilepic 235 295 3034
+button 275 325 2103 2104 1 0 61
+tilepic 235 320 3036
+button 275 350 2103 2104 1 0 62
+tilepic 235 345 3038
+button 275 375 2103 2104 1 0 63
+tilepic 235 370 3040
+button 275 400 2103 2104 1 0 64
+tilepic 235 395 3042
+
+
+////////////////////////////////////////	FIFTH COLUMN        //////////////////////////////////////////////////
+button 315 25 2103 2104 1 0 65
+tilepic 325 20 3049
+button 315 50 2103 2104 1 0 66
+tilepic 325 45 3051
+button 315 75 2103 2104 1 0 67
+tilepic 325 70 3053
+button 315 100 2103 2104 1 0 68
+tilepic 325 95 3055
+button 315 125 2103 2104 1 0 69
+tilepic 325 120 3057
+button 315 150 2103 2104 1 0 70
+tilepic 325 145 3059
+button 315 175 2103 2104 1 0 71
+tilepic 325 170 3061
+button 315 200 2103 2104 1 0 72
+tilepic 325 195 3063
+button 315 225 2103 2104 1 0 73
+tilepic 325 220 3065
+button 315 250 2103 2104 1 0 74
+tilepic 325 245 3067
+button 315 275 2103 2104 1 0 75
+tilepic 325 270 3069
+button 315 300 2103 2104 1 0 76
+tilepic 325 295 3071
+button 315 325 2103 2104 1 0 77
+tilepic 325 320 3073
+button 315 350 2103 2104 1 0 78
+tilepic 325 345 3075
+button 315 375 2103 2104 1 0 79
+tilepic 325 370 3077
+button 315 400 2103 2104 1 0 80
+tilepic 325 395 3079
+
+////////////////////////////////////////	SIXTH COLUMN        //////////////////////////////////////////////////
+button 390 25 2103 2104 1 0 81
+tilepic 350 20 3050
+button 390 50 2103 2104 1 0 82
+tilepic 350 45 3052
+button 390 75 2103 2104 1 0 83
+tilepic 350 70 3054
+button 390 100 2103 2104 1 0 84
+tilepic 350 95 3056
+button 390 125 2103 2104 1 0 85
+tilepic 350 120 3058
+button 390 150 2103 2104 1 0 86
+tilepic 350 145 3060
+button 390 175 2103 2104 1 0 87
+tilepic 350 170 3062
+button 390 200 2103 2104 1 0 88
+tilepic 350 195 3064
+button 390 225 2103 2104 1 0 89
+tilepic 350 220 3066
+button 390 250 2103 2104 1 0 90
+tilepic 350 245 3068
+button 390 275 2103 2104 1 0 91
+tilepic 350 270 3070
+button 390 300 2103 2104 1 0 92
+tilepic 350 295 3072
+button 390 325 2103 2104 1 0 93
+tilepic 350 320 3074
+button 390 350 2103 2104 1 0 94
+tilepic 350 345 3076
+button 390 375 2103 2104 1 0 95
+tilepic 350 370 3078
+button 390 400 2103 2104 1 0 96
+tilepic 350 395 3080
+
+
+
+
+
+
+[DIALOG D_HOUSE_SIGN BUTTON]
+
+ONBUTTON=1
+DISPID=2979
+SRC.FIX
+
+ONBUTTON=2
+DISPID=2981
+SRC.FIX
+
+ONBUTTON=3
+DISPID=2983
+SRC.FIX
+
+ONBUTTON=4
+DISPID=2985
+SRC.FIX
+
+ONBUTTON=5
+DISPID=2987
+SRC.FIX
+
+ONBUTTON=6
+DISPID=2989
+SRC.FIX
+
+ONBUTTON=7
+DISPID=2991
+SRC.FIX
+
+ONBUTTON=8
+DISPID=2993
+SRC.FIX
+
+ONBUTTON=9
+DISPID=2995
+SRC.FIX
+
+ONBUTTON=10
+DISPID=2997
+SRC.FIX
+
+ONBUTTON=11
+DISPID=2999
+SRC.FIX
+
+ONBUTTON=12
+DISPID=3001
+SRC.FIX
+
+ONBUTTON=13
+DISPID=3003
+SRC.FIX
+
+ONBUTTON=14
+DISPID=3005
+SRC.FIX
+
+ONBUTTON=15
+DISPID=3007
+SRC.FIX
+
+ONBUTTON=16
+DISPID=3009
+SRC.FIX
+
+ONBUTTON=17
+DISPID=2980
+SRC.FIX
+
+ONBUTTON=18
+DISPID=2982
+SRC.FIX
+
+ONBUTTON=19
+DISPID=2984
+SRC.FIX
+
+ONBUTTON=20
+DISPID=2986
+SRC.FIX
+
+ONBUTTON=21
+DISPID=2988
+SRC.FIX
+
+ONBUTTON=22
+DISPID=2990
+SRC.FIX
+
+ONBUTTON=23
+DISPID=2992
+SRC.FIX
+
+ONBUTTON=24
+DISPID=2994
+SRC.FIX
+
+ONBUTTON=25
+DISPID=2996
+SRC.FIX
+
+ONBUTTON=26
+DISPID=2998
+SRC.FIX
+
+ONBUTTON=27
+DISPID=3000
+SRC.FIX
+
+ONBUTTON=28
+DISPID=3002
+SRC.FIX
+
+ONBUTTON=29
+DISPID=3004
+SRC.FIX
+
+ONBUTTON=30
+DISPID=3006
+SRC.FIX
+
+ONBUTTON=31
+DISPID=3008
+SRC.FIX
+
+ONBUTTON=32
+DISPID=3010
+SRC.FIX
+
+ONBUTTON=33
+DISPID=3011
+SRC.FIX
+
+ONBUTTON=34
+DISPID=3013
+SRC.FIX
+
+ONBUTTON=35
+DISPID=3015
+SRC.FIX
+
+ONBUTTON=36
+DISPID=3017
+SRC.FIX
+
+ONBUTTON=37
+DISPID=3019
+SRC.FIX
+
+ONBUTTON=38
+DISPID=3021
+SRC.FIX
+
+ONBUTTON=39
+DISPID=3023
+SRC.FIX
+
+ONBUTTON=40
+DISPID=3025
+SRC.FIX
+
+ONBUTTON=41
+DISPID=3027
+SRC.FIX
+
+ONBUTTON=42
+DISPID=3029
+SRC.FIX
+
+ONBUTTON=43
+DISPID=3031
+SRC.FIX
+
+ONBUTTON=44
+DISPID=3033
+SRC.FIX
+
+ONBUTTON=45
+DISPID=3035
+SRC.FIX
+
+ONBUTTON=46
+DISPID=3037
+SRC.FIX
+
+ONBUTTON=47
+DISPID=3039
+SRC.FIX
+
+ONBUTTON=48
+DISPID=3041
+SRC.FIX
+
+ONBUTTON=49
+DISPID=3012
+SRC.FIX
+
+ONBUTTON=50
+DISPID=3014
+SRC.FIX
+
+ONBUTTON=51
+DISPID=3016
+SRC.FIX
+
+ONBUTTON=52
+DISPID=3018
+SRC.FIX
+
+ONBUTTON=53
+DISPID=3020
+SRC.FIX
+
+ONBUTTON=54
+DISPID=3022
+SRC.FIX
+
+ONBUTTON=55
+DISPID=3024
+SRC.FIX
+
+ONBUTTON=56
+DISPID=3026
+SRC.FIX
+
+ONBUTTON=57
+DISPID=3028
+SRC.FIX
+
+ONBUTTON=58
+DISPID=3030
+SRC.FIX
+
+ONBUTTON=59
+DISPID=3032
+SRC.FIX
+
+ONBUTTON=60
+DISPID=3034
+SRC.FIX
+
+ONBUTTON=61
+DISPID=3036
+SRC.FIX
+
+ONBUTTON=62
+DISPID=3038
+SRC.FIX
+
+ONBUTTON=63
+DISPID=3040
+SRC.FIX
+
+ONBUTTON=64
+DISPID=3042
+SRC.FIX
+
+ONBUTTON=65
+DISPID=3049
+SRC.FIX
+
+ONBUTTON=66
+DISPID=3051
+SRC.FIX
+
+ONBUTTON=67
+DISPID=3053
+SRC.FIX
+
+ONBUTTON=68
+DISPID=3055
+SRC.FIX
+
+ONBUTTON=69
+DISPID=3057
+SRC.FIX
+
+ONBUTTON=70
+DISPID=3059
+SRC.FIX
+
+ONBUTTON=71
+DISPID=3061
+SRC.FIX
+
+ONBUTTON=72
+DISPID=3063
+SRC.FIX
+
+ONBUTTON=73
+DISPID=3065
+SRC.FIX
+
+ONBUTTON=74
+DISPID=3067
+SRC.FIX
+
+ONBUTTON=75
+DISPID=3069
+SRC.FIX
+
+ONBUTTON=76
+DISPID=3071
+SRC.FIX
+
+ONBUTTON=77
+DISPID=3073
+SRC.FIX
+
+ONBUTTON=78
+DISPID=3075
+SRC.FIX
+
+ONBUTTON=79
+DISPID=3077
+SRC.FIX
+
+ONBUTTON=80
+DISPID=3079
+SRC.FIX
+
+ONBUTTON=81
+DISPID=3050
+SRC.FIX
+
+ONBUTTON=82
+DISPID=3052
+SRC.FIX
+
+ONBUTTON=83
+DISPID=3054
+SRC.FIX
+
+ONBUTTON=84
+DISPID=3056
+SRC.FIX
+
+ONBUTTON=85
+DISPID=3058
+SRC.FIX
+
+ONBUTTON=86
+DISPID=3060
+SRC.FIX
+
+ONBUTTON=87
+DISPID=3062
+SRC.FIX
+
+ONBUTTON=88
+DISPID=3064
+SRC.FIX
+
+ONBUTTON=89
+DISPID=3066
+SRC.FIX
+
+ONBUTTON=90
+DISPID=3068
+SRC.FIX
+
+ONBUTTON=91
+DISPID=3070
+SRC.FIX
+
+ONBUTTON=92
+DISPID=3072
+SRC.FIX
+
+ONBUTTON=93
+DISPID=3074
+SRC.FIX
+
+ONBUTTON=94
+DISPID=3076
+SRC.FIX
+
+ONBUTTON=95
+DISPID=3078
+SRC.FIX
+
+ONBUTTON=96
+DISPID=3080
+SRC.FIX
+
+
+[DIALOG D_FRIEND_MENU]
+100,10
+
+NOMOVE
+
+resizepic 50 0 9550 250 375			//MAIN BACKGROUND
+resizepic 85 25 9568 180 300			//TOP BACKGROUND
+
+gumppic 0 25 10440				//DRAGON LEFT
+gumppic 267 25 10441				//DRAGON RIGHT
+
+IF !(<LINK.TAG0.FRIEND1>)
+ text 125 45 100 0				//FRIEND 1 NAME (IF NONE)
+ELSE
+ text 125 45 100 1				//FRIEND 1 NAME
+ENDIF
+
+IF !(<LINK.TAG0.FRIEND2>)
+ text 125 90 100 2				//FRIEND 2 NAME (IF NONE)
+ELSE
+ text 125 90 100 3				//FRIEND 2 NAME
+ENDIF
+
+IF !(<LINK.TAG0.FRIEND3>)
+ text 125 135 100 4				//FRIEND 3 NAME (IF NONE)
+ELSE
+ text 125 135 100 5				//FRIEND 3 NAME
+ENDIF
+
+IF !(<LINK.TAG0.FRIEND4>)
+ text 125 180 100 6				//FRIEND 4 NAME (IF NONE)
+ELSE
+ text 125 180 100 7				//FRIEND 4 NAME
+ENDIF
+
+IF !(<LINK.TAG0.FRIEND5>)
+ text 125 225 100 8				//FRIEND 5 NAME (IF NONE)
+ELSE
+ text 125 225 100 9				//FRIEND 5 NAME
+ENDIF
+
+text 105 45 0 10				//LINE 1
+text 105 90 0 11				//LINE 2
+text 105 135 0 12				//LINE 3
+text 105 180 0 13				//LINE 4
+text 105 225 0 14				//LINE 5
+
+text 125 65 800 15
+button 110 71 2103 2104 1 0 1
+
+text 200 65 800 16
+button 185 71 2103 2104 1 0 2
+
+text 125 110 800 15
+button 110 116 2103 2104 1 0 3
+
+text 200 110 800 16
+button 185 116 2103 2104 1 0 4
+
+text 125 155 800 15
+button 110 161 2103 2104 1 0 5
+
+text 200 155 800 16
+button 185 161 2103 2104 1 0 6
+
+text 125 200 800 15
+button 110 206 2103 2104 1 0 7
+
+text 200 200 800 16
+button 185 206 2103 2104 1 0 8
+
+text 125 245 800 15
+button 110 251 2103 2104 1 0 9
+
+text 200 245 800 16
+button 185 251 2103 2104 1 0 10
+
+button 140 340 242 241 1 0 11			//CANCEL BUTTON
+
+[DIALOG D_FRIEND_MENU TEXT]
+None
+<LINK.TAG.FRIEND1NAME>
+None
+<LINK.TAG.FRIEND2NAME>
+None
+<LINK.TAG.FRIEND3NAME>
+None
+<LINK.TAG.FRIEND4NAME>
+None
+<LINK.TAG.FRIEND5NAME>
+1.
+2.
+3.
+4.
+5.
+Add
+Remove
+
+
+[DIALOG D_FRIEND_MENU BUTTON]
+ONBUTTON=1
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF !(<LINK.TAG0.FRIEND1>)
+  SRC.NEWITEM I_HOUSE_ADD_FRIEND_1
+  SRC.ACT.LINK <LINK>
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You already have a friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can set friends.
+ENDIF
+
+ONBUTTON=2
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF (<LINK.TAG0.FRIEND1>)
+  LINK.TAG.FRIEND1=
+  LINK.TAG.FRIEND1NAME=
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You have no friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can remove friends of the house.
+ENDIF
+
+ONBUTTON=3
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF !(<LINK.TAG0.FRIEND2>)
+  SRC.NEWITEM I_HOUSE_ADD_FRIEND_2
+  SRC.ACT.LINK <LINK>
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You already have a friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can set friends.
+ENDIF
+
+ONBUTTON=4
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF (<LINK.TAG0.FRIEND2>)
+  LINK.TAG.FRIEND2=
+  LINK.TAG.FRIEND2NAME=
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You have no friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can remove friends of the house.
+ENDIF
+
+ONBUTTON=5
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF !(<LINK.TAG0.FRIEND3>)
+  SRC.NEWITEM I_HOUSE_ADD_FRIEND_3
+  SRC.ACT.LINK <LINK>
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You already have a friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can set friends.
+ENDIF
+
+ONBUTTON=6
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF (<LINK.TAG0.FRIEND3>)
+  LINK.TAG.FRIEND3=
+  LINK.TAG.FRIEND3NAME=
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You have no friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can remove friends of the house.
+ENDIF
+
+ONBUTTON=7
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF !(<LINK.TAG0.FRIEND4>)
+  SRC.NEWITEM I_HOUSE_ADD_FRIEND_4
+  SRC.ACT.LINK <LINK>
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You already have a friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can set friends.
+ENDIF
+
+ONBUTTON=8
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF (<LINK.TAG0.FRIEND4>)
+  LINK.TAG.FRIEND4=
+  LINK.TAG.FRIEND4NAME=
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You have no friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can remove friends of the house.
+ENDIF
+
+ONBUTTON=9
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF !(<LINK.TAG0.FRIEND5>)
+  SRC.NEWITEM I_HOUSE_ADD_FRIEND_5
+  SRC.ACT.LINK <LINK>
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You already have a friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can set friends.
+ENDIF
+
+ONBUTTON=10
+IF !(STRCMP(<SRC.UID>,<LINK.TAG.OWNER>))
+ IF (<LINK.TAG0.FRIEND5>)
+  LINK.TAG.FRIEND5=
+  LINK.TAG.FRIEND5NAME=
+ ELSE
+  SRC.SYSMESSAGE <DEF.SYSMessageColor> You have no friend in this slot.
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can remove friends of the house.
+ENDIF
+
+ONBUTTON=11
+DIALOG D_HOUSE_MENU_SYSTEM
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[DIALOG D_REDEED_HOUSE]
+100,10
+
+NOMOVE
+
+resizepic 50 150 9550 300 75			//MAIN BACKGROUND
+text 75 155 800 0				//ARE YOU SURE YOU WISH TO REDEED? 
+button 125 185 247 248 1 0 1 			//OKAY BUTTON
+button 225 185 242 241 1 0 2			//CANCEL BUTTON
+
+[DIALOG D_REDEED_HOUSE TEXT]
+Are you sure you wish to redeed?
+
+[DIALOG D_REDEED_HOUSE BUTTON]
+ONBUTTON=1
+F_REDEED_HOUSE
+
+ONBUTTON=2
+DIALOG D_HOUSE_MENU_SYSTEM
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[DIALOG D_RENAME_HOUSE]
+100,10
+NOMOVE
+
+resizepic 50 150 9550 300 75			//MAIN BACKGROUND
+resizepic 75 160 9568 250 25			//TEXTENTRY BACKGROUND
+textentry 85 165 1153 25 0 0 0			//TEXTENTRY FIELD
+button 125 193 238 240 1 0 1			//ACCEPT BUTTON
+button 225 193 242 241 1 0 2			//CANCEL BUTTON
+
+[DIALOG D_RENAME_HOUSE TEXT]
+<NAME>
+
+[DIALOG D_RENAME_HOUSE BUTTON]
+ONBUTTON=1
+F_RENAME_HOUSE <ARGTXT[0]>
+
+ONBUTTON=2
+DIALOG D_HOUSE_MENU_SYSTEM
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//#############################################   FUNCTION DEFINITIONS   #################################################//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##THIS FUNCTION CREATES A DEED TO MATCH THE ORIGINAL HOUSE TYPE.  IT THEN LOGS THE FACT THAT THE HOUSE IS REDEEDED.	##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_REDEED_HOUSE]
+SRC.NEWITEM i_deed
+SRC.ACT.MORE <LINK.BASEID>
+SRC.ACT.NAME Deed to a <LINK.NAME>
+SRC.ACT.BOUNCE
+LINK.REMOVE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##THIS FUNCTION ALLOWS THE USER TO CHANGE THE LOCKS ON HIS HOUSE.  							##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_CHANGE_LOCKS]
+F_REMOVE_OLD_KEYS <ARGS>
+SRC.NEWITEM i_change_locks
+SRC.ACT.LINK <ARGS>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##THIS FUNCTION ALLOWS THE USER TO ADD NEWBIED KEYS TO HIS HOUSE.							##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_CREATE_NEW_KEYS]
+SRC.NEWITEM i_create_new_key
+SRC.ACT.LINK <ARGS>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##THIS FUNCTION IS USED IN CONJUNCTION WITH A SPEECH FILE FOR USE INSIDE THE HOUSE TO LOCK DOWN ITEMS.		##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_LOCK_DOWN]
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE1>) || (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE2>)
+ SRC.NEWITEM i_lock_down
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can lock down items.
+ENDIF
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##THIS FUNCTION IS USED IN CONJUNCTION WITH A SPEECH FILE TO PLACE A TRASH BARREL IN THE HOUSE.			##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_PLACE_TRASH]
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE1>) || (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE2>)
+ SRC.NEWITEM I_GARBAGE_CAN_PLACEMENT
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must be inside your house to use this.
+ENDIF
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##THIS FUNCTION IS USED IN CONJUNCTION WITH A SPEECH FILE TO PLACE A SECURE CHEST INSIDE THE HOUSE.			##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_PLACE_CHEST]
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE1>) || (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE2>)
+ SRC.NEWITEM I_SECURE_CHEST_PLACEMENT
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> You must be inside your house to use this.
+ENDIF
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##THIS FUNCTION IS USED IN CONJUNCTION WITH A SPEECH FILE FOR USE INSIDE THE HOUSE TO UNLOCK ITEMS.			##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_UNLOCK_ITEM]
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE1>) || (<SRC.TARG.REGION.TYPE>==<SRC.TAG0.MYHOUSE2>)
+ SRC.NEWITEM i_unlock_item
+ELSE
+ SRC.SYSMESSAGE <DEF.SYSMessageColor> Only the owner can unlock items.
+ENDIF
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##THIS IS JUST A SIMPLE FUNCTION IN RENAMING A HOUSE (REALLY JUST RENAMES THE SIGN)					##//
+//##USING A TEXTENTRY IN THE HOUSE GUMP.						   				##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_RENAME_HOUSE]
+NAME=<ARGS>
+DIALOG D_HOUSE_MENU_SYSTEM
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##USED FOR EQUIPPING THE ITEM THAT IS USED FOR TRANSFERRING A HOUSE TO ANOTHER PLAYER.				##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_TRANSFER_HOUSE]
+DIALOGCLOSE D_HOUSE_MENU_SYSTEM
+SRC.NEWITEM I_HOUSE_TRANSFER
+SRC.ACT.LINK <LINK>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//##USED FOR EQUIPPING THE ITEM THAT IS USED FOR ASSIGNING A CO-OWNER TO THE HOUSE.					##//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[FUNCTION F_HOUSE_ADD_COOWNER]
+DIALOGCLOSE D_HOUSE_MENU_SYSTEM
+SRC.NEWITEM I_HOUSE_ADD_COOWNER
+SRC.ACT.LINK <LINK>
+
+[FUNCTION F_REMOVE_ITEM]
+SRC.NEWITEM I_REMOVE_ITEM
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//########################################################################################################################//
+//#################################################   HOUSE SPEECH   #####################################################//
+//########################################################################################################################//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[SPEECH HOUSE_COMMANDS]
+ON=*I*WISH*TO*LOCK*THIS*DOWN*
+F_LOCK_DOWN
+
+ON=*I*WISH*TO*UNLOCK*THIS*
+F_UNLOCK_ITEM
+
+ON=*I*WISH*TO*PLACE*A*TRASH*BARREL*
+F_PLACE_TRASH
+
+ON=*I*WISH*TO*PLACE*A*SECURE*CHEST*
+F_PLACE_CHEST
+
+ON=*I*WISH*TO*REMOVE*THIS*
+F_REMOVE_ITEM
+
+
+
+
+[EOF]

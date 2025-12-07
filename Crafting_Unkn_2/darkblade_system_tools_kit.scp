@@ -1,0 +1,88 @@
+//and a special leather working tool that allows you to create special leather items
+//the gump is also here.
+
+[ITEMDEF i_leathercrafting_kit]
+ID=i_toolcase
+DEFNAME=i_leathercrafting_kit
+RESOURCES=i_TOOLCASE_EMPTY, 4 i_ingot_iron,1 i_log, 5 i_sewing_kit
+WEIGHT=6
+TYPE=
+CATEGORY=Darkblade Leather System
+SUBSECTION=Tools
+DESCRIPTION=Leathercrafting Kit
+DUPELIST=01ebb
+
+ON=@CREATE
+TIMER=-1 
+NAME=Leathercrafting Kit.
+ATTR=010
+
+ON=@DCLICK
+TARGET Which leather would you like to use?
+RETURN 1
+TIMER=30
+
+ON=@TARGON_ITEM
+
+IF (<SRC.TARG.BASEID>==l_cut_troll_leather)
+DIALOG d_troll_leather_menu
+RETURN 1
+
+elseif  (<SRC.TARG.BASEID>==i_hides_cut)
+SRC.MESSAGE *This tool can not be used with normal leather*
+RETURN 1
+
+elseif  (<SRC.TARG.BASEID>==l_cut_ice_troll_leather)
+DIALOG d_ice_troll_leather_menu
+RETURN 1
+
+elseif  (<SRC.TARG.BASEID>==l_cut_dark_troll_leather)
+DIALOG d_dark_troll_leather_menu
+RETURN 1
+
+elseif  (<SRC.TARG.BASEID>==l_cut_daemon_leather)
+DIALOG d_daemon_leather_menu
+RETURN 1
+
+elseif   (<SRC.TARG.BASEID>==l_cut_ettin_leather)
+DIALOG d_ettin_leather_menu
+RETURN 1
+
+elseif   (<SRC.TARG.BASEID>==l_cut_ice_ettin_leather)
+DIALOG d_ice_ettin_leather_menu
+RETURN 1
+
+elseif  (<SRC.TARG.BASEID>==l_cut_snake_leather)
+DIALOG d_snake_leather_menu
+RETURN 1
+
+elseif   (<SRC.TARG.BASEID>==l_cut_dragon_leather)
+DIALOG d_dragon_leather_menu
+RETURN 1
+
+elseif   (<SRC.TARG.BASEID>==l_cut_cyclops_leather)
+DIALOG d_cyclops_leather_menu
+RETURN 1
+
+elseif   (<SRC.TARG.BASEID>==l_cut_titan_leather)
+DIALOG d_titan_leather_menu
+RETURN 1
+
+elseif (<SRC.TARG.BASEID>==l_cut_ophidian_leather)
+DIALOG d_ophidian_leather_menu
+RETURN 1
+
+elseif (<SRC.TARG.BASEID>==l_cut_orc_leather)
+DIALOG d_orc_leather_menu
+RETURN 1
+
+elseif (<SRC.TARG.BASEID>==l_cut_terathan_leather)
+DIALOG d_terathan_leather_menu
+RETURN 1
+
+elseif (<SRC.TARG.BASEID>==l_cut_ogre_leather)
+DIALOG d_ogre_leather_menu
+RETURN 1
+ENDIF
+
+[EOF]

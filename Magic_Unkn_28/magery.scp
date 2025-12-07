@@ -1,0 +1,3031 @@
+///////CREATED BY GM RASTAM OF NIGHTFALL SHARD ///
+TUTTI I DIRITTI SONO RISERVATI
+////////////////////////////////////////////////////////////////////
+[FUNCTION F_TAG_MAGERY]
+findid.i_backpack.more=0<EVAL<TAG.AP>>
+findid.i_backpack.more=0<EVAL<TAG.BP>>
+findid.i_backpack.more=0<EVAL<TAG.CP>>
+findid.i_backpack.more=0<EVAL<TAG.AM>>
+findid.i_backpack.more=0<EVAL<TAG.BM>>
+findid.i_backpack.more=0<EVAL<TAG.CM>>
+findid.i_backpack.more=0<EVAL<TAG.POLYLEVEL>>
+findid.i_backpack.more=0<EVAL<TAG.POLY>>
+findid.i_backpack.more=0<EVAL<TAG.STR>>
+findid.i_backpack.more=0<EVAL<TAG.DEX>>
+findid.i_backpack.more=0<EVAL<TAG.INT>>
+findid.i_backpack.more=0<EVAL<TAG.STR2>>
+findid.i_backpack.more=0<EVAL<TAG.TSTR>>
+findid.i_backpack.more=0<EVAL<TAG.TDEX>>
+findid.i_backpack.more=0<EVAL<TAG.TINT>>
+findid.i_backpack.more=0<EVAL<TAG.NAMEI>>
+findid.i_backpack.more=0<EVAL<TAG.clusmy_timer>>
+findid.i_backpack.more=0<EVAL<TAG.clumsy_value>>
+findid.i_backpack.more=0<EVAL<TAG.feeblemind_timer>>
+findid.i_backpack.more=0<EVAL<TAG.feeblemind_value>>
+findid.i_backpack.more=0<EVAL<TAG.weaken_timer>>
+findid.i_backpack.more=0<EVAL<TAG.weaken_value>>
+findid.i_backpack.more=0<EVAL<TAG.Agility_timer>>
+findid.i_backpack.more=0<EVAL<TAG.Agility_value>>
+findid.i_backpack.more=0<EVAL<TAG.Cunning_timer>>
+findid.i_backpack.more=0<EVAL<TAG.Cunning_value>>
+findid.i_backpack.more=0<EVAL<TAG.Strength_timer>>
+findid.i_backpack.more=0<EVAL<TAG.Strength_value>>
+findid.i_backpack.more=0<EVAL<TAG.bless_timer>>
+findid.i_backpack.more=0<EVAL<TAG.bless_value>>
+findid.i_backpack.more=0<EVAL<TAG.curse_timer>>
+findid.i_backpack.more=0<EVAL<TAG.curse_value>>
+RETURN 1
+//-----------------
+[ITEMDEF i_polymorph]
+ID=i_rune_polymorph
+TYPE=t_eq_script
+NAME=Polymorph
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.FLAGS <CONT.FLAGS> &~ statf_polymorph
+CONT.COLOR <CONT.OSKIN>
+CONT.BODY <CONT.OBODY>
+CONT.UPDATE
+CONT.INT = <CONT.TAG.AP>
+CONT.STR = <CONT.TAG.BP>
+CONT.DEX = <CONT.TAG.CP>
+
+[FUNCTION polynew]
+IF !(<ISEVENT.e_polymorph>)
+EVENTS e_polymorph
+ENDIF
+
+IF (<FLAGS> & statf_dead)
+TAG.POLYLEVEL
+///ELIF (<FLAGS> & statf_polymorph)
+/// TAG.POLYLEVEL
+/// SYSMESSAGE You are already polymorphed.
+
+ELSE
+TAG.POLY <ARGS>
+POLY <ARGS>
+
+ENDIF
+[FUNCTION SALVAM] ///// SALVA LE STAT PRIAM DEL POLUYMORPH
+SRC.TAG.AM = <SRC.INT>
+SRC.TAG.BM = <SRC.STR>
+SRC.TAG.CM = <SRC.DEX>
+
+[FUNCTION CARM] ///// RICARICA STAT LE STAT PRIAM DEL POLYMORPH
+SRC.INT = <SRC.TAG.AM>
+SRC.STR = <SRC.TAG.BM>
+SRC.DEX = <SRC.TAG.CM>
+
+[FUNCTION SALVAS] ///// SALVA LE STAT PRIAM DEL POLUYMORPH
+SRC.TAG.AP = <SRC.INT>
+SRC.TAG.BP = <SRC.STR>
+SRC.TAG.CP = <SRC.DEX>
+
+
+[FUNCTION CARS] ///// RICARICA STAT LE STAT PRIAM DEL POLYMORPH
+SRC.INT = <SRC.TAG.AP>
+SRC.STR = <SRC.TAG.BP>
+SRC.DEX = <SRC.TAG.CP>
+
+[FUNCTION pman]
+STR=40
+DEX=40
+INT=20
+SALVAM
+
+[FUNCTION pwoman]
+STR=30
+DEX=20
+INT=20
+SALVAM
+
+[FUNCTION pcroc] /// alligatore
+STR=30
+DEX=20
+INT=5
+
+SALVAM
+[FUNCTION pbear] /// orso bruno
+STR=52
+DEX=40
+INT=5
+SALVAM
+
+[FUNCTION pgri] //// grizzly
+STR=60
+DEX=40
+INT=5
+SALVAM
+
+
+[FUNCTION pbird] ///// uccellino
+STR=7
+DEX=9
+INT=5
+SALVAM
+
+[FUNCTION pbullb] //// toro marrone
+STR=20
+DEX=20
+INT=5
+SALVAM
+
+[FUNCTION pbulll] //// toro marrone chiaro
+STR=35
+DEX=30
+INT=5
+SALVAM
+
+[FUNCTION pbullf] ///// rospo
+STR=8
+DEX=10
+INT=2
+SALVAM
+
+[FUNCTION pcat] ///// Gatto
+STR=21
+DEX=19
+INT=4
+SALVAM
+[FUNCTION pcchi] ///// Chicken
+STR=5
+DEX=12
+INT=1
+SALVAM
+
+[FUNCTION pcowb] ///// mucca marrone
+STR=20
+DEX=20
+INT=6
+SALVAM
+[FUNCTION pwcow] //// mucca multi colore
+STR=22
+DEX=15
+INT=8
+SALVAM
+[FUNCTION pdeer] //// Cervo
+STR=12
+DEX=30
+INT=6
+SALVAM
+[FUNCTION pdog] ///// cane
+STR=7
+DEX=15
+INT=4
+SALVAM
+[FUNCTION peag] //// aquila
+STR=10
+DEX=40
+INT=4
+SALVAM
+[FUNCTION pgoat] //// Carpa
+STR=12
+DEX=7
+INT=2
+SALVAM
+[FUNCTION pgori] //// Gorilla
+STR=45
+DEX=35
+INT=10
+SALVAM
+[FUNCTION ppant] //// Pantera
+STR=60
+DEX=60
+INT=8
+SALVAM
+[FUNCTION ppig] //// Pig
+STR=21
+DEX=10
+INT=6
+SALVAM
+[FUNCTION ppigb] //// Pig Big
+STR=40
+DEX=20
+INT=6
+SALVAM
+[FUNCTION prab] //// Rabbit
+STR=7
+DEX=10
+INT=6
+SALVAM
+[FUNCTION prat] //// Rat
+STR=9
+DEX=10
+INT=6
+SALVAM
+[FUNCTION pgiarat] //// Giant Rat
+STR=25
+DEX=20
+INT=12
+SALVAM
+[FUNCTION pshes] //// Sheep shorn
+STR=4
+DEX=10
+INT=2
+SALVAM
+[FUNCTION pshew] //// Sheep Wooly
+STR=6
+DEX=10
+INT=3
+SALVAM
+[FUNCTION psnake] //// Snake
+STR=8
+DEX=10
+INT=2
+SALVAM
+[FUNCTION pdeeh] //// Deer Hart
+STR=30
+DEX=32
+INT=15
+SALVAM
+[FUNCTION pwalr] //// Walrus Walrus
+STR=75
+DEX=50
+INT=26
+SALVAM
+[FUNCTION pwisp] //// Wisp
+STR=50
+DEX=34
+INT=96
+SALVAM
+[FUNCTION pwolf] //// Wolf
+STR=51
+DEX=33
+INT=12
+SALVAM
+///////////////////////// POLY 3 /////////////////////////////
+[FUNCTION pslime] //// Slime
+STR=31
+DEX=4
+INT=9
+SALVAM
+[FUNCTION pheadl] //// HeadLess
+STR=50
+DEX=30
+INT=1
+SALVAM
+[FUNCTION pharpy] //// Harpy
+STR=75
+DEX=60
+INT=25
+SALVAM
+[FUNCTION pmonb] //// MongBat
+STR=26
+DEX=42
+INT=12
+SALVAM
+[FUNCTION pratman] //// Ratman
+STR=54
+DEX=35
+INT=21
+SALVAM
+[FUNCTION psnakeg] //// Snake Giant
+STR=80
+DEX=10
+INT=17
+SALVAM
+[FUNCTION pspider] //// Spider
+STR=62
+DEX=15
+INT=2
+SALVAM
+[FUNCTION ptoad] //// Toad Giant
+STR=32
+DEX=18
+INT=9
+SALVAM
+[FUNCTION psgiant] //// Scorpion
+STR=91
+DEX=32
+INT=40
+SALVAM
+[FUNCTION pliz] //// Lizardman
+STR=57
+DEX=41
+INT=21
+SALVAM
+[FUNCTION plizm] //// Lizardman Mace
+STR=57
+DEX=41
+INT=21
+SALVAM
+[FUNCTION plizs] //// Lizardman Spear
+STR=57
+DEX=41
+INT=21
+SALVAM
+/////////////////////// poli 4/////////////////////
+[FUNCTION pcorp] //// Corpser
+STR=49
+DEX=34
+INT=30
+SALVAM
+[FUNCTION pettin] //// Ettin
+STR=72
+DEX=49
+INT=16
+SALVAM
+[FUNCTION pettinw] //// Ettin Axe
+STR=72
+DEX=49
+INT=16
+SALVAM
+[FUNCTION pgarg] //// Gargoyle
+STR=85
+DEX=72
+INT=40
+SALVAM
+[FUNCTION pelder] //// Bheolder
+STR=63
+DEX=25
+INT=110
+SALVAM
+[FUNCTION pogre] //// OGre
+STR=120
+DEX=80
+INT=9
+SALVAM
+[FUNCTION porc] //// Orco
+STR=80
+DEX=80
+INT=45
+SALVAM
+[FUNCTION porcl] //// Orco lord
+STR=100
+DEX=100
+INT=45
+SALVAM
+[FUNCTION porcw] //// Orco with axe
+STR=100
+DEX=100
+INT=45
+SALVAM
+[FUNCTION pciclo] //// ciclope
+STR=128
+DEX=100
+INT=72
+SALVAM
+[FUNCTION ptit] //// Titano
+STR=149
+DEX=120
+INT=79
+SALVAM
+[FUNCTION ptrol] //// Troll
+STR=120
+DEX=160
+INT=45
+SALVAM
+[FUNCTION ptrola] //// Troll with axe
+STR=120
+DEX=160
+INT=45
+SALVAM
+[FUNCTION ptrolm] //// Troll with mace
+STR=120
+DEX=160
+INT=45
+SALVAM
+////////////////////////////// poli 5 /////////////////////////
+[FUNCTION pliche] //// liche
+STR=140
+DEX=70
+INT=160
+SALVAM
+[FUNCTION pske] //// Skeleton
+STR=41
+DEX=50
+INT=0
+SALVAM
+[FUNCTION pskew] //// Skeleton Axe
+STR=41
+DEX=50
+INT=0
+SALVAM
+[FUNCTION pskes] //// Skeleton with Sword
+STR=41
+DEX=50
+INT=0
+SALVAM
+[FUNCTION pspectre] //// Spettro
+STR=80
+DEX=80
+INT=140
+SALVAM
+[FUNCTION pzombie] //// Zombie
+STR=43
+DEX=5
+INT=0
+SALVAM
+[FUNCTION preap] //// Ghost
+STR=100
+DEX=100
+INT=100
+SALVAM
+[FUNCTION pair] //// Air elem
+STR=120
+DEX=120
+INT=160
+SALVAM
+[FUNCTION pear] //// Earth elem
+STR=160
+DEX=100
+INT=60
+
+//////////////////// poli 6 ///////////////////
+
+[FUNCTION pphi] //// Ophidian Mage
+STR=130
+DEX=90
+INT=160
+SALVAM
+[FUNCTION pphiq] //// Ophidian Queen
+STR=130
+DEX=130
+INT=130
+SALVAM
+[FUNCTION pphiw] //// Ophidian Warrior
+STR=160
+DEX=140
+INT=80
+SALVAM
+[FUNCTION pted] //// Terathan
+STR=120
+DEX=120
+INT=100
+SALVAM
+[FUNCTION ptem] //// Terathan matriarch
+STR=132
+DEX=125
+INT=123
+SALVAM
+[FUNCTION ptew] //// Terathan warrior
+STR=132
+DEX=130
+INT=116
+SALVAM
+[FUNCTION pfire] //// Pig
+STR=152
+DEX=110
+INT=130
+SALVAM
+[FUNCTION pwat] //// Pig
+STR=152
+DEX=110
+INT=130
+////////////////////////////// poli 7////////////////
+[FUNCTION pdae] //// Daemon
+STR=200
+DEX=160
+INT=190
+SALVAM
+[FUNCTION pdaes] //// Daemon Sword
+STR=210
+DEX=150
+INT=160
+SALVAM
+[FUNCTION pdrag] ////Dragon Green
+STR=210
+DEX=190
+INT=190
+
+SALVAM
+[FUNCTION pdrared] //// Dragon Red
+STR=220
+DEX=200
+INT=220
+
+SALVAM
+[FUNCTION pdrad] //// Dragon Drake
+STR=185
+DEX=170
+INT=180
+
+SALVAM
+[FUNCTION predd] //// Drahon Drake Red
+STR=200
+DEX=190
+INT=200
+
+SALVAM
+
+////////////////////////VELENO /////////////////
+[ITEMDEF I_VELENO_TIME]
+ID=I_HOURGLASS
+NAME=VELENO TIMER DO NOT REMOVE!
+ID=I_HOURGLASS
+WEIGHT=0
+LAYER=30
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+ATTR=ATTR_DECAY
+MORE2={4 16}
+
+ON=@EQUIP
+MORE2=(<MORE2>+-1)
+TIMER=8 // <--- Set this for when to "start" the regen
+
+ON=@TIMER
+IF (<MORE2>==0)
+CONT.FLAGS=<CONT.FLAGS>&~statf_poisoned
+UPDATE
+FIX
+REMOVE
+RETURN 1
+ENDIF
+IF (<MORE2> > 12)
+CONT.EMOTE Il veleno fa effetto in modo mortale
+ENDIF
+IF ((<MORE2> > Cool && (<MORE2> < 12))
+CONT.EMOTE Il veleno ti consuma pesantemente
+ENDIF
+IF ((<MORE2> > 4) && (<MORE2> < Cool)
+CONT.EMOTE Il veleno ti rende debole
+ENDIF
+IF ((<MORE2> > 0) && (<MORE2> < 4))
+CONT.EMOTE Perpisci una piccola sostanza di veleno nel tuo corpo
+ENDIF
+var.danno=<eval <cont.hits>+(-Rand(Cool)>
+CONT.hits=<var.danno>
+CONT.ANIM 20
+CONT.EFFECT=3,i_fx_curse,10,20,10
+CONT.SOUND=0203
+TIMER=4 // <---- Set TIMER FOR VELENO
+MORE2=(<MORE2>+-1)
+if (<CONT.FIXACTION> == SKILL_MAGERY )
+if (<magicresistance> > 70.0 )
+CONT.SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+CONT.SYSMESSAGE Magia non resistita
+CONT.ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+RETURN 1
+[FUNCTION FIXACTION]
+RETURN <ACTION> | 0D2000000
+
+[ITEMDEF I_refli1]
+ID=I_HOURGLASS
+NAME=Reflect!
+ID=I_HOURGLASS
+WEIGHT=0
+LAYER=30
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+ATTR=ATTR_DECAY
+
+ON=@TIMER
+CONT.FLAGS=(<CONT.FLAGS>&~0200)
+REMOVE
+SAY DELETE
+RETURN 1
+
+[ITEMDEF i_stat_Paralyze]
+ID=i_rune_Paralyze
+TYPE=t_eq_script
+NAME=Paralyze
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.FLAGS=<CONT.FLAGS>&~04
+RETURN 1
+
+
+[ITEMDEF i_stat_mod_curse]
+ID=i_rune_curse
+TYPE=t_eq_script
+NAME=curse
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.STR=<TAG.STR>
+CONT.DEX=<TAG.DEX>
+CONT.INT=<TAG.INT>
+RETURN 1
+
+
+[ITEMDEF i_stat_mod_bless]
+ID=i_rune_bless
+TYPE=t_eq_script
+NAME=bless
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.STR=<TAG.STR>
+CONT.DEX=<TAG.DEX>
+CONT.INT=<TAG.INT>
+RETURN 1
+
+[ITEMDEF i_stat_mod_strength]
+ID=i_rune_strength
+TYPE=t_eq_script
+NAME=strength
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.STR=<TAG.STR>
+RETURN 1
+
+[ITEMDEF i_stat_mod_Cunning]
+ID=i_rune_Cunning
+TYPE=t_eq_script
+NAME=Cunning
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.INT=<TAG.INT>
+CONT.STR=<CONT.TAG.TSTR2>
+RETURN 1
+
+[ITEMDEF i_stat_mod_Agility]
+ID=i_rune_Agility
+TYPE=t_eq_script
+NAME=Agility
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.DEX=<TAG.DEX>
+CONT.STR=<CONT.TAG.TSTR2>
+RETURN 1
+
+[ITEMDEF i_stat_mod_weaken]
+ID=i_rune_weaken
+TYPE=t_eq_script
+NAME=Weaken
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.STR=<TAG.STR>
+RETURN 1
+
+[ITEMDEF i_stat_mod_feeblemind]
+ID=i_rune_feeblemind
+TYPE=t_eq_script
+NAME=feeblemind
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.INT=<TAG.INT>
+RETURN 1
+
+[ITEMDEF i_stat_mod_clumsy]
+ID=i_rune_clumsy
+TYPE=t_eq_script
+NAME=Clumsy
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.DEX=<TAG.DEX>
+
+[ITEMDEF i_stat_mod_feeblemind]
+ID=i_rune_feeblemind
+TYPE=t_eq_script
+NAME=feeblemind
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.INT=<TAG.INT>
+RETURN 1
+
+
+[ITEMDEF i_stat_incognito]
+ID=i_rune_incognito
+TYPE=t_eq_script
+NAME=Incognito
+
+ON=@Create
+ATTR attr_decay
+ON=@Timer
+CONT.NAME=<TAG.NAMEI>
+CONT.FLAGS=<CONT.FLAGS>&~statf_incognito
+REMOVE
+RETURN 1
+
+[FUNCTION SPELLARGN]
+VAR.SPELLARGN <ARGN> + 0dc000000
+
+[EVENTS e_resist]
+On=@spellCAST
+F_TAG_MAGERY
+SPELLARGN <ARGN>
+VAR.POISONN=<EVAL(RAND(10))>
+IF ((<TAG.POISON_VALUE>=1) && (<VAR.POISONN> > 5))
+var.danno=<eval <hits>+(-Rand(Cool)>
+hits=<var.danno>
+EFFECT=3,i_fx_curse,10,20,10
+ANIM 20
+ACTION=-1
+EMOTE Il Veleno non ti permette di castare
+newitem i_veleno_time
+act.timer <TAG.poison_TIMER>
+ACT.CONT <UID>
+TAG.POISON_VALUE=0
+ENDIF
+IF (<VAR.SPELLARGN> == s_polymorph)
+if (<tag.poly_value>==1)
+CARS
+ELSE
+tag.poly_value=1
+SALVAS
+Endif
+ENDIF
+ON=@SKILLSTART
+F_TAG_MAGERY
+//////////////POLYMORPH////////////
+IF (<SRC.FINDID.i_polymorph>)
+CARM
+RETURN 1
+ENDIF
+IF (0<tag.poly_value>=1)
+tag.poly_value=0
+CARS
+ENDIF
+IF !(<FINDID.i_polymorph>)
+SALVAS
+ENDIF
+/////////////// FINE POLY ///////
+
+IF ((0<TAG.CURSE_VALUE>=0)&& (0<TAG.BLESS_VALUE>=0) && (0<TAG.STRENGTH_VALUE>=0) && (0<TAG.CUNNING_VALUE>=0) && (0<TAG.agility_VALUE>=0)&& (0<TAG.weaken_VALUE>=0)&& (0<TAG.feeblemind_VALUE>=0) && (0<TAG.clumsy_VALUE>=0))
+TAG.TSTR2=<STR>
+ENDIF
+IF !(<FIXACTION>==SKILL_MAGERY)
+IF (0<TAG.CURSE_VALUE>=1)
+newitem i_stat_mod_curse
+ACT.TAG.STR=<TAG.STAT_STR>
+ACT.TAG.DEX=<TAG.STAT_DEX>
+ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.CURSE_TIMER>
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+newitem i_stat_mod_bless
+ACT.TAG.STR=<TAG.STAT_STR>
+ACT.TAG.DEX=<TAG.STAT_DEX>
+ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.BLESS_TIMER>
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+newitem i_stat_mod_strength
+ACT.TAG.STR=<TAG.STAT_STR>
+//ACT.TAG.DEX=<TAG.STAT_DEX>
+//ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.STRENGTH_TIMER>
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+newitem i_stat_mod_CUNNING
+STR=<TAG.TSTR2>
+//ACT.TAG.STR=<TAG.STAT_STR>
+//ACT.TAG.DEX=<TAG.STAT_DEX>
+ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.CUNNING_TIMER>
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.agility_VALUE>=1)
+newitem i_stat_mod_agility
+STR=<TAG.TSTR2>
+//ACT.TAG.STR=<TAG.STAT_STR>
+ACT.TAG.DEX=<TAG.STAT_DEX>
+//ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.agility_TIMER>
+TAG.agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+newitem i_stat_mod_weaken
+ACT.TAG.STR=<TAG.STAT_STR>
+//ACT.TAG.DEX=<TAG.STAT_DEX>
+//ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.weaken_TIMER>
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+newitem i_stat_mod_feeblemind
+//ACT.TAG.STR=<TAG.STAT_STR>
+//ACT.TAG.DEX=<TAG.STAT_DEX>
+ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.feeblemind_TIMER>
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+newitem i_stat_mod_clumsy
+//ACT.TAG.STR=<TAG.STAT_STR>
+ACT.TAG.DEX=<TAG.STAT_DEX>
+//ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.clumsy_TIMER>
+TAG.clumsy_VALUE=0
+ENDIF
+IF (0<TAG.POISON_VALUE>=1)
+newitem i_veleno_time
+ACT.CONT <UID>
+act.timer <TAG.poison_TIMER>
+TAG.poison_VALUE=0
+ENDIF
+IF (0<TAG.INCOGNITO_VALUE>=1)
+FLAGS=<FLAGS>|staf_incognito
+FLAGS=<FLAGS>|staf_incognito
+newitem i_stat_INCOGNITO
+act.timer <TAG.incognito_TIMER>
+ACT.CONT <UID>
+TAG.INCOGNITO_VALUE=0
+ENDIF
+ENDIF
+
+
+ON=@ITEMDCLICK
+F_TAG_MAGERY
+IF (0<tag.poly_value>=1)
+tag.poly_value=0
+CARS
+ENDIF
+IF (<SRC.FINDID.i_polymorph>)
+CARM
+RETURN 0
+
+ENDIF
+IF !(<FIXACTION>==SKILL_MAGERY)
+IF (0<TAG.CURSE_VALUE>=1)
+newitem i_stat_mod_curse
+ACT.TAG.STR=<TAG.STAT_STR>
+ACT.TAG.DEX=<TAG.STAT_DEX>
+ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.CURSE_TIMER>
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+newitem i_stat_mod_bless
+ACT.TAG.STR=<TAG.STAT_STR>
+ACT.TAG.DEX=<TAG.STAT_DEX>
+ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.BLESS_TIMER>
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+newitem i_stat_mod_strength
+ACT.TAG.STR=<TAG.STAT_STR>
+//ACT.TAG.DEX=<TAG.STAT_DEX>
+//ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.STRENGTH_TIMER>
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+newitem i_stat_mod_CUNNING
+//ACT.TAG.STR=<TAG.STAT_STR>
+//ACT.TAG.DEX=<TAG.STAT_DEX>
+ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.CUNNING_TIMER>
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.agility_VALUE>=1)
+newitem i_stat_mod_agility
+//ACT.TAG.STR=<TAG.STAT_STR>
+ACT.TAG.DEX=<TAG.STAT_DEX>
+//ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.agility_TIMER>
+TAG.agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+newitem i_stat_mod_weaken
+ACT.TAG.STR=<TAG.STAT_STR>
+//ACT.TAG.DEX=<TAG.STAT_DEX>
+//ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.weaken_TIMER>
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+newitem i_stat_mod_feeblemind
+//ACT.TAG.STR=<TAG.STAT_STR>
+//ACT.TAG.DEX=<TAG.STAT_DEX>
+ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.feeblemind_TIMER>
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+newitem i_stat_mod_clumsy
+//ACT.TAG.STR=<TAG.STAT_STR>
+ACT.TAG.DEX=<TAG.STAT_DEX>
+//ACT.TAG.INT=<TAG.STAT_INT>
+ACT.CONT <UID>
+act.timer <TAG.clumsy_TIMER>
+TAG.clumsy_VALUE=0
+ENDIF
+IF (0<TAG.POISON_VALUE>=1)
+newitem i_veleno_time
+act.timer <TAG.poison_TIMER>
+ACT.CONT <UID>
+TAG.POISON_VALUE=0
+ENDIF
+IF (0<TAG.INCOGNITO_VALUE>=1)
+FLAGS=<FLAGS>|staf_incognito
+FLAGS=<FLAGS>|staf_incognito
+newitem i_stat_INCOGNITO
+ACT.TAG.NAMEI=<TAG.NAMEI>
+act.timer <TAG.incognito_TIMER>
+ACT.CONT <UID>
+TAG.INCOGNITO_VALUE=0
+ENDIF
+ENDIF
+On=@spelleffect
+SPELLARGN <ARGN>
+IF ((<VAR.SPELLARGN>=s_polymorph)
+tag.poly_value=0
+ENDIF
+IF !((<VAR.SPELLARGN>==s_heal) && (<VAR.SPELLARGN>==s_night_sight) && (<VAR.SPELLARGN>==s_Agility) && (<VAR.SPELLARGN>==s_reactive_armor) && (<VAR.SPELLARGN>==s_Cunning) && (<VAR.SPELLARGN>==s_cure) && (<VAR.SPELLARGN>==s_magic_trap) && (<VAR.SPELLARGN>==s_magic_untrap) && (<VAR.SPELLARGN>==s_protection) && (<VAR.SPELLARGN>==s_strength) && (<VAR.SPELLARGN>==s_bless) && (<VAR.SPELLARGN>==s_magic_lock) && (<VAR.SPELLARGN>==s_telekinesis) && (<VAR.SPELLARGN>==s_unlock) && (<VAR.SPELLARGN>==s_archcure) && (<VAR.SPELLARGN>==s_archprotection) && (<VAR.SPELLARGN>==s_greater_heal) && (<VAR.SPELLARGN>==s_cure) && (<VAR.SPELLARGN>==s_incognito) && (<VAR.SPELLARGN>==s_magic_reflection) && (<VAR.SPELLARGN>==s_dispel) && (<VAR.SPELLARGN>==s_invisibility) && (<VAR.SPELLARGN>==s_mass_dispel) && (<VAR.SPELLARGN>==s_polymorph))
+IF !(<UID>==<SRC.UID>)
+IF ((<FLAGS>&0200) && (<SRC.FLAGS>&0200))
+FLAGS=(<FLAGS>&~0200)
+//MESSAGE Magic Reflection blocca la magia.
+effect= 3,i_fx_glow,1,15,16
+BARK 3
+SRC.NEWITEM=i_refli1
+SRC.ACT.TIMER=2
+SRC.ACT.EQUIP
+SRC.SAY <SRC.FLAGS>
+//SRC.MESSAGE Magic Reflection blocca la magia.
+SRC.effect= 3,i_fx_glow,1,15,16
+SRC.BARK 3
+sector.update
+RETURN 1
+ENDIF
+IF (<FLAGS>&0200)
+FLAGS=(<FLAGS>&~0200)
+//MESSAGE Magic Reflection blocca la magia.
+effect= 3,i_fx_glow,1,15,16
+BARK 3
+src.spelleffect <argn> <magery>
+sector.update
+act <var.act>
+var.act
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+////////////////////////RESISTANCE///////////////////////
+//////////////MAGIC ARROW ///////////////////////////////
+IF ((<VAR.SPELLARGN> == s_magic_arrow)
+IF (<FLAGS>&04)
+FLAGS=(<FLAGS>&~04)
+ENDIF
+var.danno=<eval <hits>+(-<argn>)>
+hits=<var.danno>
+ANIM 20
+
+if (<magicresistance> > 50.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+/////////////// CLUMSY //////////////////////////////////
+IF (<VAR.SPELLARGN> == s_Clumsy)
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+IF (0<TAG.CUNNING_VALUE>=1)
+STR=<TAG.TSTR2>
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+STR=<TAG.TSTR2>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.clumsy_VALUE>=0)
+//TAG.STAT_STR=<STR>
+TAG.STAT_DEX=<DEX>
+//TAG.STAT_INT=<INT>
+TAG.clumsy_TIMER={150 200}
+DEX=<eval(<DEX>-(rand(10)))>
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_clumsy
+TAG.clumsy_VALUE=1
+if (<magicresistance> > 50.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+
+ELSE
+
+newitem i_stat_mod_clumsy
+//ACT.TAG.STR=<TAG.TSTR>
+ACT.TAG.DEX=<TAG.TDEX>
+//ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_clumsy
+DEX=<eval(<DEX>-(rand(10)))>
+RETURN 1
+ENDIF
+
+
+
+ENDIF
+//////////////////FEEBLEMIND////////////////////
+IF (<VAR.SPELLARGN> == s_feeblemind)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+IF (0<TAG.CUNNING_VALUE>=1)
+STR=<TAG.TSTR2>
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+STR=<TAG.TSTR2>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.feeblemind_VALUE>=0)
+//TAG.STAT_STR=<STR>
+//TAG.STAT_DEX=<DEX>
+TAG.STAT_INT=<INT>
+TAG.feeblemind_TIMER={150 200}
+INT=<eval(<INT>-(rand(10)))>
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_feeblemind
+TAG.feeblemind_VALUE=1
+if (<magicresistance> > 50.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+
+ELSE
+
+newitem i_stat_mod_feeblemind
+//ACT.TAG.STR=<TAG.TSTR>
+//ACT.TAG.DEX=<TAG.TDEX>
+ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_feeblemind
+INT=<eval(<INT>-(rand(10)))>
+RETURN 1
+ENDIF
+
+ENDIF
+////////////////////// WEAKEN //////////////////////////////////
+IF (<VAR.SPELLARGN> == s_weaken)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+STR=<TAG.TSTR2>
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+STR=<TAG.TSTR2>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.weaken_VALUE>=0)
+TAG.STAT_STR=<STR>
+//TAG.STAT_DEX=<DEX>
+//TAG.STAT_INT=<INT>
+TAG.weaken_TIMER={150 200}
+STR=<eval(<STR>-(rand(10)))>
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_weaken
+TAG.weaken_VALUE=1
+if (<magicresistance> > 50.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+
+ELSE
+
+newitem i_stat_mod_weaken
+ACT.TAG.STR=<TAG.TSTR>
+//ACT.TAG.DEX=<TAG.TDEX>
+//ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_weaken
+STR=<eval(<STR>-(rand(10)))>
+RETURN 1
+ENDIF
+ENDIF
+///////////// AGILITY /////////////////////////
+IF (<VAR.SPELLARGN> == s_Agility)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.Agility_VALUE>=0)
+//TAG.STAT_STR=<STR>
+TAG.STAT_DEX=<DEX>
+//TAG.STAT_INT=<INT>
+STR=<TAG.TSTR2>
+TAG.Agility_TIMER={150 200}
+DEX=<eval(<DEX>+(rand(10)))>
+effect 3,i_fx_bless_effect,6,15,1
+sfx snd_spell_Agility
+TAG.Agility_VALUE=1
+RETURN 1
+ENDIF
+
+ELSE
+
+newitem i_stat_mod_Agility
+//ACT.TAG.STR=<TAG.TSTR>
+ACT.TAG.DEX=<TAG.TDEX>
+//ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_bless_effect,6,15,1
+sfx snd_spell_Agility
+DEX=<eval(<DEX>+(rand(10)))>
+RETURN 1
+ENDIF
+ENDIF
+///////////////////////CUNNING///////////////////////
+IF (<VAR.SPELLARGN> == s_Cunning)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+STR=<TAG.TSTR2>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.CUNNING_VALUE>=0)
+//TAG.STAT_STR=<STR>
+//TAG.STAT_DEX=<DEX>
+TAG.STAT_INT=<INT>
+TAG.CUNNING_TIMER={150 200}
+INT=<eval(<INT>+(rand(10)))>
+effect 3,i_fx_bless_effect,6,15,1
+sfx snd_spell_CUNNING
+TAG.CUNNING_VALUE=1
+RETURN 1
+ENDIF
+
+ELSE
+
+newitem i_stat_mod_CUNNING
+//ACT.TAG.STR=<TAG.TSTR>
+//ACT.TAG.DEX=<TAG.TDEX>
+ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_bless_effect,6,15,1
+sfx snd_spell_CUNNING
+INT=<eval(<INT>+(rand(10)))>
+RETURN 1
+ENDIF
+ENDIF
+/////////////////////STRENGTH/////////////////////////
+IF (<VAR.SPELLARGN> == s_strength)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+STR=<TAG.TSTR2>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.STRENGTH_VALUE>=0)
+TAG.STAT_STR=<STR>
+//TAG.STAT_DEX=<DEX>
+//TAG.STAT_INT=<INT>
+TAG.STRENGTH_TIMER={150 200}
+STR=<eval(<STR>+(rand(10)))>
+effect 3,i_fx_bless_effect,6,15,1
+sfx snd_spell_bless
+TAG.STRENGTH_VALUE=1
+RETURN 1
+ENDIF
+
+ELSE
+
+newitem i_stat_mod_strength
+ACT.TAG.STR=<TAG.TSTR>
+//ACT.TAG.DEX=<TAG.TDEX>
+//ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_bless_effect,6,15,1
+sfx snd_spell_strength
+STR=<eval(<STR>+(rand(10)))>
+RETURN 1
+ENDIF
+ENDIF
+//////////////////////// BLESS/////////////////////////////////////////
+IF (<VAR.SPELLARGN> == s_bless)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.BLESS_VALUE>=0)
+TAG.STAT_STR=<STR>
+TAG.STAT_DEX=<DEX>
+TAG.STAT_INT=<INT>
+TAG.BLESS_TIMER={150 200}
+STR=<eval(<STR>+(<TAG.RANDB>))>
+DEX=<eval(<DEX>+(<TAG.RANDB>))>
+INT=<eval(<INT>+(<TAG.RANDB>))>
+effect 3,i_fx_BLESS_EFFECT,6,15,1
+sfx snd_spell_bless
+TAG.BLESS_VALUE=1
+RETURN 1
+ENDIF
+
+ELSE
+newitem i_stat_mod_bless
+ACT.TAG.STR=<TAG.TSTR>
+ACT.TAG.DEX=<TAG.TDEX>
+ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_BLESS_EFFECT,6,15,1
+sfx snd_spell_bless
+STR=<eval(<STR>+(<TAG.RANDB>))>
+DEX=<eval(<DEX>+(<TAG.RANDB>))>
+INT=<eval(<INT>+(<TAG.RANDB>))>
+RETURN 1
+ENDIF
+ENDIF
+//////////////////// CURSE///////////////////////////
+IF (<VAR.SPELLARGN> == s_curse)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+ENDIF
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.CURSE_VALUE>=0)
+TAG.STAT_STR=<STR>
+TAG.STAT_DEX=<DEX>
+TAG.STAT_INT=<INT>
+TAG.CURSE_TIMER={150 200}
+STR=<eval(<STR>-(<TAG.RANDB>))>
+DEX=<eval(<DEX>-(<TAG.RANDB>))>
+INT=<eval(<INT>-(<TAG.RANDB>))>
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_curse
+TAG.CURSE_VALUE=1
+if (<magicresistance> > 60.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+ELSE
+
+newitem i_stat_mod_curse
+ACT.TAG.STR=<TAG.TSTR>
+ACT.TAG.DEX=<TAG.TDEX>
+ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_curse
+STR=<eval(<STR>-(<TAG.RANDB>))>
+DEX=<eval(<DEX>-(<TAG.RANDB>))>
+INT=<eval(<INT>-(<TAG.RANDB>))>
+RETURN 1
+ENDIF
+
+ENDIF
+////////////////////// MASS CURSE ///////////////////////////
+IF (<VAR.SPELLARGN> == s_mass_curse)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+
+
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+TAG.RANDB=<EVAL(RAND(20))>
+TAG.TSTR=<STR>
+TAG.TDEX=<DEX>
+TAG.TINT=<INT>
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.CURSE_VALUE>=0)
+TAG.STAT_STR=<STR>
+TAG.STAT_DEX=<DEX>
+TAG.STAT_INT=<INT>
+TAG.CURSE_TIMER={150 200}
+STR=<eval(<STR>-(<TAG.RANDB>))>
+DEX=<eval(<DEX>-(<TAG.RANDB>))>
+INT=<eval(<INT>-(<TAG.RANDB>))>
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_curse
+TAG.CURSE_VALUE=1
+if (<magicresistance> > 60.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+ELSE
+
+newitem i_stat_mod_curse
+ACT.TAG.STR=<TAG.TSTR>
+ACT.TAG.DEX=<TAG.TDEX>
+ACT.TAG.INT=<TAG.TINT>
+ACT.CONT <UID>
+act.timer {120 240}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_curse
+STR=<eval(<STR>-(<TAG.RANDB>))>
+DEX=<eval(<DEX>-(<TAG.RANDB>))>
+INT=<eval(<INT>-(<TAG.RANDB>))>
+RETURN 1
+ENDIF
+
+ENDIF
+////////////////// HARM /////////////////////////
+IF (<VAR.SPELLARGN> == s_harm)
+var.danno=<eval <hits>+(-<argn>)+ Rand(12)>
+hits=<var.danno>
+ANIM 20
+if (<magicresistance> > 50.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+///////////////////// FIREBALL //////////////////////
+IF (<VAR.SPELLARGN> == s_fireball)
+var.danno=<eval <hits>+(-<argn>)+ Rand(15)>
+hits=<var.danno>
+ANIM 20
+if (<magicresistance> > 50.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+//////////////////// LIGHTNING //////////////////////
+IF ((<VAR.SPELLARGN> == s_lightning) && (<MAGICRESISTANCE> > 70.0))
+var.danno=<eval <hits>+(-<argn>)+ Rand(20)+10>
+hits=<var.danno>
+ANIM 20
+EFFECT=1,15,1
+if (<magicresistance> > 60.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+//////////////////// MANA DRAIN ///////////////////////////////
+IF (<VAR.SPELLARGN> == s_mana_drain)
+IF (<SRC.UID>==<UID>)
+MANA=0
+RETURN 1
+ENDIF
+VAR.numr=15
+MANA=<EVAL(<MANA>-<VAR.numr>)>
+IF (<MANA><0)
+MANA=0
+ENDIF
+SRC.MANA=<EVAL(<SRC.MANA>+<var.numr>)>
+IF (<SRC.MANA> > <SRC.INT>)
+SRC.MANA=SRC.NT
+ENDIF
+ANIM 20
+effect 3,i_fx_curse,6,15,1
+if (<magicresistance> > 60.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+/////////////////////////PARALYZE ////////////////////////
+IF (<VAR.SPELLARGN> == s_paralyze)
+if (<findid.i_stat_Paralyze> )
+FLAGS=<FLAGS>&~04
+findid.i_stat_Paralyze.remove
+endif
+newitem i_stat_paralyze
+ACT.CONT <UID>
+act.timer {5 15}
+ANIM 20
+effect 3,i_fx_curse,6,15,1
+FLAGS=(<FLAGS>|04)
+
+SYSMESSAGE Magia Resistita
+
+ENDIF
+//////////////// DISPELL ///////////////////
+IF (<VAR.SPELLARGN> == s_dispel)
+
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+if (<findid.i_stat_Paralyze> )
+FLAGS=<FLAGS>&~04
+findid.i_stat_Paralyze.remove
+endif
+IF (<FLAGS>&0200)
+FLAGS=(<FLAGS>&~0200)
+endif
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+IF (<FINDID.i_polymorph>)
+FLAGS <FLAGS> &~ statf_polymorph
+BODY <OBODY>
+COLOR <OSKIN>
+CARS
+FINDID.i_polymorph.REMOVE
+ENDIF
+IF (0<tag.poly_value>=1)
+tag.poly_value=0
+CARS
+ENDIF
+IF (0<TAG.INCOGNITO_VALUE>=1)
+FLAGS=<FLAGS> & statf_incognito
+NAME=<TAG.NAMEI>
+SAY OK
+TAG.INCOGNITO_TIMER=0
+TAG.INCOGNITO_VALUE=0
+ENDIF
+if (<findid.i_stat_INCOGNITO )
+FLAGS <FLAGS> &~ statf_incognito
+NAME=<findid.i_stat_INCOGNITO.tag.NAMEI>
+FINDID.i_stat_INCOGNITO.REMOVE
+ENDIF
+RETURN 1
+ENDIF
+
+
+//////////////// MASS DISPELL ///////////////////
+IF (<VAR.SPELLARGN> == s_mass_dispel)
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+if (<findid.i_stat_Paralyze> )
+FLAGS=<FLAGS>&~04
+findid.i_stat_Paralyze.remove
+endif
+IF (<FLAGS>&0200)
+FLAGS=(<FLAGS>&~0200)
+endif
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+IF (<FINDID.i_polymorph>)
+FLAGS <FLAGS> &~ statf_polymorph
+BODY <OBODY>
+COLOR <OSKIN>
+CARS
+FINDID.i_polymorph.REMOVE
+ENDIF
+IF (0<tag.poly_value>=1)
+tag.poly_value=0
+CARS
+ENDIF
+IF (0<TAG.INCOGNITO_VALUE>=1)
+FLAGS=<FLAGS> & statf_incognito
+NAME=<TAG.NAMEI>
+TAG.INCOGNITO_TIMER=0
+TAG.INCOGNITO_VALUE=0
+ENDIF
+if (<findid.i_stat_INCOGNITO )
+FLAGS <FLAGS> &~ statf_polymorph
+NAME=<findid.i_stat_INCOGNITO.tag.NAMEI>
+FINDID.i_stat_INCOGNITO.REMOVE
+ENDIF
+RETURN 1
+ENDIF
+//////////////////POLYMORPH ///////////////////////////
+IF (<VAR.SPELLARGN> == s_polymorph) //////// POLYMORPH
+IF !(<FLAGS> & (statf_dead|statf_polymorph))
+
+FLAGS <FLAGS> | statf_polymorph
+NEWITEM i_polymorph
+ACT.MORE2 <TIME>
+ACT.CONT <UID>
+ACT.TAG.POLY <TAG.POLY>
+ACT.TIMER <EVAL (<SRC.MAGERY> / 2) - 20>
+
+NEWNPC <TAG.POLY>
+BODY <ACT.BODY>
+COLOR <ACT.COLOR>
+ACT.REMOVE
+
+UPDATE
+TAG.POLY
+RETURN 1
+
+ELIF (<FINDID.i_polymorph>)
+FLAGS <FLAGS> &~ statf_polymorph
+BODY <OBODY>
+COLOR <OSKIN>
+FINDID.i_polymorph.REMOVE
+FLAGS <FLAGS> | statf_polymorph
+NEWITEM i_polymorph
+ACT.MORE2 <TIME>
+ACT.CONT <UID>
+ACT.TAG.POLY <TAG.POLY>
+ACT.TIMER <EVAL (<SRC.MAGERY> / 2) - 20>
+NEWNPC <TAG.POLY>
+BODY <ACT.BODY>
+COLOR <ACT.COLOR>
+ACT.REMOVE
+
+UPDATE
+TAG.POLY
+RETURN 1
+
+ENDIF
+ENDIF
+////////////////////////////// MANA VAMPIRE ////////////////////////////////////////////
+IF (<VAR.SPELLARGN> == s_mana_vampire)
+IF (<SRC.UID>==<UID>)
+MANA=0
+RETURN 1
+ENDIF
+VAR.RAND_MANA_VAMPIRE=<EVAL(RAND(70))>
+SRC.MANA=<EVAL(<SRC.MANA>-<VAR.RAND_MANA_VAMPIRE>)>
+IF (<SRC.MANA><0)
+SRC.MANA=0
+ENDIF
+MANA=<EVAL(<MANA>+<VAR.RAND_MANA_VAMPIRE>)>
+IF (<MANA> > <INT>)
+MANA=INT
+ENDIF
+ANIM 20
+
+if (<magicresistance> > 80.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+///////////////////////////// CURE/////////////////
+IF (<VAR.SPELLARGN> == s_cure)
+IF (<FINDID.i_veleno_time>)
+FLAGS=<FLAGS> &~ statf_poisoned
+FLAGS=<FLAGS> &~ statf_poisoned
+FINDID.i_veleno_time.REMOVE
+FIX
+ENDIF
+IF (<TAG.POISON_VALUE>=1)
+TAG.POISON_TIMER=0
+TAG.POISON_VALUE=0
+FLAGS=<FLAGS> &~ statf_poisoned
+FLAGS=<FLAGS> &~ statf_poisoned
+FIX
+ENDIF
+effect 3,i_fx_HEAL_EFFECT,6,15,1
+RETURN 1
+ENDIF
+///////////////////////////// ARCHCURE/////////////////
+IF (<VAR.SPELLARGN> == s_archcure)
+IF (<FINDID.i_veleno_time>)
+FLAGS=<FLAGS> &~ statf_poisoned
+FLAGS=<FLAGS> &~ statf_poisoned
+FINDID.i_veleno_time.REMOVE
+FIX
+ENDIF
+IF (0<TAG.POISON_VALUE>=1)
+TAG.POISON_TIMER=0
+TAG.POISON_VALUE=0
+FLAGS=<FLAGS> &~ statf_poisoned
+FLAGS=<FLAGS> &~ statf_poisoned
+FIX
+ENDIF
+effect 3,i_fx_HEAL_EFFECT,6,15,1
+RETURN 1
+ENDIF
+///////////////////////POISON FIELD//////////////
+IF (<VAR.SPELLARGN> == s_poison_field)
+IF (<FLAGS>&0200)
+FLAGS=(<FLAGS>&~0200)
+//MESSAGE Magic Reflection blocca la magia.
+effect= 3,i_fx_glow,1,15,16
+BARK 3
+RETURN 1
+ENDIF
+IF (0<TAG.POISON_VALUE>=1)
+TAG.POISON_TIMER=0
+TAG.POISON_VALUE=0
+FLAGS <FLAGS> &~ statf_poisoned
+ENDIF
+IF (<FINDID.i_veleno_time>)
+FLAGS <FLAGS> &~ statf_poisoned
+FINDID.i_veleno_time.REMOVE
+ENDIF
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.POISON_VALUE>=0)
+FLAGS=<FLAGS>|statf_poisoned
+FLAGS=<FLAGS>|statf_poisoned
+ANIM 20
+UPDATE
+FIX
+TAG.POISON_TIMER={2 4}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_POISON
+TAG.POISON_VALUE=1
+var.danno=<eval <hits>+(-<argn>)+39>
+hits=<var.danno>
+FINDID.i_bag.DCLICK
+if (<magicresistance> > 70.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+ELSE
+FLAGS=<FLAGS>|statf_poisoned
+FLAGS=<FLAGS>|statf_poisoned
+ANIM 20
+UPDATE
+FIX
+newitem i_veleno_time
+ACT.CONT <UID>
+act.timer {2 4}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_poison
+var.danno=<eval <hits>+(-<argn>)+39>
+hits=<var.danno>
+RETURN 1
+ENDIF
+
+ENDIF
+
+
+///////////////////////FIRE FIELD//////////////
+IF (<VAR.SPELLARGN> == s_fire_field)
+IF (<FLAGS>&0200)
+FLAGS=(<FLAGS>&~0200)
+//MESSAGE Magic Reflection blocca la magia.
+effect= 3,i_fx_glow,1,15,16
+BARK 3
+RETURN 1
+ENDIF
+ANIM 20
+var.danno=<eval <hits>+(-<argn>)+26>
+hits=<var.danno>
+IF (<FIXACTION>==Skill_Magery)
+if (<magicresistance> > 70.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+RETURN 1
+ENDIF
+///////////////////////////// POISON/////////////////
+IF (<VAR.SPELLARGN> == s_poison)
+IF (0<TAG.POISON_VALUE>=1)
+TAG.POISON_TIMER=0
+TAG.POISON_VALUE=0
+FLAGS <FLAGS> &~ statf_poisoned
+ENDIF
+IF (<FINDID.i_veleno_time>)
+FLAGS <FLAGS> &~ statf_poisoned
+FINDID.i_veleno_time.REMOVE
+ENDIF
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.POISON_VALUE>=0)
+FLAGS=<FLAGS>|statf_poisoned
+FLAGS=<FLAGS>|statf_poisoned
+ANIM 20
+UPDATE
+FIX
+TAG.POISON_TIMER={2 4}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_POISON
+TAG.POISON_VALUE=1
+var.danno=<eval <hits>+(-<argn>)+3>
+hits=<var.danno>
+FINDID.i_bag.DCLICK
+if (<magicresistance> > 70.0 )
+RETURN 1
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+ELSE
+FLAGS=<FLAGS>|statf_poisoned
+FLAGS=<FLAGS>|statf_poisoned
+ANIM 20
+UPDATE
+FIX
+newitem i_veleno_time
+ACT.CONT <UID>
+act.timer {2 4}
+effect 3,i_fx_curse,6,15,1
+sfx snd_spell_poison
+var.danno=<eval <hits>+(-<argn>)+3>
+hits=<var.danno>
+RETURN 1
+ENDIF
+
+ENDIF
+///////////////////////////// MIND BLAST/////////////////
+IF (<VAR.SPELLARGN> == s_mind_blast)
+var.danno=<eval <hits>+(-<argn>)+10>
+hits=<var.danno>
+effect 3,i_fx_curse,6,15,1
+ANIM 20
+if (<magicresistance> > 80.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+///////////////////////////// ENERGY BOLT/////////////////
+IF (<VAR.SPELLARGN> == s_energy_bolt)
+var.danno=<eval <hits>+(-<argn>)+10>
+hits=<var.danno>
+ANIM 20
+if (<magicresistance> > 80.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+///////////////////////////// EXPLOSION /////////////////
+IF (<VAR.SPELLARGN> == s_explosion)
+var.danno=<eval <hits>+(-<argn>)+10>
+hits=<var.danno>
+ANIM 20
+effect 3,i_fx_explode,6,15,1
+if (<magicresistance> > 80.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+
+///////////////////////////// CHAIN LIGHTNING /////////////////
+IF (<VAR.SPELLARGN> == s_chain_lightning)
+var.danno=<eval <hits>+(-<argn>)+10>
+hits=<var.danno>
+ANIM 20
+EFFECT=1,15,1
+if (<magicresistance> > 90.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+
+
+///////////////////////////// FLAMESTRIKE /////////////////
+IF (<VAR.SPELLARGN> == s_flamestrike)
+var.danno=<eval <hits>+(-<argn>)+10>
+hits=<var.danno>
+ANIM 20
+if (<magicresistance> > 80.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+
+///////////////////////////// METEOR SWARM /////////////////
+IF (<VAR.SPELLARGN> == s_meteor_swarm)
+var.danno=<eval <hits>+(-<argn>)+10>
+hits=<var.danno>
+ANIM 20
+effect 3,i_fx_explode,6,15,1
+if (<magicresistance> > 90.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+///////////////////////////// EARTHQUAKE /////////////////
+IF (<VAR.SPELLARGN> == s_earthquake)
+var.danno=<eval <hits>+(-<argn>)+20>
+hits=<var.danno>
+ANIM 20
+if (<magicresistance> > 90.0 )
+SYSMESSAGE Magia Resistita
+RETURN 1
+
+ELSE
+ACTION=-1
+RETURN 1
+ENDIF
+
+ENDIF
+///////////////////////////// INCOGNITO /////////////////
+IF (<VAR.SPELLARGN> == s_incognito)
+IF (<FIXACTION>==Skill_Magery)
+IF (0<TAG.INCOGNITO_VALUE>=0)
+TAG.NAMEI=<NAME>
+TAG.INCOGNITO_TIMER={150 200}
+sfx snd_spell_INCOGNITO
+TAG.INCOGNITO_VALUE=1
+NAME=X
+FLAGS=<FLAGS>|staf_incognito
+FLAGS=<FLAGS>|staf_incognito
+RETURN 1
+ENDIF
+
+ELSE
+FLAGS=<FLAGS>|staf_incognito
+FLAGS=<FLAGS>|staf_incognito
+newitem i_stat_INCOGNITO
+ACT.TAG.NAMEI=<NAME>
+act.timer {120 240}
+ACT.CONT <UID>
+sfx snd_spell_INCOGNITO
+NAME=X
+RETURN 1
+ENDIF
+
+ENDIF
+
+
+ENDIF
+//////////////////////////// MORTE PG RESET STAT/////////////////////////////////////////////
+ON=@DEATH
+if (<findid.i_stat_mod_feeblemind> )
+INT=<findid.i_stat_mod_feeblemind.tag.int>
+findid.i_stat_mod_feeblemind.remove
+endif
+if (<findid.i_stat_mod_clumsy> )
+dex=<findid.i_stat_mod_clumsy.tag.dex>
+findid.i_stat_mod_clumsy.remove
+
+endif
+if (<findid.i_stat_mod_weaken> )
+str=<findid.i_stat_mod_weaken.tag.str>
+findid.i_stat_mod_weaken.remove
+
+endif
+if (<findid.i_stat_mod_Agility> )
+dex=<findid.i_stat_mod_Agility.tag.dex>
+findid.i_stat_mod_Agility.remove
+endif
+if (<findid.i_stat_mod_Cunning> )
+int=<findid.i_stat_mod_Cunning.tag.int>
+findid.i_stat_mod_Cunning.remove
+endif
+if (<findid.i_stat_mod_strength> )
+str=<findid.i_stat_mod_strength.tag.str>
+findid.i_stat_mod_strength.remove
+endif
+if (<findid.i_stat_mod_bless> )
+str=<findid.i_stat_mod_bless.tag.str>
+dex=<findid.i_stat_mod_bless.tag.dex>
+int=<findid.i_stat_mod_bless.tag.int>
+findid.i_stat_mod_bless.remove
+endif
+if (<findid.i_stat_mod_curse> )
+str=<findid.i_stat_mod_curse.tag.str>
+dex=<findid.i_stat_mod_curse.tag.dex>
+int=<findid.i_stat_mod_curse.tag.int>
+findid.i_stat_mod_curse.remove
+endif
+if (<findid.i_stat_Paralyze> )
+FLAGS=<FLAGS>&~04
+findid.i_stat_Paralyze.remove
+endif
+IF (0<TAG.CURSE_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.CURSE_TIMER=0
+TAG.CURSE_VALUE=0
+ENDIF
+IF (0<TAG.BLESS_VALUE>=1)
+STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.BLESS_TIMER=0
+TAG.BLESS_VALUE=0
+ENDIF
+IF (0<TAG.STRENGTH_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.STRENGTH_TIMER=0
+TAG.STRENGTH_VALUE=0
+ENDIF
+IF (0<TAG.CUNNING_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+INT=<TAG.STAT_INT>
+TAG.CUNNING_TIMER=0
+TAG.CUNNING_VALUE=0
+ENDIF
+IF (0<TAG.Agility_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+STR=<TAG.TSTR2>
+//INT=<TAG.STAT_INT>
+TAG.Agility_TIMER=0
+TAG.Agility_VALUE=0
+ENDIF
+IF (0<TAG.weaken_VALUE>=1)
+STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.weaken_TIMER=0
+TAG.weaken_VALUE=0
+ENDIF
+IF (0<TAG.feeblemind_VALUE>=1)
+//STR=<TAG.STAT_STR>
+//DEX=<TAG.STAT_DEX>
+INT=<TAG.STAT_INT>
+TAG.feeblemind_TIMER=0
+TAG.feeblemind_VALUE=0
+ENDIF
+IF (0<TAG.clumsy_VALUE>=1)
+//STR=<TAG.STAT_STR>
+DEX=<TAG.STAT_DEX>
+//INT=<TAG.STAT_INT>
+TAG.clumsy_TIMER=0
+TAG.clumsy_VALUE=0
+ENDIF
+IF (<FINDID.i_polymorph>)
+FLAGS <FLAGS> &~ statf_polymorph
+CARS
+BODY <OBODY>
+COLOR <OSKIN>
+FINDID.i_polymorph.REMOVE
+ENDIF
+IF (<FINDID.i_veleno_time>)
+FLAGS <FLAGS> &~ statf_poisoned
+FINDID.i_veleno_time.REMOVE
+ENDIF
+IF (0<TAG.POISON_VALUE>=1)
+TAG.POISON_TIMER=0
+TAG.POISON_VALUE=0
+FLAGS <FLAGS> &~ statf_poisoned
+ENDIF
+IF (0<tag.poly_value>=1)
+tag.poly_value=0
+CARS
+ENDIF
+IF (0<TAG.INCOGNITO_VALUE>=1)
+FLAGS=<FLAGS> & statf_incognito
+NAME=<TAG.NAMEI>
+TAG.INCOGNITO_TIMER=0
+TAG.INCOGNITO_VALUE=0
+ENDIF
+if (<findid.i_stat_INCOGNITO )
+FLAGS <FLAGS> &~ statf_polymorph
+NAME=<findid.i_stat_INCOGNITO.tag.NAMEI>
+FINDID.i_stat_INCOGNITO.REMOVE
+ENDIF

@@ -1,0 +1,218 @@
+//----------------------------------------------------------
+//Guild Message System V1 (Final Release)
+//By Sven
+//Created for Flinthills 2
+//---------------------------------------------------------
+
+//-----------Installation Instructions--------------
+//Put this script into your scripts folder and give permission for players to use the following functions.
+//guild : guildpanic : listguild : guildmsg : guildmsgcheck : writeguildmsg : guildhelp
+//Also note : Once a guild has used guildmsg, an invisible bulletin board will appear at their guildstone.
+//DO NOT DELETE THIS BULLETIN BOARD
+//--------------------------------------------------------
+
+//-----------Functions-------------------------------
+//Guild (Message) - Will send your guildmates a message.
+//Guildpanic (message) - Will alert your guildmates you are panicing and will tell them where you are.
+//Guildmsg - Will bring up messages left by other guildmates - usefull for meeting times.
+//Guildmsgcheck - Will check if you have any new guild messages - if so it will bring the menu up.
+//Writeguildmsg (message) - Will write a new guild message to be checked with "Guildmsg"
+//Listguild - Will list guild members currently online.
+//-------------------------------------------------------
+
+//----------Notes------------------------------------
+//If you ever need to store large amount of strings, check out Bulletin Boards.
+//Bulletin Boards r0xx0r 4ll3z for strings.
+//------------------------------------------------------
+
+[FUNCTION guild] 
+IF <memoryfindtype.memory_guild.link.uid> 
+serv.allclients guild_r <name> [<memoryfindtype.memory_guild.link.abbrev>]: <args> 
+ELSE
+SRC.SYSMESSAGE You are not in a guild.
+endif
+RETURN 1
+ 
+[FUNCTION guild_r] 
+IF <memoryfindtype.memory_guild.link.uid> == <src.memoryfindtype.memory_guild.link.uid> 
+SYSMESSAGE <args> 
+ENDIF
+
+[FUNCTION guildpanic] 
+IF <memoryfindtype.memory_guild.link.uid> 
+serv.allclients guildpanic_r <name> [<memoryfindtype.memory_guild.link.abbrev>]: PANIC: <P> (<REGION.NAME>): <args>!
+ELSE
+SRC.SYSMESSAGE You are not in a guild.
+endif
+RETURN 1
+ 
+[FUNCTION guildpanic_r] 
+IF <memoryfindtype.memory_guild.link.uid> == <src.memoryfindtype.memory_guild.link.uid> 
+SYSMESSAGE <args> 
+ENDIF
+
+[FUNCTION listguild]
+IF <memoryfindtype.memory_guild.link.uid>
+serv.allclients listguild_r
+ELSE
+SRC.SYSMESSAGE You are not in a guild.
+endif
+RETURN 1
+
+[FUNCTION listguild_r] 
+IF <memoryfindtype.memory_guild.link.uid> == <src.memoryfindtype.memory_guild.link.uid> 
+SRC.SYSMESSAGE <NAME> [<memoryfindtype.memory_guild.link.abbrev>]: <REGION.NAME>
+ENDIF
+
+[FUNCTION guildmsg]
+IF <memoryfindtype.memory_guild.link.uid>
+guild_init
+MENU M_GUILDMSG
+ELSE
+SRC.SYSMESSAGE You are not in a guild!
+ENDIF
+RETURN 1
+
+[FUNCTION guildmsgcheck]
+IF <memoryfindtype.memory_guild.link.uid> 
+guild_init
+IF (0<SRC.TAG.guildcheck>=0)
+	SRC.SYSMESSAGE You have new guild messages!.
+	SRC.TAG.GUILDCHECK=<memoryfindtype.memory_guild.link.link.findcont.0.BODY.0>
+	guildmsg
+	RETURN 1
+ELSEIF STRMATCH(<memoryfindtype.memory_guild.link.link.findcont.0.BODY.0>,<SRC.TAG.GUILDCHECK>)
+	SRC.SYSMESSAGE There are no new messages.
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You have new guild messages!.
+	SRC.TAG.GUILDCHECK=<memoryfindtype.memory_guild.link.link.findcont.0.BODY.0>
+	guildmsg
+	RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You are not in a guild!
+ENDIF
+RETURN 1
+
+[FUNCTION guild_init]
+IF (<memoryfindtype.memory_guild.link.link> == 04fffffff)
+	SRC.NEWITEM i_bulletin_board
+	SRC.ACT.P=<memoryfindtype.memory_guild.link.P>
+	memoryfindtype.memory_guild.link.link=<SRC.ACT.UID>
+	SRC.ACT.NAME=<memoryfindtype.memory_guild.link.ABBREV>
+	SRC.ACT.ATTR=080
+		SRC.NEWITEM 0eb0
+		SRC.ACT.TYPE=t_message
+		SRC.ACT.NAME=Guild Message System
+		SRC.ACT.AUTHOR=Vlad
+		SRC.ACT.BODY.0=This is the Guild Messaging System - To write a message, press .writeguildmsg <message>
+		SRC.ACT.LINK=<SRC.UID>
+		SRC.ACT.ATTR=0
+		SRC.ACT.CONT=<memoryfindtype.memory_guild.link.link>
+	ENDIF
+RETURN 1
+
+[FUNCTION writeguildmsg]
+IF <memoryfindtype.memory_guild.link.uid>
+IF (<memoryfindtype.memory_guild.link.link.rescount> >= 5)
+	memoryfindtype.memory_guild.link.link.findcont.4.remove
+ENDIF
+IF STRMATCH(<ARGS>,)
+	SRC.SYSMESSAGE Please put your message after .writeguildmessage like this ".writeguildmessage message".
+	RETURN 1
+ENDIF
+	SRC.NEWITEM 0eb0
+	SRC.ACT.TYPE=t_message
+	SRC.ACT.NAME=Guild Message
+	SRC.ACT.AUTHOR=<SRC.NAME>
+	SRC.ACT.BODY.0=<ARGS>
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.ATTR=0
+	SRC.ACT.CONT=<memoryfindtype.memory_guild.link.link>
+	SRC.SYSMESSAGE <ARGS> is now a guild message.
+ENDIF
+
+[MENU m_guildmsg]
+Guild Messages for [<memoryfindtype.memory_guild.link.ABBREV>]
+
+ON=0 1. <memoryfindtype.memory_guild.link.link.findcont.0.NAME> by <memoryfindtype.memory_guild.link.link.findcont.0.AUTHOR>
+VAR.GUILD=0
+SRC.DIALOG d_guildmsg
+RETURN 1
+
+ON=0 2. <memoryfindtype.memory_guild.link.link.findcont.1.NAME> by <memoryfindtype.memory_guild.link.link.findcont.1.AUTHOR>
+VAR.GUILD=1
+SRC.DIALOG d_guildmsg
+RETURN 1
+
+ON=0 3. <memoryfindtype.memory_guild.link.link.findcont.2.NAME> by <memoryfindtype.memory_guild.link.link.findcont.2.AUTHOR>
+VAR.GUILD=2
+SRC.DIALOG d_guildmsg
+RETURN 1
+
+ON=0 4. <memoryfindtype.memory_guild.link.link.findcont.3.NAME> by <memoryfindtype.memory_guild.link.link.findcont.3.AUTHOR>
+VAR.GUILD=3
+SRC.DIALOG d_guildmsg
+RETURN 1
+
+ON=0 5. <memoryfindtype.memory_guild.link.link.findcont.4.NAME> by <memoryfindtype.memory_guild.link.link.findcont.4.AUTHOR>
+VAR.GUILD=4
+SRC.DIALOG d_guildmsg
+RETURN 1
+
+[dialog d_guildmsg]
+1,1
+page 0 
+TEXT 3 424 0273 0
+TEXT 8 444 0273 1
+
+[dialog d_guildmsg text] 
+Guild Message <EVAL <VAR.GUILD>+1> by <memoryfindtype.memory_guild.link.link.findcont.<VAR.GUILD>.AUTHOR>
+<memoryfindtype.memory_guild.link.link.findcont.<VAR.GUILD>.BODY.0>
+
+[dialog d_guildmsg button] 
+onbutton=0
+SRC.SYSMESSAGE Guild Message Closed
+RETURN 1
+
+[FUNCTION guildlogindisable]
+SRC.EVENTS=-e_guildmsg
+SRC.SYSMESSAGE Guild Login Disabled
+RETURN 1
+
+[FUNCTION guildloginenable]
+SRC.EVENTS=+e_guildmsg
+SRC.SYSMESSAGE Guild Login Enabled
+RETURN 1
+
+[EVENTS e_guildmsg]
+ON=@LOGIN
+guildmsgcheck
+
+[FUNCTION guildhelp]
+MENU m_guildhelp
+RETURN 1
+
+[MENU M_GUILDHELP]
+Guild Help System by Vlad
+
+ON=0 Guild (Message)
+SRC.SYSMESSAGE Will send your guildmates a message.
+RETURN 1
+ON=0 Guildpanic (message)
+SRC.SYSMESSAGE Will alert your guildmates you are panicing and will tell them where you are.
+RETURN 1
+ON=0 Guildmsg
+SRC.SYSMESSAGE Will bring up messages left by other guildmates - usefull for meeting times.
+RETURN 1
+ON=0 Guildmsgcheck
+SRC.SYSMESSAGE Will check if you have any new guild messages - if so it will bring the menu up.
+RETURN 1
+ON=0 Writeguildmsg (message)
+SRC.SYSMESSAGE Will write a new guild message to be checked with "Guildmsg"
+RETURN 1
+ON=0 Listguild
+SRC.SYSMESSAGE Will list guild members currently online.
+RETURN 1
+

@@ -1,0 +1,300 @@
+//MODIFIED REG COUNTER
+//Script originally made by Kell. EDITED by Imzadi 
+//Full credit goes to Kell for idea and making of script. 
+//Imzadi re-edited it to make it look nicer to his eyes. 
+
+
+//Reformated to use pages and necro added by Iz 
+//Triggered by book instead of .regs command 
+//Removed function too 
+
+
+//Iz addition - item its linked to on our shard 
+[ITEMDEF i_reg_book] 
+//Book that opens reg gump 
+ID=0efa 
+TYPE=0 
+NAME="Magic Reg Tracking Book" 
+VALUE=5000 
+
+
+ON=@CREATE 
+   COLOR=045 
+
+
+ON=@DCLICK 
+   SRC.EFFECT=3,i_fx_HEAL_EFFECT,6,15,1 
+   SRC.SOUND=515 
+   SRC.SYSMESSAGE="The magic of the book has tabulated your reagents." 
+   SRC.DIALOG d_reagents 
+   SRC.SOUND=85 
+RETURN 1 
+
+
+CATEGORY=Provisions - Alchemy & Magic 
+SUBSECTION=Magical Items 
+DESCRIPTION=Magic Reg Tracking Book 
+
+
+[DIALOG d_reagents] 
+100, 0 
+page 0 
+resizepic 2 10 2620 200 500 
+button 170 30 03 04 1 0 0 
+
+
+page 1 
+// button 7 = X,Y,Down gump,Up gump,pressable(1/0),pagedest,id 
+text 72 20 1 16  //std 
+text 72 35 1 17 
+gumppic 85 480 2225 
+button 120 480 1209 1210 0 2 
+text 140 475 1 19 
+
+
+tilepic 10 60 <eval 0f8d>                 // spider silk 
+gumppic 62 80 2443                        //text thing 
+text 77 82 0 0     //Black text 
+text 48 58 5 1   //Title text 
+
+
+tilepic 10 112 <eval 0f8c>                // sulfurous ash 
+gumppic 62 128 2443                       //text thing 
+text 77 130 0 2     //Black text 
+text 48 110 5 3   //Title text 
+
+
+tilepic 10 164 <eval 0f88>                // nightshade 
+gumppic 62 184 2443                       //text thing 
+text 77 186 0 4     //Black text 
+text 45 162 5 5   //Title text 
+
+
+tilepic 10 216 <eval 0f7b>                // mandrake root 
+gumppic 62 233 2443                       //text thing 
+text 77 235 0 6     //Black text 
+text 45 214 5 7   //Title text 
+
+
+tilepic 10 268 <eval 0f85>                // ginseng 
+gumppic 62 285 2443                       //text thing 
+text 77 287 0 8        //Black text 
+text 45 266 5 9      //Title text 
+
+
+tilepic 10 320 <eval 0f84>                // garlic 
+gumppic 62 340 2443                       //text thing 
+text 77 340 0 10        //Black text 
+text 45 320 5 11      //Title text 
+
+
+tilepic 10 372 <eval 0f86>                   // blood moss 
+gumppic 62 392 2443                          //text thing 
+text 77 392 0 12    //Black text 
+text 45 372 5 13  //Title text 
+
+
+tilepic 10 424 <eval 0f7a>                   // black pearl 
+gumppic 62 444 2443                          //text thing 
+text 77 444 0 14      //Black text 
+text 45 424 5 15    //Title text 
+
+
+page 2 
+text 72 20 1 18  //pagan 
+text 72 35 1 17 
+// button 7 = X,Y,Down gump,Up gump,pressable(1/0),pagedest,id 
+button 20 480 1209 1210 0 1 
+text 40 475 1 20 
+gumppic 85 480 2226 
+button 120 480 1209 1210 0 3 
+text 140 475 1 19 
+
+
+tilepic 10 60 <eval 0f78>                 // batwing 
+gumppic 62 80 2443                        //text thing 
+text 77 82 0 21    //Black text 
+text 48 58 5 22  //Title text 
+
+
+tilepic 10 112 <eval 0f79>                // blackmoor 
+gumppic 62 128 2443                       //text thing 
+text 77 130 0 23    //Black text 
+text 48 110 5 24  //Title text 
+
+
+tilepic 10 164 <eval 0f7c>                // blood_spawn 
+gumppic 62 184 2443                       //text thing 
+text 77 186 0 25    //Black text 
+text 45 162 5 26  //Title text 
+
+
+tilepic 10 216 <eval 0f7e>                // bone 
+gumppic 62 233 2443                       //text thing 
+text 77 235 0 27    //Black text 
+text 45 214 5 28  //Title text 
+
+
+tilepic 10 268 <eval 0f7d>                // blood_vial 
+gumppic 62 285 2443                       //text thing 
+text 77 287 0 29       //Black text 
+text 45 266 5 30     //Title text 
+
+
+tilepic 10 320 <eval 0f7f>                // brimstone 
+gumppic 62 340 2443                       //text thing 
+text 77 340 0 31        //Black text 
+text 45 320 5 32      //Title text 
+
+
+tilepic 10 372 <eval 0f80>                   // daemon bones 
+gumppic 62 392 2443                          //text thing 
+text 77 392 0 33    //Black text 
+text 45 372 5 34  //Title text 
+
+
+tilepic 10 424 <eval 0f81>                   // fertile dirt 
+gumppic 62 444 2443                          //text thing 
+text 77 444 0 35      //Black text 
+text 45 424 5 36    //Title text 
+
+
+page 3 
+text 72 20 1 18  //pagan 
+text 72 35 1 17 
+button 20 480 1209 1210 0 2 
+text 40 475 1 20 
+gumppic 85 480 2227 
+button 120 480 1209 1210 0 4 
+text 140 475 1 19 
+
+
+tilepic 10 60 <eval 0f82>                 // dragon blood 
+gumppic 62 80 2443                        //text thing 
+text 77 82 0 37     //Black text 
+text 48 58 5 38   //Title text 
+
+
+tilepic 10 112 <eval 0f83>                // exe 
+gumppic 62 128 2443                       //text thing 
+text 77 130 0 39     //Black text 
+text 48 110 5 40   //Title text 
+
+
+tilepic 10 164 <eval 0f87>                // eye 
+gumppic 62 184 2443                       //text thing 
+text 77 186 0 41     //Black text 
+text 45 162 5 42   //Title text 
+
+
+tilepic 10 216 <eval 0f89>                // obsidian 
+gumppic 62 233 2443                       //text thing 
+text 77 235 0 43     //Black text 
+text 45 214 5 44   //Title text 
+
+
+tilepic 10 268 <eval 0f8a>                // pig 
+gumppic 62 285 2443                       //text thing 
+text 77 287 0 45        //Black text 
+text 45 266 5 46      //Title text 
+
+
+tilepic 10 320 <eval 0f8b>                // pumice 
+gumppic 62 340 2443                       //text thing 
+text 77 340 0 47        //Black text 
+text 45 320 5 48      //Title text 
+
+
+tilepic 10 372 <eval 0f8e>                   // serp 
+gumppic 62 392 2443                          //text thing 
+text 77 392 0 49    //Black text 
+text 45 372 5 50  //Title text 
+
+
+tilepic 10 424 <eval 0f8f>                   // volcanic 
+gumppic 62 444 2443                          //text thing 
+text 77 444 0 51      //Black text 
+text 45 424 5 52    //Title text 
+
+
+page 4 
+text 72 20 1 18  //std 
+text 72 35 1 17 
+gumppic 85 480 2228 
+button 20 480 1209 1210 0 3 
+text 40 475 1 20 
+
+
+tilepic 10 60 <eval 0f90>                 // dead wood 
+gumppic 62 80 2443                        //text thing 
+text 77 82 0 53     //Black text 
+text 48 58 5 54   //Title text 
+
+
+tilepic 10 112 <eval 0f91>                // worms heart 
+gumppic 62 128 2443                       //text thing 
+text 77 130 0 55     //Black text 
+text 48 110 5 56   //Title text 
+
+
+[DIALOG d_reagents TEXT] 
+<eval <rescount i_reag_spider_silk>>  //0 
+Spider's Silk 
+<eval <rescount i_reag_sulfur_ash>> 
+Sulfurous Ash 
+<eval <rescount i_reag_nightshade>> 
+Nightshade                            //5 
+<eval <rescount i_reag_blood_moss>> 
+Blood Moss 
+<eval <rescount i_reag_ginseng>> 
+Ginseng 
+<eval <rescount i_reag_garlic>>        //10 
+Garlic 
+<eval <rescount i_reag_mandrake_root>> 
+Mandrake Root 
+<eval <rescount i_reag_black_pearl>> 
+Black Pearls                           //15 
+Standard 
+Reagents 
+Pagan 
+Next 
+Back                                       //20 
+<eval <rescount i_reag_batwing>> 
+Batwings 
+<eval <rescount i_reag_blackmoor>> 
+Blackmoor 
+<eval <rescount i_reag_blood_spawn>>      //25 
+Bloodspawn 
+<eval <rescount i_reag_bone>> 
+Bones 
+<eval <rescount i_reag_blood_vial>> 
+Vials of Blood                           //30 
+<eval <rescount i_reag_brimstone>> 
+Brinstone 
+<eval <rescount i_reag_daemon_bone>> 
+Daemon Bones 
+<eval <rescount i_reag_fertile_dirt>>    //35 
+Fertile Dirt 
+<eval <rescount i_reag_dragon_blood>> 
+Dragons Blood 
+<eval <rescount i_reag_executioners_cap>> 
+Executioners Cap                          //40 
+<eval <rescount i_reag_eye_of_newt>> 
+Eye of Newt 
+<eval <rescount i_reag_obsidian>> 
+Obsidian 
+<eval <rescount i_reag_pig_iron>>    //45 
+Pig Iron 
+<eval <rescount i_reag_pumice>> 
+Pumice 
+<eval <rescount i_reag_serpent_scale>> 
+Serpents Scales                        //50 
+<eval <rescount i_reag_volcanic_ash>> 
+Volcanic Ash 
+<eval <rescount i_reag_dead_wood>> 
+Dead Wood 
+<eval <rescount i_reag_worm_heart>>       //55 
+Worms Heart 
+
+
+[EOF]

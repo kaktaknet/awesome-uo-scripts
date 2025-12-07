@@ -1,0 +1,94 @@
+// By Swindler. 
+// The magic resistance script below works exactly the same as OSI's, which you can see here: 
+// UO Stratics - Magic: Resisting Spells and Evaluating Intelligence 
+// Instructions: Open up spheretable_x, and delete every SPELLFLAG_RESIST. 
+// If after removing it, the line ends with a |, you'll want to delete the | too. 
+// Then all you need to do is put this e_resist event on all your players. 
+// Note: To change the skillgain rate, change RESISTGAIN 20 and RESISTGAIN 10, the first one is 
+// for when the resist succeeds, second for when it fails. 20 and 10 is fairly fast skill gain.
+
+[FUNCTION SPELLARGN]
+VAR.SPELLARGN <ARGN> + 0dc000000
+
+[FUNCTION SPELLCIRCLE]
+IF (<VAR.SPELLARGN> == s_clumsy) || (<VAR.SPELLARGN> == s_create_food) || (<VAR.SPELLARGN> == s_feeblemind) || (<VAR.SPELLARGN> == s_heal) || (<VAR.SPELLARGN> == s_magic_arrow) || (<VAR.SPELLARGN> == s_night_sight) || (<VAR.SPELLARGN> == s_reactive_armor) || (<VAR.SPELLARGN> == s_weaken)
+VAR.SPELLCIRCLE 1
+ELIF (<VAR.SPELLARGN> == s_agility) || (<VAR.SPELLARGN> == s_cunning) || (<VAR.SPELLARGN> == s_cure) || (<VAR.SPELLARGN> == s_harm) || (<VAR.SPELLARGN> == s_magic_trap) || (<VAR.SPELLARGN> == s_magic_untrap) || (<VAR.SPELLARGN> == s_protection) || (<VAR.SPELLARGN> == s_strength)
+VAR.SPELLCIRCLE 2
+ELIF (<VAR.SPELLARGN> == s_bless) || (<VAR.SPELLARGN> == s_fireball) || (<VAR.SPELLARGN> == s_magic_lock) || (<VAR.SPELLARGN> == s_poison) || (<VAR.SPELLARGN> == s_telekinesis) || (<VAR.SPELLARGN> == s_teleport) || (<VAR.SPELLARGN> == s_unlock) || (<VAR.SPELLARGN> == s_wall_of_stone)
+VAR.SPELLCIRCLE 3
+ELIF (<VAR.SPELLARGN> == s_archcure) || (<VAR.SPELLARGN> == s_archprotection) || (<VAR.SPELLARGN> == s_curse) || (<VAR.SPELLARGN> == s_fire_field) || (<VAR.SPELLARGN> == s_greater_heal) || (<VAR.SPELLARGN> == s_lightning) || (<VAR.SPELLARGN> == s_mana_drain) || (<VAR.SPELLARGN> == s_recall)
+VAR.SPELLCIRCLE 4
+ELIF (<VAR.SPELLARGN> == s_blade_spirits) || (<VAR.SPELLARGN> == s_dispel_field) || (<VAR.SPELLARGN> == s_incognito) || (<VAR.SPELLARGN> == s_magic_reflection) || (<VAR.SPELLARGN> == s_mind_blast) || (<VAR.SPELLARGN> == s_paralyze) || (<VAR.SPELLARGN> == s_poison_field) || (<VAR.SPELLARGN> == s_summon_creature)
+VAR.SPELLCIRCLE 5
+ELIF (<VAR.SPELLARGN> == s_dispel) || (<VAR.SPELLARGN> == s_energy_bolt) || (<VAR.SPELLARGN> == s_explosion) || (<VAR.SPELLARGN> == s_invisibility) || (<VAR.SPELLARGN> == s_mark) || (<VAR.SPELLARGN> == s_mass_curse) || (<VAR.SPELLARGN> == s_paralyzation_field) || (<VAR.SPELLARGN> == s_reveal)
+VAR.SPELLCIRCLE 6
+ELIF (<VAR.SPELLARGN> == s_chain_lightning) || (<VAR.SPELLARGN> == s_energy_field) || (<VAR.SPELLARGN> == s_flamestrike) || (<VAR.SPELLARGN> == s_gate_travel) || (<VAR.SPELLARGN> == s_mana_vampire) || (<VAR.SPELLARGN> == s_mass_dispel) || (<VAR.SPELLARGN> == s_meteor_swarm) || (<VAR.SPELLARGN> == s_polymorph)
+VAR.SPELLCIRCLE 7
+ELIF (<VAR.SPELLARGN> == s_earthquake) || (<VAR.SPELLARGN> == s_energy_vortex) || (<VAR.SPELLARGN> == s_resurrection) || (<VAR.SPELLARGN> == s_summon_elem_air) || (<VAR.SPELLARGN> == s_summon_daemon) || (<VAR.SPELLARGN> == s_summon_elem_earth) || (<VAR.SPELLARGN> == s_summon_elem_fire) || (<VAR.SPELLARGN> == s_summon_elem_water)
+VAR.SPELLCIRCLE 8
+ENDIF
+
+[EVENTS e_resist]
+ON=@SpellCast
+IF (<SRC.ACT.ISCHAR>)
+IF !(<SRC.ACT.ISEVENT.e_resist>)
+SRC.ACT.EVENTS +e_resist
+ENDIF
+ENDIF
+
+ON=@SpellEffect
+IF !(<SRC.ISEVENT.e_resist>)
+SRC.EVENTS +e_resist
+ENDIF
+
+SPELLARGN <ARGN>
+IF (<VAR.SPELLARGN> == s_harm) || (<VAR.SPELLARGN> == s_lightning) || (<VAR.SPELLARGN> == s_energy_bolt) || (<VAR.SPELLARGN> == s_chain_lightning) || (<VAR.SPELLARGN> == s_earthquake) || (<VAR.SPELLARGN> == s_paralyzation_field) || (<VAR.SPELLARGN> == s_poison_field) || (!(<CAN> & mt_fire_immune) && ((<VAR.SPELLARGN> == s_magic_arrow) || (<VAR.SPELLARGN> == s_fireball) || (<VAR.SPELLARGN> == s_explosion) || (<VAR.SPELLARGN> == s_meteor_swarm) || (<VAR.SPELLARGN> == s_flamestrike) || (<VAR.SPELLARGN> == s_fire_field)))
+SPELLCIRCLE <ARGN>
+IF (<EVAL ((<MAGICRESISTANCE> / 5) + 5) / 10>) > (<EVAL ((<MAGICRESISTANCE> - (((<SRC.MAGERY> - 20.0) / 5) + (<VAR.SPELLCIRCLE> * 5))) + 5) / 10>)
+IF (RAND(100) < <EVAL ((<MAGICRESISTANCE> / 5) + 5) / 10>)
+TAG.RESIST 1
+ELSE
+TAG.RESIST 2
+ENDIF
+ELSE
+IF (RAND(100) < <EVAL ((<MAGICRESISTANCE> - (((<SRC.MAGERY> - 20.0) / 5) + (<VAR.SPELLCIRCLE> * 5))) + 5) / 10>)
+TAG.RESIST 1
+ELSE
+TAG.RESIST 2
+ENDIF
+ENDIF
+ENDIF
+
+ON=@GetHit
+IF (0<TAG.RESIST> == 1)
+SYSMESSAGE You feel yourself resisting magic.
+HITS <EVAL <HITS> + (<ARGN> / 2)>
+Resist_EVALINT <EVAL <ARGN> / 2>
+RESISTGAIN 20
+ELIF (0<TAG.RESIST> == 2)
+Resist_EVALINT <ARGN>
+RESISTGAIN 10
+ENDIF
+TAG.RESIST
+
+[FUNCTION Resist_EVALINT]
+IF !(<NPC>)
+IF (<MAGICRESISTANCE> > <SRC.EVALUATINGINTEL>)
+VAR.MODIFIER <EVAL 10 + ((<SRC.EVALUATINGINTEL> - <MAGICRESISTANCE>) / 200)>
+ELIF (<MAGICRESISTANCE> < <SRC.EVALUATINGINTEL>)
+VAR.MODIFIER <EVAL 10 + ((<SRC.EVALUATINGINTEL> - <MAGICRESISTANCE>) / 500)>
+ENDIF
+HITS <EVAL <HITS> + (<ARGN> - ((<VAR.MODIFIER> * <ARGN>) / 10))>
+ENDIF
+
+[FUNCTION RESISTGAIN]
+IF !(<NPC>)
+IF (<MAGICRESISTANCE> < 1000)
+TAG.Resist_Fudge <EVAL 0<TAG.Resist_Fudge> + <ARGN>>
+IF (0<TAG.Resist_Fudge> > <MAGICRESISTANCE>)
+TAG.Resist_Fudge
+MAGICRESISTANCE <MAGICRESISTANCE> + 0.1
+ENDIF
+ENDIF
+ENDIF

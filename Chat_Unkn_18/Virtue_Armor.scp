@@ -1,0 +1,635 @@
+[ITEMDEF platemailofvirtue] 
+
+DEFNAME=i_PLATEMAIL_VIRTUE 
+
+ID=i_platemail_chest 
+
+NAME=Platemail of Virtue 
+
+REQSTR=100 
+
+ARMOR=75 
+
+CATEGORY=Spec Items 
+
+SUBSECTION=Platemail 
+
+DESCRIPTION=Platemail of Virtue 
+
+
+
+ON=@Create 
+
+ATTR=attr_magic 
+
+HITPOINTS=70 
+
+COLOR=color_magic_invulnerability 
+
+
+
+ON=@EQUIP 
+
+IF <SRC.KARMA><1000 
+
+SRC.SYSMESSAGE=Only the most Virtuous may wear this. 
+
+SRC.SYSMESSAGE=You need at least 1000 Karma and yours is <SRC.KARMA>! 
+
+RETURN 1 
+
+ELSE 
+
+IF <SRC.KARMA>>1000 
+
+SOUND=495 
+
+SRC.MESSAGE=You feel stronger. 
+
+SRC.STR=<SRC.STR>+20 
+
+return 0 
+
+ENDIF 
+
+
+
+ON=@DAMAGE 
+
+SRC.EVENTS +e_virtue 
+
+
+
+ON=@UNEQUIP 
+
+IF <src.karma><1000 
+
+RETURN 1 
+
+ENDIF 
+
+
+
+SRC.MESSAGE=You become weaker. 
+
+SRC.STR=<SRC.STR>+-20 
+
+SOUND=487 
+
+
+
+[ITEMDEF platemailleggingsofvirtue] 
+
+DEFNAME=i_leggings_virtue 
+
+ID=i_platemail_leggings 
+
+NAME=Platemail Leggings of Virtue 
+
+REQSTR=100 
+
+ARMOR=75 
+
+CATEGORY=Spec Items 
+
+SUBSECTION=Platemail 
+
+DESCRIPTION=Platemail Legs of Virtue 
+
+
+
+ON=@Create 
+
+ATTR=attr_magic 
+
+HITPOINTS=70 
+
+COLOR=color_magic_invulnerability 
+
+
+
+ON=@EQUIP 
+
+IF <SRC.KARMA><1000 
+
+SRC.SYSMESSAGE=Only the most Virtuous may wear this. 
+
+SRC.SYSMESSAGE=You need at least 1000 Karma and yours is <SRC.KARMA>! 
+
+RETURN 1 
+
+ELSE 
+
+IF <SRC.KARMA>>1000 
+
+SOUND=495 
+
+SRC.MESSAGE=You feel Faster. 
+
+SRC.DEX=<SRC.DEX>+20 
+
+return 0 
+
+ENDIF 
+
+
+
+ON=@DAMAGE 
+
+SRC.EVENTS +e_virtue 
+
+
+
+ON=@UNEQUIP 
+
+IF <SRC.KARMA><1000 
+
+RETURN 1 
+
+ENDIF 
+
+
+
+SRC.MESSAGE=You become Slower. 
+
+SRC.DEX=<SRC.DEX>+-20 
+
+SOUND=487 
+
+
+
+[ITEMDEF PLATEMAIL_ARMS_VIRTUE] 
+
+DEFNAME=i_ARMS_VIRTUE 
+
+ID=i_platemail_arms 
+
+NAME=Platemail Arms of Virtue 
+
+REQSTR=100 
+
+ARMOR=75 
+
+CATEGORY=Spec Items 
+
+SUBSECTION=Platemail 
+
+DESCRIPTION=Platemail Arms of Virtue 
+
+
+
+ON=@Create 
+
+ATTR=attr_magic 
+
+HITPOINTS=70 
+
+COLOR=color_magic_invulnerability 
+
+
+
+ON=@EQUIP 
+
+IF <SRC.KARMA><1000 
+
+SRC.SYSMESSAGE=Only the most Virtuous may wear this. 
+
+SRC.SYSMESSAGE=You need at least 1000 Karma and yours is <SRC.KARMA>! 
+
+RETURN 1 
+
+ELSE 
+
+IF <SRC.KARMA>>1000 
+
+SOUND=495 
+
+SRC.MESSAGE=Your Magic grows. 
+
+SRC.MANA=<SRC.MANA>+20 
+
+return 0 
+
+ENDIF 
+
+
+
+ON=@DAMAGE 
+
+SRC.EVENTS +e_virtue 
+
+
+
+ON=@UNEQUIP 
+
+IF <SRC.KARMA><1000 
+
+RETURN 1 
+
+ENDIF 
+
+SOUND=487 
+
+SRC.MANA=<SRC.MANA>+-20 
+
+
+
+[ITEMDEF HELM_VIRTUE] 
+
+DEFNAME=i_helm_virtue 
+
+ID=i_platemail_helm 
+
+NAME=Plate Helm of Virtue 
+
+REQSTR=100 
+
+ARMOR=75 
+
+CATEGORY=Spec Items 
+
+SUBSECTION=Platemail 
+
+DESCRIPTION=Plate Helm of Virtue 
+
+
+
+ON=@Create 
+
+ATTR=attr_magic 
+
+HITPOINTS=60 
+
+COLOR=color_magic_invulnerability 
+
+
+
+ON=@EQUIP 
+
+IF <SRC.KARMA><1000 
+
+SRC.SYSMESSAGE=Only the most Virtuous may wear this. 
+
+SRC.SYSMESSAGE=You need at least 1000 Karma and yours is <SRC.KARMA>! 
+
+RETURN 1 
+
+ELSE 
+
+IF <SRC.KARMA>>1000 
+
+SOUND=495 
+
+SRC.MESSAGE=Your Wisdom grows. 
+
+SRC.INT=<SRC.INT>+20 
+
+return 0 
+
+ENDIF 
+
+
+
+ON=@DAMAGE 
+
+SRC.EVENTS +e_virtue 
+
+
+
+ON=@UNEQUIP 
+
+IF <SRC.KARMA><1000 
+
+RETURN 1 
+
+ENDIF 
+
+SOUND=487 
+
+SRC.INT=<SRC.INT>+-20 
+
+
+
+[ITEMDEF GORGET_VIRTUE] 
+
+DEFNAME=i_GORGET_VIRTUE 
+
+ID=i_platemail_gorget 
+
+NAME=Platemail Gorget of Virtue 
+
+REQSTR=100 
+
+ARMOR=75 
+
+CATEGORY=Spec Items 
+
+SUBSECTION=Platemail 
+
+DESCRIPTION=Platemail Gorget of Virtue 
+
+
+
+ON=@Create 
+
+ATTR=attr_magic 
+
+HITPOINTS=70 
+
+COLOR=color_magic_invulnerability 
+
+
+
+ON=@EQUIP 
+
+IF <SRC.KARMA><1000 
+
+SRC.SYSMESSAGE=Only the most Virtuous may wear this. 
+
+SRC.SYSMESSAGE=You need at least 1000 Karma and yours is <SRC.KARMA>! 
+
+RETURN 1 
+
+ELSE 
+
+IF <SRC.KARMA>>1000 
+
+SOUND=495 
+
+SRC.MESSAGE=Your Stamina grows. 
+
+SRC.STAMINA=<SRC.STAMINA>+20 
+
+return 0 
+
+ENDIF 
+
+
+
+ON=@DAMAGE 
+
+SRC.EVENTS +e_virtue 
+
+
+
+ON=@UNEQUIP 
+
+IF <SRC.KARMA><1000 
+
+RETURN 1 
+
+ENDIF 
+
+SOUND=487 
+
+SRC.STAMINA=<SRC.STAMINA>+-20 
+
+
+
+[ITEMDEF GAUNTLETS_VIRTUE] 
+
+DEFNAME=i_GAUNTLETS_VIRTUE 
+
+ID=i_platemail_gloves 
+
+NAME=Platemail Gauntlets of Virtue 
+
+REQSTR=100 
+
+ARMOR=75 
+
+CATEGORY=Spec Items 
+
+SUBSECTION=Platemail 
+
+DESCRIPTION=Platemail Gauntlets of Virtue 
+
+
+
+ON=@Create 
+
+ATTR=attr_magic 
+
+HITPOINTS=70 
+
+COLOR=color_magic_invulnerability 
+
+
+
+ON=@EQUIP 
+
+IF <SRC.KARMA><1000 
+
+SRC.SYSMESSAGE=Only the most Virtuous may wear this. 
+
+SRC.SYSMESSAGE=You need at least 1000 Karma and yours is <SRC.KARMA>! 
+
+RETURN 1 
+
+ELSE 
+
+IF <SRC.KARMA>>1000 
+
+SOUND=495 
+
+SRC.MESSAGE=Your Skill grows. 
+
+SRC.SWORDSMANSHIP=<SRC.SWORDSMANSHIP>+200 
+
+return 0 
+
+ENDIF 
+
+
+
+ON=@DAMAGE 
+
+SRC.EVENTS +e_virtue 
+
+
+
+ON=@UNEQUIP 
+
+IF <SRC.KARMA><1000 
+
+RETURN 1 
+
+ENDIF 
+
+SRC.MESSAGE=You Lose some Skill. 
+
+SRC.SWORDSMANSHIP=<SRC.SWORDSMANSHIP>+-200 
+
+SOUND=487 
+
+
+
+
+
+[EVENTS e_virtue] 
+
+ON=@itemEQUIP 
+
+IF (<SRC.FINDLAYER(6).EQUIP> i_helm_virtue) && (<SRC.FINDLAYER(13).EQUIP> i_platemail_virtue) && (<SRC.FINDLAYER(19).EQUIP> i_arms_virtue) && (<SRC.FINDLAYER(24).EQUIP> i_leggings_virtue) && (<SRC.FINDLAYER(10).EQUIP> i_gorget_virtue) && (<SRC.FINDLAYER(7).EQUIP> i_gauntlets_virtue) 
+
+SRC.TITLE=The most Virtuous 
+
+
+
+ON=@itemUNEQUIP 
+
+SRC.TITLE= 
+
+
+
+ON=@HIT 
+
+IF (<SRC.FINDLAYER(6).EQUIP> i_helm_virtue) && (<SRC.FINDLAYER(13).EQUIP> i_platemail_virtue) && (<SRC.FINDLAYER(19).EQUIP> i_arms_virtue) && (<SRC.FINDLAYER(24).EQUIP> i_leggings_virtue) && (<SRC.FINDLAYER(10).EQUIP> i_gorget_virtue) && (<SRC.FINDLAYER(7).EQUIP> i_gauntlets_virtue) 
+
+src.tag.damage=<eval Rand(3)> 
+
+IF <src.tag.damage>==01 
+
+SRC.SPELLEFFECT=4 1000 
+
+SRC.EFFECT=2,i_fx_HEAL_EFFECT,6,15 
+
+SRC.SOUND=snd_SPELL_HEAL 
+
+return 0 
+
+ENDIF 
+
+
+
+[DIALOG d_Reflectshield] 
+
+0, 0 // this is always the size. 
+
+resizepic 0 0 3600 330 100 
+
+page 0 
+
+text 40 17 0 0 
+
+text 40 37 1152 1 
+
+text 50 60 152 2 
+
+button 20 40 1209 1210 1 0 1 
+
+[DIALOG d_Reflectshield TEXT] 
+
+Welcome <SRC.NAME>, Have fun =) 
+
+Reflection Shield (800k) 
+
+Reflection Shield scripted by: Tludina 
+
+[DIALOG d_Reflectshield BUTTON] 
+
+ONBUTTON=0 
+
+MESSAGE Menu Aborted 
+
+ONBUTTON=1 
+
+IF <SRC.RESTEST 800000 i_gold> 
+
+SRC.NEWITEM=Shield_of_reflection 
+
+SRC.ACT.BOUNCE 
+
+SRC.CONSUME=800000 i_gold 
+
+Else 
+
+message You lack the 800k to pay for this item 
+
+Endif 
+
+[ITEMDEF Shield_reflection_Stone] 
+
+ID=0edc 
+
+Name=Shield of reflection Stone 
+
+TYPE=92 
+
+
+
+ON=@Create 
+
+Color=0481 
+
+
+
+ON=@DCLICK 
+
+Dialog d_reflectshield 
+
+
+
+CATEGORY=!!Custom!! 
+
+SUBSECTION=Special Stones 
+
+DESCRIPTION=Shield of reflection Despencer 
+
+
+
+[ITEMDEF Shield_of_reflection] 
+
+DEFNAME=Shield_of_reflection 
+
+ID=01b76 
+
+NAME=Shield of Reflection 
+
+WEIGHT=8 
+
+
+
+ON=@CREATE 
+
+COLOR=0481 
+
+HITPOINTS={5000 10000} 
+
+
+
+ON=@EQUIP 
+
+TIMER=600 
+
+CONT.SYSMESSAGE You feel reflective towards magic. 
+
+CONT.SPELLEFFECT s_magic_reflection,1000 
+
+RETURN 0 
+
+
+
+ON=@TIMER 
+
+CONT.SPELLEFFECT s_magic_reflection,1000 
+
+CONT.SYSMESSAGE You feel reflective towards magic. 
+
+TIMER 600 
+
+
+
+ON=@UNEQUIP 
+
+TIMER -1 
+
+CONT.SYSMESSAGE You no longer feel reflective towards magic. 
+
+CONT.FINDID.i_rune_magic_reflection.REMOVE 
+
+RETURN 0 
+
+
+
+[eof]

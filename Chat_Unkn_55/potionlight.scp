@@ -1,0 +1,76 @@
+
+
+///////POTION OF LIGHT ADMIN EYDEWIM -TIERRAS MALDITAS SPHERE SHARD-
+//////instalation: paste this script in your sphere script directory
+//////www.tierrasmalditas.com
+//////spanish version adminesfera@mixmail.com
+
+
+[ITEMDEF i_potion_light] 
+ID=i_bottle_white
+NAME=Potion of light
+TYPE=t_potion_empty 
+TDATA1=t_potion_empty 
+RESOURCES=25 i_reag_sulfur_ash, 5 i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 80.0
+
+CATEGORY=Eydewim
+SUBSECTION=Potions 
+DESCRIPTION=Shrink 
+
+ON=@Create 
+COLOR=0496
+
+ON=@DClick 
+if <src.tag.controluz>=1
+src.sysmessage @33 
+return 1
+else
+remove
+src.nightsigth
+SRC.SPELLEFFECT 7, 800
+src.tag.potionluz=5
+src.sysmessage @74 You drank a Potion of light and you have now 5 chargues. Type .plight to consume one charge. 
+return 1
+endif
+
+[plevel 1]
+plight
+
+[function luz]
+if <src.tag.potionluz>=0
+src.sysmessage @33 You havent charges to use .plight you need to drink a potion of light.
+return 1
+elseif <src.tag.potionluz>=1
+src.tag.controluz=0
+src.nightsight
+SRC.SPELLEFFECT 7, 800
+src.tag.potionluz=<src.tag.potionluz>-1
+src.sysmessage @74 You have just consumed 1 chargue. You have now 0 charges.
+elseif <src.tag.potionluz>=2
+src.nightsight
+SRC.SPELLEFFECT 7, 800
+src.tag.potionluz=<src.tag.potionluz>-1
+src.sysmessage @74 You have just consumed 1 chargue. You have now 1 charges.
+elseif <src.tag.potionluz>=3
+src.nightsight
+SRC.SPELLEFFECT 7, 800
+src.tag.potionluz=<src.tag.potionluz>-1
+src.sysmessage @74 You have just consumed 1 chargue. You have now 2 charges.
+return 1
+elseif <src.tag.potionluz>=4
+src.nightsight
+SRC.SPELLEFFECT 7, 800
+src.tag.potionluz=<src.tag.potionluz>-1
+src.sysmessage @74 You have just consumed 1 chargue. You have now 3 charges.
+elseif <src.tag.potionluz>=5
+src.nightsight
+SRC.SPELLEFFECT 7, 800
+src.tag.potionluz=<src.tag.potionluz>-1
+src.sysmessage @74 You have just consumed 1 chargue. You have now 4 charges.
+endif
+
+
+
+
+[EOF]

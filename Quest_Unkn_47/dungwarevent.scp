@@ -1,0 +1,409 @@
+//--------------------------------------------------------------------\\
+//|__________________________________________________________________|\\
+//|Say .dung_war to begin, then target where you want the stone to be|\\
+//|After everyone has gone in double click it yourself it will vanish|\\
+//|GIVE THE PRIZE(S) AFTER EVERYONE HAS EXITED.                      |\\
+//|Say .dung_war_end to finish                                       |\\
+//|They will go to britain moongate. Give prizes and a bank.         |\\
+//|report any bugs to michaelleejones104@hotmail.com                 |\\
+//|              	Created by Nightwing      		     |\\
+//|                  LEAVE THIS HEADER IN PLEASE                     |\\
+//|__________________________________________________________________|\\
+//|------------------------------------------------------------------|\\
+	//\\// |º| (-, |-| -|- \\//\\// |º| //\\// (-,
+	
+
+//////////////////////////////////////////////////////////
+[plevel 3]
+dung_war
+dung_war_end
+
+[function dung_war_end]
+src.newitem i_dung_war_exiter
+src.act.p=<src.p>
+src.sayua 200 0ff 1 1 <serv.servname>'s dung war is over. Thanks to <src.name> for hosting it.
+region.allclients sysmessage double click the stone to leave. wait for a gm for your prizes.
+
+[function dung_war]
+src.newitem i_dung_war_starter
+src.act.p=<src.p>
+src.sayua 200 0ff 1 1 <src.name> is beggining a dung war. Come to <src.sex him/her> if you wish to join.
+region.allclients sysmessage double click the stone to join.
+
+
+[ITEMDEF i_dung_war_starter]
+ID=i_gravestone_17
+NAME=Dung War Starting Stone
+
+category=Nightwing
+Subsection=Events
+Description=dung arrow event starter
+
+ON=@DCLICK
+events +e_dungwar
+IF (<src.account.plevel><2)
+src.stone
+SRC.FINDLAYER(1).CONT=<SRC.FINDLAYER(29).UID>//Banks ALL of there items. NOTE:: If a player trys to use there backpack
+SRC.FINDLAYER(2).CONT=<SRC.FINDLAYER(29).UID>//during the event, it gets banked as well. To put it back drag it to
+SRC.FINDLAYER(3).CONT=<SRC.FINDLAYER(29).UID>//the spot where it gose on paperdoll.
+SRC.FINDLAYER(4).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(5).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(6).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(7).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(8).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(9).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(10).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(12).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(13).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(14).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(15).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(17).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(18).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(19).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(20).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(21).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(22).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(23).CONT=<SRC.FINDLAYER(29).UID>
+SRC.FINDLAYER(24).CONT=<SRC.FINDLAYER(29).UID>
+SRC.TAG.MYFAME=<SRC.FAME>
+SRC.TAG.MYKILLS=<SRC.KILLS>
+SRC.TAG.MYKARMA=<SRC.KARMA>
+src.tag.archery=<SRC.ARCHERY>
+src.go 5388,1185 
+src.newitem i_dung_robe
+src.act.equip
+src.newitem i_dung_helm
+src.act.equip
+src.newitem i_dung_gloves
+src.act.equip
+src.newitem i_dung_gorget
+src.act.equip
+src.newitem i_dung_arms
+src.act.equip
+src.newitem i_dung_leggings
+src.act.equip
+src.newitem i_dung_platemail
+src.act.equip
+src.newitem i_dung_bow
+src.act.equip
+src.go 5388,1186
+src.newitem i_dung_war
+src.act.equip
+src.emote is ready for <serv.servname>'s dung war event!
+ELSE
+src.newitem i_dung_bow
+src.act.equip
+src.go 5388,1185 
+src.newitem i_dung_robe
+src.act.equip
+src.newitem i_dung_gloves
+src.act.equip
+src.newitem i_dung_gorget
+src.act.equip
+src.newitem i_dung_arms
+src.act.equip
+src.newitem i_dung_leggings
+src.act.equip
+src.newitem i_dung_platemail
+src.act.equip
+src.newitem i_dung_helm
+src.act.equip
+src.newitem i_dung_war
+src.act.equip
+src.sayu <src.name> is ready for a dung war event!
+endif
+remove
+
+ON=@CREATE
+COLOR=020
+attr=08090
+
+[itemdef i_dung_war_exiter]
+name=dung war exit stone
+id=i_gravestone_17
+
+category=Nightwing
+Subsection=Events
+Description=dung war exiter
+
+on=@create
+color=0bj1
+
+on=@DCLICK
+events=
+src.stone
+src.findlayer(2).remove 
+src.findlayer(3).remove 
+src.findlayer(4).remove 
+src.findlayer(5).remove 
+src.findlayer(6).remove 
+src.findlayer(7).remove 
+src.findlayer(8).remove 
+src.findlayer(9).remove 
+src.findlayer(10).remove 
+src.findlayer(12).remove 
+src.findlayer(13).remove 
+src.findlayer(14).remove 
+src.findlayer(17).remove 
+src.findlayer(18).remove 
+src.findlayer(19).remove 
+src.findlayer(20).remove 
+src.findlayer(21).remove 
+src.findlayer(22).remove 
+src.findlayer(23).remove 
+src.findlayer(24).remove 
+src.consume i_dung_bow
+src.consume i_dung_war
+src.consume i_arrow_dung
+src.consume i_dung_leggings
+src.consume i_dung_arms
+src.consume i_dung_gorget
+src.consume i_dung_platemail
+src.consume i_dung_robe
+src.consume i_dung_gloves
+src.consume i_dung_helm
+src.newitem i_backpack
+src.act.equip
+src.act.color
+src.stone
+src.message thanks for playing <Serv.servname>'s Dung War Event!
+src.go britain moongate
+ELSE
+src.go britain moongate
+src.newitem i_bag
+SRC.FAME=<SRC.TAG.MYFAME>
+SRC.KILLS=<SRC.TAG.MYKILLS>
+SRC.KARMA=<SRC.TAG.MYKARMA>
+src.archery=<src.tag.archery>
+
+/////bow\\\\
+[itemdef i_dung_bow] 
+DEFNAME=i_dung_bow 
+ID=i_bow 
+TDATA3=i_arrow_dung
+TDATA4=i_arrow_dung
+Name=Dung Bow
+TWOHANDS=Y
+WEIGHT=1
+
+category=Nightwing
+Subsection=Events
+Description=dung bow
+
+
+On=@Create 
+COLOR=020
+attr 0010
+
+
+on=@equip 
+IF (0<SRC.FINDID.i_arrow_dung.UID>)
+TARGET Where are you going to fire? 
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You have no dung to throw!
+RETURN 1
+ENDIF
+
+ON=@Targon_Char
+SRC.CONSUME=1 i_arrow_dung
+SRC.TARG.DAMAGE={100 200} 
+SRC.TARG.EFFECT 0,0e73,15,0,0 
+SRC.TARG.EFFECT 2,036b0,15,10,10 
+EFFECT 2,036b0,15,10,10
+
+ON=@UNEQUIP
+IF (<src.account.plevel> <2)
+return 1
+src.message only staff can take me off!
+////////////////////////////////////////////arrow\\\\\\\\\\\\\\\\\\\\\
+[itemdef i_arrow_dung]
+DEFNAME=i_arrow_dung
+id=i_horse_dung
+weight=0
+category=Nightwing
+Subsection=Events
+Description=dung arrow
+
+ON=@CREATE
+color={00 05 50 90}
+//////////////////////////etc\\\\\\\\\\\\\\\\\\\
+[TEMPLATE i_dung_war]
+defname=dung_war_ammo
+NAME=dung war ammo
+type=t_arrow
+
+category=Nightwing
+subsection=events
+description=dung war
+
+
+CONTAINER=i_backpack
+COLOR=032
+NAME=Dung War Ammunition Bag
+attr=08090
+category=Nightwing
+Subsection=Events
+Description=dung war ammunition
+
+ITEM=i_arrow_dung
+amount=300
+
+////////////////////////armor script\\\\\\\\\\\\\\\\\\\\
+[ITEMDEF i_dung_leggings]
+name=dung armor
+ID=i_platemail_leggings
+WEIGHT=0
+ARMOR=50
+
+description=dung leggings
+subsection=items
+category=Nightwing
+
+ON=@CREATE
+COLOR=0b1j
+HITPOINTS=9999
+
+ON=@Equip
+SRC.ARCHERY 1000 
+RETURN 0
+
+ON=@Unequip
+IF (<src.account.plevel>=1) 
+RETURN 1
+ELSE
+src.archery=<src.archery> +-1000
+ENDIF
+
+[ITEMDEF i_dung_platemail]
+name=dung armor
+ID=i_platemail_chest
+WEIGHT=0
+ARMOR=50
+
+ON=@CREATE
+COLOR=0b1j
+HITPOINTS=9999
+
+ON=@Unequip
+IF (<src.account.plevel>=1)
+RETURN 1
+ELSE
+ENDIF
+
+description=dung platemail
+subsection=items
+category=Nightwing
+
+[ITEMDEF i_dung_arms]
+name=dung armor
+ID=i_platemail_arms
+WEIGHT=0
+ARMOR=50
+
+description=dung arms
+subsection=items
+category=Nightwing
+
+ON=@CREATE
+COLOR=0b1j
+HITPOINTS=9999
+
+ON=@Unequip
+IF (<src.account.plevel>=1)
+RETURN 1
+ELSE
+ENDIF
+
+[ITEMDEF i_dung_gorget]
+name=dung armor
+ID=i_platemail_gorget
+WEIGHT=0
+ARMOR=50
+
+description=dung gorget
+subsection=items
+category=Nightwing
+
+ON=@CREATE
+COLOR=0b1j
+HITPOINTS=9999
+
+ON=@Unequip
+IF (<src.account.plevel>=1)
+RETURN 1
+ELSE
+ENDIF
+
+[ITEMDEF i_dung_gloves]
+name=dung armor
+ID=i_platemail_gloves
+WEIGHT=0
+ARMOR=50
+
+description=dung gloves
+subsection=items
+category=Nightwing
+
+ON=@CREATE
+COLOR=0b1j
+HITPOINTS=9999
+
+ON=@Unequip
+IF (<src.account.plevel>=1)
+RETURN 1
+ELSE
+ENDIF
+
+[ITEMDEF i_dung_helm]
+name=dung armor
+ID=i_helm_closed
+WEIGHT=0
+ARMOR=50
+
+description=dung helm
+subsection=items
+category=Nightwing
+
+ON=@CREATE
+COLOR=0b1j
+HITPOINTS=9999
+
+ON=@Unequip
+IF (<src.account.plevel>=1)
+RETURN 1
+ELSE
+endif
+
+[itemdef i_dung_robe]
+id=i_deathshroud
+name=Dung Event Robe
+
+ON=@CREATE
+color=0b1j
+HITPOINTS=-1
+
+ON=@Unequip
+IF (<src.account.plevel>=1)
+RETURN 1
+ELSE
+ENDIF
+
+[events e_dungwar]
+on=@click
+IF (src.isgm)
+message=[staff]
+ELSE
+endif
+on=@gethit
+IF (src.isgm)
+return 1
+ELSE
+dorand 3
+src.hitpoints=<src.hitpoints> +-5
+src.hitpoints=<src.hitpoints> +-10
+src.hitpoints=<src.hitpoints> +-15
+ENDDO
+ENDIF
+
+[EOF]

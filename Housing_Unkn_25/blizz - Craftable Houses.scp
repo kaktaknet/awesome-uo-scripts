@@ -1,0 +1,725 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//Info:
+//Craftable houses.  Only houses supported are those provided by UO T2A itself.
+
+//Installation
+//-Add this section to [SKILLMENU sm_carpentry] in sphereskill.scp
+
+//ON=i_deed Houses
+//SKILLMENU=sm_houses
+
+//-Take in note to remove the comments after installation (//)
+
+[ITEMDEF i_house_door]
+ID=i_deed
+NAME="House Door"
+DEFNAME=i_house_door
+RESOURCES=25 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 85.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=House Door
+
+[ITEMDEF i_house_roof]
+ID=i_deed
+NAME="House Roof"
+DEFNAME=i_house_roof
+RESOURCES=150 i_log, 1 i_nails, 25 i_ingot_iron
+SKILLMAKE=CARPENTRY 95.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=House Roof
+
+[ITEMDEF i_house_floor]
+ID=i_deed
+NAME="House Floor"
+DEFNAME=i_house_floor
+RESOURCES=150 i_log, 1 i_nails, 25 i_ingot_iron
+SKILLMAKE=CARPENTRY 90.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=House Floor
+
+[ITEMDEF i_house_wall]
+ID=i_deed
+NAME="House Wall"
+DEFNAME=i_house_wall
+RESOURCES=150 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 90.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=House Wall
+
+[ITEMDEF i_house_stairs]
+ID=i_deed
+NAME="House Stairs"
+DEFNAME=i_house_stairs
+RESOURCES=50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 85.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=House Stairs
+
+///////////Houses
+
+[ITEMDEF i_house_largeblacksmith]
+DEFNAME=i_house_largeblacksmith
+NAME="Deed to a large blacksmithy shop"
+ID=i_deed
+RESOURCES=4 i_house_roof, 4 i_house_floor, 7 i_house_wall, 3 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Large Black Smithy
+
+ON=@Create
+MORE=i_multi_shop_blacksmithy_large
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_largemarble]
+DEFNAME=i_house_largemarble
+NAME="Deed to a large marble patio house"
+ID=i_deed
+RESOURCES=4 i_house_roof, 6 i_house_floor, 3 i_house_stairs, 6 i_house_wall, 2 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Large Marble Patio House
+
+ON=@Create
+MORE=i_multi_house_patio_marble
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_sandpatio]
+DEFNAME=i_house_sandpatio
+NAME="Deed to a sandstone patio house"
+ID=i_deed
+RESOURCES=3 i_house_roof, 5 i_house_floor, 4 i_house_wall, 1 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Sandstone Patio House
+
+ON=@Create
+MORE=i_multi_house_patio_sand
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_smallbrick]
+DEFNAME=i_house_smallbrick
+NAME="Deed to a small brick house"
+ID=i_deed
+RESOURCES=1 i_house_roof, 1 i_house_floor, 2 i_house_wall, 1 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Brick House
+
+ON=@Create
+MORE=i_multi_house_stone_brick_small
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_marbleshopsmall]
+DEFNAME=i_house_marbleshopsmall
+NAME="Deed to a small marble shop"
+ID=i_deed
+RESOURCES=2 i_house_roof, 2 i_house_floor, 4 i_house_wall, 2 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Marble Shop
+
+ON=@Create
+MORE=i_multi_shop_marble_small
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_smallplaster]
+DEFNAME=i_house_smallplaster
+NAME="Deed to a small stone-and-plaster house"
+ID=i_deed
+RESOURCES=1 i_house_roof, 1 i_house_floor, 2 i_house_wall, 1 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Stone and Plaster House
+
+ON=@Create
+MORE=i_multi_house_stone_plaster_small
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_smallstone]
+DEFNAME=i_house_smallstone
+ID=i_deed
+NAME="Deed to a small stone house"
+RESOURCES=1 i_house_roof, 1 i_house_floor, 2 i_house_wall, 1 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Stone House
+
+ON=@Create
+MORE=i_multi_house_stone_small
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_smallshop]
+DEFNAME=i_house_smallshop
+NAME="Deed to a small stone shop"
+ID=i_deed
+RESOURCES=1 i_house_roof, 2 i_house_floor, 2 i_house_wall, 1 i_house_door, 1 i_house_stairs, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Stone Shop
+
+ON=@Create
+MORE=i_multi_shop_stone_small
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_smallwood]
+DEFNAME=i_house_smallwood
+NAME="Deed to a small wood-and-plaster house"
+ID=i_deed
+RESOURCES=1 i_house_roof, 1 i_house_floor, 2 i_house_wall, 1 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Wood and Plaster House
+
+ON=@Create
+MORE=i_multi_house_wood_plaster_small
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_smallwoodstone]
+DEFNAME=i_house_smallwoodstone
+NAME="Deed to a small wood house"
+ID=i_deed
+RESOURCES=1 i_house_roof, 1 i_house_floor, 2 i_house_wall, 1 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Wood House
+
+ON=@Create
+MORE=i_multi_house_stone_wood_small
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_smallthatched]
+DEFNAME=i_house_smallthatched
+NAME="Deed to a small wood thatched-roof house"
+ID=i_deed
+RESOURCES=1 i_house_roof, 1 i_house_floor, 2 i_house_wall, 1 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Wood House Thatched Roof
+
+
+ON=@Create
+MORE=i_multi_house_wood_thatched_small
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_threeroom]
+DEFNAME=i_house_threeroom
+NAME="Deed to a three room house"
+ID=i_deed
+RESOURCES=4 i_house_roof, 4 i_house_floor, 6 i_house_wall, 3 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Three Room House
+
+ON=@Create
+MORE=i_multi_house_3room
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_logcabin]
+DEFNAME=i_house_logcabin
+NAME="Deed to a two story log cabin"
+ID=i_deed
+RESOURCES=2 i_house_roof, 3 i_house_floor, 1 i_house_stairs, 5 i_house_wall, 2 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Two Story Log Cabin
+
+ON=@Create
+MORE=i_Log_Cabin_Fix
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_plaster]
+DEFNAME=i_house_plaster
+NAME="Deed to a two story stone-and-plaster house"
+ID=i_deed
+RESOURCES=5 i_house_roof, 7 i_house_floor, 4 i_house_stairs, 8 i_house_wall, 4 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Two Story Stone and Plaster House
+
+ON=@Create
+MORE=i_multi_house_stone_plaster_2story
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_villa]
+DEFNAME=i_house_villa
+NAME="Deed to a two story villa"
+ID=i_deed
+RESOURCES=3 i_house_roof, 5 i_house_floor, 2 i_house_stairs, 6 i_house_wall, 2 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Two Story Villa
+
+ON=@Create
+MORE1=i_multi_villa_2story
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_wood]
+DEFNAME=i_house_wood
+NAME="Deed to a two story wood-and-plaster house"
+ID=i_deed
+RESOURCES=5 i_house_roof, 7 i_house_floor, 4 i_house_stairs, 8 i_house_wall, 4 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Two Story Wood and Plaster House
+
+ON=@Create
+MORE=i_multi_house_wood_plaster_2story
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_cottage]
+DEFNAME=i_house_cottage
+NAME="Deed to a wheat cottage"
+ID=i_deed
+RESOURCES=2 i_house_roof, 2 i_house_floor, 6 i_house_wall, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Wheat Cottage
+
+ON=@Create
+MORE=i_multi_house_wheat_cottage
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[ITEMDEF i_house_wizardtower]
+DEFNAME=i_house_wizardtower
+NAME="Deed to a small stone tower"
+ID=i_deed
+RESOURCES=1 i_house_roof, 2 i_house_floor, 2 i_house_stairs, 8 i_house_wall, 1 i_house_door, 50 i_log, 1 i_nails
+SKILLMAKE=CARPENTRY 100.0, t_carpentry
+
+CATEGORY=Custom
+SUBSECTION=Craftable
+DESCRIPTION=Small Tower
+
+ON=@Create
+MORE=i_multi_tower_wizard
+
+ON=@DCLICK
+SRC.SYSMESSAGE House placement cancellation could result in a 60 second delay in the return of your deed.
+RETURN 0
+
+ON=@Targon_Ground
+IF (<EVAL <SRC.FINDID.i_house_placement_memory.UID>>==0)
+SRC.NEWITEM i_house_placement_memory
+SRC.ACT.CONT <SRC.UID>
+SRC.ACT.LINK <UID>
+SRC.ACT.MORE <BASEID>
+SRC.ACT.USE
+RETURN 0
+ELSE
+SRC.FINDID.i_house_placement_memory.MORE <BASEID>
+SRC.FINDID.i_house_placement_memory.USE
+RETURN 0
+ENDIF
+
+[SKILLMENU sm_houses]
+Houses
+
+ON=i_house_roof <name> (<resmake>)
+MAKEITEM=i_house_roof
+
+ON=i_house_floor <name> (<resmake>)
+MAKEITEM=i_house_floor
+
+ON=i_house_stairs <name> (<resmake>)
+MAKEITEM=i_house_stairs
+
+ON=i_house_wall <name> (<resmake>)
+MAKEITEM=i_house_wall
+
+ON=i_house_door <name> (<resmake>)
+MAKEITEM=i_house_door
+
+ON=i_house_roof <name> (<resmake>)
+MAKEITEM=i_house_roof
+
+ON=i_house_cottage <name> (<resmake>)
+MAKEITEM=i_house_cottage
+
+ON=i_house_largeblacksmith <name> (<resmake>)
+MAKEITEM=i_house_largeblacksmith
+
+ON=i_house_largemarble <name> (<resmake>)
+MAKEITEM=i_house_largemarble
+
+ON=i_house_logcabin <name> (<resmake>)
+MAKEITEM=i_house_logcabin
+
+ON=i_house_marbleshopsmall <name> (<resmake>)
+MAKEITEM=i_house_marbleshopsmall
+
+ON=i_house_plaster <name> (<resmake>)
+MAKEITEM=i_house_plaster
+
+ON=i_house_sandpatio <name> (<resmake>)
+MAKEITEM=i_house_sandpatio
+
+ON=i_house_smallbrick <name> (<resmake>)
+MAKEITEM=i_house_smallbrick
+
+ON=i_house_smallplaster <name> (<resmake>)
+MAKEITEM=i_house_smallplaster
+
+ON=i_house_smallshop <name> (<resmake>)
+MAKEITEM=i_house_smallshop
+
+ON=i_house_smallstone <name> (<resmake>)
+MAKEITEM=i_house_smallstone
+
+ON=i_house_smallthatched <name> (<resmake>)
+MAKEITEM=i_house_smallthatched
+
+ON=i_house_wood <name> (<resmake>)
+MAKEITEM=i_house_wood
+
+ON=i_house_smallwoodstone <name> (<resmake>)
+MAKEITEM=i_house_smallwoodstone
+
+ON=i_house_threeroom <name> (<resmake>)
+MAKEITEM=i_house_threeroom
+
+ON=i_house_villa <name> (<resmake>)
+MAKEITEM=i_house_villa
+
+ON=i_house_wizardtower <name> (<resmake>)
+MAKEITEM=i_house_wizardtower
+
+ON=i_house_wood <name> (<resmake>)
+MAKEITEM=i_house_wood
+
+[EOF]

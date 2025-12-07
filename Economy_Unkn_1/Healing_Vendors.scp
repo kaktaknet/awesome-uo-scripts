@@ -1,0 +1,63 @@
+[TYPEDEF T_HEAL_VEND]
+
+// Healing vendor machine. For 200gp - 50 i_bandage
+
+
+
+ON=@DCLICK
+
+SRC.MESSAGE=Wellcome to Heal center.
+
+SRC.MENU M_HEAL
+
+return 1
+
+
+
+[MENU M_HEAL]
+
+Choose healing method.
+
+ON=0 50 Bandages - 200gp
+
+IF <SRC.RESTEST 200 i_gold>
+
+SRC.NEWITEM=i_bandage
+
+SRC.ACT.AMOUNT=50
+
+SRC.ACT.BOUNCE // put it in your pack.
+
+SRC.CONSUME=200 i_gold
+
+MESSAGE Thank you!
+
+RETURN 1
+
+ELSE
+
+MESSAGE You lack 200gp to buy!
+
+ENDIF
+
+ON=0 Full Heal - 500gp
+
+IF <SRC.RESTEST 500 i_gold>
+
+VAR.TEMP = <SRC.STR>
+
+SRC.HITPOINTS = <VAR.TEMP>
+
+SOUND=snd_spell_heal
+
+SRC.CONSUME=500 i_gold
+
+MESSAGE Thank you!
+
+RETURN 1
+
+ELSE
+
+MESSAGE You lack 500gp to heal!
+
+ENDIF

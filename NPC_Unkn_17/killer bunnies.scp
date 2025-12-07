@@ -1,0 +1,68 @@
+//********************************************************************
+//Killer Rabbits v1.4 (aka Vorpal Bunnies, aka Evil Easter Bunnies)
+//Script by Mordaunt
+//Something I did one year to make easter more entertaining when I
+//was GMing on First Sundering.
+//Inspired by that scene from Monty Python and the Holy Grail
+//"Huge Pointy Fangs!"
+//This is an approximation of that script, the original long since lost
+//For most amusing settings try killing up to 10 at once, they are 
+//tiny and hard to target.  Kudos to Elric for testing these for me.
+//********************************************************************
+[CHARDEF c_bad_bunny]
+NAME=Killer Rabbit //Vorpal Bunny
+ID=0cd
+SOUND=snd_ANIMALS_RABBIT3
+ICON=i_pet_RABBIT_2
+
+ARMOR=10
+RESOURCES=2 i_ribs_raw,1 i_fur_dark
+
+CAN=MT_WALK|MT_RUN
+FOODTYPE=55 t_crops, 55 t_foliage, 64 t_grass
+DESIRES=t_crops,c_bad_bunny
+SHELTER=r_plains
+AVERSIONS=e_carnivores2
+
+DESCRIPTION=Killer Rabbit
+SUBSECTION=Pack Hunters
+CATEGORY=Mord Extra's
+
+//The following settings may need to be tweaked to suit your shard
+//To make them interesting they shuold behave like this, adjust the
+//STR/DEX/INT and skills if your shard has higher than 100 as stat &
+//skill cap.
+//1  Bunny   = Not too difficult to kill
+//2  Bunnies = Little more difficult
+//3  Bunnies = May require assitance to get rid of them before you die
+//5  Bunnies = You should really call for help
+//7+ Bunnies = Run away very quickly
+
+//Bunnies should also be able to keep up with an average/slightly above
+//player (when on foot) so check your stats on that one too.
+
+ON=@Create
+COLOR=colors_brown
+STR=150
+DEX=250
+INT=75
+
+PARRYING=60.0
+MAGICRESISTANCE=50.0
+TACTICS=80
+WRESTLING=85.0
+
+NPC=brain_monster
+
+FAME=10
+KARMA={-6000 -6500}
+
+ON=@NPCRESTOCK
+ITEM=1 i_easter_egg
+
+[ITEMDEF i_easter_egg]
+NAME=Easter Egg
+ID=01726
+
+ON=@CREATE
+COLOR={00015 1 00027 1 00036 1 00047 1 0005a 1 0003 1}

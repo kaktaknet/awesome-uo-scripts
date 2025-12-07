@@ -1,0 +1,96 @@
+//*********** COMMODITY DEED *************
+//
+//	Scripted by Spliff
+//	Ferals_scripts@yahoo.com
+//
+//****************************************
+
+
+[ITEMDEF i_com_deed]
+ID=i_deed
+NAME=Commodity Deed
+TYPE=t_script
+VALUE=50
+
+ON=@CREATE
+ATTR=attr_newbie
+COLOR=03e
+MORE=0
+
+ON=@CLICK
+IF (<MORE>==0)
+MESSAGE Unfilled
+RETURN 0
+ELSE
+MESSAGE <TAG.COMNAME>
+MESSAGE <MORE>
+RETURN 0
+ENDIF
+
+ON=@DCLICK
+IF (<MORE>==10000)
+TARGET This deed is full.
+RETURN 1
+ELSE
+TARGET Select the commodity to add.
+RETURN 1
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You do not own that!
+RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_reagent)||(<SRC.TARG.TYPE>==t_ingot)||(<SRC.TARG.TYPE>==t_ore)||(<SRC.TARG.TYPE>==t_log)||(<SRC.TARG.TYPE>==t_cloth)||(<SRC.TARG.TYPE>==t_leather)||(<SRC.TARG.TYPE>==t_scroll_blank)||(<SRC.TARG.TYPE>==t_feather)||(<SRC.TARG.TYPE>==t_wool)||(<SRC.TARG.TYPE>==t_fur)||(<SRC.TARG.TYPE>==t_thread)||(<SRC.TARG.TYPE>==t_yarn)||(<SRC.TARG.TYPE>==t_shaft)||(<SRC.TARG.TYPE>==t_hide)||(<SRC.TARG.TYPE>==t_cloth_bolt)||(<SRC.TARG.TYPE>==t_potion_empty)||(<SRC.TARG.TYPE>==t_cotton)
+	IF (<MORE>==0)
+		IF (<SRC.TARG.AMOUNT> > 10000)
+		MORE=10000
+		SRC.TARG.AMOUNT=<SRC.TARG.AMOUNT>+(-10000)
+		SRC.TARG.UPDATEX
+		TAG.COMNAME=<SRC.TARG.NAME>
+		TAG.COMID=<SRC.TARG.BASEID>
+		SRC.SYSMESSAGE This deed is full.
+		RETURN 1
+		ELSE
+		MORE=<SRC.TARG.AMOUNT>
+		TAG.COMNAME=<SRC.TARG.NAME>
+		TAG.COMID=<SRC.TARG.BASEID>
+		SRC.TARG.REMOVE
+		RETURN 1
+		ENDIF
+	ELSEIF (<SRC.TARG.BASEID>==<TAG.COMID>)
+		IF ((<MORE>+<SRC.TARG.AMOUNT>) > 10000)
+		VAR.COMAMT=(10000+-<more>)
+		SRC.TARG.AMOUNT=(<SRC.TARG.AMOUNT>+-<VAR.COMAMT>)
+		SRC.TARG.UPDATEX
+		MORE=10000
+		VAR.COMAMT=
+		RETURN 1
+		ELSE
+		MORE=(<MORE>+<SRC.TARG.AMOUNT>)
+		SRC.TARG.REMOVE
+		RETURN 1
+		ENDIF
+	ELSE
+	SRC.SYSMESSAGE That is not a <TAG.COMNAME>
+	RETURN 1
+	ENDIF
+
+ELSEIF (<SRC.TARG.UID>==<UID>)
+	IF (<MORE>==0)
+	SRC.SYSMESSAGE This deed is empty
+	RETURN 1
+	ELSE
+	SRC.NEWITEM=<TAG.COMID>
+	SRC.ACT.AMOUNT=<MORE>
+	SRC.ACT.BOUNCE
+	SRC.ACT.UPDATEX
+	REMOVE
+	RETURN 1
+	ENDIF
+ELSE
+SRC.SYSMESSAGE That is not a commodity item.
+RETURN 1
+ENDIF
+
+
+[EOF]

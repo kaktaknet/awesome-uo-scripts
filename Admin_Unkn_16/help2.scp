@@ -1,0 +1,141 @@
+[DIALOG d_help]
+100, 100
+PAGE 0
+PAGE 1
+resizepic 0 0 3600 470 370
+resizepic 25 70 3500 190 260
+resizepic 240 70 3600 190 260
+gumppic 246 68 12
+gumppic 245 68 50806
+gumppic 246 68 50987
+gumppic 245 69 50628
+text 126 23 1152 0
+text 300 340 1152 14
+button 45 105 210 211 0 2 0
+text 74 104 1152 1
+button 45 135 210 211 0 3 0
+text 74 136 1152 2
+button 45 165 210 211 1 0 1
+text 74 166 1152 3
+
+PAGE 2
+resizepic 0 0 3600 470 370
+resizepic 25 70 3500 190 260
+resizepic 240 70 3600 190 260
+gumppic 246 68 12
+gumppic 245 68 50806
+gumppic 246 68 50987
+gumppic 245 69 50628
+button 45 105 210 211 1 0 2
+text 74 105 1152 4
+button 45 135 210 211 1 0 3
+text 74 136 1152 5
+button 45 165 210 211 1 0 4
+text 74 166 1152 6
+button 45 195 210 211 1 0 5
+text 74 195 1152 7
+button 45 225 210 211 1 0 6
+text 74 224 1152 8
+button 45 255 210 211 1 0 7
+text 74 255 1152 9
+text 126 23 1152 10
+PAGE 3
+resizepic 0 0 3600 470 180
+resizepic 35 42 3500 400 100
+button 61 68 210 211 1 0 8
+text 89 68 1152 11
+button 61 99 210 211 1 0 9
+text 89 99 1152 12
+text 174 18 1152 13
+
+[DIALOG d_help TEXT]
+<serv.servname> Help Menu
+Page Menu
+Stuck Menu
+Server Info
+Question
+Harassment
+Housing
+Report a Crime
+Confess a Crime
+Other
+<serv.servname> Page Menu
+Stuck (This can only be used 10x)
+Clear (50,000 gold)
+Stuck Menu (<src.tag.stuck>)
+By Bane
+
+[DIALOG d_help BUTTON]
+on=1
+INFORMATION
+on=2
+GMPAGE Question
+on=3
+GMPAGE Harassment
+on=4
+GMPAGE Housing
+on=5
+GMPAGE Report a Crime
+on=6
+SRC.JAIL
+GMPAGE Confess
+SRC.MESSAGE If you use this without being a criminal you may be punished.
+on=7
+GMPAGE Other
+on=8
+IF (<SRC.TAG.STUCK>==0)
+SRC.GO Britain
+SRC.TAG.STUCK=1
+ELSE
+IF (<SRC.TAG.STUCK>==1)
+SRC.GO Britain
+SRC.TAG.STUCK=2
+ELSE
+IF (<SRC.TAG.STUCK>==2)
+SRC.GO Britain
+SRC.TAG.STUCK=3
+ELSE
+IF (<SRC.TAG.STUCK>==3)
+SRC.GO Britain
+SRC.TAG.STUCK=4
+ELSE
+IF (<SRC.TAG.STUCK>==4)
+SRC.GO Britain
+SRC.TAG.STUCK=5
+ELSE
+IF (<SRC.TAG.STUCK>==5)
+SRC.GO Britain
+SRC.TAG.STUCK=6
+ELSE
+IF (<SRC.TAG.STUCK>==6)
+SRC.GO Britain
+SRC.TAG.STUCK=7
+ELSE
+IF (<SRC.TAG.STUCK>==7)
+SRC.GO Britain
+SRC.TAG.STUCK=8
+ELSE
+IF (<SRC.TAG.STUCK>==8)
+SRC.GO Britain
+SRC.TAG.STUCK=9
+ELSE
+IF (<SRC.TAG.STUCK>==9)
+SRC.GO Britain
+SRC.TAG.STUCK=10
+ELSE
+IF (<SRC.TAG.STUCK>==10)
+SRC.MESSAGE You do not have anymore charges on this you may pay to clear it if you wish.
+ENDIF
+RETURN 1
+on=9
+IF <SRC.RESTEST 50000 i_gold>
+            SRC.TAG.STUCK=0
+		SRC.CONSUME=50000 i_gold
+		SRC.MESSAGE That will be 50,000 gold.
+		RETURN 1
+	ELSE
+		MESSAGE You lack the gold to pay.
+	ENDIF
+
+
+[eof]

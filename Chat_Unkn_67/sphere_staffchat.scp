@@ -1,0 +1,33 @@
+//Oblivion Shard Staff Chat System.  
+//Very simple and fast
+
+//How it works:
+//
+//.staffchat - turns it on/off
+//.sc text   - says that text to everyone with staffchat on
+
+[PLEVEL 2]
+STAFFCHAT
+SC
+
+[FUNCTION STAFFCHAT]
+   IF 0<SRC.TAG.STAFFCHAT>=0
+      SRC.TAG.STAFFCHAT=1
+      SRC.SYSMESSAGE "<SERV.NAME> staff chatting system turned ON."
+   ELSE
+      SRC.TAG.STAFFCHAT=
+      SRC.SYSMESSAGE "<SERV.NAME> staff chatting system turned OFF."
+   ENDIF
+RETURN 0
+
+[FUNCTION SC]
+   TRYP 2 SERV.ALLCLIENTS f_staffchatmessage <ARGS>
+RETURN 0
+
+[FUNCTION f_staffchatmessage]
+   IF (<ACCOUNT.PLEVEL>>=2)
+      SYSMESSAGE "<SRC.NAME> says: <ARGS>"
+   ENDIF
+RETURN 0
+
+[EOF]

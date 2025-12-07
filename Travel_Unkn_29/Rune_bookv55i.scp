@@ -1,0 +1,1042 @@
+//Scripted for 55i by Theol Admin Dark
+//Original script for 55r402 rescripted to work on 55i
+//added buttons to charge runebook and add rune from the 55r402 version
+
+[ITEMDEF i_rune_bk]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+ID=i_spellbook
+TYPE=t_eq_script
+NAME=Rune Book
+
+ON=@CREATE
+COLOR=0901
+ATTR=attr_decay
+TAG.NAME_1=Empty
+TAG.NAME_2=Empty
+TAG.NAME_3=Empty
+TAG.NAME_4=Empty
+TAG.NAME_5=Empty
+TAG.NAME_6=Empty
+TAG.NAME_7=Empty
+TAG.NAME_8=Empty
+TAG.NAME_9=Empty
+TAG.NAME_10=Empty
+TAG.NAME_11=Empty
+TAG.NAME_12=Empty
+TAG.NAME_13=Empty
+TAG.NAME_14=Empty
+TAG.NAME_15=Empty
+TAG.NAME_16=Empty
+TAG.NAME_17=Empty
+TAG.NAME_18=Empty
+TAG.NAME_19=Empty
+TAG.NAME_20=Empty
+TAG.LOC_1=0
+TAG.LOC_2=0
+TAG.LOC_3=0
+TAG.LOC_4=0
+TAG.LOC_5=0
+TAG.LOC_6=0
+TAG.LOC_7=0
+TAG.LOC_8=0
+TAG.LOC_9=0
+TAG.LOC_10=0
+TAG.LOC_11=0
+TAG.LOC_12=0
+TAG.LOC_13=0
+TAG.LOC_14=0
+TAG.LOC_15=0
+TAG.LOC_16=0
+TAG.LOC_17=0
+TAG.LOC_18=0
+TAG.LOC_19=0
+TAG.LOC_20=0
+TAG.CHARGE=5
+TAG.TCHARGE=50
+
+ON=@DCLICK
+SOUND=055
+SRC.DIALOG d_rune_bk
+RETURN 1
+
+[ITEMDEF i_mark_mem]
+ID=i_memory
+LAYER=layer_special
+TYPE=t_eq_script
+
+ON=@EQUIP
+ATTR=attr_decay
+TARGET
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE You can't think of a way to use that item.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.BASEID>==i_rune_marker)
+SRC.SYSMESSAGE That is not a Recall rune.
+RETURN 1
+ENDIF
+IF !(<SRC.TARG.CONT.CONT.UID>==<SRC.UID>)
+SRC.SYSMESSAGE The Rune must be in your pack
+SRC.SYSMESSAGE You can't think of a way to use that item.
+RETURN 1
+ENDIF
+IF (<EVAL (<SRC.TARG.MOREP>)>==0)
+SRC.SYSMESSAGE That is a blank rune.
+RETURN 1
+ELSE
+VAR.RUNE_NAME=<SRC.TARG.NAME>
+VAR.RUNE_LOC=<SRC.TARG.MOREP>
+SRC.MESSAGE Kal Por Ylem
+SRC.MARK_SLOT <EVAL (<SRC.VAR.SLOTNUM>)>
+SRC.TARG.REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_recall_delay]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55r402.
+ID=i_memory
+LAYER=layer_special
+TYPE=t_eq_script
+
+ON=@CREATE
+TAG.GET_HIT=0
+TAG.HIT=0
+MORE=1
+
+ON=@TIMER
+IF (<MORE>>0)
+MORE=<MORE> +-1
+TIMER=1
+RETURN 1
+ELSE
+LINK.GO_RECALL <MOREZ>
+REMOVE
+RETURN 1
+
+[ITEMDEF i_gate_delay]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+ID=i_memory
+LAYER=layer_special
+TYPE=t_eq_script
+
+ON=@CREATE
+TAG.GET_HIT=0
+TAG.HIT=0
+MORE=3
+
+ON=@TIMER
+IF (<MORE>>0)
+MORE=<MORE> +-1
+TIMER=1
+RETURN 1 
+ELSE
+LINK.GO_GATE <MOREZ>
+REMOVE
+RETURN 1
+
+[ITEMDEF i_gateway]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+ID=i_moongate_blue_fx
+TYPE=t_script
+
+ON=@CREATE
+ATTR=attr_decay|attr_move_never
+
+ON=@TIMER
+IF <TYPE>==t_script
+TIMER=60
+DISPID=i_moongate_blue
+TYPE=t_telepad
+REMOVEFROMVIEW
+UPDATE
+RETURN 1
+ELSE
+RETURN 0
+
+[FUNCTION Charge_book]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+IF !(<SRC.RESTEST 1 i_scroll_recall>)
+SRC.SYSMESSAGE You have no scrolls to charge the <SRC.TARG.NAME> with.
+RETURN 1
+ENDIF
+IF !(<SRC.RESTEST 1 i_rune_bk>)
+SYSMESSAGE You need to have the rune book in your pack.
+RETURN 1
+ENDIF
+IF (<EVAL (<SRC.TARG.TAG.CHARGE>+<SRC.FINDID(i_scroll_recall).AMOUNT>)>>50)
+VAR.ADDAMOUNT=<EVAL (<SRC.TARG.TAG.CHARGE>+<SRC.FINDID(i_scroll_recall).AMOUNT>)>
+VAR.RETURNAMOUNT=<EVAL (<VAR.ADDAMOUNT>-50)>
+VAR.AMOUNT=<EVAL (<SRC.FINDID(i_scroll_recall).AMOUNT>-<VAR.RETURNAMOUNT>)>//for scroll%s return
+SRC.TARG.TAG.CHARGE=<EVAL (<SRC.TARG.TAG.CHARGE>+<VAR.AMOUNT>)>
+SRC.FINDID(i_scroll_recall).AMOUNT=<EVAL (<VAR.RETURNAMOUNT>)>
+SRC.SYSMESSAGE You Add <EVAL <VAR.AMOUNT>> <SRC.FINDID(i_scroll_recall).NAME> to the <SRC.TARG.NAME>
+SOUND=snd_spell_telekinesis
+VAR.ADDAMOUNT=
+VAR.AMOUNT=
+VAR.MINUSAMOUNT=
+RETURN 1
+ELSEIF (<EVAL (<SRC.TARG.TAG.CHARGE>+<SRC.FINDID(i_scroll_recall).AMOUNT>)><50)
+SRC.TARG.TAG.CHARGE=<EVAL (<SRC.TARG.TAG.CHARGE>+<SRC.FINDID(i_scroll_recall).AMOUNT>)>
+SRC.SYSMESSAGE You Add <EVAL <SRC.FINDID(i_scroll_recall).AMOUNT>> <SRC.FINDID(i_scroll_recall).NAME> to the <SRC.TARG.NAME>
+SRC.FINDID(i_scroll_recall).REMOVE
+SOUND=snd_spell_telekinesis
+RETURN 1
+ENDIF
+
+[FUNCTION Mark_slot]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+IF !(<SRC.RESTEST 1 i_rune_bk>)
+SYSMESSAGE You need to have the rune book in your pack.
+RETURN 1
+ENDIF
+SRC.FINDID(i_rune_bk).TRYP 0 TAG.NAME_<ARGS>=<VAR.rune_name>
+SRC.FINDID(i_rune_bk).TRYP 0 TAG.LOC_<ARGS>=<VAR.rune_loc>
+SRC.SYSMESSAGE You added <VAR.rune_name> to slot <EVAL <ARGS>>
+SRC.SOUND=snd_spell_mark
+VAR.rune_name=
+VAR.rune_loc=
+VAR.slotnum=
+
+
+[FUNCTION Drop_rune] 
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+IF !(<EVAL (<TARG.TAG.LOC_<ARGS>>)>==0) 
+NEWITEM=i_rune_marker 
+ACT.NAME=<TARG.TAG.NAME_<ARGS>> 
+ACT.MOREP=<TARG.TAG.LOC_<ARGS>>
+ACT.MORE1=0a 
+ACT.BOUNCE
+SYSMESSAGE You Dropped the rune <TARG.TAG.NAME_<ARGS>>
+TRYP 0 TARG.TAG.NAME_<ARGS>=Empty 
+TRYP 0 TARG.TAG.LOC_<ARGS>=0  
+ELSE 
+SRC.SYSMESSAGE There's no rune in this slot!
+RETURN 1
+ENDIF
+
+[FUNCTION go_recall]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+NEWITEM=i_gold
+ACT.P=<FINDID(i_recall_delay).tag.LOC_>
+ACT.ATTR=attr_decay|attr_invis
+ACT.UPDATE
+ACT.LINK=<FINDID(i_recall_delay).SERIAL>
+ACT.LINK.LINK.TAG.FLAGSARE=<ACT.REGION.FLAGS>
+ACT.TIMERd=1
+IF (<ACT.REGION.FLAGS>&region_antimagic_recall_in)
+FINDID(i_recall_delay).REMOVE
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+TAG.FLAGSARE=
+RETURN 1
+ENDIF
+IF !(<RESTEST 1 i_rune_bk>)
+SYSMESSAGE You don't seem to have a rune book
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+RETURN 1
+ELSE
+FINDID(i_rune_bk).TAG.CHARGE=<EVAL (<FINDID(i_rune_bk).TAG.CHARGE>)>+-1
+SOUND=snd_spell_recall
+GO=<FINDID(i_recall_delay).tag.LOC_>
+ANIM=16
+SYSMESSAGE You have arrived at <FINDID(i_recall_delay).TAG.NAME_>
+UPDATE
+EFFECT=3,i_fx_sparkle,12,18
+RETURN 1
+ENDIF
+
+[FUNCTION Recall_wdelay]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+IF !(<TARG.TAG.CHARGE>>0)
+SYSMESSAGE The <TARG.NAME> has no charges
+SYSMESSAGE You stop casting the spell.
+EFFECT=3,i_fx_smoke_small,12,24
+SOUND=05c
+RETURN 1
+ENDIF
+IF (<REGION.FLAGS>&region_antimagic_recall_out)
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+EFFECT=3,i_fx_smoke_small,12,24
+SOUND=05c
+RETURN 1
+ELSE
+NEWITEM=i_recall_delay
+ACT.P=<P>
+ACT.EQUIP
+ACT.LINK=<SERIAL>
+ACT.TAG.LOC_=<TARG.TAG.LOC_<ARGS>>
+ACT.TAG.NAME_=<TARG.TAG.NAME_<ARGS>>
+ACT.MOREZ=<ARGS>
+ACT.ATTR=attr_decay
+ACT.TIMER=1
+RETURN 1
+ENDIF
+
+[FUNCTION go_gate]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+NEWITEM=i_gold
+ACT.P=<FINDID(i_gate_delay).tag.LOC_>
+ACT.ATTR=attr_decay|attr_invis
+ACT.MOVE 0 0 -1
+ACT.UPDATE
+ACT.LINK=<FINDID(i_gate_delay).SERIAL>
+ACT.LINK.LINK.TAG.FLAGSARE=<ACT.REGION.FLAGS>
+ACT.TIMERd=1
+IF (<ACT.REGION.FLAGS>&region_antimagic_recall_in) || (<ACT.REGION.FLAGS>&region_antimagic_gate)
+FINDID(i_gate_delay).REMOVE
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+TAG.FLAGSARE=
+RETURN 1
+ENDIF
+IF !(<RESTEST 1 i_rune_bk>)
+SYSMESSAGE You don't seem to have a rune book
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+RETURN 1
+ELSE
+FINDID(i_rune_bk).TAG.CHARGE=<EVAL (<FINDID(i_rune_bk).TAG.CHARGE>)>+-1
+NEWITEM=i_gateway
+ACT.P=<P>
+ACT.LINK=<SERIAL>
+ACT.TIMER=1
+ACT.MOREP=<FINDID(i_gate_delay).TAG.LOC_>
+ACT.NAME=a Rune Gate to <FINDID(i_gate_delay).TAG.NAME_>
+ACT.SOUND=snd_spell_gate_travel
+NEWITEM=i_gateway
+ACT.LINK=<SERIAL>
+ACT.P=<FINDID(i_gate_delay).TAG.LOC_>
+ACT.COLOR=020
+ACT.NAME=a Rune Gate to <REGION.NAME>
+ACT.MOREP=<P>
+ACT.SOUND=snd_spell_gate_travel
+ACT.TIMER=1
+UPDATE
+ANIM=16
+RETURN 1
+ENDIF
+
+[FUNCTION gate_wdelay]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+IF !(<TARG.TAG.CHARGE>>0)
+SYSMESSAGE The <TARG.NAME> has no charges
+SYSMESSAGE You stop casting the spell.
+EFFECT=3,i_fx_smoke_small,12,24
+SOUND=05c
+RETURN 1
+ENDIF
+IF (<REGION.FLAGS>&region_antimagic_recall_in) || (<REGION.FLAGS>&region_antimagic_gate) || (<REGION.FLAGS>&region_antimagic_recall_out)
+SYSMESSAGE An anti-magic field blocks you
+SYSMESSAGE You stop casting the spell.
+SOUND=05c
+EFFECT=3,i_fx_smoke_small,12,24
+RETURN 1
+ELSE
+NEWITEM=i_gate_delay
+ACT.P=<P>
+ACT.EQUIP
+ACT.LINK=<SERIAL>
+ACT.TAG.LOC_=<TARG.TAG.LOC_<ARGS>>
+ACT.TAG.NAME_=<TARG.TAG.NAME_<ARGS>>
+ACT.MOREZ=<ARGS>
+ACT.ATTR=attr_decay
+ACT.TIMER=1
+RETURN 1
+ENDIF
+
+
+[DIALOG d_rune_bk]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+0,0
+PAGE 0
+GUMPPIC 50 50 2220
+RESIZEPIC 263 170 5100 135 70
+RESIZEPIC 105 85 5100 130 165
+BUTTON 150 60 2225 2331 0 1 0
+BUTTON 170 60 2226 2331 0 2 0
+BUTTON 190 60 2227 2331 0 3 0 
+BUTTON 210 60 2228 2331 0 4 0
+BUTTON 270 60 2460 2461 1 0 5
+
+
+PAGE 1
+BUTTON 108 60 2640 2641 1 0 6
+BUTTON 370 58 2206 2206 0 2 0
+RADIO 105 90 25 26 0 1
+RADIO 105 110 25 26 0 2
+RADIO 105 130 25 26 0 3
+RADIO 105 150 25 26 0 4
+RADIO 105 170 25 26 0 5
+resizepic 110 218 2620 100 30
+textentry 115 225 110 32 922 1 0
+BUTTON 210 223 208 209 1 0 1 
+BUTTON 255 150 2706 2707 1 0 2
+BUTTON 280 190 2271 2297 1 0 3 
+BUTTON 335 190 2291 2263 1 0 4 
+TEXT 115 195 0 21
+TEXT 268 150 0 22
+TEXT 280 170 0 23
+TEXT 345 170 0 24
+croppedtext 130 90 100 20 0 1
+croppedtext 130 110 100 20 0 2
+croppedtext 130 130 100 20 0 3
+croppedtext 130 150 100 20 0 4
+croppedtext 130 170 100 20 0 5
+TEXT 268 110 0 25
+TEXT 260 125 0 26
+
+
+PAGE 2
+BUTTON 95 58 2205 2205 0 1 0 
+BUTTON 370 58 2206 2206 0 3 0
+RADIO 105 90 25 26 0 6
+RADIO 105 110 25 26 0 7
+RADIO 105 130 25 26 0 8
+RADIO 105 150 25 26 0 9
+RADIO 105 170 25 26 0 10
+resizepic 110 218 2620 100 30
+textentry 115 225 250 32 922 2 0
+BUTTON 210 223 208 209 1 0 1 
+BUTTON 255 150 2706 2707 1 0 2
+BUTTON 280 190 2271 2297 1 0 3 
+BUTTON 335 190 2291 2263 1 0 4 
+TEXT 115 195 0 21
+TEXT 268 150 0 22
+TEXT 280 170 0 23
+TEXT 345 170 0 24
+croppedtext 130 90 100 20 0 6
+croppedtext 130 110 100 20 0 7
+croppedtext 130 130 100 20 0 8
+croppedtext 130 150 100 20 0 9
+croppedtext 130 170 100 20 0 10
+TEXT 268 110 0 25
+TEXT 260 125 0 26
+
+PAGE 3
+BUTTON 370 58 2206 2206 0 4 0
+BUTTON 95 58 2205 2205 0 2 0
+RADIO 105 90 25 26 0 11
+RADIO 105 110 25 26 0 12
+RADIO 105 130 25 26 0 13
+RADIO 105 150 25 26 0 14
+RADIO 105 170 25 26 0 15
+resizepic 110 218 2620 100 30
+textentry 115 225 250 32 922 3 0
+BUTTON 210 223 208 209 1 0 1 
+BUTTON 255 150 2706 2707 1 0 2
+BUTTON 280 190 2271 2297 1 0 3 
+BUTTON 335 190 2291 2263 1 0 4 
+TEXT 115 195 0 21
+TEXT 268 150 0 22
+TEXT 280 170 0 23
+TEXT 345 170 0 24
+croppedtext 130 90 100 20 0 11
+croppedtext 130 110 100 20 0 12
+croppedtext 130 130 100 20 0 13
+croppedtext 130 150 100 20 0 14
+croppedtext 130 170 100 20 0 15
+TEXT 268 110 0 25
+TEXT 260 125 0 26
+
+PAGE 4
+BUTTON 95 58 2205 2205 0 3 0
+RADIO 105 90 25 26 0 16
+RADIO 105 110 25 26 0 17
+RADIO 105 130 25 26 0 18
+RADIO 105 150 25 26 0 19
+RADIO 105 170 25 26 0 20
+resizepic 110 218 2620 100 30
+textentry 115 225 110 32 922 4 0
+BUTTON 210 223 208 209 1 0 1 
+BUTTON 255 150 2706 2707 1 0 2
+BUTTON 280 190 2271 2297 1 0 3 
+BUTTON 335 190 2291 2263 1 0 4 
+TEXT 115 195 0 21
+TEXT 268 150 0 22
+TEXT 280 170 0 23
+TEXT 345 170 0 24
+croppedtext 130 90 100 20 0 16
+croppedtext 130 110 100 20 0 17
+croppedtext 130 130 100 20 0 18
+croppedtext 130 150 100 20 0 19
+croppedtext 130 170 100 20 0 20
+TEXT 268 110 0 25
+TEXT 260 125 0 26
+
+[DIALOG d_rune_bk TEXT]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+<VAR.BLANK>        
+<TARG.TAG.NAME_1>
+<TARG.TAG.NAME_2>
+<TARG.TAG.NAME_3>
+<TARG.TAG.NAME_4>
+<TARG.TAG.NAME_5>
+<TARG.TAG.NAME_6>
+<TARG.TAG.NAME_7>
+<TARG.TAG.NAME_8>
+<TARG.TAG.NAME_9>
+<TARG.TAG.NAME_10>
+<TARG.TAG.NAME_11>
+<TARG.TAG.NAME_12>
+<TARG.TAG.NAME_13>
+<TARG.TAG.NAME_14>
+<TARG.TAG.NAME_15>
+<TARG.TAG.NAME_16>
+<TARG.TAG.NAME_17>
+<TARG.TAG.NAME_18>
+<TARG.TAG.NAME_19>
+<TARG.TAG.NAME_20>
+Rename Rune
+Drop Rune
+Recall
+Gate
+Max Charges:[<EVAL (0<TARG.TAG.TCHARGE>)>]
+Actual Charges:[<EVAL (0<TARG.TAG.CHARGE>)>]
+
+[DIALOG d_rune_bk BUTTON]
+//Scripted by Theol, Admin Dark
+//for Sphereserver 55i.
+ONBUTTON=0
+SOUND=055
+ONBUTTON=1
+IF (<ARGCHK[1]>) && (<EVAL <TARG.TAG.LOC_1>>>0)
+TARG.TAG.NAME_1=<ARGTXT[1]>
+SYSMESSAGE Location renamed to <ARGTXT[1]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[2]>) && (<EVAL <TARG.TAG.LOC_2>>>0)
+TARG.TAG.NAME_2=<ARGTXT[1]>
+SYSMESSAGE Location renamed to <ARGTXT[1]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[3]>) && (<EVAL <TARG.TAG.LOC_3>>>0)
+TARG.TAG.NAME_3=<ARGTXT[1]>
+SYSMESSAGE Location renamed to <ARGTXT[1]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[4]>) && (<EVAL <TARG.TAG.LOC_4>>>0)
+TARG.TAG.NAME_4=<ARGTXT[1]>
+SYSMESSAGE Location renamed to <ARGTXT[1]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[5]>) && (<EVAL <TARG.TAG.LOC_5>>>0)
+TARG.TAG.NAME_5=<ARGTXT[1]>
+SYSMESSAGE Location renamed to <ARGTXT[1]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[6]>) && (<EVAL <TARG.TAG.LOC_6>>>0)
+TARG.TAG.NAME_6=<ARGTXT[2]>
+SYSMESSAGE Location renamed to <ARGTXT[2]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[7]>) && (<EVAL <TARG.TAG.LOC_7>>>0)
+TARG.TAG.NAME_7=<ARGTXT[2]>
+SYSMESSAGE Location renamed to <ARGTXT[2]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[8]>) && (<EVAL <TARG.TAG.LOC_8>>>0)
+TARG.TAG.NAME_8=<ARGTXT[2]>
+SYSMESSAGE Location renamed to <ARGTXT[2]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[9]>) && (<EVAL <TARG.TAG.LOC_9>>>0)
+TARG.TAG.NAME_9=<ARGTXT[2]>
+SYSMESSAGE Location renamed to <ARGTXT[2]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[10]>) && (<EVAL <TARG.TAG.LOC_10>>>0)
+TARG.TAG.NAME_10=<ARGTXT[2]>
+SYSMESSAGE Location renamed to <ARGTXT[2]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[11]>) && (<EVAL <TARG.TAG.LOC_11>>>0)
+TARG.TAG.NAME_11=<ARGTXT[3]>
+SYSMESSAGE Location renamed to <ARGTXT[3]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[12]>) && (<EVAL <TARG.TAG.LOC_12>>>0)
+TARG.TAG.NAME_12=<ARGTXT[3]>
+SYSMESSAGE Location renamed to <ARGTXT[3]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[13]>) && (<EVAL <TARG.TAG.LOC_13>>>0)
+TARG.TAG.NAME_13=<ARGTXT[3]>
+SYSMESSAGE Location renamed to <ARGTXT[3]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[14]>) && (<EVAL <TARG.TAG.LOC_14>>>0)
+TARG.TAG.NAME_14=<ARGTXT[3]>
+SYSMESSAGE Location renamed to <ARGTXT[3]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[15]>) && (<EVAL <TARG.TAG.LOC_15>>>0)
+TARG.TAG.NAME_15=<ARGTXT[3]>
+SYSMESSAGE Location renamed to <ARGTXT[3]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[16]>) && (<EVAL <TARG.TAG.LOC_16>>>0)
+TARG.TAG.NAME_16=<ARGTXT[4]>
+SYSMESSAGE Location renamed to <ARGTXT[4]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[17]>) && (<EVAL <TARG.TAG.LOC_17>>>0)
+TARG.TAG.NAME_17=<ARGTXT[4]>
+SYSMESSAGE Location renamed to <ARGTXT[4]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[18]>) && (<EVAL <TARG.TAG.LOC_18>>>0)
+TARG.TAG.NAME_18=<ARGTXT[4]>
+SYSMESSAGE Location renamed to <ARGTXT[4]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[19]>) && (<EVAL <TARG.TAG.LOC_19>>>0)
+TARG.TAG.NAME_19=<ARGTXT[4]>
+SYSMESSAGE Location renamed to <ARGTXT[4]>
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[20]>) && (<EVAL <TARG.TAG.LOC_20>>>0)
+TARG.TAG.NAME_20=<ARGTXT[4]>
+SYSMESSAGE Location renamed to <ARGTXT[4]>
+DIALOG d_rune_bk
+RETURN 1
+ELSE
+SYSMESSAGE You need to have the location marked.
+SOUND=05c
+RETURN 1
+ENDIF
+
+ONBUTTON=2
+IF (<ARGCHK[1]>) && (<EVAL <TARG.TAG.LOC_1>>>0)
+DROP_RUNE 1
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[2]>) && (<EVAL <TARG.TAG.LOC_2>>>0)
+DROP_RUNE 2
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[3]>) && (<EVAL <TARG.TAG.LOC_3>>>0)
+DROP_RUNE 3
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[4]>) && (<EVAL <TARG.TAG.LOC_4>>>0)
+DROP_RUNE 4
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[5]>) && (<EVAL <TARG.TAG.LOC_5>>>0)
+DROP_RUNE 5
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[6]>) && (<EVAL <TARG.TAG.LOC_6>>>0)
+DROP_RUNE 6
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[7]>) && (<EVAL <TARG.TAG.LOC_7>>>0)
+DROP_RUNE 7
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[8]>) && (<EVAL <TARG.TAG.LOC_8>>>0)
+DROP_RUNE 8
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[9]>) && (<EVAL <TARG.TAG.LOC_9>>>0)
+DROP_RUNE 9
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[10]>) && (<EVAL <TARG.TAG.LOC_10>>>0)
+DROP_RUNE 10
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[11]>) && (<EVAL <TARG.TAG.LOC_11>>>0)
+DROP_RUNE 11
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[12]>) && (<EVAL <TARG.TAG.LOC_12>>>0)
+DROP_RUNE 12
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[13]>) && (<EVAL <TARG.TAG.LOC_13>>>0)
+DROP_RUNE 13
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[14]>) && (<EVAL <TARG.TAG.LOC_14>>>0)
+DROP_RUNE 14
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[15]>) && (<EVAL <TARG.TAG.LOC_15>>>0)
+DROP_RUNE 15
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[16]>) && (<EVAL <TARG.TAG.LOC_16>>>0)
+DROP_RUNE 16
+DIALOG d_rune_bk 
+RETURN 1
+ELSEIF (<ARGCHK[17]>) && (<EVAL <TARG.TAG.LOC_17>>>0)
+DROP_RUNE 17
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[18]>) && (<EVAL <TARG.TAG.LOC_18>>>0)
+DROP_RUNE 18
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[19]>) && (<EVAL <TARG.TAG.LOC_19>>>0)
+DROP_RUNE 19
+DIALOG d_rune_bk
+RETURN 1
+ELSEIF (<ARGCHK[20]>) && (<EVAL <TARG.TAG.LOC_20>>>0)
+DROP_RUNE 20
+DIALOG d_rune_bk
+RETURN 1
+ELSE
+SYSMESSAGE You need to have the location marked.
+RETURN 1
+ENDIF
+
+ONBUTTON=3
+IF (<ARGCHK[1]>) && (<EVAL <TARG.TAG.LOC_1>>>0)
+Recall_wdelay 1
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[2]>) && (<EVAL <TARG.TAG.LOC_2>>>0)
+Recall_wdelay 2
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[3]>) && (<EVAL <TARG.TAG.LOC_3>>>0)
+Recall_wdelay 3
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[4]>) && (<EVAL <TARG.TAG.LOC_4>>>0)
+Recall_wdelay 4
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[5]>) && (<EVAL <TARG.TAG.LOC_5>>>0)
+Recall_wdelay 5
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[6]>) && (<EVAL <TARG.TAG.LOC_6>>>0)
+Recall_wdelay 6
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[7]>) && (<EVAL <TARG.TAG.LOC_7>>>0)
+Recall_wdelay 7
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[8]>) && (<EVAL <TARG.TAG.LOC_8>>>0)
+Recall_wdelay 8
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[9]>) && (<EVAL <TARG.TAG.LOC_9>>>0)
+Recall_wdelay 9
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[10]>) && (<EVAL <TARG.TAG.LOC_10>>>0)
+Recall_wdelay 10
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[11]>) && (<EVAL <TARG.TAG.LOC_11>>>0)
+Recall_wdelay 11
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[12]>) && (<EVAL <TARG.TAG.LOC_12>>>0)
+Recall_wdelay 12
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[13]>) && (<EVAL <TARG.TAG.LOC_13>>>0)
+Recall_wdelay 13
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[14]>) && (<EVAL <TARG.TAG.LOC_14>>>0)
+Recall_wdelay 14
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[15]>) && (<EVAL <TARG.TAG.LOC_15>>>0)
+Recall_wdelay 15
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[16]>) && (<EVAL <TARG.TAG.LOC_16>>>0)
+Recall_wdelay 16
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[17]>) && (<EVAL <TARG.TAG.LOC_17>>>0)
+Recall_wdelay 17
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[18]>) && (<EVAL <TARG.TAG.LOC_18>>>0)
+Recall_wdelay 18
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[19]>) && (<EVAL <TARG.TAG.LOC_19>>>0)
+Recall_wdelay 19
+SAY Kal Ort Por
+RETURN 1
+ELSEIF (<ARGCHK[20]>) && (<EVAL <TARG.TAG.LOC_20>>>0)
+Recall_wdelay 20
+SAY Kal Ort Por
+RETURN 1
+ELSE
+SYSMESSAGE You need to have the location marked.
+SOUND=05c
+RETURN 1
+ENDIF
+
+ONBUTTON=4
+IF (<ARGCHK[1]>) && (<EVAL <TARG.TAG.LOC_1>>>0)
+gate_wdelay 1
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[2]>) && (<EVAL <TARG.TAG.LOC_2>>>0)
+gate_wdelay 2
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[3]>) && (<EVAL <TARG.TAG.LOC_3>>>0)
+gate_wdelay 3
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[4]>) && (<EVAL <TARG.TAG.LOC_4>>>0)
+gate_wdelay 4
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[5]>) && (<EVAL <TARG.TAG.LOC_5>>>0)
+gate_wdelay 5
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[6]>) && (<EVAL <TARG.TAG.LOC_6>>>0)
+gate_wdelay 6
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[7]>) && (<EVAL <TARG.TAG.LOC_7>>>0)
+gate_wdelay 7
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[8]>) && (<EVAL <TARG.TAG.LOC_8>>>0)
+gate_wdelay 8
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[9]>) && (<EVAL <TARG.TAG.LOC_9>>>0)
+gate_wdelay 9
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[10]>) && (<EVAL <TARG.TAG.LOC_10>>>0)
+gate_wdelay 10
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[11]>) && (<EVAL <TARG.TAG.LOC_11>>>0)
+gate_wdelay 11
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[12]>) && (<EVAL <TARG.TAG.LOC_12>>>0)
+gate_wdelay 12
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[13]>) && (<EVAL <TARG.TAG.LOC_13>>>0)
+gate_wdelay 13
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[14]>) && (<EVAL <TARG.TAG.LOC_14>>>0)
+gate_wdelay 14
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[15]>) && (<EVAL <TARG.TAG.LOC_15>>>0)
+gate_wdelay 15
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[16]>) && (<EVAL <TARG.TAG.LOC_16>>>0)
+gate_wdelay 16
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[17]>) && (<EVAL <TARG.TAG.LOC_17>>>0)
+gate_wdelay 17
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[18]>) && (<EVAL <TARG.TAG.LOC_18>>>0)
+gate_wdelay 18
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[19]>) && (<EVAL <TARG.TAG.LOC_19>>>0)
+gate_wdelay 19
+SAY Vas Rel Por
+RETURN 1
+ELSEIF (<ARGCHK[20]>) && (<EVAL <TARG.TAG.LOC_20>>>0)
+gate_wdelay 20
+SAY Vas Rel Por
+RETURN 1
+ELSE
+SYSMESSAGE You need to have the location marked.
+SOUND=05c
+RETURN 1
+ENDIF
+
+ONBUTTON=5
+IF (<ARGCHK[1]>) && (<EVAL <TARG.TAG.LOC_1>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+VAR.SLOTNUM=1
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+RETURN 1
+ELSEIF (<ARGCHK[2]>) && (<EVAL <TARG.TAG.LOC_2>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=2
+RETURN 1
+ELSEIF (<ARGCHK[3]>) && (<EVAL <TARG.TAG.LOC_3>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=3
+RETURN 1
+ELSEIF (<ARGCHK[4]>) && (<EVAL <TARG.TAG.LOC_4>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=4
+RETURN 1
+ELSEIF (<ARGCHK[5]>) && (<EVAL <TARG.TAG.LOC_5>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=5
+RETURN 1
+ELSEIF (<ARGCHK[6]>) && (<EVAL <TARG.TAG.LOC_6>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=6
+RETURN 1
+ELSEIF (<ARGCHK[7]>) && (<EVAL <TARG.TAG.LOC_7>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=7
+RETURN 1
+ELSEIF (<ARGCHK[8]>) && (<EVAL <TARG.TAG.LOC_8>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=8
+RETURN 1
+ELSEIF (<ARGCHK[9]>) && (<EVAL <TARG.TAG.LOC_9>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=9
+RETURN 1
+ELSEIF (<ARGCHK[10]>) && (<EVAL <TARG.TAG.LOC_10>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=10
+RETURN 1
+ELSEIF (<ARGCHK[11]>) && (<EVAL <TARG.TAG.LOC_11>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=11
+RETURN 1
+ELSEIF (<ARGCHK[12]>) && (<EVAL <TARG.TAG.LOC_12>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=12
+RETURN 1
+ELSEIF (<ARGCHK[13]>) && (<EVAL <TARG.TAG.LOC_13>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=13
+RETURN 1
+ELSEIF (<ARGCHK[14]>) && (<EVAL <TARG.TAG.LOC_14>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=14
+RETURN 1
+ELSEIF (<ARGCHK[15]>) && (<EVAL <TARG.TAG.LOC_15>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=15
+RETURN 1
+ELSEIF (<ARGCHK[16]>) && (<EVAL <TARG.TAG.LOC_16>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=16
+RETURN 1
+ELSEIF (<ARGCHK[17]>) && (<EVAL <TARG.TAG.LOC_17>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=17
+RETURN 1
+ELSEIF (<ARGCHK[18]>) && (<EVAL <TARG.TAG.LOC_18>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=18
+RETURN 1
+ELSEIF (<ARGCHK[19]>) && (<EVAL <TARG.TAG.LOC_19>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=19
+RETURN 1
+ELSEIF (<ARGCHK[20]>) && (<EVAL <TARG.TAG.LOC_20>>==0)
+SRC.NEWITEM=i_mark_mem
+ACT.EQUIP
+ACT.TIMER=12
+SRC.SYSMESSAGE Target the Rune you wish to add to this slot.
+VAR.SLOTNUM=20
+RETURN 1
+ELSE
+SYSMESSAGE You need to select a location to be marked.
+SOUND=05c
+RETURN 1
+ENDIF
+
+ONBUTTON=6
+CHARGE_BOOK
+RETURN 1
+
+
+[EOF]

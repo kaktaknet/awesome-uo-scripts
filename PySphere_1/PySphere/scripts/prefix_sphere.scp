@@ -1,0 +1,61 @@
+//prefix_sphere.scp compiled by PySphere Release 17 from prefix_sphere.py.
+//#sphere-55i
+//#prefix-sphere
+//
+//#This contains some stuff that's also in prefix_local.py, except with an s instead of an l at the start of the function
+//#name. This file is just to demonstrate the prefix-sphere notation, so you can decide whether to use that or
+//#prefix-local.
+//
+//#This file also tests UID references when compiling to 55i.
+//
+//def sgimmeitem(itemID):
+[function sgimmeitem]
+var.py__prefix_sphere__sgimmeitem__itemID=<var.itemID>
+//	sphere.newitem(itemID)
+tryp 0 newitem <var.py__prefix_sphere__sgimmeitem__itemID>
+//	sphere.act.bounce()
+act.bounce
+//
+//def sgimmeitem2(itemID):
+[function sgimmeitem2]
+var.py__prefix_sphere__sgimmeitem2__itemID=<var.itemID>
+//	item=sphere.newitem(itemID)
+var.py__prefix_sphere__sgimmeitem2__tempact=<act.uid>
+newitem <var.py__prefix_sphere__sgimmeitem2__itemID>
+var.py__prefix_sphere__sgimmeitem2__item=<act.uid>
+act=<var.py__prefix_sphere__sgimmeitem2__tempact>
+//	item.bounce()
+uid.py__prefix_sphere__sgimmeitem2__item.bounce
+//	item.color(5)
+uid.py__prefix_sphere__sgimmeitem2__item.color 5
+//	sphere.finduid(item).say("Moo.")
+tryp 0 uid.<var.py__prefix_sphere__sgimmeitem2__item>.say("Moo.")
+//
+//def steststrings(num, text):
+[function steststrings]
+var.py__prefix_sphere__steststrings__num=<var.num>
+var.py__prefix_sphere__steststrings__text=<var.text>
+//	test=5
+var.py__prefix_sphere__steststrings__test=5
+//	sphere.echo(num)
+tryp 0 echo <var.py__prefix_sphere__steststrings__num>
+//	sphere.sysmessage("Forsooth!")
+sysmessage Forsooth!
+//	sphere.sysmessage('Forsay!eth')
+sysmessage Forsay!eth
+//	sphere.sysmessage('Testingeth')
+sysmessage Testingeth
+//	sphere.sysmessage("Aaaasdfdff")
+sysmessage Aaaasdfdff
+//	sphere.sysmessage("Your name is '"+sphere.name+"'")
+tryp 0 sysmessage Your name is '<name>'
+//	sphere.sysmessage('sayin'+"'"+" '"+text+"'")
+tryp 0 sysmessage sayin' '<var.py__prefix_sphere__steststrings__text>'
+//	sphere.sysmessage("sayin' "+"'"+text+"'")
+tryp 0 sysmessage sayin' '<var.py__prefix_sphere__steststrings__text>'
+//	sphere.sysmessage("sayin' "+text)
+tryp 0 sysmessage sayin' <var.py__prefix_sphere__steststrings__text>
+//	sphere.sysmessage('sayin\' \''+text+'\'')
+tryp 0 sysmessage sayin' '<var.py__prefix_sphere__steststrings__text>'
+//
+//	

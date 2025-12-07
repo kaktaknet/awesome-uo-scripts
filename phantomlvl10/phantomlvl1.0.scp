@@ -1,0 +1,118 @@
+//    ######################################################
+//   ##~~~~~~~~~~~~Phantoms Level System v1.0~~~~~~~~~~~~##
+//  ##__________________________________________________##
+// ##      ADD    TEVENTS=e_npcexp     to every npc    ##
+//######################################################
+//COMMANDS .exp (to check exp) and .level (to level up)
+//PLEASE REPORT BUGS TO jorden_2@hotmail.com   
+
+
+//############## ADD THIS SECTION TO THE BOTTOM OF SPHERETABLES.SCP UNDER [SKILLCLASS 0]#############
+ON=@CLICK
+SRC.MESSAGE [Level <EVAL 0<TAG.LEVEL>>] 
+
+ON=@Death
+IF (<EVAL 0<TAG.LEVEL>(25)>)
+SRC.ACT.TAG.EXP=<EVAL 0<TAG.LEVEL>+(RAND(200))>
+ELIF (<EVAL 0<TAG.LEVEL>(15)>)
+SRC.ACT.TAG.EXP=<EVAL 0<TAG.LEVEL>+(RAND(100))>
+ELSE
+SRC.ACT.TAG.EXP=<EVAL 0<TAG.LEVEL>+(RAND(40))>
+ENDIF
+RETURN 0
+
+//##############ADD ^ TO BOTTOM OF SPHERETABLES.SCP UNDER [SKILLCLASS 0]#####################
+
+
+
+//BEGINING OF ACTUAL SCRIPT!!!
+//   #
+//   #
+// #####
+//  ###
+//   #
+
+
+[EVENTS e_npcexp] 
+ON=@CLICK
+TAG.LEVEL=<EVAL <STR> + <DEX> + <INT>>/58
+MESSAGE [Difficulty <EVAL 0<TAG.LEVEL>>]
+ON=@Death
+//IF ( <SRC.FLAGS>&08000000)
+//RETURN 0
+IF (<EVAL 0<TAG.LEVEL>>(75)>)
+SRC.ACT.TAG.EXP=<EVAL 0<SRC.ACT.TAG.EXP>>+<EVAL <STR> + <DEX> + <INT>>/50
+ELIF (<EVAL 0<TAG.LEVEL>>(35)>)
+SRC.ACT.TAG.EXP=<EVAL 0<SRC.ACT.TAG.EXP>>+<EVAL <STR> + <DEX> + <INT>>/50
+ELIF (<EVAL 0<TAG.LEVEL>>(25)>)
+SRC.ACT.TAG.EXP=<EVAL 0<SRC.ACT.TAG.EXP>>+<EVAL <STR> + <DEX> + <INT>>/50
+ELSE
+SRC.ACT.TAG.EXP=<EVAL 0<SRC.ACT.TAG.EXP>>+<EVAL <STR> + <DEX> + <INT>>/50
+ENDIF
+RETURN 0
+
+
+
+[PLEVEL 1]
+
+level
+exp
+
+
+[FUNCTION level]
+SRC.TAG.EXPNEEDED=<EVAL 0<SRC.TAG.LEVEL>*(150)>
+//IF (<EVAL 0<SRC.TAG.LEVEL>==(300)>)  //###############USE TO MAKE MAXIMUM LEVEL.
+//SRC.SYSMESSAGE You have reached Maxmimum Level!
+IF (<EVAL 0<SRC.TAG.EXP>>>=<EVAL 0<SRC.TAG.EXPNEEDED>>)
+SRC.TAG.EXP=(<EVAL 0<SRC.TAG.EXP>-<EVAL 0<SRC.TAG.EXPNEEDED>)
+SRC.TAG.LEVEL=<EVAL 0<SRC.TAG.LEVEL>+(1)>
+SRC.MESSAGE You have Reached Level <EVAL 0<SRC.TAG.LEVEL>>!
+DIALOG d_lvlstat
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You lack the exp to Level! You need <EVAL 0<SRC.TAG.EXPNEEDED>-0<SRC.TAG.EXP>> more exp to level.
+RETURN 0
+
+[FUNCTION exp]
+SRC.TAG.EXPNEEDED=<EVAL 0<SRC.TAG.LEVEL>*(150)>
+SRC.SYSMESSAGE You have <EVAL 0<SRC.TAG.EXP>> exp, You need <EVAL 0<SRC.TAG.EXPNEEDED>-0<SRC.TAG.EXP>> more exp to level.
+RETURN 0
+
+
+[DIALOG d_lvlstat]
+0, 0
+noclose
+nomove
+PAGE 0
+resizepic 51 33 2520 300 133
+text 106 42 995 0
+text 124 137 31 1
+PAGE 1
+text 91 71 162 2
+text 170 70 162 3
+text 246 69 162 4
+button 257 99 1150 1151 1 0 1
+button 179 99 1150 1151 1 0 2
+button 105 99 1150 1151 1 0 3
+
+[DIALOG d_lvlstat TEXT]
+Select a Stat to Raise +1
+Scripted By Phantom
+Str +1                    //if u change the button values, change these too, or u will look kinda stupid lol
+Dex +1
+Int +1
+
+
+[DIALOG d_lvlstat BUTTON]
+on=1
+SRC.INT=<SRC.INT>+1    //HOW MUCH SKILL CAN THEY GET PER LEVEL,  I HAVE IT SET TO +1 FOR EACH LEVEL
+on=2                  // I WOULD RECOMMEND HAVING LOW STAT ADDITION IF U ARE GONNA USE ALOT OF LEVELS
+SRC.DEX=<SRC.DEX>+1
+on=3
+SRC.STR=<SRC.STR>+1
+
+
+
+
+
+[EOF]

@@ -1,0 +1,2203 @@
+////////////Pwer Scrolls by Admin M///////////////////////// 
+version 56b should work with 55r's 
+This IS NOT an awsome script but i have been using it for along time now.
+Any bugs i have found i have fixed if you find any please e-mail me at spawnofsosaria@hotmail.com 
+
+First off add this next section to what ever monster you want to get the power scrolls off 
+
+
+
+ON=@SPELLEFFECT 
+IF (<act.brain>==0) && (RAND(500) == 0) // keep this number high!! 
+IF (<ARGN>==28) || (<ARGN>==39) || (<ARGN>==47) // Field spells 
+SRC.NEWITEM=random_ps2 
+SRC.act.BOUNCE 
+SRC.SYSMESSAGE @1153 You have received a Power Scroll for your valor! 
+ENDIF 
+ENDIF 
+
+
+ON=@GETHIT 
+if ( <src.memoryfindtype(memory_ipet).uid> ) && (RAND(100) == 0) // This section takes pets into consideration 
+src.memoryfindtype(memory_ipet).link.newitem=random_ps2 
+SRC.memoryfindtype(memory_ipet).link.BOUNCE <new> 
+src.memoryfindtype(memory_ipet).link.sysmessage @1153 You have been Rewarded a Scroll of Power for your valor!. 
+return 0 
+ELSEIF (<act.brain>==0) && (RAND(100) == 0) // begining of player section 
+SRC.NEWITEM=random_ps2 
+SRC.act.BOUNCE 
+SRC.SYSMESSAGE @1153 You have received a Power Scroll for your valor! 
+ENDIF 
+
+ 
+
+
+You can place the scripts below anywhere and resync Tada! its in. 
+
+/////////Power Scroll Template/////////// 
+
+
+
+[TEMPLATE RANDOM_ps2] 
+CATEGORY=Item Templates 
+SUBSECTION=Random PS 
+DESCRIPTION=magery 
+ITEM= {i_psmage5 1 i_psmage10 1 i_psbs5 1 i_psbs10 1 i_psa5 1 i_psa10 1 i_pss5 1 i_pss10 1 i_psf5 1 i_psf10 1 i_psm5 1 i_psm10 1 i_pst5 1 i_pst10 1 i_psp5 1 i_psp10 1 i_psmu5 1 i_psmu10 1 i_psmi5 1 i_psmi10 1 i_psh5 1 i_psh10 1 i_psmed5 1 i_psmed10 1 i_psres5 1 i_psres10 1 i_psta5 1 i_psta10 1 i_pstac5 1 i_pstac10 1 i_psev5 1 i_psev10 1 i_parry5 1 i_parry10 1 i_lp5 1 i_lp10 1 } 
+
+ 
+
+
+\\\\\\\\\\\\\\\\\Power Scrolls\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+
+When you use these scrolls a menu will popup giving you the choice to use the scroll or not . 
+These scroll wills only bring skill up to 120.0 max. I havent been able to figure out how to make it change the cap. Anyways not all skills are here but i will be updating it if needed (It's also really easy to add more skills ) 
+
+
+
+////Power scrolls by Admin M//// 
+
+
+///////////+5 magery///////////// 
+
+
+[ITEMDEF i_psmage5] 
+id=i_deed 
+NAME=+5 Magery 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=magery 
+
+
+ON=@DCLICK 
+DIALOG=d_mage5_yn 
+
+
+
+[DIALOG d_mage5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_mage5_yn TEXT] 
+Are you sure you use this scroll?? 
+Yes 
+No 
+
+
+[DIALOG d_mage5_yn BUTTON] 
+
+ON=1 
+IF <SRC.MAGERY> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in magery!. 
+      SRC.magery= (<SRC.magery>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+
+
+//////+10 magery ////// 
+
+[ITEMDEF i_psmage10] 
+id=i_deed 
+NAME=+10 Magery 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=magery 
+
+
+ON=@DCLICK 
+DIALOG=d_mage10_yn 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=magery 
+
+[DIALOG d_mage10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_mage10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_mage10_yn BUTTON] 
+
+ON=1 
+IF <SRC.MAGERY> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+                SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in magery!. 
+      SRC.magery= (<SRC.magery>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+///////////blacksmith +5////////// 
+
+[ITEMDEF i_psbs5] 
+id=i_deed 
+NAME=+5 Blacksmith 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=blacksmith 
+
+
+ON=@DCLICK 
+DIALOG=d_bs5_yn 
+
+
+
+
+[DIALOG d_bs5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_bs5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_bs5_yn BUTTON] 
+
+ON=1 
+IF <SRC.Blacksmithing> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Blacksmithing!. 
+      SRC.blacksmithing= (<SRC.blacksmithing>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+////+10 blacksmith//// 
+
+[ITEMDEF i_psbs10] 
+id=i_deed 
+NAME=+10 Blacksmith 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=blacksmith 
+
+
+ON=@DCLICK 
+DIALOG=d_bs10_yn 
+
+
+[DIALOG d_bs10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_bs10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_bs10_yn BUTTON] 
+
+ON=1 
+IF <SRC.blacksmithing> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Blacksmithing!. 
+      SRC.blacksmithing= (<SRC.blacksmithing>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+
+
+//////+5 archery///// 
+
+[ITEMDEF i_psa5] 
+id=i_deed 
+NAME=+5 Archery 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=archery 
+
+ON=@DCLICK 
+DIALOG=d_ar5_yn 
+
+
+[DIALOG d_ar5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_ar5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_ar5_yn BUTTON] 
+
+ON=1 
+IF <SRC.archery> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Archery!. 
+      SRC.archery= (<SRC.archery>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+
+///////+10 archery 
+  
+[ITEMDEF i_psa10] 
+id=i_deed 
+NAME=+10 Archery 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=archery 
+
+
+ON=@DCLICK 
+DIALOG=d_ar10_yn 
+
+
+[DIALOG d_ar10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_ar10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_ar10_yn BUTTON] 
+
+ON=1 
+IF <SRC.archery> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Archery!. 
+      SRC.archery= (<SRC.archery>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+///////////+5 swords///////// 
+
+[ITEMDEF i_pss5] 
+id=i_deed 
+NAME=+5 Swordsmanship 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=swords 
+
+
+ON=@DCLICK 
+DIALOG=d_sw5_yn 
+
+
+[DIALOG d_sw5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_sw5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_sw5_yn BUTTON] 
+
+ON=1 
+IF <SRC.swordsmanship> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Swordsmanship!. 
+      SRC.swordsmanship= (<SRC.swordsmanship>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+///////////+10 swords////// 
+
+
+[ITEMDEF i_pss10] 
+id=i_deed 
+NAME=+10 Swordsmanship 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=swords 
+
+
+ON=@DCLICK 
+DIALOG=d_sw10_yn 
+
+
+[DIALOG d_sw10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_sw10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_sw10_yn BUTTON] 
+
+ON=1 
+IF <SRC.swordsmanship> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Swordsmanship!. 
+      SRC.swordsmanship= (<SRC.swordsmanship>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+//////+5 fencing////// 
+
+
+[ITEMDEF i_psf5] 
+id=i_deed 
+NAME=+5 Fencing 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=fencing 
+
+
+ON=@DCLICK 
+DIALOG=d_fen5_yn 
+
+
+[DIALOG d_fen5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_fen5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_fen5_yn BUTTON] 
+
+ON=1 
+IF <SRC.fencing> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Fencing!. 
+      SRC.fencing= (<SRC.fencing>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+////////+10 fencing/////// 
+
+[ITEMDEF i_psf10] 
+id=i_deed 
+NAME=+10 Fencing 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=fencing 
+
+
+
+ON=@DCLICK 
+DIALOG=d_fen10_yn 
+
+
+[DIALOG d_fen10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_fen10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_fen10_yn BUTTON] 
+
+ON=1 
+IF <SRC.fencing> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Fencing!. 
+      SRC.fencing= (<SRC.fencing>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+//////////+5 macing///////// 
+
+
+[ITEMDEF i_psm5] 
+id=i_deed 
+NAME=+5 Mace Fighting 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=macing 
+
+
+ON=@DCLICK 
+DIALOG=d_mace5_yn 
+
+
+[DIALOG d_mace5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_mace5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_mace5_yn BUTTON] 
+
+ON=1 
+IF <SRC.macefighting> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Mace Fighting!. 
+      SRC.macefighting= (<SRC.macefighting>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+/////+10 macing 
+
+[ITEMDEF i_psm10] 
+id=i_deed 
+NAME=+10 Mace Fighting 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=macing 
+
+
+ON=@DCLICK 
+DIALOG=d_mace10_yn 
+
+
+[DIALOG d_mace10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_mace10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_mace10_yn BUTTON] 
+
+ON=1 
+IF <SRC.macefighting> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Mace Fighting!. 
+      SRC.macefighting= (<SRC.macefighting>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+///////////Tailoring +5///////// 
+
+[ITEMDEF i_pst5] 
+id=i_deed 
+NAME=+5 Tailoring 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=tailoring 
+
+
+ON=@DCLICK 
+DIALOG=d_tailor5_yn 
+
+
+[DIALOG d_tailor5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_tailor5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_tailor5_yn BUTTON] 
+
+ON=1 
+IF <SRC.tailoring> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Tailoring!. 
+      SRC.tailoring= (<SRC.tailoring>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+//////tailor +10/////// 
+
+[ITEMDEF i_pst10] 
+id=i_deed 
+NAME=+10 Tailoring 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=tailoring 
+
+
+ON=@DCLICK 
+DIALOG=d_tailor10_yn 
+
+
+[DIALOG d_tailor10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_tailor10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_tailor10_yn BUTTON] 
+
+ON=1 
+IF <SRC.tailoring> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Tailoring!. 
+      SRC.tailoring= (<SRC.tailoring>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+///////Provok +5/// 
+
+[ITEMDEF i_psp5] 
+id=i_deed 
+NAME=+5 Provocation 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=provocation 
+
+
+ON=@DCLICK 
+DIALOG=d_provo5_yn 
+
+
+[DIALOG d_provo5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_provo5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_provo5_yn BUTTON] 
+
+ON=1 
+IF <SRC.provocation> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Provocation!. 
+      SRC.provocation= (<SRC.provocation>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+////provok +10//// 
+
+[ITEMDEF i_psp10] 
+id=i_deed 
+NAME=+10 Provocation 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=provocation 
+
+
+ON=@DCLICK 
+DIALOG=d_provo10_yn 
+
+
+[DIALOG d_provo10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_provo10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_provo10_yn BUTTON] 
+
+ON=1 
+IF <SRC.provocation> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in provocation!. 
+      SRC.provocation= (<SRC.provocation>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+////////////Musicianship +5///////// 
+
+[ITEMDEF i_psmu5] 
+id=i_deed 
+NAME=+5 Musicianship 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=Music 
+
+
+ON=@DCLICK 
+DIALOG=d_Music5_yn 
+
+
+[DIALOG d_Music5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_Music5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_Music5_yn BUTTON] 
+
+ON=1 
+IF <SRC.musicianship> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Musicianship!. 
+      SRC.musicianship= (<SRC.musicianship>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+////music +10///// 
+
+[ITEMDEF i_psmu10] 
+id=i_deed 
+NAME=+10 Musicianship 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=Music 
+
+
+ON=@DCLICK 
+DIALOG=d_Music10_yn 
+
+
+[DIALOG d_Music10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_Music10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_Music10_yn BUTTON] 
+
+ON=1 
+IF <SRC.musicianship> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Musicianship!. 
+      SRC.musicianship= (<SRC.musicianship>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+////////Mining +5////// 
+
+[ITEMDEF i_psmi5] 
+id=i_deed 
+NAME=+5 Mining 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=Mining 
+
+
+ON=@DCLICK 
+DIALOG=d_mi5_yn 
+
+
+[DIALOG d_mi5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_mi5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_mi5_yn BUTTON] 
+
+ON=1 
+IF <SRC.mining> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Mining!. 
+      SRC.mining= (<SRC.mining>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+////mining +10/////// 
+
+[ITEMDEF i_psmi10] 
+id=i_deed 
+NAME=+10 Mining 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=Mining 
+
+ON=@DCLICK 
+DIALOG=d_mi10_yn 
+
+
+[DIALOG d_mi10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_Mi10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_mi10_yn BUTTON] 
+
+ON=1 
+IF <SRC.mining> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Mining!. 
+      SRC.mining= (<SRC.mining>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+
+//////+5 healing/////// 
+
+[ITEMDEF i_psh5] 
+id=i_deed 
+NAME=+5 Healing 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=healing 
+
+
+ON=@DCLICK 
+DIALOG=d_heal5_yn 
+
+
+[DIALOG d_heal5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_heal5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_heal5_yn BUTTON] 
+
+ON=1 
+IF <SRC.healing> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Healing!. 
+      SRC.healing= (<SRC.healing>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+///////+10 healing///// 
+
+[ITEMDEF i_psh10] 
+id=i_deed 
+NAME=+10 Healing 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=healing 
+
+
+ON=@DCLICK 
+DIALOG=d_heal10_yn 
+
+
+[DIALOG d_heal10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_heal10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_heal10_yn BUTTON] 
+
+ON=1 
+IF <SRC.healing> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Healing!. 
+      SRC.healing= (<SRC.healing>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+/////+5 med////// 
+
+[ITEMDEF i_psmed5] 
+id=i_deed 
+NAME=+5 meditaion 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=Meditation 
+
+ON=@DCLICK 
+DIALOG=d_med5_yn 
+
+
+[DIALOG d_med5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_med5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_med5_yn BUTTON] 
+
+ON=1 
+IF <SRC.Meditation> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Meditation!. 
+      SRC.meditation= (<SRC.meditation>+(5.0)) 
+src.effect=3,i_fx_sparkle ,6,15,1 
+sfx snd_SPELL_GREATER_HEAL 
+remove 
+ENDIF 
+RETURN 0 
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+
+
+////+10 med///// 
+
+[ITEMDEF i_psmed10] 
+id=i_deed 
+NAME=+10 Meditaion 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=Meditation 
+
+
+
+ON=@DCLICK 
+DIALOG=d_med10_yn 
+
+
+[DIALOG d_med10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_med10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+[DIALOG d_med10_yn BUTTON] 
+
+ON=1 
+IF <SRC.meditation> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Meditation!. 
+      SRC.meditation= (<SRC.meditation>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+////////resisting spells +5//// 
+
+[ITEMDEF i_psres5] 
+id=i_deed 
+NAME=+5 Magic Resistance 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=Resisting Spells 
+
+
+
+ON=@DCLICK 
+DIALOG=d_res5_yn 
+
+
+
+
+[DIALOG d_res5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_res5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_res5_yn BUTTON] 
+
+ON=1 
+IF <SRC.magicresistance> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Magic Resistance!. 
+      SRC.magicresistance= (<SRC.magicresistance>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+///+10 resist//// 
+
+[ITEMDEF i_psres10] 
+id=i_deed 
+NAME=+10 Magic Resistance 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=Resisting Spells 
+
+
+
+ON=@DCLICK 
+DIALOG=d_res10_yn 
+
+
+[DIALOG d_res10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_res10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_res10_yn BUTTON] 
+
+ON=1 
+IF <SRC.magicresistance> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Magic Resistance!. 
+      SRC.magicresistance= (<SRC.magicresistance>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+///////+5 taming/////// 
+
+[ITEMDEF i_psta5] 
+id=i_deed 
+NAME=+5 Taming 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=Taming 
+
+
+ON=@DCLICK 
+DIALOG=d_tam5_yn 
+
+
+[DIALOG d_tam5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_tam5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_tam5_yn BUTTON] 
+
+ON=1 
+IF <SRC.taming> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Animal Taming!. 
+      SRC.taming= (<SRC.taming>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+///////+10 taming///// 
+
+[ITEMDEF i_psta10] 
+id=i_deed 
+NAME=+10 Taming 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=Taming 
+
+
+
+ON=@DCLICK 
+DIALOG=d_tam10_yn 
+
+[DIALOG d_tam10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_tam10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_tam10_yn BUTTON] 
+
+ON=1 
+IF <SRC.taming> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Animal Taming!. 
+      SRC.taming= (<SRC.taming>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+/////+5 tactics////// 
+
+[ITEMDEF i_pstac5] 
+id=i_deed 
+NAME=+5 Tactics 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=Tactics 
+
+
+
+ON=@DCLICK 
+DIALOG=d_tact5_yn 
+
+[DIALOG d_tact5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_tact5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_tact5_yn BUTTON] 
+
+ON=1 
+IF <SRC.tactics> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Tactics!. 
+      SRC.tactics= (<SRC.tactics>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+////+10 tactics///// 
+
+[ITEMDEF i_pstac10] 
+id=i_deed 
+NAME=+10 Tactics 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=Tactics 
+
+
+ON=@DCLICK 
+DIALOG=d_tact10_yn 
+
+[DIALOG d_tact10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_tact10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_tact10_yn BUTTON] 
+
+ON=1 
+IF <SRC.tactics> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Tactics!. 
+      SRC.tactics= (<SRC.tactics>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+/////+5 eval////// 
+
+[ITEMDEF i_psev5] 
+id=i_deed 
+NAME=+5 Evaluating Intelligence 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=Eval 
+
+
+ON=@DCLICK 
+DIALOG=d_eval5_yn 
+
+[DIALOG d_eval5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_eval5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_eval5_yn BUTTON] 
+
+ON=1 
+IF <SRC.evaluatingintel> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Evaluating Intelligence!. 
+      SRC.evaluatingintel= (<SRC.evaluatingintel>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+
+
+
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+
+
+
+////+10 eval///// 
+
+[ITEMDEF i_psev10] 
+id=i_deed 
+NAME=+10 Evaluating Intelligence 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=Eval 
+
+
+ON=@DCLICK 
+DIALOG=d_eval10_yn 
+
+[DIALOG d_eval10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_eval10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_eval10_yn BUTTON] 
+
+ON=1 
+IF <SRC.evaluatingintel> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Evaluating Intelligence!. 
+      SRC.evaluatingintel= (<SRC.evaluatingintel>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+///////+5 parry//// 
+
+[ITEMDEF i_parry5] 
+id=i_deed 
+NAME=+5 Parrying 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=parry 
+
+
+ON=@DCLICK 
+DIALOG=d_parry5_yn 
+
+[DIALOG d_parry5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_parry5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_parry5_yn BUTTON] 
+
+ON=1 
+IF <SRC.parrying> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Parrying!. 
+      SRC.parrying= (<SRC.parrying>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+////+10 parry///// 
+
+[ITEMDEF i_parry10] 
+id=i_deed 
+NAME=+10 Parrying 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=parry 
+
+
+ON=@DCLICK 
+DIALOG=d_parry10_yn 
+
+[DIALOG d_parry10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_parry10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_parry10_yn BUTTON] 
+
+ON=1 
+IF <SRC.parrying> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Parrying!. 
+      SRC.parrying= (<SRC.parrying>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+/////////Updated scrolls///////// 
+
+
+
+///////+5 lockpicking//// 
+
+[ITEMDEF i_lp5] 
+id=i_deed 
+NAME=+5 Lockpicking 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+5 
+DESCRIPTION=Lockpicking 
+
+
+ON=@DCLICK 
+DIALOG=d_lp5_yn 
+
+[DIALOG d_lp5_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_lp5_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_lp5_yn BUTTON] 
+
+ON=1 
+IF <SRC.lockpicking> > 1150 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Lockpicking!. 
+      SRC.lockpicking= (<SRC.lockpicking>+(5.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+
+////+10 parry///// 
+
+[ITEMDEF i_lp10] 
+id=i_deed 
+NAME=+10 Lockpicking 
+TYPE=T_deed 
+Weight=1 
+
+ON=@CREATE 
+COLOR=0481 
+
+CATEGORY=Power Scrolls 
+SUBSECTION=+10 
+DESCRIPTION=Lockpicking 
+
+
+ON=@DCLICK 
+DIALOG=d_lp10_yn 
+
+[DIALOG d_lp10_yn] 
+0, 0 
+PAGE 0 
+resizepic 113 37 2620 400 105 
+text 125 50 95 0 
+text 197 84 1152 1 
+text 358 84 1152 2 
+button 231 85 239 240 1 0 1 
+button 382 85 243 241 1 0 2 
+
+[DIALOG d_lp10_yn TEXT] 
+Do you wisht to use this scroll? 
+Yes 
+No 
+
+
+[DIALOG d_lp10_yn BUTTON] 
+
+ON=1 
+IF <SRC.Lockpicking> > 1100 
+      SRC.MESSAGE @70 You are already to powerful for the effects of this scroll to work! 
+   RETURN 1 
+ELSE 
+      SRC.MESSAGE @90 You feel a surge of magical energy go through your body. 
+      SRC.SYSMESSAGE @90 You feel more skilled in Lockpicking!. 
+      SRC.lockpicking= (<SRC.lockpicking>+(10.0)) 
+                src.effect=3,i_fx_sparkle ,6,15,1 
+      sfx snd_SPELL_GREATER_HEAL 
+remove 
+   ENDIF 
+    
+RETURN 0 
+
+
+ON=2 
+SRC.SYSMESSAGE @54 Menu Closed 
+
+
+[EOF] 
+ 

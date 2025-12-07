@@ -1,0 +1,187 @@
+//-------------------------- /////
+////News System - by ClouD /////
+//--------------------------
+////E-mail: alexbastos@ism.com.br ////
+//--------------------------
+////ICQ: 133411911 ////
+//--------------------------
+////Please, do not take this header out :D plz? ////
+//-------------------------- /////
+
+//Your player just need to type .news, in-game, to open a menu with the last 10 news your staffers has added.
+
+//If you are a gm, be sure that you are with .gm enabled, than type .news and a staff dialog will appear
+//inside you can easily add/edit news :)
+
+//With this script also comesa webpage that gets updated everytime you add/edit a new
+
+//hope you enjoy ;)
+
+[DEFNAME news_page_settings]
+MINPLEVEL 4 ///the minimum plevel needed to edit news, default = 4
+
+[DIALOG news_page]
+310, 30
+
+PAGE 1
+resizepic 50 50 3500 500 400
+CHECKERTRANS 50 50 500 400
+tilepic 250 30 7775
+dtext 260 70 2010 Novidades
+dhtmlgump 75 100 450 290 1 1 <DEF.BFONT_lRED>1-<VAR.NOTICIA1><DEF.BR>2-<VAR.NOTICIA2><DEF.BRE><DEF.BR>3-<VAR.NOTICIA3><DEF.BRE><DEF.BR>4-<VAR.NOTICIA4><DEF.BRE><DEF.BR>5-<VAR.NOTICIA5><DEF.BRE><DEF.BR>6-<VAR.NOTICIA6><DEF.BRE><DEF.BR>7-<VAR.NOTICIA7><DEF.BRE><DEF.BR>8-<VAR.NOTICIA8><DEF.BRE><DEF.BR>9-<VAR.NOTICIA9><DEF.BRE><DEF.BR>10-<VAR.NOTICIA10><DEF.BRE><DEF.BFONTE>
+dtext 180 400 39 Time: <serv.rtime>
+
+PAGE 2
+IF (<ISGM>)
+resizepic 50 50 3500 300 300
+CHECKERTRANS 50 50 300 300
+dtext 130 70 2010 News - Staff Area
+tilepic 150 100 7774
+dtext 105 210 88 Add New
+button 70 210 4005 4006 0 3 1
+dtext 105 250 88 Edit New n:
+dtextentry 205 250 20 25 45 1 1
+button 70 250 4005 4006 1 0 2
+ENDIF
+
+PAGE 3
+resizepic 50 50 3500 300 300
+CHECKERTRANS 50 50 300 300
+dtext 105 70 88 Type the new on the fi-
+dtext 95 90 88 eld below:
+resizepic 70 130 3500 250 110
+dtextentry 85 150 230 65 45 0 X
+button 70 250 4005 4006 1 0 3
+dtext 105 250 88 OK
+button 70 280 4016 4015 0 2 4
+dtext 105 280 88 Back
+
+PAGE 4
+resizepic 50 50 3500 300 300
+CHECKERTRANS 50 50 300 300
+dtext 105 70 88 Type the new news on
+dtext 95 90 88 the field below:
+resizepic 70 130 3500 250 110
+dtextentry 85 150 230 65 45 2 Type here
+button 70 250 4005 4006 1 0 5
+dtext 105 250 88 OK
+button 70 280 4016 4015 0 2 4
+dtext 105 280 88 Voltar
+
+[DIALOG news_page BUTTON]
+ON=2
+IF (<ISEMPTY <VAR.NOTICIA<EVAL <ARGTXT[1]>>>>)
+SYSMESSAGE @07a0 There are no news in this slot
+SDIALOG news_page 2
+ELSE
+TAG.HEHE=<ARGTXT[1]>
+SDIALOG news_page 4
+ENDIF
+
+ON=3
+FOR 10 2
+IF !(<ISEMPTY <VAR.NOTICIA<EVAL <LOCAL._FOR>-1>>>)
+TRY VAR.NOTICIA<EVAL <LOCAL._FOR>>=<VAR.NOTICIA<EVAL <LOCAL._FOR>-1>>
+ENDIF
+ENDFOR
+VAR.NOTICIA1="<RTIME.DAY>/<RTIME.MONTH>/<RTIME.YEAR> : <ARGTXT[0]> - posted by <NAME>"
+SDIALOG news_page 1
+
+ON=5
+TRY VAR.NOTICIA<EVAL <TAG.HEHE>>="<RTIME.DAY>/<RTIME.MONTH>/<RTIME.YEAR> : <ARGTXT[2]> - posted by <NAME>"
+TAG.HEHE
+SDIALOG news_page 1
+
+[PLEVEL 1]
+news
+
+[FUNCTION news]
+IF !(<ISGM>)
+SDIALOG news_page 1
+ELSE
+IF !(<ACCOUNT.PLEVEL> < <DEF.MINPLEVEL>)
+SDIALOG news_page 2
+ELSE
+SYSMESSAGE @07a0 You don't have enough plevel to use this.
+ENDIF
+ENDIF
+
+[FUNCTION rtime.year]
+return <strsub 0 4 <serv.rtime>>
+
+[FUNCTION rtime.month]
+return <strsub 5 2 <serv.rtime>>
+
+[FUNCTION rtime.day]
+return <strsub 8 2 <serv.rtime>>
+
+[defname def_html] // useful with htmlgumps
+BFONT_SIZE1 <basefont SIZE="1">
+BFONT_SIZE2 <basefont SIZE="2">
+BFONT_SIZE3 <basefont SIZE="3">
+BFONT_SIZE4 <basefont SIZE="4">
+BFONT_SIZE5 <basefont SIZE="5">
+BFONT_SIZE7 <basefont SIZE="7">
+BFONT_white <basefont color="#ffffff">
+BFONT_LGRAY <basefont color="#aaaaaa">
+BFONT_GRAY <basefont color="#888888">
+BFONT_DGRAY <basefont color="#444444">
+BFONT_BLACK <basefont color="#000011">
+BFONT_LRED <basefont color="#ff0000">
+BFONT_RED <basefont color="#880000">
+Bfont_DRED <basefont color="#440000">
+BFONT_LGREEN <basefont color="#00ff00">
+BFONT_GREEN <basefont color="#008800">
+BFONT_DGREEN <basefont color="#004400">
+BFONT_LBLUE <basefont color="#0000ff">
+BFONT_BLUE <basefont color="#000088">
+BFONT_DBLUE <basefont color="#000044">
+BFONT_LYELLOW <basefont color="#ffff88">
+BFONT_YELLOW <basefont color="#ffff00">
+BFONT_DYELLOW <basefont color="#888800">
+BFONT_LPURPLE <basefont color="#ff88ff">
+BFONT_PURPLE <basefont color="#ff00ff">
+BFONT_DPURPLE <basefont color="#880088">
+BFONT_LCYAN <basefont color="#88ffff">
+BFONT_CYAN <basefont color="#00ffff">
+BFONT_DCYAN <basefont color="#008888">
+BFONT <BASEFONT
+BFONTE </BASEFONT>
+
+DIV_RIGHT <div align="right">
+DIV_LEFT <div align="left">
+DIV_END </DIV> 
+CENTER <CENTER>
+CENTERE </CENTER>
+BR <BR>
+BRE </BR>
+
+L1 <
+R1 >
+
+B <B>
+BE </B>
+BIG <BIG>
+BIGE </BIG>
+SMALL <SMALL>
+SMALLE </SMALL>
+EM <EM>
+EME </EM>
+U <U>
+UE </U>
+H1 <H1>
+H1E </H1>
+H2 <H2>
+H2E </H2>
+H3 <H3>
+H3E </H3>
+H4 <H4>
+H4E </H4>
+H5 <H5>
+H5E </H5>
+H6 <H6>
+H6E </H6>
+A <a
+AE </a>
+
+[EOF]

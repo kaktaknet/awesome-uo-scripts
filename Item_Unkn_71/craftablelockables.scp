@@ -1,0 +1,426 @@
+////////////////////////////////////////////////////////////////////////
+//Craftable lockables
+//Mordaunt
+//
+//This script contains lockable containers, I know its been done before
+//but the only ones I have seen go via crafting a deed, which I didnt want.  
+This way produces the item itself, and a linked key inside it.
+//
+//To add these to your craftables list, edit your Sphereskill.scp file
+//Adding: ON=<ITEMDEF> <name> (<resmake>)
+//        MAKEITEM=<ITEMDEF>
+//Where <ITEMDEF> is the item you wish to add
+////////////////////////////////////////////////////////////////////////
+
+
+[ITEMDEF i_box_brass_lock]
+ID=09a8
+NAME=brass lock box
+TYPE=T_CONTAINER
+TDATA2=04b
+//TDATA2=043    // no lock?
+FLIP=1
+WEIGHT=5
+DUPELIST=i_box_brass_lock2
+SKILLMAKE=TINKERING 95.0,t_tinker_tools
+RESOURCES=5 i_ingot_iron, 5 i_log
+RESOURCES2=3 i_ingot_iron,1 i_nails,2 i_hinge
+
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Brass Box  (lock)(N)
+
+
+[ITEMDEF i_box_brass_lock2]
+ID=0e80
+
+
+
+[ITEMDEF i_chest_metal_brass_lock]
+ID=0e40
+NAME=brass lock chest
+TYPE=T_CONTAINER
+TDATA2=042
+FLIP=1
+WEIGHT=20
+SKILLMAKE=TINKERING 95.0,t_tinker_tools
+RESOURCES=15 i_ingot_iron, 5 i_ingot_gold, 2 i_log
+RESOURCES2=9 i_INGOT_IRON,2 I_HINGES_BRASS
+DUPELIST=i_chest_metal_brass_lock2
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=METAL BRASS CHEST (lock)(W)
+
+
+[ITEMDEF i_chest_metal_brass_lock2]
+ID=0e41
+
+
+[ITEMDEF i_chest_metal_lock]
+ID=09ab
+NAME=metal lock chest
+TYPE=T_CONTAINER
+TDATA2=04a
+FLIP=1
+WEIGHT=20
+DUPELIST=i_chest_metal_lock2
+SKILLMAKE=TINKERING 95.0,T_TINKER_TOOLS
+RESOURCES=20 i_ingot_iron, 2 i_board
+RESOURCES2=3 i_ingot_iron,1 i_nails,2 i_hinge
+
+
+
+ON=@CREATE
+VALUE=500
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Metal Chest (lock)(N)
+
+
+[ITEMDEF i_chest_metal_lock2]
+ID=0e7c
+
+
+[ITEMDEF i_chest_wooden_brass_lock]
+ID=0e42
+NAME=wooden lock chest
+RESOURCES=20 i_board
+TYPE=T_CONTAINER
+TDATA2=049
+FLIP=1
+WEIGHT=10
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Wood/Brass Chest (lock)(W)
+SKILLMAKE=CARPENTRY 73.6, t_carpentry
+DUPELIST=i_chest_wooden_brass_lock2
+RESOURCES2=15 i_board
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Wood/Brass Chest (lock)(W)
+
+
+[ITEMDEF i_chest_wooden_brass_lock2]
+ID=0e43
+
+
+[ITEMDEF i_armoir_dk_lock]
+ID=0a4c
+//dark wood armoire standing open facing SW
+NAME=loackable armoire
+RESOURCES=35 i_log
+TYPE=T_CONTAINER
+TDATA2=04e
+FLIP=1
+WEIGHT=25
+DUPELIST=i_armoir_dk_lock2,i_armoir_dk_lock3,i_armoir_dk_lock4
+RESOURCES2=20 i_board,6 i_nails,4 i_hinge
+SKILLMAKE=CARPENTRY 84.2, t_carpentry
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Decoration - Furniture
+SUBSECTION=Bedroom Furniture
+DESCRIPTION=Armoire (lock)(Dark Wood)
+
+
+[ITEMDEF i_armoir_dk_lock2]
+ID=0a4d
+
+
+[ITEMDEF i_armoir_dk_lock3]
+ID=0a50
+
+
+[ITEMDEF i_armoir_dk_lock4]
+ID=0a51
+
+
+[ITEMDEF i_armoir_lt_lock]
+ID=0a4e
+//armoire standing open light wood facing SW
+NAME=lockable armoire
+TYPE=T_CONTAINER
+TDATA2=04f
+FLIP=1
+SKILLMAKE=CARPENTRY 84.2, t_carpentry
+RESOURCES=35 i_log
+RESOURCES2=20 i_board,6 i_nails,4 i_hinge
+WEIGHT=9
+DUPELIST=i_armoir_lt_lock2,i_armoir_lt_lock3,i_armoir_lt_lock4
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Decoration - Furniture
+SUBSECTION=Bedroom Furniture
+DESCRIPTION=Armoire (lock)(Light Wood)
+
+
+[ITEMDEF i_armoir_lt_lock2]
+ID=0a4f
+
+
+[ITEMDEF i_armoir_lt_lock3]
+ID=0a52
+
+
+[ITEMDEF i_armoir_lt_lock4]
+ID=0a53
+
+
+[ITEMDEF i_bureau_2_lock]
+ID=0a30
+NAME=Drawers
+TYPE=T_CONTAINER
+TDATA2=048
+FLIP=1
+WEIGHT=20
+DUPELIST=i_bureau_2_lock2
+
+
+SKILLMAKE=CARPENTRY 85.0, t_carpentry
+RESOURCES=25 i_log
+RESOURCES2=5 i_board,10 i_nails,3 i_DRAWER
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Decoration - Furniture
+SUBSECTION=Bedroom Furniture
+DESCRIPTION=Chest of Drawers (lock)(Dark Wood) (SW)
+
+
+[ITEMDEF i_bureau_2_lock2]
+ID=0a38
+
+
+[ITEMDEF i_bureau_lock]
+ID=0a2c
+NAME=lockable drawers
+RESOURCES=5 I_BOARD, 10 I_NAILS, 3 I_DRAWER
+TYPE=T_CONTAINER
+TDATA2=051
+FLIP=1
+VALUE={150 180}
+WEIGHT=20
+DUPELIST=i_bureau_lock2
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Decoration - Furniture
+SUBSECTION=Bedroom Furniture
+DESCRIPTION=Chest of Drawers (lock)(Light Wood)(SW)
+
+
+[ITEMDEF i_bureau_lock2]
+ID=0a34
+
+
+[ITEMDEF i_dresser_lock]
+ID=0a3c
+NAME=lockable dresser
+RESOURCES=8 I_BOARD, 20 I_NAILS, 6 I_DRESSER_DRAWER, 1 i_ingot_silver, 5 I_SAND
+TYPE=T_CONTAINER
+TDATA2=051
+FLIP=1
+WEIGHT=30
+DUPELIST=i_dresser_lock2,i_dresser_lock3,i_dresser_lock4
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Decoration - Furniture
+SUBSECTION=Bedroom Furniture
+DESCRIPTION=Dresser (lock)(Vanity)
+
+
+[ITEMDEF i_dresser_lock2]
+ID=0a3d
+
+
+[ITEMDEF i_dresser_lock3]
+ID=0a44
+
+
+[ITEMDEF i_dresser_lock4]
+ID=0a45
+
+
+[ITEMDEF i_box_wood_lock]
+ID=09aa
+NAME=wooden lock box
+RESOURCES=10 i_board
+TYPE=T_CONTAINER
+TDATA2=040
+FLIP=1
+WEIGHT=4
+SKILLMAKE=CARPENTRY 21.0, t_carpentry
+DUPELIST=i_box_wood_lock2
+RESOURCES2=9 i_board
+
+
+ON=@CREATE
+more2=0
+
+
+ON=@DCLICK
+IF <eval <More2>><1
+src.newitem=i_key_copper
+src.act.cont=<uid>
+src.act.more1=<uid>
+src.act.cont.more1=<uid>
+MORE2=<more2>+1
+ELSE
+OPEN
+ENDIF
+
+
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Wooden Box (lock)(W)
+
+
+[ITEMDEF i_box_wood_lock2]
+ID=0e7d

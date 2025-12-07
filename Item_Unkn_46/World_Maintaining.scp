@@ -1,0 +1,445 @@
+//Removes Targetted Item from World, MOREX = password
+//Admin Vertigo of The Darkside Shard www.tdsshard.com
+
+[ITEMDEF i_stone_cleanup]
+NAME=Stone of Item Cleanup by Vertigo
+ID=i_virtstone_7
+TYPE=t_script
+WEIGHT=5
+
+CATEGORY=Staff Only Use
+SUBSECTION=GM Items
+DESCRIPTION=Stone of Item Cleanup by Vertigo
+
+ON=@CREATE
+COLOR=0815
+MORE2=0
+//MORE2 = counter
+MOREX=0
+VAR.ITEMTODELETE=0
+
+ON=@DCLICK
+LINK=0
+IF <MOREX>==01011
+TARGET
+ENDIF
+
+ON=@TARGON_ITEM
+VAR.ITEMTODELETE=<SRC.TARG.BASEID>
+//more1 is timer counter in 03ff/1023 increments
+//more2 is current counter/link value
+MORE1=040000000
+MORE2=040000000
+TIMER=1
+
+ON=@TIMER
+MORE1=<MORE1>+03ff
+TRYP 0 UID.<UID>.SAY <MORE1>
+
+IF <MORE1> >=04fffffff
+TIMER=-1
+ELSE
+f_delete_item
+TIMER=1
+RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION F_DELETE_ITEM]
+LINK=<MORE2>
+IF (<LINK.BASEID>==<VAR.ITEMTODELETE>)
+TRYP 0 UID.<UID>.SAY D: <LINK.NAME>
+LINK.REMOVE
+ENDIF
+IF <MORE2><<MORE1>
+MORE2=<EVAL(<MORE2>+1)>
+F_DELETE_ITEM
+ENDIF
+RETURN 0
+
+//Replace's Targetted Item with <MOREY> amount of gold. will have problems with large qtys. <MOREX> password
+
+[ITEMDEF i_stone_replace]
+NAME=Stone of Item Replace by Vertigo
+ID=i_virtstone_7
+TYPE=t_script
+WEIGHT=5
+
+CATEGORY=Staff Only Use
+SUBSECTION=GM Items
+DESCRIPTION=Stone of Item Replace by Vertigo
+
+ON=@CREATE
+COLOR=0815
+MORE2=0
+//MORE2 = counter
+MOREX=0
+MOREY=1
+VAR.ITEMTOREPLACE=0
+
+ON=@DCLICK
+SRC.MESSAGE SET MOREY to amount of gold to replace with
+VAR.MYUID=<SRC.UID>
+LINK=0
+IF <MOREX>==01011
+TARGET
+ENDIF
+
+ON=@TARGON_ITEM
+VAR.ITEMTOREPLACE=<SRC.TARG.BASEID>
+//more1 is timer counter in 03ff/1023 increments
+//more2 is current counter/link value
+MORE1=040000000
+MORE2=040000000
+TIMER=1
+
+ON=@TIMER
+MORE1=<MORE1>+03ff
+TRYP 0 UID.<UID>.SAY <MORE1>
+
+IF <MORE1> >=04fffffff
+TIMER=-1
+ELSE
+f_REPLACE_item
+TIMER=1
+RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION F_REPLACE_ITEM]
+LINK=<MORE2>
+IF (<LINK.BASEID>==<VAR.ITEMTOREPLACE>)
+TRYP 0 UID.<UID>.SAY R: <LINK.NAME>
+TRYP 0 UID.<VAR.MYUID>.NEWITEM i_gold
+TRYP 0 UID.<VAR.MYUID>.ACT.AMOUNT=<LINK.AMOUNT>*<MOREY>
+TRYP 0 UID.<VAR.MYUID>.ACT.P=<LINK.P>
+IF <LINK.CONT.UID>>0
+TRYP 0 UID.<VAR.MYUID>.ACT.CONT=<LINK.CONT.UID>
+ENDIF
+LINK.REMOVE
+ENDIF
+IF <MORE2><<MORE1>
+MORE2=<EVAL(<MORE2>+1)>
+F_REPLACE_ITEM
+ENDIF
+RETURN 0
+
+
+//Prints out the UID for bad color items that can crash clients. <MOREX> password
+
+[ITEMDEF i_stone_ColorFix]
+NAME=Stone of Item Color Fix by Vertigo
+ID=i_virtstone_7
+TYPE=t_script
+WEIGHT=5
+
+CATEGORY=Staff Only Use
+SUBSECTION=GM Items
+DESCRIPTION=Stone of Item Color Fix by Vertigo
+
+ON=@CREATE
+COLOR=0815
+MORE2=0
+//MORE2 = counter
+MOREX=0
+VAR.ITEMTORECOLOR=0
+
+ON=@DCLICK
+LINK=0
+IF <MOREX>==01011
+TARGET
+ENDIF
+
+ON=@TARGON_ITEM
+VAR.ITEMTORECOLOR=<SRC.TARG.BASEID>
+VAR.TEMP=0
+//more1 is timer counter in 03ff/1023 increments
+//more2 is current counter/link value
+MORE1=040000000
+MORE2=040000000
+TIMER=1
+
+ON=@TIMER
+MORE1=<MORE1>+03ff
+TRYP 0 UID.<UID>.SAY <MORE1>
+
+IF <MORE1> >=04fffffff
+TIMER=-1
+ELSE
+f_RECOLOR_item
+TIMER=1
+RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION F_RECOLOR_ITEM]
+LINK=<MORE2>
+IF (<LINK.COLOR>>0bb7)&&(<LINK.COLOR><083ea)
+TRYP 0 UID.<UID>.SAY C: <LINK.NAME> <LINK.COLOR> <LINK.UID>
+ENDIF
+IF <MORE2><<MORE1>
+MORE2=<EVAL(<MORE2>+1)>
+F_RECOLOR_ITEM
+ENDIF
+RETURN 0
+
+
+//Locate Homeless Spawns and bring them to you.
+
+[ITEMDEF i_stone_badspawn]
+NAME=Stone of Search Bad Spawn by Vertigo
+ID=i_virtstone_7
+TYPE=t_crystal_ball
+WEIGHT=5
+
+CATEGORY=Staff Only Use
+SUBSECTION=GM Items
+DESCRIPTION=Stone of Search Bad Spawn by Vertigo
+
+ON=@CREATE
+COLOR=0815
+MORE2=0
+//MORE2 = counter
+MOREX=0
+VAR.badspawngem=0
+
+ON=@DCLICK
+LINK=0
+IF <MOREX>==01011
+MORE1=040000000
+MORE2=040000000
+TARGET
+ENDIF
+
+ON=@TARGON_ITEM
+VAR.badspawngem=<SRC.TARG.MORE1>
+VAR.TEMP=0
+//more1 is timer counter in 03ff/1023 increments
+//more2 is current counter/link value
+TIMER=1
+
+
+ON=@TIMER
+MORE1=<MORE1>+03ff
+TRYP 0 UID.<UID>.SAY <MORE1>
+IF <MORE1> >=04fffffff
+TIMER=-1
+ELSE
+f_FINDBADSPAWN
+TIMER=1
+RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION F_FINDBADSPAWN]
+LINK=<MORE2>
+IF (<LINK.TYPE>==t_spawn_char)
+IF (<LINK.MORE1>==<VAR.badspawngem>)
+LINK.P = <P>
+TRYP 0 UID.<UID>.SAY C: <LINK.NAME>
+LINK.UPDATE
+ENDIF
+ENDIF
+IF <MORE2><<MORE1>
+MORE2=<EVAL(<MORE2>+1)>
+F_FINDBADSPAWN
+ENDIF
+RETURN 0
+
+
+
+//Ever hate global animal spawns being exploited for transfering across facets?, current configured to shunt to mapplane 1
+[ITEMDEF i_stone_wrongplanespawn]
+NAME=Stone of Shunt Mapplane 255 spawns by Vertigo
+ID=i_virtstone_7
+TYPE=t_crystal_ball
+WEIGHT=5
+
+CATEGORY=Staff Only Use
+SUBSECTION=GM Items
+DESCRIPTION=Stone of Shunt Mapplane 255 spawns by Vertigo
+
+ON=@CREATE
+COLOR=0818
+MORE2=0
+//MORE2 = counter
+MOREX=0
+VAR.badspawngem=0
+
+ON=@DCLICK
+LINK=0
+IF <MOREX>==01011
+MORE1=040000000
+MORE2=040000000
+TARGET
+ENDIF
+
+ON=@TARGON_ITEM
+VAR.BADMAPPLANE=<SRC.TARG.MAPPLANE>
+VAR.TEMP=0
+//more1 is timer counter in 03ff/1023 increments
+//more2 is current counter/link value
+TIMER=1
+
+
+ON=@TIMER
+MORE1=<MORE1>+03ff
+TRYP 0 UID.<UID>.SAY <MORE1>
+IF <MORE1> >=04fffffff
+TIMER=-1
+ELSE
+f_FINDWRONGPLANESPAWN
+TIMER=1
+RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION F_FINDWRONGPLANESPAWN]
+LINK=<MORE2>
+IF (<LINK.TYPE>==t_spawn_char)
+IF (<LINK.MAPPLANE>==<VAR.BADMAPPLANE>)
+LINK.MAPPLANE = 1
+TRYP 0 UID.<UID>.SAY R: <LINK.NAME>
+LINK.UPDATE
+ENDIF
+ENDIF
+
+IF <MORE2><<MORE1>
+MORE2=<EVAL(<MORE2>+1)>
+F_FINDWRONGPLANESPAWN
+ENDIF
+RETURN 0
+
+
+[ITEMDEF i_stone_homeless]
+NAME=Stone of Find Homeless by Vertigo
+ID=i_virtstone_7
+TYPE=t_crystal_ball
+WEIGHT=5
+
+CATEGORY=Staff Only Use
+SUBSECTION=GM Items
+DESCRIPTION=Stone of Find Homeless by Vertigo
+
+ON=@CREATE
+COLOR=0818
+MORE2=0
+//MORE2 = counter
+MOREX=0
+VAR.badspawngem=0
+
+ON=@DCLICK
+LINK=0
+MORE1=0
+MORE2=0
+TARGET
+
+ON=@TARGON_ITEM
+VAR.TEMP=0
+//more1 is timer counter in 03ff/1023 increments
+//more2 is current counter/link value
+TIMER=1
+
+
+ON=@TIMER
+MORE1=<MORE1>+03ff
+TRYP 0 UID.<UID>.SAY <MORE1>
+IF <MORE1> >=04fffffff
+TIMER=-1
+ELSE
+f_FINDhomeless
+TIMER=1
+RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION F_FINDhomeless]
+LINK=<MORE2>
+IF (0<LINK.NPC>>0)
+//TRYP 0 UID.<UID>.SAY <LINK.NAME> <LINK.HOME> 1
+//IF <LINK.HOMEDIST>==32767
+IF !(<LINK.FLAGS>&010000000)
+IF !(<LINK.FLAGS>&08000000)
+LINK.P = <P>
+LINK.UPDATE
+//TRYP 0 UID.<UID>.SAY <LINK.NAME> <LINK.HOME> <LINK.FLAGS> 2
+ENDIF
+ENDIF
+ENDIF
+
+
+IF <MORE2><<MORE1>
+MORE2=<EVAL(<MORE2>+1)>
+F_FINDhomeless
+ENDIF
+RETURN 0
+
+
+
+//Re adjust Spawn Amounts, ever had weirdo gm's spawning 100 spawn amounts??
+
+[ITEMDEF i_stone_spawncount]
+NAME=Stone of Set Spawn Count by Vertigo
+ID=i_virtstone_7
+TYPE=t_crystal_ball
+WEIGHT=5
+
+CATEGORY=Staff Only Use
+SUBSECTION=GM Items
+DESCRIPTION=Stone of Set Spawn Count by Vertigo
+
+ON=@CREATE
+COLOR=0818
+MORE2=0
+//MORE2 = counter
+MOREX=0
+VAR.badspawngem=0
+
+ON=@DCLICK
+LINK=0
+IF <MOREX>==01011
+MORE1=040000000
+MORE2=040000000
+TARGET
+ENDIF
+
+ON=@TARGON_ITEM
+VAR.TEMP=0
+//more1 is timer counter in 03ff/1023 increments
+//more2 is current counter/link value
+TIMER=1
+
+
+ON=@TIMER
+MORE1=<MORE1>+03ff
+TRYP 0 UID.<UID>.SAY <MORE1>
+
+IF <MORE1> >=04fffffff
+TIMER=-1
+ELSE
+f_FINDspawncount
+TIMER=1
+RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION F_FINDspawncount]
+LINK=<MORE2>
+IF (<LINK.TYPE>==t_spawn_char)
+IF (<LINK.AMOUNT>>5)
+LINK.AMOUNT = 5
+TRYP 0 UID.<UID>.SAY R: <LINK.NAME>
+LINK.UPDATE
+ENDIF
+ENDIF
+
+
+IF <MORE2><<MORE1>
+MORE2=<EVAL(<MORE2>+1)>
+F_FINDspawncount
+ENDIF
+RETURN 0
+
+
+
+[EOF]

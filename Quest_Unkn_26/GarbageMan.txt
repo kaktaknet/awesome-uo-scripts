@@ -1,0 +1,64 @@
+//===============================================//
+// Garbage Man   				 //
+// By Admin Falcon			         //
+// Please dont remove this header.		 //
+//						 //
+//===============================================//
+
+//put this at the bottom of spherechar_humans.scp
+[CHARDEF C_H_DPW]
+// DPW
+NAME=DPW Worker
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+TEVENTS=e_trashman
+
+CATEGORY=Civilized
+SUBSECTION=Shard Chars
+DESCRIPTION=DPW Worker
+
+ON=@Create
+COLOR=colors_skin
+STR={386 310}
+DEX={81 95}
+INT={61 75}
+
+WRESTLING={70.0 95.0}
+TACTICS={50.0 95.0}
+
+NPC=brain_human
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+ITEMNEWBIE=i_shirt_plain
+COLOR=00030
+ITEMNEWBIE=i_pants_short
+COLOR=00030
+ITEMNEWBIE=i_cap
+COLOR=00030
+ITEMNEWBIE=i_boots_calf
+COLOR=colors_neutral
+
+//put this in the sphereevents.scp
+
+[events e_trashman]
+on=@itemstep
+If (<act.attr>&04)||(<act.attr>&010) //check for static/non movable items
+act.remove
+endif

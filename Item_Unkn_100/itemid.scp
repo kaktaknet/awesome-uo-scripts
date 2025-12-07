@@ -1,0 +1,112 @@
+//=======Item Identification System by Marox(Commented version)================
+//======You may : Use this script on your shard, edit it as you wish, cut pieces out of it, just dont copy the whole thing or something, give me the credit if you do something to this file however.
+//=============================================================================
+//======Contact : marox_gm@hotmail.com=========================================
+[PLEVEL 1] //we put this so players can use it, not just gms
+iditem
+
+[FUNCTION iditem] //this is the actual function definition
+SRC.NEWITEM=i_ids_mems
+SRC.ACT.EQUIP
+
+[ITEMDEF i_ids_mems] //this is the invisible item which holds the code
+ID=i_memory
+TYPE=t_eq_script
+NAME=itemid memory object
+
+ON=@EQUIP //the target for identifying is triggered when you equip it (auto)
+TARGET What do you wish to identify?
+
+
+ON=@TARGON_CHAR //..cant id chars
+SRC.SYSMESSAGE You cannot identify characters.
+RETURN 1
+REMOVE
+
+ON=@TARGON_ITEM //clicked on item..
+SRC.VAR.IDSID=<SRC.TARG.BASEID> //this is the item ID set into a temp variable
+IF (<SRC.TARG.TAG.IDSESTU> == 0) || !(<SRC.FINDLAYER(21).FINDID(<SRC.VAR.IDSID>)>) //the item doesnt have a id tag(already id'ed or not set)? the item isn't in the persons backpack?
+SRC.SYSMESSAGE There is nothing to identify on that item. Or the item is not in your backpack.
+SRC.VAR.IDSID=0 //remove var
+RETURN 1
+ELSEIF (<SRC.ITEMID> >= <SRC.TARG.TAG.IDSESKILL>) //if the if is false, then do this : check requested id skill and persons id skill
+SRC.VAR.IDSNME=<SRC.TARG.ID>
+SRC.VAR.IDSEPROMPT=<SRC.TARG.TAG.IDSESTU> //identified item tag information(the item ID when we id it)
+SRC.TARG.REMOVE //we remove the item we id'ed and give him the real (look below)
+SRC.NEWITEM=<SRC.VAR.IDSEPROMPT> //we give him the real,identified item
+SRC.ACT.BOUNCE //make it bounce in his pack
+SRC.SYSMESSAGE You successfully identify the item.
+SRC.VAR.IDSEPROMPT=0 //we remove the not needed variables
+SRC.VAR.IDSID=0
+Return 1
+REMOVE //we remove the invisible thingy (code)
+ELSE //if none of the if statements are true then the person must have too low skill
+SRC.VAR.IDSID=0 //removal of variable
+SRC.SYSMESSAGE You are not skilled enough to identify that item!
+ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND //the grass looks magical. eck, we can't id ground dammit!
+SRC.SYSMESSAGE You cannot identify ground.
+Return 1
+REMOVE
+
+[ITEMDEF i_sword_example] //example item (do your items on this template)
+DEFNAME=i_sword_example
+ID=i_sword_viking
+NAME=sword
+type=t_script
+
+ON=@CREATE //this sword is the unidentified version (can't equip - keep everything same except the color, name and ID-picture for your item)
+TAG.IDSESTU=i_sword_example_id //change the "i_sword_example_id" to the real item id (example : i_fire_sword_identified) this is the identified version of the item!!
+TAG.IDSESKILL=400 //skill needed to identify the item (change this to fit your needs)
+COLOR 3 //maybe you want them to think the sword IS something special, so they know what to id? change to anything or remove
+
+[ITEMDEF i_sword_example_id] //replace this item with the actual, IDENTIFIED item you wish. (example : if i'd make a i_sword_fire as the non-identified version, i'd make i_sword_fire_id as the identified, true version
+DEFNAME=i_sword_example_id
+ID=i_sword_viking
+NAME=Example Identified Sword!
+type=t_weapon_sword
+
+ON=@CREATE
+COLOR 3
+
+ON=@EQUIP
+SRC.SAY Iam wielding the final product! //put anything here, this item can be whatever you want, everything can be changed
+
+
+
+
+
+[ITEMDEF i_axe_frost] //example item number2 - unidentified
+DEFNAME=i_axe_frost
+NAME=weird looking axe
+ID=i_axe_battle
+TYPE=t_script
+
+ON=@CREATE
+TAG.IDSESTU=i_axe_frost_id
+TAG.IDSESKILL=750
+COLOR=9591
+
+
+[ITEMDEF i_axe_frost_id] //example item number2 - identified
+DEFNAME=i_axe_frost_id
+NAME=Frost Axe
+ID=i_axe_battle
+WEIGHT=3
+TYPE=T_WEAPON_AXE
+FLIP=1
+DAM=50
+SPEED=5
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+ON=@Create
+HITPOINTS=100
+COLOR=9591
+
+ON=@DAMAGE
+SRC.HITS = <SRC.HITS> + -20
+SRC.SAY *<SRC.NAME> is hit by a freezing blow!*

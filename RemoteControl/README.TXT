@@ -1,0 +1,4 @@
+This program is meant to give absolute control over a remote computer. In fact, through the graphical user interface, it is possible to remotely control both the mouse and the keyboard while seeing what you are actually doing on the remote computer.  It isn't friendly-user at all so you will need to read the readmes for both the client and the server in order to use it in a secure way.  First of all, you need the Java Runtime Environment in order to execute these programs: http://java.sun.com/j2se/1.4.2/download.html
+Afterwards, if double clicking the jar file doesn't execute the program but rather opens it in Winrar or Winace, you will need to edit the file associations to make sure that no program associate jar files other than Java.  If you need further help, questions/bugs/suggestions can be addressed through Script Sharing's forums at www.scriptsharing.org
+
+-Amlaruil

@@ -1,0 +1,787 @@
+// Tourney is started and players join via .arena command, all player items auto banked, including shrinking any mounts they 
+
+// may have, aswell as fame karma and kills recorded to be auto restored when they leave. They are auto given tourney armor
+// and weapons. The tourney is run and the winner gets a win on the status page showing he/she won (To do this get the player 
+
+// to walk on a winner pad issued from the tourney book). When players leave, all tourney items removed, and fame karma and 
+
+// kills are auto restored.
+
+//requirements
+
+// Follow instructions provided
+// To update status page requires Maul custom status page
+
+// Version by date 30/4/03
+// Fixed or added in this version
+
+// Fixed bug to stop players stealing tourney items
+// Added a map menu for when players leave so they can choose where they want to exit to.
+// Added a winners pad for use in updating winner details on the status page
+// Added new button to event book to simplify adding pot pags and bandies for players
+// Added event on players to prevent use of some spells, like summon creature and so on.
+
+/////////////////////////////////////////////////////////////////////////////////
+//// Banner
+//// Tounrey System by Maul
+////
+//// Modify this script if you wish but please do not remove this banner.
+////////////////////////////////////////////////////////////////////////////////////////////
+//// Note: This isnt all my work, i have borrowed some code from others.
+//////////////////////////////////////////////////////////////////////////////////////////
+////
+//// DESCRIPTION: This touney system was designed to make running a tourney simple.
+//// To start with who ever is given the job of running Tourneys needs to be issued with a
+//// Tourney Book, this will give them the control to run a tourneys. This item can be given
+//// to any player no matter what priv level they have. The person who has the tourney book 
+//// simple needs to d click it and use the menu, eg click "start Tourney" will start the
+//// tourney and will send him/her to the arena area. He/Her will be given a tele 
+//// crook to move the players around with and to be able to res them. Also a sysetm
+//// message will inform all players that a tounrey has been started, and informs them
+//// on how to join in. Players simply need to type ".arena". This will bank all items
+//// on the player including the mount(Shrinks it first) (note this does not include the spell 
+//// book which is kept by the player), and then takes them to the tourney arena.
+//// Each player's stats and fame, karma, kills are recorded to be reset back to
+//// the player when they leave the tourney. Then the players stats are recorded so they
+//// can be put back aswell and then they are changed to 100 STR, 100 DEX, 100 INT. Each
+//// player is give a full set of plate armor aswell as a viking sword and some other weapons.
+//// Also included is some potions and bandies, regs. When the person who is running the
+//// tourney feels that there is enough players to run the touney all he/she needs to do
+//// to stop more from comming is use the book eg "Close enries to Tourney". This will 
+//// stop the players from being able to use the ".arena" command to come to the tourney
+//// arena. And then its time to have fun. Each player can leave the tourney at any time
+//// by typing ".exitarena" This will remove all items not including there spellbook and
+//// return them to a safe place Blue = Brit and Red = Bucs (they will be naked), each 
+//// stat, eg STR, INT, DEX will be returned to what they were before the touney. Then they
+//// can get there items from the box that will be in there bank with everything they had
+//// before the tourney.
+////
+//////////////////////////////////////////////////////////////////////////////////////////
+////
+//// Commands
+//// Player
+//// .arena = will take players to the arena for a tourney (banks player items)
+////
+//// .arenaexit = will take players back to towns (red or blue)
+////
+//////////////////////////////////////////////////////////////////////////////////////////
+////
+//// Warning: Do not have any other way for the players to be able to gain access to
+//// the arena, eg tele pads or a stone that lets them come to the arena. This is to
+//// stop players from being able to bring other items to the tourney, otherwise u 
+//// will end up with players using power weapons against players who dont have them
+//// and thus unbalance the system. If you already have a tourney area that already 
+//// has pads or any other way for the players to gain access then i would suggest 
+//// making another tourney arena in a diff location that u know they would not 
+//// otherwise be able to get to, and use it for this system.
+////
+///////////////////////////////////////////////////////////////////////////////////////////
+////
+//// Installation, modify the arena go locations to your arena area, i suggest putting
+//// the one for the players in an arena waiting area and the one for the person running
+//// the tourney in the arena iteslf. You may wish to modify the items i have chosen to give the players.
+//// First open your spheremenu.scp and search for MENU MENU_PAGEGM_4, when found comment
+//// these lines out to prevent players from using the helpdesk to leave the tourney
+//// with the tourney items. I have included a replacement for these in this script that will
+//// check to see if the player is in a tourney before it will let them go to the Help Desk.
+////
+//// Comment this out in your spheremenu.scp file like this, note // before each line
+// [MENU MENU_PAGEGM_4]
+// Are you sure you want to be teleported to the Depths of Development? You will be stuck there until a GM teleports you back 
+
+to the world.
+// ON=0 YES, down we go!
+// //GOPLACE a_helpdesk
+// src.newitem i_teleport_delay
+// src.act.equip
+//
+// ON=0 NO, I'd rather stay here.
+// SYSMESSAGE Help request aborted.
+////
+////
+//// Lastly drop this file into your scripts folder and 
+//// resync the shard.
+
+//////////////////////////////////////////////////////////////////////////////////////////
+////////// Now the script starts //////////////////////////////////////////////////////
+//[MENU MENU_PAGEGM_4]
+//Are you sure you want to be teleported to the Depths of Development? You will be stuck there until a GM teleports you back 
+
+//to the world.
+//ON=0 YES, down we go!
+//IF !<SRC.RESTEST i_mem_tourney_stat_storage> 
+// src.newitem i_teleport_delay
+// src.act.equip
+//else
+// sysmessage You are involved in an event right now, use the event exit command to leave.
+// return 1
+//endif
+//
+//ON=0 NO, I'd rather stay here.
+//SYSMESSAGE Help request aborted.
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_tourney_crook] 
+NAME=Tourney Crook 
+ID=i_shepherds_crook 
+WEIGHT=5 
+
+ON=@CREATE 
+COLOR=021// {007a5} 
+HITPOINTS={5 10} 
+ATTR=attr_newbie|attr_move_never|attr_magic 
+
+CATEGORY=Maul 
+SUBSECTION=Tourney
+DESCRIPTION=Tourney Staff 
+
+ON=@DCLICK 
+TARGET Select the player you would like to move or res. 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+if ((<src.TARG.id>==c_ghost_man) || (<src.TARG.id>==c_ghost_woman)) 
+SRC.TARG.RESURRECT
+src.targ.HITS = <SRC.targ.STR> 
+sound=snd_SPELL_RESURRECTION 
+RETURN 1
+endif
+
+LINK=<SRC.TARG.UID> 
+TARGETG Where would you like to move <SRC.TARG.NAME>? 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+LINK.GO <SRC.TARGP> 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+LINK.GO <SRC.TARGP> 
+RETURN 1 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_mem_tourney_stat_storage] 
+ID=i_gem_diamond 
+TYPE=t_script 
+NAME=Tourney stat storage 
+CATEGORY=Maul
+SUBSECTION=Tourney
+DESCRIPTION=Tourney stat storage
+
+on=@create 
+ATTR=04090 //Invis, don't move, decay. 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+[Function tourneyon] // only usable by an assigned player
+var.Tourney=1
+
+SERV.B A TOURNEY HAS JUST BEEN STARTED, TYPE .arena TO JOIN.
+SERV.B A TOURNEY HAS JUST BEEN STARTED, TYPE .arena TO JOIN.
+
+src.go=5360,285,15
+SRC.FINDLAYER(layer_hand1).BOUNCE 
+SRC.NEWITEM=i_tourney_crook 
+SRC.ACT.equip 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+[Function tourneyoff] // only usable by an assigned player
+var.Tourney=2
+
+SERV.B ENTRIES TO THE TOURNEY ARE NOW CLOSED.
+SERV.B ENTRIES TO THE TOURNEY ARE NOW CLOSED.
+
+///////////////////////////////////////////////////////////////////////////////////////////
+[Function tourneyexit] // only usable by assigned player with book
+src.go=1425,1697
+SRC.CONSUME=i_tourney_crook
+return 1
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[plevel 1] 
+arena 
+
+[function arena] 
+//if <scr.region>=jail 10 // |jail1|jail2|jail3|jail4|jail5|jail6|jail7|jail8|j
+ail9
+//if <scr.jail>=1
+// Scr.sysmessage You are in jail and can not join the tourney.
+
+if <var.Tourney>=2
+SRC.SYSMESSAGE There is no Tourney on at this time.
+return 1
+elseif <var.Tourney>=
+SRC.SYSMESSAGE There is no Tourney on at this time.
+return 1
+elseif <SRC.RESTEST i_mem_tourney_stat_storage> 
+sysmessage You are already in a event.
+return 1
+else
+
+SRC.EVENTS e_tourney
+SRC.findlayer.21.updatex 
+SRC.FINDLAYER(layer_hand1).BOUNCE 
+SRC.FINDLAYER(layer_hand2).BOUNCE 
+SRC.FINDLAYER(layer_shoes).BOUNCE 
+SRC.FINDLAYER(layer_pants).BOUNCE 
+SRC.FINDLAYER(layer_shirt).BOUNCE 
+SRC.FINDLAYER(layer_helm).BOUNCE 
+SRC.FINDLAYER(layer_gloves).BOUNCE 
+SRC.FINDLAYER(layer_ring).BOUNCE 
+SRC.FINDLAYER(layer_collar).BOUNCE 
+SRC.FINDLAYER(layer_half_apron).BOUNCE 
+SRC.FINDLAYER(layer_chest).BOUNCE 
+SRC.FINDLAYER(layer_wrist).BOUNCE 
+SRC.FINDLAYER(layer_tunic).BOUNCE 
+SRC.FINDLAYER(layer_ears).BOUNCE 
+SRC.FINDLAYER(layer_arms).BOUNCE 
+SRC.FINDLAYER(layer_cape).BOUNCE 
+SRC.FINDLAYER(layer_robe).BOUNCE 
+SRC.FINDLAYER(layer_skirt).BOUNCE 
+SRC.FINDLAYER(layer_legs).BOUNCE 
+SRC.FINDTYPE.T_SPELLBOOK.EQUIP 
+SRC.DISMOUNT
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+if (<SRC.findlayer.21.findcont> = 1 ) /// Bank items in pack
+updatex 
+var.getbankuid=<findlayer.29.uid> ///gets used in bank items function
+f_getbags 
+findlayer.21.f_misccheck
+f_bags_to_bank
+src.go 5358,280,15
+else /// and just go here if they dont
+src.go 5358,280,15
+endif 
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+SRC.NEWITEM=i_mem_tourney_stat_storage
+SRC.ACT.BOUNCE
+SRC.FINDTYPE.T_SPELLBOOK.UNEQUIP
+
+src.tag.famepits=<src.fame>
+src.tag.karmapits=<src.karma>
+src.tag.murderpits=<src.kills>
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+SRC.NEWITEM=tm_event_regs 
+SRC.ACT.BOUNCE
+SRC.NEWITEM=tm_event_pots 
+SRC.ACT.BOUNCE
+SRC.NEWITEM=i_bandage,100
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_arrow,200
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_bow
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_kryss
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_axe_war
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_axe_battle
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_katana
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_dagger
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_war_fork
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_mace
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_halberd
+SRC.ACT.BOUNCE
+src.act.color=021
+SRC.NEWITEM=i_platemail_helm
+SRC.ACT.EQUIP
+src.act.color=021
+SRC.NEWITEM=i_platemail_arms
+SRC.ACT.EQUIP
+src.act.color=021
+SRC.NEWITEM=i_platemail_leggings
+SRC.ACT.EQUIP
+src.act.color=021
+SRC.NEWITEM=i_platemail_chest
+SRC.ACT.EQUIP
+src.act.color=021
+SRC.NEWITEM=i_platemail_gorget
+SRC.ACT.EQUIP
+src.act.color=021
+SRC.NEWITEM=i_platemail_gloves
+SRC.ACT.EQUIP
+src.act.color=021
+SRC.NEWITEM=i_shield_heater
+SRC.ACT.EQUIP
+src.act.color=021
+SRC.NEWITEM=i_sword_viking
+SRC.ACT.EQUIP
+src.act.color=021
+
+/////////////////////////////////////////////////////////////////////////////////
+
+[function f_getbags] 
+src.newitem=i_crate_lg
+src.act.bounce 
+src.act.drop
+src.act.color=058 
+src.act.attr=0 
+src.tag.tourneybag=<act.uid> 
+var.tourneybag=<tag.tourneybag>
+f_clear_sysmessage 
+
+///////////////////////////////////////////////////////////////////////////////////
+
+[function f_misccheck] // loops through checking for items in pack
+if (<findcont> = 1 ) 
+var.tourneybag=<cont.tag.tourneybag> 
+findcont(0).cont=<var.tourneybag> 
+return <f_misccheck> 
+else 
+cont.sysmessage=Welcome to the tourney. 
+endif 
+
+///////////////////////////////////////////////////////////////////////////////////
+
+[function f_clear_sysmessage] 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+src.sysmessage= 
+
+//////////////////////////////////////////////
+
+[function f_bags_to_bank] 
+//Sends the bag to your bank & clears tags and vars 
+try uid.<var.tourneybag>.cont=<var.getbankuid> 
+try uid.<var.tourneybag>.update 
+tag.tourneybag= 
+var.getbankuid= 
+bankself 
+updatex 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[TEMPLATE tm_event_regs] 
+DEFNAME=bag_o_regs 
+
+CATEGORY=Maul 
+SUBSECTION=Tourney 
+DESCRIPTION=Bag of Regs 
+
+CONTAINER=i_bag 
+ITEM=i_reag_black_pearl,60 
+ITEM=i_reag_blood_moss,60 
+ITEM=i_reag_garlic,60 
+ITEM=i_reag_ginseng,60 
+ITEM=i_reag_mandrake_root,60 
+ITEM=i_reag_nightshade,60 
+ITEM=i_reag_sulfur_ash,60 
+ITEM=i_reag_spider_silk,60
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[TEMPLATE tm_event_pots] 
+DEFNAME=bag_o_pots 
+
+CATEGORY=Maul 
+SUBSECTION=Tourney 
+DESCRIPTION=Bag of Pots
+
+CONTAINER=i_bag 
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+ITEM=i_potion_HealGreat,1
+
+//////////////////////////
+
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+ITEM=i_potion_CureGreat,1
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[function dismount] /// dismounts the player and bounces his ride
+
+SRC.findlayer.21.updatex 
+if (<src.findlayer.25.uid> ) 
+src.act=<src.findlayer.25.more2> 
+src.act.p=<src.p> 
+src.findlayer.25.remove
+src.flags=<src.flags>&~080000000
+src.update 
+update
+SRC.act.SHRINK
+SRC.BOUNCE <SRC.act.ACTARG1>&~080000000
+SRC.findlayer.21.updatex
+endif
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[plevel 1] 
+arenaexit
+
+[function arenaexit]
+IF !<SRC.RESTEST i_mem_tourney_stat_storage> 
+sysmessage Your are not in a Tourney right now.
+return 1
+
+else
+
+SRC.SYSMESSAGE Choose where you wish to go to.
+SRC.FINDLAYER.(31).REMOVE //removes items from cursor.
+
+DIALOG D_Travel_book
+return 1
+
+//////////////////////////////////////////////////////////////
+
+[DIALOG d_Travel_book]
+0, 0
+gumppic 100 10 5528 //Background: open book
+page 1 //Page 1: 
+
+button 285 55 2361 2361 1 0 2 //Button: 2 Minoc
+button 125 95 2361 2361 1 0 3 //Button: 3 Yew
+button 210 155 2361 2361 1 0 4 //Button: 4 Britain
+button 245 265 2361 2361 1 0 5 //Button: 5 Trinsic
+button 310 95 2361 2361 1 0 6 //Button: 6 Vesper
+button 260 120 2361 2361 1 0 7 //Button: 7 Cove
+button 420 95 2361 2361 1 0 8 //Button: 8 Moonglow
+button 300 200 2360 2360 1 0 9 //Button: 9 Buc's den
+button 372 244 2360 2360 1 0 10 //Button: 10 Ocllo
+button 190 110 2360 2360 1 0 11 //Button: 11 Wind
+
+///////////////////////////////////////////////////////////////
+
+text 195 400 899 0 //Text: Where would you like to go?
+text 149 190 899 1 //Text: <None>
+text 300 50 0 2 //Text: Minoc
+text 140 90 0 3 //Text: Yew
+text 225 150 0 4 //Text: Britain
+text 260 260 0 5 //Text: Trinsic
+text 325 90 0 6 //Text: Vesper
+text 275 115 0 7 //Text: Cove
+text 390 70 0 8 //Text: Moonglow
+text 280 175 0 9 //Text: Buc's den
+text 390 240 0 10 //Text: Ocllo
+text 205 105 0 11 //Text: Wind
+
+//////////////////////////////////////////////////////////////
+
+[DIALOG d_Travel_Book TEXT]
+Where would you like to go?
+<none>
+Minoc
+Yew
+Britain
+Trinsic
+Vesper
+Cove
+Moonglow
+Buc's den
+Ocllo
+Wind
+
+//////////////////////////////////////////////////////////////
+
+[DIALOG d_Travel_Book BUTTON]
+
+ONBUTTON=0 // Close Book
+
+ONBUTTON=1 
+
+ONBUTTON=2
+SRC.tourney_strip_items
+go 2466,443,15 //Minoc
+RETURN 1
+
+ONBUTTON=3
+SRC.tourney_strip_items
+go 635,818,0 //Yew
+RETURN 1
+
+ONBUTTON=4
+SRC.tourney_strip_items
+go 1475,1645,21 //Britain
+RETURN 1
+
+ONBUTTON=5
+SRC.tourney_strip_items
+go 1815,2822,0 //Trinsic
+RETURN 1
+
+ONBUTTON=6
+SRC.tourney_strip_items
+go 2895,688,0 //Vesper
+RETURN 1
+
+ONBUTTON=7
+SRC.tourney_strip_items
+go 2246,1214,0 //Cove
+RETURN 1
+
+ONBUTTON=8
+SRC.tourney_strip_items
+go 4471,1178,0 //Moonglow
+RETURN 1
+
+ONBUTTON=9
+SRC.tourney_strip_items
+go 2685,2154 //Buc's den
+RETURN 1
+
+ONBUTTON=10
+SRC.tourney_strip_items
+go 3689,2523 //Ocllo
+RETURN 1
+
+ONBUTTON=11
+SRC.tourney_strip_items
+go 5184,105,5 //Wind
+RETURN 1
+
+////////////////////////////////////////////////////////////////////
+[function tourney_strip_items] /// removes tourney items and flags
+
+SRC.findlayer.21.updatex 
+SRC.FINDLAYER(layer_hand1).remove 
+SRC.FINDLAYER(layer_hand2).remove 
+SRC.FINDLAYER(layer_shoes).remove 
+SRC.FINDLAYER(layer_pants).remove 
+SRC.FINDLAYER(layer_shirt).remove 
+SRC.FINDLAYER(layer_helm).remove 
+SRC.FINDLAYER(layer_gloves).remove 
+SRC.FINDLAYER(layer_ring).remove 
+SRC.FINDLAYER(layer_collar).remove 
+SRC.FINDLAYER(layer_half_apron).remove 
+SRC.FINDLAYER(layer_chest).remove 
+SRC.FINDLAYER(layer_wrist).remove 
+SRC.FINDLAYER(layer_tunic).remove 
+SRC.FINDLAYER(layer_ears).remove 
+SRC.FINDLAYER(layer_arms).remove 
+SRC.FINDLAYER(layer_cape).remove 
+SRC.FINDLAYER(layer_robe).remove 
+SRC.FINDLAYER(layer_skirt).remove 
+SRC.FINDLAYER(layer_legs).remove 
+SRC.FINDTYPE.T_SPELLBOOK.EQUIP 
+SRC.Findlayer(21).EMPTY
+SRC.FINDTYPE.T_SPELLBOOK.UNEQUIP
+
+src.flags=<src.flags>&~ statf_criminal
+SRC.KILLS=<SRC.TAG.MURDERPITS>
+SRC.FAME=<SRC.TAG.FAMEPITS>
+SRC.KARMA=<SRC.TAG.KARMAPITS>
+
+src.EVENTS -e_tourney
+src.act.remove <i_mem_tourney_stat_storage.remove>
+
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF I_tourneybook]
+NAME=Tourney Book
+ID=i_BOOK_OPEN
+
+CATEGORY=Maul 
+SUBSECTION=Tourney
+DESCRIPTION=Tourney Book 
+
+ON=@CREATE 
+COLOR=021// {007a5} 
+ATTR=attr_newbie //|attr_move_never|attr_magic 
+
+ON=@DCLICK
+SRC.SFX 555
+DIALOG d_x_arena_book
+RETURN 1
+
+[DIALOG d_x_arena_book]
+107,77
+resizepic 50 360 5054 480 160 // Curved Grey background 
+resizepic 60 370 3000 460 140 // Curved White background
+
+////////////////////////////////////////////////////////////////////
+button 80 455 2103 2104 1 0 0 //Close book
+button 80 380 2103 2104 1 0 1 //Button Start a Tourney
+button 80 405 2103 2104 1 0 2 //Button Close enries to Tourney
+button 80 430 2103 2104 1 0 3 //Button Exit Tourney
+
+button 300 380 2103 2104 1 0 4 //Button Add a bag o regs
+button 300 405 2103 2104 1 0 5 //Button Add a bag o pots
+button 300 430 2103 2104 1 0 6 //Button Add 100 bandies
+button 300 455 2103 2104 1 0 7 //Button Add 200 arrows
+button 190 475 2103 2104 1 0 8 //Create winner pad
+
+////Headings/////////////////////////////////////////////////////////
+text 100 450 0 0 // Close book
+text 100 375 0 1 // Start a Tourney
+text 100 400 0 2 // Close enries to Tourney
+text 100 425 0 3 // Exit Tourney
+
+text 320 375 0 4 // Add a bag o regs
+text 320 400 0 5 // Add a bag o pots
+text 320 425 0 6 // Add 100 bandies
+text 320 450 0 7 // Add 200 arrows
+text 210 470 0 8 // Create winner pad
+
+////////button types and screen location
+
+[DIALOG d_x_arena_book TEXT]
+Close book
+Start a Tourney
+Close enries to Tourney
+Exit Tourney
+Add a bag o regs
+Add a bag o pots
+Add 100 bandies
+Add 200 arrows
+Create winner pad
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_x_arena_book BUTTON]
+
+ONBUTTON=0
+
+ONBUTTON=1
+tourneyon
+
+ONBUTTON=2
+tourneyoff
+
+ONBUTTON=3
+tourneyexit
+
+ONBUTTON=4
+SRC.NEWITEM=tm_event_regs 
+SRC.ACT.BOUNCE
+
+ONBUTTON=5
+SRC.NEWITEM=tm_event_pots 
+SRC.ACT.BOUNCE
+
+ONBUTTON=6
+SRC.NEWITEM=i_bandage,100
+SRC.ACT.BOUNCE
+
+ONBUTTON=7
+SRC.NEWITEM=i_arrow,200
+SRC.ACT.BOUNCE
+
+ONBUTTON=8
+SRC.NEWITEM=i_tourney_winner_pad
+SRC.ACT.BOUNCE
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_tourney_winner_pad] 
+ID=0516
+NAME=Tounrey Winner should walk on me 
+
+ON=@CREATE 
+ATTR=8010
+COLOR=03 
+
+ON=@STEP
+//SRC.MESSAGE <src.name> stepped on the winner pad
+SERV.B <src.name> has been declared the winner of the tourney.
+sound=snd_SPELL_RESURRECTION
+if <src.tag.twon>=
+src.tag.twon=1
+else
+src.tag.twon=(<src.tag.twon>+1)
+endif
+
+remove
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[EVENTS e_tourney] 
+ON=@CLICK 
+MESSAGE [Tourney] 
+
+//////////////////////////////////////////
+// this is to disable the use of some skills during an event. Skills disabled listed
+// Hiding
+
+ON=@SkillStart 
+IF <src.action>==Skill_Hiding 
+SRC.ACTION -1 
+SRC.SYSMESSAGE This skill is not allowed.
+RETURN 1 
+endif
+
+//////////////////////////////////////////
+// this is to disable the use of some spells during an event. Spells disabled listed
+// Reactive Armor, Protection, Arch Protection, Fire Field, Blade Spirit, Summon, Energy Vortex, 
+// Air Elemental, Daemon, Earth Elemental, Fire Elemental, Water Elemental, Summon Undead.
+
+
+ON=@SPELLCAST 
+IF (<ARGN>==7) || (<ARGN>==15) || (<ARGN>==26) || (<ARGN>==28) || (<ARGN>==33) || (<ARGN>==40) || (<ARGN>==58) || 
+
+(<ARGN>==60) || (<ARGN>==61) || (<ARGN>==62) || (<ARGN>==63) || (<ARGN>==64) || (<ARGN>==65)
+SRC.ACTION -1 
+SRC.SYSMESSAGE This spell is not allowed.
+RETURN 1 
+ENDIF 
+
+//////////////////////////////////////////

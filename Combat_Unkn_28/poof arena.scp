@@ -1,0 +1,61 @@
+//===============================================//
+// Poof Arena Script   				 //
+// By GM Samson aka Sanchezuk			 //
+// (www.krackatoah.cjb.net)			 //
+// Please dont remove this header.		 //
+//						 //
+// This script uses two portals, one is to enter //
+// the arena area and the other is to exit there.//
+// The idea of this is that PVP players dont die //
+// when they loose so no items can be stolen if  //
+// duels are not supervised by staff.		 //
+//===============================================//
+
+//How to set up: 
+//Obviously change the co-ordinates to suit your shard arena area and exit town etc,
+//then you will need to edit your map script using axis and making your arena flags 
+//anti recall & gate so players cant leave without using the exit portal to remove 
+//the resurrect event. The portals also saves players kills, karma & fame.
+
+
+//============================================================ Enter Arena
+
+[ITEMDEF i_arena_enter] 
+id=i_moongate_red 
+name=Arena Entrance 
+
+ON=@STEP
+SRC.TAG.MYFAME=<SRC.FAME>
+SRC.TAG.MYKILLS=<SRC.KILLS>
+SRC.TAG.MYKARMA=<SRC.KARMA>
+SRC.EVENTS +e_arenapits
+SRC.GO 4434,3863 //====== Arena Co-Ordinates.
+RETURN 1
+ENDIF
+
+
+//============================================================ Exit Arena
+
+[ITEMDEF i_arena_exit] 
+id=i_moongate_red 
+name=Arena Exit 
+
+ON=@STEP
+SRC.FAME=<SRC.TAG.MYFAME>
+SRC.KILLS=<SRC.TAG.MYKILLS>
+SRC.KARMA=<SRC.TAG.MYKARMA>
+SRC.EVENTS -e_arenapits
+SRC.GO 1023,1576,2 //====== Exit Co-Ordinates from Arena.
+RETURN 1
+ENDIF
+
+[EVENTS e_arenapits]
+
+ON=@DEATH
+SRC.RESURRECT
+SRC.HITPOINTS=<SRC.HITPOINTS>+20
+SRC.GO 4400,3913 //====== Outer Arena (Viewing Area)
+RETURN 1
+ENDIF
+
+[EOF]

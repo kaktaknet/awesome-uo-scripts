@@ -1,0 +1,23 @@
+//To install, add the command 'f_spell_delay_fix' to all your chars @login.
+//Place it in (spheretables.scp) under @login so this function will be called each time the player logs on.
+//This will remove all failed SPECIAL SPELL timer memories (-1 timers) from the player, and lets them be able to cast thier spells again. It also removes access SPECIAL SPELL memorys from the player, and prevents crashing.
+//If you happen to find any more "dead" memories on players, simply add it into the script for it to be removed @login.
+
+[function f_spell_delay_fix]
+if (<findid.i_spelldelay_memory.timer> == -1 )
+findid.i_spelldelay_memory.timer=0
+endif
+if (<findid.i_anti_gank_mem.timer> == -1 )
+findid.i_anti_gank_mem.remove
+endif
+if (<findid.i_witchdoctor_4.timer> == -1 )
+consume=3 i_witchdoctor_4
+endif
+if (<findid.i_warlock_1.timer> == -1 )
+consume=3 i_warlock_1
+endif
+if (<findid.i_necromancer_4.timer> == -1 )
+consume=3 i_necromancer_4
+endif
+
+[eof]

@@ -1,0 +1,379 @@
+//===============================================//
+// House Stone Script By Samson (aka Sanchezuk)  //
+//						 //
+// House stone script to replace the vendor.     //
+// makes house buying easier and was made for    //
+// my custom shard where we had show homes in    //
+// greenacres and custom houses so if you use    //
+// then you might want to edit the deeds and     //
+// names also the pay function is Belgar's bank  //
+// pay system, use it, it's an awesome script. 	 //
+//						 //
+// Please dont remove this header..		 //
+//===============================================//
+
+[ITEMDEF i_house_stone]
+ID=i_gravestone_7
+NAME=House Purchase Stone
+WEIGHT=2500
+TYPE=t_normal
+
+DESCRIPTION=House Purchase Stone
+CATEGORY=Provisions - GM Items
+SUBSECTION=Stones
+
+ON=@Create
+COLOR=00
+ATTR=attr_static
+
+ON=@DClick
+SRC.MENU m_item_stone
+RETURN 1
+
+[MENU m_item_stone]
+What size house are you interested in?
+
+ON=0 Small Size Buildings
+SRC.MENU m1_1_stone
+
+ON=0 Medium Size Buildings
+SRC.MENU m1_2_stone
+
+ON=0 Large Size Buildings
+SRC.MENU m1_3_stone
+
+ON=0 Extreme Size Buildings 
+SRC.MENU m1_4_stone
+
+ON=0 Miscellaneous
+SRC.MENU m1_5_stone
+
+
+[MENU m1_1_stone]
+Select the house if you wish to buy..
+
+ON=0 Wood Cabin House (40K)
+SRC.payup 40000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_House_stone_wood_small
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Stone Cabin House (42K)
+SRC.payup 42000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_House_stone_small
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Stone Two Story Shop (65K)
+SRC.payup 65000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_shop_stone_small
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Marble Two Story Shop (70K)
+SRC.payup 70000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_shop_marble_small
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Three Story Wizards Tower (80K)
+SRC.payup 80000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_tower_wizard
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Exit
+SRC.SYSMESSAGE Goodbye.
+RETURN 1
+
+
+[MENU m1_2_stone]
+Select the house if you wish to buy..
+
+ON=0 Plaster Two Story Town House (75K)
+SRC.payup 75000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_Plaster_Town_House
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Marble Two Story Town House (85K)
+SRC.payup 85000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_Marble_Two_Story_Town_House
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Wood & Plaster Two Story Town House (95K)
+SRC.payup 95000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_Wood_and_Plaster_Town_House
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Three Room Bungalow (95K)
+SRC.payup 95000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_house_3room
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+
+ON=0 Two Story Sandstone Patio House (100K)
+SRC.payup 100000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_house_patio_sand
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Exit
+SRC.SYSMESSAGE Goodbye.
+RETURN 1
+
+
+[MENU m1_3_stone]
+Select the house if you wish to buy..
+
+ON=0 Two Story Villa (120K)
+SRC.payup 120000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_villa_2story
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Three Story Marble Patio House (160K)
+SRC.payup 160000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_house_patio_marble
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Two Story Stone & Plaster House (180K)
+SRC.payup 180000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_house_stone_plaster_2story
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Two Story Wood & Plaster House (185K)
+SRC.payup 185000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_house_wood_plaster_2story
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Three Story Marble Balcony House (220K)
+SRC.payup 220000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_Large_Marble_House
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Exit
+SRC.SYSMESSAGE Goodbye.
+RETURN 1
+
+
+[MENU m1_4_stone]
+Select the house if you wish to buy..
+
+ON=0 Tower (395K)
+SRC.payup 395000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_tower
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF
+
+ON=0 Huge Farm House (550K)
+SRC.payup 550000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_Huge_Farm_House
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF 
+
+ON=0 Keep (800K)
+SRC.payup 800000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_keep
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF 
+
+ON=0 Castle (1200K)
+SRC.payup 1200000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_castle
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF 
+
+ON=0 Exit
+SRC.SYSMESSAGE Goodbye.
+RETURN 1
+
+[MENU m1_5_stone]
+Select the house if you wish to buy..
+
+
+ON=0 Blue Tent with Doors (25K)
+SRC.payup 25000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_tent_blue
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF 
+
+ON=0 Green Tent with Doors (25K)
+SRC.payup 25000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_tent_blue
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF 
+
+ON=0 Marble Patio Building (85K)
+SRC.payup 85000
+IF (<var.enough>)
+SRC.SYSMESSAGE Thank you, please come again!
+SRC.NEWITEM i_deed_Marble_Patio_Building
+SRC.ACT.BOUNCE
+SRC.UPDATEX
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You seem to lack the gold to buy this house.
+RETURN 1
+ENDIF 
+
+ON=0 Exit
+SRC.SYSMESSAGE Goodbye.
+RETURN 1
+ENDIF
+
+[EOF]

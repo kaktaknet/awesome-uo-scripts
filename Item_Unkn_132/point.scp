@@ -1,0 +1,92 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// The POINT Function (Created 14/06/02)
+// Mordaunt - With Kudos To Rudenid
+// Just add it and try it, you can point to anything and anyone
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+[PLEVEL 1]
+point
+
+[FUNCTION point]
+NEWITEM=i_pointer
+SRC.ACT.EQUIP
+
+[ITEMDEF i_pointer]
+NAME=pointer
+id=i_memory 
+type=t_eq_script 
+WEIGHT=0
+
+ON=@CREATE
+ATTR=attr_invis
+
+ON=@EQUIP
+TARGETG
+SRC.SYSMESSAGE Who/what do you wish to point to?
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SAYU *<src.name> points at <src.targ.name>*
+SRC.TARG.SAYU *<src.name> points here*
+REMOVE
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SAYU *<src.name> points at <src.targ.name>*
+SRC.TARG.SAYU *<src.name> points here*
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND 
+VAR.POINTERNAME=<SRC.NAME>
+SRC.NEWNPC=c_point        
+SRC.ACT.P=<SRC.TARGP>
+SRC.ACT.UPDATE
+SRC.SAYU *<src.name> points*
+REMOVE
+RETURN 1
+
+[ITEMDEF i_marker_memory]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Marker Memory
+ON=@CREATE
+ATTR=080
+
+ON=@EQUIP
+TIMER=2
+
+ON=@TIMER
+CONT.REMOVE
+RETURN 1
+
+[CHARDEF c_point] 
+ID=c_man_invisible 
+CAN=mt_equip|mt_walk  
+ 
+ON=@Create 
+FLAGS=04 
+NAME=" " 
+
+ON=@NPCRestock 
+ITEMNEWBIE=i_pointnpcmemory 
+TIMER=1 
+ 
+[ITEMDEF i_pointnpcmemory] 
+ID=i_memory 
+TYPE=t_eq_script 
+
+ON=@Timer 
+IF !(<TAG.TIMERFIRED> = 1) 
+CONT.SAYU *<var.pointername> points here*
+TAG.TIMERFIRED=1 
+TIMER=2 
+RETURN 1 
+ELSE 
+TAG.TIMERFIRED= 
+VAR.POINTERNAME=
+CONT.REMOVE 
+REMOVE 
+RETURN 1 
+ENDIF
+

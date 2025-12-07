@@ -1,0 +1,105 @@
+[Comment]
+Created by Raszith
+
+// Duplicating Ooze //
+[chardef c_dupe_ooze]
+id=033
+name=Ooze
+//ALIGNMENT=EVIL
+
+on=@create
+color=0363
+str={300 320}
+dex=100
+int={16 20}
+hits={400 500}
+FAME=0
+KARMA={-4999 -5999}
+
+NPC=brain_monster 
+
+on=@gethit
+IF (<eval <tag.dupeooze>>=0)
+color 01d8
+emote splits into three
+newnpc=c_dupe_ooze_1
+newnpc=c_dupe_ooze_1
+tag.dupeooze 1
+ENDIF
+RETURN 0
+
+[chardef c_dupe_ooze_1]
+id=033
+name=Ooze
+//ALIGNMENT=EVIL
+
+on=@create
+color=01d8
+str={265 285}
+dex=100
+int={16 20}
+FAME=0
+KARMA={-4999 -5999}
+
+NPC=brain_monster 
+
+on=@gethit
+IF (<eval <tag.dupeooze1>>=0)
+color 0040
+emote splits into three
+newnpc=c_dupe_ooze_2
+newnpc=c_dupe_ooze_2
+tag.dupeooze1 1
+ENDIF
+RETURN 0
+
+on=@death
+remove
+
+[chardef c_dupe_ooze_2]
+id=033
+name=Ooze
+//ALIGNMENT=EVIL
+
+on=@create
+color=0040
+str={225 265}
+dex=100
+int={16 20}
+FAME=0
+KARMA={-4999 -5999}
+
+NPC=brain_monster 
+
+on=@gethit
+IF (<eval <tag.dupeooze2>>=0)
+color 0042
+emote splits into three
+newnpc=c_dupe_ooze_3
+newnpc=c_dupe_ooze_3
+tag.dupeooze2 1
+ENDIF
+RETURN 0
+
+on=@death
+remove
+
+[chardef c_dupe_ooze_3]
+id=033
+name=Ooze
+//ALIGNMENT=EVIL
+
+on=@create
+color=0042
+str={185 225}
+dex=100
+int={16 20}
+FAME=0
+KARMA={-4999 -5999}
+
+NPC=brain_monster 
+
+on=@death
+remove
+
+[EOF]

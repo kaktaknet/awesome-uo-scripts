@@ -1,0 +1,488 @@
+[comment on this script ...]
+made for Sphere.55R4.0.2 by Moe
+This is a script for player set traps. The Skill for setting traps can be defined (is RemoveTrap by default). To set a trap dclick it and specify a location. Traps can be placed anywhere on gound. Also traps can be wired to items on ground as boobytraps. Boobytraps trigger when the item is dclicked, picked up, another item is stacked ontop of it or someone steps onto the item. Boobytrapped containers and doors trigger only if they are open, boobytraps are harmeless until the item is unlocked. Traps expire some time after they are set up, depending on the skill of the trapper. Boobytraps on locked down items (e.g. chests, doors) never expire.
+Disarming traps is performed with the skill "RemoveTrap" or with the spell "Magic Untrap". To Find traps use the skill "DetectingHidden" or the spell "Reveal". The spell "Magic Trap" places a magic trap. Expiretime is calculated based on "Duration" defined in the spell and the skill "Magery" of the caster.
+
+When removing traps the Skill "RemoveTrap" gains with Sphere's skillgain method. Skillgain method for setting up traps is kept very simple, since this is a traps script and not a skillgain script. If you don't like it, you can use f_traps_skillgain to script it on your own.
+
+Usage of trap flags (tag.flags):
+-trap_reusable: This flag lets you reuse a trap after it being disarmed
+-trap_persistent: A trap with this flag set rearmes itself after being triggered. Each time it rearmes a charge (tag.charges) is consumed. You can reload persistent traps when they are inactive: Dclick the trap; when you are asked where to place it, target the ammo in your backpack; The ammo must be in a container, otherwise you will attempt to boobytrap the specified item. The used ammunition is stored in tag.ammo. An example for a persistent trap is the bolt trap (i_trap_bolt) included in this archive.
+-trap_selfdestruct: A trap with this flag will be destroyed when triggered. Examples for this are the explosion trap and the magic trap.
+
+Effect types (tag.effectType):
+-effect_scripted: when triggered, the trap attempts to run a function where the trap effect is scripted. The function is stored in tag.effectScript.
+-effect_spell: the char who triggers the trap is affected by the spell specified in tag.spell. The power of the spell is tag.effect. Example is the lightning trap (i_trap_lightning).
+
+
+[defname TrapSysmessages]
+traps.SetTrapWhere=Where do you want to set the trap?
+traps.SetupPositionInvalid=You can't place the trap there.
+traps.DisarmUse=The trap is disarmed and can be reused.
+traps.DisarmNoUse=The trap is disarmed and was destroyed in the process.
+traps.TrapStep=You walk into a trap!
+traps.StepOwnTrap=You walk carefully over your own trap.
+traps.TrapNoUse=You can't think of a way to use that item.
+traps.NotInContainer=You can't set up a trap inside a container.
+traps.TargetToReload=Target a suitable item in your backpack to reload the trap.
+traps.ReloadTrap=You reload the trap.
+traps.TriggerBoobytrap=You have triggered a boobytrap!
+traps.NoTrapThere=The spell has no effect. You need to target a trap with this spell.
+
+traps.SetTrapEmote=*a trap is set up*
+traps.SetTrapFail=*set up trap is failed*
+traps.ActiveTag=[armed]
+traps.Skill=RemoveTrap //wich skill should be checked when setting up a trap? This skill also determines how long the trap remains active.
+traps.SetTrapTimer=10.0,2.0 //how long does it take to set a trap (in seconds); low value at skill 0, high value at skill 100.0
+traps.TrapActiveTime=1,30 //how long does a player-set trap remain active on ground (in minutes); low value at skill 0, high value at skill 100.0
+traps.TrapCheckTimer=10 //how often is checked if a trap is still active
+
+[defname RemoveTrap_Messages]
+traps.RemoveTrap.DisarmSelect=Select the trap to disarm.
+traps.RemoveTrap.DisarmFail=You fail to disarm the trap.
+traps.RemoveTrap.DisarmSuccess=You disable the trap.
+traps.RemoveTrap.DisarmAbort=You give up to disarm the trap.
+traps.RemoveTrap.DisarmNoTrap=This is no trap.
+
+[defname DetectingHidden_Messages]
+traps.DetectingHidden.Fail=You can see nothing hidden there.
+traps.DetectingHidden.Success=You stop looking for anything hidden.
+
+
+[defname TrapFlags]
+trap_reusable		0001 //can be reused after being disarmed
+trap_persistent		0002 //rearms itself after being triggered, will become disarmed and visible otherwise
+trap_selfdestruct	0004 //is destroyed after being triggered
+
+
+[defname TrapEffectTypes]
+effect_scripted	0001
+effect_spell	0002
+
+
+[DEFMESSAGE skills]
+//default messages are disabled
+removetraps_witem	""
+removetraps_reach	""
+
+
+[function f_traps_skillgain]
+//<args> is the skill to gain
+//<i> is the char to gain the skill
+if ( !<eval rand(<eval <<args>>/50>)> )
+	try <args> = <<args>>+1
+endif
+
+
+
+[SKILL 14]
+//enable detecting hidden for revealing traps (and other items that are scripted to respond to s_reveal)
+//it affects items only and still reveals chars as it used to
+on=@fail
+src.sysmessage <def.traps.DetectingHidden.Fail>
+
+on=@abort
+src.sysmessage <def.traps.DetectingHidden.Success>
+
+on=@success
+foritems <eval (<src.DetectingHidden>/100)+1>
+	if <attr>&attr_invis
+		serv.newitem i_memory
+		new.p=<p>
+		if <new.canseelos>
+			spelleffect s_reveal <src.DetectingHidden>
+		endif
+		new.remove
+	endif
+endfor
+
+
+
+[SKILL 48]
+//override default triggers for Skill "RemoveTrap"
+//all other values are read from Sphere_Skill.scp
+
+on=@fail
+src.sysmessage <def.traps.RemoveTrap.disarmFail>
+src.act.f_trap_trigger
+
+on=@abort
+src.sysmessage <def.traps.RemoveTrap.DisarmAbort>
+
+on=@select
+serv.newitem i_mem_skill_remove_trap
+src.consume i_mem_skill_remove_trap
+src.equip <new.uid>
+return 1
+
+on=@success
+src.act.f_trap_disarm
+return 1
+
+
+[itemdef i_mem_skill_remove_trap]
+id=i_rune_magic_untrap
+name=remove trap targeting
+layer=30
+type=t_eq_script
+
+on=@equip
+target <def.traps.RemoveTrap.DisarmSelect>
+
+on=@targon_item
+if <src.targ.type>==t_trap
+	src.act=<src.targ.uid>
+	src.action=RemoveTrap
+else
+	src.sysmessage <def.traps.RemoveTrap.DisarmNoTrap>
+endif
+remove
+return 1
+
+on=@targon_char
+	src.sysmessage <def.traps.RemoveTrap.DisarmNoTrap>
+remove
+return 1
+
+on=@targon_cancel
+remove
+
+
+[Spell 13]
+FLAGS=SPELLFLAG_TARG_OBJ | SPELLFLAG_TARG_XYZ | SPELLFLAG_HARM | SPELLFLAG_FIELD | SPELLFLAG_SCRIPTED | SPELLFLAG_PLAYERONLY
+
+on=@success
+serv.newitem i_s_magic_trap
+new.tag.damage=<strarg <serv.spell.<argn1>.effect>>+(((<streat <serv.spell.<argn1>.effect>>-<strarg <serv.spell.<argn1>.effect>>)*<argn2>)/1000)
+new.tag.damagetype=0484
+new.link=<uid>
+if <act>
+	new.tag.item=<act.uid>
+	new.p=<act.p>
+	new.f_set_boobytrap
+else
+	local.lo=<strarg <serv.spell.<argn1>.duration>>
+	local.hi=<streat <serv.spell.<argn1>.duration>>
+	new.tag.expiretime=<eval <serv.time>+((<local.lo>+(((<local.hi>-<local.lo>)*<argn2>)/1000))*10)>
+	new.p=<targp>
+	new.f_trap_arm
+endif
+
+
+[Spell 14]
+FLAGS=SPELLFLAG_TARG_OBJ | SPELLFLAG_SCRIPTED | SPELLFLAG_PLAYERONLY
+
+on=@success
+if (<act.type>==t_script_trap)
+	obj=<act.uid>
+elseif (<uid.<act.tag0.trap>.type>==t_script_trap)
+	obj=<act.tag0.trap>
+else
+	sysmessage <def.Traps.NoTrapThere>
+	return 0
+endif
+obj.f_trap_disarm
+
+
+[itemdef i_s_magic_trap]
+id=i_rune_magic_trap
+type=t_trap_inactive
+name=magic trap
+
+on=@create
+events +t_script_trap
+tag.effectType=effect_scripted
+tag.effectScript=f_s_magic_trap
+tag.flags=trap_selfdestruct
+
+[function f_s_magic_trap]
+f_areadamage <tag0.damage>,<tag0.damagetype>,3,<link.uid>
+
+
+[typedef t_trap]
+on=@step
+//override standard traps
+return 1
+
+
+[function f_areadamage]
+serv.newitem=i_memory
+new.attr=02
+new.type=t_explosion
+new.timerd=0
+new.moreX=<argn1>
+new.moreY=<argn2>
+new.moreZ=<argn3>
+new.link=<streat <streat <streat <args>>>>
+new.p=<p>
+
+
+
+[typedef t_script_trap]
+on=@dclick
+if (<type>==t_trap_inactive)
+	targetg <def.traps.SetTrapWhere>
+	if <tag.flags>&trap_persistent
+		src.sysmessage <def.traps.TargetToReload>
+	endif
+elseif (<type>==t_trap)
+	f_trap_trigger
+else
+	src.sysmessage <def.traps.TrapNoUse>
+endif
+return 1
+
+on=@click
+if (<tag0.flags>&trap_persistent)
+	if <type>==t_trap
+		name=<typedef.name> <def.traps.ActiveTag> (<eval <tag0.charges>> <serv.itemdef.<tag0.ammo>.name>)
+	else
+		name=<typedef.name> (<eval <tag0.charges>> <serv.itemdef.<tag0.ammo>.name>)
+	endif
+else
+	if <type>==t_trap
+		name=<typedef.name> <def.traps.ActiveTag>
+	else
+		name=<typedef.name>
+	endif
+endif
+
+on=@pickup_ground
+if (<type>==t_trap)
+	f_trap_trigger
+endif
+
+on=@targon_item
+f_set_trap_item
+return 1
+
+on=@targon_ground
+f_set_trap_ground
+return 1
+
+on=@timer
+f_traptimer
+return 1
+
+on=@spelleffect
+call f_trap_spelleffect
+return 1
+
+on=@step
+f_trap_step
+return 0
+
+
+[function f_trap_step]
+if <src.flags>&(statf_insubstantial|statf_dead|statf_stone|statf_freeze)
+	//invis GMs, ghosts and paralyzeds don't trigger traps
+	return 0
+endif
+if <link>==<src.uid>
+	src.sysmessage <def.traps.StepOwnTrap>
+	return 1
+endif
+if <type>==t_trap
+	src.sysmessage <def.traps.Trapstep>
+	f_trap_trigger
+elseif <type>==t_trap_inactive
+	//nothing to happen here
+elseif <type>==t_trap_active
+	//someone walks into the work of the rogue
+	//or the rogue sets the trap under a person
+	f_trap_disarm
+	say <def.traps.SetTrapFail>
+endif
+
+[function f_trap_show]
+attr=(<attr>&~attr_invis)|attr_move_never
+update
+
+[function f_trap_trigger]
+if <tag0.item>
+	obj=<tag.item>
+	obj.tag.trap
+	obj.events -t_boobytrap
+endif
+if <tag0.effectType>&effect_scripted
+	try <tag0.effectScript>
+endif
+if <tag0.effectType>&effect_spell
+	local.spell=<tag0.spell>
+	local.effect=<tag0.effect>
+	obj=<src.uid>
+	trysrc <link.uid> obj.spelleffect <local.spell> <local.effect>
+endif
+if (<tag0.flags>&trap_selfdestruct)
+	remove
+	return 0
+endif
+if (<tag0.flags>&trap_persistent)
+	if <tag0.charges>
+		tag0.charges -= 1
+		if <tag.item>
+			f_set_boobytrap
+		else
+			f_trap_arm
+		endif
+	else
+		f_trap_disarm
+	endif
+else
+	tag.item
+	f_trap_disarm
+endif
+
+
+[function f_trap_spelleffect]
+if <argn1>==48 //s_reveal
+	f_trap_show
+endif
+
+
+[function f_trap_disarm]
+if <tag0.trap>
+	obj=<tag.trap>
+	obj.f_trap_disarm
+	return 1
+elseif <tag0.item>
+	obj=<tag.item>
+	obj.tag.trap
+	obj.events -t_boobytrap
+endif
+if (<tag0.flags>&trap_reusable)
+	type=t_trap_inactive
+	color=0
+	name=<typedef.name>
+	attr=attr_decay
+	timer=<serv.decaytimer>*60
+	update
+	if <src>
+		src.sysmessage <def.traps.DisarmUse>
+	endif
+else
+	remove
+	if <src>
+		src.sysmessage <def.traps.DisarmNoUse>
+	endif
+endif
+
+[function f_trap_arm]
+type=t_trap
+timer=<def.traps.TrapCheckTimer>
+attr=<attr>|attr_invis
+color=020
+name=<typedef.name> <def.traps.ActiveTag>
+updateX
+
+
+[function f_traptimer]
+if (<type>==t_trap_active)
+	link.f_traps_skillgain <def.traps.Skill>
+	if <tag0.item>
+		f_set_boobytrap
+	else
+		f_trap_arm
+	endif
+elseif (<type>==t_trap)
+	if <tag0.expiretime>
+		if (<serv.time> > <tag0.expiretime>)
+			f_trap_disarm
+		else
+			timer=<def.traps.TrapCheckTimer>
+		endif
+	else
+		attr=<attr>&~attr_decay
+		timer=-1
+	endif
+elseif (<type>==t_trap_inactive)
+	remove
+endif
+
+[function f_set_trap_ground]
+local.trapP=<p>
+p=<src.targp>
+if (<distance> > 3)||(!<canseelos>)
+	p=<local.trapP>
+	src.sysmessage <def.traps.SetupPositionInvalid>
+	return 0
+endif
+update
+attr |= attr_move_never
+link=<src.uid>
+type=t_trap_active
+local.lo=<strarg <def.traps.TrapActiveTime>>
+local.hi=<streat <def.traps.TrapActiveTime>>
+tag.expiretime=<eval <serv.time>+((<local.lo>+(((<local.hi>-<local.lo>)*<src.<def.traps.skill>>)/1000))*600)>
+local.lo=<strarg <def.traps.SetTrapTimer>>
+local.hi=<streat <def.traps.SetTrapTimer>>
+timerd=<eval <local.lo>+(((<local.hi>-<local.lo>)*<src.<def.traps.skill>>)/1000)>
+say <def.traps.SetTrapEmote>
+
+
+[function f_set_trap_item]
+if <src.targ.cont>
+	if (<src.targ.baseid>==<tag.ammo>)
+		src.sysmessage <def.traps.ReloadTrap>
+		tag0.charges += <src.targ.amount>
+		src.targ.remove
+	else
+		src.sysmessage <def.traps.NotInContainer>
+	endif
+	return 1
+endif
+tag.item=<src.targ.uid>
+p=<src.targ.p>
+attr |= attr_move_never
+update
+link=<src.uid>
+type=t_trap_active
+say <def.traps.SetTrap>
+if (<src.targ.attr>&attr_move_never)
+	tag.expiretime=0 //if the item is locked, never expire
+else
+	local.lo=<strarg <def.traps.TrapActiveTime>>
+	local.hi=<streat <def.traps.TrapActiveTime>>
+	tag.expiretime=<eval <serv.time>+((<local.lo>+(((<local.hi>-<local.lo>)*<src.<def.traps.skill>>)/1000))*600)>
+endif
+local.lo=<strarg <def.traps.SetTrapTimer>>
+local.hi=<streat <def.traps.SetTrapTimer>>
+timerd=<eval <local.lo>+(((<local.hi>-<local.lo>)*<src.<def.traps.skill>>)/1000)>
+return 1
+
+[function f_set_boobytrap]
+//uid=trap; tag.item=item
+obj=<tag.item>
+obj.tag.trap=<uid>
+obj.events +t_boobytrap
+type=t_trap
+tag.item=<obj.uid>
+color=020
+tag.expiretime
+name=<typedef.name> <def.traps.ActiveTag>
+attr=(<attr>|attr_invis)&~attr_decay
+updateX
+timer=<def.traps.TrapCheckTimer>
+
+
+[typedef t_boobytrap]
+on=@dclick
+if (<type>!=t_container_locked)&&(<type>!=t_ship_hold_lock)&&(<type>!=t_door_locked)
+	f_boobytrap
+endif
+return 1
+on=@pickup_ground
+f_boobytrap
+return 1
+
+on=@dropon_self
+f_boobytrap
+return 1
+
+[function f_boobytrap]
+src.sysmessage <def.traps.TriggerBoobytrap>
+obj=<tag0.trap>
+obj.f_trap_trigger
+
+
+[eof]

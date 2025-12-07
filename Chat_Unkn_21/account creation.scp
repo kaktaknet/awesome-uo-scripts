@@ -1,0 +1,61 @@
+[plevel 4]
+accadd
+
+[function accadd]
+if (<src.isgm>=1)
+src.dialog d_accadd
+else
+src.sysmessage Type .gm before use this
+endif
+
+[dialog d_accadd]
+150,50
+page 0
+resizepic 0 0 3500 330 200
+text 70 15 1100 0
+text 70 25 99 1
+
+text 85 50 46 2
+
+text 25 80 0 3
+resizepic 75 77 9300 180 30
+textentry 80 80 170 16 990 1 7
+
+text 25 120 0 4
+resizepic 75 117 9300 180 30
+textentry 80 120 170 16 990 2 7
+
+
+
+button 270 160 4031 4030 1 0 1 
+text 160 160 0 8 
+
+resizepic 0 220 3500 330 80
+text 40 240 990 5
+text 90 260 990 6
+
+[dialog d_accadd text]
+Rain of Fire 
+_____________
+Account Creator 
+Login:
+Password:
+The password and the login must 
+only have numbers and letters
+<var.blankline>
+OK
+<SRC.TAG.ARGTXT1>
+<SRC.TAG.ARGTXT2>
+
+[dialog d_accadd button]
+on=0
+src.sysmessage Action Canceled
+
+on=1
+SRC.TAG.argtxt1=<ARGTXT[1]>
+SRC.TAG.argtxt2=<ARGTXT[2]>
+src.serv.account add <ARGTXT[1]> <ARGTXT[2]>
+src.update
+src.sysmessage Account creation completed
+src.sysmessage Login: <ARGTXT[1]>
+src.sysmessage Password: <ARGTXT[2]> 

@@ -1,0 +1,73 @@
+//CREATED BY RASZITH
+//DO NOT REMOVE THIS HEADER
+
+[ITEMDEF i_weather_control_unit]
+ID=i_plant_cactus_potted
+TYPE=T_EQ_SCRIPT
+NAME=weather control unit
+WEIGHT=0
+
+ON=@CREATE
+ATTR=attr_invis|attr_decay
+TIMER=1
+MORE=0
+MOREX=0
+
+ON=@DCLICK
+IF (<eval <timer>>==1)
+	TIMER=5
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE There will be a storm in <eval <timer>/60> minutes.
+	RETURN 1
+ENDIF
+
+ON=@TIMER
+IF (<eval <morex>>==0)
+	SERV.ALLCLIENTS SYSMESSAGE a storm is approaching, seek shelter...
+	SERV.ALLCLIENTS SFX 0206
+	TIMER=15
+	MOREX=1
+ELSE
+	IF (<eval <more>> < 25)
+		serv.allclients deadly_storm
+		TIMER=5
+		MORE=<eval <more>+1>
+	ELSE
+		SERV.ALLCLIENTS SYSMESSAGE the storm has passed...
+		TIMER={21600 64800}
+		MORE=0
+		MOREX=0
+	ENDIF
+ENDIF
+RETURN 1
+
+[PLEVEL 6]
+deadly_storm
+
+[FUNCTION deadly_storm]
+VAR.RANDOMSOUND=<EVAL {1 30}>
+IF (<VAR.RANDOMSOUND>==1)
+	SFX=0220
+ELIF (<VAR.RANDOMSOUND>==10)
+	SFX=021e
+ELIF (<VAR.RANDOMSOUND>==20)
+	SFX=0016
+ENDIF
+IF (<FLAGS>&001000000)
+ELIF (<FLAGS>&statf_stone)
+ELIF (<FLAGS>&statf_dead)
+ELIF (<FLAGS>&010000000)
+ELIF <isgm>
+ELSE
+	VAR.RANDOMHIT=<EVAL {1 3}>
+	IF (<VAR.RANDOMHIT>==2)
+		HITS=<eval <HITS>+-{50 100}>
+		sound=snd_spell_lightning
+		effect=1,1,16,16,16
+		effect=3,i_fire_column,16,16,16
+	ELSE
+	ENDIF
+ENDIF
+
+[EOF]

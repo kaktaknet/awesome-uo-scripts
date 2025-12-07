@@ -1,0 +1,1142 @@
+//Lamination system.
+//v1.6
+//by Rudenid.
+//This script allows you to color your weapons. There's really nothing
+//special about lamination beyond that, but you'd be surprised how
+//coloring something suddenly creates demand for it.
+//Lamination is fairly difficult to do, and even grandmasters will
+//fail at it sometimes.
+
+//Installation:
+//Add the following code (uncommented, of course) to sphereskill.scp,
+//in the blacksmithing menu:
+//ON=i_ingot_silver Laminate
+//TEST=BLACKSMITHING 70.0
+//SKILLMENU=sm_laminate
+
+
+[SKILLMENU sm_laminate]
+Choose ingot type to laminate with:
+
+ON=i_ingot_iron Iron
+TEST=BLACKSMITHING 70.0
+f_laminate i_laminate_iron
+
+ON=i_ingot_rusty Rusty
+TEST=BLACKSMITHING 90.0
+f_laminate i_laminate_rusty
+
+ON=i_ingot_old_copper Old Copper
+TEST=BLACKSMITHING 90.0
+f_laminate i_laminate_old_copper
+
+
+ON=i_ingot_dull_copper Dull Copper
+TEST=BLACKSMITHING 90.0
+f_laminate i_laminate_dull_copper
+
+
+ON=i_ingot_bronze Bronze
+TEST=BLACKSMITHING 90.0
+f_laminate i_laminate_bronze
+
+
+ON=i_ingot_shadow Shadow
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_shadow
+
+
+ON=i_ingot_copper Copper
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_copper
+
+
+ON=i_ingot_gold Gold
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_gold
+
+
+ON=i_ingot_rose Rose
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_rose
+
+
+ON=i_ingot_agapite Agapite
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_agapite
+
+
+ON=i_ingot_bloodrock Bloodrock
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_bloodrock
+
+
+ON=i_ingot_silver Silver
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_silver
+
+
+ON=i_ingot_verite Verite
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_verite
+
+
+ON=i_ingot_valorite Valorite
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_valorite
+
+
+ON=i_ingot_shadow Mytheril
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_mytheril
+
+
+ON=i_ingot_blackrock Blackrock
+TEST=BLACKSMITHING 100.0
+f_laminate i_laminate_blackrock
+
+[FUNCTION f_laminate]
+NEWITEM <ARGS>
+ACT.EQUIP
+
+[ITEMDEF i_laminate_iron]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_iron>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> iron ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_iron
+SRC.TARG.COLOR=03a7
+SRC.TARG.NAME=<SRC.TARG.NAME> (Iron Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_iron
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_rusty]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_rusty>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> rusty ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_rusty
+SRC.TARG.COLOR=0750
+SRC.TARG.NAME=<SRC.TARG.NAME> (Rusty Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_rusty
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_old_Copper]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_old_Copper>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Old Copper ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_old_Copper
+SRC.TARG.COLOR=0590
+SRC.TARG.NAME=<SRC.TARG.NAME> (Old Copper Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_old_Copper
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Dull_Copper]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Dull_Copper>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Dull Copper ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Dull_Copper
+SRC.TARG.COLOR=060a
+SRC.TARG.NAME=<SRC.TARG.NAME> (Dull Copper Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Dull_Copper
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_bronze]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_bronze>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Bronze ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_bronze
+SRC.TARG.COLOR=06d6
+SRC.TARG.NAME=<SRC.TARG.NAME> (Bronze Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_bronze
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Shadow]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Shadow>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Shadow ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Shadow
+SRC.TARG.COLOR=0770
+SRC.TARG.NAME=<SRC.TARG.NAME> (Shadow Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Shadow
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Copper]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Copper>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Copper ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Copper
+SRC.TARG.COLOR=0f1
+SRC.TARG.NAME=<SRC.TARG.NAME> (Copper Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Copper
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Gold]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Gold>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Gold ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Gold
+SRC.TARG.COLOR=045e
+SRC.TARG.NAME=<SRC.TARG.NAME> (Gold Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Gold
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Rose]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Rose>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Rose ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Rose
+SRC.TARG.COLOR=0665
+SRC.TARG.NAME=<SRC.TARG.NAME> (Rose Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Rose
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Agapite]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Agapite>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Agapite ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Agapite
+SRC.TARG.COLOR=0400
+SRC.TARG.NAME=<SRC.TARG.NAME> (Agapite Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Agapite
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Bloodrock]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Bloodrock>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Bloodrock ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Bloodrock
+SRC.TARG.COLOR=04c2
+SRC.TARG.NAME=<SRC.TARG.NAME> (Bloodrock Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Bloodrock
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Silver]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Silver>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Silver ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Silver
+SRC.TARG.COLOR=06dd
+//SRC.TARG.COLOR=05ae
+//SRC.TARG.COLOR=0231
+SRC.TARG.NAME=<SRC.TARG.NAME> (Silver Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Silver
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Verite]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Verite>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Verite ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Verite
+SRC.TARG.COLOR=07d1
+SRC.TARG.NAME=<SRC.TARG.NAME> (Verite Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Verite
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Valorite]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Valorite>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Valorite ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Valorite
+SRC.TARG.COLOR=0515
+SRC.TARG.NAME=<SRC.TARG.NAME> (Valorite Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Valorite
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Mytheril]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Mytheril>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Mytheril ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Mytheril
+SRC.TARG.COLOR=052d
+SRC.TARG.NAME=<SRC.TARG.NAME> (Mytheril Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Mytheril
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_laminate_Blackrock]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Laminate weapon
+
+ON=@Equip
+TARGET Choose the weapon you wish to laminate
+ATTR=attr_decay|attr_move_never
+TIMER=20
+
+ON=@Targon_Char
+REMOVE
+RETURN 1
+
+ON=@Targon_Item
+
+IF (<SRC.TARG.CONT> != <SRC.FINDLAYER(layer_pack).UID>)
+SRC.SYSMESSAGE The item must be in your pack
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_axe)
+IF !(<SRC.TARG.COLOR> == 0)
+SRC.SYSMESSAGE This item cannot be laminated further.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR>&020)
+SRC.SYSMESSAGE You dare not touch this, lest the magic be destroyed during lamination.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST <eval <SRC.TARG.WEIGHT>/10> i_ingot_Blackrock>)
+SRC.SYSMESSAGE You require <eval <SRC.TARG.WEIGHT>/10> Blackrock ingots to laminate this.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.LAMDIFFICULTY=<eval 100.0 - <SRC.BLACKSMITHING>>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> / 10>
+VAR.LAMDIFFICULTY=<eval <VAR.LAMDIFFICULTY> + 3>
+
+IF (RAND(<VAR.LAMDIFFICULTY>)==1)
+SRC.CONSUME <eval <SRC.TARG.WEIGHT>/10> i_ingot_Blackrock
+SRC.TARG.COLOR=0455
+SRC.TARG.NAME=<SRC.TARG.NAME> (Blackrock Laminated)
+SRC.SYSMESSAGE You successfully laminate the item
+ELSE
+SRC.CONSUME {1 <eval <SRC.TARG.WEIGHT>/10>} i_ingot_Blackrock
+SRC.SYSMESSAGE You fail to laminate the item. Some of the ingots are unusable.
+ENDIF
+
+VAR.LAMDIFFICULTY=
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can only laminate metal weapons.
+REMOVE
+RETURN 1
+ENDIF

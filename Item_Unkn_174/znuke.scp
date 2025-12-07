@@ -1,0 +1,124 @@
+//********************************************************************
+// This function might be useful during building phase.
+// You can easily delete or edit items between a certain z-level
+// It works similar to the nuke command.
+//
+// examples for using this function
+// ".znuke 10,20" 	     delete all items betwees Z-level 10 and 20
+// ".znuke 0,0,color=10"     colorize all items at Z-level 0
+// ".znuke 20,20,nudgeup 5"  nudgeup all items at Z-leve 20
+//
+// Don't use ".znuke x,y,move a,b". It does not work correctly.
+//
+// scripted for 55r402
+// by Dagoth
+//
+// last update: 11/18/04
+//********************************************************************
+
+// give this command to your GMs
+// usage is: .znuke z1,z2[,cmd]
+// z1, z2 is the z-level where to affect items
+// cmd is optional, when no cmd is given, items will be nuked
+[FUNCTION znuke]
+local.zmin = <strarg <args>>
+local.zmax = <strarg <streat <args>>>
+local.cmd = <streat <streat <args>>>
+if <isempty <local.zmin>> || <isempty <local.zmax>> || !<isnum <eval <local.zmin>>> || !<isnum <eval <local.zmax>>>
+    src.sysmessage @04ea Syntax: znuke z1,z2[,cmd]
+    return 1
+endif
+if <local.zmin> > <local.zmax>
+    src.sysmessage @04ea Error: z-level1 > z-level2!
+    return 1
+endif
+serv.newitem i_memory_znuke_target  //used to do targeting
+new.tag.zmin = <local.zmin>
+new.tag.zmax = <local.zmax>
+new.tag.cmd = <local.cmd>
+equip <new.uid>
+
+[ITEMDEF i_memory_znuke_target]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+targetg @04f2 Select area!
+
+ON=@TARGON_ITEM
+if <tag0.corner1_selected>
+   tag.p2.x=<cont.targp.x>
+   tag.p2.y=<cont.targp.y>
+   call f_znuke
+   remove
+else
+   tag.p1.x=<cont.targp.x>
+   tag.p1.y=<cont.targp.y>
+   targetg @04f2 Pick other corner!
+   tag.corner1_selected = 1
+endif
+return 1
+
+ON=@TARGON_GROUND
+if <tag0.corner1_selected>
+   tag.p2.x=<cont.targp.x>
+   tag.p2.y=<cont.targp.y>
+   call f_znuke
+   remove
+else
+   tag.p1.x=<cont.targp.x>
+   tag.p1.y=<cont.targp.y>
+   targetg @04f2 Pick other corner!
+   tag.corner1_selected = 1
+endif
+return 1
+
+ON=@TARGON_CANCEL
+remove
+
+[FUNCTION f_znuke]
+serv.newitem i_gold  //dummy item that moves through all positions
+new.attr=attr_invis
+local.count = 0
+for x <tag.p1.x> <tag.p2.x>	//move through all positions
+   for y <tag.p1.y> <tag.p2.y>
+      new.p <eval <local.x>>,<eval <local.y>>
+      if !<isnum <tag.cmd>> 
+         local.count += <new.f_znuke_cmd <tag.zmin>,<tag.zmax>,<tag.cmd>>
+      else
+         local.count += <new.f_znuke_remove <tag.zmin>,<tag.zmax>>
+      endif
+   endfor
+endfor
+new.remove  //remove the dummy item
+if <local.count> > 0
+    cont.sysmessage @04f2 <eval <local.count>> items affected.
+else
+    cont.sysmessage @04f2 No items affected.
+endif
+
+//removes all items between z1 and z2 at the current pos
+[FUNCTION f_znuke_remove]
+local.items = 0
+foritems 0
+   if (<uid>!=<src.uid>) && (<p.z> >= <argn1>) && (<p.z> <= <argn2>)
+      remove
+      local.items += 1
+   endif
+endfor
+return <local.items>
+
+//trys to execute the given command on all items between z1 and z2
+//at current position of the dummy item
+[FUNCTION f_znuke_cmd]
+local.command = <streat <streat <args>>>
+local.items = 0
+foritems 0
+   if (<uid>!=<src.uid>) && (<p.z> >= <argn1>) && (<p.z> <= <argn2>)
+      try <local.command>   //use specified command on the item
+      local.items += 1
+   endif
+endfor
+return <local.items>
+
+[eof]

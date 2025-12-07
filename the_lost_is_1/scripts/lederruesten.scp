@@ -1,0 +1,1833 @@
+//Lederruesten V. 1.0
+
+
+//Leather Ruestungen (inkl. Ressource)
+
+//Leather			11			skill:50
+//Studded leahter		13		skill:55
+
+//Ogre Leder			20		skill:60
+//"Studded" Ogre Leder		24	skill:65
+
+//Ettin Leder			24		skill:70
+//"Studded" Ettin Leder		28	skill:74
+
+//Troll Leder				25	skill:80
+//"Studded" Troll Leder		29	skill:85
+
+//Schlangen Leder			29	skill:88
+//"Studded" Schlangen Leder	33	skill:90
+
+//Eis Ettin Leder		27			skill:93
+//"Studded" Eis Ettin Leder	40		skill:96
+
+//Invul Leder			44		skill:98
+//Studded Invu Leder		50		skill:100
+
+//Barbarien Bone Rüstung(only barbaren)85	skill:80
+
+//*****************************************************************************
+//
+
+//Ogre Leder resources
+[ITEMDEF i_hide_ogre]
+ID=i_hide
+NAME=Ogreleder
+Value=5
+TYPE=t_hide
+Weight=2
+
+CATEGORY=Items by Professions
+Description=Hides_ogre (Pile)
+SUBSECTION=Tanner
+
+ON=@Create
+COLOR=02f1
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+[ITEMDEF i_hides_cut_ogre]
+DEFNAME=i_hides_cut_ogre
+ID=i_hides_cut
+NAME=cut up ogre leather
+RESOURCES= i_hide_ogre
+TYPE=T_LEATHER
+DYE=1
+WEIGHT=1
+DUPELIST=//01068,01081,01082
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Cut-up Leather Ogre
+
+ON=@Create
+COLOR=02f1
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+
+[ITEMDEF 01068]
+//cut up leather ogre
+DUPEITEM=01067
+
+
+ 
+
+//Ogre Leder 		color=02f1
+
+[ITEMDEF i_leather_cap_ogre]
+TYPE=t_armor_leather
+ID=01db9
+Weight=2
+Armor=24
+REQSTR=25
+RESOURCES=5 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Cap Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Cap
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_leather_gorget_ogre]
+TYPE=t_armor_leather
+ID=013c7
+Weight=1
+Armor=24
+REQSTR=25
+RESOURCES=4 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Gorget Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Gorget
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_leather_tunic_ogre]
+TYPE=t_armor_leather
+ID=013cc
+Weight=10
+Armor=24
+REQSTR=25
+RESOURCES=20 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Tunic Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Tunic
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_leather_sleeves_ogre]
+TYPE=t_armor_leather
+ID=013c5
+Weight=6
+Armor=24
+REQSTR=25
+RESOURCES=10 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Sleeves Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Sleeves
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_leather_gloves_ogre]
+TYPE=t_armor_leather
+ID=013c6
+Weight=4
+Armor=24
+REQSTR=25
+RESOURCES=6 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Gloves Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Gloves
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_leather_leggings_ogre]
+TYPE=t_armor_leather
+ID=013cb
+Weight=9
+Armor=24
+REQSTR=25
+RESOURCES=18 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Leggings Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Leggings
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_leather_bustier_ogre]		//oberteil ,kurz
+TYPE=t_armor_leather
+ID=01c0a
+Weight=5
+Armor=24
+REQSTR=25
+RESOURCES=15 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Bustier Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Bustier
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_leather_skirt_ogre]
+TYPE=t_armor_leather
+ID=01c08
+Weight=5
+Armor=24
+REQSTR=25
+RESOURCES=10 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Skirt Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Skirt
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_leather_femarmor_ogre]
+TYPE=t_armor_leather
+ID=01c06
+Weight=8
+Armor=24
+REQSTR=25
+RESOURCES=15 i_hides_cut_ogre
+SKILLMAKE=TAILORING 60.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor Ogre Leder
+DESCRIPTION=Leather Femarmor Ogre Leder
+
+ON=@Create
+NAME=Ogreleder armor
+HITPOINTS={40 50}
+Color=02f1
+
+//Studded
+[ITEMDEF i_studded_gorget_ogre]
+TYPE=T_ARMOR
+ID=013d6
+Weight=2
+Armor=29
+REQSTR=25
+RESOURCES=6 i_hides_cut_ogre, 2 i_ingot_iron
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Studded Armor Ogre Leder
+DESCRIPTION=Studded Gorget Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Studded Gorget
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_studded_sleeves_ogre]
+TYPE=T_ARMOR
+ID=013d4
+Weight=10
+Armor=29
+REQSTR=25
+RESOURCES=12 i_hides_cut_ogre, 2 i_ingot_iron
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Studded Armor Ogre Leder
+DESCRIPTION=Studded Sleeves Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Studded Sleeves
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_studded_gloves_ogre]
+TYPE=T_ARMOR
+ID=013d5
+Weight=6
+Armor=29
+REQSTR=25
+RESOURCES=8 i_hides_cut_ogre, 2 i_ingot_iron
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Studded Armor Ogre Leder
+DESCRIPTION=Studded Gloves Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Studded Gloves
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_studded_leggings_ogre]
+TYPE=T_ARMOR
+ID=013da
+Weight=12
+Armor=29
+REQSTR=25
+RESOURCES=20 i_hides_cut_ogre, 2 i_ingot_iron
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Studded Armor Ogre Leder
+DESCRIPTION=Studded Leggings Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Studded Leggings
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_studded_tunic_ogre]
+TYPE=T_ARMOR
+ID=013db
+Weight=15
+Armor=29
+REQSTR=25
+RESOURCES=22 i_hides_cut_ogre, 2 i_ingot_iron
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Studded Armor Ogre Leder
+DESCRIPTION=Studded Tunic Ogre Leder
+
+ON=@Create
+NAME=Ogreleder Studded Tunic
+HITPOINTS={40 50}
+Color=02f1
+
+[ITEMDEF i_studded_female_ogre]	//studded Female armor
+TYPE=T_ARMOR
+ID=01c02
+Weight=15
+Armor=25
+REQSTR=25
+RESOURCES=15 i_hides_cut_ogre, 2 i_ingot_iron
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Studded Armor Ogre Leder
+DESCRIPTION=Studded Female Ogre Leder
+
+ON=@CREATE
+NAME=Ogreleder Studded armor
+HITPOINTS={40 50}
+Color=02f1
+//end
+
+//Ettin Leder  ressource
+
+[ITEMDEF i_hide_ettin]
+// DEFNAME2=PILE_HIDES
+DEFNAME=i_hide_ettin
+NAME=Ettinleder
+ID=i_hide
+TYPE=t_hide // T_HIDE made into t_leather later ?
+WEIGHT=2
+VALUE=80
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Hides Ettin (Pile)
+
+On=@create
+COLOR=076c
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+[ITEMDEF i_hides_cut_ettin]
+DEFNAME=i_hides_cut_ettin
+ID=i_hides_cut
+NAME=cut up ettin leather
+RESOURCES= i_hide_ettin
+TYPE=T_LEATHER
+DYE=1
+WEIGHT=1
+DUPELIST=//01068,01081,01082
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Cut-up Leather ettin
+
+ON=@Create
+COLOR=076c
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+[ITEMDEF 01068]
+//cut up leather ettin
+DUPEITEM=01067
+
+//Ettin Armor	skill:70,74
+
+[ITEMDEF I_ELEDER_CAP]
+ID=01db9
+TYPE=t_armor_leather
+NAME=Ettinleder Cap
+WEIGHT=4
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+RESOURCES=5 i_hides_cut_ettin
+ARMOR=28
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Cap
+
+ON=@CREATE 
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_ELEDER_BOOTS]
+ID=01711
+TYPE=T_ARMOR
+NAME=Ettinleder Boots
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+RESOURCES=8 i_hides_cut_ettin
+WEIGHT=4
+DYE=1
+ARMOR=5
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Schuhe
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_ELEDER_GLOVES]
+ID=013c6
+NAME=Ettinleder Gloves
+TYPE=t_armor_leather
+RESOURCES=6 i_hides_cut_ettin
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=4
+ARMOR=29
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Gloves
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_ELEDER_GORGET]
+ID=013c7
+NAME=Ettinleder Gorget
+RESOURCES=4 i_hides_cut_ettin
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=1
+ARMOR=29
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Gorget
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_ELEDER_SLEEVES]
+ID=013c5
+NAME=Ettinleder Sleeves
+RESOURCES=10 i_hides_cut_ettin,1 i_ingot_iron
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=6
+ARMOR=29
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Sleeves
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_ELEDER_LEGGINGS]
+ID=013cb
+NAME=Ettinleder Leggings
+RESOURCES=18 i_hides_cut_ettin,1 i_ingot_iron
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=9
+ARMOR=29
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Leggings
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_BUSTIER]
+ID=01c0a
+NAME=Ettinleder Bustier
+RESOURCES=14 i_hides_cut_ettin,1 i_ingot_iron
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=5
+ARMOR=26
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Top
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_SHORTS]
+ID=01c00
+NAME=Ettinleder Shorts
+RESOURCES=8 i_hides_cut_ettin
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+TYPE=T_ARMOR
+WEIGHT=5
+ARMOR=29
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Shorts
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_SKIRT]
+ID=01c08
+NAME=Ettinleder Skirt
+RESOURCES=10 i_hides_cut_ettin
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+TYPE=T_ARMOR
+WEIGHT=5
+ARMOR=29
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Skirt
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_LEDER_ARMOR]			//Female Armor armor
+ID=01c06
+NAME=Ettinleder armor
+RESOURCES=15 i_hides_cut_ettin,1 i_ingot_iron
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=4
+ARMOR=26
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder (female) armor
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_ELEDER_TUNIC]		//male Tunic
+ID=013cc
+NAME=Ettinleder Tunic
+RESOURCES=20 i_hides_cut_ettin,1 i_ingot_iron
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=10
+ARMOR=29
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Tunic
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_STUDDED_GLOVES]				//studded
+ID=013d5
+NAME=Ettinleder Studded Gloves
+TYPE=t_armor
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+RESOURCES=8 i_hides_cut_ettin,1 i_ingot_iron
+WEIGHT=6
+FLIP=1
+ARMOR=33
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Studded Gloves
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_STUDDED_GORGET]
+ID=013d6
+NAME=Ettinleder Studded Gorget
+TYPE=T_ARMOR
+RESOURCES=6 i_hides_cut_ettin,1 i_ingot_iron
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+WEIGHT=2
+FLIP=1
+ARMOR=33
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Studded Gorget
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_STUDDED_SLEEVES]
+ID=013d4
+NAME=Ettinleder Studded Sleeves
+TYPE=T_ARMOR
+RESOURCES=12 i_hides_cut_ettin,3 i_ingot_iron
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+WEIGHT=10
+FLIP=1
+ARMOR=33
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Studded Sleeves
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_STUDDED_LEGGINGS]
+ID=013da
+NAME=Ettinleder Studded Leggings
+TYPE=T_ARMOR
+RESOURCES=20 i_hides_cut_ettin,4 i_ingot_iron
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+WEIGHT=12
+FLIP=1
+ARMOR=33
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Studded Leggings
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_STUDDED]				//female studded armor
+ID=01c02
+NAME=Ettinleder Studded armor
+RESOURCES=17 i_hides_cut_ettin,3 i_ingot_iron
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+WEIGHT=12
+ARMOR=30
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Studded female tunic
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_BUSTIER_STUDDED]
+ID=01c0c
+NAME=Ettinleder Studded Bustier 
+RESOURCES=17 i_hides_cut_ettin,1 i_ingot_iron
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+WEIGHT=8
+ARMOR=33
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Top Studded
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+[ITEMDEF I_E_STUDDED_TUNIC]
+ID=013db
+NAME=Ettinleder Studded Tunic
+TYPE=T_ARMOR
+RESOURCES=22 i_hides_cut_ettin,3 i_ingot_iron
+SKILLMAKE=TAILORING 74.0, t_sewing_kit
+WEIGHT=15
+FLIP=1
+ARMOR=33
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Ettin Armor
+DESCRIPTION=Ettinleder Studded Tunic
+
+ON=@Create
+COLOR=076c
+HITPOINTS=60
+
+//end
+
+
+//Troll Leder  skill:80
+[ITEMDEF i_hide_troll]
+// DEFNAME2=PILE_HIDES
+DEFNAME=i_hide_troll
+NAME=Trollleder
+ID=i_hide
+TYPE=t_hide // T_HIDE made into t_leather later ?
+WEIGHT=2
+VALUE=80
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Hides Troll (Pile)
+
+
+On=@create
+COLOR=0966
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+[ITEMDEF i_hides_cut_troll]
+DEFNAME=i_hides_cut_troll
+ID=i_hides_cut
+NAME=cut up troll leather
+RESOURCES= i_hide_troll
+TYPE=T_LEATHER
+DYE=1
+WEIGHT=1
+DUPELIST=//01068,01081,01082
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Cut-up Leather troll
+
+ON=@Create
+COLOR=0966
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+
+//Troll "normales" leder
+
+[ITEMDEF i_leather_cap_troll]
+TYPE=t_armor_leather
+ID=01db9
+Weight=4
+Armor=30
+REQSTR=25
+RESOURCES=5 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Cap troll Leder
+
+ON=@Create
+NAME=Trollleder Cap
+HITPOINTS={40 50}
+Color=0966
+
+[ITEMDEF i_leather_gorget_troll]
+TYPE=t_armor_leather
+ID=013c7
+Weight=1
+Armor=30
+REQSTR=25
+RESOURCES=4 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Gorget troll Leder
+
+ON=@Create
+NAME=Trollleder Gorget
+HITPOINTS={40 50}
+Color=0966
+
+[ITEMDEF i_leather_tunic_troll]
+TYPE=t_armor_leather
+ID=013cc
+Weight=10
+Armor=30
+REQSTR=25
+RESOURCES=20 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Tunic troll Leder
+
+ON=@Create
+NAME=Trollleder Tunic
+HITPOINTS={40 50}
+Color=0966
+
+[ITEMDEF i_leather_sleeves_troll]
+TYPE=t_armor_leather
+ID=013c5
+Weight=6
+Armor=30
+REQSTR=25
+RESOURCES=10 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Sleeves troll Leder
+
+ON=@Create
+NAME=Trollleder Sleeves
+HITPOINTS={40 50}
+Color=0966
+
+[ITEMDEF i_leather_gloves_troll]
+TYPE=t_armor_leather
+ID=013c6
+Weight=4
+Armor=30
+REQSTR=25
+RESOURCES=6 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Gloves troll Leder
+
+ON=@Create
+NAME=Trollleder Gloves
+HITPOINTS={40 50}
+Color=0966
+
+[ITEMDEF i_leather_leggings_troll]
+TYPE=t_armor_leather
+ID=013cb
+Weight=9
+Armor=30
+REQSTR=25
+RESOURCES=18 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Leggings troll Leder
+
+ON=@Create
+NAME=Trollleder Leggings
+HITPOINTS={40 50}
+Color=0966
+
+[ITEMDEF i_leather_bustier_troll]
+TYPE=t_armor_leather
+ID=01c0a
+Weight=5
+Armor=30
+REQSTR=25
+RESOURCES=15 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Bustier troll Leder
+
+ON=@Create
+NAME=Trollleder Bustier
+HITPOINTS={40 50}
+Color=0966
+
+[ITEMDEF i_leather_skirt_troll]
+TYPE=t_armor_leather
+ID=01c08
+Weight=5
+Armor=30
+REQSTR=25
+RESOURCES=10 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Skirt troll Leder
+
+ON=@Create
+NAME=Trollleder Skirt
+HITPOINTS={40 50}
+Color=0966
+
+[ITEMDEF i_leather_femarmor_troll]	//female armor (!= tunic!)
+TYPE=t_armor_leather
+ID=01c06
+Weight=8
+Armor=30
+REQSTR=25
+RESOURCES=15 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor troll Leder
+DESCRIPTION=Leather Femarmor troll Leder
+
+ON=@Create
+NAME=Trollleder armor
+HITPOINTS={40 50}
+Color=0966
+//
+
+//Troll Rüstung (studded)
+[ITEMDEF i_studded_sleeves_troll]
+DEFNAME=i_studded_sleeves_troll
+TYPE=T_ARMOR
+ID=i_studded_sleeves
+NAME=Studded Trollleder Sleeves
+WEIGHT=10
+FLIP=1
+ARMOR=35
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Troll Armor
+DESCRIPTION=Studded Sleeves Troll
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=12 i_hides_cut_troll,3 i_ingot_iron
+VALUE=80
+ON=@Create
+HITPOINTS={50 62}
+COLOR=0966
+
+[ITEMDEF i_studded_gloves_troll]
+DEFNAME=i_studded_gloves_troll
+TYPE=t_armor
+ID=i_studded_gloves
+NAME=Studded Trollleder Gloves
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=8 i_hides_cut_troll,1 i_ingot_iron
+WEIGHT=6
+FLIP=1
+ARMOR=35
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Troll Armor
+DESCRIPTION=Studded Gloves Troll
+VALUE=80
+
+ON=@Create
+HITPOINTS={50 62}
+COLOR=0966
+
+[ITEMDEF i_studded_gorget_troll]
+DEFNAME=i_studded_gorget_troll
+TYPE=T_ARMOR
+ID=i_studded_gorget
+NAME=Studded Trollleder Gorget
+WEIGHT=2
+FLIP=1
+ARMOR=35
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Troll Armor
+DESCRIPTION=Studded Gorget Troll
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=6 i_hides_cut_troll,1 i_ingot_iron
+VALUE=80
+ON=@Create
+HITPOINTS={50 62}
+COLOR=0966
+
+[ITEMDEF i_studded_leggings_troll]
+DEFNAME=i_studded_leggings_troll
+TYPE=T_ARMOR
+ID=i_studded_leggings
+NAME=Studded Trollleder Leggings
+WEIGHT=12
+FLIP=1
+ARMOR=35
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Troll Armor
+DESCRIPTION=Studded Leggings Troll
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=20 i_hides_cut_troll,4 i_ingot_iron
+VALUE=80
+ON=@Create
+HITPOINTS={50 62}
+COLOR=0966
+
+[ITEMDEF i_studded_tunic_troll]
+DEFNAME=i_studded_tunic_troll
+TYPE=T_ARMOR
+ID=i_studded_tunic
+NAME=Studded Trollleder Tunic
+WEIGHT=15
+FLIP=1
+ARMOR=35
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Troll Armor
+DESCRIPTION=Studded Tunic Troll
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=22 i_hides_cut_troll,3 i_ingot_iron
+VALUE=80
+ON=@Create
+HITPOINTS={50 62}
+COLOR=0966
+
+
+
+//Schlangen Leder ressource	skill:88, 90
+//
+[ITEMDEF i_hide_schlange]
+// DEFNAME2=PILE_HIDES
+DEFNAME=i_hide_schlange
+NAME=Schlangenleder
+ID=i_hide
+TYPE=t_hide // T_HIDE made into t_leather later ?
+WEIGHT=2
+VALUE=80
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Hides Schlangen (Pile)
+
+On=@create
+	COLOR=007d5
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+[ITEMDEF i_hides_cut_schlange]
+DEFNAME=i_hides_cut_schlange
+ID=i_hides_cut
+NAME=cut up schlangen leather
+RESOURCES= i_hide_schlange
+TYPE=T_LEATHER
+DYE=1
+WEIGHT=1
+DUPELIST=
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Cut-up Leather schlange
+
+ON=@Create
+COLOR=007d5
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+
+
+//Schlangen Leder (normales Leder) 
+//Schlangen "normales" leder
+
+[ITEMDEF i_leather_cap_schlangen]
+TYPE=t_armor_leather
+ID=01db9
+Weight=4
+Armor=30
+REQSTR=25
+RESOURCES=5 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Cap schlange Leder
+
+ON=@Create
+NAME=Schlangenleder Cap
+HITPOINTS={50 65}
+COLOR=007d5
+
+[ITEMDEF i_leather_gorget_schlangen]
+TYPE=t_armor_leather
+ID=013c7
+Weight=1
+Armor=30
+REQSTR=25
+RESOURCES=4 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Gorget schlange Leder
+
+ON=@Create
+NAME=Schlangenleder Gorget
+HITPOINTS={50 65}
+COLOR=007d5
+
+[ITEMDEF i_leather_tunic_schlangen]
+TYPE=t_armor_leather
+ID=013cc
+Weight=10
+Armor=30
+REQSTR=25
+RESOURCES=20 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Tunic schlange Leder
+
+ON=@Create
+NAME=Schlangenleder Tunic
+HITPOINTS={50 65}
+COLOR=007d5
+
+[ITEMDEF i_leather_sleeves_schlangen]
+TYPE=t_armor_leather
+ID=013c5
+Weight=6
+Armor=30
+REQSTR=25
+RESOURCES=10 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Sleeves schlange Leder
+
+ON=@Create
+NAME=Schlangenleder Sleeves
+HITPOINTS={50 65}
+COLOR=007d5
+
+[ITEMDEF i_leather_gloves_schlangen]
+TYPE=t_armor_leather
+ID=013c6
+Weight=4
+Armor=30
+REQSTR=25
+RESOURCES=6 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Gloves schlange Leder
+
+ON=@Create
+NAME=Schlangenleder Gloves
+HITPOINTS={50 65}
+COLOR=007d5
+
+[ITEMDEF i_leather_leggings_schlangen]
+TYPE=t_armor_leather
+ID=013cb
+Weight=9
+Armor=30
+REQSTR=25
+RESOURCES=18 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Leggings schlange Leder
+
+ON=@Create
+NAME=Schlangenleder Leggings
+HITPOINTS={50 65}
+COLOR=007d5
+
+[ITEMDEF i_leather_bustier_schlangen]
+TYPE=t_armor_leather
+ID=01c0a
+Weight=5
+Armor=30
+REQSTR=25
+RESOURCES=15 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Bustier schlange Leder
+
+ON=@Create
+NAME=Schlangenleder Bustier
+HITPOINTS={50 65}
+COLOR=007d5
+
+[ITEMDEF i_leather_skirt_schlangen]
+TYPE=t_armor_leather
+ID=01c08
+Weight=5
+Armor=30
+REQSTR=25
+RESOURCES=10 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Skirt schlange Leder
+
+ON=@Create
+NAME=Schlangenleder Skirt
+HITPOINTS={50 65}
+COLOR=007d5
+
+[ITEMDEF i_leather_femarmor_schlangen]
+TYPE=t_armor_leather
+ID=01c06
+Weight=8
+Armor=30
+REQSTR=25
+RESOURCES=15 i_hides_cut_schlange
+SKILLMAKE=TAILORING 88.0, t_sewing_kit
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Leather Armor schlange Leder
+DESCRIPTION=Leather Femarmor schlange Leder
+
+ON=@Create
+NAME=Schlangenleder armor
+HITPOINTS={50 65}
+COLOR=007d5
+//
+
+//Schlangen  Rüstung ( studded)
+[ITEMDEF i_studded_sleeves_schlangen]
+DEFNAME=i_studded_sleeves_schlangen
+TYPE=T_ARMOR
+ID=i_studded_sleeves
+NAME=Studded Schlangenleder Sleeves
+WEIGHT=10
+FLIP=1
+ARMOR=39
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Schlangen Armor
+DESCRIPTION=Studded Sleeves schlangen
+SKILLMAKE=TAILORING 90.0, t_sewing_kit
+RESOURCES=12 i_hides_cut_schlange,3 i_ingot_iron
+VALUE=80
+ON=@Create
+HITPOINTS={52 66}
+COLOR=007d5
+
+[ITEMDEF i_studded_gloves_schlangen]
+DEFNAME=i_studded_gloves_schlangen
+TYPE=t_armor
+ID=i_studded_gloves
+NAME=Studded Schlangenleder Gloves
+SKILLMAKE=TAILORING 90.0, t_sewing_kit
+RESOURCES=8 i_hides_cut_schlange,1 i_ingot_iron
+WEIGHT=6
+FLIP=1
+ARMOR=39
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Schlangen Armor
+DESCRIPTION=Studded Gloves schlangen
+VALUE=80
+
+ON=@Create
+HITPOINTS={52 66}
+COLOR=007d5
+
+[ITEMDEF i_studded_gorget_schlangen]
+DEFNAME=i_studded_gorget_schlangen
+TYPE=T_ARMOR
+ID=i_studded_gorget
+NAME=Studded Schlangenleder Gorget
+WEIGHT=2
+FLIP=1
+ARMOR=39
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Schlangen Armor
+DESCRIPTION=Studded Gorget schlangen
+SKILLMAKE=TAILORING 90.0, t_sewing_kit
+RESOURCES=6 i_hides_cut_schlange,1 i_ingot_iron
+VALUE=80
+ON=@Create
+HITPOINTS={52 66}
+COLOR=007d5
+
+[ITEMDEF i_studded_leggings_schlangen]
+DEFNAME=i_studded_leggings_schlangen
+TYPE=T_ARMOR
+ID=i_studded_leggings
+NAME=Studded Schlangenleder Leggings
+WEIGHT=12
+FLIP=1
+ARMOR=39
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Schlangen Armor
+DESCRIPTION=Studded Leggings schlangen
+SKILLMAKE=TAILORING 90.0, t_sewing_kit
+RESOURCES=20 i_hides_cut_schlange,4 i_ingot_iron
+VALUE=80
+ON=@Create
+HITPOINTS={52 66}
+COLOR=007d5
+
+[ITEMDEF i_studded_tunic_schlangen]
+DEFNAME=i_studded_tunic_schlangen
+TYPE=T_ARMOR
+ID=i_studded_tunic
+NAME=Studded Schlangenleder Tunic
+WEIGHT=15
+FLIP=1
+ARMOR=39
+REQSTR=25
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Schlangen Armor
+DESCRIPTION=Studded Tunic schlangen
+SKILLMAKE=TAILORING 90.0, t_sewing_kit
+RESOURCES=22 i_hides_cut_schlange,3 i_ingot_iron
+VALUE=80
+ON=@Create
+HITPOINTS={52 66}
+COLOR=007d5
+
+//EIS Ettin Leder ressource		skill 93, 96
+[ITEMDEF i_hide_ettin_eis]
+// DEFNAME2=PILE_HIDES
+DEFNAME=i_hide_ettin_eis
+NAME=Eisettinleder
+ID=i_hide
+TYPE=t_hide // T_HIDE made into t_leather later ?
+WEIGHT=2
+VALUE=80
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Hides Ettin_eis (Pile)
+On=@create
+COLOR=00482
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+[ITEMDEF i_hides_cut_ettin_eis]
+DEFNAME=i_hides_cut_ettin_eis
+ID=i_hides_cut
+NAME=cut up eisettin leather
+RESOURCES= i_hide_ettin_eis
+TYPE=T_LEATHER
+DYE=1
+WEIGHT=1
+DUPELIST=
+CATEGORY=Items by Professions
+SUBSECTION=Tanner
+DESCRIPTION=Cut-up Leather eis ettin
+
+ON=@Create
+COLOR=00482
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your backpack."
+   RETURN 1
+ENDIF
+
+
+
+//Leather Eisettin Armor		skill: 93, 96
+
+[ITEMDEF I_ELEDER_W_CAP]
+ID=01db9
+NAME=Eisettinleder Cap
+WEIGHT=4
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+RESOURCES=5 i_hides_cut_ettin_eis
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Cap
+
+ON=@CREATE 
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_ELEDER_W_BOOTS]
+ID=01711
+TYPE=T_ARMOR
+NAME=Eisettinleder Boots
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+RESOURCES=8 i_hides_cut_ettin_eis
+WEIGHT=4
+DYE=1
+ARMOR=5
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Schuhe
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_ELEDER_W_GLOVES]
+ID=013c6
+NAME=Eisettinleder Gloves
+TYPE=t_armor_leather
+RESOURCES=6 i_hides_cut_ettin_eis
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+WEIGHT=4
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Gloves
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_ELEDER_W_GORGET]
+ID=013c7
+NAME=Eisettinleder Gorget
+RESOURCES=4 i_hides_cut_ettin_eis
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+WEIGHT=1
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Gorget
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_ELEDER_W_SLEEVES]
+ID=013c5
+NAME=Eisettinleder Sleeves
+RESOURCES=10 i_hides_cut_ettin_eis,1 i_ingot_iron
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+WEIGHT=6
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Sleeves
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_ELEDER_W_LEGGINGS]
+ID=013cb
+NAME=Eisettinleder Leggings
+RESOURCES=18 i_hides_cut_ettin_eis,1 i_ingot_iron
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+WEIGHT=9
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Leggings
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_BUSTIER]
+ID=01c0a
+NAME=Eisettinleder Bustier
+RESOURCES=15 i_hides_cut_ettin_eis,1 i_ingot_iron
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+WEIGHT=5
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Top
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_SHORTS]
+ID=01c00
+NAME=Eisettinleder Shorts
+RESOURCES=8 i_hides_cut_ettin_eis
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+TYPE=T_ARMOR
+WEIGHT=5
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Shorts
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_SKIRT]
+ID=01c08
+NAME=Eisettinleder Skirt
+RESOURCES=10 i_hides_cut_ettin_eis
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+TYPE=T_ARMOR
+WEIGHT=5
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Rock
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_LEDER_ARMOR]
+ID=01c06
+NAME=Eisettinleder Armor
+RESOURCES=10 i_hides_cut_ettin_eis,1 i_ingot_iron
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+WEIGHT=8
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Armor
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_ELEDER_W_TUNIC]
+ID=013cc
+NAME=Eisettinleder Tunic
+RESOURCES=20 i_hides_cut_ettin_eis,1 i_ingot_iron
+SKILLMAKE=TAILORING 93.0, t_sewing_kit
+WEIGHT=10
+ARMOR=32
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Tunic
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_STUDDED_GLOVES]				//studded
+ID=013d5
+NAME=Studded Eisettinleder Gloves
+TYPE=t_armor
+SKILLMAKE=TAILORING 96.0, t_sewing_kit
+RESOURCES=8 i_hides_cut_ettin_eis,1 i_ingot_iron
+WEIGHT=6
+FLIP=1
+ARMOR=46
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Studded Gloves
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_STUDDED_GORGET]
+ID=013d6
+NAME=Studded Eisettinleder Gorget
+TYPE=T_ARMOR
+RESOURCES=6 i_hides_cut_ettin_eis,1 i_ingot_iron
+SKILLMAKE=TAILORING 96.0, t_sewing_kit
+WEIGHT=2
+FLIP=1
+ARMOR=46
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Studded Gorget
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_STUDDED_SLEEVES]
+ID=013d4
+NAME=Studded Eisettinleder Sleeves
+TYPE=T_ARMOR
+RESOURCES=12 i_hides_cut_ettin_eis,3 i_ingot_iron
+SKILLMAKE=TAILORING 96.0, t_sewing_kit
+WEIGHT=10
+FLIP=1
+ARMOR=46
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Studded Sleeves
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_STUDDED_LEGGINGS]
+ID=013da
+NAME=Studded Eisettinleder Leggings
+TYPE=T_ARMOR
+RESOURCES=20 i_hides_cut_ettin_eis,4 i_ingot_iron
+SKILLMAKE=TAILORING 96.0, t_sewing_kit
+WEIGHT=12
+FLIP=1
+ARMOR=46
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Studded Leggings
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_STUDDED]
+ID=01c02
+NAME=Studded Eisettinleder Armor
+RESOURCES=10 i_hides_cut_ettin_eis,3 i_ingot_iron
+SKILLMAKE=TAILORING 96.0, t_sewing_kit
+WEIGHT=12
+ARMOR=46
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Studded armor
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_BUSTIER_STUDDED]
+ID=01c0c
+NAME=Studded Eisettinleder Bustier 
+RESOURCES=17 i_hides_cut_ettin_eis,1 i_ingot_iron
+SKILLMAKE=TAILORING 96.0, t_sewing_kit
+WEIGHT=8
+ARMOR=42
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Studded bustier
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+[ITEMDEF I_E_W_STUDDED_TUNIC]
+ID=013db
+NAME=Studded Eisettinleder Tunic
+TYPE=T_ARMOR
+RESOURCES=22 i_hides_cut_ettin_eis,3 i_ingot_iron
+SKILLMAKE=TAILORING 96.0, t_sewing_kit
+WEIGHT=15
+FLIP=1
+ARMOR=49
+REQSTR=25
+VALUE=80
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Eisettin Armor
+DESCRIPTION=Eis Ettinleder Studded Tunic
+
+ON=@Create
+COLOR=00482
+HITPOINTS={70 80}
+
+//Barbarien Bone Rüstung , nur für Barbaren
+[FUNCTION f_bar_drop]
+	if ( <SRC.TAG.RACE> !=Barbar )
+		CONT.SYSMESSAGE="You are not a Barbar !"
+		BOUNCE
+	endif
+
+[ITEMDEF i_bar_bone_arms]
+DEFNAME=i_bar_bone_arms
+ID=i_bone_arms
+NAME=Barbarien Bone Arms
+TYPE=t_armor_leather
+FLIP=1
+RESOURCES=18 i_reag_daemon_bone 	//deamon bone 
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+WEIGHT=2
+ARMOR=85
+REQSTR=50
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Bone Armor fuer Barbaren
+DESCRIPTION=Bone Arms
+DUPELIST=01453
+VALUE=80
+ON=@Create
+HITPOINTS=80
+COLOR=color_o_shadow
+ON=@Equip
+	f_bar_drop
+[ITEMDEF i_bar_bone_chest]
+DEFNAME=i_bar_bone_chest
+ID=i_bone_chest
+NAME=Barbarien Bone Chest
+TYPE=t_armor_leather
+FLIP=1
+RESOURCES=30 i_reag_daemon_bone, 10 i_hides_cut_troll
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+WEIGHT=11
+ARMOR=85
+REQSTR=50
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Bone Armor fuer Barbaren
+DESCRIPTION=Bone Chest
+DUPELIST=01454
+VALUE=80
+ON=@Create
+HITPOINTS=80
+COLOR=color_o_shadow
+ON=@Equip
+	f_bar_drop
+[ITEMDEF i_bar_bone_gloves]
+DEFNAME=i_bar_bone_gloves
+ID=i_bone_gloves
+TYPE=t_armor_leather
+NAME=Barbarien Bone Gloves
+FLIP=1
+RESOURCES=12 i_reag_daemon_bone
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+WEIGHT=3
+ARMOR=85
+REQSTR=40
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Bone Armor fuer Barbaren
+DESCRIPTION=Bone Gloves
+DUPELIST=01455
+VALUE=80
+ON=@Create
+HITPOINTS=80
+COLOR=color_o_shadow
+ON=@Equip
+	f_bar_drop
+[ITEMDEF i_bar_bone_helmet]
+DEFNAME=i_bar_bone_helmet
+TYPE=t_armor_leather
+NAME=Barbarien Bone Helmet
+ID=i_bone_helmet
+FLIP=1
+RESOURCES=10 i_reag_daemon_bone
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+WEIGHT=4
+ARMOR=85
+REQSTR=50
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Bone Armor fuer Barbaren
+DESCRIPTION=Bone Helmet
+DUPELIST=01456
+VALUE=80
+ON=@Create
+HITPOINTS=80
+COLOR=color_o_shadow
+ON=@Equip
+	f_bar_drop
+[ITEMDEF i_bar_bone_leggings]
+DEFNAME=i_bar_bone_leggings
+ID=i_bone_leggings
+NAME=Barbarien Bone Leggings
+TYPE=t_armor_leather
+FLIP=1
+RESOURCES=22 i_reag_daemon_bone
+SKILLMAKE=TAILORING 80.0, t_sewing_kit
+WEIGHT=6
+ARMOR=85
+CATEGORY=Farbige Lederruesten
+SUBSECTION=Bone Armor fuer Barbaren
+DESCRIPTION=Bone Legs
+DUPELIST=01457
+VALUE=80
+ON=@Create
+HITPOINTS=80
+COLOR=color_o_shadow
+ON=@Equip
+	f_bar_drop
+//end
+
+[EOF]

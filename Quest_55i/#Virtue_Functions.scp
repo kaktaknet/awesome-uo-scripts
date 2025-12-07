@@ -1,0 +1,454 @@
+//2002 OSI Virue System Functions
+
+//See this page:
+//http://update.uo.com/design_389.html
+
+[PLEVEL 1]
+VIRTUE
+
+[Function Virtue]
+Dialog d_virtue_main
+
+[Function f_virtue_Sacrifice]
+	if <Findid.I_MEM_Virtue_Sacrifice>
+		sysmessage "You can only sacrifice your fame once a day"
+		return 1
+	endif
+	
+	newitem I_MEM_Virtue_Sacrifice
+	act.p		= <p>
+	act.layer	= 30
+	act.timer	= 30		//Target in 30 seconds
+	act.cont	= <src.uid>
+	act.target Select A Creature within 30 Seconds
+	
+[Function f_virtue_Sacrifice_Resurrect]
+	if <eval <src.tag.Sacrifice>> == 0
+		Src.sysmessage "You do not have the ability to resurrect yourself"
+		return 1
+	endif
+		
+	if ( !( <src.findid.i_mem_sacrifice_resurrect> )) //Didnt Resurrect within a week
+		//then resurrect
+		f_virtue_self_resurrect
+	else
+		if ( <eval <src.tag.Sacrifice>> <= 1 )
+			if ( <src.findid.i_mem_sacrifice_resurrect.morex> < 1 )
+			//Level 1 can only resurrect once per week, They can only resurrect if the memory
+			//Obj has a record less than 1
+				f_virtue_self_resurrect
+			else
+				src.sysmessage "You have reach the resurrection limit."
+				return 1	//Must stop proceeding here
+			endif
+		elseif ( <eval <src.tag.Sacrifice>> <= 3 )
+			//Level 2 ppl
+			if ( <src.findid.i_mem_sacrifice_resurrect.morex> < 2 )
+				f_virtue_self_resurrect
+			else
+				src.sysmessage "You have reach the resurrection limit."
+				return 1
+			endif
+		Elseif ( <eval <src.tag.Sacrifice>> <=5 ) 
+			//Level 3 can resurrect 3 times per week, so the record should be less than 3.
+			if ( <src.findid.i_mem_sacrifice_resurrect.morex> < 3 )
+				f_virtue_self_resurrect
+			else
+				src.sysmessage "You have reach the resurrection limit."
+				return 1	//Must stop proceeding here
+			endif			
+		else
+			src.sysmessage "You have reach the resurrection limit."
+			return 1
+		endif
+	endif
+
+[function f_virtue_self_resurrect]
+	if (!( <src.flags> & 02 ))
+		src.sysmessage "You are still alive"
+		return 1
+	endif
+	
+	IF ( <SRC.REGION.FLAGS>==01092 ) || ( <SRC.REGION.FLAGS>==01192 )
+		src.sysmessage "You can not resurrect near a house"
+		return 1
+	endif
+	
+	if ( <src.flags> & 02000000 ) //Criminal
+		src.sysmessage "Criminal Can not self resurrect"
+		return 1
+	endif
+	
+	src.resurrect
+	
+	if ( <src.hits> > 0 ) //resurrected.
+		src.hits = 1
+		src.mana = 1
+		if <src.findid.i_mem_sacrifice_resurrect>
+			src.findid.i_mem_sacrifice_resurrect.morex = <eval <src.findid.i_mem_sacrifice_resurrect.morex> + 1>
+		else
+			src.newitem i_mem_sacrifice_resurrect
+			src.act.timer	= 3600	//an hour
+			src.act.more1	= 24 * 7	//a week
+			src.act.morex	= 1
+			src.act.layer	= 30
+			src.act.update
+			src.act.cont	= <src.uid>
+		endif
+		
+		return 1
+	endif
+	
+	return 0		
+		
+[itemdef i_mem_sacrifice_resurrect]
+ID	=i_Memory
+TYPE	=T_eq_Script
+NAME	=Self Res Count
+
+ON=@Create
+	LAYER	= 30
+	ATTR	= 02	//Decay
+	
+ON=@Timer
+	if <MORE1>	= 0
+		return 0
+	else
+		MORE1	= <eval <MORE1> +- 1 >
+		Timer	= 3600
+		return 1
+	endif
+
+			
+	
+[function f_virtue_exp_Sacrifice]
+	if <eval <src.tag.Sacrifice>> == 0  //Level 0
+		if (<eval <src.tag.Sacrifice.exp>>) >= 50  //Gain a level
+			src.tag.Sacrifice = <eval (<src.tag.Sacrifice> + 1)>
+			src.hear "You have achieved a new level in Sacrifice"
+		endif
+	elseif <eval <src.tag.Sacrifice>> == 1 //Lv 1
+	//Now players should be allow Self-Resurrect Once per week
+		if (<eval <src.tag.Sacrifice.exp>>) >= 100
+			src.tag.Sacrifice = <eval (<src.tag.Sacrifice> + 1)>
+			src.hear "You have achieved a new level in Sacrifice"
+		endif
+	elseif <eval <src.tag.Sacrifice>> == 2
+		if (<eval <src.tag.Sacrifice.exp>>) >= 200
+			src.tag.Sacrifice = <eval (<src.tag.Sacrifice> + 1>
+			src.hear "You have achieved a new level in Sacrifice"
+		endif
+	elseif <eval <src.tag.sacrifice>> == 3
+	//Now players should be allow Self-Resurrect Twice Per week
+		if (<eval <src.tag.Sacrifice.exp>>) >= 500
+			src.tag.Sacrifice = <eval (<src.tag.Sacrifice> + 1)>
+			src.hear "You have achieved a new level in Sacrifice"
+		endif
+	elseif <eval <Src.tag.sacrifice>> == 4
+		if (<eval <src.tag.Sacrifice.exp>>) >= 1000
+			src.tag.Sacrifice = <eval (<src.tag.Sacrifice> + 1)>
+			src.hear "You have achieved a new level in Sacrifice"
+		endif
+	elseif <eval <src.tag.sacrifice>> == 5
+	//Now players should be allow Self-Resurrect Three Times Per week
+		if (<eval <src.tag.Sacrifice.exp>>) >= 1700
+			src.tag.Sacrifice = <eval (<src.tag.Sacrifice> + 1)>
+			src.hear "You have achieved a goal in Sacrifice"
+		endif
+	Endif
+		
+
+[ITEMDEF I_MEM_Virtue_Sacrifice]
+ID	=i_Memory
+TYPE	=T_eq_Script
+NAME	=Sacrifice Target
+
+ON=@TARGON_CHAR
+	if (<src.fame> <= 100)
+		src.message "You are not famous enough, that you have nothing to be sacrificed"
+		REmove
+		return 1
+	endif
+		
+	if <src.targ.hits> <= <eval (<src.targ.str> * 15 / 100)>
+		src.sysmessage "Your target is already harmed."
+		remove
+		return 1
+	endif
+	
+	if !(<src.targ.canseelos>)
+		if <src.targ.distance> > 8
+			src.sysmessage "That is too far away"
+		else
+			src.sysmessage "You can not see your target"
+		endif
+		
+		remove
+		return 1
+	endif
+	
+	if <src.flags> & 02
+		src.sysmessage "You are dead"
+		remove
+		return 1
+	endif
+		
+	if (<src.targ.body> == c_liche) || (<src.targ.body> == c_gargoyle) || (<src.targ.ID> == c_Daemon) || (<src.targ.ID> == c_H_EvilMage) || (<src.targ.ID> == c_H_EvilMage_F)
+		src.Emote Sacrificed fame to defeat <src.targ.name>
+		src.targ.damage (<eval <Src.fame>/4>)
+		src.targ.effect 2,0374a,6,16,0
+		src.tag.Sacrifice.exp = <eval (<src.tag.Sacrifice.exp>) + (<src.fame>/200)>
+		src.fame = 0
+		src.f_virtue_exp_Sacrifice
+		timer		= 3600 	//An Hour
+		MORE1		= 6	//Six hours of online time is more than enough
+		return 1
+	else
+		src.sysmessage "You can not sacrifice your fame upon your target"
+		return 1
+	endif
+	
+	remove
+	return 1
+
+ON=@TIMER
+	if (<more1>	= 0)
+		return 0
+	else
+		more1	= <more1> - 1
+		timer	= 3600
+		return 1
+	endif
+	
+on=@TARGON_ITEM
+	remove
+	return 1
+	
+//////////////////END SACRIFICE//////////////////////
+
+
+//===============Humility===============
+
+//this virtue is about helping young players
+//I would suggest install an event on the young player, and 
+//a memory obj
+//but since @SkillGain doesnt quite work, we have to figure
+//some way out to reward the veteran player.
+
+
+
+/////////////////////////////////////////////////////////////////
+//Compassion : Helping NPCs
+//Compassion Exp Gaining Quests Is not Included in this file.
+/////////////////////////////////////////////////////////////////
+
+
+[Function f_virtue_exp_gain_compassion]
+//Call this when a Compassion Related Quest is done
+//Src.F_Virtue_Exp_Gain_Compassion {10 20}   //<-- gain 10-20 points
+
+	if <eval <args>> > 0
+		tag.compassion.exp = <eval <eval <src.tag.compassion.exp>> + <eval <args>>>
+		sysmessage "You Have Learned Some Knowledge of The Virtue of Compassion"
+		f_virtue_exp_compassion
+	endif
+	
+
+[function f_virtue_exp_Compassion]
+	if <eval <src.tag.Compassion>> == 0  //Level 0
+		if (<eval <src.tag.Compassion.exp>>) >= 50  //Gain a level
+			src.tag.Compassion = <eval ( <src.tag.Compassion> + 1) >
+			src.events +e_Virtue_Compassion
+			src.hear "You have achieved a new level in Compassion"
+		endif
+	elseif <eval <src.tag.Compassion>> == 1 //Lv 1
+	//Starting From here, the resurrected player should have 20% of his hits back
+	
+		if (<eval <src.tag.Compassion.exp>>) >= 100
+			src.tag.Compassion = <eval (<src.tag.Compassion> + 1)>
+			src.events +e_Virtue_Compassion
+			src.hear "You have achieved a new level in Compassion"
+		endif
+	elseif <eval <src.tag.Compassion>> == 2
+		if (<eval <src.tag.Compassion.exp>>) >= 200
+			src.tag.Compassion = <eval (<src.tag.Compassion> + 1>
+			src.events +e_Virtue_Compassion
+			src.hear "You have achieved a new level in Compassion"
+		endif
+	elseif <eval <src.tag.Compassion>> == 3
+	//40% of hits
+		if (<eval <src.tag.Compassion.exp>>) >= 500
+			src.tag.Compassion = <eval (<src.tag.Compassion> + 1)>
+			src.events +e_Virtue_Compassion
+			src.hear "You have achieved a new level in Compassion"
+		endif
+	elseif <eval <Src.tag.Compassion>> == 4
+		if (<eval <src.tag.Compassion.exp>>) >= 1000
+			src.tag.Compassion = <eval (<src.tag.Compassion> + 1)>
+			src.events +e_Virtue_Compassion
+			src.hear "You have achieved a new level in Compassion"
+		endif
+	elseif <eval <src.tag.Compassion>> == 5
+	//80% of hits
+		if (<eval <src.tag.Compassion.exp>>) >= 1500
+			src.tag.Compassion = <eval (<src.tag.Compassion> + 1)>
+			src.events +e_Virtue_Compassion
+			src.hear "You have achieved a goal in Compassion"
+		endif
+	Endif
+	
+[itemdef i_virtue_restimer]
+id	= I_Memory
+type	= t_eq_script
+
+on=@create
+	timer = 8
+	layer = 30
+	
+on=@timer
+	link.act = <tag.actuid>
+	link.f_virtue_compassion_resurrect_done <eval <tag.Percentage>>
+	link.mana	= <eval <link.mana> +- 50>
+	link.consume 1 i_reag_blood_moss
+	link.consume 1 i_reag_ginseng
+	link.consume 1 i_reag_garlic
+
+	remove
+	return 0
+	
+[function f_virtue_compassion_resurrect]
+	if ( <argn> > 100 )
+		<argn> = 100
+	endif	
+	
+	if ( <src.isgm> )
+		src.f_virtue_compassion_resurrect_done <argn>	//pass the argn
+		return 1
+	endif
+	
+	if ( <src.findid.i_virtue_restimer> )
+		src.sysmessage "You have to wait awhile to cast again"
+		return 1
+	endif
+		
+	src.tag.virtueactuid = <src.act.uid>
+	
+	src.newitem i_virtue_restimer
+	src.act.tag.ActUid = <src.tag.virtueActUid>
+	src.act.tag.Percentage = <argn>
+	src.act.link	= <src.uid>
+	src.act.layer	= 30
+	src.act.p	= <src.p>
+	src.act.timer	= 8
+	src.act.update
+	src.act.cont	= <src.uid>
+	
+	src.tag.virtueactuid =
+	return 1
+
+[function f_virtue_compassion_resurrect_done]	//int ARGN = percentage of hits after resurrected
+	
+	if ( <act.canResurrect> )		
+		act.resurrect
+		act.hits = <eval (<act.str> * <ARGN>) / 100>
+		act.fix
+		act.sysmessage "You have been resurrected by <name>, You regained <argn>% of your hits due to his compassion."		
+	else
+		sysmessage "Your target can not be resurrected"
+		skill fail
+		return 1
+	endif
+	return 1
+	
+	
+[function canResurrect]	//Bool function
+	
+	if ( <isitem> )
+		return 0
+	endif
+	
+	if ( <npc> > 0 )
+		return 0
+	endif
+		
+	if ( !( <flags> & 02 )) //still alive
+		return 0
+	endif
+	
+	//if ( <isgm> )
+	//	return 1
+	//endif
+	
+	if ( <region.flags> & 01 ) //all magic banned
+		src.sysmessage "Anti-Magic blocks the Resurrection!"
+		return 0
+	endif
+	
+	if ( <region.flags> & 02 ) //anti recall in
+		src.sysmessage "Anti-Magic blocks the Resurrection!"
+		return 0
+	endif
+	
+	if ( <region.flags> & 010 ) //Anti Teleport
+		src.sysmessage "Anti-Magic blocks the Resurrection!"
+		return 0
+	endif
+	
+	return 1
+	
+	
+[Events e_Virtue_Compassion]
+ON=@SpellCast
+	if ( <argn> == 59 )
+		if <eval <src.tag.Compassion>> < 1		//lv 0
+			return 0
+		endif
+		
+		
+		if ( <src.cancast 59> )
+			if <eval <src.tag.Compassion>> < 2	//lv 1
+			
+				if ( <src.magery> ) >= 80.0 //100% chance of success
+					src.f_virtue_compassion_resurrect 20
+					
+				elseif ( <eval rand(10)> <= 3 )
+				
+					src.f_virtue_compassion_resurrect 20
+				else
+					src.skill fail
+					return 1
+				endif
+				
+			elseif ( <eval <src.tag.Compassion>> < 4 )	//lv 2
+				if ( <src.magery> ) >= 80.0 //100% chance of success
+				src.say passed
+					src.f_virtue_compassion_resurrect 40
+				elseif ( <eval rand(10)> <= 5 )
+					src.f_virtue_compassion_resurrect 40
+				else
+					src.skill fail
+					return 1
+				endif
+			elseif ( <eval <src.tag.Compassion>> <= 6 )	//lv 3
+				if ( <src.magery> ) >= 80.0 //100% chance of success
+					src.f_virtue_compassion_resurrect 80
+				elseif ( <eval rand(10)> <= 7 )
+					src.f_virtue_compassion_resurrect 80
+				else
+					src.skill fail
+					return 1
+				endif
+			else
+				return 0
+			endif
+		else
+			src.sysmessage "You do not have the ability to resurrect another person"
+			src.skill fail
+			return 1
+		endif
+		return 1
+	endif
+	
+		
+		
+[eof]

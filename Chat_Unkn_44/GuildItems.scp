@@ -1,0 +1,410 @@
+// Scripted by Exercisto
+
+// If you add the Guild Shields ingame without adding this little menu to your SPHERE_MENU.SCP you'll find em a bit buggored. So you should really.
+
+// Included: Guild Deed, Guild Stone, Guild Pad, Guild Chest (North) Deed, Guild Chest (East) Deed, Guild Chest (North), Guild Chest (East), Guild Door, Order Shield and a Chaos Shield.
+
+// Start Menu (Use CTRL+F and type GUILD to find this in SPHERE_MENU.SCP)
+
+[MENU MENU_GUILD_MASTER]
+<Name> (<MasterTitle> <Master>)
+ON=0 Recruit someone into the guild
+RECRUIT
+ON=0 View the current roster.
+VIEWROSTER
+ON=0 View the guild's charter.
+VIEWCHARTER
+ON=0 Declare your fealty. You are currently loyal to <LoyalTo>.
+DECLAREFEALTY
+ON=0 Toggle showing the guild's abbreviation in your name to unguilded people. Currently <AbbreviationToggle>.
+TOGGLEABBREVIATION
+ON=0 Resign from the guild.
+RESIGN
+ON=0 View list of candidates who have been sponsored to the guild.
+VIEWCANDIDATES
+ON=0 View list of guilds that <Name> has declared war on.
+VIEWENEMYS
+ON=0 View list of guilds that have declared war on <Name>.
+VIEWTHREATS
+ON=0 Access Guild <MasterGenderTitle> functions.
+MASTERMENU
+ON=0 Obtain Guild Shield.
+IF (<ALIGN>==1) && (<SRC.RESTEST I_ORDER_SHIELD>)
+SRC.SYSMESSAGE @07a1 You already have an Order Shield on you.
+RETURN 1
+ENDIF
+
+IF (<ALIGN>==1)
+SRC.SYSMESSAGE @07a1 You obtain the Order Shield.
+SRC.NEWITEM=I_ORDER_SHIELD
+SRC.ACT.LINK=<UID>
+SRC.ACT.COLOR=<COLOR>
+SRC.ACT.EQUIP
+RETURN 1
+ENDIF
+
+IF (<ALIGN>==2) && (<SRC.RESTEST I_CHAOS_SHIELD>)
+SRC.SYSMESSAGE @07a1 You already have an Chaos Shield on you.
+RETURN 1
+ENDIF
+
+IF (<ALIGN>==2)
+SRC.SYSMESSAGE @07a1 You obtain the Chaos Shield.
+SRC.NEWITEM=I_CHAOS_SHIELD
+SRC.ACT.LINK=<UID>
+SRC.ACT.COLOR=<COLOR>
+SRC.ACT.EQUIP
+RETURN 1
+ENDIF
+
+IF (<ALIGN>==0)
+SRC.SYSMESSAGE @07a1 Neutral Guilds don't have Guild Shields.
+RETURN 1
+ENDIF
+
+// This is the NON-guildmaster initial selection screen for guildstones
+[MENU MENU_GUILD_MEMBER]
+<Name> (<MasterTitle> <Master>)
+ON=0 Recruit someone into the guild
+RECRUIT
+ON=0 View the current roster.
+VIEWROSTER
+ON=0 View the guild's charter.
+VIEWCHARTER
+ON=0 Declare your fealty. You are currently loyal to <LoyalTo>.
+DECLAREFEALTY
+ON=0 Toggle showing the guild's abbreviation in your name to unguilded people. Currently <AbbreviationToggle>.
+TOGGLEABBREVIATION
+ON=0 Resign from the guild.
+RESIGN
+
+ON=0 View list of candidates who have been sponsored to the guild.
+VIEWCANDIDATES
+ON=0 View list of guilds that <Name> has declared war on.
+VIEWENEMYS
+ON=0 View list of guilds that have declared war on <Name>.
+VIEWTHREATS
+ON=0 Obtain Guild Shield.
+IF (<ALIGN>==1) && (<SRC.RESTEST I_ORDER_SHIELD>)
+SRC.SYSMESSAGE @07a1 You already have an Order Shield on you.
+RETURN 1
+ENDIF
+
+IF (<ALIGN>==1)
+SRC.SYSMESSAGE @07a1 You obtain the Order Shield.
+SRC.NEWITEM=I_ORDER_SHIELD
+SRC.ACT.LINK=<UID>
+SRC.ACT.COLOR=<COLOR>
+SRC.ACT.EQUIP
+RETURN 1
+ENDIF
+
+IF (<ALIGN>==2) && (<SRC.RESTEST I_CHAOS_SHIELD>)
+SRC.SYSMESSAGE @07a1 You already have an Chaos Shield on you.
+RETURN 1
+ENDIF
+
+IF (<ALIGN>==2)
+SRC.SYSMESSAGE @07a1 You obtain the Chaos Shield.
+SRC.NEWITEM=I_CHAOS_SHIELD
+SRC.ACT.LINK=<UID>
+SRC.ACT.COLOR=<COLOR>
+SRC.ACT.EQUIP
+RETURN 1
+ENDIF
+
+IF (<ALIGN>==0)
+SRC.SYSMESSAGE @07a1 Neutral Guilds don't have Guild Shields.
+RETURN 1
+ENDIF
+
+// End Menu
+
+[ITEMDEF I_GUILD_DEED]
+ID=I_DEED
+NAME=Guild Deed
+TYPE=T_EQ_SCRIPT
+
+ON=@CLICK
+MESSAGE @07a1 Guild Deed
+RETURN 1
+ENDIF
+
+ON=@DCLICK
+IF (<CONT.UID>!=<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE @07a1 You can't use that where it is.
+RETURN 1
+ENDIF
+
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID>)
+SRC.SYSMESSAGE @07a1 You're already in a guild.
+RETURN 1
+ELSE
+TARGET Where would you like to place the Guild Stone?
+RETURN 1
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID>==I_GUILD_PAD)
+SRC.NEWITEM=I_GUILD_STONE
+SRC.ACT.ABBREV=<SRC.NAME>
+SRC.ACT.NAME=<SRC.NAME>
+SRC.ACT.P=<SRC.TARG.P>
+SRC.TARG.REMOVE
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @07a1 You must target a Guild Pad in the Guild Hall.
+RETURN 1
+ENDIF
+
+[ITEMDEF I_GUILD_STONE]
+ID=I_GRAVESTONE_17
+NAME=Guild Stone
+TYPE=T_STONE_GUILD
+
+ON=@CLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+MESSAGE @0787 [<ABBREV>]
+MESSAGE @07a1 Guild Stone
+RETURN 1
+ELSE
+MESSAGE @0870 [<ABBREV>]
+MESSAGE @07a1 Guild Stone
+RETURN 1
+ENDIF
+
+ON=@CREATE
+COLOR={0793 1 0a20 1 0a62 1 0a60 1 0795 1 0796 1 0794 1}
+ATTR=08010
+
+ON=@DCLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+RETURN 0
+ELSE
+SRC.SYSMESSAGE @07a1 You're not a member of this guild.
+RETURN 1
+ENDIF
+
+ON=@TIMER
+RETURN 1
+
+[ITEMDEF I_GUILD_PAD]
+ID=I_PAVER_STONE
+NAME=Guild Pad
+TYPE=T_EQ_SCRIPT
+CAN=CAN_I_BLOCK
+
+ON=@CREATE
+COLOR=0793
+
+[ITEMDEF I_DEED_CHEST_GUILD_E]
+ID=I_DEED
+NAME=Guild Chest Deed [East]
+TYPE=T_EQ_SCRIPT
+
+ON=@CLICK
+MESSAGE @0480 [Direction: East]
+MESSAGE @07a1 Guild Chest Deed
+RETURN 1
+
+ON=@DCLICK
+IF (<CONT.UID>!=<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE @07a1 You can't use that where it is.
+RETURN 1
+ENDIF
+
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID>)
+SRC.SYSMESSAGE @07a1 You place the Guild Chest!
+SRC.NEWITEM=I_CHEST_GUILD_E
+SRC.ACT.COLOR=<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.COLOR>
+SRC.ACT.LINK=<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK>
+SRC.ACT.P=<SRC.P>
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @07a1 You must be in a guild to place this.
+RETURN 1
+ENDIF
+
+[ITEMDEF I_DEED_CHEST_GUILD_N]
+ID=I_DEED
+NAME=Guild Chest Deed [North]
+TYPE=T_EQ_SCRIPT
+
+ON=@CLICK
+MESSAGE @0480 [Direction: North]
+MESSAGE @07a1 Guild Chest Deed
+RETURN 1
+
+ON=@DCLICK
+IF (<CONT.UID>!=<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE @07a1 You can't use that where it is.
+RETURN 1
+ENDIF
+
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID>)
+SRC.SYSMESSAGE @07a1 You place the Guild Chest!
+SRC.NEWITEM=I_CHEST_GUILD_N
+SRC.ACT.COLOR=<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.COLOR>
+SRC.ACT.LINK=<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK>
+SRC.ACT.P=<SRC.P>
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @07a1 You must be in a guild to place this.
+RETURN 1
+ENDIF
+
+[ITEMDEF I_CHEST_GUILD_E]
+ID=I_CHEST_METAL
+NAME=Guild Chest
+TYPE=T_CONTAINER
+
+ON=@CREATE
+ATTR=08010
+
+ON=@CLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+MESSAGE @0787 [<LINK.ABBREV>]
+MESSAGE @07a1 Guild Chest
+RETURN 1
+ELSE
+MESSAGE @0870 [<LINK.ABBREV>]
+MESSAGE @07a1 Guild Chest
+RETURN 1
+ENDIF
+
+ON=@DCLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+RETURN 0
+ELSE
+SRC.SYSMESSAGE @07a1 You're not a member of this guild.
+RETURN 1
+ENDIF
+
+[ITEMDEF I_CHEST_GUILD_N]
+ID=0e7c
+NAME=Guild Chest
+TYPE=T_CONTAINER
+
+ON=@CREATE
+ATTR=08010
+
+ON=@CLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+MESSAGE @0787 [<LINK.ABBREV>]
+MESSAGE @07a1 Guild Chest
+RETURN 1
+ELSE
+MESSAGE @0870 [<LINK.ABBREV>]
+MESSAGE @07a1 Guild Chest
+RETURN 1
+ENDIF
+
+ON=@DCLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+RETURN 0
+ELSE
+SRC.SYSMESSAGE @07a1 You're not a member of this guild.
+RETURN 1
+ENDIF
+
+[ITEMDEF I_DOOR_METAL_GUILD]
+ID=I_DOOR_METAL
+NAME=Guild Door
+TYPE=T_DOOR
+
+ON=@CREATE
+ATTR=08010
+
+ON=@CLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+MESSAGE @0787 [<LINK.ABBREV>]
+MESSAGE @07a1 Guild Door
+RETURN 1
+ELSE
+MESSAGE @0870 [<LINK.ABBREV>]
+MESSAGE @07a1 Guild Door
+RETURN 1
+ENDIF
+
+ON=@DCLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+RETURN 0
+ELSE
+SRC.SYSMESSAGE @07a1 You're not a member of this guild.
+RETURN 1
+ENDIF
+
+[ITEMDEF I_ORDER_SHIELD]
+ID=I_SHIELD_ORDER
+NAME=Order Shield
+TYPE=T_SHIELD
+
+ARMOR=30,30
+
+ON=@CREATE
+HITPOINTS=200
+
+ON=@CLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+MESSAGE @0787 [<LINK.ABBREV>]
+MESSAGE @07a1 Order Shield
+RETURN 1
+ELSE
+MESSAGE @0870 [<LINK.ABBREV>]
+MESSAGE @07a1 Order Shield
+RETURN 1
+ENDIF
+
+ON=@EQUIP
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.ALIGN> != 1) && (<SRC.ACCOUNT.PLEVEL> < 03)
+SRC.SYSMESSAGE @07a1 You must be a Order member to use this shield.
+BOUNCE
+RETURN 1
+ENDIF
+
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+RETURN 0
+ELSE
+SRC.SYSMESSAGE @07a1 You're not a member of this guild.
+RETURN 1
+ENDIF
+
+[ITEMDEF I_CHAOS_SHIELD]
+ID=I_SHIELD_CHAOS
+NAME=Chaos Shield
+TYPE=T_SHIELD
+
+ARMOR=30,30
+
+ON=@CREATE
+HITPOINTS=200
+
+ON=@CLICK
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+MESSAGE @0787 [<LINK.ABBREV>]
+MESSAGE @07a1 Chaos Shield
+RETURN 1
+ELSE
+MESSAGE @0870 [<LINK.ABBREV>]
+MESSAGE @07a1 Chaos Shield
+RETURN 1
+ENDIF
+
+ON=@EQUIP
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.ALIGN> != 2) && (<SRC.ACCOUNT.PLEVEL> < 03)
+SRC.SYSMESSAGE @07a1 You must be a Chaos member to use this shield.
+BOUNCE
+RETURN 1
+ENDIF
+
+IF (<SRC.MEMORYFINDTYPE.MEMORY_GUILD.LINK.UID> == <LINK.UID>) || (<SRC.ACCOUNT.PLEVEL> > 03)
+RETURN 0
+ELSE
+SRC.SYSMESSAGE @07a1 You're not a member of this guild.
+RETURN 1
+ENDIF
+
+[EOF]

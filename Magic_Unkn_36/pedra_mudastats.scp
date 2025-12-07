@@ -1,0 +1,116 @@
+////////////////////////////////////////////////////////////////////////////
+///             			  BY Forkius!			 	 	  //
+// 			  EMAIL/MSN//kaboka21@hotmail.com		 	  	  //
+// Por Favor Deixe Isso Aki Em Cima.... // Please Dont Remove This Above  //
+////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_pedra_stats2] 
+ID=0ed6
+NAME=Pedra de Arruma Stats
+TYPE=T_NORMAL 
+DEFNAME=i_pedra_stats2
+
+//BY Forkius!
+
+CATEGORY=Forkius
+SUBSECTION=Pedras
+DESCRIPTION=Pedra Muda Stats
+
+ON=@CREATE 
+COLOR=0823
+ATTR=010
+
+ON=@DCLICK
+dialog d_stats
+
+[dialog d_stats]
+100,100
+resizepic 0 0 3600 300 220
+resizepic 25 60 3000 250 40
+gumppic 0 40 92
+gumppic 50 40 93
+gumppic 150 40 93
+gumppic 260 40 94
+resizepic 25 90 3000 250 40
+resizepic 25 120 3000 250 30
+text 75 30 1005 0
+button 22 178 1209 1210 1 0 1
+text 35 175 1000 1
+textentry 50 70 176 25 0 0 2
+textentry 50 100 176 25 0 1 4
+textentry 50 130 176 25 0 2 5
+text 165 165 150 3
+text 100 070 150 6
+text 100 100 150 7
+text 100 130 150 8
+button 100 178 1209 1210 1 0 2
+text 115 175 1000 9
+
+[dialog d_stats text]
+Coloke Seus Status Aki
+Mudar
+<src.str>
+By Forkius
+<src.dex>
+<src.INT>
+STR
+DEX
+INT
+Como Funciona?
+
+[dialog d_stats button]
+ON=1
+SRC.SPELLEFFECT 41 100
+src.tag.str=<ARGTXT[0]>
+src.tag.dex=<ARGTXT[1]>
+src.tag.int=<ARGTXT[2]>
+IF (( <src.tag.str> + <src.tag.dex> + <src.tag.int> ) <= 300 ) && (<src.tag.str> <= 200) && (<src.tag.dex> <= 200) && (<src.tag.int> <= 200) && (<src.tag.str> >= 10) && (<src.tag.dex> >= 10) && (<src.tag.int> >= 10) 
+SRC.FINDLAYER(1).UNEQUIP 
+SRC.FINDLAYER(2).UNEQUIP 
+SRC.FINDLAYER(3).UNEQUIP
+SRC.FINDLAYER(4).UNEQUIP 
+SRC.FINDLAYER(5).UNEQUIP
+SRC.FINDLAYER(6).UNEQUIP
+SRC.FINDLAYER(7).UNEQUIP
+SRC.FINDLAYER(8).UNEQUIP 
+SRC.FINDLAYER(10).UNEQUIP 
+SRC.FINDLAYER(12).UNEQUIP
+SRC.FINDLAYER(13).UNEQUIP
+SRC.FINDLAYER(17).UNEQUIP
+SRC.FINDLAYER(18).UNEQUIP
+SRC.FINDLAYER(19).UNEQUIP 
+SRC.FINDLAYER(20).UNEQUIP 
+SRC.FINDLAYER(22).UNEQUIP 
+SRC.FINDLAYER(23).UNEQUIP 
+SRC.FINDLAYER(24).UNEQUIP 
+src.str=<ARGTXT[0]>
+src.dex=<ARGTXT[1]>
+src.int=<ARGTXT[2]>
+src.hits=<ARGTXT[0]>
+src.stam=<ARGTXT[1]>
+ELSE
+src.message @07a1 Cheque o botao "Como Funciona" Para Saber O Erro.
+ENDIF
+ONBUTTON=2
+DIALOG d_como
+
+[dialog d_como]
+100,100
+resizepic 0 0 3600 415 220
+text 15 30 1005 0
+text 15 50 1005 1
+text 15 70 1005 2
+text 15 100 1005 3
+text 15 120 1005 4
+text 15 140 1005 5
+
+[dialog d_como TEXT]
+Vc Deve Mudar Seus Status
+De Um Modo Que Nao Passe De 300 A Soma Deles.
+Mas...U Minimo De Cada Um Eh 10.
+E O Maximo De Cada Eh 200.
+Por ex.: 150 STR/50 DEX/100 INT
+Ou.: 200 str/ 90 DEX / 10 INT
+
+
+

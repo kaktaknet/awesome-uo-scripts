@@ -1,0 +1,1581 @@
+// ############################################################ 
+// RW's Special Abilities: Sphere-based UO Emu Servers 
+// Designed By: Dubious Advocate and DigiAnimus
+// You are free to use this, repost it, chop it up, spindle, 
+// and mutilate to your heart's content. If you use it without 
+// any change then don't claim it as your own. If you do try 
+// to claim full credit for this script then the boogey man will 
+// get you. Or eventually you'll grow up and feel really silly 
+// about what a dumb kid you used to be. I expect I will sleep 
+// well at night no matter what. 
+// 
+// ------------------------------------------------------------ 
+// Installing this script - 
+// Installing it is the easy part. Just copy it into your 
+// scripts directory. 
+// 
+// FILE LAST UPDATED: July 26, 2001 
+// 
+Version=0.54 
+
+
+// ######################### 
+// Sections - 
+// [DEFNAME RACES] 
+// STANDARD SPHERE RACES 
+// Dubious Advocate's DEFINED RACES 
+// [DEFNAME HUES] 
+// [DEFNAME RACE_STATS] 
+// Barbarian Skills MAX 
+// Barbarian Skills START 
+// Drow Skills MAX 
+// Drow Skills START 
+// Duergar Skills MAX 
+// Duergar Skills START 
+// Dwarf Skills MAX 
+// Dwarf Skills START 
+// Elf Skills MAX 
+// Elf Skills START 
+// Halfelf Skills MAX 
+// Halfelf Skills START 
+// Halforc Skills MAX 
+// Halforc Skills START 
+// Human Skills MAX 
+// Human Skills START 
+// Shapeshifter Skills MAX 
+// Shapeshifter Skills START 
+// Vampire Skills MAX 
+// Vampire Skills START 
+// Warlock Skills MAX 
+// Warlock Skills START 
+// Werven Skills MAX 
+// Werven Skills START 
+
+
+[DEFNAME RACES] 
+// For SRC.TAG.RACE 
+// STANDARD SPHERE RACES 
+RACE_Unset 0 
+RACE_Human 1 
+RACE_Elf 2 
+RACE_Daemon 3 
+RACE_Sprite 4 
+RACE_Drow 5 
+RACE_Ogre 6 // Unused 
+RACE_Troll 7 // Unused 
+RACE_Dwarf 8 
+RACE_HalfOrc 9 
+RACE_Garg 10 // Unused 
+RACE_Borg 11 // Unused 
+RACE_Barbarian 12 
+RACE_Vampire 13 
+RACE_Lizard 14 // Unused 
+// UOG DEFINED RACES 
+RACE_Shapeshifter 20 
+RACE_Werven 21 
+RACE_Warlock 22 
+RACE_Duergar 24 
+RACE_Halfelf 25 
+
+
+[DEFNAME RACE_HUES] 
+color_Barbarian_skin 05e1 
+color_Barbarian_hair 03c7 
+color_Drow_skin 0455 
+color_Drow_hair 0 
+color_Duergar_skin colors_neutral 
+color_Duergar_hair 0 
+color_Dwarf_skin 07e2 
+color_Dwarf_hair colors_brown 
+color_Elf_skin 096e 
+color_Elf_hair 045e 
+color_Halfelf_skin 02d 
+color_Halfelf_hair 045e 
+color_Halforc_skin 05a6 
+color_Halforc_hair 05ab 
+color_Human_skin colors_skin 
+color_Human_hair colors_hair 
+color_Shapeshifter_skin color_spectral 
+color_Shapeshifter_hair color_spectral 
+color_Vampire_skin 038a 
+color_Vampire_hair 03c2 
+color_Warlock_skin 0599 
+color_Warlock_hair color_gray_dk 
+color_Werven_skin 0475 
+color_Werven_hair 046d 
+
+
+[DEFNAME RACE_REPUTATION] 
+
+// Barbarian 
+RACE_FameMAX_Barbarian 9999 
+RACE_KarmaMAX_Barbarian 9999 
+RACE_FameSTART_Barbarian {200 999} 
+RACE_KarmaSTART_Barbarian {-200 200} 
+
+// Drow 
+RACE_FameMAX_Drow 9999 
+RACE_KarmaMAX_Drow 9999 
+RACE_FameSTART_Drow 0 
+RACE_KarmaSTART_Drow {-1999 -1000} 
+
+// Duergar 
+RACE_FameMAX_Duergar 9999 
+RACE_KarmaMAX_Duergar 9999 
+RACE_FameSTART_Duergar 0 
+RACE_KarmaSTART_Duergar {-1999 -1000} 
+
+// Dwarf 
+RACE_FameMAX_Dwarf 9999 
+RACE_KarmaMAX_Dwarf 9999 
+RACE_FameSTART_Dwarf {600 999} 
+RACE_KarmaSTART_Dwarf {600 999} 
+
+// Elf 
+RACE_FameMAX_Elf 9999 
+RACE_KarmaMAX_Elf 9999 
+RACE_FameSTART_Elf {600 999} 
+RACE_KarmaSTART_Elf {1000 1999} 
+
+// Halfelf 
+RACE_FameMAX_Halfelf 9999 
+RACE_KarmaMAX_Halfelf 9999 
+RACE_FameSTART_Halfelf {200 699} 
+RACE_KarmaSTART_Halfelf {600 999} 
+
+// Halforc 
+RACE_FameMAX_Halforc 9999 
+RACE_KarmaMAX_Halforc 9999 
+RACE_FameSTART_Halforc {100 199} 
+RACE_KarmaSTART_Halforc {-200 200} 
+
+// Human 
+RACE_FameMAX_Human 9999 
+RACE_KarmaMAX_Human 9999 
+RACE_FameSTART_Human {200 999} 
+RACE_KarmaSTART_Human {200 999} 
+
+// Shapeshifter 
+RACE_FameMAX_Shapeshifter 9999 
+RACE_KarmaMAX_Shapeshifter 9999 
+RACE_FameSTART_Shapeshifter {100 199} 
+RACE_KarmaSTART_Shapeshifter {-999 0} 
+
+// Vampire 
+RACE_FameMAX_Vampire 9999 
+RACE_KarmaMAX_Vampire 9999 
+RACE_FameSTART_Vampire 0 
+RACE_KarmaSTART_Vampire {-1999 -1000} 
+
+// Warlock 
+RACE_FameMAX_Warlock 9999 
+RACE_KarmaMAX_Warlock 9999 
+RACE_FameSTART_Warlock {0 29} 
+RACE_KarmaSTART_Warlock {-999 0} 
+
+// Werven 
+RACE_FameMAX_Werven 9999 
+RACE_KarmaMAX_Werven 9999 
+RACE_FameSTART_Werven {0 29} 
+RACE_KarmaSTART_Werven {-999 0} 
+
+
+[DEFNAME RACE_STATS] 
+
+// Barbarian 
+RACE_STRMAX_Barbarian 120 
+RACE_INTMAX_Barbarian 110 
+RACE_DEXMAX_Barbarian 130 
+RACE_STRSTART_Barbarian {30 35} 
+RACE_INTSTART_Barbarian {25 30} 
+RACE_DEXSTART_Barbarian {35 40} 
+
+// Drow 
+RACE_STRMAX_Drow 80 
+RACE_INTMAX_Drow 120 
+RACE_DEXMAX_Drow 130 
+RACE_STRSTART_Drow {15 20} 
+RACE_INTSTART_Drow {30 35} 
+RACE_DEXSTART_Drow {35 40} 
+
+// Duergar 
+RACE_STRMAX_Duergar 130 
+RACE_INTMAX_Duergar 100 
+RACE_DEXMAX_Duergar 110 
+RACE_STRSTART_Duergar {35 40} 
+RACE_INTSTART_Duergar {20 25} 
+RACE_DEXSTART_Duergar {25 30} 
+
+// Dwarf 
+RACE_STRMAX_Dwarf 130 
+RACE_INTMAX_Dwarf 100 
+RACE_DEXMAX_Dwarf 110 
+RACE_STRSTART_Dwarf {35 40} 
+RACE_INTSTART_Dwarf {20 25} 
+RACE_DEXSTART_Dwarf {25 30} 
+
+// Elf 
+RACE_STRMAX_Elf 80 
+RACE_INTMAX_Elf 120 
+RACE_DEXMAX_Elf 130 
+RACE_STRSTART_Elf {15 20} 
+RACE_INTSTART_Elf {30 35} 
+RACE_DEXSTART_Elf {35 40} 
+
+// Halfelf 
+RACE_STRMAX_Halfelf 100 
+RACE_INTMAX_Halfelf 120 
+RACE_DEXMAX_Halfelf 120 
+RACE_STRSTART_Halfelf {20 25} 
+RACE_INTSTART_Halfelf {30 35} 
+RACE_DEXSTART_Halfelf {30 35} 
+
+// Halforc 
+RACE_STRMAX_Halforc 120 
+RACE_INTMAX_Halforc 100 
+RACE_DEXMAX_Halforc 120 
+RACE_STRSTART_Halforc {30 35} 
+RACE_INTSTART_Halforc {15 20} 
+RACE_DEXSTART_Halforc {30 35} 
+
+// Human 
+RACE_STRMAX_Human 120 
+RACE_INTMAX_Human 110 
+RACE_DEXMAX_Human 110 
+RACE_STRSTART_Human {25 30} 
+RACE_INTSTART_Human {25 30} 
+RACE_DEXSTART_Human {25 30} 
+
+// Shapeshifter 
+RACE_STRMAX_Shapeshifter 100 
+RACE_INTMAX_Shapeshifter 130 
+RACE_DEXMAX_Shapeshifter 90 
+RACE_STRSTART_Shapeshifter {15 20} 
+RACE_INTSTART_Shapeshifter {35 40} 
+RACE_DEXSTART_Shapeshifter {15 25} 
+
+// Vampire 
+RACE_STRMAX_Vampire 130 
+RACE_INTMAX_Vampire 130 
+RACE_DEXMAX_Vampire 120 
+RACE_STRSTART_Vampire {35 40} 
+RACE_INTSTART_Vampire {35 40} 
+RACE_DEXSTART_Vampire {30 35} 
+
+// Warlock 
+RACE_STRMAX_Warlock 120 
+RACE_INTMAX_Warlock 120 
+RACE_DEXMAX_Warlock 100 
+RACE_STRSTART_Warlock {30 35} 
+RACE_INTSTART_Warlock {30 35} 
+RACE_DEXSTART_Warlock {20 25} 
+
+// Werven 
+RACE_STRMAX_Werven 130 
+RACE_INTMAX_Werven 80 
+RACE_DEXMAX_Werven 130 
+RACE_STRSTART_Werven {35 40} 
+RACE_INTSTART_Werven {15 20} 
+RACE_DEXSTART_Werven {35 40} 
+
+
+
+[DEFNAME RACE_SKILLS] 
+
+// Barbarian Skills MAX 
+
+RACE_SKILLMAX_Barbarian_Alchemy 100.0 
+RACE_SKILLMAX_Barbarian_Anatomy 90.1 
+RACE_SKILLMAX_Barbarian_AnimalLore 45.0 
+RACE_SKILLMAX_Barbarian_Archery 104.0 
+RACE_SKILLMAX_Barbarian_ArmsLore 90.1 
+RACE_SKILLMAX_Barbarian_Begging 90.1 
+RACE_SKILLMAX_Barbarian_Blacksmithing 100.0 
+RACE_SKILLMAX_Barbarian_Bowcraft 100.0 
+RACE_SKILLMAX_Barbarian_Camping 90.1 
+RACE_SKILLMAX_Barbarian_Carpentry 45.0 
+RACE_SKILLMAX_Barbarian_Cartography 90.1 
+RACE_SKILLMAX_Barbarian_Cooking 45.0 
+RACE_SKILLMAX_Barbarian_DetectingHidden 100.0 
+RACE_SKILLMAX_Barbarian_Enticement 45.0 
+RACE_SKILLMAX_Barbarian_EvaluatingIntel 90.1 
+RACE_SKILLMAX_Barbarian_Fencing 90.1 
+RACE_SKILLMAX_Barbarian_Fishing 45.0 
+RACE_SKILLMAX_Barbarian_Forensics 90.1 
+RACE_SKILLMAX_Barbarian_Healing 100.0 
+RACE_SKILLMAX_Barbarian_Herding 70.1 
+RACE_SKILLMAX_Barbarian_Hiding 100.0 
+RACE_SKILLMAX_Barbarian_Inscription 100.0 
+RACE_SKILLMAX_Barbarian_ItemID 90.1 
+RACE_SKILLMAX_Barbarian_LockPicking 100.0 
+RACE_SKILLMAX_Barbarian_Lumberjacking 45.0 
+RACE_SKILLMAX_Barbarian_Macefighting 90.1 
+RACE_SKILLMAX_Barbarian_Magery 90.1 
+RACE_SKILLMAX_Barbarian_MagicResistance 100.0 
+RACE_SKILLMAX_Barbarian_Meditation 90.1 
+RACE_SKILLMAX_Barbarian_Mining 100.0 
+RACE_SKILLMAX_Barbarian_Musicianship 70.1 
+RACE_SKILLMAX_Barbarian_Necromancy 45.0 
+RACE_SKILLMAX_Barbarian_Parrying 90.1 
+RACE_SKILLMAX_Barbarian_Peacemaking 70.1 
+RACE_SKILLMAX_Barbarian_Poisoning 100.0 
+RACE_SKILLMAX_Barbarian_Provocation 90.1 
+RACE_SKILLMAX_Barbarian_RemoveTrap 100.0 
+RACE_SKILLMAX_Barbarian_Snooping 90.1 
+RACE_SKILLMAX_Barbarian_SpiritSpeak 45.0 
+RACE_SKILLMAX_Barbarian_Stealing 100.0 
+RACE_SKILLMAX_Barbarian_Stealth 100.0 
+RACE_SKILLMAX_Barbarian_Swordsmanship 90.1 
+RACE_SKILLMAX_Barbarian_Tactics 90.1 
+RACE_SKILLMAX_Barbarian_Tailoring 104.0 
+RACE_SKILLMAX_Barbarian_Taming 70.1 
+RACE_SKILLMAX_Barbarian_TasteID 90.1 
+RACE_SKILLMAX_Barbarian_Tinkering 100.0 
+RACE_SKILLMAX_Barbarian_Tracking 100.0 
+RACE_SKILLMAX_Barbarian_Veterinary 45.0 
+RACE_SKILLMAX_Barbarian_Wrestling 70.1 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Barbarian Skills START 
+
+RACE_SKILLSTART_Barbarian_Alchemy {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Anatomy {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_AnimalLore 0.0 
+RACE_SKILLSTART_Barbarian_Archery {25.0 35.0} 
+RACE_SKILLSTART_Barbarian_ArmsLore {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Begging {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Blacksmithing {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Bowcraft {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Camping {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Carpentry 0.0 
+RACE_SKILLSTART_Barbarian_Cartography {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Cooking 0.0 
+RACE_SKILLSTART_Barbarian_DetectingHidden {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Enticement 0.0 
+RACE_SKILLSTART_Barbarian_EvaluatingIntel {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Fencing {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Fishing 0.0 
+RACE_SKILLSTART_Barbarian_Forensics {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Healing {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Herding {5.0 10.0} 
+RACE_SKILLSTART_Barbarian_Hiding {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Inscription {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_ItemID {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_LockPicking {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Lumberjacking 0.0 
+RACE_SKILLSTART_Barbarian_Macefighting {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Magery {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_MagicResistance {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Meditation {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Mining {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Musicianship {5.0 10.0} 
+RACE_SKILLSTART_Barbarian_Necromancy 0.0 
+RACE_SKILLSTART_Barbarian_Parrying {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Peacemaking {5.0 10.0} 
+RACE_SKILLSTART_Barbarian_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Provocation {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_RemoveTrap {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Snooping {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_SpiritSpeak 0.0 
+RACE_SKILLSTART_Barbarian_Stealing {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Stealth {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Swordsmanship {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Tactics {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Tailoring {25.0 35.0} 
+RACE_SKILLSTART_Barbarian_Taming {5.0 10.0} 
+RACE_SKILLSTART_Barbarian_TasteID {15.0 30.0} 
+RACE_SKILLSTART_Barbarian_Tinkering {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Tracking {20.0 35.0} 
+RACE_SKILLSTART_Barbarian_Veterinary 0.0 
+RACE_SKILLSTART_Barbarian_Wrestling {5.0 10.0} 
+
+
+// Drow Skills MAX 
+
+RACE_SKILLMAX_Drow_Alchemy 100.0 
+RACE_SKILLMAX_Drow_Anatomy 100.0 
+RACE_SKILLMAX_Drow_AnimalLore 45.0 
+RACE_SKILLMAX_Drow_Archery 90.1 
+RACE_SKILLMAX_Drow_ArmsLore 90.1 
+RACE_SKILLMAX_Drow_Begging 70.1 
+RACE_SKILLMAX_Drow_Blacksmithing 90.1 
+RACE_SKILLMAX_Drow_Bowcraft 90.1 
+RACE_SKILLMAX_Drow_Camping 45.0 
+RACE_SKILLMAX_Drow_Carpentry 45.0 
+RACE_SKILLMAX_Drow_Cartography 70.1 
+RACE_SKILLMAX_Drow_Cooking 45.0 
+RACE_SKILLMAX_Drow_DetectingHidden 100.0 
+RACE_SKILLMAX_Drow_Enticement 70.1 
+RACE_SKILLMAX_Drow_EvaluatingIntel 104.0 
+RACE_SKILLMAX_Drow_Fencing 100.0 
+RACE_SKILLMAX_Drow_Fishing 45.0 
+RACE_SKILLMAX_Drow_Forensics 104.0 
+RACE_SKILLMAX_Drow_Healing 70.1 
+RACE_SKILLMAX_Drow_Herding 70.1 
+RACE_SKILLMAX_Drow_Hiding 100.0 
+RACE_SKILLMAX_Drow_Inscription 100.0 
+RACE_SKILLMAX_Drow_ItemID 90.1 
+RACE_SKILLMAX_Drow_LockPicking 100.0 
+RACE_SKILLMAX_Drow_Lumberjacking 45.0 
+RACE_SKILLMAX_Drow_Macefighting 45.0 
+RACE_SKILLMAX_Drow_Magery 100.0 
+RACE_SKILLMAX_Drow_MagicResistance 100.0 
+RACE_SKILLMAX_Drow_Meditation 100.0 
+RACE_SKILLMAX_Drow_Mining 45.0 
+RACE_SKILLMAX_Drow_Musicianship 70.1 
+RACE_SKILLMAX_Drow_Necromancy 100.0 
+RACE_SKILLMAX_Drow_Parrying 100.0 
+RACE_SKILLMAX_Drow_Peacemaking 70.1 
+RACE_SKILLMAX_Drow_Poisoning 100.0 
+RACE_SKILLMAX_Drow_Provocation 70.1 
+RACE_SKILLMAX_Drow_RemoveTrap 100.0 
+RACE_SKILLMAX_Drow_Snooping 100.0 
+RACE_SKILLMAX_Drow_SpiritSpeak 90.1 
+RACE_SKILLMAX_Drow_Stealing 100.0 
+RACE_SKILLMAX_Drow_Stealth 90.1 
+RACE_SKILLMAX_Drow_Swordsmanship 104.0 
+RACE_SKILLMAX_Drow_Tactics 100.0 
+RACE_SKILLMAX_Drow_Tailoring 100.0 
+RACE_SKILLMAX_Drow_Taming 70.1 
+RACE_SKILLMAX_Drow_TasteID 70.1 
+RACE_SKILLMAX_Drow_Tinkering 70.1 
+RACE_SKILLMAX_Drow_Tracking 70.1 
+RACE_SKILLMAX_Drow_Veterinary 45.0 
+RACE_SKILLMAX_Drow_Wrestling 70.1 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Drow Skills START 
+
+RACE_SKILLSTART_Drow_Alchemy {20.0 35.0} 
+RACE_SKILLSTART_Drow_Anatomy {20.0 35.0} 
+RACE_SKILLSTART_Drow_AnimalLore 0.0 
+RACE_SKILLSTART_Drow_Archery {15.0 30.0} 
+RACE_SKILLSTART_Drow_ArmsLore {15.0 30.0} 
+RACE_SKILLSTART_Drow_Begging {5.0 10.0} 
+RACE_SKILLSTART_Drow_Blacksmithing {15.0 30.0} 
+RACE_SKILLSTART_Drow_Bowcraft {15.0 30.0} 
+RACE_SKILLSTART_Drow_Camping 0.0 
+RACE_SKILLSTART_Drow_Carpentry 0.0 
+RACE_SKILLSTART_Drow_Cartography {5.0 10.0} 
+RACE_SKILLSTART_Drow_Cooking 0.0 
+RACE_SKILLSTART_Drow_DetectingHidden {20.0 35.0} 
+RACE_SKILLSTART_Drow_Enticement {5.0 10.0} 
+RACE_SKILLSTART_Drow_EvaluatingIntel {25.0 35.0} 
+RACE_SKILLSTART_Drow_Fencing {20.0 35.0} 
+RACE_SKILLSTART_Drow_Fishing 0.0 
+RACE_SKILLSTART_Drow_Forensics {25.0 35.0} 
+RACE_SKILLSTART_Drow_Healing {5.0 10.0} 
+RACE_SKILLSTART_Drow_Herding {5.0 10.0} 
+RACE_SKILLSTART_Drow_Hiding {20.0 35.0} 
+RACE_SKILLSTART_Drow_Inscription {20.0 35.0} 
+RACE_SKILLSTART_Drow_ItemID {15.0 30.0} 
+RACE_SKILLSTART_Drow_LockPicking {20.0 35.0} 
+RACE_SKILLSTART_Drow_Lumberjacking 0.0 
+RACE_SKILLSTART_Drow_Macefighting 0.0 
+RACE_SKILLSTART_Drow_Magery {20.0 35.0} 
+RACE_SKILLSTART_Drow_MagicResistance {20.0 35.0} 
+RACE_SKILLSTART_Drow_Meditation {20.0 35.0} 
+RACE_SKILLSTART_Drow_Mining 0.0 
+RACE_SKILLSTART_Drow_Musicianship {5.0 10.0} 
+RACE_SKILLSTART_Drow_Necromancy {20.0 35.0} 
+RACE_SKILLSTART_Drow_Parrying {20.0 35.0} 
+RACE_SKILLSTART_Drow_Peacemaking {5.0 10.0} 
+RACE_SKILLSTART_Drow_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Drow_Provocation {5.0 10.0} 
+RACE_SKILLSTART_Drow_RemoveTrap {20.0 35.0} 
+RACE_SKILLSTART_Drow_Snooping {20.0 35.0} 
+RACE_SKILLSTART_Drow_SpiritSpeak {15.0 30.0} 
+RACE_SKILLSTART_Drow_Stealing {20.0 35.0} 
+RACE_SKILLSTART_Drow_Stealth {15.0 30.0} 
+RACE_SKILLSTART_Drow_Swordsmanship {25.0 35.0} 
+RACE_SKILLSTART_Drow_Tactics {20.0 35.0} 
+RACE_SKILLSTART_Drow_Tailoring {20.0 35.0} 
+RACE_SKILLSTART_Drow_Taming {5.0 10.0} 
+RACE_SKILLSTART_Drow_TasteID {5.0 10.0} 
+RACE_SKILLSTART_Drow_Tinkering {5.0 10.0} 
+RACE_SKILLSTART_Drow_Tracking {5.0 10.0} 
+RACE_SKILLSTART_Drow_Veterinary 0.0 
+RACE_SKILLSTART_Drow_Wrestling {5.0 10.0} 
+
+
+// Duergar Skills MAX 
+
+RACE_SKILLMAX_Duergar_Alchemy 70.1 
+RACE_SKILLMAX_Duergar_Anatomy 100.0 
+RACE_SKILLMAX_Duergar_AnimalLore 70.1 
+RACE_SKILLMAX_Duergar_Archery 90.1 
+RACE_SKILLMAX_Duergar_ArmsLore 100.0 
+RACE_SKILLMAX_Duergar_Begging 90.1 
+RACE_SKILLMAX_Duergar_Blacksmithing 104.0 
+RACE_SKILLMAX_Duergar_Bowcraft 90.1 
+RACE_SKILLMAX_Duergar_Camping 45.0 
+RACE_SKILLMAX_Duergar_Carpentry 90.1 
+RACE_SKILLMAX_Duergar_Cartography 70.1 
+RACE_SKILLMAX_Duergar_Cooking 70.1 
+RACE_SKILLMAX_Duergar_DetectingHidden 100.0 
+RACE_SKILLMAX_Duergar_Enticement 45.0 
+RACE_SKILLMAX_Duergar_EvaluatingIntel 90.1 
+RACE_SKILLMAX_Duergar_Fencing 70.1 
+RACE_SKILLMAX_Duergar_Fishing 90.1 
+RACE_SKILLMAX_Duergar_Forensics 70.1 
+RACE_SKILLMAX_Duergar_Healing 100.0 
+RACE_SKILLMAX_Duergar_Herding 45.0 
+RACE_SKILLMAX_Duergar_Hiding 100.0 
+RACE_SKILLMAX_Duergar_Inscription 70.1 
+RACE_SKILLMAX_Duergar_ItemID 100.0 
+RACE_SKILLMAX_Duergar_LockPicking 100.0 
+RACE_SKILLMAX_Duergar_Lumberjacking 45.0 
+RACE_SKILLMAX_Duergar_Macefighting 104.0 
+RACE_SKILLMAX_Duergar_Magery 45.0 
+RACE_SKILLMAX_Duergar_MagicResistance 100.0 
+RACE_SKILLMAX_Duergar_Meditation 45.0 
+RACE_SKILLMAX_Duergar_Mining 104.0 
+RACE_SKILLMAX_Duergar_Musicianship 45.0 
+RACE_SKILLMAX_Duergar_Necromancy 70.1 
+RACE_SKILLMAX_Duergar_Parrying 100.0 
+RACE_SKILLMAX_Duergar_Peacemaking 45.0 
+RACE_SKILLMAX_Duergar_Poisoning 100.0 
+RACE_SKILLMAX_Duergar_Provocation 90.1 
+RACE_SKILLMAX_Duergar_RemoveTrap 100.0 
+RACE_SKILLMAX_Duergar_Snooping 70.1 
+RACE_SKILLMAX_Duergar_SpiritSpeak 45.0 
+RACE_SKILLMAX_Duergar_Stealing 70.1 
+RACE_SKILLMAX_Duergar_Stealth 45.0 
+RACE_SKILLMAX_Duergar_Swordsmanship 100.0 
+RACE_SKILLMAX_Duergar_Tactics 100.0 
+RACE_SKILLMAX_Duergar_Tailoring 70.1 
+RACE_SKILLMAX_Duergar_Taming 45.0 
+RACE_SKILLMAX_Duergar_TasteID 70.1 
+RACE_SKILLMAX_Duergar_Tinkering 100.0 
+RACE_SKILLMAX_Duergar_Tracking 70.1 
+RACE_SKILLMAX_Duergar_Veterinary 45.0 
+RACE_SKILLMAX_Duergar_Wrestling 100.0 
+
+
+// Duergar Skills START 
+
+RACE_SKILLSTART_Duergar_Alchemy {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Anatomy {20.0 35.0} 
+RACE_SKILLSTART_Duergar_AnimalLore {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Archery {15.0 30.0} 
+RACE_SKILLSTART_Duergar_ArmsLore {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Begging {15.0 30.0} 
+RACE_SKILLSTART_Duergar_Blacksmithing {25.0 35.0} 
+RACE_SKILLSTART_Duergar_Bowcraft {15.0 30.0} 
+RACE_SKILLSTART_Duergar_Camping 0.0 
+RACE_SKILLSTART_Duergar_Carpentry {15.0 30.0} 
+RACE_SKILLSTART_Duergar_Cartography {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Cooking {5.0 10.0} 
+RACE_SKILLSTART_Duergar_DetectingHidden {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Enticement 0.0 
+RACE_SKILLSTART_Duergar_EvaluatingIntel {15.0 30.0} 
+RACE_SKILLSTART_Duergar_Fencing {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Fishing {15.0 30.0} 
+RACE_SKILLSTART_Duergar_Forensics {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Healing {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Herding 0.0 
+RACE_SKILLSTART_Duergar_Hiding {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Inscription {5.0 10.0} 
+RACE_SKILLSTART_Duergar_ItemID {20.0 35.0} 
+RACE_SKILLSTART_Duergar_LockPicking {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Lumberjacking 0.0 
+RACE_SKILLSTART_Duergar_Macefighting {25.0 35.0} 
+RACE_SKILLSTART_Duergar_Magery 0.0 
+RACE_SKILLSTART_Duergar_MagicResistance {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Meditation 0.0 
+RACE_SKILLSTART_Duergar_Mining {25.0 35.0} 
+RACE_SKILLSTART_Duergar_Musicianship 0.0 
+RACE_SKILLSTART_Duergar_Necromancy {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Parrying {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Peacemaking 0.0 
+RACE_SKILLSTART_Duergar_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Provocation {15.0 30.0} 
+RACE_SKILLSTART_Duergar_RemoveTrap {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Snooping {5.0 10.0} 
+RACE_SKILLSTART_Duergar_SpiritSpeak 0.0 
+RACE_SKILLSTART_Duergar_Stealing {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Stealth 0.0 
+RACE_SKILLSTART_Duergar_Swordsmanship {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Tactics {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Tailoring {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Taming 0.0 
+RACE_SKILLSTART_Duergar_TasteID {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Tinkering {20.0 35.0} 
+RACE_SKILLSTART_Duergar_Tracking {5.0 10.0} 
+RACE_SKILLSTART_Duergar_Veterinary 0.0 
+RACE_SKILLSTART_Duergar_Wrestling {20.0 35.0} 
+
+
+// Dwarf Skills MAX 
+
+RACE_SKILLMAX_Dwarf_Alchemy 70.1 
+RACE_SKILLMAX_Dwarf_Anatomy 100.0 
+RACE_SKILLMAX_Dwarf_AnimalLore 70.1 
+RACE_SKILLMAX_Dwarf_Archery 90.1 
+RACE_SKILLMAX_Dwarf_ArmsLore 100.0 
+RACE_SKILLMAX_Dwarf_Begging 45.0 
+RACE_SKILLMAX_Dwarf_Blacksmithing 104.0 
+RACE_SKILLMAX_Dwarf_Bowcraft 90.1 
+RACE_SKILLMAX_Dwarf_Camping 90.1 
+RACE_SKILLMAX_Dwarf_Carpentry 90.1 
+RACE_SKILLMAX_Dwarf_Cartography 70.1 
+RACE_SKILLMAX_Dwarf_Cooking 70.1 
+RACE_SKILLMAX_Dwarf_DetectingHidden 100.0 
+RACE_SKILLMAX_Dwarf_Enticement 45.0 
+RACE_SKILLMAX_Dwarf_EvaluatingIntel 90.1 
+RACE_SKILLMAX_Dwarf_Fencing 70.1 
+RACE_SKILLMAX_Dwarf_Fishing 90.1 
+RACE_SKILLMAX_Dwarf_Forensics 70.1 
+RACE_SKILLMAX_Dwarf_Healing 100.0 
+RACE_SKILLMAX_Dwarf_Herding 45.0 
+RACE_SKILLMAX_Dwarf_Hiding 90.1 
+RACE_SKILLMAX_Dwarf_Inscription 70.1 
+RACE_SKILLMAX_Dwarf_ItemID 100.0 
+RACE_SKILLMAX_Dwarf_LockPicking 100.0 
+RACE_SKILLMAX_Dwarf_Lumberjacking 90.1 
+RACE_SKILLMAX_Dwarf_Macefighting 100.0 
+RACE_SKILLMAX_Dwarf_Magery 45.0 
+RACE_SKILLMAX_Dwarf_MagicResistance 90.1 
+RACE_SKILLMAX_Dwarf_Meditation 45.0 
+RACE_SKILLMAX_Dwarf_Mining 104.0 
+RACE_SKILLMAX_Dwarf_Musicianship 45.0 
+RACE_SKILLMAX_Dwarf_Necromancy 70.1 
+RACE_SKILLMAX_Dwarf_Parrying 100.0 
+RACE_SKILLMAX_Dwarf_Peacemaking 45.0 
+RACE_SKILLMAX_Dwarf_Poisoning 100.0 
+RACE_SKILLMAX_Dwarf_Provocation 70.1 
+RACE_SKILLMAX_Dwarf_RemoveTrap 100.0 
+RACE_SKILLMAX_Dwarf_Snooping 45.0 
+RACE_SKILLMAX_Dwarf_SpiritSpeak 45.0 
+RACE_SKILLMAX_Dwarf_Stealing 70.1 
+RACE_SKILLMAX_Dwarf_Stealth 45.0 
+RACE_SKILLMAX_Dwarf_Swordsmanship 104.0 
+RACE_SKILLMAX_Dwarf_Tactics 100.0 
+RACE_SKILLMAX_Dwarf_Tailoring 70.1 
+RACE_SKILLMAX_Dwarf_Taming 45.0 
+RACE_SKILLMAX_Dwarf_TasteID 70.1 
+RACE_SKILLMAX_Dwarf_Tinkering 100.0 
+RACE_SKILLMAX_Dwarf_Tracking 70.1 
+RACE_SKILLMAX_Dwarf_Veterinary 45.0 
+RACE_SKILLMAX_Dwarf_Wrestling 100.0 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Dwarf Skills START 
+
+RACE_SKILLSTART_Dwarf_Alchemy {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Anatomy {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_AnimalLore {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Archery {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_ArmsLore {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Begging 0.0 
+RACE_SKILLSTART_Dwarf_Blacksmithing {25.0 35.0} 
+RACE_SKILLSTART_Dwarf_Bowcraft {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_Camping {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_Carpentry {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_Cartography {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Cooking {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_DetectingHidden {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Enticement 0.0 
+RACE_SKILLSTART_Dwarf_EvaluatingIntel {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_Fencing {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Fishing {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_Forensics {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Healing {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Herding 0.0 
+RACE_SKILLSTART_Dwarf_Hiding {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_Inscription {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_ItemID {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_LockPicking {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Lumberjacking {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_Macefighting {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Magery 0.0 
+RACE_SKILLSTART_Dwarf_MagicResistance {15.0 30.0} 
+RACE_SKILLSTART_Dwarf_Meditation 0.0 
+RACE_SKILLSTART_Dwarf_Mining {25.0 35.0} 
+RACE_SKILLSTART_Dwarf_Musicianship 0.0 
+RACE_SKILLSTART_Dwarf_Necromancy {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Parrying {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Peacemaking 0.0 
+RACE_SKILLSTART_Dwarf_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Provocation {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_RemoveTrap {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Snooping 0.0 
+RACE_SKILLSTART_Dwarf_SpiritSpeak 0.0 
+RACE_SKILLSTART_Dwarf_Stealing {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Stealth 0.0 
+RACE_SKILLSTART_Dwarf_Swordsmanship {25.0 35.0} 
+RACE_SKILLSTART_Dwarf_Tactics {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Tailoring {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Taming 0.0 
+RACE_SKILLSTART_Dwarf_TasteID {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Tinkering {20.0 35.0} 
+RACE_SKILLSTART_Dwarf_Tracking {5.0 10.0} 
+RACE_SKILLSTART_Dwarf_Veterinary 0.0 
+RACE_SKILLSTART_Dwarf_Wrestling {20.0 35.0} 
+
+
+// Elf Skills MAX 
+
+RACE_SKILLMAX_Elf_Alchemy 100.0 
+RACE_SKILLMAX_Elf_Anatomy 100.0 
+RACE_SKILLMAX_Elf_AnimalLore 100.0 
+RACE_SKILLMAX_Elf_Archery 104.0 
+RACE_SKILLMAX_Elf_ArmsLore 90.1 
+RACE_SKILLMAX_Elf_Begging 70.1 
+RACE_SKILLMAX_Elf_Blacksmithing 90.1 
+RACE_SKILLMAX_Elf_Bowcraft 104.0 
+RACE_SKILLMAX_Elf_Camping 100.0 
+RACE_SKILLMAX_Elf_Carpentry 90.1 
+RACE_SKILLMAX_Elf_Cartography 100.0 
+RACE_SKILLMAX_Elf_Cooking 100.0 
+RACE_SKILLMAX_Elf_DetectingHidden 100.0 
+RACE_SKILLMAX_Elf_Enticement 100.0 
+RACE_SKILLMAX_Elf_EvaluatingIntel 100.0 
+RACE_SKILLMAX_Elf_Fencing 90.1 
+RACE_SKILLMAX_Elf_Fishing 90.1 
+RACE_SKILLMAX_Elf_Forensics 100.0 
+RACE_SKILLMAX_Elf_Healing 100.0 
+RACE_SKILLMAX_Elf_Herding 100.0 
+RACE_SKILLMAX_Elf_Hiding 100.0 
+RACE_SKILLMAX_Elf_Inscription 100.0 
+RACE_SKILLMAX_Elf_ItemID 100.0 
+RACE_SKILLMAX_Elf_LockPicking 100.0 
+RACE_SKILLMAX_Elf_Lumberjacking 45.0 
+RACE_SKILLMAX_Elf_Macefighting 45.0 
+RACE_SKILLMAX_Elf_Magery 104.0 
+RACE_SKILLMAX_Elf_MagicResistance 100.0 
+RACE_SKILLMAX_Elf_Meditation 100.0 
+RACE_SKILLMAX_Elf_Mining 45.0 
+RACE_SKILLMAX_Elf_Musicianship 100.0 
+RACE_SKILLMAX_Elf_Necromancy 100.0 
+RACE_SKILLMAX_Elf_Parrying 100.0 
+RACE_SKILLMAX_Elf_Peacemaking 100.0 
+RACE_SKILLMAX_Elf_Poisoning 100.0 
+RACE_SKILLMAX_Elf_Provocation 100.0 
+RACE_SKILLMAX_Elf_RemoveTrap 100.0 
+RACE_SKILLMAX_Elf_Snooping 70.1 
+RACE_SKILLMAX_Elf_SpiritSpeak 100.0 
+RACE_SKILLMAX_Elf_Stealing 70.1 
+RACE_SKILLMAX_Elf_Stealth 100.0 
+RACE_SKILLMAX_Elf_Swordsmanship 100.0 
+RACE_SKILLMAX_Elf_Tactics 100.0 
+RACE_SKILLMAX_Elf_Tailoring 100.0 
+RACE_SKILLMAX_Elf_Taming 100.0 
+RACE_SKILLMAX_Elf_TasteID 100.0 
+RACE_SKILLMAX_Elf_Tinkering 100.0 
+RACE_SKILLMAX_Elf_Tracking 100.0 
+RACE_SKILLMAX_Elf_Veterinary 100.0 
+RACE_SKILLMAX_Elf_Wrestling 70.1 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Elf Skills START 
+
+RACE_SKILLSTART_Elf_Alchemy {20.0 35.0} 
+RACE_SKILLSTART_Elf_Anatomy {20.0 35.0} 
+RACE_SKILLSTART_Elf_AnimalLore {20.0 35.0} 
+RACE_SKILLSTART_Elf_Archery {25.0 35.0} 
+RACE_SKILLSTART_Elf_ArmsLore {15.0 30.0} 
+RACE_SKILLSTART_Elf_Begging {5.0 10.0} 
+RACE_SKILLSTART_Elf_Blacksmithing {15.0 30.0} 
+RACE_SKILLSTART_Elf_Bowcraft {25.0 35.0} 
+RACE_SKILLSTART_Elf_Camping {20.0 35.0} 
+RACE_SKILLSTART_Elf_Carpentry {15.0 30.0} 
+RACE_SKILLSTART_Elf_Cartography {20.0 35.0} 
+RACE_SKILLSTART_Elf_Cooking {20.0 35.0} 
+RACE_SKILLSTART_Elf_DetectingHidden {20.0 35.0} 
+RACE_SKILLSTART_Elf_Enticement {20.0 35.0} 
+RACE_SKILLSTART_Elf_EvaluatingIntel {20.0 35.0} 
+RACE_SKILLSTART_Elf_Fencing {15.0 30.0} 
+RACE_SKILLSTART_Elf_Fishing {15.0 30.0} 
+RACE_SKILLSTART_Elf_Forensics {20.0 35.0} 
+RACE_SKILLSTART_Elf_Healing {20.0 35.0} 
+RACE_SKILLSTART_Elf_Herding {20.0 35.0} 
+RACE_SKILLSTART_Elf_Hiding {20.0 35.0} 
+RACE_SKILLSTART_Elf_Inscription {20.0 35.0} 
+RACE_SKILLSTART_Elf_ItemID {20.0 35.0} 
+RACE_SKILLSTART_Elf_LockPicking {20.0 35.0} 
+RACE_SKILLSTART_Elf_Lumberjacking 0.0 
+RACE_SKILLSTART_Elf_Macefighting 0.0 
+RACE_SKILLSTART_Elf_Magery {25.0 35.0} 
+RACE_SKILLSTART_Elf_MagicResistance {20.0 35.0} 
+RACE_SKILLSTART_Elf_Meditation {20.0 35.0} 
+RACE_SKILLSTART_Elf_Mining 0.0 
+RACE_SKILLSTART_Elf_Musicianship {20.0 35.0} 
+RACE_SKILLSTART_Elf_Necromancy {20.0 35.0} 
+RACE_SKILLSTART_Elf_Parrying {20.0 35.0} 
+RACE_SKILLSTART_Elf_Peacemaking {20.0 35.0} 
+RACE_SKILLSTART_Elf_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Elf_Provocation {20.0 35.0} 
+RACE_SKILLSTART_Elf_RemoveTrap {20.0 35.0} 
+RACE_SKILLSTART_Elf_Snooping {5.0 10.0} 
+RACE_SKILLSTART_Elf_SpiritSpeak {20.0 35.0} 
+RACE_SKILLSTART_Elf_Stealing {5.0 10.0} 
+RACE_SKILLSTART_Elf_Stealth {20.0 35.0} 
+RACE_SKILLSTART_Elf_Swordsmanship {20.0 35.0} 
+RACE_SKILLSTART_Elf_Tactics {20.0 35.0} 
+RACE_SKILLSTART_Elf_Tailoring {20.0 35.0} 
+RACE_SKILLSTART_Elf_Taming {20.0 35.0} 
+RACE_SKILLSTART_Elf_TasteID {20.0 35.0} 
+RACE_SKILLSTART_Elf_Tinkering {20.0 35.0} 
+RACE_SKILLSTART_Elf_Tracking {20.0 35.0} 
+RACE_SKILLSTART_Elf_Veterinary {20.0 35.0} 
+RACE_SKILLSTART_Elf_Wrestling {5.0 10.0} 
+
+
+// Halfelf Skills Max 
+
+RACE_SKILLMAX_Halfelf_Alchemy 100.0 
+RACE_SKILLMAX_Halfelf_Anatomy 100.0 
+RACE_SKILLMAX_Halfelf_AnimalLore 100.0 
+RACE_SKILLMAX_Halfelf_Archery 104.0 
+RACE_SKILLMAX_Halfelf_ArmsLore 90.1 
+RACE_SKILLMAX_Halfelf_Begging 90.1 
+RACE_SKILLMAX_Halfelf_Blacksmithing 90.1 
+RACE_SKILLMAX_Halfelf_Bowcraft 104.0 
+RACE_SKILLMAX_Halfelf_Camping 100.0 
+RACE_SKILLMAX_Halfelf_Carpentry 100.0 
+RACE_SKILLMAX_Halfelf_Cartography 100.0 
+RACE_SKILLMAX_Halfelf_Cooking 100.0 
+RACE_SKILLMAX_Halfelf_DetectingHidden 100.0 
+RACE_SKILLMAX_Halfelf_Enticement 100.0 
+RACE_SKILLMAX_Halfelf_EvaluatingIntel 100.0 
+RACE_SKILLMAX_Halfelf_Fencing 100.0 
+RACE_SKILLMAX_Halfelf_Fishing 100.0 
+RACE_SKILLMAX_Halfelf_Forensics 100.0 
+RACE_SKILLMAX_Halfelf_Healing 100.0 
+RACE_SKILLMAX_Halfelf_Herding 100.0 
+RACE_SKILLMAX_Halfelf_Hiding 100.0 
+RACE_SKILLMAX_Halfelf_Inscription 100.0 
+RACE_SKILLMAX_Halfelf_ItemID 100.0 
+RACE_SKILLMAX_Halfelf_LockPicking 100.0 
+RACE_SKILLMAX_Halfelf_Lumberjacking 70.1 
+RACE_SKILLMAX_Halfelf_Macefighting 70.1 
+RACE_SKILLMAX_Halfelf_Magery 100.0 
+RACE_SKILLMAX_Halfelf_MagicResistance 100.0 
+RACE_SKILLMAX_Halfelf_Meditation 100.0 
+RACE_SKILLMAX_Halfelf_Mining 70.1 
+RACE_SKILLMAX_Halfelf_Musicianship 100.0 
+RACE_SKILLMAX_Halfelf_Necromancy 100.0 
+RACE_SKILLMAX_Halfelf_Parrying 100.0 
+RACE_SKILLMAX_Halfelf_Peacemaking 100.0 
+RACE_SKILLMAX_Halfelf_Poisoning 100.0 
+RACE_SKILLMAX_Halfelf_Provocation 90.1 
+RACE_SKILLMAX_Halfelf_RemoveTrap 90.1 
+RACE_SKILLMAX_Halfelf_Snooping 70.1 
+RACE_SKILLMAX_Halfelf_SpiritSpeak 100.0 
+RACE_SKILLMAX_Halfelf_Stealing 70.1 
+RACE_SKILLMAX_Halfelf_Stealth 100.0 
+RACE_SKILLMAX_Halfelf_Swordsmanship 100.0 
+RACE_SKILLMAX_Halfelf_Tactics 100.0 
+RACE_SKILLMAX_Halfelf_Tailoring 100.0 
+RACE_SKILLMAX_Halfelf_Taming 104.0 
+RACE_SKILLMAX_Halfelf_TasteID 100.0 
+RACE_SKILLMAX_Halfelf_Tinkering 90.1 
+RACE_SKILLMAX_Halfelf_Tracking 100.0 
+RACE_SKILLMAX_Halfelf_Veterinary 100.0 
+RACE_SKILLMAX_Halfelf_Wrestling 90.1 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Halfelf Skills START 
+
+RACE_SKILLSTART_Halfelf_Alchemy {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Anatomy {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_AnimalLore {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Archery {25.0 35.0} 
+RACE_SKILLSTART_Halfelf_ArmsLore {15.0 30.0} 
+RACE_SKILLSTART_Halfelf_Begging {15.0 30.0} 
+RACE_SKILLSTART_Halfelf_Blacksmithing {15.0 30.0} 
+RACE_SKILLSTART_Halfelf_Bowcraft {25.0 35.0} 
+RACE_SKILLSTART_Halfelf_Camping {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Carpentry {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Cartography {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Cooking {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_DetectingHidden {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Enticement {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_EvaluatingIntel {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Fencing {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Fishing {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Forensics {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Healing {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Herding {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Hiding {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Inscription {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_ItemID {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_LockPicking {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Lumberjacking {5.0 10.0} 
+RACE_SKILLSTART_Halfelf_Macefighting {5.0 10.0} 
+RACE_SKILLSTART_Halfelf_Magery {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_MagicResistance {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Meditation {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Mining {5.0 10.0} 
+RACE_SKILLSTART_Halfelf_Musicianship {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Necromancy {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Parrying {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Peacemaking {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Provocation {15.0 30.0} 
+RACE_SKILLSTART_Halfelf_RemoveTrap {15.0 30.0} 
+RACE_SKILLSTART_Halfelf_Snooping {5.0 10.0} 
+RACE_SKILLSTART_Halfelf_SpiritSpeak {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Stealing {5.0 10.0} 
+RACE_SKILLSTART_Halfelf_Stealth {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Swordsmanship {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Tactics {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Tailoring {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Taming {25.0 35.0} 
+RACE_SKILLSTART_Halfelf_TasteID {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Tinkering {15.0 30.0} 
+RACE_SKILLSTART_Halfelf_Tracking {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Veterinary {20.0 35.0} 
+RACE_SKILLSTART_Halfelf_Wrestling {15.0 30.0} 
+
+
+// Halforc Skills MAX 
+
+RACE_SKILLMAX_Halforc_Alchemy 70.1 
+RACE_SKILLMAX_Halforc_Anatomy 90.1 
+RACE_SKILLMAX_Halforc_AnimalLore 70.1 
+RACE_SKILLMAX_Halforc_Archery 70.1 
+RACE_SKILLMAX_Halforc_ArmsLore 70.1 
+RACE_SKILLMAX_Halforc_Begging 45.0 
+RACE_SKILLMAX_Halforc_Blacksmithing 70.1 
+RACE_SKILLMAX_Halforc_Bowcraft 70.1 
+RACE_SKILLMAX_Halforc_Camping 90.1 
+RACE_SKILLMAX_Halforc_Carpentry 70.1 
+RACE_SKILLMAX_Halforc_Cartography 70.1 
+RACE_SKILLMAX_Halforc_Cooking 45.0 
+RACE_SKILLMAX_Halforc_DetectingHidden 90.1 
+RACE_SKILLMAX_Halforc_Enticement 45.0 
+RACE_SKILLMAX_Halforc_EvaluatingIntel 70.1 
+RACE_SKILLMAX_Halforc_Fencing 100.0 
+RACE_SKILLMAX_Halforc_Fishing 90.1 
+RACE_SKILLMAX_Halforc_Forensics 70.1 
+RACE_SKILLMAX_Halforc_Healing 90.1 
+RACE_SKILLMAX_Halforc_Herding 45.0 
+RACE_SKILLMAX_Halforc_Hiding 90.1 
+RACE_SKILLMAX_Halforc_Inscription 70.1 
+RACE_SKILLMAX_Halforc_ItemID 90.1 
+RACE_SKILLMAX_Halforc_LockPicking 90.1 
+RACE_SKILLMAX_Halforc_Lumberjacking 70.1 
+RACE_SKILLMAX_Halforc_Macefighting 45.0 
+RACE_SKILLMAX_Halforc_Magery 45.0 
+RACE_SKILLMAX_Halforc_MagicResistance 70.1 
+RACE_SKILLMAX_Halforc_Meditation 45.0 
+RACE_SKILLMAX_Halforc_Mining 70.1 
+RACE_SKILLMAX_Halforc_Musicianship 90.1 
+RACE_SKILLMAX_Halforc_Necromancy 70.1 
+RACE_SKILLMAX_Halforc_Parrying 104.0 
+RACE_SKILLMAX_Halforc_Peacemaking 45.0 
+RACE_SKILLMAX_Halforc_Poisoning 100.0 
+RACE_SKILLMAX_Halforc_Provocation 104.0 
+RACE_SKILLMAX_Halforc_RemoveTrap 90.1 
+RACE_SKILLMAX_Halforc_Snooping 100.0 
+RACE_SKILLMAX_Halforc_SpiritSpeak 45.0 
+RACE_SKILLMAX_Halforc_Stealing 100.0 
+RACE_SKILLMAX_Halforc_Stealth 100.0 
+RACE_SKILLMAX_Halforc_Swordsmanship 100.0 
+RACE_SKILLMAX_Halforc_Tactics 104.0 
+RACE_SKILLMAX_Halforc_Tailoring 70.1 
+RACE_SKILLMAX_Halforc_Taming 45.0 
+RACE_SKILLMAX_Halforc_TasteID 90.1 
+RACE_SKILLMAX_Halforc_Tinkering 70.1 
+RACE_SKILLMAX_Halforc_Tracking 90.1 
+RACE_SKILLMAX_Halforc_Veterinary 45.0 
+RACE_SKILLMAX_Halforc_Wrestling 100.0 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Halforc Skills START 
+
+RACE_SKILLSTART_Halforc_Alchemy {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Anatomy {15.0 30.0} 
+RACE_SKILLSTART_Halforc_AnimalLore {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Archery {5.0 10.0} 
+RACE_SKILLSTART_Halforc_ArmsLore {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Begging 0.0 
+RACE_SKILLSTART_Halforc_Blacksmithing {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Bowcraft {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Camping {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Carpentry {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Cartography {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Cooking 0.0 
+RACE_SKILLSTART_Halforc_DetectingHidden {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Enticement 0.0 
+RACE_SKILLSTART_Halforc_EvaluatingIntel {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Fencing {20.0 35.0} 
+RACE_SKILLSTART_Halforc_Fishing {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Forensics {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Healing {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Herding 0.0 
+RACE_SKILLSTART_Halforc_Hiding {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Inscription {5.0 10.0} 
+RACE_SKILLSTART_Halforc_ItemID {15.0 30.0} 
+RACE_SKILLSTART_Halforc_LockPicking {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Lumberjacking {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Macefighting 0.0 
+RACE_SKILLSTART_Halforc_Magery 0.0 
+RACE_SKILLSTART_Halforc_MagicResistance {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Meditation 0.0 
+RACE_SKILLSTART_Halforc_Mining {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Musicianship {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Necromancy {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Parrying {25.0 35.0} 
+RACE_SKILLSTART_Halforc_Peacemaking 0.0 
+RACE_SKILLSTART_Halforc_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Halforc_Provocation {25.0 35.0} 
+RACE_SKILLSTART_Halforc_RemoveTrap {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Snooping {20.0 35.0} 
+RACE_SKILLSTART_Halforc_SpiritSpeak 0.0 
+RACE_SKILLSTART_Halforc_Stealing {20.0 35.0} 
+RACE_SKILLSTART_Halforc_Stealth {20.0 35.0} 
+RACE_SKILLSTART_Halforc_Swordsmanship {20.0 35.0} 
+RACE_SKILLSTART_Halforc_Tactics {25.0 35.0} 
+RACE_SKILLSTART_Halforc_Tailoring {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Taming 0.0 
+RACE_SKILLSTART_Halforc_TasteID {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Tinkering {5.0 10.0} 
+RACE_SKILLSTART_Halforc_Tracking {15.0 30.0} 
+RACE_SKILLSTART_Halforc_Veterinary 0.0 
+RACE_SKILLSTART_Halforc_Wrestling {20.0 35.0} 
+
+
+// Human Skills MAX 
+
+RACE_SKILLMAX_Human_Alchemy 90.1 
+RACE_SKILLMAX_Human_Anatomy 90.1 
+RACE_SKILLMAX_Human_AnimalLore 90.1 
+RACE_SKILLMAX_Human_Archery 90.1 
+RACE_SKILLMAX_Human_ArmsLore 90.1 
+RACE_SKILLMAX_Human_Begging 90.1 
+RACE_SKILLMAX_Human_Blacksmithing 90.1 
+RACE_SKILLMAX_Human_Bowcraft 90.1 
+RACE_SKILLMAX_Human_Camping 90.1 
+RACE_SKILLMAX_Human_Carpentry 90.1 
+RACE_SKILLMAX_Human_Cartography 90.1 
+RACE_SKILLMAX_Human_Cooking 90.1 
+RACE_SKILLMAX_Human_DetectingHidden 90.1 
+RACE_SKILLMAX_Human_Enticement 90.1 
+RACE_SKILLMAX_Human_EvaluatingIntel 90.1 
+RACE_SKILLMAX_Human_Fencing 90.1 
+RACE_SKILLMAX_Human_Fishing 90.1 
+RACE_SKILLMAX_Human_Forensics 90.1 
+RACE_SKILLMAX_Human_Healing 90.1 
+RACE_SKILLMAX_Human_Herding 90.1 
+RACE_SKILLMAX_Human_Hiding 90.1 
+RACE_SKILLMAX_Human_Inscription 90.1 
+RACE_SKILLMAX_Human_ItemID 90.1 
+RACE_SKILLMAX_Human_LockPicking 90.1 
+RACE_SKILLMAX_Human_Lumberjacking 90.1 
+RACE_SKILLMAX_Human_Macefighting 90.1 
+RACE_SKILLMAX_Human_Magery 90.1 
+RACE_SKILLMAX_Human_MagicResistance 104.0 
+RACE_SKILLMAX_Human_Meditation 90.1 
+RACE_SKILLMAX_Human_Mining 90.1 
+RACE_SKILLMAX_Human_Musicianship 90.1 
+RACE_SKILLMAX_Human_Necromancy 90.1 
+RACE_SKILLMAX_Human_Parrying 90.1 
+RACE_SKILLMAX_Human_Peacemaking 104.0 
+RACE_SKILLMAX_Human_Poisoning 90.1 
+RACE_SKILLMAX_Human_Provocation 90.1 
+RACE_SKILLMAX_Human_RemoveTrap 90.1 
+RACE_SKILLMAX_Human_Snooping 90.1 
+RACE_SKILLMAX_Human_SpiritSpeak 90.1 
+RACE_SKILLMAX_Human_Stealing 90.1 
+RACE_SKILLMAX_Human_Stealth 90.1 
+RACE_SKILLMAX_Human_Swordsmanship 90.1 
+RACE_SKILLMAX_Human_Tactics 90.1 
+RACE_SKILLMAX_Human_Tailoring 90.1 
+RACE_SKILLMAX_Human_Taming 90.1 
+RACE_SKILLMAX_Human_TasteID 90.1 
+RACE_SKILLMAX_Human_Tinkering 104.0 
+RACE_SKILLMAX_Human_Tracking 90.1 
+RACE_SKILLMAX_Human_Veterinary 90.1 
+RACE_SKILLMAX_Human_Wrestling 90.1 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Human Skills START 
+
+RACE_SKILLSTART_Human_Alchemy {15.0 30.0} 
+RACE_SKILLSTART_Human_Anatomy {15.0 30.0} 
+RACE_SKILLSTART_Human_AnimalLore {15.0 30.0} 
+RACE_SKILLSTART_Human_Archery {15.0 30.0} 
+RACE_SKILLSTART_Human_ArmsLore {15.0 30.0} 
+RACE_SKILLSTART_Human_Begging {15.0 30.0} 
+RACE_SKILLSTART_Human_Blacksmithing {15.0 30.0} 
+RACE_SKILLSTART_Human_Bowcraft {15.0 30.0} 
+RACE_SKILLSTART_Human_Camping {15.0 30.0} 
+RACE_SKILLSTART_Human_Carpentry {15.0 30.0} 
+RACE_SKILLSTART_Human_Cartography {15.0 30.0} 
+RACE_SKILLSTART_Human_Cooking {15.0 30.0} 
+RACE_SKILLSTART_Human_DetectingHidden {15.0 30.0} 
+RACE_SKILLSTART_Human_Enticement {15.0 30.0} 
+RACE_SKILLSTART_Human_EvaluatingIntel {15.0 30.0} 
+RACE_SKILLSTART_Human_Fencing {15.0 30.0} 
+RACE_SKILLSTART_Human_Fishing {15.0 30.0} 
+RACE_SKILLSTART_Human_Forensics {15.0 30.0} 
+RACE_SKILLSTART_Human_Healing {15.0 30.0} 
+RACE_SKILLSTART_Human_Herding {15.0 30.0} 
+RACE_SKILLSTART_Human_Hiding {15.0 30.0} 
+RACE_SKILLSTART_Human_Inscription {15.0 30.0} 
+RACE_SKILLSTART_Human_ItemID {15.0 30.0} 
+RACE_SKILLSTART_Human_LockPicking {15.0 30.0} 
+RACE_SKILLSTART_Human_Lumberjacking {15.0 30.0} 
+RACE_SKILLSTART_Human_Macefighting {15.0 30.0} 
+RACE_SKILLSTART_Human_Magery {15.0 30.0} 
+RACE_SKILLSTART_Human_MagicResistance {25.0 35.0} 
+RACE_SKILLSTART_Human_Meditation {15.0 30.0} 
+RACE_SKILLSTART_Human_Mining {15.0 30.0} 
+RACE_SKILLSTART_Human_Musicianship {15.0 30.0} 
+RACE_SKILLSTART_Human_Necromancy {15.0 30.0} 
+RACE_SKILLSTART_Human_Parrying {15.0 30.0} 
+RACE_SKILLSTART_Human_Peacemaking {25.0 35.0} 
+RACE_SKILLSTART_Human_Poisoning {15.0 30.0} 
+RACE_SKILLSTART_Human_Provocation {15.0 30.0} 
+RACE_SKILLSTART_Human_RemoveTrap {15.0 30.0} 
+RACE_SKILLSTART_Human_Snooping {15.0 30.0} 
+RACE_SKILLSTART_Human_SpiritSpeak {15.0 30.0} 
+RACE_SKILLSTART_Human_Stealing {15.0 30.0} 
+RACE_SKILLSTART_Human_Stealth {15.0 30.0} 
+RACE_SKILLSTART_Human_Swordsmanship {15.0 30.0} 
+RACE_SKILLSTART_Human_Tactics {15.0 30.0} 
+RACE_SKILLSTART_Human_Tailoring {15.0 30.0} 
+RACE_SKILLSTART_Human_Taming {15.0 30.0} 
+RACE_SKILLSTART_Human_TasteID {15.0 30.0} 
+RACE_SKILLSTART_Human_Tinkering {25.0 35.0} 
+RACE_SKILLSTART_Human_Tracking {15.0 30.0} 
+RACE_SKILLSTART_Human_Veterinary {15.0 30.0} 
+RACE_SKILLSTART_Human_Wrestling {15.0 30.0} 
+
+
+// Shapeshifter Skills MAX 
+
+RACE_SKILLMAX_Shapeshifter_Alchemy 100.0 
+RACE_SKILLMAX_Shapeshifter_Anatomy 100.0 
+RACE_SKILLMAX_Shapeshifter_AnimalLore 100.0 
+RACE_SKILLMAX_Shapeshifter_Archery 45.0 
+RACE_SKILLMAX_Shapeshifter_ArmsLore 45.0 
+RACE_SKILLMAX_Shapeshifter_Begging 45.0 
+RACE_SKILLMAX_Shapeshifter_Blacksmithing 45.0 
+RACE_SKILLMAX_Shapeshifter_Bowcraft 45.0 
+RACE_SKILLMAX_Shapeshifter_Camping 45.0 
+RACE_SKILLMAX_Shapeshifter_Carpentry 45.0 
+RACE_SKILLMAX_Shapeshifter_Cartography 100.0 
+RACE_SKILLMAX_Shapeshifter_Cooking 90.1 
+RACE_SKILLMAX_Shapeshifter_DetectingHidden 45.0 
+RACE_SKILLMAX_Shapeshifter_Enticement 100.0 
+RACE_SKILLMAX_Shapeshifter_EvaluatingIntel 104.0 
+RACE_SKILLMAX_Shapeshifter_Fencing 45.0 
+RACE_SKILLMAX_Shapeshifter_Fishing 45.0 
+RACE_SKILLMAX_Shapeshifter_Forensics 100.0 
+RACE_SKILLMAX_Shapeshifter_Healing 100.0 
+RACE_SKILLMAX_Shapeshifter_Herding 100.0 
+RACE_SKILLMAX_Shapeshifter_Hiding 104.0 
+RACE_SKILLMAX_Shapeshifter_Inscription 100.0 
+RACE_SKILLMAX_Shapeshifter_ItemID 100.0 
+RACE_SKILLMAX_Shapeshifter_LockPicking 100.0 
+RACE_SKILLMAX_Shapeshifter_Lumberjacking 45.0 
+RACE_SKILLMAX_Shapeshifter_Macefighting 45.0 
+RACE_SKILLMAX_Shapeshifter_Magery 104.0 
+RACE_SKILLMAX_Shapeshifter_MagicResistance 100.0 
+RACE_SKILLMAX_Shapeshifter_Meditation 100.0 
+RACE_SKILLMAX_Shapeshifter_Mining 45.0 
+RACE_SKILLMAX_Shapeshifter_Musicianship 90.1 
+RACE_SKILLMAX_Shapeshifter_Necromancy 100.0 
+RACE_SKILLMAX_Shapeshifter_Parrying 45.0 
+RACE_SKILLMAX_Shapeshifter_Peacemaking 90.1 
+RACE_SKILLMAX_Shapeshifter_Poisoning 45.0 
+RACE_SKILLMAX_Shapeshifter_Provocation 90.1 
+RACE_SKILLMAX_Shapeshifter_RemoveTrap 45.0 
+RACE_SKILLMAX_Shapeshifter_Snooping 100.0 
+RACE_SKILLMAX_Shapeshifter_SpiritSpeak 100.0 
+RACE_SKILLMAX_Shapeshifter_Stealing 90.1 
+RACE_SKILLMAX_Shapeshifter_Stealth 100.0 
+RACE_SKILLMAX_Shapeshifter_Swordsmanship 45.0 
+RACE_SKILLMAX_Shapeshifter_Tactics 70.1 
+RACE_SKILLMAX_Shapeshifter_Tailoring 70.1 
+RACE_SKILLMAX_Shapeshifter_Taming 90.1 
+RACE_SKILLMAX_Shapeshifter_TasteID 90.1 
+RACE_SKILLMAX_Shapeshifter_Tinkering 45.0 
+RACE_SKILLMAX_Shapeshifter_Tracking 100.0 
+RACE_SKILLMAX_Shapeshifter_Veterinary 90.1 
+RACE_SKILLMAX_Shapeshifter_Wrestling 70.1 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Shapeshifter Skills START 
+
+RACE_SKILLSTART_Shapeshifter_Alchemy {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Anatomy {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_AnimalLore {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Archery 0.0 
+RACE_SKILLSTART_Shapeshifter_ArmsLore 0.0 
+RACE_SKILLSTART_Shapeshifter_Begging 0.0 
+RACE_SKILLSTART_Shapeshifter_Blacksmithing 0.0 
+RACE_SKILLSTART_Shapeshifter_Bowcraft 0.0 
+RACE_SKILLSTART_Shapeshifter_Camping 0.0 
+RACE_SKILLSTART_Shapeshifter_Carpentry 0.0 
+RACE_SKILLSTART_Shapeshifter_Cartography {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Cooking {15.0 30.0} 
+RACE_SKILLSTART_Shapeshifter_DetectingHidden 0.0 
+RACE_SKILLSTART_Shapeshifter_Enticement {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_EvaluatingIntel {25.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Fencing 0.0 
+RACE_SKILLSTART_Shapeshifter_Fishing 0.0 
+RACE_SKILLSTART_Shapeshifter_Forensics {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Healing {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Herding {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Hiding {25.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Inscription {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_ItemID {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_LockPicking {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Lumberjacking 0.0 
+RACE_SKILLSTART_Shapeshifter_Macefighting 0.0 
+RACE_SKILLSTART_Shapeshifter_Magery {25.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_MagicResistance {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Meditation {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Mining 0.0 
+RACE_SKILLSTART_Shapeshifter_Musicianship {15.0 30.0} 
+RACE_SKILLSTART_Shapeshifter_Necromancy {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Parrying 0.0 
+RACE_SKILLSTART_Shapeshifter_Peacemaking {15.0 30.0} 
+RACE_SKILLSTART_Shapeshifter_Poisoning 0.0 
+RACE_SKILLSTART_Shapeshifter_Provocation {15.0 30.0} 
+RACE_SKILLSTART_Shapeshifter_RemoveTrap 0.0 
+RACE_SKILLSTART_Shapeshifter_Snooping {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_SpiritSpeak {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Stealing {15.0 30.0} 
+RACE_SKILLSTART_Shapeshifter_Stealth {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Swordsmanship 0.0 
+RACE_SKILLSTART_Shapeshifter_Tactics {5.0 10.0} 
+RACE_SKILLSTART_Shapeshifter_Tailoring {5.0 10.0} 
+RACE_SKILLSTART_Shapeshifter_Taming {15.0 30.0} 
+RACE_SKILLSTART_Shapeshifter_TasteID {15.0 30.0} 
+RACE_SKILLSTART_Shapeshifter_Tinkering 0.0 
+RACE_SKILLSTART_Shapeshifter_Tracking {20.0 35.0} 
+RACE_SKILLSTART_Shapeshifter_Veterinary {15.0 30.0} 
+RACE_SKILLSTART_Shapeshifter_Wrestling {5.0 10.0} 
+
+
+// Vampire Skills MAX 
+
+RACE_SKILLMAX_Vampire_Alchemy 100.0 
+RACE_SKILLMAX_Vampire_Anatomy 100.0 
+RACE_SKILLMAX_Vampire_AnimalLore 100.0 
+RACE_SKILLMAX_Vampire_Archery 45.0 
+RACE_SKILLMAX_Vampire_ArmsLore 90.1 
+RACE_SKILLMAX_Vampire_Begging 45.0 
+RACE_SKILLMAX_Vampire_Blacksmithing 70.1 
+RACE_SKILLMAX_Vampire_Bowcraft 45.0 
+RACE_SKILLMAX_Vampire_Camping 70.1 
+RACE_SKILLMAX_Vampire_Carpentry 45.0 
+RACE_SKILLMAX_Vampire_Cartography 100.0 
+RACE_SKILLMAX_Vampire_Cooking 90.1 
+RACE_SKILLMAX_Vampire_DetectingHidden 100.0 
+RACE_SKILLMAX_Vampire_Enticement 104.0 
+RACE_SKILLMAX_Vampire_EvaluatingIntel 100.0 
+RACE_SKILLMAX_Vampire_Fencing 100.0 
+RACE_SKILLMAX_Vampire_Fishing 45.0 
+RACE_SKILLMAX_Vampire_Forensics 100.0 
+RACE_SKILLMAX_Vampire_Healing 45.0 
+RACE_SKILLMAX_Vampire_Herding 100.0 
+RACE_SKILLMAX_Vampire_Hiding 104.0 
+RACE_SKILLMAX_Vampire_Inscription 100.0 
+RACE_SKILLMAX_Vampire_ItemID 100.0 
+RACE_SKILLMAX_Vampire_LockPicking 70.1 
+RACE_SKILLMAX_Vampire_Lumberjacking 45.0 
+RACE_SKILLMAX_Vampire_Macefighting 45.0 
+RACE_SKILLMAX_Vampire_Magery 100.0 
+RACE_SKILLMAX_Vampire_MagicResistance 100.0 
+RACE_SKILLMAX_Vampire_Meditation 100.0 
+RACE_SKILLMAX_Vampire_Mining 70.1 
+RACE_SKILLMAX_Vampire_Musicianship 90.1 
+RACE_SKILLMAX_Vampire_Necromancy 100.0 
+RACE_SKILLMAX_Vampire_Parrying 70.1 
+RACE_SKILLMAX_Vampire_Peacemaking 100.0 
+RACE_SKILLMAX_Vampire_Poisoning 100.0 
+RACE_SKILLMAX_Vampire_Provocation 100.0 
+RACE_SKILLMAX_Vampire_RemoveTrap 70.1 
+RACE_SKILLMAX_Vampire_Snooping 100.0 
+RACE_SKILLMAX_Vampire_SpiritSpeak 100.0 
+RACE_SKILLMAX_Vampire_Stealing 70.1 
+RACE_SKILLMAX_Vampire_Stealth 104.0 
+RACE_SKILLMAX_Vampire_Swordsmanship 90.1 
+RACE_SKILLMAX_Vampire_Tactics 100.0 
+RACE_SKILLMAX_Vampire_Tailoring 90.1 
+RACE_SKILLMAX_Vampire_Taming 90.1 
+RACE_SKILLMAX_Vampire_TasteID 90.1 
+RACE_SKILLMAX_Vampire_Tinkering 45.0 
+RACE_SKILLMAX_Vampire_Tracking 100.0 
+RACE_SKILLMAX_Vampire_Veterinary 45.0 
+RACE_SKILLMAX_Vampire_Wrestling 70.1 
+
+
+// Copy/Paste, Search/Replace from above subsection 
+// Vampire Skills START 
+
+RACE_SKILLSTART_Vampire_Alchemy {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Anatomy {20.0 35.0} 
+RACE_SKILLSTART_Vampire_AnimalLore {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Archery 0.0 
+RACE_SKILLSTART_Vampire_ArmsLore {15.0 30.0} 
+RACE_SKILLSTART_Vampire_Begging 0.0 
+RACE_SKILLSTART_Vampire_Blacksmithing {5.0 10.0} 
+RACE_SKILLSTART_Vampire_Bowcraft 0.0 
+RACE_SKILLSTART_Vampire_Camping {5.0 10.0} 
+RACE_SKILLSTART_Vampire_Carpentry 0.0 
+RACE_SKILLSTART_Vampire_Cartography {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Cooking {15.0 30.0} 
+RACE_SKILLSTART_Vampire_DetectingHidden {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Enticement {25.0 35.0} 
+RACE_SKILLSTART_Vampire_EvaluatingIntel {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Fencing {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Fishing 0.0 
+RACE_SKILLSTART_Vampire_Forensics {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Healing 0.0 
+RACE_SKILLSTART_Vampire_Herding {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Hiding {25.0 35.0} 
+RACE_SKILLSTART_Vampire_Inscription {20.0 35.0} 
+RACE_SKILLSTART_Vampire_ItemID {20.0 35.0} 
+RACE_SKILLSTART_Vampire_LockPicking {5.0 10.0} 
+RACE_SKILLSTART_Vampire_Lumberjacking 0.0 
+RACE_SKILLSTART_Vampire_Macefighting 0.0 
+RACE_SKILLSTART_Vampire_Magery {20.0 35.0} 
+RACE_SKILLSTART_Vampire_MagicResistance {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Meditation {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Mining {5.0 10.0} 
+RACE_SKILLSTART_Vampire_Musicianship {15.0 30.0} 
+RACE_SKILLSTART_Vampire_Necromancy {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Parrying {5.0 10.0} 
+RACE_SKILLSTART_Vampire_Peacemaking {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Provocation {20.0 35.0} 
+RACE_SKILLSTART_Vampire_RemoveTrap {5.0 10.0} 
+RACE_SKILLSTART_Vampire_Snooping {20.0 35.0} 
+RACE_SKILLSTART_Vampire_SpiritSpeak {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Stealing {5.0 10.0} 
+RACE_SKILLSTART_Vampire_Stealth {25.0 35.0} 
+RACE_SKILLSTART_Vampire_Swordsmanship {15.0 30.0} 
+RACE_SKILLSTART_Vampire_Tactics {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Tailoring {15.0 30.0} 
+RACE_SKILLSTART_Vampire_Taming {15.0 30.0} 
+RACE_SKILLSTART_Vampire_TasteID {15.0 30.0} 
+RACE_SKILLSTART_Vampire_Tinkering 0.0 
+RACE_SKILLSTART_Vampire_Tracking {20.0 35.0} 
+RACE_SKILLSTART_Vampire_Veterinary 0.0 
+RACE_SKILLSTART_Vampire_Wrestling {5.0 10.0} 
+
+
+// Warlock Skills MAX 
+
+RACE_SKILLMAX_Warlock_Alchemy 90.1 
+RACE_SKILLMAX_Warlock_Anatomy 100.0 
+RACE_SKILLMAX_Warlock_AnimalLore 45.0 
+RACE_SKILLMAX_Warlock_Archery 70.1 
+RACE_SKILLMAX_Warlock_ArmsLore 90.1 
+RACE_SKILLMAX_Warlock_Begging 45.0 
+RACE_SKILLMAX_Warlock_Blacksmithing 70.1 
+RACE_SKILLMAX_Warlock_Bowcraft 70.1 
+RACE_SKILLMAX_Warlock_Camping 45.0 
+RACE_SKILLMAX_Warlock_Carpentry 70.1 
+RACE_SKILLMAX_Warlock_Cartography 90.1 
+RACE_SKILLMAX_Warlock_Cooking 90.1 
+RACE_SKILLMAX_Warlock_DetectingHidden 70.1 
+RACE_SKILLMAX_Warlock_Enticement 70.1 
+RACE_SKILLMAX_Warlock_EvaluatingIntel 100.0 
+RACE_SKILLMAX_Warlock_Fencing 90.1 
+RACE_SKILLMAX_Warlock_Fishing 45.0 
+RACE_SKILLMAX_Warlock_Forensics 100.0 
+RACE_SKILLMAX_Warlock_Healing 70.1 
+RACE_SKILLMAX_Warlock_Herding 45.0 
+RACE_SKILLMAX_Warlock_Hiding 90.1 
+RACE_SKILLMAX_Warlock_Inscription 104.0 
+RACE_SKILLMAX_Warlock_ItemID 100.0 
+RACE_SKILLMAX_Warlock_LockPicking 70.1 
+RACE_SKILLMAX_Warlock_Lumberjacking 45.0 
+RACE_SKILLMAX_Warlock_Macefighting 45.0 
+RACE_SKILLMAX_Warlock_Magery 100.0 
+RACE_SKILLMAX_Warlock_MagicResistance 104.0 
+RACE_SKILLMAX_Warlock_Meditation 100.0 
+RACE_SKILLMAX_Warlock_Mining 45.0 
+RACE_SKILLMAX_Warlock_Musicianship 90.1 
+RACE_SKILLMAX_Warlock_Necromancy 104.0 
+RACE_SKILLMAX_Warlock_Parrying 90.1 
+RACE_SKILLMAX_Warlock_Peacemaking 45.0 
+RACE_SKILLMAX_Warlock_Poisoning 100.0 
+RACE_SKILLMAX_Warlock_Provocation 90.1 
+RACE_SKILLMAX_Warlock_RemoveTrap 70.1 
+RACE_SKILLMAX_Warlock_Snooping 70.1 
+RACE_SKILLMAX_Warlock_SpiritSpeak 90.1 
+RACE_SKILLMAX_Warlock_Stealing 70.1 
+RACE_SKILLMAX_Warlock_Stealth 70.1 
+RACE_SKILLMAX_Warlock_Swordsmanship 90.1 
+RACE_SKILLMAX_Warlock_Tactics 90.1 
+RACE_SKILLMAX_Warlock_Tailoring 70.1 
+RACE_SKILLMAX_Warlock_Taming 70.1 
+RACE_SKILLMAX_Warlock_TasteID 100.0 
+RACE_SKILLMAX_Warlock_Tinkering 45.0 
+RACE_SKILLMAX_Warlock_Tracking 70.1 
+RACE_SKILLMAX_Warlock_Veterinary 45.0 
+RACE_SKILLMAX_Warlock_Wrestling 90.1 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Warlock Skills START 
+
+RACE_SKILLSTART_Warlock_Alchemy {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Anatomy {20.0 35.0} 
+RACE_SKILLSTART_Warlock_AnimalLore 0.0 
+RACE_SKILLSTART_Warlock_Archery {5.0 10.0} 
+RACE_SKILLSTART_Warlock_ArmsLore {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Begging 0.0 
+RACE_SKILLSTART_Warlock_Blacksmithing {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Bowcraft {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Camping 0.0 
+RACE_SKILLSTART_Warlock_Carpentry {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Cartography {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Cooking {15.0 30.0} 
+RACE_SKILLSTART_Warlock_DetectingHidden {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Enticement {5.0 10.0} 
+RACE_SKILLSTART_Warlock_EvaluatingIntel {20.0 35.0} 
+RACE_SKILLSTART_Warlock_Fencing {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Fishing 0.0 
+RACE_SKILLSTART_Warlock_Forensics {20.0 35.0} 
+RACE_SKILLSTART_Warlock_Healing {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Herding 0.0 
+RACE_SKILLSTART_Warlock_Hiding {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Inscription {25.0 35.0} 
+RACE_SKILLSTART_Warlock_ItemID {20.0 35.0} 
+RACE_SKILLSTART_Warlock_LockPicking {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Lumberjacking 0.0 
+RACE_SKILLSTART_Warlock_Macefighting 0.0 
+RACE_SKILLSTART_Warlock_Magery {20.0 35.0} 
+RACE_SKILLSTART_Warlock_MagicResistance {25.0 35.0} 
+RACE_SKILLSTART_Warlock_Meditation {20.0 35.0} 
+RACE_SKILLSTART_Warlock_Mining 0.0 
+RACE_SKILLSTART_Warlock_Musicianship {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Necromancy {25.0 35.0} 
+RACE_SKILLSTART_Warlock_Parrying {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Peacemaking 0.0 
+RACE_SKILLSTART_Warlock_Poisoning {20.0 35.0} 
+RACE_SKILLSTART_Warlock_Provocation {15.0 30.0} 
+RACE_SKILLSTART_Warlock_RemoveTrap {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Snooping {5.0 10.0} 
+RACE_SKILLSTART_Warlock_SpiritSpeak {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Stealing {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Stealth {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Swordsmanship {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Tactics {15.0 30.0} 
+RACE_SKILLSTART_Warlock_Tailoring {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Taming {5.0 10.0} 
+RACE_SKILLSTART_Warlock_TasteID {20.0 35.0} 
+RACE_SKILLSTART_Warlock_Tinkering 0.0 
+RACE_SKILLSTART_Warlock_Tracking {5.0 10.0} 
+RACE_SKILLSTART_Warlock_Veterinary 0.0 
+RACE_SKILLSTART_Warlock_Wrestling {15.0 30.0} 
+
+
+// Werven Skills MAX 
+
+RACE_SKILLMAX_Werven_Alchemy 70.1 
+RACE_SKILLMAX_Werven_Anatomy 90.1 
+RACE_SKILLMAX_Werven_AnimalLore 90.1 
+RACE_SKILLMAX_Werven_Archery 45.0 
+RACE_SKILLMAX_Werven_ArmsLore 45.0 
+RACE_SKILLMAX_Werven_Begging 45.0 
+RACE_SKILLMAX_Werven_Blacksmithing 45.0 
+RACE_SKILLMAX_Werven_Bowcraft 70.1 
+RACE_SKILLMAX_Werven_Camping 90.1 
+RACE_SKILLMAX_Werven_Carpentry 45.0 
+RACE_SKILLMAX_Werven_Cartography 70.1 
+RACE_SKILLMAX_Werven_Cooking 90.1 
+RACE_SKILLMAX_Werven_DetectingHidden 100.0 
+RACE_SKILLMAX_Werven_Enticement 45.0 
+RACE_SKILLMAX_Werven_EvaluatingIntel 45.0 
+RACE_SKILLMAX_Werven_Fencing 45.0 
+RACE_SKILLMAX_Werven_Fishing 90.1 
+RACE_SKILLMAX_Werven_Forensics 70.1 
+RACE_SKILLMAX_Werven_Healing 70.1 
+RACE_SKILLMAX_Werven_Herding 104.0 
+RACE_SKILLMAX_Werven_Hiding 100.0 
+RACE_SKILLMAX_Werven_Inscription 70.1 
+RACE_SKILLMAX_Werven_ItemID 45.0 
+RACE_SKILLMAX_Werven_LockPicking 90.1 
+RACE_SKILLMAX_Werven_Lumberjacking 45.0 
+RACE_SKILLMAX_Werven_Macefighting 90.1 
+RACE_SKILLMAX_Werven_Magery 45.0 
+RACE_SKILLMAX_Werven_MagicResistance 90.1 
+RACE_SKILLMAX_Werven_Meditation 45.0 
+RACE_SKILLMAX_Werven_Mining 45.0 
+RACE_SKILLMAX_Werven_Musicianship 70.1 
+RACE_SKILLMAX_Werven_Necromancy 70.1 
+RACE_SKILLMAX_Werven_Parrying 90.1 
+RACE_SKILLMAX_Werven_Peacemaking 45.0 
+RACE_SKILLMAX_Werven_Poisoning 90.1 
+RACE_SKILLMAX_Werven_Provocation 70.1 
+RACE_SKILLMAX_Werven_RemoveTrap 90.1 
+RACE_SKILLMAX_Werven_Snooping 90.1 
+RACE_SKILLMAX_Werven_SpiritSpeak 45.0 
+RACE_SKILLMAX_Werven_Stealing 70.1 
+RACE_SKILLMAX_Werven_Stealth 90.1 
+RACE_SKILLMAX_Werven_Swordsmanship 45.0 
+RACE_SKILLMAX_Werven_Tactics 90.1 
+RACE_SKILLMAX_Werven_Tailoring 70.1 
+RACE_SKILLMAX_Werven_Taming 45.0 
+RACE_SKILLMAX_Werven_TasteID 70.1 
+RACE_SKILLMAX_Werven_Tinkering 45.0 
+RACE_SKILLMAX_Werven_Tracking 104.0 
+RACE_SKILLMAX_Werven_Veterinary 70.1 
+RACE_SKILLMAX_Werven_Wrestling 104.0 
+
+// Copy/Paste, Search/Replace from above subsection 
+// Werven Skills START 
+
+RACE_SKILLSTART_Werven_Alchemy {5.0 10.0} 
+RACE_SKILLSTART_Werven_Anatomy {15.0 30.0} 
+RACE_SKILLSTART_Werven_AnimalLore {15.0 30.0} 
+RACE_SKILLSTART_Werven_Archery 0.0 
+RACE_SKILLSTART_Werven_ArmsLore 0.0 
+RACE_SKILLSTART_Werven_Begging 0.0 
+RACE_SKILLSTART_Werven_Blacksmithing 0.0 
+RACE_SKILLSTART_Werven_Bowcraft {5.0 10.0} 
+RACE_SKILLSTART_Werven_Camping {15.0 30.0} 
+RACE_SKILLSTART_Werven_Carpentry 0.0 
+RACE_SKILLSTART_Werven_Cartography {5.0 10.0} 
+RACE_SKILLSTART_Werven_Cooking {15.0 30.0} 
+RACE_SKILLSTART_Werven_DetectingHidden {20.0 35.0} 
+RACE_SKILLSTART_Werven_Enticement 0.0 
+RACE_SKILLSTART_Werven_EvaluatingIntel 0.0 
+RACE_SKILLSTART_Werven_Fencing 0.0 
+RACE_SKILLSTART_Werven_Fishing {15.0 30.0} 
+RACE_SKILLSTART_Werven_Forensics {5.0 10.0} 
+RACE_SKILLSTART_Werven_Healing {5.0 10.0} 
+RACE_SKILLSTART_Werven_Herding {25.0 35.0} 
+RACE_SKILLSTART_Werven_Hiding {20.0 35.0} 
+RACE_SKILLSTART_Werven_Inscription {5.0 10.0} 
+RACE_SKILLSTART_Werven_ItemID 0.0 
+RACE_SKILLSTART_Werven_LockPicking {15.0 30.0} 
+RACE_SKILLSTART_Werven_Lumberjacking 0.0 
+RACE_SKILLSTART_Werven_Macefighting {15.0 30.0} 
+RACE_SKILLSTART_Werven_Magery 0.0 
+RACE_SKILLSTART_Werven_MagicResistance {15.0 30.0} 
+RACE_SKILLSTART_Werven_Meditation 0.0 
+RACE_SKILLSTART_Werven_Mining 0.0 
+RACE_SKILLSTART_Werven_Musicianship {5.0 10.0} 
+RACE_SKILLSTART_Werven_Necromancy {5.0 10.0} 
+RACE_SKILLSTART_Werven_Parrying {15.0 30.0} 
+RACE_SKILLSTART_Werven_Peacemaking 0.0 
+RACE_SKILLSTART_Werven_Poisoning {15.0 30.0} 
+RACE_SKILLSTART_Werven_Provocation {5.0 10.0} 
+RACE_SKILLSTART_Werven_RemoveTrap {15.0 30.0} 
+RACE_SKILLSTART_Werven_Snooping {15.0 30.0} 
+RACE_SKILLSTART_Werven_SpiritSpeak 0.0 
+RACE_SKILLSTART_Werven_Stealing {5.0 10.0} 
+RACE_SKILLSTART_Werven_Stealth {15.0 30.0} 
+RACE_SKILLSTART_Werven_Swordsmanship 0.0 
+RACE_SKILLSTART_Werven_Tactics {15.0 30.0} 
+RACE_SKILLSTART_Werven_Tailoring {5.0 10.0} 
+RACE_SKILLSTART_Werven_Taming 0.0 
+RACE_SKILLSTART_Werven_TasteID {5.0 10.0} 
+RACE_SKILLSTART_Werven_Tinkering 0.0 
+RACE_SKILLSTART_Werven_Tracking {25.0 35.0} 
+RACE_SKILLSTART_Werven_Veterinary {5.0 10.0} 
+RACE_SKILLSTART_Werven_Wrestling {25.0 35.0} 
+
+[EOF]

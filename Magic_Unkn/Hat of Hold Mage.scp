@@ -1,0 +1,62 @@
+///////////////////////////////
+// DESPERATION SHARD (Italy) //
+// Hat of hold mage          //
+// By Radical Metal          //
+///////////////////////////////
+
+//sorry for bad english but i'm italian......
+
+[ITEMDEF Capp_gMago]
+DEFNAME=i_hat_wizards_Grand
+NAME=Hat of Hold Mage
+ID=01718
+WEIGHT=2
+TYPE=T_CLOTHING
+DYE=1
+ARMOR=50
+
+CATEGORY=Stevu
+SUBSECTION=Magery
+DESCRIPTION=Hat of Hold Mage
+
+ON=@Create
+COLOR=0505
+HITPOINTS={21 23}
+
+On=@Step
+   SRC.Resurrect
+
+ON=@DClick
+  MENU G_Grand
+
+[MENU G_Grand]
+Hat of Hold Mage
+On=0 Take hat for you
+On=0 Heal you
+   SRC.HITS 100
+   SRC.MANA -10
+On=0 Hot Flame
+   SRC.Cast 51
+   COLOR 00480
+   SRC.MANA 0
+REMOVE
+On=0 Kill your avversary
+   SRC.SAY Death!
+   SRC.Set kill
+   SRC.MANA 0
+REMOVE
+On=0 Resurrect
+   SAY I Resurrect you!
+   SRC.Cast 59
+   SRC.MANA 0
+On=0 Hold Mage
+   SRC.SAY Desperation!
+   SRC.Cast 57
+   SRC.MANA 10
+On=0 Mana!
+   SRC.MANA 100
+   SRC.HITS -20
+   SRC.STAM -40
+
+
+[EOF]

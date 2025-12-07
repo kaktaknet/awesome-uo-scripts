@@ -1,0 +1,248 @@
+//**********************************************************
+//* Please observe copyright. Do not claim it as your own. *
+//* Copyright © Magistrator                                * 
+//**********************************************************
+
+//Use these scripts in spheretables.scp, to make statlock feature work correctly.
+
+//As an example, here is the modyfied [SKILL 1] script:
+[SKILL 1]
+DEFNAME=SKILL_ANATOMY
+KEY=Anatomy
+TITLE=Scholar
+PROMPT_MSG=Whom shall I examine?
+
+DELAY=3.0,1.0
+ADV_RATE=2.5,50.0,200.0
+
+BONUS_STATS=50
+BONUS_STR=0
+BONUS_DEX=0
+BONUS_INT=100
+
+//These parameters are changed to (0) to ensure that stat rises only via @SkillStart 
+//event.
+STAT_STR=0
+STAT_INT=0
+STAT_DEX=0
+
+ON=@Fail
+//This line would be present only in those skills, that affect stats via @SkillStart
+//event:
+	SRC.TAG.TEMPSTAT = 0
+	SRC.MESSAGE You can't think of anything about this creature
+
+//--------------------
+
+//This is the example for [SKILLCLASS 0]:
+
+[SKILLCLASS 0]
+// undeclared class.
+// max skills for players of this skill class. 
+// might want this to be all 50.0 to make people declare a class?
+DEFNAME=Class_undeclared
+NAME=undeclared
+// EVENTS=e_ClassUndeclared
+
+//To make Sphere ignore statsum (to handle it yourself) set big amount of STATSUM
+STATSUM=1000
+SKILLSUM=5100.0
+STR=100
+INT=100
+DEX=100
+Anatomy=100.0
+ItemID=100.0
+ArmsLore=100.0
+Parrying=100.0
+Begging=100.0
+Blacksmithing=100.0
+Bowcraft=100.0
+Peacemaking=100.0
+Camping=100.0
+Carpentry=100.0
+Cartography=100.0
+Cooking=100.0
+DetectingHidden=100.0
+Enticement=100.0
+EvaluatingIntel=100.0
+Healing=100.0
+Fishing=100.0
+Forensics=100.0
+Herding=100.0
+Hiding=100.0
+Provocation=100.0
+Inscription=100.0
+LockPicking=100.0
+Magery=100.0
+MagicResistance=100.0
+Tactics=100.0
+Snooping=100.0
+Musicianship=100.0
+Poisoning=100.0
+Archery=100.0
+SpiritSpeak=100.0
+Stealing=100.0
+Tailoring=100.0
+Taming=100.0
+TasteID=100.0
+Tinkering=100.0
+Tracking=100.0
+Veterinary=100.0
+Swordsmanship=100.0
+Macefighting=100.0
+Fencing=100.0
+Wrestling=100.0
+Lumberjacking=100.0
+Mining=100.0
+Meditation=100.0
+Stealth=100.0
+RemoveTrap=100.0
+Necromancy=100.0
+
+On=@Death
+//If by accidentally stats would happen to become above their max levels, they have to be cut
+//down when a character dies.
+IF (<SRC.FLAGS> & STATF_POLYMORPH) || (<SRC.FINDLAYER(LAYER_SPELL_STATS)>) || (<SRC.FINDLAYER(LAYER_FLAG_Potion)>) || (<SRC.FINDLAYER(LAYER_FLAG_Hallucination)>) || <SRC.BRAIN> || <ISGM> THEN
+RETURN 0
+ENDIF
+ 
+IF <SRC.STR> > 170 THEN
+SRC.STR = 170
+ENDIF
+IF <SRC.DEX> > 170 THEN
+SRC.DEX = 170
+ENDIF
+IF <SRC.INT> > 170 THEN
+SRC.INT = 170
+ENDIF
+IF (<EVAL <SRC.INT> + <SRC.STR> + <SRC.DEX>>) > 350 THEN
+SRC.STR = 100
+SRC.DEX = 100
+SRC.INT = 100
+ENDIF
+
+ON=@SkillStart
+//If skills, that affect intelligence are used
+IF (<ACTION> == 03) || (<ACTION> == 16) THEN
+//TEMPSTAT is needed to overrun a 55i bug with @Success. When SkillStart occurs, TEMPSTAT is 
+//checked. If it's (1) then the script for stat rise runs, else it doesn't, and at the end
+//of the script it's set to (1). On a @Fail event TEMPSTAT is set to (0). Thus, the script
+//for the rise of the stats runs only is the used skill is success.
+IF 0<SRC.TAG.TEMPSTAT> == 1 THEN
+//If in the .statlock dialog the rise of stat is allowed, then it rises.
+IF 0<SRC.TAG.INTLOCK> == 0 THEN
+//Place intcap here:
+IF <SRC.INT> < 170 THEN
+//Place global statcap here:
+IF <EVAL <SRC.INT>+<SRC.DEX>+<SRC.STR>> < 350 THEN
+
+//If stat affecting spells, items and potions used, stat shouldn't rise:
+//Don't forget to enable definitions for flags in spheredefs.scp
+IF (<SRC.FLAGS> & STATF_POLYMORPH) || (<SRC.FINDLAYER(LAYER_SPELL_STATS)>) || (<SRC.FINDLAYER(layer_hand1).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_hand2).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shoes).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_pants).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_helm).attr> & attr_cursed)  || (<SRC.FINDLAYER(layer_gloves).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ring).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_light).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_collar).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_half_apron).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_chest).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_wrist).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_tunic).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ears).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_arms).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_cape).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_robe).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_skirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_legs).attr> & attr_cursed) || (<SRC.FINDLAYER(LAYER_FLAG_Drunk)>) || (<SRC.FINDLAYER(LAYER_FLAG_Potion)>) || (<SRC.FINDLAYER(LAYER_FLAG_Hallucination)>) || <SRC.BRAIN> THEN
+SRC.MESSAGE You can't think of anything off hand
+RETURN 0
+ENDIF
+
+IF !(RAND(10)) THEN
+SRC.INT = <SRC.INT> + 1
+ENDIF
+
+//When statcap is reached, sphere must rise INT and decrease STR only if STR isn't locked.
+ELIF 0<SRC.TAG.STRLOCK> == 0 THEN
+//Stat won't fall beyond this value:
+IF <SRC.STR> > 30 THEN
+
+IF (<SRC.FLAGS> & STATF_POLYMORPH) || (<SRC.FINDLAYER(LAYER_SPELL_STATS)>) || (<SRC.FINDLAYER(layer_hand1).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_hand2).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shoes).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_pants).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_helm).attr> & attr_cursed)  || (<SRC.FINDLAYER(layer_gloves).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ring).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_light).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_collar).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_half_apron).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_chest).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_wrist).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_tunic).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ears).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_arms).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_cape).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_robe).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_skirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_legs).attr> & attr_cursed) || (<SRC.FINDLAYER(LAYER_FLAG_Drunk)>) || (<SRC.FINDLAYER(LAYER_FLAG_Potion)>) || (<SRC.FINDLAYER(LAYER_FLAG_Hallucination)>) || <SRC.BRAIN> THEN
+SRC.MESSAGE You can't think of anything off hand
+RETURN 0
+ENDIF
+
+IF !(RAND(10)) THEN
+SRC.INT = <SRC.INT> + 1
+SRC.STR = <SRC.STR> + (-1)
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+SRC.TAG.TEMPSTAT = 1
+
+//If skills, that affect dexterity are used
+ELIF (<ACTION> == 01) || (<ACTION> == 21) THEN
+IF 0<SRC.TAG.TEMPSTAT> == 1 THEN
+IF 0<SRC.TAG.DEXLOCK> == 0 THEN
+//Place intcap here:
+IF <SRC.DEX> < 170 THEN
+//Place global statcap here:
+IF <EVAL <SRC.INT>+<SRC.DEX>+<SRC.STR>> < 350 THEN
+
+//If stat affecting spells, items and potions used, stat shouldn't rise:
+IF (<SRC.FLAGS> & STATF_POLYMORPH) || (<SRC.FINDLAYER(LAYER_SPELL_STATS)>) || (<SRC.FINDLAYER(layer_hand1).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_hand2).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shoes).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_pants).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_helm).attr> & attr_cursed)  || (<SRC.FINDLAYER(layer_gloves).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ring).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_light).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_collar).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_half_apron).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_chest).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_wrist).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_tunic).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ears).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_arms).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_cape).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_robe).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_skirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_legs).attr> & attr_cursed) || (<SRC.FINDLAYER(LAYER_FLAG_Drunk)>) || (<SRC.FINDLAYER(LAYER_FLAG_Potion)>) || (<SRC.FINDLAYER(LAYER_FLAG_Hallucination)>) || <SRC.BRAIN> THEN
+SRC.MESSAGE You can't think of anything off hand
+RETURN 0
+ENDIF
+
+IF !(RAND(10)) THEN
+SRC.DEX = <SRC.DEX> + 1
+ENDIF
+
+ELIF 0<SRC.TAG.INTLOCK> == 0 THEN
+//Stat won't fall beyond this value:
+IF <SRC.INT> > 30 THEN
+
+IF (<SRC.FLAGS> & STATF_POLYMORPH) || (<SRC.FINDLAYER(LAYER_SPELL_STATS)>) || (<SRC.FINDLAYER(layer_hand1).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_hand2).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shoes).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_pants).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_helm).attr> & attr_cursed)  || (<SRC.FINDLAYER(layer_gloves).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ring).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_light).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_collar).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_half_apron).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_chest).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_wrist).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_tunic).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ears).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_arms).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_cape).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_robe).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_skirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_legs).attr> & attr_cursed) || (<SRC.FINDLAYER(LAYER_FLAG_Drunk)>) || (<SRC.FINDLAYER(LAYER_FLAG_Potion)>) || (<SRC.FINDLAYER(LAYER_FLAG_Hallucination)>) || <SRC.BRAIN> THEN
+SRC.MESSAGE You can't think of anything off hand
+RETURN 0
+ENDIF
+
+IF !(RAND(10)) THEN
+SRC.DEX = <SRC.DEX> + 1
+SRC.INT = <SRC.INT> + (-1)
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+SRC.TAG.TEMPSTAT = 1
+
+//If skills, that affect strength are used
+ELIF (<ACTION> == 02) THEN
+IF 0<SRC.TAG.TEMPSTAT> == 1 THEN
+IF 0<SRC.TAG.STRLOCK> == 0 THEN
+//Place intcap here:
+IF <SRC.STR> < 170 THEN
+//Place global statcap here:
+IF <EVAL <SRC.INT>+<SRC.DEX>+<SRC.STR>> < 350 THEN
+
+//If stat affecting spells, items and potions used, stat shouldn't rise:
+IF (<SRC.FLAGS> & STATF_POLYMORPH) || (<SRC.FINDLAYER(LAYER_SPELL_STATS)>) || (<SRC.FINDLAYER(layer_hand1).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_hand2).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shoes).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_pants).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_helm).attr> & attr_cursed)  || (<SRC.FINDLAYER(layer_gloves).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ring).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_light).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_collar).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_half_apron).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_chest).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_wrist).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_tunic).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ears).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_arms).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_cape).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_robe).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_skirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_legs).attr> & attr_cursed) || (<SRC.FINDLAYER(LAYER_FLAG_Drunk)>) || (<SRC.FINDLAYER(LAYER_FLAG_Potion)>) || (<SRC.FINDLAYER(LAYER_FLAG_Hallucination)>) || <SRC.BRAIN> THEN
+SRC.MESSAGE You can't think of anything off hand
+RETURN 0
+ENDIF
+
+IF !(RAND(10)) THEN
+SRC.STR = <SRC.STR> + 1
+ENDIF
+
+ELIF 0<SRC.TAG.DEXLOCK> == 0 THEN
+//Stat won't fall beyond this value:
+IF <SRC.DEX> > 30 THEN
+
+IF (<SRC.FLAGS> & STATF_POLYMORPH) || (<SRC.FINDLAYER(LAYER_SPELL_STATS)>) || (<SRC.FINDLAYER(layer_hand1).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_hand2).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shoes).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_pants).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_shirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_helm).attr> & attr_cursed)  || (<SRC.FINDLAYER(layer_gloves).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ring).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_light).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_collar).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_half_apron).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_chest).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_wrist).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_tunic).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_ears).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_arms).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_cape).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_robe).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_skirt).attr> & attr_cursed) || (<SRC.FINDLAYER(layer_legs).attr> & attr_cursed) || (<SRC.FINDLAYER(LAYER_FLAG_Drunk)>) || (<SRC.FINDLAYER(LAYER_FLAG_Potion)>) || (<SRC.FINDLAYER(LAYER_FLAG_Hallucination)>) || <SRC.BRAIN> THEN
+SRC.MESSAGE You can't think of anything off hand
+RETURN 0
+ENDIF
+
+IF !(RAND(10)) THEN
+SRC.STR = <SRC.STR> + 1
+SRC.DEX = <SRC.DEX> + (-1)
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+SRC.TAG.TEMPSTAT = 1
+ENDIF

@@ -1,0 +1,148 @@
+[TYPEDEF T_AOS_WEAPON]
+ON=@ClientToolTip
+IF !(STRCMPI(<TAG0.SLAYERGROUP>,Repond))
+SRC.ADDCLILOC 1060472
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,OGRE))
+SRC.ADDCLILOC 1060468
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,ORC))
+SRC.ADDCLILOC 1060470
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,TROLL))
+SRC.ADDCLILOC 1060480
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,UNDEAD))
+SRC.ADDCLILOC 1060479
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,ELEMENTAL))
+SRC.ADDCLILOC 1060464
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,AIRELEMENTAL))
+SRC.ADDCLILOC 1060457
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,BLOODELEMENTAL))
+SRC.ADDCLILOC 1060459
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,OREELEMENTAL))
+SRC.ADDCLILOC 1060463
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,FIREELEMENTAL))
+SRC.ADDCLILOC 1060465
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,POISONELEMENTAL))
+SRC.ADDCLILOC 1060471
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,SNOWELEMENTAL))
+SRC.ADDCLILOC 1060476
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,WATERELEMENTAL))
+SRC.ADDCLILOC 1060481
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,DAEMON))
+SRC.ADDCLILOC 1060460
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,GARGOYLE))
+SRC.ADDCLILOC 1060466
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,FEY))
+SRC.ADDCLILOC 1070855
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,ARACHNID))
+SRC.ADDCLILOC 1060458
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,SCORPION))
+SRC.ADDCLILOC 1060474
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,SPIDER))
+SRC.ADDCLILOC 1060477
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,TERATHAN))
+SRC.ADDCLILOC 1060478
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,REPTILE))
+SRC.ADDCLILOC 1060473
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,DRAGON))
+SRC.ADDCLILOC 1061284
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,LIZARDMAN))
+SRC.ADDCLILOC 1060467
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,OPHIDIAN))
+SRC.ADDCLILOC 1060469
+ELIF !(STRCMPI(<TAG0.SLAYERGROUP>,SNAKE))
+SRC.ADDCLILOC 1060475
+ENDIF
+
+ON=@Equip
+SRC.EVENTS +e_slayerdam
+
+ON=@UnEquip
+SRC.EVENTS -e_slayerdam
+
+[EVENTS e_slayerdam]
+ON=@Hit
+IF !(<ISEMPTY <ARGO.TAG.SLAYERGROUP>>) || ((<FINDLAYER.1.BASEID>==i_spellbook) && !(<ISEMPTY <FINDLAYER.1.TAG.SLAYERGROUP>>))
+IF (STRMATCH(*<BASEID>*,<DEF.<ARGO.TAG0.SLAYERGROUP>_SLAYER>))  || (STRMATCH(*<BASEID>*,<DEF.<FINDLAYER.1.TAG0.SLAYERGROUP>_SLAYER>))
+IF !(<R4>)
+ARGN1 *= 2
+EFFECT 3,i_fx_glow,16,20
+ENDIF
+ENDIF
+ENDIF
+
+[FUNCTION SETSLAYER]
+DORAND 25
+TAG.SLAYERGROUP=REPOND
+TAG.SLAYERGROUP=OGRE
+TAG.SLAYERGROUP=ORC
+TAG.SLAYERGROUP=TROLL
+TAG.SLAYERGROUP=UNDEAD
+TAG.SLAYERGROUP=ELEMENTAL
+TAG.SLAYERGROUP=AIRELEMENTAL
+TAG.SLAYERGROUP=BLOODELEMENTAL
+TAG.SLAYERGROUP=OREELEMENTAL
+TAG.SLAYERGROUP=FIREELEMENTAL
+TAG.SLAYERGROUP=POISONELEMENTAL
+TAG.SLAYERGROUP=SNOWELEMENTAL
+TAG.SLAYERGROUP=WATERELEMENTAL
+TAG.SLAYERGROUP=DAEMON
+TAG.SLAYERGROUP=GARGOYLE
+TAG.SLAYERGROUP=FEY
+TAG.SLAYERGROUP=ARACHNID
+TAG.SLAYERGROUP=SCORPION
+TAG.SLAYERGROUP=SPIDER
+TAG.SLAYERGROUP=TERATHAN
+TAG.SLAYERGROUP=REPTILE
+TAG.SLAYERGROUP=DRAGON
+TAG.SLAYERGROUP=LIZARDMAN
+TAG.SLAYERGROUP=OPHIDIAN
+TAG.SLAYERGROUP=SNAKE
+ENDDO
+EVENTS +T_AOS_WEAPON
+UPDATE
+
+[DEFNAME SLAYER_GROUPS]
+//Humanoids (Repond)
+REPOND_SLAYER c_cyclops;c_ettin;c_h_evilmage;c_h_evilmage_f;c_m_frost_troll;c_samurai;c_ogre;c_m_ogre_lord;c_orc;c_m_orc_mage;c_orc_lord;c_m_orc_captain;c_orc_brute;c_orc_w_club;c_ratman;c_ratman_w_sword;c_ratman_w_mace;c_archer_ratman;c_ice_ratman;c_titan;c_troll;c_troll_w_mace;c_troll_w_axe
+
+OGRE_SLAYER c_ogre;c_m_ogre_lord;
+ORC_SLAYER c_orc;c_orc_brute;c_m_orc_mage;c_orc_lord;c_m_orc_captain;c_orc_w_mace
+TROLL_SLAYER c_troll;c_m_frost_troll;c_troll_w_mace;c_troll_w_axe
+
+//Undead
+UNDEAD_SLAYER c_m_ghoul;c_m_skeleton_knight;c_m_skeleton_mage;c_dark_guardian;c_darknight_creeper;c_flesh_golem;c_gore_fiend;c_lady_of_snow;c_liche;c_m_liche_lord;c_m_mummy;c_revenant_lion;c_zombie;c_m_wraith;c_spectre;c_shadow_knight;C_SirPatrick;c_skeleton;c_skeleton_w_axe;c_skeleton_w_sword;c_m_skeletonarcher;c_snow_zombie;c_rotting_corpse
+
+//Elemental
+ELEMENTAL_SLAYER c_m_efreet;c_kaze_kemono;c_rai_ju;c_elem_air;c_m_elem_blood;c_copper_elemental;c_elem_earth;c_m_efreet;c_elem_fire;c_m_elem_ice;c_oldcopper_elemental;c_m_elem_poison;c_elem_sand;c_m_elem_snow;c_valorite_elemental;c_verite_elemental
+
+AIRELEMENTAL_SLAYER c_elem_air;
+BLOODELEMENTAL_SLAYER c_m_elem_blood
+OREELEMENTAL_SLAYER c_copper_elemental;c_oldcopper_elemental;c_valorite_elemental;c_verite_elemental
+FIREELEMENTAL_SLAYER c_elem_fire;
+POISONELEMENTAL_SLAYER c_m_elem_poison;
+SNOWELEMENTAL_SLAYER c_m_elem_snow;c_m_elem_ice
+WATERELEMENTAL_SLAYER c_elem_water;
+
+//Abyss
+DAEMON_SLAYER c_abyssmal_horror;c_true_abyssmal_horror;c_arcane_daemon;c_m_balron;c_bone_daemon;c_chaos_daemon;c_daemon;c_dark_father;c_devourer_souls;c_fan_dancer;c_fire_gargoyle;c_gargoyle;c_destroyer_gargoyle;c_gibberling;c_night_imp;c_m_icefiend;c_m_imp;c_impaler;c_fourarmed_daemon;c_oni;c_ravager;c_semidar;c_m_gargoyle_stone;c_tsuki_wolf;c_succubus
+
+GARGOYLE_SLAYER c_gargoyle;c_m_gargoyle_stone;c_fire_gargoyle;c_destroyer_gargoyle
+
+//FEY
+FEY_SLAYER c_centaur;c_forest_lord;c_kirin;c_lord_oaks;c_pixie;c_silvani;c_treefellow;c_m_unicorn;c_wisp
+
+//Arachnid
+ARACHNID_SLAYER c_mephitis;c_m_frostspider;c_dread_spider;c_spider_lord;c_spider_giant;c_terathan_avenger;c_terathan_drone;c_terathan_matriarch;c_terathan_warrior;c_scorpion_giant;c_m_scorpion_king;c_m_scorpion_prince;c_m_scorpion_queen;c_m_scorpion_thrall
+
+SCORPION_SLAYER c_scorpion_giant;c_m_scorpion_king;c_m_scorpion_prince;c_m_scorpion_queen;c_m_scorpion_thrall
+SPIDER_SLAYER c_mephitis;c_m_frostspider;c_dread_spider;c_spider_lord;c_spider_giant
+TERATHAN_SLAYER c_terathan_avenger;c_terathan_drone;c_terathan_matriarch;c_terathan_warrior
+
+//Reptilian
+REPTILE_SLAYER c_ancient_wyrm;c_m_hiryu;c_serado;c_yamandon;c_m_ophidian_archmage;c_m_ophidian_knight;c_ophidian_mage;c_ophidian_queen;c_ophidian_warrior;c_sea_serpent;c_lizardman;c_lizardman_mace;c_lizardman_spear;c_snake_giant;c_m_ice_serpent;c_m_lava_lizard;c_m_lava_serpent;c_m_silver_serpent;c_m_dragon_crystal;c_dragon_green;c_dragon_red;c_dragon_small_black;c_dragon_small_red;c_m_dragon_blackdrake;c_m_dragon_bluedrake;c_m_dragon_copperdrake;c_m_dragon_crystaldrake;c_m_dragon_golddrake;c_m_dragon_greendrake;c_m_dragon_silverdrake;c_m_dragon_ice;c_m_dragon_wyrm;c_m_wyvern;c_serpentine_dragon
+
+DRAGON_SLAYER c_ancient_wyrm;c_m_hiryu;c_m_dragon_crystal;c_dragon_green;c_dragon_red;c_dragon_small_black;c_dragon_small_red;c_m_dragon_blackdrake;c_m_dragon_bluedrake;c_m_dragon_copperdrake;c_m_dragon_crystaldrake;c_m_dragon_golddrake;c_m_dragon_greendrake;c_m_dragon_silverdrake;c_m_dragon_ice;c_m_dragon_wyrm;c_m_wyvern;c_serpentine_dragon;c_skeletal_dragon
+LIZARDMAN_SLAYER c_lizardman;c_lizardman_mace;c_lizardman_spear
+OPHIDIAN_SLAYER c_m_ophidian_archmage;c_m_ophidian_knight;c_ophidian_mage;c_ophidian_queen;c_ophidian_warrior
+SNAKE_SLAYER c_yamandon;c_serado;c_sea_serpent;c_snake_giant;c_m_ice_serpent;c_m_lava_lizard;c_m_lava_serpent;c_m_silver_serpent
+
+[EOF]

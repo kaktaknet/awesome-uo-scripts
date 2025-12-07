@@ -1,0 +1,323 @@
+//#################################################### 
+//#############Tracker's TAXED BANKS################## 
+//#################################################### 
+//By Tracker of Shattered Alliance 
+//http://gray-cat.com/alliance 
+//This is tested on version 99x5 
+// 
+//Use at your own risk, yada yada... 
+// 
+// 
+//INSTRUCTIONS!! 
+// 
+//This script is terribly easy to use. Put it in your Sphere folder in a .scp file 
+//that is in your spheretables under [RESOURCES], or make a new one and put it there. 
+// 
+//This system uses a bunch of functions that I use to make things easier on me. 
+//Functions like CALLTARGET, TAKEITEMS, etc.. 
+//If you want to use them or understand them in another context, ask me about them 
+//And I'll be glad to help. 
+// 
+//The system is centered around the t_bank_taxed typedef. Any item can be a bank "stone"! 
+//You all should start getting creative and using other things besides gravestones for everything... 
+//So, if you'd like you can set anything (a shrubbery, a tree, or even a banana) to type t_bank_taxed. 
+// 
+//The typedef only uses two variables: 
+//-LINK, the owner's UID 
+//-MORE1, the amount of the tax 
+// 
+//Using the item is simple. 
+// 
+//General players, who don't own it, and are not GMs: 
+//-Dclick it to use it. The tax will come out of your bank or pack. 
+// 
+//Owners or GMs: 
+//-Dclick it to use it. You will not be taxed. 
+//-Single click it to pull up the menu to set taxes, or change ownership. 
+// 
+//To make it craftable, you'll want to include the bankstone deed in a skillmenu. 
+//From that deed, they can choose which of the bank items they want. They will to use house commands or something similar to lock it down, or they will need to be placed by GMs. 
+
+
+
+
+//************************************************** 
+//*****************TYPEDEF SECTION****************** 
+//************************************************** 
+
+
+[typedef t_bank_taxed] 
+//link=char that owns me 
+//more1=tax amount 
+
+on=@userClick 
+timer=-1 
+if (<src.isgm>) 
+menu m_bank_setup 
+return 0 
+endif 
+
+if (<src.uid>==<link.uid>) 
+menu m_bank_setup 
+return 0 
+endif 
+message "This bank has a tax of <?more1?> gold per use." 
+
+on=@userDclick 
+timer=-1 
+if !(<eval(<link>)>)||(<src.isgm>)||(<src.tag.notaxes>) //If it has no link (meaning that it's jsut un-owned),or you're gm, or you own it 
+//then it will just bank you without any trouble. Staff works too hard to have to pay taxes! 
+//You can also just set someone's tag.notaxes to 1 to make them untaxable, which is useful to do on your own player account 
+src.bankself 
+return 1 
+endif 
+
+if (<link.ischar>) //the owner is a player (or NPC, actually) 
+//send tax amount to their bank box based just on what is set on the stone 
+//if the player has the cash, open it of course, otherwise don't let them bank. 
+if (<?src.takegold(<more1>)?>) //If they have the amount of tax, this will consume it 
+link.newitem i_gold //give the owner the gold 
+link.lastnew.cont=<link.findlayer(29).uid> //put it into their bank 
+link.lastnew.amount=<?link.lastnew.amount?>+<?more1?>-1 //set it to the right amount 
+src.message "You pay the tax of <?eval(<more1>)?> gold." 
+src.bankself //and open their box 
+else 
+src.message "This bankstone has a tax of <?eval(<more1>)?> gold per use. You do not have enough." 
+endif 
+endif 
+return 1 
+
+//************************************************** 
+//*******************MENU SECTION******************* 
+//************************************************** 
+[menu m_choose_bank] 
+What kind of bank do you want? 
+on=0 A throne 
+src.newitem i_bank_throne 
+src.act.cont=<src.findlayer(layer_pack).uid> 
+src.act.link=<src.uid> 
+on=0 A rune 
+src.newitem i_bank_rune 
+src.act.cont=<src.findlayer(layer_pack).uid> 
+src.act.link=<src.uid> 
+on=0 A gate 
+src.newitem i_bank_gate 
+src.act.cont=<src.findlayer(layer_pack).uid> 
+src.act.link=<src.uid> 
+on=0 A stone 
+src.newitem i_bank_stone_taxed 
+src.act.cont=<src.findlayer(layer_pack).uid> 
+src.act.link=<src.uid> 
+
+[menu m_bank_setup] 
+What would you like to do with the bank? 
+on=0 Adjust the tax rate (Currently <?eval(<more1>)?> gold) 
+menu m_tax_setup 
+on=0 Change ownership of this bank 
+src.sysmessage "Please target a townstone or character" 
+var.temp_bank_uid=<uid> 
+src.calltarget("f_set_link") 
+
+[menu m_tax_setup] 
+What would you like the tax rate set to? (Tax is currently at <?eval(<more1>)?> gold) 
+on=0 0 gold 
+more1=0 
+on=0 5 gold 
+more1=5 
+on=0 10 gold 
+more1=10 
+on=0 15 gold 
+more1=15 
+on=0 20 gold 
+more1=20 
+on=0 30 goldb 
+more1=30 
+on=0 40 gold 
+more1=40 
+on=0 50 gold 
+more1=50 
+on=0 60 gold 
+more1=60 
+on=0 70 gold 
+more1=70 
+on=0 100 gold 
+more1=100 
+on=0 125 gold 
+more1=125 
+on=0 150 gold 
+more1=150 
+on=0 200 gold 
+more1=200 
+
+//************************************************** 
+//*******************ITEMS SECTION****************** 
+//************************************************** 
+[itemdef i_bank_deed] //This is the deed that lets you choose which item you want 
+id=i_deed 
+name="bank deed" 
+type=t_normal 
+
+on=@dclick 
+menu m_choose_bank 
+return 1 
+
+
+[itemdef i_bank_throne] 
+ID=i_chair_throne 
+name="bank throne" 
+type=t_bank_taxed 
+
+[itemdef i_bank_stone_taxed] 
+ID=i_gravestone_18 
+name="bank stone" 
+type=t_bank_taxed 
+
+[itemdef i_bank_gate] 
+ID=i_moongate_gray 
+name="bank portal" 
+type=t_bank_taxed 
+
+[itemdef i_bank_rune] 
+ID=i_rune_glowing_3 
+name="bank rune" 
+type=t_bank_taxed 
+
+
+//************************************************** 
+//****************FUNCTIONS SECTION***************** 
+//************************************************** 
+
+//****************************************************** 
+//*************************CALLTARGET******************* 
+//****************************************************** 
+//Creates a memory object that pulls up a targetter and runs <ARGS> as a function. 
+//This is useful when you need to get a target from a dialog or menu. 
+//In this, you must use SRC to refer to the player it is called on 
+//SRC.TARG is the target, while the default is the memory object itself. 
+//Also...this sets the ACT of the player it is called on to the target's UID 
+//Allowing you to referance them more easily later. 
+// 
+//Syntax: CALLTARGET(FUNCTION) 
+// 
+//Example: 
+//[menu m_kill_someone] 
+//Do you want to kill someone? 
+//on=0 Yes 
+// calltarget(src.targ.kill) 
+//on=0 No 
+// sysmessage "Don't be a pansy..." 
+// suicide 
+// 
+// 
+
+[function calltarget] 
+newitem i_calltarget_timer 
+lastnew.tag.function=<?ARGV[0]?> 
+lastnew.cont=<uid> 
+lastnew.dclick 
+
+[ITEMDEF i_calltarget_timer] 
+ID=i_memory 
+Type=t_eq_script 
+NAME="calltarget timer" 
+
+on=@create 
+timer=30 
+attr=04002 
+
+ON=@userDclick 
+TARGET 
+RETURN 1 
+
+ON=@Targon_char 
+src.act=<src.targ.uid> 
+TRY <tag.function> 
+remove 
+RETURN 1 
+
+
+ON=@TargOn_Item 
+src.act=<src.targ.uid> 
+TRY <tag.function> 
+remove 
+RETURN 1 
+
+
+//************************************* 
+//************f_set_link*************** 
+//************************************* 
+//This function is solely here to set the link on bankstones. 
+//It has no other real use. 
+[function f_set_link] 
+if (<src.targ.ischar>) 
+try finduid(<var.temp_bank_uid>).link=<src.targ.uid> 
+elif (<src.targ.isitem>)&&(<src.targ.type>==t_town) 
+try finduid(<var.temp_bank_uid>).link=<src.targ.uid> 
+else 
+src.message "That is not a townstone or character! Bad <?src.name?>! Bad!" 
+serv.sysmessage "Warning! Stupid bastard <?src.name?> is trying to break my scripts and has attempted to improperly link <?src.targ.name?> (uid <?src.targ.uid?>) to a bankstone. \r" 
+return 1 
+endif 
+src.message "<?finduid(<var.temp_bank_uid>).link.name?> is now the owner of this bank" 
+
+
+//********************************************** 
+//******************TAKEGOLD******************** 
+//********************************************** 
+//This function is a simple version of takeitems that can only eat gold. 
+//Syntax: takegold(amount) 
+//Ex: 
+//if (<takegold(1000)>) 
+// sysmessage "You had 1000 gold, but now you don't. Sorry." 
+//else 
+// sysmessage "You didn't have 1000 gold, and you still do." 
+//endif 
+
+[function takegold] 
+return(<?eval(<takeitems(<ARGV[0]>,i_gold)>)?>) 
+
+
+//********************************************** 
+//******************TAKEITEMS******************* 
+//********************************************** 
+//This function will consume a certain amount of the specified item from the character's pack or bank. 
+//It is designed to be used with an "If" statement, so that if they don't have enough, it won't eat 
+//the items anyway, and you can give an error message. 
+//Syntax: 
+//takeitems(amount,id) 
+
+//Ex: 
+//on=@userdclick 
+//if !(<src.takeitems(20,i_berry)>) 
+//If it *can* consume 20 berries, it will, otherwise it will return 0 
+// src.sysmessage "You don't have enough berries." 
+//else 
+// src.sysmessage "You have enough berries!" 
+// src.str=<src.str>+1 
+//endif 
+
+[function takeitems] 
+if (<ISGM>) 
+sysmessage "<?ARGV[0]?> <?ARGV[1]?> will not be consumed from you because you are in GM mode" 
+return 1 
+endif 
+
+if (<?rescount <ARGV[1]>?> >= <?ARGV[0]?>) //They have the items in their pack 
+consume <?ARGV[0]?> <?ARGV[1]?> //so just eat the items 
+return 1 
+else 
+if (<?eval(<findlayer(29).rescount(<ARGV[1]>)>+<rescount(<ARGV[1]>)>)?> < <?ARGV[0]?>) 
+//if they have less then that amount of items in their bank 
+return 0 //Then return 0 and stop right there. 
+else 
+ARG(tActUid, <?act.uid?>) //save act so you don't disrupt other scripts 
+act=<findlayer(29).uid> //change act to your bank's uid 
+findlayer(29).cont=<findlayer(21).uid> //move it into your pack 
+act.type=t_container //change it to a "bag" so consume will look into it for items 
+consume <?ARGV[0]?> <?ARGV[1]?> //eat the items 
+act.type=t_eq_bank_box //change it back to a bank box type 
+act.cont=<uid> //put it back ont the character 
+act=<tActUid> //and restore act 
+return 1 
+endif 
+endif 

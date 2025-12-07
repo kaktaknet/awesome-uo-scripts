@@ -1,0 +1,274 @@
+//Events File
+
+
+////////////////////////////////////////
+//////////   Monster AI  ///////////////
+////////////////////////////////////////
+
+[EVENTS e_monster_dispel]
+ON=@Gethit
+	if (<src.flags> & 04000000) && (<mana> > 20)  //conjured
+		SAY "An Ort"
+		SRC.SpellEffect 41,1500
+		mana	= <eval <mana> - 20>
+		Sound snd_Spell_Dispel
+	Endif
+	
+[Events e_monster_heal]
+on=@SPELLEFFECT
+	if ( <action> == 25 )
+		return 1
+	endif
+
+	if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+		SAY "Vas In Mani"
+		Mana	= <MANA> - 10
+		Effect 2,0376a,6,15,0
+		Spelleffect 29,500
+		Sound snd_SPELL_Heal
+	ENDIF
+
+ON=@Gethit
+	if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+		SAY "Vas In Mani"
+		Mana	= <MANA> - 10
+		Effect 2,0376a,6,15,0
+		Spelleffect 29,500
+		Sound snd_SPELL_Heal		
+	ENDIF
+	
+[Events e_monster_cure]
+ON=@Gethit
+	if <flags> & 080
+		SAY "An Nox"
+		Effect 2,0376a,6,15,0
+		Spelleffect 11,<Magery>
+		Sound snd_SPELL_CURE
+	else
+		return 0  //just cast
+	endif
+
+[events e_elem_gatattack]
+ON=@Hit
+	if <eval rand(5)> > 3
+		src.effect 2,i_gas_column,6,0,0
+		src.act.p	= <src.p>
+		return 1
+	endif
+		
+[Itemdef i_gas_column]
+id	= 03709
+name	= a gas column
+type	= 28
+
+ON=@Create
+	Color	= 07d1
+	Timer	= 2
+		
+ON=@Timer
+	Remove
+	return 0
+
+ON=@Step
+	Src.damage 25,45
+	return 0
+	
+[EVENTS e_Tentacles]
+ON=@NPCSEENEWPLAYER
+	if <distance> < 5
+		if <hits> < <str>
+			hits = <hits> + 25
+		endif
+		
+		src.hits = <src.hits> +- 25
+		
+		return 1
+	endif
+	
+	ATTACK
+	
+ON=@Hit
+	if <hits> < <str>
+		hits = <hits> + 40
+	endif
+	
+ON=@Gethit
+	if <hits> < <str>
+		if <eval rand(5)> = 1
+			hits 		= <hits> + <eval <ARGN>/2>
+			src.hits	= <src.hits> +- <ARGN>
+		endif
+	endif
+	
+ON=@SpellEffect
+	if (<argn> == S_EarthQuake)
+		return 1
+	endif
+
+[Events e_Mechanics]
+
+ON=@HITTRY
+	if <hits> <= <eval <str> / 2>
+		if <eval rand(5)> > 3
+			CastES
+		endif
+	endif
+	
+ON=@HIT
+	if ( <eval rand(5)> >= 3 )
+		//Colossal Blow
+		src.removeflag 020	//cancel war mode
+		src.spelleffect 38,100	//10.0 Paralysis
+		src.sysmessage "The blow stuns you"
+	endif
+		
+
+ON=@GETHIT
+	if <hits> <= <eval <str> / 2>
+		if <eval rand(5)> > 3
+			CastES
+		endif
+	endif
+
+ON=@SPELLEFFECT
+	if ( <argn> == 04) || ( <argn> == 29)
+		//Machanincs can not be healed
+		return 1
+	endif
+	
+
+///////////////////////////////////////////
+///////////   Extra Events   //////////////
+///////////////////////////////////////////
+
+[EVENTS e_ElectricityRes]
+ON=@SPELLEFFECT
+	if (<argn>==30)
+		if <findlayer(8)>
+			findlayer(8).EMOTE "Protects <NAME> from the shock"
+		endif
+		return 1
+	endif
+
+	if (<argn>==49)
+		if <eval rand(10)> = 5
+			if <findlayer(8)>
+				findlayer(8).EMOTE "Protects <NAME> from the shock"
+			endif
+		return 1
+		endif
+	endif
+
+ON=@Gethit
+	if <src.body> = c_elem_air
+		if <eval rand(10)> = 3
+			if <findlayer(8)>
+				findlayer(8).EMOTE "blocks the attack from <src.NAME>"
+			endif
+		return 1
+		endif
+	endif
+
+[EVENTS e_fireRes]
+ON=@SPELLEFFECT
+	if (<argn>==18) 
+		if <findlayer(8)>
+			findlayer(8).EMOTE "Protects <NAME> from the blast"
+		endif
+		return 1
+	endif
+
+	if (<argn>==28) 
+		if <findlayer(8)>
+			findlayer(8).EMOTE "Protects <NAME> from the fire"
+		endif
+		return 1
+	endif
+
+	if (<argn>==43)
+		if <eval rand(5)> = 2
+			if <findlayer(8)>
+				findlayer(8).EMOTE "Protects <NAME> from the explosion"
+			endif
+			return 1
+		endif
+	endif
+
+	if (<argn>==51) || (<argn>==69) || (<argn>==55)
+		if <eval rand(10)> = 5
+			if <findlayer(8)>
+				findlayer(8).EMOTE "Protects <NAME> from the spell"
+			endif
+			return 1
+		endif
+	endif
+
+ON=@Gethit
+	if <src.body> = c_elem_Fire
+		if <eval rand(10)> = 3
+			if <findlayer(8)>
+				findlayer(8).EMOTE "blocks the attack from <src.NAME>"
+			endif
+		return 1
+		endif
+	endif
+
+[EVENTS e_poisonRes]
+ON=@Gethit
+	if <src.id> = c_m_elem_poison
+		if <eval rand(10)> = 3
+			if <findlayer(8)>
+				findlayer(8).EMOTE "blocks the attack from <src.NAME>"
+			endif
+		return 1
+		endif
+	endif
+
+	if <flags> & 080
+		if <findlayer(8)>
+			findlayer(8).EMOTE "Cures <Name>'s Poison"
+		endif
+	Effect 3,0376a,6,15,0
+	Spelleffect 11,<Magery>
+	Sound snd_SPELL_CURE
+	endif
+
+[events e_m_poisonres]
+ON=@Spelleffect
+	if (<argn> == 20) || (<argn> == 39)
+		return 1
+	endif
+
+ON=@Gethit
+	if <flags> & 080
+		spelleffect s_cure,1500
+		return 1
+	endif
+	
+[EVENTS e_ParaRes]
+ON=@Spelleffect
+	if ( <argn> == 38 ) || ( <argn> == 47 )
+		return 1
+	endif
+
+ON=@Gethit
+	if <flags> & 04
+		removeflag 04
+		return 0
+	endif
+	
+[EVENTS e_m_Anti_Field]
+ON=@Spelleffect
+	if ( <argn> == 24 )
+		ACT	= <UID>
+		if <action> = Skill_magery
+			return 0
+		else
+			SAY "Vas An Ort"
+			ACTARG1	= 54
+			ACTION	= 25  //Cast
+			Spelleffect 54,1500
+		endif
+	endif
+	
+[EOF]

@@ -1,0 +1,244 @@
+[comment on this script...]
+made for Sphere 55R4.0.1 by Moe
+This script was created using code sniplets from Furio and SephDragon posted on http://www.projectcorp.de/55r
+It enables players to speak in different languages. To have NPCs speaking languages use SPEAK instead of SAY (NPC.SPEAK "whatever").
+The script intercepts player speech. Therefore SpeechSelf=spk_player needs to be set in sphere.ini. Languages known by a player are stored in a bitmask in TAG.LANGUAGE.KNOWN. The language spoken at the moment by a char is stored in TAG.LANGUAGE.ACTIVE. Players can chose the language by gump with the command .language. Emotes are not translated.
+Unicode support is included. I made this for german (üöä), other languages may work though.
+
+Language defenitions must contain the two values in the following format.
+language_<language index in hex>.name=<language name>
+language_<language index in hex>.color=<language color>
+Language index is a power of 2 (1=01, 2=02, 3=04, 4=08, 5=010, etc...).
+
+Translation module has to work as follows:
+local.language (input) contains the language index
+call f_languages_translate <original speech>
+<local.say> (output) contains the translated speech
+
+Known bugs:
+Due to a bug in Sphere string handling, quotation marks cut off speech blocks.
+
+
+[defname language_constants]
+emotenormal=1 //if 1, emotes are not translated
+printoutlanguagename=1 //if 1, the language name is shown for players who know the language
+NPCignoretranslated=0 //if 1, NPCs will ignore any command not given in common language; if 0, NPCs respond to any language
+language.unknown=You can't speak //(this language)
+lang_common=0 //normal language for everyone, should be 0;
+language.common.name=Common //name for common language, displayed in gump
+
+[PLEVEL 1]
+language
+
+[function language]
+src.f_language
+
+[defname speechtypes]
+speech_regular		00
+speech_broadcast	01
+speech_emote		02
+speech_label		06
+speech_emphasis		07
+speech_whisper		08
+speech_yell			09
+speech_spell		0a
+
+[speech spk_player]
+on=*
+local.speechtype=<argn1>
+if <call f_languages_intercept <args>>
+	argn1=speech_broadcast //can't be seen by anyone for some strange reason
+	return <def.NPCignoretranslated>
+endif
+return 0
+
+[function speak]
+trysrc <uid> f_languages_intercept <args>
+
+
+[function f_languages_intercept]
+if (<tag0.language.active>==<def.lang_common>)| ((<local.speechtype>==speech_emote)&<def.emotenormal>)
+	return 0
+else
+	local.language=<eval <tag0.language.active>>
+
+	call f_languages_translate <args>
+	call f_asc_to_ucs <local.say>
+	local.say=<local.ucs>
+	local.sayl=<local.ucslength>
+	
+	if <def.printoutlanguagename>
+		local.sayO=[<def.language_<local.language>.name>] <args>
+	else
+		local.sayO=<args>
+	endif
+	call f_asc_to_ucs <local.sayO>
+	local.sayO=<local.ucs>
+	local.sayOl=<local.ucslength>
+
+	local.range=<serv.distancetalk>
+	if <local.speechtype>==speech_yell
+		local.range=<serv.distanceyell>
+	elseif <local.speechtype>==speech_whisper
+		local.range=<serv.distancewhisper>
+	endif
+
+	forclients <local.range>
+		if (<tag0.language.known>&<local.language>)
+			local.length=<local.sayOl>
+			call f_languages_say <local.sayO>
+		else
+			local.length=<local.sayl>
+			call f_languages_say <local.say>
+		endif
+	endfor
+	
+	return 1
+endif
+
+
+[function f_asc_to_ucs] //transforms ASCii to UniCodeStream
+local.ucs=" "
+local.ucslength=0
+for X 0 <eval <strlength <args>>-1>
+	if (<asc <strsub <local.x> 1 <args>>> < 0)
+		if (<asc <strsub <eval <local.x>+-1> 1 <args>>> == 0ffffffc3)
+			local.ucs=<local.ucs> 00 <hval (<asc <strsub <local.x> 1 <args>>>+040)&0ff>
+			local.ucslength=<eval <local.ucslength>+1>
+		elseif (<asc <strsub <local.x> 1 <args>>> != 0ffffffc3)
+			local.ucs=<local.ucs> 00 <hval <asc <strsub <local.x> 1 <args>>>&0ff>
+			local.ucslength=<eval <local.ucslength>+1>
+		endif
+	else
+		if (<asc <strsub <eval <local.x>+-1> 1 <args>>> == 0ffffffc3)
+			local.ucs=<local.ucs> 00 <hval (<asc <strsub <local.x> 1 <args>>>+040)&0ff>
+		elseif (<eval <asc <strsub <local.x> 1 <args>>>> == 0)
+			local.ucs=<local.ucs> 00 020
+		else
+			local.ucs=<local.ucs> 00 <asc <strsub <local.x> 1 <args>>>
+		endif
+		local.ucslength=<eval <local.ucslength>+1>
+	endif
+endfor
+
+
+[function f_languages_say]
+local.uid = <src.uid>
+local.type = <local.speechtype> //speech type (whisper, emote, yell ...)
+local.color = <def.language_<local.language>.color> //color
+local.font = 03 //font
+local.message = <args>
+call f_SendMessageUC
+
+
+//original f_SendMessage by Furio
+[FUNCTION f_SendMessageUC]
+LOCAL.NAME = <QVAL <LOCAL.UID>?<UID.<LOCAL.UID>.NAME>:System> 
+LOCAL.MODEL = 0FF 0FF 
+IF (<LOCAL.UID>) 
+	IF (<UID.<LOCAL.UID>.ISCHAR>) 
+		LOCAL.MODEL = <HVAL (<EVAL <UID.<LOCAL.UID>.OBODY>> & 00000ffff)> 
+	ELSE 
+		LOCAL.MODEL = <EVAL <UID.<LOCAL.UID>.DISPID>> 
+	ENDIF 
+ELSE 
+	LOCAL.UID = 0FF 0FF 0FF 0FF 
+ENDIF 
+IF (<strlength <LOCAL.NAME>> > 30) 
+	LOCAL.NAME = <STRSUB 0 30 <LOCAL.NAME>> 
+ENDIF 
+LOCAL.P = 0AE 
+LOCAL.P = <LOCAL.P> W<hval (<local.length>*2) + 50>
+LOCAL.P = <LOCAL.P> D<LOCAL.UID> 
+LOCAL.P = <LOCAL.P> W<LOCAL.MODEL> 
+LOCAL.P = <LOCAL.P> B<LOCAL.TYPE> 
+LOCAL.P = <LOCAL.P> W<LOCAL.COLOR> 
+LOCAL.P = <LOCAL.P> W<LOCAL.FONT> 
+LOCAL.P = <LOCAL.P> 00 00 00 00 //4 Byte LANG
+LOCAL.P = <LOCAL.P> <ASC <LOCAL.NAME>>
+IF (<strlength <LOCAL.NAME>> < 30)
+	FOR X 1 <EVAL 30 - <strlength <LOCAL.NAME>>> 
+		LOCAL.P = <LOCAL.P> 00 
+	ENDFOR 
+ENDIF 
+local.Q=<local.first> <local.second>
+local.R=<local.second>+1
+for x 1 50
+	local.Q=<local.Q> <local.first> <local.R>
+	local.R=<eval <local.R>+1>
+endfor
+LOCAL.P = <LOCAL.P> <LOCAL.MESSAGE>
+
+LOCAL.P = <LOCAL.P> 00 00
+SENDPACKET <LOCAL.P> 
+
+
+//code by SephDragon
+[function strlength]
+return <strpos 0 ® <args>®>
+
+
+///////////player interface//////////////////
+
+[function f_language]
+DIALOGCLOSE d_language
+dialog d_language
+
+[dialog d_language]
+<tag0.language.dialogP>
+local.goon=1
+local.entries=1
+WHILE <def.language_<local.goon>.color>
+	local.goon=<eval <local.goon>*2>
+	local.entries=<eval <local.entries>+1>
+ENDWHILE
+resizepic 0 0 5054 250 <eval 80+25*<local.entries>> 
+button 0 <eval (80+25*<local.entries>)/2> 5223 5223 1 0 2
+button 230 <eval (80+25*<local.entries>)/2> 5224 5224 1 0 3
+button 120 0 5208 5208 1 0 4
+button 120 <eval 65+25*<local.entries>> 5209 5209 1 0 5
+button 50 <eval 10+25*(<local.entries>+1)> 249 248 1 0 1
+button 150 <eval 10+25*(<local.entries>+1)> 243 242 1 0 0
+
+radio 25 25 210 211 <qval <tag0.language.active>?0:1> 100
+dtext 50 25 33 <def.language.common.name>
+local.goon=1
+local.entries=1
+WHILE <def.language_<local.goon>.color>
+	radio 25 <eval 25*(<local.entries>+1)> 210 211 <qval <tag.language.active>==<local.goon>?1:0> <eval 100+<local.goon>>
+	dtext 50 <eval 25*(<local.entries>+1)> 33 <def.language_<local.goon>.name>
+	local.goon=<eval <local.goon>*2>
+	local.entries=<eval <local.entries>+1>
+ENDWHILE
+
+[dialog d_language TEXT]
+
+[dialog d_language BUTTON]
+onbutton=1
+if <argchk[100]>==0
+	local.goon=1
+	while <argchk[<eval 100+<local.goon>>]>==0
+		local.goon=<eval <local.goon>*2>
+	endwhile
+else
+	local.goon=0
+endif
+if (<local.goon> > 0)&&((<tag0.language.known>&<local.goon>)==0)
+	sysmessage <def.language.unknown> <def.language_<local.goon>.name>
+	f_language
+	return 0
+endif
+tag.language.active=<local.goon>
+
+onbutton=2
+f_language_dialog_move <src.tag.language.dialogp>,-20,0
+onbutton=3
+f_language_dialog_move <src.tag.language.dialogp>,20,0
+onbutton=4
+f_language_dialog_move <src.tag.language.dialogp>,0,-20
+onbutton=5
+f_language_dialog_move <src.tag.language.dialogp>,0,20
+
+[function f_language_dialog_move]
+tag.language.dialogp=<eval <argv[0]>+<argv[2]>>,<eval <argv[1]>+<argv[3]>>
+f_language

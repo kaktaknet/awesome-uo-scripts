@@ -1,0 +1,861 @@
+[CHARDEF c_iniciado_cove] 
+DEFNAME=c_iniciado_cove
+NAME=Iniciado
+ID=c_man
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+ARMOR={20 25}
+
+CATEGORY=Excalibur
+SUBSECTION=Covetous
+DESCRIPTION=Iniciado
+
+ON=@Create
+events=e_combat
+     STR={75 100}
+     DEX={75 100}
+     INT={101 140}
+
+     PARRYING={40.0 60.0}
+     MAGERY={46.0 60.0}
+     MAGICRESISTANCE={41.0 60.0}
+     TACTICS={40.0 60.0}
+     WRESTLING={40.0 60.0}
+     EVALUATINGINTEL={40.0 60.0}
+     MEDITATION={45.0 60.0}
+     ANATOMY={45.0 60.0}
+     SWORDSMANSHIP={40.0 60.0}
+     ARCHERY={40.0 60.0}
+
+     NPC=brain_monster
+
+     FAME={500 1000}
+     KARMA={-4000 -4999}
+
+ITEM=i_studded_sleeves
+color=0038b
+ITEM=i_studded_gloves
+color=0038b
+ITEM=i_studded_gorget
+color=0038b
+ITEM=i_studded_leggings
+color=0038b
+ITEM=i_studded_tunic
+color=0038b
+ITEM=i_bascinet
+color=0038b
+ITEM=i_arrow
+AMOUNT=20
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_paralyze
+ADDSPELL=s_poison
+ITEM=i_BOW
+ITEM=i_scimitar
+ITEM=i_shield_kite_metal
+
+ON=@GETHIT
+if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+if <eval rand(5)> = 1
+SAY "In Vas Mani"
+Mana = <MANA> - 10
+Effect 2,0376a,6,15,0
+Spelleffect 29,500
+Sound snd_SPELL_Heal
+endif
+ENDIF
+
+if (<distance> < 2)  //Cambia arma
+findid(i_scimitar).cont=<uid> // <--(came from a fairy warrior i made)
+findid(i_shield_kite_metal).cont=<uid>
+endif 
+if (<distance> > 2) 
+findid(i_bow).cont=<uid> // <--this instance 0500 is a bow
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@Spelleffect
+IF <ARGN>=30
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=39
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=28
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+
+ON=@NPCRestock
+item=AVERAGE_MONSTER_GOODIE_3
+
+[CHARDEF c_acolito_cove] 
+DEFNAME=c_acolito_cove
+NAME=Acolito
+ID=c_man
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+ARMOR={20 25}
+
+CATEGORY=Excalibur
+SUBSECTION=Covetous
+DESCRIPTION=Iniciado
+
+ON=@Create
+events=e_combat
+     STR={115 180}
+     DEX={115 180}
+     INT={101 140}
+
+     PARRYING={50.0 60.0}
+     MAGERY={56.0 60.0}
+     MAGICRESISTANCE={51.0 60.0}
+     TACTICS={50.0 60.0}
+     WRESTLING={50.0 60.0}
+     EVALUATINGINTEL={50.0 60.0}
+     MEDITATION={55.0 60.0}
+     ANATOMY={55.0 60.0}
+     SWORDSMANSHIP={50.0 60.0}
+     ARCHERY={50.0 60.0}
+
+     NPC=brain_monster
+
+     FAME={500 1000}
+     KARMA={-4000 -4999}
+
+ITEM=i_studded_sleeves
+color=0038b
+ITEM=i_studded_gloves
+color=0038b
+ITEM=i_studded_gorget
+color=0038b
+ITEM=i_studded_leggings
+color=0038b
+ITEM=i_studded_tunic
+color=0038b
+ITEM=i_bascinet
+color=0038b
+ITEM=i_arrow
+AMOUNT=27
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_paralyze
+ADDSPELL=s_poison
+ITEM=i_BOW
+ITEM=i_scimitar
+ITEM=i_shield_kite_metal
+
+ON=@GETHIT
+if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+if <eval rand(5)> = 1
+SAY "In Vas Mani"
+Mana = <MANA> - 10
+Effect 2,0376a,6,15,0
+Spelleffect 29,500
+Sound snd_SPELL_Heal
+endif
+ENDIF
+
+if (<distance> < 2)  //Cambia arma
+findid(i_scimitar).cont=<uid> // <--(came from a fairy warrior i made)
+findid(i_shield_kite_metal).cont=<uid>
+endif 
+if (<distance> > 2) 
+findid(i_bow).cont=<uid> // <--this instance 0500 is a bow
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@Spelleffect
+IF <ARGN>=30
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=39
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=28
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+
+ON=@NPCRestock
+item=AVERAGE_MONSTER_GOODIE_3
+
+[CHARDEF c_sacerdote_cove] 
+DEFNAME=c_sacerdote_cove
+NAME=Sacerdote
+ID=c_man
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+ARMOR={30 35}
+
+CATEGORY=Excalibur
+SUBSECTION=Covetous
+DESCRIPTION=Iniciado
+
+ON=@Create
+events=e_combat
+     STR={215 280}
+     DEX={215 280}
+     INT={151 200}
+
+     PARRYING={60.0 80.0}
+     MAGERY={66.0 80.0}
+     MAGICRESISTANCE={61.0 80.0}
+     TACTICS={60.0 80.0}
+     WRESTLING={60.0 80.0}
+     EVALUATINGINTEL={60.0 80.0}
+     MEDITATION={65.0 80.0}
+     ANATOMY={65.0 80.0}
+     SWORDSMANSHIP={60.0 80.0}
+     ARCHERY={60.0 80.0}
+
+     NPC=brain_monster
+
+     FAME={1500 2000}
+     KARMA={-4000 -4999}
+
+ITEM=i_studded_sleeves
+color=0038b
+ITEM=i_studded_gloves
+color=0038b
+ITEM=i_studded_gorget
+color=0038b
+ITEM=i_studded_leggings
+color=0038b
+ITEM=i_studded_tunic
+color=0038b
+ITEM=i_bascinet
+color=0038b
+ITEM=i_arrow
+AMOUNT=35
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_paralyze
+ADDSPELL=s_poison
+ITEM=i_BOW
+ITEM=i_maul
+ITEM=i_shield_kite_metal
+
+ON=@GETHIT
+if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+if <eval rand(5)> = 1
+SAY "In Vas Mani"
+Mana = <MANA> - 10
+Effect 2,0376a,6,15,0
+Spelleffect 29,500
+Sound snd_SPELL_Heal
+endif
+ENDIF
+
+if (<distance> < 2)  //Cambia arma
+findid(i_maul).cont=<uid> // <--(came from a fairy warrior i made)
+findid(i_shield_kite_metal).cont=<uid>
+endif 
+if (<distance> > 2) 
+findid(i_bow).cont=<uid> // <--this instance 0500 is a bow
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@Spelleffect
+IF <ARGN>=30
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=39
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=28
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+
+ON=@NPCRestock
+item=AVERAGE_MONSTER_GOODIE_3
+
+[CHARDEF c_sumo_sacerdote_cove] 
+DEFNAME=c_sumo_sacerdote_cove
+NAME=Sumo Sacerdote
+ID=c_man
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+ARMOR={30 35}
+
+CATEGORY=Excalibur
+SUBSECTION=Covetous
+DESCRIPTION=Iniciado
+
+ON=@Create
+events=e_combat
+     STR={415 480}
+     DEX={215 280}
+     INT={151 200}
+
+     PARRYING={70.0 90.0}
+     MAGERY={76.0 90.0}
+     MAGICRESISTANCE={71.0 90.0}
+     TACTICS={70.0 90.0}
+     WRESTLING={60.0 90.0}
+     EVALUATINGINTEL={70.0 90.0}
+     MEDITATION={75.0 90.0}
+     ANATOMY={75.0 90.0}
+     SWORDSMANSHIP={70.0 90.0}
+     ARCHERY={70.0 90.0}
+
+     NPC=brain_monster
+
+     FAME={1500 2000}
+     KARMA={-4000 -4999}
+
+ITEM=i_studded_sleeves
+color=0038b
+ITEM=i_studded_gloves
+color=0038b
+ITEM=i_studded_gorget
+color=0038b
+ITEM=i_studded_leggings
+color=0038b
+ITEM=i_studded_tunic
+color=0038b
+ITEM=i_bascinet
+color=0038b
+ITEM=i_arrow
+AMOUNT=40
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_paralyze
+ADDSPELL=s_poison
+ITEM=i_BOW
+ITEM=i_maul
+ITEM=i_shield_kite_metal
+
+ON=@GETHIT
+if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+if <eval rand(5)> = 1
+SAY "In Vas Mani"
+Mana = <MANA> - 10
+Effect 2,0376a,6,15,0
+Spelleffect 29,500
+Sound snd_SPELL_Heal
+endif
+ENDIF
+
+if (<distance> < 2)  //Cambia arma
+findid(i_maul).cont=<uid> // <--(came from a fairy warrior i made)
+findid(i_shield_kite_metal).cont=<uid>
+endif 
+if (<distance> > 2) 
+findid(i_bow).cont=<uid> // <--this instance 0500 is a bow
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@Spelleffect
+IF <ARGN>=30
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=39
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=28
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+
+ON=@NPCRestock
+item=AVERAGE_MONSTER_GOODIE_3
+
+[CHARDEF c_sumo_sacerdote_cove] 
+DEFNAME=c_sumo_sacerdote_cove
+NAME=Sumo Sacerdote
+ID=c_man
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+ARMOR={30 35}
+
+CATEGORY=Excalibur
+SUBSECTION=Covetous
+DESCRIPTION=Iniciado
+
+ON=@Create
+events=e_combat
+     STR={415 480}
+     DEX={215 280}
+     INT={151 200}
+
+     PARRYING={70.0 90.0}
+     MAGERY={76.0 90.0}
+     MAGICRESISTANCE={71.0 90.0}
+     TACTICS={70.0 90.0}
+     WRESTLING={60.0 90.0}
+     EVALUATINGINTEL={70.0 90.0}
+     MEDITATION={75.0 90.0}
+     ANATOMY={75.0 90.0}
+     SWORDSMANSHIP={70.0 90.0}
+     ARCHERY={70.0 90.0}
+
+     NPC=brain_monster
+
+     FAME={1500 2000}
+     KARMA={-4000 -4999}
+
+ITEM=i_studded_sleeves
+color=0038b
+ITEM=i_studded_gloves
+color=0038b
+ITEM=i_studded_gorget
+color=0038b
+ITEM=i_studded_leggings
+color=0038b
+ITEM=i_studded_tunic
+color=0038b
+ITEM=i_bascinet
+color=0038b
+ITEM=i_arrow
+AMOUNT=50
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_paralyze
+ADDSPELL=s_poison
+ITEM=i_BOW
+ITEM=i_bardiche
+
+ON=@GETHIT
+if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+if <eval rand(5)> = 1
+SAY "In Vas Mani"
+Mana = <MANA> - 10
+Effect 2,0376a,6,15,0
+Spelleffect 29,500
+Sound snd_SPELL_Heal
+endif
+ENDIF
+
+if (<distance> < 2)  //Cambia arma
+findid(i_bardiche).cont=<uid> // <--(came from a fairy warrior i made)
+endif 
+if (<distance> > 2) 
+findid(i_bow).cont=<uid> // <--this instance 0500 is a bow
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@Spelleffect
+IF <ARGN>=30
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=39
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=28
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+
+ON=@NPCRestock
+item=AVERAGE_MONSTER_GOODIE_3
+
+[CHARDEF c_hierofante_cove] 
+DEFNAME=c_hierofante_cove
+NAME=Hierofante
+ID=c_man
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+ARMOR={30 35}
+
+CATEGORY=Excalibur
+SUBSECTION=Covetous
+DESCRIPTION=Iniciado
+
+ON=@Create
+events=e_combat
+     STR={615 780}
+     DEX={615 780}
+     INT={151 200}
+
+     PARRYING={90.0 110.0}
+     MAGERY={96.0 110.0}
+     MAGICRESISTANCE={91.0 110.0}
+     TACTICS={90.0 110.0}
+     WRESTLING={90.0 110.0}
+     EVALUATINGINTEL={90.0 110.0}
+     MEDITATION={95.0 110.0}
+     ANATOMY={95.0 110.0}
+     SWORDSMANSHIP={90.0 110.0}
+     ARCHERY={90.0 110.0}
+
+     NPC=brain_monster
+
+     FAME={1500 2000}
+     KARMA={-4000 -4999}
+
+ITEM=i_studded_sleeves
+color=0038b
+ITEM=i_studded_gloves
+color=0038b
+ITEM=i_studded_gorget
+color=0038b
+ITEM=i_studded_leggings
+color=0038b
+ITEM=i_studded_tunic
+color=0038b
+ITEM=i_bascinet
+color=0038b
+ITEM=i_arrow
+AMOUNT=100
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_paralyze
+ADDSPELL=s_poison
+ITEM=i_BOW
+ITEM=i_war_fork
+ITEM=i_shield_kite_metal
+
+ON=@GETHIT
+if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+if <eval rand(5)> = 1
+SAY "In Vas Mani"
+Mana = <MANA> - 10
+Effect 2,0376a,6,15,0
+Spelleffect 29,500
+Sound snd_SPELL_Heal
+endif
+ENDIF
+
+if (<distance> < 2)  //Cambia arma
+findid(i_war_fork).cont=<uid> // <--(came from a fairy warrior i made)
+findid(i_shield_kite_metal).cont=<uid>
+endif 
+if (<distance> > 2) 
+findid(i_bow).cont=<uid> // <--this instance 0500 is a bow
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@Spelleffect
+IF <ARGN>=30
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=39
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=28
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+
+ON=@NPCRestock
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+
+[CHARDEF c_vicario_cove] 
+DEFNAME=c_vicario_cove
+NAME=Vicario
+ID=c_man
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+ARMOR={40 45}
+
+CATEGORY=Excalibur
+SUBSECTION=Covetous
+DESCRIPTION=Iniciado
+
+ON=@Create
+events=e_combat
+     STR={1015 1080}
+     DEX={1015 1080}
+     INT={551 700}
+
+     PARRYING={110.0 140.0}
+     MAGERY={116.0 140.0}
+     MAGICRESISTANCE={111.0 140.0}
+     TACTICS={110.0 140.0}
+     WRESTLING={110.0 140.0}
+     EVALUATINGINTEL={110.0 140.0}
+     MEDITATION={115.0 140.0}
+     ANATOMY={115.0 140.0}
+     SWORDSMANSHIP={110.0 140.0}
+     ARCHERY={110.0 140.0}
+
+     NPC=brain_monster
+
+     FAME={1500 2000}
+     KARMA={-4000 -4999}
+
+ITEM=i_platemail_arms
+color=0038b
+ITEM=i_platemail_leggings
+color=0038b
+ITEM=i_platemail_helm
+color=0038b
+ITEM=i_platemail_gorget
+color=0038b
+ITEM=i_platemail_chest
+color=0038b
+ITEM=i_platemail_helm
+color=0038b
+ITEM=i_arrow
+AMOUNT=200
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_paralyze
+ADDSPELL=s_poison
+ITEM=i_BOW
+ITEM=i_kryss
+ITEM=i_shield_kite_metal
+
+ON=@GETHIT
+if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+if <eval rand(5)> = 1
+SAY "In Vas Mani"
+Mana = <MANA> - 10
+Effect 2,0376a,6,15,0
+Spelleffect 29,500
+Sound snd_SPELL_Heal
+endif
+ENDIF
+
+if (<distance> < 2)  //Cambia arma
+findid(i_kryss).cont=<uid> // <--(came from a fairy warrior i made)
+findid(i_shield_kite_metal).cont=<uid>
+endif 
+if (<distance> > 2) 
+findid(i_bow).cont=<uid> // <--this instance 0500 is a bow
+endif 
+return 0 
+endif 
+return 1 
+
+ON=@Spelleffect
+IF <ARGN>=30
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=39
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=28
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+
+ON=@NPCRestock
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+item=AVERAGE_MONSTER_GOODIE_3
+
+[CHARDEF c_Avatar_cove] 
+DEFNAME=c_avatar_cove
+NAME=Avatar
+ID=c_man
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+ARMOR={60 65}
+
+CATEGORY=Excalibur
+SUBSECTION=Covetous
+DESCRIPTION=Avatar
+
+ON=@Create
+events=e_combat
+     STR={3015 3080}
+     DEX={3015 3080}
+     INT={551 700}
+
+     PARRYING={140.0 180.0}
+     MAGERY={146.0 180.0}
+     MAGICRESISTANCE={141.0 180.0}
+     TACTICS={140.0 180.0}
+     WRESTLING={140.0 180.0}
+     EVALUATINGINTEL={140.0 180.0}
+     MEDITATION={145.0 180.0}
+     ANATOMY={145.0 180.0}
+     SWORDSMANSHIP={140.0 180.0}
+     ARCHERY={140.0 180.0}
+
+     NPC=brain_monster
+
+     FAME={1500 2000}
+     KARMA={-4000 -4999}
+
+ITEM=i_platemail_arms
+color=0038b
+ITEM=i_platemail_leggings
+color=0038b
+ITEM=i_platemail_helm
+color=0038b
+ITEM=i_platemail_gorget
+color=0038b
+ITEM=i_platemail_chest
+color=0038b
+ITEM=i_platemail_helm
+color=0038b
+ITEM=i_arrow
+AMOUNT=200
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_paralyze
+ADDSPELL=s_poison
+ITEM=i_BOW_halo
+ITEM=i_katana_venenosa
+ITEM=i_lantern_lit
+
+ON=@GETHIT
+if ( <HITS> < <EVAL <Str>/2> ) && ( <MANA> > 50 )
+if <eval rand(5)> = 1
+SAY "In Vas Mani"
+Mana = <MANA> - 10
+Effect 2,0376a,6,15,0
+Spelleffect 29,500
+Sound snd_SPELL_Heal
+endif
+ENDIF
+
+if (<distance> < 2)  //Cambia arma
+findid(i_katana_venenosa).cont=<uid> // <--(came from a fairy warrior i made)
+findid(i_lantern_lit).cont=<uid>
+endif 
+if (<distance> > 2) 
+findid(i_bow_halo).cont=<uid> // <--this instance 0500 is a bow
+endif 
+return 0 
+endif 
+ATTACK
+return 1 
+
+ON=@Spelleffect
+IF <ARGN>=30
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=39
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+IF <ARGN>=28
+Spelleffect 54,500
+RETURN 1
+ENDIF
+
+
+ON=@NPCRestock
+item=FILTHY_RICH_UNDEAD_BACKPACK
+item=FILTHY_RICH_UNDEAD_BACKPACK
+item=FILTHY_RICH_UNDEAD_BACKPACK
+item=FILTHY_RICH_UNDEAD_BACKPACK
+item=FILTHY_RICH_UNDEAD_BACKPACK
+
+[ITEMDEF i_katana_venenosa]
+NAME=Katana Venenosa
+ID=i_katana
+WEIGHT=5
+ON=@CREATE
+HITPOINTS={45 90}
+COLOR=0082a
+
+
+ON=@HIT
+//IF RAND(3)==1
+SRC.DAEMON
+SRC.NEWITEM i_poison_katana
+SRC.ACT.EQUIP
+//ENDIF
+
+
+[FUNCTION DAEMON]
+SPELLEFFECT 20,500
+NEWITEM = i_fire_column
+ACT.ATTR=attr_static|attr_decay
+ACT.TIMER 1
+ACT.P = <SRC.P>
+ACT.COLOR=0082a
+ACT.TYPE T_NORMAL
+
+[ITEMDEF i_poison_katana]
+DEFNAME=i_poison_katana
+ID=i_memory
+NAME=Poison de la katana
+TYPE=t_eq_script
+
+ON=@EQUIP
+SRC.VAR.POISONTIMERS=1
+LINK=<SRC.UID>
+LINK.MESSAGE Has sido envenenado por la katana!
+TIMER=2
+RETURN 1
+
+ON=@TIMER
+IF (<LINK.HITS> <= 0)
+REMOVE
+RETURN 1
+ELSEIF (<LINK.VAR.POISONTIMERS> < 20)
+LINK.VAR.POISONTIMERS=<LINK.VAR.POISONTIMERS> + 1
+LINK.HITS=<LINK.HITS> + -1
+LINK.BARK=3
+TIMER=2
+RETURN 1
+ELSE
+LINK.MESSAGE El veneno de la katana se va...
+REMOVE
+RETURN 1
+
+
+[ITEMDEF i_bow_halo]
+NAME=Arco de luz
+ID=I_bow
+
+
+CATEGORY=Kawo
+SUBSECTION=Armas
+DESCRIPTION=Arco halo
+
+ON=@CREATE
+COLOR=00482
+HITPOINTS {50 70}
+
+ON=@EQUIP
+SRC.equiphalo
+
+ON=@UNEQUIP
+src.findid.i_light_source.remove

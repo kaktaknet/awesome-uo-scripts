@@ -1,0 +1,89 @@
+// Script downloaded from Emulator Resource// Website - celeron.twilightmanor.net// Contact - celeron@twilightmanor.net// Author - Swindler
+
+[ITEMDEF i_gm_flash]
+ID=i_robe_gm
+NAME=Flash Robe
+TYPE=t_eq_script
+
+ON=@Create
+ATTR attr_decay
+
+ON=@DClick
+EQUIP
+RETURN 1
+
+ON=@Equip
+flash flashlink
+TIMER 1
+
+IF (0<SRC.FINDLAYER(11)> 
+SRC.TAG.HaarID=<SRC.FINDLAYER(11).ID> 
+SRC.TAG.HaarFarbe=<SRC.FINDLAYER(11).color> 
+SRC.FINDLAYER(11).REMOVE 
+ELSE 
+SRC.TAG.HaarID=0 
+ENDIF 
+
+ON=@UnEquip
+flash flashend
+TIMER -1
+
+IF !(<SRC.TAG.HaarID> == 0) 
+SRC.NEWITEM=<src.tag.haarid> 
+SRC.ACT.EQUIP 
+SRC.FINDLAYER(11).color=<src.tag.HaarFarbe> 
+ENDIF 
+
+ON=@Timer
+IF !(0<TOPOBJ.ISCHAR>) || (0<TOPOBJ.NPC>)
+RETURN 0
+
+ENDIF
+TAG.COLOR colors_all
+flash flashlayer
+TIMER <EVAL {3 5}>
+RETURN 1
+
+[FUNCTION flash]
+
+TRYP 0 <ARGS> layer_hand1
+TRYP 0 <ARGS> layer_hand2
+TRYP 0 <ARGS> layer_shoes
+TRYP 0 <ARGS> layer_pants
+TRYP 0 <ARGS> layer_shirt
+TRYP 0 <ARGS> layer_helm
+TRYP 0 <ARGS> layer_gloves
+TRYP 0 <ARGS> layer_ring
+TRYP 0 <ARGS> layer_light
+TRYP 0 <ARGS> layer_collar
+TRYP 0 <ARGS> layer_hair
+TRYP 0 <ARGS> layer_half_apron
+TRYP 0 <ARGS> layer_chest
+TRYP 0 <ARGS> layer_wrist
+TRYP 0 <ARGS> layer_beard
+TRYP 0 <ARGS> layer_tunic
+TRYP 0 <ARGS> layer_ears
+TRYP 0 <ARGS> layer_arms
+TRYP 0 <ARGS> layer_cape
+TRYP 0 <ARGS> layer_robe
+TRYP 0 <ARGS> layer_skirt
+TRYP 0 <ARGS> layer_legs
+TRYP 0 <ARGS> layer_horse
+
+[FUNCTION flashlink]
+IF (<SRC.FINDLAYER.<ARGS>>)
+TRYP 0 TAG.<ARGS> <SRC.FINDLAYER.<ARGS>.UID>
+TRYP 0 TAG.<ARGS>.COLOR <SRC.FINDLAYER.<ARGS>.COLOR>
+ENDIF
+
+[FUNCTION flashlayer]
+IF (<CONT.UID.<TAG.<ARGS>>.ISITEM>)
+TRYP 0 CONT.UID.<TAG.<ARGS>>.COLOR <TAG.COLOR>
+ENDIF
+
+[FUNCTION flashend]
+IF (<CONT.UID.<TAG.<ARGS>>.ISITEM>)
+TRYP 0 CONT.UID.<TAG.<ARGS>>.COLOR <TAG.<ARGS>.COLOR>
+TRYP 0 TAG.<ARGS>
+TRYP 0 TAG.<ARGS>.COLOR
+ENDIF

@@ -1,0 +1,60 @@
+//--------------------------------------------------------------------------
+//------------------------Script by Freezor---------------------------------
+//--------------------------------------------------------------------------
+//-----------------Telepad utility, just type .telepad----------------------
+
+[plevel 4]
+telepad
+
+[function telepad]
+if (<isgm>)
+src.dialog d_telepads
+return 0
+else
+src.sysmessage @38 No eres GM
+return 0
+endif
+
+[dialog d_telepads]
+0,0
+page 0
+gumppic 150 100 8000
+gumppic 170 130 8001
+gumppic 193 153 2488
+gumppic 210 153 2488
+gumppic 150 180 8003
+textentry 200 150 165 16 1152 0 0
+text 200 105 1152 1
+text 390 185 1152 2
+text 193 170 1152 3
+text 400 150 1152 4
+button 425 185 4023 4025 1 0 1
+
+[dialog d_telepads text]
+<p>
+Dame la localizacion (X,Y,Z,Plano)
+Dale
+(<region.name>)
+<- Actual
+[dialog d_telepads button]
+onbutton=0
+src.sysmessage @38 Cancelado
+onbutton=1
+src.newitem=i_map_telepad
+src.act.bounce
+src.act.drop
+src.act.name=Telepad to <region.name>
+src.act.morep=<ARGTXT[0]>
+src.sysmessage @90 Telepad Creado!
+Return 0
+src.act.attr=00090
+
+Return 0
+
+[itemdef i_map_telepad]
+id=0538
+type=17
+
+on=@Create
+attr=00090
+color=0b9e

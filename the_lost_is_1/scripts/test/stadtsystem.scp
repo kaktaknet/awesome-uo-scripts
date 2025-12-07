@@ -1,0 +1,94 @@
+LAST UPDATE Monday, 3 September, 2001 by Trachonok
+
+////////Wahlstein
+
+[ITEMDEF i_wahl_stein]
+ID=01174
+TYPE=t_script
+NAME=Buergermeisterwahl
+CATEGORY=Stadtsystem
+SUBSECTION=Stadtsystem
+DESCRIPTION=Wahlstein
+
+ON=@DCLICK
+IF (<src.tag.wahl>==1)
+SRC.MESSAGE Ihr habt schon gewaehlt!!!
+return 1
+ELSE
+DIALOG d_wahlen
+return 1
+ENDIF
+
+[DIALOG d_wahlen]
+50, 50
+PAGE 0
+resizepic 0 0 2520 300 280
+text 35 30 0 0
+text 20 60 1152 1
+text 45 100 1152 2
+text 45 130 1152 3
+text 45 160 1152 4
+text 45 190 1152 5
+button 25 105 2117 2118 1 0 1
+button 25 135 2117 2118 1 0 2
+button 235 220 1150 1151 1 0 3
+
+[DIALOG d_wahlen TEXT]
+Wahlen der Stadt <region.name>
+Wen wollt ihr waehlen?
+Kandidat 1
+Kandidat 2
+Kandidat 1 hat <more1> Stimmen!
+Kandidat 2 hat <more2> Stimmen!
+
+[DIALOG d_wahlen BUTTON]
+ONBUTTON=0
+ DIALOG d_wahlen
+ONBUTTON=1
+ MORE2=<MORE2>+1
+ src.tag.wahl=1
+ DIALOG d_kandidat_1
+ONBUTTON=2
+ MORE=<MORE>+1
+ src.tag.wahl=1
+ DIALOG d_kandidat_2
+ONBUTTON=3
+ Return 1
+
+[DIALOG d_kandidat_1]
+50,50
+PAGE 1
+resizepic 0 0 2520 300 280
+text 40 120 1152 0
+text 40 150 1152 1
+button 235 220 1150 1151 1 1 1
+
+[DIALOG d_kandidat_1 TEXT]
+Sie haben sich fuer 
+Kandidat 1 entschieden
+
+[DIALOG d_kandidat_1 BUTTON]
+ONBUTTON=0
+ DIALOG d_kandidat_1
+ONBUTTON=1
+ Return 1
+
+[DIALOG d_kandidat_2]
+50,50
+PAGE 1
+resizepic 0 0 2520 300 280
+text 40 120 1152 0
+text 40 150 1152 1
+button 235 220 1150 1151 1 1 1
+
+[DIALOG d_kandidat_2 TEXT]
+Sie haben sich fuer 
+Kandidat 2 entschieden
+
+[DIALOG d_kandidat_2 BUTTON]
+ONBUTTON=0
+ DIALOG d_kandidat_2
+ONBUTTON=1
+ Return 1
+
+[EOF]

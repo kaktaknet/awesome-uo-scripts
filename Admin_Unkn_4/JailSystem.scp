@@ -1,0 +1,251 @@
+// ------------- JAIL SYSTEM --------------- >>
+/////////////////////////////////////
+// Script is by |SHS|Shaku, please //
+// do not take credit for this,you //
+// did not make it. So leave this  //
+// tag at the top of this script.  //
+/////////////////////////////////////
+//         ---Whats New---         //////////////////////////////////////
+// - Time is now measured in minutes instead of seconds like befor     //
+// - You can now set weather a person has the option to have bail and  //
+//   set how much it will cost (if you allow them to bail) to bail out //
+//   of jail.                                                          //
+// - Free prisoner option... Using .forgive doesn;t actually free them //
+//   but with the Free Prisoner button it frees them :-)               //
+/////////////////////////////////////////////////////////////////////////
+//         -- Instalation          //
+//                                 ////////////////
+// 1) Type .go jail and do .static i_bail stone  //
+// 2) .add i_jail_staff and you are ready to go. //
+///////////////////////////////////////////////////
+//         ---- Shaku's Modo ---                 //
+// My modo is "I am a lazy person that scriptz   //
+// for the lazy people! Peace and enjoy the best //
+// jail system ever made!                        //
+///////////////////////////////////////////////////
+ 
+ 
+ 
+[ITEMDEF i_jail_staff] 
+ID=i_staff_black 
+NAME=staff of jailing 
+ 
+ON=@CREATE 
+COLOR=0480 
+ 
+ON=@DCLICK 
+IF (<SRC.ISGM>) 
+DIALOG d_jailer 
+RETURN 1 
+ELSE 
+SRC.SYSMESSAGE Page a GM and give them this. 
+RETURN 1 
+ENDIF 
+ 
+[DIALOG d_jailer] 
+0,0 
+nomove 
+noclose 
+resizepic 0 0 2620 350 300 
+resizepic 100 180 2440 200 20 
+resizepic 100 200 2440 200 20 
+resizepic 100 220 2440 200 20 
+text 80 5 50 0 
+text 65 20 50 14
+text 45 45 0480 1 
+text 185 45 0480 2 
+text 45 65 0480 3 
+text 185 65 0480 4 
+text 45 85 0480 5 
+text 185 85 0480 6 
+text 80 100 0480 7 
+text 51 200 0480 8  
+text 39 220 0480 9  
+textentry 105 200 253 25 0480 0 10    
+textentry 105 220 253 25 0480 1 11
+textentry 105 180 253 25 0480 2 16
+button 58 260 4005 4006 1 0 1 
+button 200 260 4005 4006 1 0 2 
+button 120 140 210 211 1 0 3
+text 100 260 0480 12    
+text 250 260 0480 13
+text 15 180 0480 15
+text 165 140 0480 17
+text 17 140 0480 18
+radio 250 140 210 211 0 5185 
+ 
+[DIALOG d_jailer TEXT] 
+Time Mesured In Minutes
+60= 1 Hour 
+120= 2 Hours 
+300= 5 Hours 
+600= 10 hours 
+1440= 1 Day 
+2880= 2 Days 
+2 Days is Max Jail time. 
+Time:
+Reason: 
+<EVAL (<EVAL <SRC.TAG.JTIME>>/60)> 
+<SRC.TAG.JREASON> 
+Cancel 
+Jail
+Jail System by |SHS|Shaku
+Bail Price:
+<EVAL <SRC.TAG.BAILCOST>>
+Enable Bail:
+Free Prisoner:
+ 
+
+[DIALOG d_jailer BUTTON] 
+ON=1 
+SRC.SYSMESSAGE Jail action cancelled!! 
+RETURN 1 
+ 
+ON=2
+IF (<EVAL (<ARGTXT[0]>*60)>>172800)
+SRC.SYSMESSAGE You cannot jail for that long!
+RETURN 1
+ENDIF
+IF (<ARGCHK[5185]>==1)
+SRC.TAG.BAIL=1
+SRC.TAG.JTIME=<EVAL (<ARGTXT[0]>*60)>
+SRC.TAG.JREASON=<ARGTXT[1]>
+SRC.TAG.BAILCOST=<ARGTXT[2]>
+SRC.NEWITEM i_target_pad_jailer 
+SRC.ACT.TARGET 
+RETURN 1
+ELSE
+SRC.TAG.BAIL=0
+SRC.TAG.JTIME=<EVAL (<ARGTXT[0]>*60)>
+SRC.TAG.JREASON=<ARGTXT[1]>
+SRC.TAG.BAILCOST=<ARGTXT[2]>
+SRC.NEWITEM i_target_pad_jailer 
+SRC.ACT.TARGET 
+RETURN 1
+ENDIF
+ 
+ON=3
+SRC.NEWITEM=i_forgiver
+SRC.ACT.TARGET Who do you wish to forgive?
+RETURN 1
+[EVENTS e_shakuzjail] 
+ON=@CLICK 
+IF (0<TAG.BAIL>=1)
+MESSAGE [Jail Time: <FINDID.m_jail_clocker.timer>] 
+SRC.SYSMESSAGE=Reason: <TAG.JREASON>
+SRC.SYSMESSAGE=Jailed by: <TAG.JAILERNAME>
+SRC.SYSMESSAGE=Bail Price: <EVAL <TAG.BAILCOST>>
+ELSE
+MESSAGE [Jail Time: <FINDID.m_jail_clocker.timer>] 
+SRC.SYSMESSAGE=Reason: <TAG.JREASON>
+SRC.SYSMESSAGE=Jailed by: <TAG.JAILERNAME>
+SRC.SYSMESSAGE=Bail Price: [None]
+RETURN 1
+ENDIF
+ 
+ON=@LOGOUT
+TAG.LOGJAILTIME=<FINDID.m_jail_clocker.TIMER>
+TAG.LJOUT=1 
+ 
+ON=@LOGIN 
+TAG.LJOUT=0 
+FINDID.m_jail_clocker.TIMER=<TAG.LOGJAILTIME>
+ 
+[ITEMDEF i_target_pad_jailer] 
+TYPE=T_EQ_SCRIPT 
+ON=@TARGON_CHAR
+SRC.TARG.TAG.BAIL=<SRC.TAG.BAIL>
+SRC.TARG.TAG.BAILCOST=<SRC.TAG.BAILCOST>
+SRC.TARG.TAG.JAILERNAME=<SRC.NAME>
+SRC.TARG.TAG.OJP=<SRC.TARG.P> 
+SRC.TARG.JAIL 
+SRC.SYSMESSAGE=<SRC.TARG.NAME> has been jailed! 
+SRC.TARG.TAG.JTIME=<SRC.TAG.JTIME> 
+SRC.TARG.EVENTS e_shakuzjail 
+SRC.TARG.TAG.JREASON=<SRC.TAG.JREASON> 
+SRC.TARG.JAILMENOWBOY 
+remove 
+RETURN 1
+ 
+[ITEMDEF i_forgiver] 
+TYPE=T_EQ_SCRIPT 
+ON=@TARGON_CHAR
+SRC.TARG.FINDID.m_jail_clocker.TIMER=1
+remove 
+RETURN 1 
+ 
+[FUNCTION jailmenowboy] 
+NEWITEM m_jail_clocker 
+ACT.TIMER=<SRC.TAG.JTIME> 
+ACT.CONT=<UID> 
+ 
+[ITEMDEF m_jail_clocker] 
+NAME=Jail Clocker 
+ID=i_memory 
+TYPE=t_eq_script 
+ON=@Create 
+ATTR=attr_decay 
+ON=@Timer 
+IF (<CONT.TAG.LJOUT>=1) 
+TIMER=1 
+RETURN 1 
+ELSE 
+CONT.FORGIVE 
+CONT.EVENTS -e_shakuzjail
+CONT.TAG.BAIL=0
+CONT.MESSAGE YOU ARE FREE TO GO! 
+CONT.P=<CONT.TAG.OJP> 
+CONT.UPDATE 
+ENDIF 
+ 
+[ITEMDEF i_bail_stone]
+ID=i_grave_stone
+NAME=bail stone
+TYPE=00
+ 
+ON=@CREATE
+COLOR=0455
+ 
+ON=@DCLICK
+IF (0<SRC.TAG.BAIL>=1)
+DIALOG d_pay_bail
+RETURN 1
+ELSE
+DIALOG d_nobail
+RETURN 1
+ENDIF
+ 
+[DIALOG d_pay_bail] 
+0,0 
+nomove 
+noclose 
+resizepic 0 0 2620 230 100
+text 25 5 50 0 
+text 25 25 0480 1
+button 100 60 4005 4006 1 0 1
+button 25 60 4005 4006 1 0 0
+text 140 60 0480 2
+text 60 60 0480 3
+ 
+[DIALOG d_pay_bail TEXT]
+Your bail is: <EVAL <SRC.TAG.BAILCOST>>
+Do you wish to pay it?
+Yes
+No
+ 
+[DIALOG d_pay_bail BUTTON]
+ON=0
+SRC.SYSMESSAGE You decide not to pay your bail.
+RETURN 1
+ 
+ON=1
+IF <SRC.RESTEST <EVAL <SRC.TAG.BAILCOST>> i_gold>
+SRC.CONSUME=<EVAL <SRC.TAG.BAILCOST>> i_gold
+SRC.FINDID.m_jail_clocker.TIMER=1
+SRC.SYSMESSAGE Bail has been payed!
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You do not have enought gold in your pack
+SRC.BANKSELF
+RETURN 1
+[EOF]

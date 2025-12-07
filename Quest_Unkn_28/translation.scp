@@ -1,0 +1,157 @@
+[comment on this script...]
+made for Sphere 55R4.0.1 by Moe
+This is a translation module for languages script by Moe based on an idea from Tracker.
+Normal speech is intercepted and pseudo-translated by placing random syllables together and sent to other players according to their knowledge of languages. Punctuation marks at the end of a speech block are passed on untouched, that way questions can be recognized as questions even if not understood.
+
+You can create own "languages" by following these instructions or by altering the examples given below. For each language there must be a DEFNAME and a NAMES block. Under DEFNAME is stored the language name and the color used to print out the "translated" speech; color must be >0. In the NAMES block are the syllables to "translate" in normal names-block-format (first line is the number of following lines). The language index has to increase bitwise (1=01, 2=02, 3=04, 4=08, 5=010, etc...) to fit into the bitmask of known languages.
+
+
+[function f_languages_translate]
+call f_syllable
+local.say=<local.syllable>
+if (<strlength <args>> >= <def.language_<local.language>.syllablefactor>)
+	for X=1 <eval (<strlength <args>>/<def.language_<local.language>.syllablefactor>)+1>
+		call f_syllable
+		if !<eval rand(2)>
+			local.say=<local.say> <local.syllable>
+		else
+			local.say=<local.say><local.syllable>
+		endif
+	endfor
+endif
+local.lastsign=<asc <strsub -1 1 <args>>>
+if (<local.lastsign>==03f)|(<local.lastsign>==021)|(<local.lastsign>==02e)
+	local.say=<local.say><strsub -1 1 <args>>
+endif
+
+[function f_syllable]
+local.oname=<name>
+name=#syllables_language_<local.language>
+local.syllable=<name>
+name=<local.oname>
+
+
+[defname languageconstants_01]
+language_01.name=Garble
+language_01.color=020
+language_01.syllablefactor=3 //average length of syllables; determines the length of translated speech
+
+[names syllables_language_01]
+17
+gar
+gle
+bla
+gle
+gng
+bll
+glb
+gla
+lb
+alb
+gle
+gna
+mdn
+leb
+ger
+gan
+bgn
+
+
+[defname languageconstants_02]
+language_02.name=Flafle
+language_02.color=1000
+language_02.syllablefactor=3
+
+[names syllables_language_02]
+17
+far
+fle
+flo
+fly
+fnf
+fml
+fl
+flo
+lf
+alf
+fle
+fnu
+mdn
+luf
+fer
+fun
+fle
+
+
+[defname languageconstants_04]
+language_04.name=Unicode Test
+language_04.color=767
+language_04.syllablefactor=1
+
+[names syllables_language_04]
+7
+Ä
+Ö
+Ü
+ö
+ü
+ä
+ß
+
+
+[defname languageconstants_08]
+language_08.name=Elven
+language_08.color=767
+language_08.syllablefactor=5
+
+[names syllables_language_08]
+50
+aimenal
+aiquen
+aiya
+alae
+amortala
+calmacil
+carca
+curna
+ekkaia
+ela
+elda
+falma
+fanya
+hwerme
+hresta
+ilqua
+ilya
+ingwe
+irmo
+kemen
+laica
+lalwende
+lavaralda
+lelya
+lestanore
+lia
+lindi
+lisse
+maitimo
+mamil
+mannar
+nisimaldar
+nolme
+nuhta
+palantir
+pelori
+quelle
+quetta
+rasse
+sina
+telda
+teleri
+tercen
+ullume
+untupa
+ur-anar
+voronwe
+yavanna
+yulda

@@ -1,0 +1,49 @@
+// ********************************************************************************
+// | All Scripts in this file by: Trunks					  |
+// | www.majinnet.com/								  |
+// | This file may be freely edited for personal use, but may not be distributed  |	
+// | in whole or in part, in any format without express written permission from   |
+// | Trunks.  									  |
+// | E-Mail: MTrunks@saiyan.com   ICQ#: 42340665  Website: Http://majinnet.com/   |
+// ********************************************************************************
+
+
+//German Hitching Post for .54x, by: Trunks
+//Translated by: Rayan
+[ITEMDEF 014e7]
+NAME=Hitching Post
+DEFNAME=i_POST_HITCHING
+WEIGHT=500
+ON=@DCLICK
+SRC.SYSMESSAGE Waehlt das Tier, dass Ihr festbinden wollt!
+TARGET
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE Gegenstaende koennen nicht festgebunden werden...
+RETURN 1
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.BODY>==c_man) | | (<SRC.TARG.BODY>==c_woman)
+SRC.SYSMESSAGE Ihr koennt doch nicht einen Menschen hier festbinden...
+RETURN 1
+ENDIF
+ IF (<SRC.TARG.FLAGS>&040000)
+ IF (<SRC.TARG.FINDLAYER(30).LINK>==<SRC.UID>)
+ SRC.TARG.FLAGS=<SRC.TARG.FLAGS>&~040000
+ SRC.SYSMESSAGE Ihr habt <SRC.TARG.NAME> wieder losgebunden!
+ RETURN 1
+ ELSE 
+ SRC.SYSMESSAGE <SRC.TARG.NAME> gehoert nicht Euch!
+ RETURN 1
+ ENDIF
+ ENDIF
+IF <SRC.TARG.FINDLAYER(30).LINK>==<SRC.UID>
+SRC.TARG.FLAGS=<SRC.TARG.FLAGS>|040000
+SRC.SYSMESSAGE <SRC.TARG.NAME> ist festgebunden!
+RETURN 1
+ENDIF
+
+CATEGORY=Stuff by Trunks
+SUBSECTION=Server Items
+DESCRIPTION= German Hitching Post

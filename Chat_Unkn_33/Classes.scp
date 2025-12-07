@@ -1,0 +1,1203 @@
+/////////////////////////////////////
+//Races/////////////////////////////
+///////////////////////////////////
+
+/////////////////////////////////////
+//Races/////////////////////////////
+///////////////////////////////////
+
+[ITEMDEF i_Race_Stone]
+ID=i_Grave_Stone
+NAME= Race and Class Stone
+
+ON=@Create
+COLOR=00818
+RETURN 1
+
+ON=@Dclick
+SRC.Dialog D_Races
+
+RETURN 1
+
+
+[DIALOG D_Races]
+20, 20
+noclose
+PAGE 1
+resizepic 169 14 3500 194 368
+text 194 45 1153 0
+button 190 78 2117 2118 1 0 1
+PAGE 0
+resizepic 169 14 3500 194 368
+text 191 29 1153 1
+button 187 73 2117 2118 1 0 2
+button 188 109 2117 2118 1 0 3
+button 188 148 2117 2118 1 0 4
+button 189 191 2117 2118 1 0 5
+button 190 232 2117 2118 1 0 6
+button 191 271 2117 2118 1 0 7
+button 192 310 2117 2118 1 0 8
+text 210 69 1152 2
+text 210 106 1152 3
+text 209 146 1152 4
+text 210 187 1152 5
+text 211 228 1152 6
+text 213 268 1152 7
+text 212 310 1152 8
+
+[DIALOG D_Races TEXT]
+Choose you race-
+Choose you race-
+Human
+Elf
+Drow
+Dwarf
+Pixie
+Orc
+Ogre
+
+
+[DIALOG D_Races BUTTON]
+on=1
+SRC.TAG.Human 1
+SRC.TAG.EXP=<EVAL 0>
+SRC.TAG.LEVEL=<EVAL 0>
+SRC.TAG.MK=<eval 0>
+SRC.TAG.a_Player=1
+SRC.EVENTS +E_LvlMessage
+SRC.STR=100
+SRC.DEX=100
+SRC.INT=100
+SRC.LOCKSTATS
+SRC.NEWITEM=i_gold,3000
+SRC.ACT.BOUNCE
+SRC.NAME= <SRC.NAME> The Human
+
+SRC.Events +E_assisain_Players
+SRC.Dialog D_Classes
+
+on=3
+
+SRC.TAG.ELF 1
+SRC.TAG.EXP=<EVAL 0>
+SRC.TAG.LEVEL=<EVAL 0>
+SRC.TAG.MK=<eval 0>
+SRC.TAG.a_Player=1
+SRC.EVENTS +E_LvlMessage
+SRC.STR=80
+SRC.DEX=100
+SRC.INT=120
+SRC.NEWITEM=i_gold,3000
+SRC.LOCKSTATS
+SRC.ACT.BOUNCE
+SRC.NAME= <SRC.NAME> The Elven
+SRC.COLOR=000b4
+
+SRC.Events +E_assisain_Players
+SRC.Dialog D_Classes
+
+on=4
+
+SRC.TAG.DROW 1
+SRC.TAG.EXP=<EVAL 0>
+SRC.TAG.LEVEL=<EVAL 0>
+SRC.TAG.MK=<eval 0>
+SRC.TAG.a_Player=1
+SRC.EVENTS +E_LvlMessage
+SRC.STR=80
+SRC.DEX=120
+SRC.INT=100
+SRC.NEWITEM=i_gold,3000
+SRC.LOCKSTATS
+SRC.ACT.BOUNCE
+SRC.NAME= <SRC.NAME> The Drow
+SRC.COLOR=002fc
+
+SRC.Events +E_assisain_Players
+SRC.Dialog D_Classes
+
+on=5
+
+SRC.TAG.Dwarf 1
+SRC.TAG.EXP=<EVAL 0>
+SRC.TAG.LEVEL=<EVAL 0>
+SRC.TAG.MK=<eval 0>
+SRC.TAG.a_Player=1
+SRC.EVENTS +E_LvlMessage
+SRC.STR=120
+SRC.DEX=80
+SRC.INT=100
+SRC.NEWITEM=i_gold,3000
+SRC.LOCKSTATS
+SRC.ACT.BOUNCE
+SRC.NAME= <SRC.NAME> The Dwarven
+
+SRC.Events +E_assisain_Players
+SRC.Dialog D_Classes
+SRC.LevelingSystem
+on=6
+
+SRC.TAG.Pixie 1
+SRC.TAG.EXP=<EVAL 0>
+SRC.TAG.LEVEL=<EVAL 0>
+SRC.TAG.MK=<eval 0>
+SRC.TAG.a_Player=1
+SRC.EVENTS +E_LvlMessage
+SRC.STR=50
+SRC.DEX=100
+SRC.INT=150
+SRC.NEWITEM=i_gold,3000
+SRC.LOCKSTATS
+SRC.ACT.BOUNCE
+SRC.NAME= <SRC.NAME> The Pixie
+SRC.COLOR=00059
+SRC.Dialog D_Classes
+
+on=7
+
+SRC.TAG.Orc 1
+SRC.TAG.EXP=<EVAL 0>
+SRC.TAG.LEVEL=<EVAL 0>
+SRC.TAG.MK=<eval 0>
+SRC.TAG.a_Player=1
+SRC.EVENTS +E_LvlMessage
+SRC.STR=120
+SRC.DEX=100
+SRC.INT=80
+SRC.NEWITEM=i_gold,3000
+SRC.LOCKSTATS
+SRC.ACT.BOUNCE
+SRC.NAME= <SRC.NAME> The Orcish
+SRC.COLOR=000a8
+SRC.LevelingSystem
+SRC.Events +E_assisain_Players
+SRC.Dialog D_Classes
+
+on=8
+SRC.TAG.Ogre 1
+SRC.TAG.EXP=<EVAL 0>
+SRC.TAG.LEVEL=<EVAL 0>
+SRC.TAG.MK=<eval 0>
+SRC.TAG.a_Player=1
+SRC.EVENTS +E_LvlMessage
+SRC.STR=150
+SRC.DEX=80
+SRC.INT=70
+SRC.NEWITEM=i_gold,3000
+SRC.LOCKSTATS
+SRC.ACT.BOUNCE
+SRC.NAME= <SRC.NAME> The Ogre
+SRC.COLOR=000f2
+SRC.LevelingSystem
+SRC.Events +E_assisain_Players
+SRC.Dialog D_Classes
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//Classes/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+[DIALOG D_Classes]
+0, 0
+NOCLOSE
+NODISPOSE
+PAGE 0
+resizepic 68 58 2520 372 148
+text 151 103 162 0
+button 199 139 249 248 1 1 0
+PAGE 0
+resizepic 68 58 2520 372 148
+text 181 98 162 1
+button 220 137 249 248 0 1 0
+PAGE 1
+resizepic 68 47 3600 366 292
+text 135 77 162 2
+button 95 116 2151 2152 1 0 1
+button 95 153 2151 2152 0 4 2
+text 128 160 2010 3
+button 95 190 2151 2152 1 0 3
+text 128 196 2010 4
+button 95 230 2151 2152 1 0 4
+text 128 234 2010 5
+button 95 268 2151 2152 1 0 5
+text 131 274 2010 6
+button 373 290 4005 4006 0 2 0
+text 127 119 2010 7
+PAGE 2
+resizepic 65 52 3600 367 282
+text 98 77 162 8
+button 87 117 2151 2152 1 0 6
+button 87 156 2151 2152 1 0 7
+button 87 195 2151 2152 1 0 8
+button 87 234 2151 2152 1 0 9
+button 87 273 2151 2152 0 3 0
+text 123 122 2010 9
+text 124 158 2010 10
+text 123 198 2010 11
+text 125 235 2010 12
+text 124 276 2010 13
+button 337 129 4014 4015 0 1 0
+button 369 129 4005 4006 0 5 0
+PAGE 3
+resizepic 70 39 2600 351 292
+text 127 69 32 14
+button 103 117 1150 1151 1 0 10
+button 102 217 1150 1151 1 0 11
+button 103 184 1150 1151 1 0 12
+button 103 151 1150 1151 1 0 13
+text 139 116 152 15
+text 139 151 152 16
+text 140 185 152 17
+text 140 216 152 18
+button 114 269 4014 4015 0 2 0
+PAGE 4
+resizepic 69 21 83 394 307
+text 91 46 102 19
+button 99 82 2117 2118 1 0 14
+button 99 116 2117 2118 1 0 15
+button 99 154 2117 2118 1 0 16
+button 99 189 2117 2118 1 0 17
+button 99 222 2117 2118 1 0 18
+text 120 78 95 20
+text 120 112 95 21
+text 120 150 95 22
+text 121 185 95 23
+text 123 221 95 24
+gumppic 151 65 1418
+button 87 279 4014 4015 0 1 0
+PAGE 5
+resizepic 72 52 3600 357 300
+text 91 84 270 25
+button 105 136 2472 2473 1 0 19
+button 105 173 2472 2473 1 0 20
+button 104 207 2472 2473 1 0 21
+text 142 139 162 26
+text 142 180 162 27
+text 141 215 162 28
+button 106 293 4014 4015 0 2 0
+button 105 248 2472 2473 1 0 22
+text 143 253 162 29
+
+
+[DIALOG D_Classes TEXT]
+Llama's Class Stone
+Llama's Class Stone
+So.... What YOU Wanna Be?
+I wanna be a Fighter!
+I wanna be a Ranger!
+I wanna be a Priest!
+I wanna be a Thief!
+I wanna be a Mage!
+Those wasent good 4 ya? Here grab a few!
+I wanna be a Assasain!
+I wanna be a Scribe!
+I wanna be a Alchemist!
+I wanna be a Chef!
+I wanna be a Crafts Man!!
+So you wanna craft stuff?
+I wanna be a Blacksmith!
+I wanna be a Tailor!
+I wanna be a Tinker!
+I wanna be a Carpenter!
+A noble fighter! in what weapon u wish to fight?
+Swords
+Maces
+Fancnig
+Wrestle
+Shield Fighter
+I hope you will find some thing u want
+I wanna be a Fisherman/woman!
+I wanna be a Bard!
+I wanna be a Map Maker!
+I wanna be a Bowcrafter!
+
+
+[DIALOG D_Classes BUTTON]
+on=1
+IF (<SRC.TAG.Dwarf>=1)
+SRC.SYSMESSAGE Sorry but a dwarf cant start off as a mage
+SRC.Dialog D_Classes
+
+ELSEIF (<SRC.TAG.Orc>=1)
+SRC.SYSMESSAGE Sorry but a Orc cant start off as a mage
+SRC.Dialog D_Classes
+
+ELSEIF (<SRC.TAG.Ogre>=1)
+SRC.SYSMESSAGE Sorry but a Ogre cant start off as a mage
+SRC.Dialog D_Classes
+ELSE
+
+SRC.TAG.CLASS Mage
+SRC.NAME = <SRC.NAME> Mage
+SRC.ALLSKILLS = 0
+SRC.MAGERY = 700
+SRC.MAGICRESISTANCE = 600
+SRC.Meditation = 500
+SRC.NEWITEM=i_spellbook
+SRC.ACT.MORE=0FFFFFFFF
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_dagger
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_blood_moss,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_garlic,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_sulfur_ash,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_ginseng,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_spider_silk,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_nightshade,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_black_pearl,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_mandrake_root,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_cape
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_robe
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_hat_wizards
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a mage now!
+SRC.GO 5152,1761
+ENDIF
+
+on=3
+IF (<SRC.TAG.Dwarf>=1)
+SRC.SYSMESSAGE Sorry but a dwarf cant start off as a Ranger
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.CLASS Ranger
+SRC.NAME = <SRC.NAME> Ranger
+SRC.ALLSKILLS=0
+SRC.Archery=700
+SRC.TACTICS=600
+SRC.TRACKING=500
+SRC.NEWITEM=i_bow
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_arrow,60
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_dagger
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a ranger now!
+SRC.GO 5152,1761
+
+on=4
+IF (<SRC.TAG.ORC>=1)
+SRC.SYSMESSAGE Sorry but a Orc cant start off as a Priest
+SRC.Dialog D_Classes
+ELSEIF (<SRC.TAG.Ogre>=1)
+SRC.SYSMESSAGE Sorry but a Ogre cant start off as a Priest
+SRC.Dialog D_Classes
+ELSE
+
+SRC.TAG.Class Priest
+SRC.NAME= <SRC.NAME> Priest
+SRC.ALLSKILLS=0
+SRC.Healing=700
+SRC.ANATOMY=600
+SRC.MAGERY=500
+SRC.NEWITEM=i_dagger
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_spellbook
+SRC.ACT.MORE=01001c54a
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_black_pearl,5
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_blood_moss,5
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_garlic,5
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_ginseng,5
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_nightshade,5
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_sulfur_ash,5
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_spider_silk,5
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_mandrake_root,5
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_cape
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_robe
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_bandage,40
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Priest now!
+SRC.GO 5152,1761
+ENDIF
+
+ON=5
+IF (<SRC.TAG.Ogre>=1)
+SRC.SYSMESSAGE Sorry but a Ogre cant start off as a Thief
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.Class Thief
+SRC.NAME= <SRC.NAME> Thief
+SRC.ALLSKILLS=0
+SRC.Snooping=700
+SRC.Stealing=600
+SRC.Hiding=500
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_dagger
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_cape
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.ACT.COLOR=colors_black
+SRC.SYSMESSAGE Gratz! Your a Thief now!
+SRC.go 5152,1761
+ENDIF
+
+ON=6
+SRC.TAG.Assasain 1
+SRC.NAME= <SRC.NAME> Assasain
+SRC.ALLSKILLS=0
+SRC.HIDING=600
+SRC.STEALTH=600
+SRC.Poisoning=500
+SRC.Fencing=500
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_kryss
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_assisain_powers
+SRC.ACT.EQUIP
+SRC.ACT.MOREZ=0
+SRC.ACT.MOREY=0
+SRC.NEWITEM=i_cape
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.ACT.COLOR=colors_black
+SRC.NEWITEM=i_potion_poison,2
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Assisain now!
+SRC.go 5152,1761
+
+ON=7
+IF (<SRC.TAG.Dwarf>=1)
+SRC.SYSMESSAGE Sorry but a dwarf cant start off as a Scribe
+SRC.Dialog D_Classes
+ELSEIF (<SRC.TAG.Orc>=1)
+SRC.SYSMESSAGE Sorry but a Orc cant start off as a Scribe
+SRC.Dialog D_Classes
+ELSEIF (<SRC.TAG.Ogre>=1)
+SRC.SYSMESSAGE Sorry but a Ogre cant start off as a Scribe
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.CLASS Scribe
+SRC.NAME= <SRC.NAME> Scribe
+SRC.ALLSKILLS=0
+SRC.Inscription=800
+SRC.MAGERY=500
+SRC.Meditation=500
+SRC.NEWITEM=i_spellbook
+SRC.ACT.MORE=00000FFFF
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_dagger
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_blood_moss,10
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_garlic,10
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_sulfur_ash,10
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_ginseng,10
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_spider_silk,10
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_nightshade,10
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_black_pearl,10
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_mandrake_root,10
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_robe
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_scorll_blank,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Scribe now!
+SRC.go 5152,1761
+ENDIF
+
+ON=8
+IF (<SRC.TAG.Dwarf>=1)
+SRC.SYSMESSAGE Sorry but a dwarf cant start off as a Alchemist
+SRC.Dialog D_Classes
+ELSEIF (<SRC.TAG.Orc>=1)
+SRC.SYSMESSAGE Sorry but a Orc cant start off as a Alchemist
+SRC.Dialog D_Classes
+ELSEIF (<SRC.TAG.Ogre>=1)
+SRC.SYSMESSAGE Sorry but a Ogre cant start off as a Alchemist
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.Class Alchemist
+SRC.NAME= <SRC.NAME> Alchemist
+SRC.ALLSKILLS=0
+SRC.ALCHEMY=700
+SRC.MAGERY=500
+SRC.TASTEID=600
+SRC.NEWITEM=i_spellbook
+SRC.ACT.MORE=00000FFFF
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_dagger
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_blood_moss,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_garlic,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_sulfur_ash,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_ginseng,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_spider_silk,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_nightshade,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_black_pearl,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_reag_mandrake_root,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_robe
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_bottle_empty,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_mortar_pestle
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Alchemist now!
+SRC.go 5152,1761
+ENDIF
+
+ON=9
+SRC.TAG.CLASS Chef
+SRC.NAME= <SRC.NAME> Chef
+SRC.allskills=0
+SRC.Cooking=700
+SRC.Tracking=600
+SRC.Fishing=500
+SRC.NEWITEM=i_flour_sack,2
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_pitcher_water,2
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_fish_big_1,2
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_eggs_fresh,3
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_bird_raw,3
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_dough
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_ribs_raw,6
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Chef now!
+SRC.go 5152,1761
+
+ON=10
+SRC.TAG.CLASS BlackSmith
+SRC.NAME= <SRC.NAME> Blacksmith
+SRC.ALLSKILLS=0
+SRC.Blacksmithing=700
+SRC.Mining=600
+SRC.ARMSLORE=500
+SRC.NEWITEM=i_hammer_smith
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_tongs
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_apron_half
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.ACT.COLOR=colors_brown
+SRC.NEWITEM=i_ingot_iron,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_pickaxe
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Blacksmith now!
+SRC.go 5152,1761
+
+ON=11
+SRC.TAG.Class Tailor
+SRC.NAME= <SRC.NAME> Tailor
+SRC.ALLSKILLS=0
+SRC.Tailoring=700
+SRC.ITEMID=600
+SRC.ARMSLORE=500
+SRC.NEWITEM=i_sewing_kit
+SRC.ACT.bounce
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_scissors
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_robe
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.ACT.COLOR=colors_brown
+SRC.NEWITEM=i_cloth,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_dye_tub
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_dyes
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Tailor now!
+SRC.go 5152,1761
+
+ON=12
+SRC.TAG.Class Tinker
+SRC.NAME= <SRC.NAME> Tinker
+SRC.ALLSKILLS=0
+SRC.TINKERING=700
+SRC.LUMBERJACKING=600
+SRC.Mining=500
+SRC.NEWITEM=i_Tinker_Tools
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_Hatchet
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_apron_half
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.ACT.COLOR=colors_brown
+SRC.NEWITEM=i_ingot_iron,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_pickaxe
+SRC.ACT.EQUIPE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_log,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Tinker now!
+SRC.go 5152,1761
+
+ON=13
+SRC.TAG.Class Carpenter
+SRC.NAME= <SRC.NAME> Carpenter
+SRC.ALLSKILLS=0
+SRC.CARPENTRY=700
+SRC.LUMBERJACKING=600
+SRC.BOWCRAFT=500
+SRC.NEWITEM=i_Dagger
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_Hatchet
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_apron_half
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.ACT.COLOR=colors_brown
+SRC.NEWITEM=i_Board,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_plane_moulding
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_log,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Carpenter now!
+SRC.go 5152,1761
+
+ON=14
+IF (<SRC.TAG.PIXIE>=1)
+SRC.SYSMESSAGE Sorry but a Pixie cant start off as any sort of fighter
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.CLASS Swordman
+SRC.NAME= <SRC.NAME> Swordman
+SRC.ALLSKILLS=0
+SRC.SWORDSMANSHIP=700
+SRC.TACTICS=600
+SRC.PARRYING=500
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_sword_long
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_shield_round_bronze
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Swordman now!
+SRC.go 5152,1761
+ENDIF
+
+ON=15
+IF (<SRC.TAG.PIXIE>=1)
+SRC.SYSMESSAGE Sorry but a Pixie cant start off as any sort of fighter
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.CLASS Macefighter
+SRC.NAME= <SRC.NAME> Macefighter
+SRC.ALLSKILLS=0
+SRC.MACEFIGHTING=700
+SRC.TACTICS=600
+SRC.PARRYING=500
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_mace
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_shield_round_bronze
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Macefighter now!
+SRC.go 5152,1761
+ENDIF
+
+ON=16
+IF (<SRC.TAG.PIXIE>=1)
+SRC.SYSMESSAGE Sorry but a Pixie cant start off as any sort of fighter
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.CLASS Fencer
+SRC.NAME= <SRC.NAME> Fencer
+SRC.ALLSKILLS=0
+SRC.Fencing=700
+SRC.TACTICS=600
+SRC.PARRYING=500
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_war_fork
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_shield_round_bronze
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Fencer now!
+SRC.go 5152,1761
+ENDIF
+
+ON=17
+IF (<SRC.TAG.PIXIE>=1)
+SRC.SYSMESSAGE Sorry but a Pixie cant start off as any sort of fighter
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.CLASS Wrestler
+SRC.NAME= <SRC.NAME> Wrestler
+SRC.ALLSKILLS=0
+SRC.WRESTLING=700
+SRC.TACTICS=600
+SRC.PARRYING=500
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_shield_round_bronze
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Wrestler now!
+SRC.go 5152,1761
+ENDIF
+
+
+ON=18
+IF (<SRC.TAG.PIXIE>=1)
+SRC.SYSMESSAGE Sorry but a Pixie cant start off as any sort of fighter
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.CLASS ShieldFighter
+SRC.NAME= <SRC.NAME> Shield Fighter
+SRC.ALLSKILLS=0
+SRC.SWORDSMANSHIP=500
+SRC.TACTICS=600
+SRC.PARRYING=700
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_sword_long
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_shield_round_bronze
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Shield Fighter now!
+SRC.go 5152,1761
+ENDIF
+
+
+ON=20
+IF (<SRC.TAG.Orc>=1)
+SRC.SYSMESSAGE Sorry but a Orc cant start off as a Bard
+SRC.Dialog D_Classes
+ELSEIF (<SRC.TAG.Ogre>=1)
+SRC.SYSMESSAGE Sorry but a Ogre cant start off as a Bard
+SRC.Dialog D_Classes
+ELSE
+SRC.TAG.CLASS BARD
+SRC.NAME= <SRC.NAME> BARD
+SRC.ALLSKILLS=0
+SRC.MUSICIANSHIP=700
+SRC.PROVOCATION=600
+SRC.PEACEMAKING=500
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_cap
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_sword_long
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_shield_round_bronze
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_lute
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Bard now!
+SRC.go 5152,1761
+ENDIF
+
+ON=19
+SRC.TAG.CLASS Fishermen
+SRC.NAME= <SRC.NAME> Fisher
+SRC.ALLSKILLS=0
+SRC.FISHING=700
+SRC.COOKING=600
+SRC.TRACKNIG=500
+SRC.NEWITEM=i_leather_gloves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_gorget
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_tunic
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_leggings
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_leather_sleeves
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_hat_floppy
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.ACT.COLOR=COLOR_BROWN
+SRC.NEWITEM=i_cleaver_meat
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_shield_round_bronze
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_fishing_pole
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Fisher now!
+SRC.go 5152,1761
+
+
+ON=21
+SRC.TAG.Class MapMaker
+SRC.NAME= <SRC.NAME> Map Maker
+SRC.ALLSKILLS=0
+SRC.CARTOGRAPHY=700
+SRC.TRACKING=600
+SRC.CAMPING=500
+SRC.NEWITEM=i_Dagger
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_map_blank,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_sextant
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Map Maker now!
+SRC.go 5152,1761
+
+ON=22
+SRC.TAG.Class Bowyer
+SRC.NAME= <SRC.NAME> Bowyer
+SRC.ALLSKILLS=0
+SRC.CARPENTRY=500
+SRC.LUMBERJACKING=600
+SRC.BOWCRAFT=700
+SRC.NEWITEM=i_Dagger
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_Hatchet
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_apron_half
+SRC.ACT.EQUIP
+SRC.ACT.ATTR 00004
+SRC.ACT.COLOR=colors_brown
+SRC.NEWITEM=i_arrow_shaft, 20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_plane_moulding
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_log,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.NEWITEM=i_feather,20
+SRC.ACT.BOUNCE
+SRC.ACT.ATTR 00004
+SRC.SYSMESSAGE Gratz! Your a Bowcrafter now!
+SRC.go 5152,1761
+
+
+
+
+////////////////////////////////////////////////////////
+//Class Race Events////////////////////////////////////
+//////////////////////////////////////////////////////
+[ITEMDEF i_assisain_powers]
+ID=i_bracelet_gold
+NAME=Assisain Abiltys (without dis u cant use any assisain abiltys)
+
+ON=@CREATE
+ATTR=00014
+COLOR=00951
+
+
+ON=@UNEQUIP
+SRC.ACT.EQUIP
+
+
+[EVENTS E_assisain_Players]
+ON=@DEATH
+IF (0<SRC.ACT.TAG.Assasain>==1)
+IF (<SRC.ACT.FINDID.i_assisain_powers.morez>>1)
+SRC.ACT.FINDID.i_assisain_powers.morez =(<SRC.FINDID.i_assisain_powers.morez>-1)
+SRC.ACT.FINDID.i_assisain_powers.morey =(<SRC.FINDID.i_assisain_powers.morey>+1)
+ELSE
+SRC.ACT.FINDID.i_assisain_powers.morey =(<SRC.FINDID.i_assisain_powers.morey>+1)
+RETURN 0
+ELSE
+RETURN 0
+ENDIF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

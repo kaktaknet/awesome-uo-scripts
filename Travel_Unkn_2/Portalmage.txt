@@ -1,0 +1,235 @@
+// This script has been made by -Ax- and belongs to sphere.
+// First of all, place the portal mage by using .add c_portal_mage or use Axis.
+// Then Approach him and Talk to him, A menu will appear. Each Travel costs 100gp.
+// Have fun, If you have ANY question. Private Message me on sphere. (UserName: alphanatix)
+
+[CHARDEF c_portal_mage] 
+DEFNAME=C_H_VENDOR
+NAME=#NAMES_HUMANMALE the Portal Mage
+ID=C_MAN
+CAN=MT_WALK
+DESIRES=i_gold,e_notoriety 
+AVERSIONS=t_TRAP,t_eerie_stuff 
+
+CATEGORY=Ax
+SUBSECTION=NPC
+DESCRIPTION=Portal Mage
+
+TSPEECH=spk_human_prime 
+TSPEECH=jobdope
+TSPEECH=spk_needs 
+TSPEECH=spk_rehello 
+TSPEECH=spk_human_default 
+
+TEVENTS=e_Human_HearUnk 
+TEVENTS=e_Human_Needs 
+TEVENTS=e_Human_ConvInit 
+TEVENTS=e_Human_Greet 
+TEVENTS=e_Human_Space 
+TEVENTS=e_Human_Refuse 
+TEVENTS=e_Human_Environ 
+
+ON=@Create 
+COLOR=colors_skin 
+STR={70 80} 
+DEX={10 20} 
+INT={50 100} 
+NEED=i_gold
+
+MAGERY={50.0 70.0} 
+
+NPC=brain_human 
+
+ON=@NPCRESTOCK
+ITEM=i_robe 
+COLOR=0527
+ITEM=i_hat_wizards
+COLOR=0527 
+ITEM=i_pants_short 
+COLOR=0527
+ITEM=i_shoes_plain 
+COLOR=0527
+ITEM=i_cape 
+COLOR=0527
+ITEM=i_spellbook
+COLOR=00
+
+[SPEECH jobdope] 
+ON=*Hi* 
+SAY=Hello, I'm a portal mage, ask me to travel and i'll see what i can do for you.
+ON=*Hey* 
+SAY=Hello, I'm a portal mage, ask me to travel and i'll see what i can do for you.
+ON=*Hello* 
+SAY=Hello, I'm a portal mage, ask me to travel and i'll see what i can do for you.
+ON=*sell* 
+SAY=Hello, I'm a portal mage, ask me to travel and i'll see what i can do for you.
+ON=*buy* 
+SAY=Hello, I'm a portal mage, ask me to travel and i'll see what i can do for you.
+ON=*Hail*
+SAY=Hello, I'm a portal mage, ask me to travel and i'll see what i can do for you.
+ON=*guards* 
+SAY=Hmmm do you really think that i'm a criminal?
+ON=*aide* 
+If src.restest 100 i_gold
+DIALOG d_x_travelmenu 
+return 1 
+Else
+src.sysmessage You don't have the funds required to travel.
+Return 1
+
+[DIALOG d_x_travelmenu] 
+0, 0 
+resizepic 75 100 2620 500 300 
+text 151 130 1153 0 
+text 151 135 1153 1
+text 170 171 1153 2 
+text 170 196 1153 3 
+text 170 221 1153 4 
+text 170 246 1153 5 
+text 170 271 1153 6 
+text 170 296 1153 7 
+text 370 171 1153 8 
+text 370 196 1153 9 
+text 370 221 1153 10 
+text 370 246 1153 11 
+text 370 271 1153 12 
+text 370 296 1153 13
+text 170 321 1153 14
+button 150 175 1209 1210 1 0 1 
+button 150 200 1209 1210 1 0 2 
+button 150 225 1209 1210 1 0 3 
+button 150 250 1209 1210 1 0 4 
+button 150 275 1209 1210 1 0 5 
+button 150 300 1209 1210 1 0 6 
+button 350 175 1209 1210 1 0 7 
+button 350 200 1209 1210 1 0 8 
+button 350 225 1209 1210 1 0 9 
+button 350 250 1209 1210 1 0 10 
+button 350 275 1209 1210 1 0 11 
+button 350 300 1209 1210 1 0 12
+button 150 325 1209 1201 1 0 13
+
+[DIALOG d_x_travelmenu TEXT] 
+My services cost 100gp.
+_______________
+Britain 
+Trinsic 
+Yew 
+Moonglow 
+Buc's Den 
+Minoc 
+Occlo 
+Serpent's Hold 
+Skara Brae 
+Vesper 
+Cove 
+Magincia
+Jhelom
+
+[DIALOG d_x_travelmenu BUTTON] 
+ONBUTTON=0 
+src.sysmessage=Travel menu closed.
+ONBUTTON=1 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 1432,1699 
+src.sysmessage Welcome to Britain! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=2 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 1820,2822 
+src.sysmessage Welcome to Trinsic! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=3 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 546,991 
+src.sysmessage Welcome to Yew! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=4 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 4442,1180 
+src.sysmessage Welcome to Moonglow! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=5 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 2735,2166 
+src.sysmessage Welcome to Buc's Den! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=6 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 2503,562 
+src.sysmessage Welcome to Minoc! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=7 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 3686,2522 
+src.sysmessage Welcome to Occlo! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=8 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 2881,3472,15
+src.sysmessage Welcome to Serpent's Hold! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=9 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 597,2154 
+src.sysmessage Welcome to Skara Brae! 100gp has been removed from your pack.
+SRC.SAY You don't have the funds to travel.
+ 
+ONBUTTON=10 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 2900,675 
+src.sysmessage Welcome to Vesper! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+
+ONBUTTON=11 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 2269,1212 
+src.sysmessage Welcome to Cove! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+ 
+ONBUTTON=12
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 3784,2250,20
+src.sysmessage Welcome to Magincia! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+ 
+ONBUTTON=13
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+src.go 1383,3815
+src.sysmessage Welcome to Jhelom! 100gp has been removed from your pack.
+ELSE
+SRC.SAY You don't have the funds to travel.
+ 
+[EOF]

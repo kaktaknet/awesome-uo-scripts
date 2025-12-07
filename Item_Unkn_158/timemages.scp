@@ -1,0 +1,209 @@
+//Time mages.
+//v1.0.
+//By Rudenid.
+//You really, really don't want to fight one.
+//Believe me, you just don't.
+
+//Installation is as simple as downloading the script into your scripts folder.
+//You need my time magic script for this to work, though!
+
+[FUNCTION REVERSEFIXACTION]
+return (<HVAL <ACTION>> &~ 0d2000000) 
+
+[EVENTS e_timemage]
+ON=@SkillStart
+
+IF (<EVAL <REVERSEFIXACTION>> = 25)
+	IF ((<ACTARG1> = 20)&&(<ACT.FLAGS> & statf_poisoned))
+		ACTARG1=51
+	ENDIF
+ENDIF
+
+IF !(<ACT.ISCHAR>)
+	RETURN 0
+ENDIF
+
+IF (<EVAL <TAG.HASTESCROLL>> = 0)
+	VAR.OLDACT=<ACT.UID>
+	NEWITEM i_scroll_haste
+	TAG.HASTESCROLL=<ACT.UID>
+	ACT.ATTR=attr_invis|attr_magic|attr_move_never
+	ACT.P=1,1
+	ACT.MORE1=30
+	ACT.LINK=<UID>
+	ACT.TIMERd=0
+	ACT=<EVAL <VAR.OLDACT>>
+	VAR.OLDACT=
+ELSE
+	VAR.OLDACT=<ACT.UID>
+	ACT=<EVAL <TAG.HASTESCROLL>>
+	ACT.MORE1=30
+	ACT=<EVAL <VAR.OLDACT>>
+	VAR.OLDACT=
+ENDIF
+
+ON=@NPCSeeNewPlayer
+IF (<ISGM>)
+	RETURN 1
+ENDIF
+
+ATTACK
+
+IF (<EVAL <TAG.HASTESCROLL>> = 0)
+	VAR.OLDACT=<ACT.UID>
+	NEWITEM i_scroll_haste
+	TAG.HASTESCROLL=<ACT.UID>
+	ACT.ATTR=attr_invis|attr_magic|attr_move_never
+	ACT.P=1,1
+	ACT.MORE1=30
+	ACT.LINK=<UID>
+	ACT.TIMERd=0
+	ACT=<EVAL <VAR.OLDACT>>
+	VAR.OLDACT=
+ELSE
+	VAR.OLDACT=<ACT.UID>
+	ACT=<EVAL <TAG.HASTESCROLL>>
+	ACT.MORE1=30
+	ACT=<EVAL <VAR.OLDACT>>
+	VAR.OLDACT=
+ENDIF
+
+RETURN 0
+
+[CHARDEF c_h_timemage]
+DEFNAME=c_h_timemage
+NAME=#NAMES_HUMANMALE the Time Mage
+ID=C_MAN
+CAN=02344
+DESIRES=i_gold,t_wand,t_reagent,t_bone
+AVERSIONS=t_TRAP,t_lavabomb,i_fx_field_fire,i_fx_field_fire_ns,i_fx_poison_field,i_fx_field_paralyze,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_human_default
+
+TEVENTS=e_timemage
+
+ON=@Create
+COLOR=colors_skin
+STR={2871 3085}
+DEX={381 495}
+INT={3196 3910}
+EVENTS=+e_nopoison
+
+//ALIGNMENT=EVIL
+//SPELLCIRCLESS=5-8
+
+EVALUATINGINTEL={55.0 78.0}
+INSCRIPTION={76.0 90.0}
+MAGERY={200.0 250.0}
+NECROMANCY={96.0 100.0}
+WRESTLING=100.0
+MACEFIGHTING=100.0
+MAGICRESISTANCE={125.0 150.0}
+MEDITATION=100.0
+TACTICS=100.0
+
+NPC=brain_beserk
+KARMA=-10000
+FAME=10000
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRestock
+ITEM=RANDOM_LIGHT
+ITEMNEWBIE=i_robe
+COLOR=05ad
+ITEMNEWBIE=i_hat_tricorne
+COLOR=05ad
+ITEM=i_sandals
+
+ITEM=i_gold, { 15000 20000 }
+ITEM=ttm_lvl5,R3
+ITEM={ random_rich_magic_loot 1 random_filthy_rich_magic_loot 1 }
+ITEM={ random_rich_magic_loot 1 random_filthy_rich_magic_loot 1 }
+ITEM=random_filthy_rich_magic_loot
+ITEM=random_filthy_rich_magic_loot
+ITEM={ i_scroll_haste 1 i_scroll_slow 1 i_scroll_stop 1 i_scroll_water_walk 1 i_scroll_healing_wind 1 }, R2
+ITEM=random_necro_scroll
+
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_poison
+ADDSPELL=s_lightning
+ADDSPELL=s_flamestrike
+ADDSPELL=s_energy_bolt
+ADDSPELL=s_energy_vortex
+ADDSPELL=s_explosion
+
+ITEM=i_staff_summoner
+NAME=Time Mage's staff
+
+[CHARDEF c_h_timemage_f]
+DEFNAME=c_h_timemage_f
+NAME=#NAMES_HUMANFEMALE the Time Mage
+ID=C_WOMAN
+CAN=02b44
+DESIRES=i_gold,t_wand,t_reagent,t_bone
+AVERSIONS=t_TRAP,t_lavabomb,i_fx_field_fire,i_fx_field_fire_ns,i_fx_poison_field,i_fx_field_paralyze,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_human_default
+
+TEVENTS=e_timemage
+
+ON=@Create
+COLOR=colors_skin
+STR={2871 3085}
+DEX={381 495}
+INT={3196 3910}
+EVENTS=+e_nopoison
+
+//ALIGNMENT=EVIL
+//SPELLCIRCLESS=5-8
+
+EVALUATINGINTEL={55.0 78.0}
+INSCRIPTION={76.0 90.0}
+MAGERY={200.0 250.0}
+NECROMANCY={96.0 100.0}
+WRESTLING=100.0
+MACEFIGHTING=100.0
+MAGICRESISTANCE={125.0 150.0}
+MEDITATION=100.0
+TACTICS=100.0
+
+NPC=brain_beserk
+KARMA=-10000
+FAME=10000
+
+ITEMNEWBIE=random_female_hair
+COLOR=colors_hair
+
+ON=@NPCRestock
+ITEM=RANDOM_LIGHT
+ITEMNEWBIE=i_robe
+COLOR=05ad
+ITEMNEWBIE=i_hat_tricorne
+COLOR=05ad
+ITEM=i_sandals
+
+ITEM=i_gold, { 15000 20000 }
+ITEM=ttm_lvl5,R3
+ITEM={ random_rich_magic_loot 1 random_filthy_rich_magic_loot 1 }
+ITEM={ random_rich_magic_loot 1 random_filthy_rich_magic_loot 1 }
+ITEM=random_filthy_rich_magic_loot
+ITEM=random_filthy_rich_magic_loot
+ITEM={ i_scroll_haste 1 i_scroll_slow 1 i_scroll_stop 1 i_scroll_water_walk 1 i_scroll_healing_wind 1 }, R2
+ITEM=random_necro_scroll
+
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_poison
+ADDSPELL=s_lightning
+ADDSPELL=s_flamestrike
+ADDSPELL=s_energy_bolt
+ADDSPELL=s_energy_vortex
+ADDSPELL=s_explosion
+
+ITEM=i_staff_summoner
+NAME=Time Mage's staff

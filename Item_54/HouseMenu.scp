@@ -1,0 +1,1663 @@
+//Speech Based Housing System V 2.6...
+//Created by GM Sven for use on Lunar Dawn
+//Copyright by Ryan Kroetch
+//Please do not remove these credits
+//Read House System Readme for Installation Instructions.
+//Also thanks to Fox Flame as I use his house stacking script inside
+//I dont have his permision, but I dont know where the script comes from.
+
+//Speech Commands, used in house.
+
+[SPEECH spk_house_command]
+DEFNAME=spk_house_command
+
+ON=Add trash can
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+IF !(<TAG.GARBAGE> == 1)
+SRC.NEWITEM i_house_garbage
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.ATTR=010
+SRC.ACT.LINK=<UID>
+TAG.GARBAGE=1
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You already have a trash can!
+RETURN 1
+ENDIF
+ELSE
+RETURN 1
+ENDIF
+
+ON=Remove trash can
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+IF (<TAG.GARBAGE> == 1)
+TAG.DC=14
+TARGET Click on the trash can you wish to remove.
+ELSE
+SRC.SYSMESSAGE You dont have a trash can!
+ENDIF
+ELSE
+RETURN 1
+ENDIF
+RETURN 1
+
+ON=Take Out the Trash
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>) || (<ISCOOWNER>)
+IF (<TAG.GARBAGE> == 1)
+TAG.DC=17
+TARGET Click on the trash can you wish to empty.
+ELSE
+SRC.SYSMESSAGE You dont have a trash can!
+ENDIF
+ELSE
+RETURN 1
+ENDIF
+RETURN 1
+
+
+ON=Change Music
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4)  || (<ISBIOWNER>) //Owner and GMs only.
+MENU M_MUSIC_CHANGE
+RETURN 1
+
+//ON=Bank
+//IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<IsCoowner>) || (<ISBIOWNER>) //Owner, Coowners and GMs only.
+//SRC.BANKSELF
+//RETURN 1
+
+ON=House Help
+DIALOG d_house_help
+RETURN 0
+
+ON=Leave House
+IF (<EVAL <SRC.UID>>==<MORE>)  || (<ISBIOWNER>) //Checks to make sure owner isnt trying, limits him from exiting.
+SRC.SYSMESSAGE Just use the door to leave.
+RETURN 1
+ELSE
+SRC.NEWITEM i_house_teleport_delay
+SRC.ACT.MOREP=<LINK.P>
+SRC.ACT.EQUIP
+RETURN 1
+ENDIF
+
+ON=redeed this house
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4)//Owner and GMs only.
+IF (<MOREX>==1)
+SERV.B <SRC.NAME> Tried to Abuse House Duping!!!
+RETURN 1
+ENDIF
+MOREX=1
+SRC.NEWITEM i_deed
+SRC.ACT.MORE <ID>
+SRC.ACT.NAME Deed to a <NAME>
+SRC.ACT.BOUNCE
+REMOVE
+SRC.FIX
+SRC.SYSMESSAGE The house deed is now in your pack.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must be the owner of the house to redeed.
+RETURN 1
+ENDIF
+
+//Start Targets
+ON=Move Up
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISCOOWNER>) || (<ISBIOWNER>) //Owner, Coowners and GMs only.
+TAG.DC = 1 //Tells TARGON_ITEM-CHAR what command was said.
+TARGET
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+ON=Move Down
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<IsCoowner>) || (<ISBIOWNER>) //Owner, Coowners and GMs only.
+TAG.DC = 2
+TARGET
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+ON=Flip
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<IsCoowner>) || (<ISBIOWNER>)  //Owner, Coowners and GMs only.
+TAG.DC = 3
+TARGET
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+ON=lock down
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISCOOWNER>) || (<ISBIOWNER>)  //Owner, Coowners and GMs only.
+TARGET 
+TAG.DC = 4
+RETURN 1
+
+ON=secure
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)  //Owner and GMs only.
+TARGET
+SRC.SYSMESSAGE Choose the item you wish to secure.
+TAG.DC = 5
+RETURN 1
+
+ON=unlock
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<IsCoowner>) || (<ISBIOWNER>)  //Owner, Coowners and GMs only.
+TARGET 
+SRC.SYSMESSAGE Choose the item you wish to release.
+TAG.DC = 6
+RETURN 1
+
+ON=guild
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)  //Owner and GMs only.
+TARGET 
+SRC.SYSMESSAGE Click on the door/container/book you wish your guild to have access to.
+TAG.DC = 7
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must be an owner of the house to do this.
+RETURN 1
+ENDIF
+
+ON=add coowner
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)  //Owner and GMs only.
+TARGET 
+SRC.SYSMESSAGE Who do you wish to make into a coowner?
+TAG.DC = 9
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must be the owner of the house to do this.
+RETURN 1
+ENDIF
+
+ON=Private
+IF (<SRC.ACCOUNT.PLEVEL>>=4) || (<EVAL <SRC.UID>>==<MORE>) || (<ISBIOWNER>)  //Owner and GMs only.
+TARGET 
+SRC.SYSMESSAGE Who do you wish this to be for.
+TAG.DC = 10
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must be the owner of the house to do this.
+RETURN 1
+ENDIF
+
+ON=version info
+SRC.SYSMESSAGE This version of Sven's Housing System is 2.6.
+RETURN 1
+
+ON=remove coowner
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)  //Owner and GMs only.
+TARGET Who do you wish to remove from being a coowner?
+TAG.DC = 11
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must be the owner of the house to do this.
+RETURN 1
+ENDIF
+
+ON=Kick Out
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<IsCoowner>) || (<ISBIOWNER>) //Owner, Coowners and GMs only.
+TAG.DC=12
+TARGET Who do you wish to kick out?
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+ON=Transfer Ownership
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4)  //Owner and GMs only.
+TAG.DC=13
+TARGET Who do you wish to transfer ownership to?
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+ON=Add Owner
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4)  //Owner and GMs only.
+TAG.DC=15
+TARGET Who do you wish to make into an owner?
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+ON=Remove Owner
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4)  //Owner and GMs only.
+TAG.DC=16
+TARGET Who do you wish to make into an owner?
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+//--------------------------------------------------
+
+//Targon_item function, used in sphereitem_multis.scp
+[FUNCTION House_TargonITEM]
+//ANTI-CHEATING
+IF !(<SRC.TARG.LINK>==<SRC.REGION.UID>) && (<SRC.TARG.ATTR> == 010) && !(<SRC.TARG.MORE2>==<SRC.REGION.UID>) && !(<SRC.TARG.MOREX>==<SRC.REGION.UID>)
+	SRC.SYSMESSAGE You cannot do this! - This activity has been logged.
+	RETURN 1
+ELSE
+//END OF ANTI-CHEATING SCRIPT
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4) || (<ISCOOWNER>) || (<ISBIOWNER>)
+IF <SRC.TARG.REGION.UID>==<UID>
+//Move Function
+IF (<TAG.DC>==1)
+IF (<SRC.TARG.TYPE>==t_door) || (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==t_door_house) || (<SRC.TARG.TYPE>==t_door_house_secure) || (<SRC.TARG.TYPE>==t_door_house_guild) || (<SRC.TARG.TYPE>==t_sign_gump) || (<SRC.TARG.TYPE>==t_door_house_private) || (<SRC.TARG.TYPE>==t_corpse) || (<SRC.TARG.TYPE>==03) || (<SRC.TARG.TYPE>==04) || (<SRC.TARG.TYPE>==56) || (<SRC.TARG.TYPE>==108)
+SRC.SYSMESSAGE You cannot move this!
+RETURN 1
+ELSEIF <SRC.TARG.Z> < <SRC.Z>+17 
+SRC.TARG.Z=<SRC.TARG.Z>+1
+RETURN 1
+ELSE
+SRC.MESSAGE You cannot lift this any higher.
+RETURN 1
+ENDIF
+ELSEIF (<TAG.DC>==2)
+IF (<SRC.TARG.TYPE>==t_door) || (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==t_door_house) || (<SRC.TARG.TYPE>==t_door_house_secure) || (<SRC.TARG.TYPE>==t_door_house_guild) || (<SRC.TARG.TYPE>==t_sign_gump) || (<SRC.TARG.TYPE>==t_door_house_private) || (<SRC.TARG.TYPE>==t_corpse) || (<SRC.TARG.TYPE>==03) || (<SRC.TARG.TYPE>==04) || (<SRC.TARG.TYPE>==56) || (<SRC.TARG.TYPE>==108)
+SRC.SYSMESSAGE You cannot move this!
+RETURN 1
+ELSEIF <SRC.TARG.Z> > <SRC.Z>
+SRC.TARG.Z=<SRC.TARG.Z>+-1
+RETURN 1
+ELSE
+SRC.MESSAGE You cannot put this into the ground.
+RETURN 1
+ENDIF
+ELSEIF (<TAG.DC>==3)
+IF (<SRC.TARG.TYPE>==t_door) || (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==t_door_house) || (<SRC.TARG.TYPE>==t_door_house_secure) || (<SRC.TARG.TYPE>==t_door_house_guild) || (<SRC.TARG.TYPE>==t_sign_gump) || (<SRC.TARG.TYPE>==t_door_house_private) || (<SRC.TARG.TYPE>==t_corpse) || (<SRC.TARG.TYPE>==03) || (<SRC.TARG.TYPE>==04) || (<SRC.TARG.TYPE>==56) || (<SRC.TARG.TYPE>==108)
+SRC.SYSMESSAGE You cannot move this!
+RETURN 1
+ELSE
+SRC.TARG.FLIP
+RETURN 1
+ENDIF
+//End of move function
+ELSEIF (<TAG.DC>==4)
+IF (<SRC.TARG.BASEID>==i_corpse)
+	SRC.MESSAGE You can not lock down a corpse.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_sign_gump) || (<SRC.TARG.TYPE>==108)
+	SRC.SYSMESSAGE You can not lock this down.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_stone_guild) || (<SRC.TARG.TYPE>==57)
+	SRC.SYSMESSAGE You cannot lock down a guildstone.
+	RETURN 1
+ELSEIF (<SRC.TARG.CONT>>=1)
+	SRC.MESSAGE You can not lock this down, place it on the ground first.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_book) || (<SRC.TARG.TYPE>==19)
+	SRC.TARG.LINK <UID>
+	SRC.TARG.TYPE=t_house_book
+	SRC.TARG.ATTR <SRC.TARG.ATTR>|attr_move_never
+	SRC.TARG.MORE=1
+	SRC.TARG.MESSAGE [Locked down]
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_guild) || (<SRC.TARG.TYPE>==t_door_house_private) || (<SRC.TARG.TYPE>==t_door_house_secure)
+	IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4) || (<ISBIOWNER>)
+	SRC.TARG.MORE= <MORE>
+	SRC.SYSMESSAGE You lock the door. Only you and your coowners can use it now.
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.LINK <UID>
+	SRC.TARG.TYPE=t_door_house
+	SRC.TARG.NAME=locked house door
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE You do not have the right to do this.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_door) || (<SRC.TARG.TYPE>==03) || (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==04)
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.LINK <UID>
+	SRC.SYSMESSAGE You lock the door. Only you and your coowners can use it now.
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.TYPE=t_door_house
+	SRC.TARG.NAME=locked house door
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house)
+	SRC.SYSMESSAGE This door is already locked!
+	RETURN 1
+ELSEIF (<SRC.TARG.LINK>=<UID>) || (<SRC.TARG.ATTR>=<SRC.TARG.ATTR>|attr_move_never)
+	SRC.SYSMESSAGE That is already locked down.
+	RETURN 1
+ELSEIF (<SRC.TARG.AMOUNT>>=2)
+	SRC.TARG.ATTR=attr_move_never
+	SRC.TARG.LINK <UID>
+	SRC.TARG.MESSAGE [Locked down]
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE> == t_comm_crystal) || (<SRC.TARG.TYPE>==77)
+	SRC.TARG.ATTR=attr_move_never
+	SRC.TARG.MESSAGE [Locked down]
+ELSEIF (<SRC.TARG.TYPE> == t_secure) || (<SRC.TARG.TYPE> == t_private) || (<SRC.TARG.TYPE> == t_guild_container)
+	SRC.SYSMESSAGE This is already locked down
+	RETURN 1
+ELSE
+	SRC.TARG.LINK <UID>
+	SRC.TARG.ATTR=attr_move_never
+	SRC.TARG.MESSAGE [Locked down]
+	RETURN 1
+ENDIF
+ELSEIF (<TAG.DC>==5)
+IF (<SRC.TARG.TYPE>==t_secure)
+	SRC.MESSAGE That is already secured.
+	RETURN 1
+ELSEIF (<SRC.TARG.CONT>>=1)
+	SRC.MESSAGE You can not secure this unless it is on the ground.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_secure)
+	SRC.SYSMESSAGE That is already secured.
+ELSEIF (<SRC.TARG.TYPE>==t_door_house)
+	SRC.TARG.LINK <UID>
+	SRC.TARG.MORE= <MORE>
+	SRC.SYSMESSAGE You secure the door. Only you can use it now.
+	SRC.TARG.TYPE=t_door_house_secure
+	SRC.TARG.NAME=secure house door
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_private)
+	SRC.TARG.LINK <UID>
+	SRC.TARG.MORE= <MORE>
+	SRC.SYSMESSAGE You secure the door. Only you can use it now.
+	SRC.TARG.TYPE=t_door_house_secure
+	SRC.TARG.NAME=secure house door
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_guild)
+	SRC.TARG.LINK <UID>
+	SRC.TARG.MORE= <MORE>
+	SRC.SYSMESSAGE You secure the door. Only you can use it now.
+	SRC.TARG.TYPE=t_door_house_secure
+	SRC.TARG.NAME=secure house door
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==04)
+	SRC.TARG.LINK <UID>
+	SRC.TARG.MORE= <MORE>
+	SRC.SYSMESSAGE You secure the door. Only you can use it now.
+	SRC.TARG.TYPE=t_door_house_secure
+	SRC.TARG.NAME=secure house door
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door) || (<SRC.TARG.TYPE>==04)
+	SRC.TARG.LINK <UID>
+	SRC.TARG.MORE= <MORE>
+	SRC.SYSMESSAGE You secure the door. Only you can use it now.
+	SRC.TARG.TYPE=t_door_house_secure
+	SRC.TARG.NAME=secure house door
+	RETURN 1
+ELSEIF (<SRC.TARG.BASEID>==i_corpse)
+	SRC.MESSAGE You can not secure a corpse!
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE> == t_private) || (<SRC.TARG.TYPE> == t_guild_container)
+	SRC.TARG.ATTR=attr_move_never
+	SRC.TARG.TYPE t_secure
+	SRC.TARG.MORE=<MORE>
+	SRC.TARG.LINK <UID>
+	SRC.TARG.MESSAGE [Secure]
+	SRC.FIX
+	RETURN 1
+ELSEIF !(<SRC.TARG.TYPE>==t_container) || (<SRC.TARG.TYPE>==01)
+	SRC.MESSAGE This isnt a container!
+	RETURN 1
+ELSE
+	SRC.TARG.ATTR=attr_move_never
+	SRC.TARG.TYPE t_secure
+	SRC.TARG.MORE=<MORE>
+	SRC.TARG.LINK <UID>
+	SRC.TARG.MESSAGE [Secure]
+	SRC.FIX
+	RETURN 1
+ENDIF
+ELSEIF (<TAG.DC> == 6)
+IF (<SRC.TARG.TYPE>==t_door) || (<SRC.TARG.TYPE>==03)
+	SRC.MESSAGE This door is already public!
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house)
+	SRC.TARG.LINK <UID>
+	SRC.SYSMESSAGE You make the door public. Anyone may enter now.
+	SRC.TARG.TYPE=t_door
+	SRC.TARG.NAME=public house door
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_guild)
+	IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4) || (<ISBIOWNER>)
+	SRC.TARG.LINK <UID>
+	SRC.SYSMESSAGE You make the door public. Anyone may enter now.
+	SRC.TARG.TYPE=t_door
+	SRC.TARG.NAME=public house door
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE Only the owner may release this door.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==04)
+	SRC.TARG.LINK <UID>
+	SRC.SYSMESSAGE You make the door public. Anyone may enter now.
+	SRC.TARG.TYPE=t_door
+	SRC.TARG.NAME=public house door
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_secure)
+	IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4) || (<ISBIOWNER>)
+	SRC.TARG.LINK <UID>
+	SRC.SYSMESSAGE You make the door public. Anyone may enter now.
+	SRC.TARG.TYPE=t_door
+	SRC.TARG.NAME=public house door
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE Only the owner may unsecure this door.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_private)
+	SRC.TARG.LINK <UID>
+	IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4) || (<ISBIOWNER>)
+	SRC.SYSMESSAGE You make the door public. Anyone may enter now.
+	SRC.TARG.TYPE=t_door
+	SRC.TARG.NAME=public house door
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE Only the owner may release this door.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_sign_gump) || (<SRC.TARG.TYPE>==56)
+	SRC.MESSAGE This is not locked down or secured!
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_house_book)
+	SRC.TARG.MORE=0
+	SRC.TARG.MORE2=0
+	SRC.TARG.LINK 04fffffff
+	SRC.TARG.MESSAGE [unlocked]
+	SRC.TARG.TYPE=t_book
+	SRC.TARG.ATTR <SRC.TARG.ATTR>&~attr_move_never
+	SRC.FIX
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_guild_book)
+	IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4) || (<ISBIOWNER>)
+	SRC.TARG.MORE=0
+	SRC.TARG.LINK 04fffffff
+	SRC.TARG.MESSAGE [unlocked]
+	SRC.TARG.TYPE=t_book
+	SRC.TARG.ATTR <SRC.TARG.ATTR>&~attr_move_never
+	SRC.TARG.MORE2=0
+	SRC.FIX
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE Only the owner may release this.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_private) || (<SRC.TARG.TYPE>==t_secure) || (<SRC.TARG.TYPE>==t_guild_container)
+	IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	SRC.TARG.MORE 0
+	SRC.TARG.LINK 04fffffff
+	SRC.TARG.MESSAGE [unlocked]
+	SRC.TARG.ATTR <SRC.TARG.ATTR>&~attr_move_never
+	SRC.TARG.TYPE=t_container
+	SRC.TARG.NAME=container
+	SRC.FIX
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE You do not have the right to do this.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_trash_can) || (<SRC.TARG.TYPE>==79)
+	SRC.SYSMESSAGE You cannot unlock this!
+	RETURN 1
+ELSEIF (<SRC.TARG.LINK>==<UID>)
+	SRC.TARG.LINK 04fffffff
+	SRC.TARG.ATTR <SRC.TARG.ATTR>&~attr_move_never
+	SRC.TARG.MESSAGE [unlocked]
+	SRC.FIX
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE> == t_comm_crystal) || (<SRC.TARG.TYPE>==77)
+	SRC.TARG.ATTR <SRC.TARG.ATTR>&~attr_move_never
+	SRC.TARG.MESSAGE [unlocked]
+	SRC.FIX
+	RETURN 1
+ELSE
+	SRC.MESSAGE This is not locked down or secured!
+	RETURN 1
+ENDIF
+ELSEIF (<TAG.DC> == 7)
+IF (<SRC.MEMORYFINDTYPE.0400.LINK> = 0)
+	SRC.SYSMESSAGE You do not have a guild.
+	RETURN 1
+ELSEIF (<SRC.TARG.CONT>>=1)
+	SRC.SYSMESSAGE You cannot make this a guild container, place it on the ground first.
+	RETURN 1
+ELSE
+IF (<SRC.TARG.TYPE> == t_door_house_guild)
+	SRC.SYSMESSAGE This door is already a guild door.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==04)
+	SRC.TARG.TIMER=500
+	SRC.SYSMESSAGE You make the door a guild door. Only the owner and your guild may enter now.
+	SRC.TARG.TYPE=t_door_house_guild
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.LINK = <SRC.MEMORYFINDTYPE.0400.LINK>
+	SRC.TARG.NAME=<SRC.MEMORYFINDTYPE.0400.LINK.NAME>'s guild door.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door) || (<SRC.TARG.TYPE>==03)
+	SRC.TARG.TIMER=500
+	SRC.SYSMESSAGE You make the door a guild door. Only the owner and your guild may enter now.
+	SRC.TARG.TYPE=t_door_house_guild
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.LINK = <SRC.MEMORYFINDTYPE.0400.LINK>
+	SRC.TARG.NAME=<SRC.MEMORYFINDTYPE.0400.LINK.NAME>'s guild door.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house)
+	SRC.TARG.TIMER=500
+	SRC.SYSMESSAGE You make the door a guild door. Only the owner and your guild may enter now.
+	SRC.TARG.TYPE=t_door_house_guild
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.LINK = <SRC.MEMORYFINDTYPE.0400.LINK>
+	SRC.TARG.NAME=<SRC.MEMORYFINDTYPE.0400.LINK.NAME>'s guild door.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_secure)
+	IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	SRC.TARG.TIMER=500
+	SRC.SYSMESSAGE You make the door a guild door. Only the owner and your guild may enter now.
+	SRC.TARG.TYPE=t_door_house_guild
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.LINK = <SRC.MEMORYFINDTYPE.0400.LINK>
+	SRC.TARG.NAME=<SRC.MEMORYFINDTYPE.0400.LINK.NAME>'s guild door.
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE You do not have the right to do this.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_private)
+	IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	SRC.TARG.TIMER=500
+	SRC.SYSMESSAGE You make the door a guild door. Only the owner and your guild may enter now.
+	SRC.TARG.TYPE=t_door_house_guild
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.LINK = <SRC.MEMORYFINDTYPE.0400.LINK>
+	SRC.TARG.NAME=<SRC.MEMORYFINDTYPE.0400.LINK.NAME>'s guild door.
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE You do not have the right to do this.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_book) || (<SRC.TARG.TYPE>==19)
+	SRC.SYSMESSAGE You make the book a guild book. Only the owner and your guild may view it.
+	SRC.TARG.TYPE=t_guild_book
+	SRC.TARG.MOREX=<SERIAL>
+	SRC.TARG.MOREY=<MORE>
+	SRC.TARG.MORE=0
+	SRC.TARG.MORE2=0
+	SRC.TARG.ATTR=attr_move_never
+	SRC.TARG.LINK = <SRC.MEMORYFINDTYPE.0400.LINK>
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_secure) || (<SRC.TARG.TYPE>==t_private)
+	IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	SRC.SYSMESSAGE You make this a guild container. Only the owner and your guild may open it now.
+	SRC.TARG.TYPE=t_guild_container
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.LINK = <SRC.MEMORYFINDTYPE.0400.LINK>
+	SRC.TARG.NAME=<SRC.MEMORYFINDTYPE.0400.LINK.NAME>'s guild container.
+	SRC.TARG.ATTR=attr_move_never
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE You have no right to do this.
+	RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.TYPE>==t_container) || (<SRC.TARG.TYPE>==01)
+	SRC.SYSMESSAGE You make this a guild container. Only the owner and your guild may open it now.
+	SRC.TARG.TYPE=t_guild_container
+	SRC.TARG.MORE2=<SERIAL>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.LINK = <SRC.MEMORYFINDTYPE.0400.LINK>
+	SRC.TARG.NAME=<SRC.MEMORYFINDTYPE.0400.LINK.NAME>'s guild container.
+	SRC.TARG.ATTR=attr_move_never
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_guild_container)
+	SRC.SYSMESSAGE This is already a guild container.
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE This is not a door or container.
+	RETURN 1
+ENDIF
+ENDIF
+ELSEIF (<TAG.DC> == 14)
+IF STRMATCH(<SRC.TARG.NAME>,Trash Can) && (<SRC.TARG.TYPE>==t_container)
+	TAG.GARBAGE=0
+	SRC.TARG.REMOVE
+	SRC.SYSMESSAGE You have removed the trash can.
+ENDIF	
+ELSEIF (<TAG.DC> == 8)
+IF (<SRC.TARG.TYPE>==t_door_house_private)
+	SRC.SYSMESSAGE This is already a private door.
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_guild)
+	SRC.SYSMESSAGE You make the door a private door. Only you and <TAG.TEM> may enter now.
+	SRC.TARG.TYPE=t_door_house_private
+	SRC.TARG.MORE2=<MORE2>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.NAME=<TAG.TEM>'s door.
+	SRC.TARG.LINK=<UID>
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==04)
+	SRC.SYSMESSAGE You make the door a private door. Only you and <TAG.TEM> may enter now.
+	SRC.TARG.TYPE=t_door_house_private
+	SRC.TARG.MORE2=<MORE2>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.NAME=<TAG.TEM>'s door.
+	SRC.TARG.LINK=<UID>
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door) || (<SRC.TARG.TYPE>==03)
+	SRC.SYSMESSAGE You make the door a private door. Only you and <TAG.TEM> may enter now.
+	SRC.TARG.TYPE=t_door_house_private
+	SRC.TARG.MORE2=<MORE2>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.NAME=<TAG.TEM>'s door.
+	SRC.TARG.LINK=<UID>
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house)
+	SRC.SYSMESSAGE You make the door a private door. Only you and <TAG.TEM> may enter now.
+	SRC.TARG.TYPE=t_door_house_private
+	SRC.TARG.MORE2=<MORE2>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.NAME=<TAG.TEM>'s door.
+	SRC.TARG.LINK=<UID>
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_door_house_secure)
+	SRC.SYSMESSAGE You make the door a private door. Only you and <TAG.TEM> may enter now.	
+	SRC.TARG.TYPE=t_door_house_private
+	SRC.TARG.MORE2=<MORE2>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.NAME=<TAG.TEM>'s door.
+	SRC.TARG.LINK=<UID>
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_secure) || (<SRC.TARG.TYPE>==t_container) || (<SRC.TARG.TYPE>==t_guild_container) || (<SRC.TARG.TYPE>==01)
+	SRC.SYSMESSAGE You make the <SRC.TARG.NAME> private. Only you and <TAG.TEM> may open it now.	
+	SRC.TARG.TYPE=t_private
+	SRC.TARG.MORE2=<MORE2>
+	SRC.TARG.MORE= <MORE>
+	SRC.TARG.NAME=<TAG.TEM>'s container.
+	SRC.TARG.LINK=<UID>
+	SRC.TARG.ATTR <SRC.TARG.ATTR>|attr_move_never
+	RETURN 1
+ELSEIF (<SRC.TARG.TYPE>==t_private)
+	SRC.SYSMESSAGE This is already private, unlock it first.
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You cannot make this private.
+	RETURN 1
+ENDIF
+ELSEIF (<TAG.DC> == 17)
+IF STRMATCH(<SRC.TARG.NAME>,Trash Can) && (<SRC.TARG.TYPE>==t_container)
+	SRC.TARG.EMPTY
+	SRC.SYSMESSAGE You have emptied the trash can.
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE This is not a trash can.
+	RETURN 1
+ENDIF
+ELSE
+	SRC.SYSMESSAGE This is not a person.
+	RETURN 1
+ENDIF
+ELSE
+	SRC.SYSMESSAGE This is not in your house.
+	RETURN 1
+ENDIF
+ELSE
+	SRC.SYSMESSAGE You must be the owner or coowner to do this.
+	RETURN 1
+ENDIF
+//End of Targon_Item Functions
+//-----------------------------------------------------
+
+
+//Targon Char inside House function, used in sphereitem_multis.scp
+[FUNCTION House_TargonCHAR]
+IF (<TAG.DC>==1) || (<TAG.DC>==2) || (<TAG.DC>==3) || (<TAG.DC>==4)|| (<TAG.DC>==5) || (<TAG.DC>==6) || (<TAG.DC>==7) || (<TAG.DC>==8) || (<TAG.DC>==14)
+	SRC.SYSMESSAGE You can not do this to a person!
+	RETURN 1
+ELSEIF (<TAG.DC>==9)
+	IF (<SRC.TARG.NPC> == 0)
+	IF (<SRC.TARG.TISCOOWNER>) || (<EVAL <SRC.TARG.UID>>==<MORE>) || (<SRC.TARG.ISGM>) || (<SRC.TARG.TISBIOWNER>)
+		SRC.SYSMESSAGE This person already has membership with the house.
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE <SRC.TARG.NAME> is now on your Coowner list.
+		SRC.TARG.SYSMESSAGE You are now on the Coowner list of <SRC.NAME>'s house.
+		SRC.NEWITEM i_info
+		SRC.ACT.NAME <SRC.TARG.NAME>
+		SRC.ACT.LINK <SRC.TARG.UID>
+		SRC.ACT.CONT <SRC.REGION.TAG.coowner>
+		RETURN 1
+	ENDIF
+	ELSE
+		SRC.SYSMESSAGE This cannot be a coowner.
+		RETURN 1
+	ENDIF
+ELSEIF (<TAG.DC> == 10)
+	IF (<SRC.TARG.UID>==<SRC.UID>)
+		SRC.SYSMESSAGE Say "secure" to do this.
+		RETURN 1
+	ELSEIF !(<SRC.TARG.NPC> == 0)
+		SRC.SYSMESSAGE This is not a person.
+		RETURN 1
+	ELSE
+		MORE2=<SRC.TARG.UID>
+		MORE=<MORE>
+		TAG.TEM=<SRC.TARG.NAME>
+		TAG.DC=8
+		TARGET What do you wish to allow <SRC.TARG.NAME> access to?
+		RETURN 1
+	ENDIF
+ELSEIF (<TAG.DC> == 11)
+	IF (<SRC.TARG.TISCOOWNER>)
+	house_remove_coowner <SRC.UID.<REGION.TAG.COOWNER>.RESCOUNT>
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE This person is not a coowner.
+	RETURN 1
+	ENDIF
+ELSEIF (<TAG.DC> == 12)
+	IF (<SRC.TARG.TISCOOWNER>) || (<EVAL <SRC.TARG.UID>>==<MORE>) || (<SRC.TARG.ISGM>) || !(<SRC.TARG.REGION.UID>==<UID>) || (<SRC.TARG.TISBIOWNER>)
+	SRC.SYSMESSAGE You cannot kick this person out!
+	RETURN 1
+	ELSE 
+	SRC.TARG.GO <LINK.P>
+	RETURN 1
+	ENDIF
+ELSEIF (<TAG.DC> == 13)
+	IF (<EVAL <SRC.TARG.UID>>==<MORE>) || (<SRC.TARG.ISGM>) || !(<SRC.TARG.NPC> == 0)
+	SRC.SYSMESSAGE You cannot make this person the owner.
+	RETURN 1
+	ELSE
+	MORE=<SRC.TARG.UID>
+	UID.<SRC.REGION.TAG.COOWNER>.EMPTY
+	UID.<SRC.REGION.TAG.BIOWNER>.EMPTY
+	SRC.SYSMESSAGE All Owners and Coowners have been removed, unlock and relock all of the doors.
+	RETURN 1
+	ENDIF
+ELSEIF (<TAG.DC>==15)
+	IF (<SRC.TARG.NPC> == 0)
+	IF (<SRC.TARG.TISBIOWNER>) || (<EVAL <SRC.TARG.UID>>==<MORE>) || (<SRC.TARG.ISGM>) || (<SRC.TARG.TISCOOWNER>)
+		SRC.SYSMESSAGE This person already has membership with the house.
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE <SRC.TARG.NAME> is now on your Owner list.
+		SRC.TARG.SYSMESSAGE You are now on the Owner list of <SRC.NAME>'s house.
+		SRC.NEWITEM i_info
+		SRC.ACT.NAME <SRC.TARG.NAME>
+		SRC.ACT.LINK <SRC.TARG.UID>
+		SRC.ACT.CONT <SRC.REGION.TAG.biowner>
+		RETURN 1
+	ENDIF
+	ELSE
+		SRC.SYSMESSAGE This cannot be a biowner.
+		RETURN 1
+	ENDIF
+ELSEIF (<TAG.DC> == 16)
+	IF (<SRC.TARG.TISBIOWNER>)
+	house_remove_biowner <SRC.UID.<REGION.TAG.BIOWNER>.RESCOUNT>
+	RETURN 1
+	ELSE
+	SRC.SYSMESSAGE This person is not an owner.
+	RETURN 1
+	ENDIF
+ENDIF
+ENDIF
+//End of Targon_Char Functions
+//-------------------------------------------------
+
+//Recursive House Ownership Functions
+
+[FUNCTION tiscoowner]
+REGION.TAG.TIS 1
+house_is Coowner
+RETURN <VAR.RETURN>
+
+[FUNCTION tisbiowner]
+REGION.TAG.TIS 1
+house_is Biowner
+RETURN <VAR.RETURN>
+
+[FUNCTION house_init]
+IF !(0<REGION.TAG.<ARGS>>)
+	VAR.ACT <SRC.ACT>
+	SRC.NEWITEM i_bag_house
+	SRC.ACT.ATTR attr_move_never|attr_invis
+	SRC.ACT.COLOR 07a0
+	SRC.ACT.NAME <ARGS>
+	SRC.ACT.LINK <UID>
+	SRC.ACT.P <P>
+	SRC.ACT.TIMER=200
+	SRC.ACT.MORE=<REGION.UID>
+	SRC.TRY REGION.TAG.<ARGS> <SRC.ACT.UID>
+	SRC.ACT <VAR.ACT>
+ENDIF
+RETURN 1
+
+[FUNCTION iscoowner]
+REGION.TAG.TIS 0
+house_is Coowner
+RETURN <VAR.RETURN>
+
+[FUNCTION isbiowner]
+REGION.TAG.TIS 0
+house_is Biowner
+RETURN <VAR.RETURN>
+
+[FUNCTION house_is]
+VAR.OBJECT=<ARGS>
+IF (<EVAL <SRC.UID.<REGION.TAG.<ARGS>>.RESCOUNT>> > 0)
+	house_is_r <SRC.UID.<REGION.TAG.<ARGS>>.RESCOUNT>
+	RETURN 0
+ENDIF
+VAR.RETURN 0
+
+[FUNCTION house_is_r]
+IF STRMATCH(<SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<ARGN>.LINK>,<QVAL <REGION.TAG.TIS> ? <SRC.TARG.UID> : <SRC.UID>>)
+	VAR.RETURN 1
+ELSEIF <ARGN> > 0
+	house_is_r <EVAL <ARGN>+-1>
+ELSE
+    VAR.RETURN 0
+ENDIF
+
+[FUNCTION house_remove]
+IF (<SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<ARGN>.LINK>=<SRC.TARG.UID>)
+SRC.SYSMESSAGE <SRC.TARG.NAME> has been removed from the <VAR.OBJECT> list.
+	SRC.TRY SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<ARGN>.REMOVE
+	RETURN 1
+ELSEIF <ARGN> > 0
+	house_remove <EVAL <ARGN>+-1>
+ELSE
+	SRC.SYSMESSAGE <SRC.TARG.NAME> is not a <VAR.OBJECT> of this house.
+	RETURN 1
+ENDIF
+
+[FUNCTION house_remove_coowner]
+VAR.OBJECT=coowner
+house_remove <ARGN>
+RETURN 1
+
+[FUNCTION house_remove_biowner]
+VAR.OBJECT=biowner
+house_remove <ARGN>
+RETURN 1
+
+//House Stacking Fix : Scripted by Fox Flame
+
+[FUNCTION AREACHECK]
+VAR.AREACHECK=0
+AREACHECKX <ARGN>
+
+[FUNCTION AREACHECKX]
+VAR.AREACHECK=<EVAL <VAR.AREACHECK> +1>
+IF (<VAR.AREACHECK> < <ARGN> )
+   SRC.NEWITEM=i_coin_copper // Edit: You might want to make this i_gold
+   SRC.ACT.P=<SRC.TARGP>
+   LINK=<SRC.ACT.UID>
+   LINK.MOVE=<EVAL <VAR.AREACHECK>>,0,0
+   IF (<SRC.UID.<LINK.REGION.UID>.TYPE> == t_multi )
+      SRC.TAG.NOPLACE=1
+   ENDIF
+   LINK.P=<SRC.TARGP>
+   LINK.MOVE=<EVAL <VAR.AREACHECK> - (<VAR.AREACHECK>*2)>,0,0
+   IF (<SRC.UID.<LINK.REGION.UID>.TYPE> == t_multi )
+      SRC.TAG.NOPLACE=1
+   ENDIF
+   LINK.REMOVE
+   LINK=04fffffff
+   AREACHECKY <ARGN>
+ELSE
+RETURN 0
+ENDIF
+
+[FUNCTION AREACHECKY]
+SRC.NEWITEM=i_coin_copper  //You might want to make this gold or something else
+SRC.ACT.P=<SRC.TARGP>
+LINK=<SRC.ACT.UID>
+LINK.MOVE=0,<EVAL <VAR.AREACHECK>>,0
+IF (<SRC.UID.<LINK.REGION.UID>.TYPE> == t_multi )
+   SRC.TAG.NOPLACE=1
+ENDIF
+LINK.P=<SRC.TARGP>
+LINK.MOVE=0,<EVAL <VAR.AREACHECK> - (<VAR.AREACHECK>*2)>,0
+IF (<SRC.UID.<LINK.REGION.UID>.TYPE> == t_multi )
+   SRC.TAG.NOPLACE=1
+ENDIF
+LINK.REMOVE
+LINK=04fffffff
+AREACHECKXY <ARGN>
+
+[FUNCTION AREACHECKXY]
+SRC.NEWITEM=i_coin_copper
+SRC.ACT.P=<SRC.TARGP>
+LINK=<SRC.ACT.UID>
+LINK.MOVE=<EVAL <VAR.AREACHECK>>,<EVAL <VAR.AREACHECK>>,0
+IF (<SRC.UID.<LINK.REGION.UID>.TYPE> == t_multi )
+   SRC.TAG.NOPLACE=1
+ENDIF
+LINK.P=<SRC.TARGP>
+LINK.MOVE=<EVAL <VAR.AREACHECK> - (<VAR.AREACHECK>*2)>,<EVAL <VAR.AREACHECK> - (<VAR.AREACHECK>*2)>,0
+IF (<SRC.UID.<LINK.REGION.UID>.TYPE> == t_multi )
+   SRC.TAG.NOPLACE=1
+ENDIF
+LINK.P=<SRC.TARGP>
+LINK.MOVE=<EVAL <VAR.AREACHECK> - (<VAR.AREACHECK>*2)>,<EVAL <VAR.AREACHECK>>,0
+IF (<SRC.UID.<LINK.REGION.UID>.TYPE> == t_multi )
+   SRC.TAG.NOPLACE=1
+ENDIF
+LINK.P=<SRC.TARGP>
+LINK.MOVE=<EVAL <VAR.AREACHECK>>,<EVAL <VAR.AREACHECK> - (<VAR.AREACHECK>*2)>,0
+IF (<SRC.UID.<LINK.REGION.UID>.TYPE> == t_multi )
+   SRC.TAG.NOPLACE=1
+ENDIF
+LINK.REMOVE
+LINK=04fffffff
+AREACHECKX <ARGN>
+
+//End of Fox Flame's House Stacking Fix
+//----------------------------------------------
+
+//Specialized Type Definitions.
+[TYPEDEF t_door_house]
+ON=@DCLICK
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<IsCoowner>) || (<ISBIOWNER>)
+	TYPE=t_door
+	DCLICK
+	TYPE=t_door_house
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You do not have access to this door.
+	RETURN 1
+ENDIF
+
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+[TYPEDEF t_door_house_secure]
+ON=@DCLICK
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	TYPE=t_door
+	DCLICK
+	TYPE=t_door_house_secure
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You do not have access to this door.
+	RETURN 1
+ENDIF
+
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+[TYPEDEF t_door_house_private]
+ON=@DCLICK
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ISGM>) || (<SRC.UID>==<EVAL <MORE2>>) || (<ISBIOWNER>)
+	TYPE=t_door
+	DCLICK
+	TYPE=t_door_house_private
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You do not have access to this door.
+	RETURN 1
+ENDIF
+
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+[TYPEDEF t_door_house_guild]
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+
+ON=@DCLICK
+IF (<LINK>==<SRC.MEMORYFINDTYPE.0400.LINK>) || (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	TYPE=t_door
+	DCLICK
+	TYPE=t_door_house_guild
+	IF (<MORE2>==<REGION.UID>)
+		RETURN 1
+	ELSE
+		REMOVE
+		RETURN 1
+	ENDIF
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You do not have access to this door.
+	RETURN 1
+ENDIF
+
+[TYPEDEF t_house_book]
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+ON=@DCLICK
+	TYPE=t_book
+	DCLICK
+	TYPE=t_house_book
+	RETURN 1
+
+[TYPEDEF t_guild_book]
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+ON=@DCLICK
+IF (<LINK>==<SRC.MEMORYFINDTYPE.0400.LINK>) || (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	TYPE=t_book
+	DCLICK
+	TYPE=t_guild_book
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You cannot seem to open this book.
+	RETURN 1
+ENDIF
+
+ON=@CLICK
+IF !(<LINK>==<SRC.MEMORYFINDTYPE.0400.LINK>) && !(<EVAL <SRC.UID>>==<MORE>) && !(<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+MESSAGE [guild]
+RETURN 1
+
+[TYPEDEF t_guild_container]
+ON=@TIMER
+	IF (<MORE2>==<REGION.UID>)
+		TIMER=500
+		RETURN 1
+	ELSE
+		REMOVE
+		RETURN 1
+	ENDIF
+
+ON=@DCLICK
+IF (<LINK>==<SRC.MEMORYFINDTYPE.0400.LINK>) || (<EVAL <SRC.UID>>==<MORE>)|| (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	TYPE=t_container
+	DCLICK
+	TYPE=t_guild_container
+	IF (<MORE2>==<REGION.UID>)
+		TIMER=500
+		RETURN 1
+	ELSE
+		REMOVE
+		RETURN 1
+	ENDIF
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You do not have access to this door.
+	RETURN 1
+ENDIF
+
+[TYPEDEF t_private]
+ON=@DCLICK
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<EVAL <SRC.UID>>==<MORE2>) || (<ISBIOWNER>)
+	TYPE=t_container
+	DCLICK
+	TYPE=t_private
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You do not have access to this container.
+	RETURN 1
+ENDIF
+
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+[TYPEDEF t_secure]
+ON=@DCLICK
+IF (<EVAL <SRC.UID>>==<MORE>) || (<SRC.ACCOUNT.PLEVEL>>=4) || (<ISBIOWNER>)
+	TYPE=t_container
+	DCLICK
+	TYPE=t_secure
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You do not have access to this container.
+	RETURN 1
+ENDIF
+ON=@CLICK
+	MESSAGE [secure]
+	RETURN 1
+	
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+[ITEMDEF i_coowner]
+ID=i_worldgem_bit
+Type=t_script
+WEIGHT=1
+
+ON=@CLICK
+REMOVE
+RETURN 1
+
+ON=@DCLICK
+REMOVE
+RETURN 1
+
+//End of Type Definitions
+//------------------------------------
+//Change Music Functions
+
+[MENU M_MUSIC_CHANGE]
+Choose your music
+ON=0 Britain
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>        		    //Removes current region settings
+	SRC.REGION.EVENTS +r_house_brit                             //Adds chosen region setting.
+	REGION.ALLCLIENTS MIDILIST=midi_britain1,midi_britain2      //Changes player's music @choose
+	SRC.SYSMESSAGE This house now plays British music.
+	RETURN 1
+ON=0 Bucs Den
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS=r_house_Bucsden
+	REGION.ALLCLIENTS MIDILIST=midi_Bucsden
+	SRC.SYSMESSAGE This house now plays Buc's Den's music.
+	RETURN 1
+ON=0 Jhelom
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_Jhelom
+	REGION.ALLCLIENTS MIDILIST=midi_Jhelom
+	SRC.SYSMESSAGE This house now plays Jhelom music.
+	RETURN 1
+ON=0 Trinsic
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_trinsic
+	REGION.ALLCLIENTS MIDILIST=midi_trinsic
+	SRC.SYSMESSAGE This house now plays Trinsic music.
+	RETURN 1
+ON=0 Vesper
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_vesper
+	REGION.ALLCLIENTS MIDILIST=midi_vesper
+	SRC.SYSMESSAGE This house now plays Vesper music.
+	RETURN 1
+ON=0 Wind
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_wind
+	REGION.ALLCLIENTS MIDILIST=midi_wind
+	SRC.SYSMESSAGE This house now plays Wind music.
+	RETURN 1
+ON=0 Yew
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_yew
+	REGION.ALLCLIENTS MIDILIST=midi_yew
+	SRC.SYSMESSAGE This house now plays Yew music.
+	RETURN 1
+ON=0 Skara Brae
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_skarabra
+	REGION.ALLCLIENTS MIDILIST=midi_skarabra
+	SRC.SYSMESSAGE This house now plays Skara Brae music.
+	RETURN 1
+ON=0 Serpents Hold
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_serpents
+	REGION.ALLCLIENTS MIDILIST=midi_serpents
+	SRC.SYSMESSAGE This house now plays Serpent's Hold music.
+	RETURN 1
+ON=0 Ocllo
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_ocllo
+	REGION.ALLCLIENTS MIDILIST=midi_ocllo
+	SRC.SYSMESSAGE This house now plays Ocllo music.
+	RETURN 1
+ON=0 Blackthorne's Castle
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_BTCastle
+	REGION.ALLCLIENTS MIDILIST=midi_LBCastle
+	SRC.SYSMESSAGE This house now plays Blackthorne's Castle music.
+	RETURN 1
+ON=0 Lord British's Castle
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_LBCastle
+	REGION.ALLCLIENTS MIDILIST=midi_BTCastle
+	SRC.SYSMESSAGE This house now plays Lord British's Castle music.
+	RETURN 1
+ON=0 In Town
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_intown01
+	REGION.ALLCLIENTS MIDILIST=midi_intown01
+	SRC.SYSMESSAGE This house now plays in town music.
+	RETURN 1
+ON=0 Tavern 
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_tavern
+	REGION.ALLCLIENTS MIDILIST=midi_tavern01
+	SRC.SYSMESSAGE This house now plays tavern music.
+	RETURN 1
+ON=0 Forest
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_ForestA
+	REGION.ALLCLIENTS MIDILIST=midi_ForestA
+	SRC.SYSMESSAGE This house now plays forest music.
+	RETURN 1
+ON=0 Plains
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_plains
+	REGION.ALLCLIENTS MIDILIST=midi_plains
+	SRC.SYSMESSAGE This house now plays plains music.
+	RETURN 1
+ON=0 Sailing
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_sailing
+	REGION.ALLCLIENTS MIDILIST=midi_sailing
+	SRC.SYSMESSAGE This house now plays sailing music.
+	RETURN 1
+ON=0 Old Ultima
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_oldultima
+	REGION.ALLCLIENTS MIDILIST=midi_oldult01
+	SRC.SYSMESSAGE This house now plays Old Ultima music.
+	RETURN 1
+	
+ON=0 Dungeon
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_dungeon
+	REGION.ALLCLIENTS MIDILIST=midi_dungeon2
+	SRC.SYSMESSAGE This house now plays dungeon music.
+	RETURN 1
+	
+ON=0 Shuffle
+	SRC.REGION.EVENTS -<SRC.REGION.EVENTS>
+	SRC.REGION.EVENTS r_house_shuffle
+	REGION.ALLCLIENTS MIDILIST=midi_magincia
+	SRC.SYSMESSAGE This house now shuffles all music.
+	RETURN 1
+
+[REGIONTYPE r_house_brit]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	DORAND 2
+	SRC.MIDILIST=midi_britain1
+	SRC.MIDILIST=midi_britain2
+	ENDDO
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	DORAND 2
+	SRC.MIDILIST=midi_britain1
+	SRC.MIDILIST=midi_britain2
+	ENDDO
+	
+[REGIONTYPE r_house_bucsden]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_Bucsden
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_Bucsden
+	
+[REGIONTYPE r_house_Jhelom]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_Jhelom
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_Jhelom
+
+[REGIONTYPE r_house_trinsic]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_trinsic
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_trinsic
+	
+	
+[REGIONTYPE r_house_vesper]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_vesper
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_vesper
+	
+[REGIONTYPE r_house_wind]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_wind
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_wind
+	
+[REGIONTYPE r_house_yew]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_yew
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_yew
+	
+[REGIONTYPE r_house_skarabra]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_skarabra
+ON=@EXIT
+	SRC.MESSAGE Goodbye <SRC.NAME>!
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_skarabra
+	
+[REGIONTYPE r_house_serpents]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_serpents
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_serpents
+	
+[REGIONTYPE r_house_ocllo]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_ocllo
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_ocllo
+	
+[REGIONTYPE r_house_LBCastle]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_LBCastle
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_LBCastle
+	
+[REGIONTYPE r_house_BTCastle]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_BTCastle
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_BTCastle
+	
+[REGIONTYPE r_house_intown01]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_intown01
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_intown01
+	
+[REGIONTYPE r_house_tavern]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	DORAND 4
+	SRC.MIDILIST=midi_tavern01
+	SRC.MIDILIST=midi_tavern02
+	SRC.MIDILIST=midi_tavern03
+	SRC.MIDILIST=midi_tavern04
+	ENDDO
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	DORAND 4
+	SRC.MIDILIST=midi_tavern01
+	SRC.MIDILIST=midi_tavern02
+	SRC.MIDILIST=midi_tavern03
+	SRC.MIDILIST=midi_tavern04
+	ENDDO
+	
+[REGIONTYPE r_house_ForestA]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_ForestA
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_ForestA
+	
+[REGIONTYPE r_house_plains]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_plains
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_plains
+	
+[REGIONTYPE r_house_sailing]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	SRC.MIDILIST=midi_sailing
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	SRC.MIDILIST=midi_sailing
+
+[REGIONTYPE r_house_oldultima]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	DORAND 6
+	SRC.MIDILIST=midi_oldult01
+	SRC.MIDILIST=midi_oldult02
+	SRC.MIDILIST=midi_oldult03
+	SRC.MIDILIST=midi_oldult04
+	SRC.MIDILIST=midi_oldult05
+	SRC.MIDILIST=midi_oldult06
+	ENDDO
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	DORAND 6
+	SRC.MIDILIST=midi_oldult01
+	SRC.MIDILIST=midi_oldult02
+	SRC.MIDILIST=midi_oldult03
+	SRC.MIDILIST=midi_oldult04
+	SRC.MIDILIST=midi_oldult05
+	SRC.MIDILIST=midi_oldult06
+	ENDDO
+
+[REGIONTYPE r_house_dungeon]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	DORAND 2
+	SRC.MIDILIST=midi_dungeon2
+	SRC.MIDILIST=midi_dungeon9
+	ENDDO
+ON=@EXIT
+	SRC.MIDILIST=
+ON=@CLIPERIODIC
+	DORAND 2
+	SRC.MIDILIST=midi_dungeon2
+	SRC.MIDILIST=midi_dungeon9
+	ENDDO
+
+[REGIONTYPE r_house_shuffle]
+ON=@ENTER
+	SRC.MESSAGE Welcome <SRC.NAME>!
+	DORAND 32
+	SRC.MIDILIST=midi_britain1
+	SRC.MIDILIST=midi_britain2
+	SRC.MIDILIST=midi_jhelom
+	SRC.MIDILIST=midi_trinsic
+	SRC.MIDILIST=midi_vesper
+	SRC.MIDILIST=midi_wind
+	SRC.MIDILIST=midi_yew
+	SRC.MIDILIST=midi_skarabra
+	SRC.MIDILIST=midi_serpents
+	SRC.MIDILIST=midi_ocllo
+	SRC.MIDILIST=midi_LBCastle
+	SRC.MIDILIST=midi_BTCastle
+	SRC.MIDILIST=midi_intown01
+	SRC.MIDILIST=midi_ForestA
+	SRC.MIDILIST=midi_sailing
+	SRC.MIDILIST=midi_plains
+	SRC.MIDILIST=midi_tavern01
+	SRC.MIDILIST=midi_tavern02
+	SRC.MIDILIST=midi_tavern03
+	SRC.MIDILIST=midi_tavern04
+	SRC.MIDILIST=midi_magincia
+	SRC.MIDILIST=midi_mountaina
+	SRC.MIDILIST=midi_oldult01
+	SRC.MIDILIST=midi_oldult02
+	SRC.MIDILIST=midi_oldult03
+	SRC.MIDILIST=midi_oldult04
+	SRC.MIDILIST=midi_oldult05
+	SRC.MIDILIST=midi_oldult06
+	SRC.MIDILIST=midi_dungeon2
+	SRC.MIDILIST=midi_dungeon9
+	SRC.MIDILIST=midi_junglea
+	SRC.MIDILIST=midi_swampa
+	ENDDO
+ON=@EXIT
+	SRC.MIDILIST=	
+ON=@CLIPERIODIC
+	DORAND 62
+	SRC.MIDILIST=midi_britain1
+	SRC.MIDILIST=midi_britain2
+	SRC.MIDILIST=midi_jhelom
+	SRC.MIDILIST=midi_trinsic
+	SRC.MIDILIST=midi_vesper
+	SRC.MIDILIST=midi_wind
+	SRC.MIDILIST=midi_yew
+	SRC.MIDILIST=midi_skarabra
+	SRC.MIDILIST=midi_serpents
+	SRC.MIDILIST=midi_ocllo
+	SRC.MIDILIST=midi_LBCastle
+	SRC.MIDILIST=midi_BTCastle
+	SRC.MIDILIST=midi_intown01
+	SRC.MIDILIST=midi_ForestA
+	SRC.MIDILIST=midi_sailing
+	SRC.MIDILIST=midi_plains
+	SRC.MIDILIST=midi_tavern01
+	SRC.MIDILIST=midi_tavern02
+	SRC.MIDILIST=midi_tavern03
+	SRC.MIDILIST=midi_tavern04
+	SRC.MIDILIST=midi_magincia
+	SRC.MIDILIST=midi_mountaina
+	SRC.MIDILIST=midi_oldult01
+	SRC.MIDILIST=midi_oldult02
+	SRC.MIDILIST=midi_oldult03
+	SRC.MIDILIST=midi_oldult04
+	SRC.MIDILIST=midi_oldult05
+	SRC.MIDILIST=midi_oldult06
+	SRC.MIDILIST=midi_dungeon2
+	SRC.MIDILIST=midi_dungeon9
+	SRC.MIDILIST=midi_junglea
+	SRC.MIDILIST=midi_swampa
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	RETURN 1
+	ENDDO
+
+//End of Change Music Functions
+//-------------------------------------------------
+
+//---------------------
+//Custom Items
+[ITEMDEF i_info]
+ID=3353
+TYPE=t_normal
+
+[ITEMDEF i_bag_house]
+ID=i_bag
+TYPE=t_container
+
+ON=@TIMER
+IF (<MORE>=<EVAL <REGION.UID>>)
+TIMER=200
+RETURN 1
+ELSE
+REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_house_garbage]
+ID=i_barrel
+TYPE=t_container
+NAME=Trash Can
+
+ON=@CREATE
+COLOR=038a
+ATTR=010
+
+ON=@TIMER
+RETURN 1
+
+[ITEMDEF i_house_teleport_delay]
+NAME=Delay Teleport
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	MORE1=5
+	
+ON=@Equip
+	TIMER=1
+	
+ON=@Timer
+	if ( <cont> )
+		if ( <more1> )
+			cont.message <EVAL(<more1>)> // put countdown above my head.
+			more1=<more1>-1
+			TIMER=1
+			return 1
+		else
+			cont.GOPLACE <morep>	
+		endif
+	endif
+	// normal timer fall through is to delete the item
+	remove
+	return 1
+//-------------------------
+
+//GM Commands
+[FUNCTION houseinfo]
+DIALOG d_houseinfo
+RETURN 1
+
+[FUNCTION gotoowner]
+SRC.GO <UID.<SRC.UID.<SRC.REGION.UID>.MORE1>.P>
+RETURN 1
+
+[FUNCTION guildinfo]
+SRC.SYSMESSAGE <UID.<SRC.UID.<SRC.REGION.UID>.MORE1>.NAME>'s guild is <UID.<SRC.UID.<SRC.REGION.UID>.MORE1>.MEMORYFINDTYPE.0400.LINK.NAME>.
+SRC.SYSMESSAGE The guild's alignment is <UID.<SRC.UID.<SRC.REGION.UID>.MORE1>.MEMORYFINDTYPE.0400.LINK.AlignType>.
+SRC.SYSMESSAGE The guild's abbreviation is [<UID.<SRC.UID.<SRC.REGION.UID>.MORE1>.MEMORYFINDTYPE.0400.LINK.ABBREV>]
+SRC.SYSMESSAGE <UID.<SRC.UID.<SRC.REGION.UID>.MORE1>.MEMORYFINDTYPE.0400.LINK.MASTER> is the master of the guild.
+RETURN 1

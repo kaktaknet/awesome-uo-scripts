@@ -1,0 +1,265 @@
+///By CLOUD_BR
+///Leave the credits, please.
+
+[DEFNAME heal_things]
+healdelay 3 //time seconds before the player can use another bandages after healing the target.
+
+[ITEMDEF 0e21]
+DEFNAME=i_bandage
+RESOURCES=i_cloth
+TYPE=T_NORMAL
+WEIGHT=1
+DUPELIST=0ee9
+CATEGORY=Items by Professions
+SUBSECTION=Healer
+DESCRIPTION=Clean Bandages
+VALUE=1
+
+ON=@Dclick
+IF (<src.findid.i_mem_heal>)
+src.sysmessage You can't heal yet.
+return 1
+ENDIF
+IF (<src.flags>&statf_freeze) || (<src.flags>&statf_stone)
+src.sysmessage You can't heal someone frozen.
+return 1
+ENDIF
+TARGET Who do you want to heal?
+RETURN 1
+
+ON=@targon_item
+src.sysmessage You can't heal an item.
+return 1
+
+On=@targon_char
+IF (<src.targ.flags>&statf_dead)
+src.sysmessage You can't heal dead people.
+return 1
+endif
+IF (<src.findid.i_mem_heal>)
+src.sysmessage You can't heal yet.
+return 1
+ENDIF
+IF (<src.flags>&statf_freeze) || (<src.flags>&statf_stone)
+src.sysmessage You can't heal someone frozen.
+return 1
+ENDIF
+IF !(<src.targ.canseelos>)
+src.sysmessage You can't see your target.
+return 1
+ELSEIF (<src.targ.distance> > 6)
+src.sysmessage You target is too far away.
+return 1
+ENDIF
+IF (<src.targ.hits>==<src.targ.maxhits>)
+src.sysmessage <src.targ.name> doesn't need to be healed.
+return 1
+ENDIF
+IF !(<src.ispk>) && !(<src.iscriminal>) && (<src.targ.iscriminal>) || (<src.targ.ispk>)
+src.becriminal
+ENDIF
+src.flags=<src.flags>&~statf_hidden
+src.flags=<src.flags>&~statf_invisible
+serv.newitem i_mem_heal
+new.link=<src.targ.uid>
+src.equip <new>
+src.sysmessage You start to heal <src.targ.name>, this will take <new.timer> secs.
+src.events +e_healing_timer
+src.update
+src.emote applying bandages in <src.targ.name>
+consume 1 i_bandage
+serv.newitem i_bandage_bloody
+new.bounce
+return 1
+
+/////////////////////////////
+
+[ITEMDEF i_mem_heal]
+NAME=healing mem
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@create
+attr=attr_invis|attr_decay
+
+ON=@Equip
+local.blah=<eval <src.anatomy>/90>
+timer=<EVAL 15-<local.blah>>
+IF (<TIMER> > 10)
+TIMER=10
+ENDIF
+more1=1
+
+ON=@Timer
+IF (<more1>==2)
+remove
+return 1
+ENDIF
+IF (<LINK.ISPLAYER>) || (<LINK.BODY>==c_man) || (<LINK.BODY>==c_woman)
+LOCAL.SKILLUSO="Healing"
+ELSE
+LOCAL.SKILLUSO="Veterinary"
+ENDIF
+IF (<link.flags>&statf_dead)
+cont.sysmessage You can't heal dead people.
+cont.events -e_healing_timer
+more1=2
+timer=3
+return 1
+ENDIF
+IF (<cont.distance <link>> > 8)
+cont.sysmessage <link.name> is too far away.
+cont.events -e_healing_timer
+more1=2
+timer=3
+return 1
+ENDIF
+IF (<LINK.HITS>==<LINK.MAXHITS>)
+cont.sysmessage <link.name> doesn't need to be healed.
+cont.events -e_healing_timer
+more1=2
+timer=3
+return 1
+ENDIF
+IF (<cont.flags>&statf_freeze) || (<cont.flags>&statf_stone)
+cont.sysmessage You can't heal someone frozen.
+cont.events -e_healing_timer
+more1=2
+timer=3
+return 1
+ENDIF
+IF (<EVAL RAND(0,<EVAL <CONT.<LOCAL.SKILLUSO>>/10>)> > <EVAL RAND(0,50)>) || (<CONT.<LOCAL.SKILLUSO>>==100.0)
+LOCAL.HEALED=<EVAL ((<CONT.<LOCAL.SKILLUSO>>+(<CONT.<LOCAL.SKILLUSO>>/3))*(<CONT.ANATOMY>/2))/20000>
+IF (<LOCAL.HEALED> < 15)
+LOCAL.HEALED=15
+ENDIF
+LINK.HITS += <LOCAL.HEALED>
+LINK.SYSMESSAGE <cont.name> healed <EVAL <LOCAL.HEALED>> hitpoints of you.
+CONT.SYSMESSAGE You healed <EVAL <LOCAL.HEALED>> hitpoints of <link.name>
+IF (<LINK.HITS> > <LINK.MAXHITS>)
+LINK.HITS=<LINK.MAXHITS>
+ENDIF
+cont.skillgain 80 <LOCAL.SKILLUSO>
+ELSE
+cont.sysmessage You fail to heal <link.name>
+link.sysmessage <cont.name> fails to heal you.
+IF (<EVAL RAND(0,8)>==1)
+cont.skillgain 70 <LOCAL.SKILLUSO>
+ENDIF
+ENDIF
+cont.events -e_healing_timer
+more1=2
+timer=<def.healdelay>
+return 1
+
+/////////////////////////////
+
+[EVENTS e_healing_timer]
+ON=@LogOut
+sysmessage You fail to heal <findid.i_mem_heal.link.name>
+findid.i_mem_heal.link.sysmessage <name> fails to heal you.
+findid.i_mem_heal.remove
+events -e_healing_timer
+
+ON=@GetHit
+sysmessage You fail to heal <findid.i_mem_heal.link.name>
+findid.i_mem_heal.link.sysmessage <name> fails to heal you.
+findid.i_mem_heal.remove
+events -e_healing_timer
+
+ON=@UserWarMode
+sysmessage You fail to heal <findid.i_mem_heal.link.name>
+findid.i_mem_heal.link.sysmessage <name> fails to heal you.
+findid.i_mem_heal.remove
+events -e_healing_timer
+
+ON=@spellcast
+sysmessage You fail to heal <findid.i_mem_heal.link.name>
+findid.i_mem_heal.link.sysmessage <name> fails to heal you.
+findid.i_mem_heal.remove
+events -e_healing_timer
+
+ON=@SkillStart
+sysmessage You fail to heal <findid.i_mem_heal.link.name>
+findid.i_mem_heal.link.sysmessage <name> fails to heal you.
+findid.i_mem_heal.remove
+events -e_healing_timer
+
+///////////////
+
+[function becriminal]
+IF !(<findid.i_criminal_timer>)
+flags |= statf_criminal
+serv.newitem i_criminal_timer
+equip <new>
+ENDIF
+
+[itemdef i_criminal_timer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=criminal timer
+
+ON=@Create
+attr=attr_invis|attr_decay
+
+ON=@Equip
+timer=<eval 60*<SERV.CRIMINALTIMER>>
+
+ON=@Timer
+cont.flags=<cont.flags>&~statf_criminal
+remove
+return 1
+
+////////////////////
+
+[FUNCTION ispk]
+IF (<NPC>)
+IF (<KARMA> < -2999)
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+ENDIF
+IF !(<KARMA> > -8001) || (<KILLS> > <SERV.MURDERMINCOUNT>)
+RETURN 1
+ENDIF
+RETURN 0
+
+[FUNCTION iscriminal]
+IF (<FLAGS>&statf_criminal)
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+////////////////////
+
+[FUNCTION skillgain] ///This wasn't made by me
+// Usage: skill_gain <GAINDIFFICULTY> <SKILLNAME>
+// IE: skill_gain 100 SWORDSMANSHIP
+// 
+// The higher the GAINDIFFICULTY number is, the easier it is to gain.
+// Recommended difficulty: 100
+// Needs to be changed to allow for gains over 100.0%.
+
+IF (<SKILLTOTAL> > 699.9)
+return 1
+ENDIF
+LOCAL.SKILL=<streat <ARGS>>
+IF (<<LOCAL.SKILL>> > 99.9)
+	RETURN 1
+ENDIF
+IF (<EVAL(RAND(<<LOCAL.SKILL>>))> < <ARGN1>)
+	IF (<LOCAL.SKILL> < 300)
+		LOCAL.GAIN=<EVAL({1 3 2 1})>
+	ELSE
+		LOCAL.GAIN=1
+	ENDIF
+
+	TRY <LOCAL.SKILL>=<EVAL <<LOCAL.SKILL>>+<LOCAL.GAIN>>
+ENDIF
+IF (<<LOCAL.SKILL>> > 99.9)
+	TRY <LOCAL.SKILL>=1000
+ENDIF
+
+[EOF]

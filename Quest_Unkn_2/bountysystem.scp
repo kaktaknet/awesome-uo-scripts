@@ -1,0 +1,103 @@
+// Bounty System version 1.0
+// By Ron Custer
+
+
+[ITEMDEF i_bounty_deed]
+NAME=Bounty Deed
+ID=i_deed
+TYPE=t_script
+
+ON=@CREATE
+COLOR=04
+MORE=1000
+
+ON=@CLICK
+SAY Bounty Deed for <LINK.NAME>
+RETURN 1
+
+ON=@DCLICK
+SRC.SYSMESSAGE Take this to a bounty stone
+RETURN 1
+
+
+[ITEMDEF i_bounty_stone]
+NAME=Bounty Stone
+ID=i_grave_stone
+TYPE=t_script
+
+ON=@CREATE
+COLOR=04
+TAG.BOUNTYNO=0
+
+ON=@DCLICK
+
+if !(0<LINK.FINDCONT(0)>) //NO items exist on the board
+IF (<SRC.FINDID(i_bounty_deed)>) //check for bounty deed 
+   VAR.TOTALGOLD=<SRC.findlayer(layer_bankbox).rescount i_gold>+<SRC.findlayer(layer_pack).rescount i_gold> 
+   if (<var.totalgold><1000) 
+    SRC.MESSAGE You do not have enough gold to place a bounty. 
+   else 
+    SRC.NEWITEM 0eb0 
+    SRC.ACT.TYPE t_message 
+    SRC.ACT.AUTHOR <SRC.NAME> 
+    SRC.ACT.BODY.0 1000 
+    SRC.ACT.LINK <SRC.FINDID(i_bounty_deed).LINK> 
+    SRC.ACT.NAME <SRC.FINDID(i_bounty_deed).LINK.NAME> 
+    SRC.ACT.CONT <LINK.UID> 
+    SRC.FINDID(i_bounty_deed).REMOVE 
+    SRC.consumebank 1000 i_gold
+    SRC.UPDATE
+   endif 
+  ELSE 
+  SAY No Bounty Items!
+ ENDIF
+ELSE
+ IF <LINK.FINDCONT(<eval <TAG.BOUNTYNO>>)> // If we have items
+  IF (<SRC.FINDID(i_flesh_head)>)         // check to see if they have a head on them
+    // THEY ARE TURNING IN A HEAD
+   IF (<SRC.FINDID(i_flesh_head).LINK>==<LINK.FINDCONT(<eval <TAG.BOUNTYNO>>).LINK> // see if they are wanted
+     SRC.SYSMESSAGE You are turning in the head of <LINK.FINDCONT(<eval <TAG.BOUNTYNO>>).LINK.NAME>
+     SRC.ACT=<LINK.FINDCONT(<eval <TAG.BOUNTYNO>>).UID>
+     SRC.ACT.REMOVE
+     SRC.FINDID(i_flesh_head).CONSUME
+     SRC.NEWITEM i_gold
+     SRC.ACT.AMOUNT 1000
+     SRC.ACT.BOUNCE
+     SRC.UPDATE
+    ENDIF
+  ELIF (<SRC.FINDID(i_bounty_deed)>)
+     VAR.TOTALGOLD=<SRC.findlayer(layer_bankbox).rescount i_gold>+<SRC.findlayer(layer_pack).rescount i_gold> 
+   if (<var.totalgold><1000) 
+    SRC.MESSAGE You do not have enough gold to place a bounty. 
+   else 
+    SRC.NEWITEM 0eb0 
+    SRC.ACT.TYPE t_message 
+    SRC.ACT.AUTHOR <SRC.NAME> 
+    SRC.ACT.BODY.0 1000
+    SRC.ACT.LINK <SRC.FINDID(i_bounty_deed).LINK> 
+    SRC.ACT.NAME <SRC.FINDID(i_bounty_deed).LINK.NAME> 
+    SRC.ACT.CONT <LINK.UID> 
+    SRC.FINDID(i_bounty_deed).REMOVE 
+    SRC.consumebank 1000 i_gold 
+    SRC.UPDATE
+   endif 
+  ELSE
+    SRC.SYSMESSAGE Check the bounty board for outstanding bounties.
+  ENDIF  
+  TAG.BOUNTYNO=<eval <TAG.BOUNTYNO>+1>
+ ELSE                                     // reset the counter for next person
+  TAG.BOUNTYNO=0
+  TRIGGER @DCLICK
+ ENDIF
+ENDIF
+RETURN 1
+
+[FUNCTION consumebank]  //Thanks to Amlaruil for this!
+act=<SRC.FINDLAYER(layer_bankbox).uid> 
+act.layer=layer_pack 
+act.type=t_container 
+act.equip 
+src.consume <args> 
+act.layer=layer_bankbox 
+act.type=t_eq_bank_box 
+act.equip

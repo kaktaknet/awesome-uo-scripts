@@ -1,0 +1,235 @@
+///////////////////////////////////////////////////////////
+// Wertestein.scp
+///////////////////////////////////////////////////////////
+//
+// Statsaendern fuer Spieler, auf Shards wo eine
+// Statscap am laufen ist.
+//
+// ACHTUNG !! Die copyright Hinweise duerfen NICHT
+// geaendert oder entfernt werden. Alle Eintraege die
+// VDHT enthalten, muessen drinne bleiben, da sonst dieses
+// File NICHT benutzt werden darf.
+//
+//
+// (c) by VDHT       www.vdht.de      01.10.01 19:15
+//
+///////////////////////////////////////////////////////////
+
+[ITEMDEF i_wertestein]
+// Stats Stein^^
+DEFNAME=i_wertestein
+ID=i_guildstone
+NAME=Statwerte aendern
+TYPE=t_normal
+
+CATEGORY=Zubehoer
+SUBSECTION=Statwerte
+DESCRIPTION=Werteaendern fuer Player
+
+ON=@CREATE
+TIMER=-1 
+NAME=Stein des Anstosses.
+ATTR=010 
+
+
+ON=@Dclick
+SRC.flagcheck
+SRC.DIALOG d_wertestein
+RETURN 1
+
+
+[DIALOG d_wertestein]
+//-- (c) by VDHT             www.vdht.de
+100,100
+button 15 310 2445 2445 1 0 1 
+resizepic 0 0 3600 300 350 
+noclose
+PAGE 0
+button 250 310 4021 4022 1 0 0
+text 15 310 990 0 
+text 50 15 1400 1
+text 15 140 1209 2 
+gumppic 100 140 2444
+text 110 140 1318 3
+button 180 140 208 209 1 0 2 
+button 210 140 208 209 1 0 7
+button 240 140 208 209 1 0 8
+text 15 160 1209 4
+gumppic 100 160 2444
+text 110 160 1318 5
+button 180 160 208 209 1 0 3
+button 210 160 208 209 1 0 9
+button 240 160 208 209 1 0 10
+text 15 180 1209 6
+gumppic 100 180 2444
+text 110 180 1318 7
+button 180 180 208 209 1 0 4
+button 210 180 208 209 1 0 11
+button 240 180 208 209 1 0 12
+text 15 200 1209 8
+gumppic 100 200 2444
+text 110 200 1318 9
+button 180 200 208 209 1 0 5
+text 15 220 1209 10
+gumppic 100 220 2444
+text 110 220 1318 11
+button 180 220 208 209 1 0 6
+text 180 120 19 12
+text 15 40 55 13
+text 15 60 55 14
+text 15 80 55 15
+text 15 250 55 16
+text 15 270 55 17
+
+[DIALOG d_wertestein TEXT]
+v1.0 by vdht
+Hail <src.sex Lord/Lady> <src.name>
+Staerke: 
+<src.str>
+Intelligenz: 
+<src.int>
+Gewandheit:
+<src.dex>
+Kills:
+<SRC.KILLS>
+Verwirrt:
+<src.var.HALLU>
+-5 -10 -15
+Hier koennt Ihr Eure Werte senken.
+Geht mit Bedacht vor, Ihr koennt
+es nicht rueckgaengig machen.
+1 Kill loeschen kostet 5000gp
+Halluzination aufheben 3000gp
+
+[DIALOG d_wertestein BUTTON]
+ONBUTTON=1
+WEBLINK http:\\www.vdht.de
+ONBUTTON=2
+src.str=<src.str>+(-5)
+sound=0f7
+if <src.str> <= 1
+  src.str=(<src.str> = 1)
+  if <src.str> = 0
+    src.str=(<src.str> + 1)
+  endif
+ENDIF
+ONBUTTON=3
+src.int=<src.int>+(-5)
+sound=0f7
+if <src.int> <= 1
+  src.int=(<src.int> = 1)
+  if <src.int> = 0
+    src.int=(<src.int> + 1)
+  endif
+ENDIF
+ONBUTTON=4
+src.dex=<src.dex>+(-5)
+sound=0f7
+if <src.dex> <= 1
+  src.dex=(<src.dex> = 1)
+  if <src.dex> = 0
+    src.dex=(<src.dex> + 1)
+  endif
+ENDIF
+ONBUTTON=5
+if <src.kills> >= 1
+  if <src.restest 5000 i_gold>
+    src.consume 5000 i_gold
+    src.kills=<src.kills> + (-1)
+    src.emote seufzt erleichtert auf
+    SOUND=024d
+  ELSE
+    src.sysmessage Leider habt Ihr nicht genug Gold <src.sex Sire/Lady>
+    sound=0f8
+  ENDIF
+else
+  src.sysmessage Ihr seid ein unbescholtener Buerger.
+endif
+ONBUTTON=6
+if (<SRC.tag.HALLU> = 1)
+  if <src.restest 3000 i_gold>
+    src.consume 3000 i_gold
+    src.flags=<src.flags>&~0400000
+    sound=0fb
+    SRC.Spelleffect 25,100.0
+  ELSE
+    src.sysmessage Leider habt Ihr nicht genug Gold <src.sex Sire/Lady>
+    RETURN 0
+  ENDIF
+ELSE
+  src.sysmessage Ihr drueckt vergeblich den Knopf.
+endif
+ONBUTTON=7
+src.str=<src.str>+(-10)
+sound=0f7
+if <src.str> <= 1
+  src.str=(<src.str> = 1)
+  if <src.str> = 0
+    src.str=(<src.str> + 1)
+  endif
+ENDIF
+ONBUTTON=8
+src.str=<src.str>+(-15)
+sound=0f7
+if <src.str> <= 1
+  src.str=(<src.str> = 1)
+  if <src.str> = 0
+    src.str=(<src.str> + 1)
+  endif
+ENDIF
+ONBUTTON=9
+src.int=<src.int>+(-10)
+sound=0f7
+if <src.int> <= 1
+  src.int=(<src.int> = 1)
+  if <src.int> = 0
+    src.int=(<src.int> + 1)
+  endif
+ENDIF
+ONBUTTON=10
+src.int=<src.int>+(-15)
+sound=0f7
+if <src.int> <= 1
+  src.int=(<src.int> = 1)
+  if <src.int> = 0
+    src.int=(<src.int> + 1)
+  endif
+ENDIF
+ONBUTTON=11
+src.dex=<src.dex>+(-10)
+sound=0f7
+if <src.dex> <= 1
+  src.dex=(<src.dex> = 1)
+  if <src.dex> = 0
+    src.dex=(<src.dex> + 1)
+  endif
+ENDIF
+ONBUTTON=12
+src.dex=<src.dex>+(-15)
+sound=0f7
+if <src.dex> <= 1
+  src.dex=(<src.dex> = 1)
+  if <src.dex> = 0
+    src.dex=(<src.dex> + 1)
+  endif
+ENDIF
+
+[ITEMDEF i_editing_mem]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Editing Memory
+
+[FUNCTION flagcheck]
+//newitem=i_editing_mem
+SRC.tag.HALLU=0
+IF (<SRC.FLAGS>&00400000)
+  SRC.TAG.HALLU=1
+ENDIF
+if (<src.tag.HALLU>==1)
+  src.var.HALLU=Ja
+ENDIF
+if (<src.tag.HALLU>==0)
+  src.var.HALLU=Nein
+ENDIF
+
+[EOF]

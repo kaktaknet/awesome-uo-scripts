@@ -1,0 +1,148 @@
+//Movable Forge
+//Scripted by.: Dev Volcano (AD_Volcano@hotmail.com)
+
+//Forge Scripts (Deed)
+
+[Itemdef i_deed_forge_movable]
+ID=i_deed
+Name=Movable Forge Deed
+
+On=@Create
+Attr=04
+Color=065
+More1=i_forge_movable_nd
+
+//Forge Scripts (Not Deployed)
+
+[Itemdef i_forge_movable_nd]
+ID=i_lantern
+Name=Movable Forge
+
+Type=t_script
+
+On=@Create
+Attr=04
+Color=065
+
+On=@Click
+If (<Link>==04FFFFFFF)
+Else
+Message <Link.Name>'s Forge
+Message [Not Deployed]
+Return 1
+
+On=@DClick
+If (<Link>==04FFFFFFF)
+Link=<Src.UID>
+Src.Sysmessage This is now your Movable Forge !
+Return 1
+Else
+If (<Link>==<Src.UID>)
+Src.Newitem i_forge_movable_d
+Src.Act.P=<Src.P>
+Src.Act.Link=<Src.UID>
+Remove
+Return 1
+Else
+Src.Sysmessage This is not your Movable Forge.
+Return 1
+
+//Forge Scripts (Deployed)
+
+[Itemdef i_forge_movable_d]
+ID=i_forge
+Name=Movable Forge
+
+On=@Create
+Attr=010
+Color=065
+
+On=@Click
+Message <Link.Name>'s Forge
+Message [Deployed]
+Return 1
+
+On=@DClick
+If (<Link>==<Src.UID>)
+Src.Newitem i_forge_movable_nd
+Src.Act.Bounce
+Src.Act.Link=<Src.UID>
+Remove
+Return 1
+Else
+Src.Sysmessage This is not your Movable Forge.
+Return 1
+
+//Anvil Scripts (Deed)
+
+[Itemdef i_deed_anvil_movable]
+ID=i_deed
+Name=Movable Anvil Deed
+
+On=@Create
+Attr=04
+Color=065
+More1=i_anvil_movable_nd
+
+//Anvil Scripts (Not Deployed)
+
+[Itemdef i_anvil_movable_nd]
+ID=i_lantern
+Name=Movable Anvil
+
+Type=t_script
+
+On=@Create
+Attr=04
+Color=065
+
+On=@Click
+If (<Link>==04FFFFFFF)
+Else
+Message <Link.Name>'s Anvil
+Message [Not Deployed]
+Return 1
+
+On=@DClick
+If (<Link>==04FFFFFFF)
+Link=<Src.UID>
+Src.Sysmessage This is now your Movable Anvil !
+Return 1
+Else
+If (<Link>==<Src.UID>)
+Src.Newitem i_anvil_movable_d
+Src.Act.P=<Src.P>
+Src.Act.Link=<Src.UID>
+Remove
+Return 1
+Else
+Src.Sysmessage This is not your Movable Anvil.
+Return 1
+
+//Anvil Scripts (Deployed)
+
+[Itemdef i_anvil_movable_d]
+ID=i_anvil
+Name=Movable Anvil
+
+On=@Create
+Attr=010
+Color=065
+
+On=@Click
+Message <Link.Name>'s Anvil
+Message [Deployed]
+Return 1
+
+On=@DClick
+If (<Link>==<Src.UID>)
+Src.Newitem i_anvil_movable_nd
+Src.Act.Bounce
+Src.Act.Link=<Src.UID>
+Remove
+Return 1
+Else
+Src.Sysmessage This is not your Movable Anvil.
+Return 1
+
+[EoF]

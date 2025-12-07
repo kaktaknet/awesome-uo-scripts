@@ -1,0 +1,494 @@
+[COMMENT header]
+Name: Useful
+Version: 1.0
+Author: Swindler
+Sphere Version: 55i
+Last Updated: 11/24/2003
+
+Feel free to contact me any time with questions regarding any of my scripts.
+You can find me in the official #sphereserver IRC channel on the irc.sphereserver.net network.
+Please contact me with descriptions of any problems you may find, and I will more than likely repair them as soon as possible.
+
+//".xcontents <args>" - to be used on a container, to perform <args> on every item in it doesn't recurse containers
+
+// blink.scp
+// decorate.scp
+// fellowship.scp
+[CHARDEF c_useful_dummy]
+ID=c_man_invisible
+NAME=_
+
+ON=@Create
+	FLAGS statf_invisible
+
+ON=@Click
+	RETURN 1
+
+ON=@Death
+	HITS <STR>
+	RETURN 1
+
+// blink.scp
+// fellowship.scp
+[FUNCTION useful_checkDir]
+IF 0<TAG.maxSteps> && (0<TAG.steps> == 0<TAG.maxSteps>)
+	RETURN 0
+ENDIF
+
+HOME <P>
+MOVE <ARGS>
+TAG.X <P.X>
+TAG.Y <P.Y>
+P <HOME>
+WALK <ARGS>
+
+IF (<P.X> == <TAG.X>) && (<P.Y> == <TAG.Y>)
+	TAG.steps 0<TAG.steps> + 1
+ENDIF
+
+P <HOME>
+
+// colorRobe.scp
+// fellowship.scp
+[FUNCTION useful_dupeLayer]
+IF <FINDLAYER.<ARGS>>
+	NEWITEM		<FINDLAYER.<ARGS>.BASEID>
+	ACT.DISPID	<FINDLAYER.<ARGS>.DISPID>
+	ACT.COLOR	<FINDLAYER.<ARGS>.COLOR>
+	ACT.CONT	<VAR.uId>
+ENDIF
+
+[FUNCTION contents]
+useful_contents <ARGS>
+
+// rest.scp
+[FUNCTION useful_contents]
+IF <RESCOUNT> > 1
+	VAR.useful_contents_function <ARGS>
+	useful_contentsR <RESCOUNT>
+ENDIF
+
+[FUNCTION useful_contentsR]
+IF <ARGN> >= 200
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 1>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 2>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 3>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 4>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 5>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 6>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 7>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 8>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 9>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 10>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 11>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 12>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 13>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 14>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 15>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 16>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 17>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 18>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 19>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 20>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 21>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 22>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 23>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 24>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 25>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 26>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 27>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 28>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 29>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 30>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 31>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 32>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 33>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 34>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 35>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 36>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 37>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 38>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 39>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 40>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 41>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 42>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 43>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 44>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 45>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 46>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 47>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 48>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 49>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 50>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 51>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 52>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 53>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 54>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 55>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 56>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 57>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 58>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 59>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 60>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 61>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 62>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 63>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 64>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 65>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 66>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 67>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 68>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 69>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 70>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 71>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 72>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 73>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 74>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 75>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 76>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 77>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 78>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 79>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 80>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 81>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 82>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 83>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 84>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 85>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 86>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 87>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 88>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 89>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 90>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 91>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 92>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 93>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 94>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 95>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 96>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 97>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 98>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 99>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 100>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 101>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 102>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 103>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 104>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 105>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 106>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 107>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 108>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 109>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 110>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 111>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 112>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 113>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 114>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 115>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 116>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 117>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 118>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 119>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 120>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 121>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 122>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 123>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 124>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 125>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 126>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 127>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 128>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 129>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 130>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 131>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 132>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 133>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 134>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 135>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 136>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 137>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 138>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 139>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 140>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 141>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 142>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 143>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 144>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 145>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 146>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 147>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 148>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 149>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 150>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 151>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 152>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 153>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 154>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 155>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 156>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 157>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 158>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 159>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 160>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 161>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 162>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 163>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 164>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 165>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 166>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 167>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 168>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 169>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 170>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 171>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 172>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 173>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 174>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 175>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 176>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 177>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 178>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 179>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 180>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 181>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 182>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 183>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 184>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 185>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 186>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 187>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 188>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 189>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 190>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 191>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 192>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 193>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 194>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 195>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 196>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 197>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 198>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 199>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 200>.<VAR.useful_contents_function>
+	useful_contentsR <ARGN> +- 200
+	RETURN 0
+ELIF <ARGN> >= 100
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 1>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 2>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 3>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 4>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 5>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 6>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 7>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 8>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 9>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 10>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 11>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 12>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 13>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 14>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 15>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 16>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 17>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 18>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 19>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 20>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 21>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 22>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 23>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 24>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 25>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 26>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 27>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 28>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 29>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 30>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 31>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 32>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 33>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 34>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 35>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 36>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 37>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 38>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 39>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 40>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 41>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 42>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 43>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 44>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 45>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 46>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 47>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 48>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 49>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 50>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 51>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 52>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 53>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 54>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 55>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 56>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 57>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 58>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 59>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 60>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 61>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 62>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 63>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 64>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 65>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 66>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 67>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 68>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 69>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 70>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 71>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 72>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 73>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 74>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 75>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 76>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 77>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 78>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 79>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 80>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 81>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 82>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 83>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 84>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 85>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 86>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 87>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 88>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 89>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 90>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 91>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 92>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 93>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 94>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 95>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 96>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 97>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 98>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 99>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 100>.<VAR.useful_contents_function>
+	useful_contentsR <ARGN> +- 100
+	RETURN 0
+ELIF <ARGN> >= 50
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 1>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 2>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 3>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 4>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 5>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 6>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 7>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 8>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 9>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 10>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 11>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 12>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 13>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 14>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 15>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 16>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 17>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 18>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 19>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 20>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 21>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 22>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 23>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 24>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 25>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 26>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 27>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 28>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 29>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 30>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 31>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 32>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 33>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 34>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 35>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 36>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 37>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 38>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 39>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 40>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 41>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 42>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 43>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 44>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 45>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 46>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 47>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 48>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 49>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 50>.<VAR.useful_contents_function>
+	useful_contentsR <ARGN> +- 50
+	RETURN 0
+ELIF <ARGN> >= 25
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 1>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 2>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 3>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 4>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 5>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 6>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 7>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 8>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 9>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 10>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 11>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 12>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 13>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 14>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 15>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 16>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 17>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 18>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 19>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 20>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 21>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 22>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 23>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 24>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 25>.<VAR.useful_contents_function>
+	useful_contentsR <ARGN> +- 25
+	RETURN 0
+ELIF <ARGN> >= 12
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 1>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 2>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 3>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 4>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 5>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 6>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 7>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 8>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 9>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 10>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 11>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 12>.<VAR.useful_contents_function>
+	useful_contentsR <ARGN> +- 12
+	RETURN 0
+ELIF <ARGN> >= 6
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 1>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 2>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 3>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 4>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 5>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 6>.<VAR.useful_contents_function>
+	useful_contentsR <ARGN> +- 6
+	RETURN 0
+ELIF <ARGN> >= 3
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 1>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 2>.<VAR.useful_contents_function>
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 3>.<VAR.useful_contents_function>
+	useful_contentsR <ARGN> +- 3
+	RETURN 0
+ELIF <ARGN> >= 1
+        TRYP 0 FINDCONT.<EVAL <ARGN> - 1>.<VAR.useful_contents_function>
+	useful_contentsR <ARGN> +- 1
+	RETURN 0
+ENDIF
+RETURN 1

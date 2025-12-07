@@ -1,0 +1,196 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////HOLIDAY ITEMS V 1.0////////////////////////////////////////////////////////////
+//////////////////////////Special Thanks to Jamie(ScriptSharing.org) For Cannonball Anim #/////////////////////////////////
+//////////////////////////Special Thanks to Strider(ScriptSharing.org) For Tech support with holiday card messaging////////
+//////////////////////////Special Thanks to Princess(Sphereserver.com) For throwable ore script (modified into snowball)///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[ITEMDEF i_Christmas_Candy]
+NAME=Peppermint Stick
+ID=i_bone
+TYPE=T_Food
+VALUE={1 2}
+WEIGHT=1
+DESCRIPTION=Peppermint Stick
+
+ON=@CREATE
+COLOR=1800
+
+[ITEMDEF i_Christmas_Dinner]
+NAME=Christmas Dinner
+ID=i_plate_food
+TYPE=T_Food
+VALUE={5 10}
+WEIGHT=1
+DESCRIPTION=Christmas Dinner
+
+[ITEMDEF i_Christmas_Ring]
+NAME=Diamond Ring
+ID=i_ring_gold
+TYPE=t_jewelry
+WEIGHT=1
+DESCRIPTION=Diamond Ring
+
+[ITEMDEF i_Christmas_Cake]
+NAME=Fruitcake
+ID=i_cake
+TYPE=T_Food
+Value{3 5}
+WEIGHT=3
+DESCRIPTION=Fruitcake
+
+ON=@CREATE
+COLOR=1776
+
+[ITEMDEF i_Christmas_Pig]
+NAME=Holiday Ham
+ID=i_pig_roast
+TYPE=T_Food
+WEIGHT=10
+DESCRIPTION=Holiday Ham
+
+ON=@CREATE
+COLOR=2042
+
+[ITEMDEF i_Christmas_Cookie]
+NAME=Christmas Cookies
+ID=i_pan_cookies
+TYPE=T_Food
+WEIGHT=3
+DESCRIPTION=Christmas Cookies
+
+ON=@Create
+COLOR=2079
+
+[ITEMDEF i_Christmas_Book]
+NAME=Christmas Carol
+ID=i_book_open
+TYPE=T_Normal
+WEIGHT=2
+DESCRIPTION=Christmas Carol
+
+ON=@CREATE
+COLOR=2047
+
+ON=@DCLICK
+SRC.MESSAGE Merry Christmas To All, And To All A Good Night
+
+[ITEMDEF i_Christmas_Plant]
+NAME=Poinsettia
+ID=i_potted_plant_sm
+TYPE=T_Normal
+WEIGHT=2
+DESCRIPTION=Poinsettia
+
+ON=@CREATE
+COLOR=2139
+
+[ITEMDEF i_Christmas_Pile]
+NAME=Pile Of Snow
+ID=i_horse_dung
+TYPE=T_Normal
+WEIGHT=5
+DESCRIPTION=Pile Of Snow
+
+ON=@CREATE
+COLOR=1153
+
+ON=@DCLICK
+SRC.NEWITEM=i_Snow_ball 
+SRC.ACT.BOUNCE
+SRC.MESSAGE You Scoop Some Of The Snow Up To Make A Snowball
+
+
+[ITEMDEF i_Snow_Ball]
+NAME=Snowball
+ID=i_cannon_ball
+WEIGHT=1
+DESCRIPTION=Snowball
+DAM=1,2
+TYPE=t_normal 
+SKILL=Fencing 00.0
+REQSTR=1
+TWOHANDS=N 
+
+ON=@Create
+HITPOINTS={1 2} 
+COLOR=1153
+
+ON=@DCLICK 
+IF (<SRC.Fencing> > 00.0) 
+TARGET Who do you want to throw the snowball at?
+RETURN 1 
+ELSEIF (<SRC.Fencing> < 00.0) 
+SRC.SYSMESSAGE You don't want to throw the snowball at anyone. 
+RETURN 1 
+ENDIF 
+ENDIF 
+
+ON=@TARGON_CHAR 
+SRC.ANIM 11 
+SOUND 0145 
+SRC.TARG.EFFECT 0,0e73,15,0,0 
+SRC.TARG.HITPOINTS=<SRC.TARG.HITPOINTS>+(-1) 
+SRC.CONSUME 1 i_Snow_Ball
+SRC.SYSMESSAGE You have thrown a snowball at <SRC.TARG.NAME>. 
+SRC.TARG.SYSMESSAGE <src.name> threw an snowball at you. 
+RETURN 1 
+
+ON=@TARGON_SELF 
+SRC.SYSMESSAGE you look the snowball over, it appears to be perfectly formed. 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE Vandalism is a crime!? 
+RETURN 1 
+
+ON=@TARGON_GROUND 
+RETURN 1 
+
+[ITEMDEF i_Christmas_Wine]
+NAME=Glass Of Champagne
+ID=i_goblet
+WEIGHT=1
+TYPE=T_Drink
+DESCRIPTION=Glass Of Champagne
+
+[ITEMDEF i_Christmas_Cider]
+NAME=Glass Of Cider
+ID=i_goblet_2
+WEIGHT=1
+TYPE=T_Drink
+DESCRIPTION=Glass Of Cider
+
+[ITEMDEF i_Christmas_Ale]
+NAME=Glass Of Holiday Ale
+ID=i_goblet_3
+WEIGHT=1
+TYPE=T_Drink
+DESCRIPTION=Glass Of Holiday Ale
+
+[ITEMDEF i_Christmas_GMWine]
+NAME=Bottle Of Holiday Wine
+ID=i_bottle_wine
+WEIGHT=3
+TYPE=T_Booze
+DESCRIPTION=Bottle Of Holiday Wine
+
+[ITEMDEF i_Christmas_Card]
+NAME=Merry Christmas Phantom Realms!
+ID=i_deed
+Weight=1
+Type=T_Normal
+
+ON=@CREATE
+COLOR=1950
+
+ON=@DCLICK 
+DORAND 4 
+SRC.MESSAGE GM Lloyd wishes you a Merry Christmas! 
+SRC.MESSAGE GM Blink Wishes you a Merry Christmas! 
+SRC.MESSAGE GM Dragorail wishes you a Merry Christmas! 
+SRC.MESSAGE GM Pandora wishes you a Merry Christmas! 
+ENDDO 
+RETURN 1
+
+
+

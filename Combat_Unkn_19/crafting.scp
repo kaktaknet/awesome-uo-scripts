@@ -1,0 +1,2098 @@
+// Smithing system v1.0
+// By Admin Iluvatar of Middle Earth Shard => www.meuo.net 
+// aka Crius of Legends of Albion => shard.puregamers.net/news.php
+// Feel free to modify anything below, as long as this header stays ;)
+
+[COMMENT smithing_system]
+The main purpose of this script is to allow admins to easily add new ores to the game. One thing
+I hated about ores was having to script each and every single piece of equipement in every single
+ore. It took ages to do it, even with special programs. 
+
+This script is also destined to the public
+and I have thus made it as customisable as possible for the newbie admin. However if you are 
+experienced with Sphere, feel free to remove some of the customisability as to make the script 
+less resource intensive. While I did my best to make it run as quickly as possible without using
+too many resources there are a couple of things you can do to make it go quicker once you figured 
+out your prefered settings:
+- find all blacksmith_* defnames and replace them with your desired number. A simple search and
+	replace will do.
+- if an option uses a doswitch, you can remove the doswitch and the other options you don't need
+
+Here are the instructions to get the script to work:
+- Script your ores and make them mineable
+- Script the ingots
+- Add the default armour and weapon scripts
+- If you don't have MySQL, get and install it. If your not sure where, read here: http://sphere.uozone.net/index.php?title=Mysql
+- Open sphere.ini and enter all the details for your database
+- Once you installed it, type in .craftini ingame. ONLY TYPE THIS IN ONCE!!
+- Type in .smithadmin (plevel 7 command). The first page shows you what is inside your ores database. If there is
+	nothing, then ignore anyting that is on there. Go directly to the second page and enter all the details
+	for your ore then press ok. If you don't want any events associated with your items, put in "none" (without
+	the "") as an event.
+- And there you go! Repeat the previous step for each ore you want to make craftable for smiths.
+
+If you want to add ores manually via commands or sql queries, I've left and example on how it can be done with the
+.crafttest command below.
+
+Here's an explanation of all the columns in the table:
+name		// Name of the ore, eg iron
+colour		// The colour of the items made from this ore. This can be different from the ore colour if you want the items to have a different colour
+skill		// The base skill difficulty of ore. This value is added to an item's SKILLMAKE difficulty when calculating total difficulty
+weight		// The additional weight given to items. The total wieght is the item's WEIGHT + this value.
+hp_ar		// The hitpoints all armours have when created. If you want an item to have more HP than others, just add it after @CREATE on the default item.
+hp_wep		// Same as hp_ar but for weapons
+ac		// Extra armor given to an armor item. This is added as MODAR. Total armour is calulated in Sphere as (AC*HITS/MAXHITS + MODAR)
+wep_low		// Adds damage to the weapon's min damage
+wep_high	// Adds damage to the weapon's max damage
+req_str_ar	// Modification to required strength to equip an armour item. You can fine-tune this by changing the default item's REQSTR.
+req_str_wep	// As above for weapons.
+event_ar	// Event you want to add to all armours made of this metal. Insert the word "none" (without "") if you don't want to add an event.
+event_wep	// As above but for all weapons.
+
+Known issues:
+- The item's full wieght (wieght + ore weight modifier) doesn't show on the status gump, only the default weight does. Since most shards don't mind wiehgt that much I left this out.
+- AR doesn't decrease as the item's hitpoints decrease due to the way Sphere calulates MODAR
+
+TODO:
+- Make a better admin menu
+- Add options to change table data from ingame
+- Function to change existing items if the tables are changed
+- Make item's modar decrease with damage recieved and increase with repairs
+
+History:
+10-10-05:	- Test release of v1.0
+
+[FUNCTION craftini]
+DB.CONNECT
+IF <DB.CONNECTED>
+	DB.EXECUTE "CREATE TABLE ores(id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(32), colour INT UNSIGNED NOT NULL, skill INT UNSIGNED NOT NULL, weight INT UNSIGNED NOT NULL, hp_ar INT UNSIGNED NOT NULL, hp_wep INT UNSIGNED NOT NULL, ac INT UNSIGNED NOT NULL, wep_low INT UNSIGNED NOT NULL, wep_high INT UNSIGNED NOT NULL, req_str_ar INT UNSIGNED NOT NULL, req_str_wep INT UNSIGNED NOT NULL, event_ar VARCHAR(64), event_wep VARCHAR(64))"
+	SYSMESSAGE Tables successfully created.
+ELSE
+	SYSMESSAGE You are not connected to the database, please make sure MySQL is running and your sphere.ini is set up correctly.
+ENDIF
+
+// If you don't want an event for the ore, place "none" as event
+[FUNCTION crafttest]
+DB.EXECUTE "INSERT INTO ores VALUES (NULL, 'iron', 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 'none', 'none')"
+DB.EXECUTE "INSERT INTO ores VALUES (NULL, 'silver', 110, 120, 130, 140, 150, 160, 170, 180, 190, 1100, 'none', 'none')"
+
+//##################################################################################################################################################################
+//##################################################################################################################################################################
+[DEFNAME custom_crafting]
+blacksmith_min_skill_difference		100	// skill at which a player can start using an ingot. eg, a smith with 60.0 can attempt to use an ingot with 80.0 difficulty if this is set to 200
+blacksmith_makers_mark			1	// 0=off, 1=on Leave the crafter's UID on the item as TAG.MAKER. It's up to you to script whatever skill or even will use this TAG.
+blacksmith_enable_last_make		1	// 0=off, 1=on Enable the "Make Last" button.
+
+// Repair options
+blacksmith_repair_ingot_amt		5	// Amount of hitpoints one ingot repairs.
+
+// Gump options
+blacksmith_gump_bg			1	// Changes the background. Values from 0 - 15
+blacksmith_gump_transparent		0	// 0=off, 1=on Turn the bg transparency on or off. Only for clients > 3.0.0. You might have to change the size of the checkertrans to fit the background.
+blacksmith_gump_button			19	// Changes the buttons. Values from 0 - 26
+blacksmith_gump_text_color		1152	// Colour of the text you want
+blacksmith_gump_button_last		21	// Changes the "Make Last" button
+
+// Creation defnames
+blacksmith_success_system		0	// 0=Auto, 1=Custom, 2=Sphere default. If the player's skill is more than the difficulty to craft the item, they always succeed
+blacksmith_success_chance		50	// %chance the player has to create the item if successful. 100 means success is garenteed if the player has enough skill. Only used if blacksmith_success_method is 1.
+blacksmith_success_pskill		1	// 0=no 1=yes. Does the player's skill effect the blacksmith_success_chance?
+blacksmith_success_fraction		100	// % of player's skill taken into consideration when calculating blacksmith_success_chance. The chance to succeed is <blacksmith_success_chance>+((<Player Skill>*blacksmith_success_fraction%)-<Item Difficulty>)
+
+// Quality effects
+blacksmith_quality_system		1		// Use the quality system? 0=no, 1=yes. If no you can ignore all the quality settings below
+blacksmith_quality_skill		armslore	// Skill that is used when checking quality
+blacksmith_quality_score_system		1		// 0 => Player's quality score = (Player's smithing skill) // 1 => Score = 1/2*(smithing skill + blacksmith_quality_skill) // 2=> Score= (blacksmith_quality_skill)
+blacksmith_quality_score_random		1		// 1 => Randomizes the player's quality score
+blacksmith_quality_skill_poor		20		// The amount a player's quality score has to be under the normal to be considered "poor quality"
+blacksmith_quality_skill_good		20		// The amount a player's quality score has to be above the normal to be considered "good quality"
+blacksmith_quality_skill_excellent	40		// as above but for "excellent quality"
+blacksmith_quality_skill_exceptional	60		// as above but for "exceptional quality"
+blacksmith_quality_ar_poor		50		// % of the item's normal AR it get if of poor quality 
+blacksmith_quality_ar_good		110		// % of the item's normal AR it get if of good quality 
+blacksmith_quality_ar_excellent		120		// % of the item's normal AR it get if of excellent quality 
+blacksmith_quality_ar_exceptional	150		// % of the item's normal AR it get if of exceptional quality 
+blacksmith_quality_hp_poor		50		// % of the item's normal HP it get if of poor quality
+blacksmith_quality_hp_good		110		// % of the item's normal HP it get if of good quality
+blacksmith_quality_hp_excellent		120		// % of the item's normal HP it get if of excellent quality
+blacksmith_quality_hp_exceptional	150		// % of the item's normal HP it get if of exceptional quality
+blacksmith_quality_dmg_poor		50		// % of the item's normal damage it get if of poor quality
+blacksmith_quality_dmg_good		110		// % of the item's normal damage it get if of good quality
+blacksmith_quality_dmg_excellent	120		// % of the item's normal damage it get if of excellent quality
+blacksmith_quality_dmg_exceptional	130		// % of the item's normal damage it get if of exceptional quality
+blacksmith_quality_names		1		// Use quality names?
+blacksmith_quality_names_system		0		// 0=add quality to name (eg: a poor quality sword), 1= add quality as a [tag] to name (eg: a sword [poor quality]). Only applies if you are using a client that doesn't support tooltips. Tooltips show "Quality: <blacksmith_quality_names_poor>" under the name.
+blacksmith_quality_names_poor		"poor"
+blacksmith_quality_names_good		"good"
+blacksmith_quality_names_excellent	"excellent"
+blacksmith_quality_names_exceptional	"exceptional"
+
+// Consumtion defnames
+blacksmith_consume_resource		1	// 0=no 1=yes: Are resources lost if a player fails to craft the item?
+blacksmith_consume_fraction		50	// % of resources lost on a failed crafting attempt. Set this to 100 if you want all of it to be consumed, or 0 if none. blacksmith_fail_consume_resource must be 1 for this to work
+blacksmith_consume_random		1	// 0=no 1=yes: Consume resources randomly? This applies to both failes and succeeded crafting. blacksmith_consume_fraction is taken into condideration
+
+// Item difficulty
+blacksmith_hardest_plate		800	// skill of the hardest default plate item. If you change this remember to change the corresponding dialog difficulties
+blacksmith_hardest_chain		550
+blacksmith_hardest_ring			450
+blacksmith_hardest_helmet		650
+blacksmith_hardest_shield		500
+blacksmith_hardest_axe			650
+blacksmith_hardest_fence		700
+blacksmith_hardest_mace			650
+blacksmith_hardest_polearm		750
+blacksmith_hardest_sword		750
+
+// Timer related defnames
+blacksmith_timer			8	// Number of seconds it takes to craft an item. This also acts as the minimum time in the <blacksmith_timer_difficulty_pskill> calculation.
+blacksmith_timer_random			1	// 0=off 1=on Do you want a random timer when crafting an item? The random time will be between <blacksmith_timer>/2 and <blacksmith_timer>. Good for simple anti-macro
+blacksmith_timer_difficulty		0	// 0=no 1=yes Base timer on item difficulty? Replaces <blacksmith_timer> when calculating time.
+blacksmith_timer_difficulty_fraction	50	// Fraction of item difficulty timer, the higher this is the faster items will be made. Only use if blacksmith_timer_difficulty is on. At 50, and item of 100.0 skillmake will take 20 seconds to make. Minimum is 1 for no effect.
+blacksmith_timer_difficulty_pskill	1	// 0=no 1=yes Does the player's skill take part of blacksmith_timer_difficulty_fraction? If yes, then if the player's skill is higher than the SKILLMAKE, the to make the item will be reduced by the difference in his skill and skillmake. The minimum time is always = <blacksmith_timer>
+
+// Message defnames
+blacksmith_sysmsg_color			100	// Sysmessage colour
+blacksmith_sysmsg_font			1	// Sysmessage font (1 - 9)
+blacksmith_sysmsg_event_color		100	// Sysmessage colour for events
+blacksmith_sysmsg_event_font		1
+blacksmith_msg_success			"You successfully create the item and put it in your pack."
+blacksmith_msg_no_ingots		"You don't have enough ingots."
+blacksmith_msg_no_repair		"This item does not need repairs."
+blacksmith_msg_repaired			"You have repaired the item."
+blacksmith_msg_fail			"You fail to craft the item."
+blacksmith_msg_ruin_material		"and ruin some ingots." // this message appears just after blacksmith_msg_fail, so you can continue the message here
+blacksmith_msg_too_weak			"You are too weak to equip this item."
+blacksmith_msg_too_heavy		"It is too heavy."
+blacksmith_msg_not_skilled		"You are not skilled enough to use this metal."
+blacksmith_msg_near_anvil		"You need to be near an anvil and forge to use this."
+blacksmith_msg_backpack			"The ingots have to be in your backpack."
+blacksmith_msg_busy			"You are already busy crafting."
+blacksmith_msg_mounted			"You cannot use this while mounted."
+
+//##################################################################################################################################################################
+//##################################################################################################################################################################
+[PLEVEL 7]
+smithadmin
+
+[FUNCTION smithadmin]
+DIALOGCLOSE d_smith_admin
+DIALOG d_smith_admin 1
+
+[ITEMDEF 013e3]
+DEFNAME=i_hammer_smith
+WEIGHT=4
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+RESOURCES=6 i_ingot_iron
+SKILLMAKE=BLACKSMITHING 10.0
+DAM=4,16
+//SPEED=60
+SKILL=Mace Fighting
+REQSTR=30
+TWOHANDS=N
+CATEGORY=Provisions - Weapons
+SUBSECTION=Maces & Hammers
+DESCRIPTION=Smith's Hammer
+DUPELIST=013e4
+
+ON=@Create
+HITPOINTS={31 60}
+
+ON=@DCLICK
+IF <SRC.STR> < <SERV.ITEMDEF.<DEFNAME>.REQSTR> 
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_too_weak>
+	RETURN 1
+ELSEIF <SRC.ISMOUNTED>
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_mounted>
+	RETURN 1
+ELSEIF <SRC.FINDID i_craft>
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_busy>
+	RETURN 1
+ELSE
+	EQUIP
+	TARGET Select the ingots you wish to work with.
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE You cannot use that.
+RETURN 1
+
+ON=@TARGON_ITEM
+DB.QUERY "SELECT skill FROM ores WHERE name LIKE '%<STRSUB 8 0 <SRC.TARG.DEFNAME>>%'"
+LOCAL.SKILL=<DB.ROW.skill>
+IF <SRC.TARG.CONT.LAYER> != layer_pack
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_backpack>
+	RETURN 1
+ELSEIF !<SRC.ISNEARTYPE t_anvil 1> && !<SRC.ISNEARTYPE t_forge 1>
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_near_anvil>
+	RETURN 1
+ELSEIF <SRC.TARG.TYPE> != t_ingot
+	IF !((<SRC.TARG.TYPE>==t_armor) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp ) || (<SRC.TARG.TYPE>==t_weapon_mace_staff ) || (<SRC.TARG.TYPE>==t_weapon_fence ) || (<SRC.TARG.TYPE>==t_weapon_mace_pick ) || (<SRC.TARG.TYPE>==t_weapon_axe ))
+		SRC.SYSMESSAGE You cannot use that.
+		RETURN 1
+	ELSEIF <SRC.TARG.MORE1l> >= <SRC.TARG.MORE1h>
+		SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_no_repair>
+		RETURN 1
+	ELSE
+		DB.QUERY "SELECT name FROM ores WHERE colour=<eval <SRC.TARG.COLOR>>"
+		LOCAL.NAME=<DB.ROW.0>
+		LOCAL.DAMAGE=<SRC.TARG.MORE1h> - <SRC.TARG.MORE1l>
+		LOCAL.R=<eval <LOCAL.DAMAGE>/<def.blacksmith_repair_ingot_amt>>
+		IF <LOCAL.R> < 1
+			LOCAL.R=1
+		ENDIF
+		IF !<SRC.RESTEST <eval <LOCAL.R>> i_ingot_<LOCAL.NAME>> // not enough resources to fix item
+			SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_no_ingots>
+			RETURN 1
+		ELSE
+			LOCAL.AMOUNT=0
+			FORCONT <SRC.FINDLAYER(layer_pack).UID> 1
+				IF <DEFNAME>==i_ingot_<LOCAL.NAME>
+					LOCAL.AMOUNT += <AMOUNT>
+				ENDIF
+			ENDFOR
+			LOCAL.AMOUNT *= <def.blacksmith_repair_ingot_amt> // amount of HP I can repair
+			IF <LOCAL.AMOUNT> >= <LOCAL.DAMAGE> // More HP I can repair than damage
+				LOCAL.AMOUNT=<LOCAL.DAMAGE>
+			ENDIF
+			SRC.TARG.MORE1l += <LOCAL.AMOUNT>
+			IF <SRC.TARG.MORE1l> > <SRC.TARG.MORE1h>
+				SRC.TARG.MORE1l=<SRC.TARG.MORE1h>
+			ENDIF
+			LOCAL.R=<LOCAL.AMOUNT>/<def.blacksmith_repair_ingot_amt>
+			IF <LOCAL.R> < 1
+				LOCAL.R=1
+			ENDIF
+			SRC.CONSUME <eval <LOCAL.R>> i_ingot_<LOCAL.NAME>
+			SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_repaired>
+			RETURN 1
+		ENDIF
+	ENDIF
+ELSEIF <eval <SRC.BLACKSMITHING>+<def.blacksmith_min_skill_difference>> < <eval <SRC.TARG.SKILLMAKE>+<local.skill>>
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_not_skilled> <eval <SRC.BLACKSMITHING>+<def.blacksmith_min_skill_difference>> vs <SRC.TARG.SKILLMAKE>+<eval <local.skill>>
+	RETURN 1
+ELSE
+	SRC.DIALOGCLOSE d_smith_player
+	SRC.DIALOG d_smith_player 1
+	SRC.CTAG.CRAFTING=<STRSUB 8 0 <SRC.TARG.DEFNAME>> <local.skill> // <metal name> <additional metal skill>
+ENDIF
+RETURN 1
+
+//##################################################################################################################################################################
+//##################################################################################################################################################################
+[FUNCTION f_smith_player_bg]
+DOSWITCH <def.blacksmith_gump_bg>
+	LOCAL.BG=2520
+	LOCAL.BG=2600
+	LOCAL.BG=2620
+	LOCAL.BG=3000
+	LOCAL.BG=3500
+	LOCAL.BG=3600
+	LOCAL.BG=5054
+	LOCAL.BG=5100
+	LOCAL.BG=5120
+	LOCAL.BG=9200
+	LOCAL.BG=9250
+	LOCAL.BG=9260
+	LOCAL.BG=9270
+	LOCAL.BG=9350
+	LOCAL.BG=9300
+	LOCAL.BG=83
+ENDDO
+
+[FUNCTION f_smith_player_button]
+DOSWITCH <def.blacksmith_gump_button>
+	LOCAL.BUTTONU=56
+	LOCAL.BUTTONU=22405
+	LOCAL.BUTTONU=11410
+	LOCAL.BUTTONU=11401
+	LOCAL.BUTTONU=10740
+	LOCAL.BUTTONU=10710
+	LOCAL.BUTTONU=10006
+	LOCAL.BUTTONU=9903
+	LOCAL.BUTTONU=9790
+	LOCAL.BUTTONU=9792
+	LOCAL.BUTTONU=9726
+	LOCAL.BUTTONU=9721
+	LOCAL.BUTTONU=9702
+	LOCAL.BUTTONU=5601
+	LOCAL.BUTTONU=5540
+	LOCAL.BUTTONU=5224
+	LOCAL.BUTTONU=4005
+	LOCAL.BUTTONU=2640
+	LOCAL.BUTTONU=2472
+	LOCAL.BUTTONU=2224
+	LOCAL.BUTTONU=2151
+	LOCAL.BUTTONU=2117
+	LOCAL.BUTTONU=2103
+	LOCAL.BUTTONU=1896
+	LOCAL.BUTTONU=1209
+	LOCAL.BUTTONU=208
+ENDDO
+DOSWITCH <def.blacksmith_gump_button>
+	LOCAL.BUTTOND=55
+	LOCAL.BUTTOND=22404
+	LOCAL.BUTTOND=11411
+	LOCAL.BUTTOND=11402
+	LOCAL.BUTTOND=10741
+	LOCAL.BUTTOND=10711
+	LOCAL.BUTTOND=10005
+	LOCAL.BUTTOND=9904
+	LOCAL.BUTTOND=9793
+	LOCAL.BUTTOND=9791
+	LOCAL.BUTTOND=9727
+	LOCAL.BUTTOND=9722
+	LOCAL.BUTTOND=9703
+	LOCAL.BUTTOND=5605
+	LOCAL.BUTTOND=5541
+	LOCAL.BUTTOND=5230
+	LOCAL.BUTTOND=4007
+	LOCAL.BUTTOND=2641
+	LOCAL.BUTTOND=2473
+	LOCAL.BUTTOND=2103
+	LOCAL.BUTTOND=2152
+	LOCAL.BUTTOND=2118
+	LOCAL.BUTTOND=2104
+	LOCAL.BUTTOND=1895
+	LOCAL.BUTTOND=1210
+	LOCAL.BUTTOND=209
+ENDDO
+
+[FUNCTION f_smith_player_button_last]
+DOSWITCH <def.blacksmith_gump_button_last>
+	LOCAL.BUTTONU=56
+	LOCAL.BUTTONU=22405
+	LOCAL.BUTTONU=11410
+	LOCAL.BUTTONU=11401
+	LOCAL.BUTTONU=10740
+	LOCAL.BUTTONU=10710
+	LOCAL.BUTTONU=10006
+	LOCAL.BUTTONU=9903
+	LOCAL.BUTTONU=9790
+	LOCAL.BUTTONU=9792
+	LOCAL.BUTTONU=9726
+	LOCAL.BUTTONU=9721
+	LOCAL.BUTTONU=9702
+	LOCAL.BUTTONU=5601
+	LOCAL.BUTTONU=5540
+	LOCAL.BUTTONU=5224
+	LOCAL.BUTTONU=4005
+	LOCAL.BUTTONU=2640
+	LOCAL.BUTTONU=2472
+	LOCAL.BUTTONU=2103
+	LOCAL.BUTTONU=2151
+	LOCAL.BUTTONU=2117
+	LOCAL.BUTTONU=2103
+	LOCAL.BUTTONU=1896
+	LOCAL.BUTTONU=1209
+	LOCAL.BUTTONU=208
+ENDDO
+DOSWITCH <def.blacksmith_gump_button_last>
+	LOCAL.BUTTOND=55
+	LOCAL.BUTTOND=22404
+	LOCAL.BUTTOND=11411
+	LOCAL.BUTTOND=11402
+	LOCAL.BUTTOND=10741
+	LOCAL.BUTTOND=10711
+	LOCAL.BUTTOND=10005
+	LOCAL.BUTTOND=9904
+	LOCAL.BUTTOND=9793
+	LOCAL.BUTTOND=9791
+	LOCAL.BUTTOND=9727
+	LOCAL.BUTTOND=9722
+	LOCAL.BUTTOND=9703
+	LOCAL.BUTTOND=5605
+	LOCAL.BUTTOND=5541
+	LOCAL.BUTTOND=5230
+	LOCAL.BUTTOND=4007
+	LOCAL.BUTTOND=2641
+	LOCAL.BUTTOND=2473
+	LOCAL.BUTTOND=2224
+	LOCAL.BUTTOND=2152
+	LOCAL.BUTTOND=2118
+	LOCAL.BUTTOND=2104
+	LOCAL.BUTTOND=1895
+	LOCAL.BUTTOND=1210
+	LOCAL.BUTTOND=209
+ENDDO
+
+[FUNCTION ISMOUNTED]
+IF (<FINDLAYER(25).AMOUNT> >= 1)
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+// This function gets all the ore table info. Currently there is a bug in selecting them all at once, so I had to make one query for each column
+[FUNCTION f_get_ore_info]
+DB.QUERY "SELECT name FROM ores WHERE id=<argn>"
+LOCAL.NAME=<DB.ROW.0>
+DB.QUERY "SELECT colour FROM ores WHERE id=<argn>"
+LOCAL.COLOUR=<DB.ROW.0>
+DB.QUERY "SELECT skill FROM ores WHERE id=<argn>"
+LOCAL.SKILL=<DB.ROW.0>
+DB.QUERY "SELECT weight FROM ores WHERE id=<argn>"
+LOCAL.WEIGHT=<DB.ROW.0>
+DB.QUERY "SELECT hp_ar FROM ores WHERE id=<argn>"
+LOCAL.HP_AR=<DB.ROW.0>
+DB.QUERY "SELECT hp_wep FROM ores WHERE id=<argn>"
+LOCAL.HP_WEP=<DB.ROW.0>
+DB.QUERY "SELECT ac FROM ores WHERE id=<argn>"
+LOCAL.AC=<DB.ROW.0>
+DB.QUERY "SELECT wep_low FROM ores WHERE id=<argn>"
+LOCAL.WEP_LOW=<DB.ROW.0>
+DB.QUERY "SELECT wep_high FROM ores WHERE id=<argn>"
+LOCAL.WEP_HIGH=<DB.ROW.0>
+DB.QUERY "SELECT req_str_ar FROM ores WHERE id=<argn>"
+LOCAL.REQ_STR_AR=<DB.ROW.0>
+DB.QUERY "SELECT req_str_wep FROM ores WHERE id=<argn>"
+LOCAL.REQ_STR_WEP=<DB.ROW.0>
+DB.QUERY "SELECT event_ar FROM ores WHERE id=<argn>"
+LOCAL.EVENT_AR=<DB.ROW.0>
+DB.QUERY "SELECT event_wep FROM ores WHERE id=<argn>"
+LOCAL.EVENT_WEP=<DB.ROW.0>
+
+// This function is called when an item is successfully created
+[FUNCTION f_blacksmithing_craft]
+call f_get_ore_info <ARGV[0]>
+OBJ=<UID.<ARGV[1]>.TOPOBJ>
+LOCAL.SKILL += <eval <SERV.ITEMDEF.<TAG0.ITEM>.SKILLMAKE>>
+SERV.NEWITEM <TAG0.ITEM>
+NEW.MOREM=<LOCAL.ID>
+NEW.COLOR=<LOCAL.COLOUR>
+NEW.NAME=<TAG.METAL> <SERV.ITEMDEF.<TAG0.ITEM>.NAME>
+IF <def.blacksmith_quality_system>
+	DOSWITCH <def.blacksmith_quality_score_system>
+		LOCAL.SCORE=<OBJ.BLACKSMITHING>
+		LOCAL.SCORE=<eval <OBJ.BLACKSMITHING>+<OBJ.<def.blacksmith_quality_score_skill>>/2>
+		LOCAL.SCORE=<OBJ.<def.blacksmith_quality_score_skill>>
+	ENDDO
+	IF <def.blacksmith_quality_score_random>
+		LOCAL.SCORE=<eval RAND(<LOCAL.SCORE>)>
+	ENDIF
+ENDIF
+IF <def.blacksmith_makers_mark>
+	NEW.TAG.MAKER=<OBJ.UID>
+ENDIF
+IF (<SERV.ITEMDEF.<TAG0.ITEM>.TYPE>==t_armor) || (<SERV.ITEMDEF.<TAG0.ITEM>.TYPE>==t_shield)
+	NEW.MORE1h += <LOCAL.HP_AR>
+	NEW.MODAR=<LOCAL.AC>
+	NEW.TAG.REQ_STR=<LOCAL.REQ_STR_AR>
+	NEW.TAG.WEIGHT=<LOCAL.WEIGHT>+<SERV.ITEMDEF.<TAG0.ITEM>.WEIGHT>
+	NEW.EVENTS +t_custom_armour
+	IF STRCMPI(<LOCAL.EVENT_AR>,none) 
+		NEW.EVENTS +<LOCAL.EVENT_AR>
+	ENDIF
+	IF <def.blacksmith_quality_system>
+		IF <eval <LOCAL.SKILL>-<LOCAL.SCORE>> > <def.blacksmith_quality_skill_poor>
+			NEW.MODAR=<eval (<NEW.MODAR>*<def.blacksmith_quality_ar_poor>)/100>
+			NEW.MORE1h=<eval (<NEW.MORE1h>*<def.blacksmith_quality_hp_poor>)/100>
+			NEW.TAG.QUALITY=4
+		ELSEIF <eval <LOCAL.SCORE>-<LOCAL.SKILL>> > <def.blacksmith_quality_skill_exceptional>
+			NEW.MODAR=<eval (<NEW.MODAR>*<def.blacksmith_quality_ar_exceptional>)/100>
+			NEW.MORE1h=<eval (<NEW.MORE1h>*<def.blacksmith_quality_hp_exceptional>)/100>
+			NEW.TAG.QUALITY=1
+		ELSEIF <eval <LOCAL.SCORE>-<LOCAL.SKILL>> > <def.blacksmith_quality_skill_excellent>
+			NEW.MODAR=<eval (<NEW.MODAR>*<def.blacksmith_quality_ar_excellent>)/100>
+			NEW.MORE1h=<eval (<NEW.MORE1h>*<def.blacksmith_quality_hp_excellent>)/100>
+			NEW.TAG.QUALITY=2
+		ELSEIF <eval <LOCAL.SCORE>-<LOCAL.SKILL>> > <def.blacksmith_quality_skill_good>
+			NEW.MODAR=<eval (<NEW.MODAR>*<def.blacksmith_quality_ar_good>)/100>
+			NEW.MORE1h=<eval (<NEW.MORE1h>*<def.blacksmith_quality_hp_good>)/100>
+			NEW.TAG.QUALITY=3
+		ENDIF
+	ENDIF
+ELSE
+	NEW.MORE1h += <LOCAL.HP_WEP>
+	NEW.TAG.REQ_STR=<LOCAL.REQ_STR_WEP>
+	NEW.TAG.WEIGHT=<LOCAL.WEIGHT>+<SERV.ITEMDEF.<TAG0.ITEM>.WEIGHT>
+	NEW.TAG.DAMAGE=<LOCAL.WEP_LOW> <LOCAL.WEP_HIGH>
+	NEW.EVENTS +t_custom_weapon
+	IF STRCMPI(<LOCAL.EVENT_WEP>,none) 
+		NEW.EVENTS +<LOCAL.EVENT_WEP>
+	ENDIF
+	IF <def.blacksmith_quality_system>
+		IF <eval <LOCAL.SKILL>-<LOCAL.SCORE>> > <def.blacksmith_quality_skill_poor>
+			NEW.TAG.DAMAGE=<eval (<LOCAL.WEP_LOW>*<def.blacksmith_quality_dmg_poor>)/100> <eval (<LOCAL.WEP_HIGH>*<def.blacksmith_quality_dmg_poor>)/100>
+			NEW.MORE1h=<eval (<NEW.MORE1h>*<def.blacksmith_quality_hp_poor>)/100>
+			NEW.TAG.QUALITY=4
+		ELSEIF <eval <LOCAL.SCORE>-<LOCAL.SKILL>> > <def.blacksmith_quality_skill_exceptional>
+			NEW.TAG.DAMAGE=<eval (<LOCAL.WEP_LOW>*<def.blacksmith_quality_dmg_exceptional>)/100> <eval (<LOCAL.WEP_HIGH>*<def.blacksmith_quality_dmg_exceptional>)/100>
+			NEW.MORE1h=<eval (<NEW.MORE1h>*<def.blacksmith_quality_hp_exceptional>)/100>
+			NEW.TAG.QUALITY=1
+		ELSEIF <eval <LOCAL.SCORE>-<LOCAL.SKILL>> > <def.blacksmith_quality_skill_excellent>
+			NEW.TAG.DAMAGE=<eval (<LOCAL.WEP_LOW>*<def.blacksmith_quality_dmg_excellent>)/100> <eval (<LOCAL.WEP_HIGH>*<def.blacksmith_quality_dmg_excellent>)/100>
+			NEW.MORE1h=<eval (<NEW.MORE1h>*<def.blacksmith_quality_hp_excellent>)/100>
+			NEW.TAG.QUALITY=2
+		ELSEIF <eval <LOCAL.SCORE>-<LOCAL.SKILL>> > <def.blacksmith_quality_skill_good>
+			NEW.TAG.DAMAGE=<eval (<LOCAL.WEP_LOW>*<def.blacksmith_quality_dmg_good>)/100> <eval (<LOCAL.WEP_HIGH>*<def.blacksmith_quality_dmg_good>)/100>
+			NEW.MORE1h=<eval (<NEW.MORE1h>*<def.blacksmith_quality_hp_good>)/100>
+			NEW.TAG.QUALITY=3
+		ENDIF
+	ENDIF
+ENDIF
+NEW.MORE1l=<NEW.MORE1h>
+NEW.CONT=<ARGV[1]>
+OBJ.SYSMESSAGE @<def.blacksmith_sysmsg_color>,<def.blacksmith_sysmsg_font> <def.blacksmith_msg_success>
+
+//##################################################################################################################################################################
+//##################################################################################################################################################################
+[TYPEDEF t_custom_armour]
+ON=@ClientToolTip
+SRC.ADDCLILOC 1070722,<NAME>
+IF <def.blacksmith_quality_names>
+	DOSWITCH <TAG0.QUALITY>
+		LOCAL.DONOTHING=
+		SRC.ADDCLILOC 1063483,Quality:,<def.blacksmith_quality_names_exceptional>
+		SRC.ADDCLILOC 1063483,Quality:,<def.blacksmith_quality_names_excellent>
+		SRC.ADDCLILOC 1063483,Quality:,<def.blacksmith_quality_names_good>
+		SRC.ADDCLILOC 1063483,Quality:,<def.blacksmith_quality_names_poor>
+	ENDDO
+ENDIF
+RETURN 1
+
+// #### Uncomment this and comment the @ClientToolTip if you are not using tooltips
+//ON=@CLICK
+//DOSWITCH <def.blacksmith_quality_names_system>
+//	DOSWITCH <TAG0.QUALITY>
+//		MESSAGE <NAME>
+//		MESSAGE <def.blacksmith_quality_names_exceptional> <NAME>
+//		MESSAGE <def.blacksmith_quality_names_excellent> <NAME>
+//		MESSAGE <def.blacksmith_quality_names_good> <NAME>
+//		MESSAGE <def.blacksmith_quality_names_poor> <NAME>
+//	ENDDO
+//	DOSWITCH <TAG0.QUALITY>
+//		MESSAGE <NAME>
+//		MESSAGE <NAME> [<def.blacksmith_quality_names_exceptional>]
+//		MESSAGE <NAME> [<def.blacksmith_quality_names_excellent>]
+//		MESSAGE <NAME> [<def.blacksmith_quality_names_good>]
+//		MESSAGE <NAME> [<def.blacksmith_quality_names_poor>]
+//	ENDDO
+//ENDDO
+//RETURN 1
+
+ON=@EQUIP
+IF <SRC.STR> < <eval <TAG0.REQ_STR> + <REQSTR>>
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_too_weak>
+	RETURN 1
+ENDIF
+IF <eval <TAG0.WEIGHT>+<SRC.WEIGHT>> > <SRC.MAXWEIGHT>
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_too_heavy>
+	DROP
+	RETURN 1
+ENDIF
+
+[TYPEDEF t_custom_weapon]
+ON=@ClientToolTip
+SRC.ADDCLILOC 1070722,<NAME>
+IF <def.blacksmith_quality_names>
+	DOSWITCH <TAG0.QUALITY>
+		LOCAL.DONOTHING=
+		SRC.ADDCLILOC 1063483,Quality:,<def.blacksmith_quality_names_exceptional>
+		SRC.ADDCLILOC 1063483,Quality:,<def.blacksmith_quality_names_excellent>
+		SRC.ADDCLILOC 1063483,Quality:,<def.blacksmith_quality_names_good>
+		SRC.ADDCLILOC 1063483,Quality:,<def.blacksmith_quality_names_poor>
+	ENDDO
+ENDIF
+RETURN 1
+
+//ON=@CLICK
+//DOSWITCH <def.blacksmith_quality_names_system>
+//	DOSWITCH <TAG0.QUALITY>
+//		MESSAGE <NAME>
+//		MESSAGE <def.blacksmith_quality_names_exceptional> <NAME>
+//		MESSAGE <def.blacksmith_quality_names_excellent> <NAME>
+//		MESSAGE <def.blacksmith_quality_names_good> <NAME>
+//		MESSAGE <def.blacksmith_quality_names_poor> <NAME>
+//	ENDDO
+//	DOSWITCH <TAG0.QUALITY>
+//		MESSAGE <NAME>
+//		MESSAGE <NAME> [<def.blacksmith_quality_names_exceptional>]
+//		MESSAGE <NAME> [<def.blacksmith_quality_names_excellent>]
+//		MESSAGE <NAME> [<def.blacksmith_quality_names_good>]
+//		MESSAGE <NAME> [<def.blacksmith_quality_names_poor>]
+//	ENDDO
+//ENDDO
+//RETURN 1
+
+ON=@EQUIP
+IF <SRC.STR> < <eval <TAG0.REQ_STR> + <REQSTR>>
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_too_weak>
+	RETURN 1
+ENDIF
+IF <eval <TAG.WEIGHT>+<SRC.WEIGHT>> > <SRC.MAXWEIGHT>
+	SRC.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_too_heavy>
+	DROP
+	RETURN 1
+ELSE
+	SRC.EVENTS +e_custom_weapon
+ENDIF
+
+ON=@UNEQUIP
+SRC.EVENTS -e_custom_weapon
+
+[EVENTS e_custom_weapon]
+ON=@HIT
+ARGN1 += RAND(<STRARG <ARGO.TAG.DAMAGE>>,<STREAT <ARGO.TAG.DAMAGE>>)
+
+//##################################################################################################################################################################
+//##################################################################################################################################################################
+
+[DIALOG d_smith_admin]
+50,100
+Page 0
+resizepic 0 0 2600 700 450
+resizepic 50 15 5100 600 30
+dhtmlgump 0 20 700 20 0 0 <def.center><def.h3>Blacksmithing Admin Menu
+IF <ARGN>==1
+button 686 50 227 227 1 0 1 //up
+button 686 120 235 235 1 0 2 // down
+ELSEIF <ARGN>==2
+button 686 50 228 227 1 0 1 // down
+button 686 120 234 235 1 0 2 // up
+ELSE
+button 686 50 228 227 1 0 1 // down
+button 686 120 235 234 1 0 2 // up
+ENDIF
+
+Page 1
+IF <ARGN>==1
+DORIGIN 40 60
+dtext *0 *0 1552 name, colour, skill, weight, hp_ar, hp_wep, ac, wep_low, wep_high, req_str_ar, req_str_wep, event_ar, event_wep
+DB.QUERY "SELECT * FROM ores"
+FOR 1 <DB.ROW.NUMROWS>
+	call f_get_ore_info <local._for>
+	dtext 40 <eval <eval 20*<LOCAL._for>>+80> 1152 <LOCAL.NAME> | <eval <LOCAL.COLOUR>> | <eval <LOCAL.SKILL>> | <eval <LOCAL.WEIGHT>> | <eval <LOCAL.HP_AR>> | <eval <LOCAL.HP_WEP>> | <eval <LOCAL.AC>> | <eval <LOCAL.WEP_LOW>> | <eval <LOCAL.WEP_HIGH>> | <eval <LOCAL.REQ_STR_AR>> | <eval <LOCAL.REQ_STR_WEP>> | <LOCAL.EVENT_AR> | <LOCAL.EVENT_WEP>
+END
+ENDIF
+
+Page 2
+IF <ARGN>==2
+dorigin 40 60
+dtext *0 *0 1152 Ore Name:
+gumppic 200 - 2440
+dtextentry 210 - 100 20 1552 1 
+dtext - *20 1152 Ore Colour:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 2 
+dtext - *20 1152 Required Skill:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 3 
+dtext - *20 1152 Weight
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 4 
+dtext - *20 1152 Armour HP:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 5 
+dtext - *20 1152 Weapon HP:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 6 
+dtext - *20 1152 Armour Class:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 7 
+dtext - *20 1152 Weapon Damage Low:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 8 
+dtext - *20 1152 Weapon Damage High:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 9 
+dtext - *20 1152 Armour required STR:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 10 
+dtext - *20 1152 Weapon required STR:
+gumppic 200 - 2443
+dtextentry 210 - 100 20 1552 11
+dtext - *20 1152 Armour Event:
+gumppic 200 - 2440
+dtextentry 210 - 100 20 1552 12 
+dtext - *20 1152 Weapon Event:
+gumppic 200 - 2440
+dtextentry 210 - 100 20 1552 13 
+ENDIF
+button 500 400 2452 2451 1 0 3
+
+[DIALOG d_smith_admin TEXT]
+[DIALOG d_smith_admin BUTTON]
+ON=1
+DIALOG d_smith_admin 1
+ON=2
+DIALOG d_smith_admin 2
+ON=3
+DB.EXECUTE "INSERT INTO ores (name, colour, skill, weight, hp_ar, hp_wep, ac, wep_low, wep_high, req_str_ar, req_str_wep, event_ar, event_wep) VALUES ('<ARGTXT[1]>', <ARGTXT[2]>, <ARGTXT[3]>, <ARGTXT[4]>, <ARGTXT[5]>, <ARGTXT[6]>, <ARGTXT[7]>, <ARGTXT[8]>, <ARGTXT[9]>, <ARGTXT[10]>, <ARGTXT[11]>, '<ARGTXT[12]>', '<ARGTXT[13]>')"
+DIALOG d_smith_admin 1
+
+//##################################################################################################################################################################
+//##################################################################################################################################################################
+
+[DIALOG d_smith_player]
+100,100
+Page 0
+
+Page 1
+call f_smith_player_bg
+resizepic 160 0 <eval <local.bg>> 280 170
+IF <def.blacksmith_gump_transparent>
+	checkertrans 126 8 348 158
+ENDIF
+resizepic 180 40 5100 240 20
+button 210 25 5006 5007 1 0 2
+button 295 25 5006 5007 1 0 7
+//button 340 25 5006 5007 1 0 4
+dtext 235 23 <def.blacksmith_gump_text_color> Armour
+dtext 317 23 <def.blacksmith_gump_text_color> Weapons
+//dtext 375 23 <def.blacksmith_gump_text_color> Misc
+IF <def.blacksmith_enable_last_make>
+call f_smith_player_button_last
+button 330 120 <local.buttonu> <local.buttond> 1 0 50
+dtext 250 118 <def.blacksmith_gump_text_color> Make Last:
+ENDIF
+
+Page 2 // Armour : Platemail
+IF <ARGN>==2
+call f_smith_player_bg
+LOCAL.COLUMNS=4
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5007 5006 1 0 2
+button 170 25 5006 5007 1 0 3
+button 255 25 5006 5007 1 0 4
+button 340 25 5006 5007 1 0 5
+button 425 25 5006 5007 1 0 6
+dtext 103 23 <def.blacksmith_gump_text_color> Platemail
+dtext 190 23 <def.blacksmith_gump_text_color> Chainmail
+dtext 277 23 <def.blacksmith_gump_text_color> Ringmail
+dtext 365 23 <def.blacksmith_gump_text_color> Helmets
+dtext 450 23 <def.blacksmith_gump_text_color> Shields 
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>> // stops the rest of the dialog being parsed if not enough ingots, saves resources
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_plate> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> // the first number (here 750) represents the highest difficulty item under platemail
+IF <BLACKSMITHING> < <eval <LOCAL.TOTAL> - 200> // lowest difficulty, cannot make plate
+	RETURN 0
+ENDIF
+// #### Format for adding new items:
+// #### Items are arranged from lowest skill requirement to highest skill requirement
+// #### There can only be four items per row
+// #### The important part is the first button after the IF statement which should have the following format:
+// #### "button *120 *0 ..." <== The first X shows where it an the next 3 buttons will start. Only the first Y after the IF
+// #### needs to have the "*0", the rest can just have a "-".
+// #### The 5th, 10th, 15th etc button need to have their X as "*-360". -- Good luck!
+// #### Buttons 100 - 199 are for platemail
+dorigin 80 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 200>
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80>  <local.buttonu> <local.buttond> 1 0 100
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01413 <eval <LOCAL.COLOUR>-1> // gorget
+		tooltip 1025139
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 101
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01414 <eval <LOCAL.COLOUR>-1> // gloves
+		tooltip 1025140
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 150>
+	IF <RESTEST 18 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 102
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01410 <eval <LOCAL.COLOUR>-1> //arms
+		tooltip 1025136
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 112
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10105 <eval <LOCAL.COLOUR>-1> // samurai gorget, mempo
+		tooltip 1030105
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 110
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 12640 <eval <LOCAL.COLOUR>-1> // elven gorget
+		tooltip 1025139
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 109
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 12641 <eval <LOCAL.COLOUR>-1> // elven gloves
+		tooltip 1025140
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 100>
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 103
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01411 <eval <LOCAL.COLOUR>-1> // legs
+		tooltip 1025137
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 18 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 113
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10112 <eval <LOCAL.COLOUR>-1> // samurai arms, kote
+		tooltip 1029835
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 18 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 108
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 12643 <eval <LOCAL.COLOUR>-1> // elven arms
+		tooltip 1025136
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 25 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 104
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01415 <eval <LOCAL.COLOUR>-1> // chest
+		tooltip 1025142
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 105
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01c04 <eval <LOCAL.COLOUR>-1> // female chest
+		tooltip 1046430
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 114
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10120 <eval <LOCAL.COLOUR>-1> // samurai legs, suneate
+		tooltip 1030120
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 18 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 115
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10125 <eval <LOCAL.COLOUR>-1> // samurai waist, haidate
+		tooltip 1030200
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 107
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 12642 <eval <LOCAL.COLOUR>-1> // elven legs
+		tooltip 1025137
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 25 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 111
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10109 <eval <LOCAL.COLOUR>-1> // samurai chest, do
+		tooltip 1030109
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 25 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 106
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 12644 <eval <LOCAL.COLOUR>-1> // elven chest
+		tooltip 1025142
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 3 // Armour : Chainmail
+IF <ARGN>==3
+call f_smith_player_bg
+LOCAL.COLUMNS=1
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5006 5007 1 0 2
+button 170 25 5007 5006 1 0 3
+button 255 25 5006 5007 1 0 4
+button 340 25 5006 5007 1 0 5
+button 425 25 5006 5007 1 0 6
+dtext 103 23 <def.blacksmith_gump_text_color> Platemail
+dtext 190 23 <def.blacksmith_gump_text_color> Chainmail
+dtext 277 23 <def.blacksmith_gump_text_color> Ringmail
+dtext 365 23 <def.blacksmith_gump_text_color> Helmets
+dtext 450 23 <def.blacksmith_gump_text_color> Shields
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_chain> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.TOTAL> - 150> // lowest difficulty, cannot make chain
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 200 - 299 are for chainmail
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 150>
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 200
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013bb <eval <LOCAL.COLOUR>-1> // coif
+		tooltip 1025051
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 18 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 201
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013be <eval <LOCAL.COLOUR>-1> //legs
+		tooltip 1025052
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 202
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013bf <eval <LOCAL.COLOUR>-1> // tunic
+		tooltip 1025053
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 4 // Armour : Ringmail
+IF <ARGN>==4
+call f_smith_player_bg
+LOCAL.COLUMNS=1
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5006 5007 1 0 2
+button 170 25 5006 5007 1 0 3
+button 255 25 5007 5006 1 0 4
+button 340 25 5006 5007 1 0 5
+button 425 25 5006 5007 1 0 6
+dtext 103 23 <def.blacksmith_gump_text_color> Platemail
+dtext 190 23 <def.blacksmith_gump_text_color> Chainmail
+dtext 277 23 <def.blacksmith_gump_text_color> Ringmail
+dtext 365 23 <def.blacksmith_gump_text_color> Helmets
+dtext 450 23 <def.blacksmith_gump_text_color> Shields
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_ring> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.HARDEST> - 150> // lowest difficulty, cannot make ring
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 300 - 399 are for ringmail
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 150>
+	IF <RESTEST 25 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 300
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013eb <eval <LOCAL.COLOUR>-1> // gloves
+		tooltip 1025106
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 100>
+	IF <RESTEST 14 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 301
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013ee <eval <LOCAL.COLOUR>-1> //arms
+		tooltip 1025097
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 16 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 302
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013f0 <eval <LOCAL.COLOUR>-1> // legs
+		tooltip 1025094
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 18 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 302
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013ec <eval <LOCAL.COLOUR>-1> // tunic
+		tooltip 1025100
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 5 // Armour : Helmets
+IF <ARGN>==5
+call f_smith_player_bg
+LOCAL.COLUMNS=2
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5006 5007 1 0 2
+button 170 25 5006 5007 1 0 3
+button 255 25 5006 5007 1 0 4
+button 340 25 5007 5006 1 0 5
+button 425 25 5006 5007 1 0 6
+dtext 103 23 <def.blacksmith_gump_text_color> Platemail
+dtext 190 23 <def.blacksmith_gump_text_color> Chainmail
+dtext 277 23 <def.blacksmith_gump_text_color> Ringmail
+dtext 365 23 <def.blacksmith_gump_text_color> Helmets
+dtext 450 23 <def.blacksmith_gump_text_color> Shields
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_helmet> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.HARDEST> - 300> // lowest difficulty, cannot make helmets
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 400 - 499 are for helmets
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 300>
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 400
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0140d <eval <LOCAL.COLOUR>-1> // bascinet
+		tooltip 1015040
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 150>
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 401
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0140f <eval <LOCAL.COLOUR>-1> //norse
+		tooltip 1015041
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 100>
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 402
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0140b <eval <LOCAL.COLOUR>-1> // open
+		tooltip 1015039
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 403
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01419 <eval <LOCAL.COLOUR>-1> // plate
+		tooltip 1015043
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 404
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01409 <eval <LOCAL.COLOUR>-1> // closed
+		tooltip 1015042
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 405
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10117 <eval <LOCAL.COLOUR>-1> // samurai helm, kabuto
+		tooltip 1029870
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 6 // Armour : Shields
+IF <ARGN>==6
+call f_smith_player_bg
+LOCAL.COLUMNS=2
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5006 5007 1 0 2
+button 170 25 5006 5007 1 0 3
+button 255 25 5006 5007 1 0 4
+button 340 25 5006 5007 1 0 5
+button 425 25 5007 5006 1 0 6
+dtext 103 23 <def.blacksmith_gump_text_color> Platemail
+dtext 190 23 <def.blacksmith_gump_text_color> Chainmail
+dtext 277 23 <def.blacksmith_gump_text_color> Ringmail
+dtext 365 23 <def.blacksmith_gump_text_color> Helmets
+dtext 450 23 <def.blacksmith_gump_text_color> Shields
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 6 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_shield> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.HARDEST> - 400> // lowest difficulty, cannot make shields
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 500 - 599 are for shields
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 400>
+	IF <RESTEST 6 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 500
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01b73 <eval <LOCAL.COLOUR>-1> // buckler
+		tooltip 1015044
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 350>
+	IF <RESTEST 14 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 501
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01b7b <eval <LOCAL.COLOUR>-1> //round 
+		tooltip 1027035
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 300>
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 502
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01b72 <eval <LOCAL.COLOUR>-1> // round bronze
+		tooltip 1027026
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 200>
+	IF <RESTEST 16 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 503
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01b74 <eval <LOCAL.COLOUR>-1> // kite
+		tooltip 1027028
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 18 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 504
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01b76 <eval <LOCAL.COLOUR>-1> // heater
+		tooltip 1027030
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 7 // Axes
+IF <ARGN>==7
+call f_smith_player_bg
+LOCAL.COLUMNS=2
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5007 5006 1 0 7
+button 170 25 5006 5007 1 0 8
+button 255 25 5006 5007 1 0 9
+button 340 25 5006 5007 1 0 10
+button 425 25 5006 5007 1 0 11
+dtext 118 23 <def.blacksmith_gump_text_color> Axes
+dtext 193 23 <def.blacksmith_gump_text_color> Fencing
+dtext 282 23 <def.blacksmith_gump_text_color> Maces
+dtext 365 23 <def.blacksmith_gump_text_color> Polearms
+dtext 450 23 <def.blacksmith_gump_text_color> Swords
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_axe> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.HARDEST> - 100> // lowest difficulty, cannot make axes
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 600 - 699 are for Axes
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 100>
+	IF <RESTEST 14 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 600
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f47 <eval <LOCAL.COLOUR>-1> // battle axe
+		tooltip 1015058
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 601
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f4b <eval <LOCAL.COLOUR>-1> // double axe
+		tooltip 1015062
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 14 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 602
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013fa <eval <LOCAL.COLOUR>-1> // large axe
+		tooltip 1015063
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 16 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 603
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f45 <eval <LOCAL.COLOUR>-1> // executioner's axe
+		tooltip 1015060
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 14 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 604
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f49 <eval <LOCAL.COLOUR>-1> // axe
+		tooltip 1015059
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 16 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 605
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01442 <eval <LOCAL.COLOUR>-1> // two handed axe
+		tooltip 1015061
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 16 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 606
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013af <eval <LOCAL.COLOUR>-1> // war axe
+		tooltip 1015064
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 8 // Fencing
+IF <ARGN>==8
+call f_smith_player_bg
+LOCAL.COLUMNS=2
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5006 5007 1 0 7
+button 170 25 5007 5006 1 0 8
+button 255 25 5006 5007 1 0 9
+button 340 25 5006 5007 1 0 10
+button 425 25 5006 5007 1 0 11
+dtext 118 23 <def.blacksmith_gump_text_color> Axes
+dtext 193 23 <def.blacksmith_gump_text_color> Fencing
+dtext 282 23 <def.blacksmith_gump_text_color> Maces
+dtext 365 23 <def.blacksmith_gump_text_color> Polearms
+dtext 450 23 <def.blacksmith_gump_text_color> Swords
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 2 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_fence> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.HARDEST> - 550> // lowest difficulty, cannot make fencing weapons
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 700 - 799 are for Fencing
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 550>
+	IF <RESTEST 2 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 700
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0ec4 <eval <LOCAL.COLOUR>-1> // skinning knife
+		tooltip 1011220
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 500>
+	IF <RESTEST 3 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 701
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f51 <eval <LOCAL.COLOUR>-1> // dagger
+		tooltip 1015050
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 200>
+	IF <RESTEST 6 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 705
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 100> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 11553 <eval <LOCAL.COLOUR>-1> // assassin spike
+		tooltip 1031565
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 100>
+	IF <RESTEST 8 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 702
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01400 <eval <LOCAL.COLOUR>-1> // kryss
+		tooltip 1025120
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 703
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10234 <eval <LOCAL.COLOUR>-1> // sai
+		tooltip 1030234
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 704
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10230 <eval <LOCAL.COLOUR>-1> // tekagi
+		tooltip 1030155
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 706
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10157 <eval <LOCAL.COLOUR>-1> // kama
+		tooltip 1030155
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 9 // Maces
+IF <ARGN>==9
+call f_smith_player_bg
+LOCAL.COLUMNS=2
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5006 5007 1 0 7
+button 170 25 5006 5007 1 0 8
+button 255 25 5007 5006 1 0 9
+button 340 25 5006 5007 1 0 10
+button 425 25 5006 5007 1 0 11
+dtext 118 23 <def.blacksmith_gump_text_color> Axes
+dtext 193 23 <def.blacksmith_gump_text_color> Fencing
+dtext 282 23 <def.blacksmith_gump_text_color> Maces
+dtext 365 23 <def.blacksmith_gump_text_color> Polearms
+dtext 450 23 <def.blacksmith_gump_text_color> Swords
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 6 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_fence> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.HARDEST> - 250> // lowest difficulty, cannot make mace weapons
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 800 - 899 are for Maces
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 250>
+	IF <RESTEST 6 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 800
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f5c <eval <LOCAL.COLOUR>-1> // mace
+		tooltip 1015070
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 200>
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 801
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0143a <eval <LOCAL.COLOUR>-1> // maul
+		tooltip 1025178
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 8 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 802
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0143c <eval <LOCAL.COLOUR>-1> // hammer pick
+		tooltip 1015074
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 150>
+	IF <RESTEST 14 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 803
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01406 <eval <LOCAL.COLOUR>-1> // war mace
+		tooltip 1015072
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 16 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 804
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01438 <eval <LOCAL.COLOUR>-1> // war hammer
+		tooltip 1015073
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 805
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 026BC <eval <LOCAL.COLOUR>-1> // scepter
+		tooltip 1029926
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 16 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 806
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 100> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 11556 <eval <LOCAL.COLOUR>-1> // diamond mace
+		tooltip 1031556
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 10 // Polearms
+IF <ARGN>==10
+call f_smith_player_bg
+LOCAL.COLUMNS=4
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5006 5007 1 0 7
+button 170 25 5006 5007 1 0 8
+button 255 25 5006 5007 1 0 9
+button 340 25 5007 5006 1 0 10
+button 425 25 5006 5007 1 0 11
+dtext 118 23 <def.blacksmith_gump_text_color> Axes
+dtext 193 23 <def.blacksmith_gump_text_color> Fencing
+dtext 282 23 <def.blacksmith_gump_text_color> Maces
+dtext 365 23 <def.blacksmith_gump_text_color> Polearms
+dtext 450 23 <def.blacksmith_gump_text_color> Swords
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 5 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_polearm> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.HARDEST> - 550> // lowest difficulty, cannot make polearms
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 900 - 999 are for Polearms
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 550>
+	IF <RESTEST 5 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 900
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 70> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0e87 <eval <LOCAL.COLOUR>-1> // pitchfork
+		tooltip 1023719
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 200>
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 910
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 026BE <eval <LOCAL.COLOUR>-1> // pike
+		tooltip 1029918
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 909
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 100> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 026BD <eval <LOCAL.COLOUR>-1> // bladed staff
+		tooltip 1029927
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 150>
+	IF <RESTEST 18 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 901
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 100> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f4d <eval <LOCAL.COLOUR>-1> // bardiche
+		tooltip 1015068
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 100>
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 902
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01404 <eval <LOCAL.COLOUR>-1> // war fork
+		tooltip 1025124
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 903
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0143e <eval <LOCAL.COLOUR>-1> // halberd
+		tooltip 1015069
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 6 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 904
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01402 <eval <LOCAL.COLOUR>-1> // short spear
+		tooltip 1015065
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 908
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 9914 <eval <LOCAL.COLOUR>-1> // scynth
+		tooltip 1029914
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 908
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10151 <eval <LOCAL.COLOUR>-1> // lajatang
+		tooltip 1030226
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 905
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 70> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 70> 0f62 <eval <LOCAL.COLOUR>-1> // long spear
+		tooltip 1015066
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 17 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 907
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 70> 9920 <eval <LOCAL.COLOUR>-1> // lance
+		tooltip 1028758
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 906
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 70> 026c1 <eval <LOCAL.COLOUR>-1> // Double blade
+		tooltip 1029929
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 911
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 70> 026BF <eval <LOCAL.COLOUR>-1> // Doubled blade staff
+		tooltip 1029919
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+Page 11 // Swords
+IF <ARGN>==11
+call f_smith_player_bg
+LOCAL.COLUMNS=5
+resizepic 25 0 <eval <local.bg>> 555 <eval (<LOCAL.COLUMNS>*60)+70>
+IF <def.blacksmith_gump_transparent>
+	checkertrans 31 8 543 <eval (<LOCAL.COLUMNS>*60)+58>
+ENDIF
+resizepic 50 40 5100 500 20
+button 55 41 5223 5230 1 0 1
+button 85 25 5006 5007 1 0 7
+button 170 25 5006 5007 1 0 8
+button 255 25 5006 5007 1 0 9
+button 340 25 5006 5007 1 0 10
+button 425 25 5007 5006 1 0 11
+dtext 118 23 <def.blacksmith_gump_text_color> Axes
+dtext 193 23 <def.blacksmith_gump_text_color> Fencing
+dtext 282 23 <def.blacksmith_gump_text_color> Maces
+dtext 365 23 <def.blacksmith_gump_text_color> Polearms
+dtext 450 23 <def.blacksmith_gump_text_color> Swords
+dtext 80 40 <def.blacksmith_gump_text_color> Main Menu
+IF !<RESTEST 3 i_ingot_<STRARG <CTAG.CRAFTING>>> 
+	RETURN 0
+ENDIF
+LOCAL.HARDEST=<def.blacksmith_hardest_sword> + <STREAT <CTAG.CRAFTING>> - <def.blacksmith_min_skill_difference> 
+IF <BLACKSMITHING> < <eval <LOCAL.HARDEST> - 550> // lowest difficulty, cannot make swords
+	RETURN 0
+ENDIF
+dorigin -40 80
+DB.QUERY "SELECT colour FROM ores WHERE name LIKE '%<STRARG <CTAG.CRAFTING>>%'"
+LOCAL.COLOUR=<DB.ROW.0>
+call f_smith_player_button
+LOCAL.NUM_ITEMS=0
+// #### Buttons 1000 - 1099 are for swords
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 550>
+	IF <RESTEST 3 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1000
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0ec2 <eval <LOCAL.COLOUR>-1> // meat cleaver
+		tooltip 1011204
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 3 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1001
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013f6 <eval <LOCAL.COLOUR>-1> // butcher knife
+		tooltip 1011174
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 200>
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1002
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f60 <eval <LOCAL.COLOUR>-1> // longsword
+		tooltip 1015056
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 12 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1003
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013b7 <eval <LOCAL.COLOUR>-1> // longsword b
+		tooltip 1015056
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 14 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1004
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013b9 <eval <LOCAL.COLOUR>-1> // viking sword
+		tooltip 1015057
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 8 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1005
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 01440 <eval <LOCAL.COLOUR>-1> // cutlass
+		tooltip 1015051
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 150>
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1010
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 130> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 026BB <eval <LOCAL.COLOUR>-1> // bone harvester
+		tooltip 1029915
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1006
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013b5 <eval <LOCAL.COLOUR>-1> // scimitar
+		tooltip 1025045
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1016
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10148 <eval <LOCAL.COLOUR>-1> // wakizachi
+		tooltip 1030223
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 100>
+	IF <RESTEST 10 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1007
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 0f5e <eval <LOCAL.COLOUR>-1> // broad sword
+		tooltip 1015055
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 15 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1009
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 110> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 9935 <eval <LOCAL.COLOUR>-1> // paladin sword
+		tooltip 1029934
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 6 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1014
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 110> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 11554 <eval <LOCAL.COLOUR>-1> // elven leaf blade
+		tooltip 1031566
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <eval <LOCAL.HARDEST> - 50>
+	IF <RESTEST 6 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1013
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 100> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 11552 <eval <LOCAL.COLOUR>-1> // elven spellblade
+		tooltip 1031552
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 9 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1015
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 100> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 11555 <eval <LOCAL.COLOUR>-1> // war cleaver
+		tooltip 1031554
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 8 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1008
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 013fe <eval <LOCAL.COLOUR>-1> // katana
+		tooltip 1015052
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+IF <BLACKSMITHING> >= <LOCAL.HARDEST>
+	IF <RESTEST 20 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1011
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10146 <eval <LOCAL.COLOUR>-1> // no-dachi
+		tooltip 1030221
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+	IF <RESTEST 30 i_ingot_<STRARG <CTAG.CRAFTING>>>
+		button <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 80> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> <local.buttonu> <local.buttond> 1 0 1012
+		tilepichue <eval ((<LOCAL.NUM_ITEMS>%4)*120) + 120> <eval ((<LOCAL.NUM_ITEMS>/4)*60) + 80> 10153 <eval <LOCAL.COLOUR>-1> // daisho
+		tooltip 1030153
+		LOCAL.NUM_ITEMS += 1
+	ENDIF
+ENDIF
+ENDIF
+
+[DIALOG d_smith_player TEXT]
+[DIALOG d_smith_player BUTTON]
+ON=0
+CTAG.CRAFTING=
+ON=1
+DIALOG d_smith_player 1
+ON=2
+DIALOG d_smith_player 2
+ON=3
+DIALOG d_smith_player 3
+ON=4
+DIALOG d_smith_player 4
+ON=5
+DIALOG d_smith_player 5
+ON=6
+DIALOG d_smith_player 6
+ON=7 
+DIALOG d_smith_player 7
+ON=8
+DIALOG d_smith_player 8
+ON=9
+DIALOG d_smith_player 9
+ON=10
+DIALOG d_smith_player 10
+ON=11
+DIALOG d_smith_player 11
+ON=12
+DIALOG d_smith_player 12
+
+ON=50
+craftitem <STRARG <CTAG.CRAFTING>>,<CTAG.LASTITEM>
+
+// Plate: 100 - 199
+ON=100
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_platemail_gorget
+ON=101
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_platemail_gloves
+ON=102
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_platemail_arms
+ON=103
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_platemail_leggings
+ON=104
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_platemail_chest
+ON=105
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_armor_female_plate
+ON=106
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_elven_armor_plate_chest
+ON=107
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_elven_armor_plate_legs
+ON=108
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_elven_armor_plate_arms
+ON=109
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_elven_armor_plate_gloves
+ON=110
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_elven_armor_plate_gorget
+ON=111
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_plate_do
+ON=112
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_plate_mempo
+ON=113
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_plate_kote
+ON=114
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_plate_suneate
+ON=115
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_plate_haidate
+
+// Chain: 200 - 299
+ON=200
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_chainmail_coif
+ON=201
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_chainmail_leggings
+ON=202
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_chainmail_tunic
+
+// Ringmail: 300 - 399
+ON=300
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_ringmail_gloves
+ON=301
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_ringmail_sleeves
+ON=302
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_ringmail_leggings
+ON=303
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_ringmail_tunic
+
+// Helms: 400 - 499
+ON=400
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_bascinet
+ON=401
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_helm_nose
+ON=402
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_helm_open
+ON=403
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_platemail_helm
+ON=404
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_helm_closed
+ON=405
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_plate_kabuto
+
+// Shields: 500 - 599
+ON=500
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_shield_buckler
+ON=501
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_shield_round_metal
+ON=502
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_shield_round_bronze
+ON=503
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_shield_kite_metal
+ON=504
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_shield_heater
+
+// Axes: 600 - 699
+ON=600
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_axe_battle
+ON=601
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_axe_double
+ON=602
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_axe_battle_large
+ON=603
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_axe_exec
+ON=604
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_axe
+ON=605
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_axe_two_hand
+ON=606
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_axe_war
+
+// Fencing: 700 - 799
+ON=700
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_knife_skinning
+ON=701
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_dagger
+ON=702
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_kryss
+ON=703
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_sai
+ON=704
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_tekagi
+ON=705
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_sword_assassin_spike
+ON=706
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_kama
+
+// Maces: 800 - 899
+ON=800
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_mace
+ON=801
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_maul
+ON=802
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_hammer_pick
+ON=803
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_mace_war
+ON=804
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_hammer_war
+ON=805
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_scepter
+ON=806
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_mace_diamondmace
+
+// Polearms: 900 - 999 
+ON=900
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_pitchfork
+ON=901
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_bardiche
+ON=902
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_war_fork
+ON=903
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_halberd
+ON=904
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_spear_short
+ON=905
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_spear
+ON=906
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_double_blade
+ON=907
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_lance
+ON=908
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_scyth
+ON=909
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_bladed_staff
+ON=910
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_pike
+ON=911
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_double_bladed_staff
+ON=912
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_lajatang
+
+// Swords: 1000 - 1099
+ON=1000
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_cleaver_meat
+ON=1001
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_knife_butcher
+ON=1002
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_sword_long
+ON=1003
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_sword_long_b
+ON=1004
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_sword_viking
+ON=1005
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_cutlass
+ON=1006
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_scimitar
+ON=1007
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_sword_broad
+ON=1008
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_katana
+ON=1009
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_paladin_sword
+ON=1010
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_bone_harvester
+ON=1011
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_nodachi
+ON=1012
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_daisho
+ON=1013
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_elven_spellblade
+ON=1014
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_sword_leafblade
+ON=1015
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_sword_warcleaver
+ON=1015
+craftitem <STRARG <CTAG.CRAFTING>>,i_default_wakizashi
+
+//##################################################################################################################################################################
+//##################################################################################################################################################################
+
+[FUNCTION craftitem]
+NEWITEM i_craft
+NEW.TAG.METAL=<ARGV[0]>
+NEW.TAG.ITEM=<ARGV[1]>
+NEW.EQUIP
+CTAG.LASTITEM=<ARGV[1]>
+
+[ITEMDEF i_craft]
+ID=i_memory
+NAME=Crafting
+TYPE=t_eq_script
+
+ON=@CREATE
+
+ON=@EQUIP
+DOSWITCH <def.blacksmith_timer_difficulty>
+	BEGIN
+		DOSWITCH <def.blacksmith_timer_random>
+			MOREM=<def.blacksmith_timer>
+			MOREM={<eval <def.blacksmith_timer>/2> <def.blacksmith_timer>}
+		ENDDO
+	END
+	BEGIN
+		LOCAL.SKILL=<eval <SERV.ITEMDEF.<TAG.ITEM>.SKILLMAKE>> // Only the default item's time is taken, didn't add ore difficulty
+		IF (<SRC.BLACKSMITHING> > <LOCAL.SKILL>) && (<def.blacksmith_timer_difficulty_pskill>)
+			LOCAL.SKILL -= <SRC.BLACKSMITHING>-<LOCAL.SKILL>
+			IF (<LOCAL.SKILL>) < (<def.blacksmith_timer>)
+				LOCAL.SKILL=<def.blacksmith_timer>
+			ENDIF
+		ENDIF
+		DOSWITCH <def.blacksmith_timer_random>
+			MOREM=<eval <LOCAL.SKILL>/<def.blacksmith_timer_difficulty_fraction>>
+			BEGIN
+				LOCAL.SKILL /= <def.blacksmith_timer_difficulty_fraction>
+				MOREM={<eval <LOCAL.SKILL>/2> <LOCAL.SKILL>}
+			END
+		ENDDO
+	END
+ENDDO
+LINK=<SRC.UID>
+TIMER=1
+
+ON=@TIMER
+IF !<LINK.ISNEARTYPE t_anvil 1>
+	LINK.SYSMESSAGE @<def.blacksmith_sysmsg_event_color>,<def.blacksmith_sysmsg_event_font> <def.blacksmith_msg_near_anvil>
+	REMOVE
+	RETURN 1
+ENDIF
+IF <MOREM>
+	IF !(<eval <MOREM>%2>)
+		DORAND 4
+			LINK.ANIM 9
+			LINK.ANIM 11
+			LINK.ANIM 12
+			LINK.ANIM 13
+		ENDDO
+		DORAND 5
+			LINK.SOUND 0237
+			LINK.SOUND 002a
+			LINK.SOUND 0236
+			LINK.SOUND 023c
+			LINK.SOUND 023b
+		ENDDO
+	ENDIF
+	TIMER=1
+	MOREM -= 1
+ELSE
+	LOCAL.CONSUME=<eval <SERV.ITEMDEF.<TAG0.ITEM>.RESOURCES>>
+	IF !<LINK.RESTEST <eval <LOCAL.CONSUME>> i_ingot_<TAG0.METAL>> // prevents exploit where player removes ingots from pack after selecting an item to make
+		LINK.SYSMESSAGE @<def.blacksmith_sysmsg_color>,<def.blacksmith_sysmsg_font> <def.blacksmith_msg_no_ingots>
+		REMOVE
+		RETURN 1
+	ENDIF
+	DB.QUERY "SELECT id FROM ores WHERE name LIKE '%<TAG.METAL>%'"
+	LOCAL.ID=<DB.ROW.0>
+	DB.QUERY "SELECT skill FROM ores WHERE id=<eval <local.id>>"
+	LOCAL.SKILL=<DB.ROW.0>
+	LOCAL.SKILL += <eval <SERV.ITEMDEF.<TAG0.ITEM>.SKILLMAKE>>
+	
+	LOCAL.CONSUME *= <def.blacksmith_consume_fraction>
+	LOCAL.CONSUME /= 100
+	DOSWITCH <def.blacksmith_success_system>
+		BEGIN // use auto method
+			IF (<LINK.BLACKSMITHING> < <LOCAL.SKILL>)
+				LINK.SYSMESSAGE @<def.blacksmith_sysmsg_color>,<def.blacksmith_sysmsg_font> <def.blacksmith_msg_fail>
+				IF <def.blacksmith_consume_resource>
+					DOSWITCH <def.blacksmith_consume_random>
+						LINK.CONSUME <LOCAL.CONSUME> i_ingot_<tag.metal>
+						LINK.CONSUME <eval RAND(<LOCAL.CONSUME>)> i_ingot_<tag.metal>					
+					ENDDO					
+					LINK.SYSMESSAGE @<def.blacksmith_sysmsg_color>,<def.blacksmith_sysmsg_font> <def.blacksmith_msg_ruin_material>
+				ENDIF
+				REMOVE
+			ELSE
+				f_blacksmithing_craft <LOCAL.ID>,<LINK.FINDLAYER.21.UID>
+				DOSWITCH <def.blacksmith_consume_random>
+					LINK.CONSUME <LOCAL.CONSUME> i_ingot_<tag.metal>
+					LINK.CONSUME <eval RAND(<LOCAL.CONSUME>)> i_ingot_<tag.metal>					
+				ENDDO
+			ENDIF
+		END
+		BEGIN // use custom method
+			LOCAL.SCORE=<eval (RAND(<def.blacksmith_success_chance>)*10)+(<LINK.BLACKSMITHING>*<def.blacksmith_success_pskill>*<def.blacksmith_success_fraction>/100)>
+			IF <LOCAL.SCORE> < <LOCAL.SKILL>
+				LINK.SYSMESSAGE @<def.blacksmith_sysmsg_color>,<def.blacksmith_sysmsg_font> <def.blacksmith_msg_fail>
+				IF <def.blacksmith_consume_resource>
+					DOSWITCH <def.blacksmith_consume_random>
+						LINK.CONSUME RAND(<eval <SERV.ITEMDEF.<TAG0.ITEM>.RESOURCES>*<def.blacksmith_consume_fraction>/100>) i_ingot_<tag.metal>
+						LINK.CONSUME <eval <SERV.ITEMDEF.<TAG0.ITEM>.RESOURCES>*<def.blacksmith_consume_fraction>/100> i_ingot_<tag.metal>
+					ENDDO
+					LINK.SYSMESSAGE @<def.blacksmith_sysmsg_color>,<def.blacksmith_sysmsg_font> <def.blacksmith_msg_ruin_material>
+				ENDIF
+				REMOVE
+			ELSE
+				f_blacksmithing_craft <LOCAL.ID>,<LINK.FINDLAYER.21.UID>
+				DOSWITCH <def.blacksmith_consume_random>
+					LINK.CONSUME <LOCAL.CONSUME> i_ingot_<tag.metal>
+					LINK.CONSUME <eval RAND(<LOCAL.CONSUME>)> i_ingot_<tag.metal>					
+				ENDDO
+			ENDIF
+		END
+		BEGIN // use sphere default
+			IF !<LINK.SKILLUSEQUICK BLACKSMITHING <eval <LOCAL.SKILL>>>
+				LINK.SYSMESSAGE @<def.blacksmith_sysmsg_color>,<def.blacksmith_sysmsg_font> <def.blacksmith_msg_fail>
+				IF <def.blacksmith_consume_resource>
+					DOSWITCH <def.blacksmith_consume_random>
+						LINK.CONSUME RAND(<eval <SERV.ITEMDEF.<TAG0.ITEM>.RESOURCES>*<def.blacksmith_consume_fraction>/100>) i_ingot_<tag.metal>
+						LINK.CONSUME <eval <SERV.ITEMDEF.<TAG0.ITEM>.RESOURCES>*<def.blacksmith_consume_fraction>/100> i_ingot_<tag.metal>
+					ENDDO
+					LINK.SYSMESSAGE @<def.blacksmith_sysmsg_color>,<def.blacksmith_sysmsg_font> <def.blacksmith_msg_ruin_material>
+				ENDIF
+				REMOVE
+			ELSE
+				f_blacksmithing_craft <LOCAL.ID>,<LINK.FINDLAYER.21.UID>
+				DOSWITCH <def.blacksmith_consume_random>
+					LINK.CONSUME <LOCAL.CONSUME> i_ingot_<tag.metal>
+					LINK.CONSUME <eval RAND(<LOCAL.CONSUME>)> i_ingot_<tag.metal>					
+				ENDDO
+			ENDIF
+		END	
+	ENDDO
+	REMOVE
+ENDIF
+RETURN 1
+
+//##################################################################################################################################################################
+//##################################################################################################################################################################
+
+[EOF]

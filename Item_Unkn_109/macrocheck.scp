@@ -1,0 +1,480 @@
+//This is a very advanced anti-macro system.
+//At least, that's what people tell me :)
+//Anti-Macro System v2.1, by Rudenid.
+//2.1 fixes a minor issue in which no penalty is given the first time.
+//It also makes the penalties a bit harsher (divided by 3 initially, rather than 4).
+//Quadratic growth is now the default.
+//This checks for macroing of up to 3 skills at once.
+//At first, a dialog will pop up asking the player to answer a simple math problem.
+//If the player fails to respond within 3 minutes, a dragon will pop up and ask a
+//different problem. If the player fails to respond to the dragon within 2 minutes,
+//the dragon will kill the player, penalize and LOCK the player's skill, and take all of the player's items.
+//The items will be deposited in any instance of i_chest_macro_items
+
+//Make sure to let your players know that they can type .macrodialog to show the macro
+//dialog again if it becomes invalid.
+
+//Installation instructions:
+//1. Choose whether you want penalties to remain constant or grow at a linear (x1,x2,x3,x4,...) or quadratic (x1,x2,x4,x8,...) rate.
+     Change this on line 375. The default behavior is linear.
+//2. Create exactly one i_chest_macro_items item in a GM-only area.
+//   This can be inside of a staff member's pack or anywhere else, so long as it exists.
+//3. Add the macrodialog function to PLEVEL 1.
+//4. Add e_macrocheck to your players on @Login.
+
+//This is the inverse of the popular FIXACTION function.
+//Dealing with a number is a requisite here. Constants are FAR less versatile.
+[FUNCTION REVERSEFIXACTION]
+return (<HVAL <ACTION>> &~ 0d2000000) 
+
+//Put this event on all players.
+[EVENTS e_macrocheck]
+ON=@Logout
+TAG.MACROSKILL1=
+TAG.MACROSKILL2=
+TAG.MACROSKILL3=
+TAG.MACROTIMES1=
+TAG.MACROTIMES2=
+TAG.MACROTIMES3=
+TAG.TOTALMACROPENALTY=
+
+ON=@Death
+
+IF (<SRC.FINDID.i_macro_timer>)
+	SRC.FINDID.i_macro_timer.REMOVE
+	SRC.MESSAGE You have been marked attended, or at least unable to unattended macro any further.
+ENDIF
+
+SRC.TAG.MACRONUMBER1=
+SRC.TAG.MACRONUMBER2=
+SRC.TAG.MACROSKILL1=
+SRC.TAG.MACROSKILL2=
+SRC.TAG.MACROSKILL3=
+SRC.TAG.MACROTIMES1=
+SRC.TAG.MACROTIMES2=
+SRC.TAG.MACROTIMES3=
+SRC.TAG.TOTALMACROPENALTY=
+
+ON=@SkillStart
+MACROSKILL
+
+[FUNCTION macrodialog]
+IF !(<FINDID.i_macro_timer>)
+SYSMESSAGE There is no need to bring up the macro dialog right now, as the server doesn't think you're macroing.
+ELSE
+DIALOG d_macro
+ENDIF
+
+[FUNCTION macrocheck]
+VAR.OLDACT=<ACT.UID>
+NEWITEM i_macro_equip
+ACT.MOREX=<EVAL <TAG.MACROSKILL<ARGN>>>
+ACT.MOREY=<EVAL <TAG.MACROTIMES<ARGN>>>
+EQUIP <ACT.UID>
+ACT=<EVAL <VAR.OLDACT>>
+VAR.OLDACT=
+
+IF (<SRC.ISGM>)
+SRC.SYSMESSAGE <NAME> will be checked for unattended macroing.
+ENDIF
+
+[ITEMDEF i_macro_equip]
+ID=i_memory
+NAME=Macro Equip
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_invis|attr_move_never
+
+ON=@Equip
+IF (<SRC.FINDID.i_macro_timer>)
+	IF (<SRC.FINDID.i_macro_timer.TIMER> < 0)
+		SRC.FINDID.i_macro_timer.TIMER=180
+		REMOVE
+		RETURN 1
+	ENDIF
+ENDIF
+
+VAR.OLDACT=<SRC.ACT>
+SRC.NEWITEM i_macro_timer
+SRC.ACT.MOREP=<MOREP>
+SRC.ACT.TIMER=180
+SRC.ACT.EQUIP
+SRC.ACT=<EVAL <VAR.OLDACT>>
+VAR.OLDACT=
+SRC.TAG.MACRONUMBER1=<EVAL RAND(10)>
+SRC.TAG.MACRONUMBER2=<EVAL RAND(10)>
+SRC.DIALOG d_macro
+REMOVE
+RETURN 1
+
+[ITEMDEF i_macro_timer]
+ID=i_memory
+NAME=Macro Timer
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_invis|attr_move_never
+
+ON=@Timer
+CONT.TAG.MACROSKILL1=
+CONT.TAG.MACROSKILL2=
+CONT.TAG.MACROSKILL3=
+CONT.TAG.MACROTIMES1=
+CONT.TAG.MACROTIMES2=
+CONT.TAG.MACROTIMES3=
+CONT.TAG.MACRONUMBER1=
+CONT.TAG.MACRONUMBER2=
+CONT.NEWNPC c_dragon_macro
+CONT.ACT.RUN n
+CONT.ACT.RUN n
+CONT.ACT.RUN n
+CONT.ACT.RUN e
+CONT.ACT.RUN s
+CONT.ACT.RUN w
+CONT.ACT.NEWITEM i_macro_dragon_timer
+CONT.ACT.ACT.MOREX=<MOREX>
+CONT.ACT.ACT.MOREY=<MOREY>
+CONT.ACT.ACT.MOREZ=<EVAL RAND(10)>
+CONT.ACT.ACT.MOREM=<EVAL RAND(10)>
+CONT.ACT.ACT.MORE2=2
+CONT.ACT.ACT.LINK=<CONT.UID>
+CONT.ACT.ACT.TIMER=60
+CONT.ACT.ACT.CONT=<CONT.ACT.UID>
+CONT.ACT.SPEECHCOLOR=037
+CONT.ACT.SAY Greetings, <CONT.NAME>. My master has sent me to ask you a math problem!
+CONT.ACT.SPEECHCOLOR=0481
+CONT.ACT.SAYU What is <EVAL <CONT.ACT.ACT.MOREZ>> + <EVAL <CONT.ACT.ACT.MOREM>>? You have <CONT.ACT.ACT.MORE2> minutes to respond! Say Macro Dragon Number if I do not respond to the number alone.
+REMOVE
+RETURN 1
+
+[DIALOG d_macro]
+0,0
+page 0
+noclose
+nodispose
+resizepic 100 110 2620 550 200
+text 110 119 1152 1
+text 110 139 1152 2
+text 110 159 1152 3
+text 110 179 1152 4
+text 110 204 1152 5
+resizepic 245 199 2620 200 35
+textentry 250 204 200 20 1152 6 0
+button 350 240 2076 2075 1 0 7
+
+[DIALOG d_macro TEXT]
+<VAR.NOTHING>
+The server has reason to believe that you are unattended macroing.
+You have five minutes to answer. If you do not, you will be jailed.
+If you accidentally close this dialog, type .macrodialog to bring it up again.
+You'll also need to type .macrodialog if you see "Unexpected button input" when clicking OK.
+<EVAL <TAG.MACRONUMBER1>> + <EVAL <TAG.MACRONUMBER2>> =
+
+[DIALOG d_macro BUTTON]
+ON=7
+IF (<EVAL <ARGTXT[6]>> != <EVAL <TAG.MACRONUMBER1> + <TAG.MACRONUMBER2>>)
+SYSMESSAGE <TAG.MACRONUMBER1> + <TAG.MACRONUMBER2> is not <EVAL <ARGTXT[6]>>
+DIALOG d_macro
+ELSE
+SRC.FINDID.i_macro_timer.REMOVE
+SRC.TAG.MACRONUMBER1=
+SRC.TAG.MACRONUMBER2=
+SRC.TAG.MACROSKILL1=
+SRC.TAG.MACROSKILL2=
+SRC.TAG.MACROSKILL3=
+SRC.TAG.MACROTIMES1=
+SRC.TAG.MACROTIMES2=
+SRC.TAG.MACROTIMES3=
+SRC.TAG.TOTALMACROPENALTY=
+VAR.OLDP=<SRC.P>
+SRC.P=20,20
+SRC.SAYUA 026, 0,0,eng,You have been marked attended.
+SRC.P=<VAR.OLDP>
+VAR.OLDP=
+SRC.SYSMESSAGE You have been marked attended.
+ENDIF
+
+[FUNCTION macroskill]
+
+//Exceptions to the macroing rules return 1.
+IF (<ISGM>)
+	RETURN 1
+ENDIF
+
+IF ((<EVAL <REVERSEFIXACTION>> > 50) || (<EVAL <REVERSEFIXACTION>> = 31))
+	//Invalid skill number or archery.
+	RETURN 1
+ENDIF
+
+IF (<EVAL <REVERSEFIXACTION>> < 1)
+	//The player isn't using a skill.
+	RETURN 1
+ENDIF
+
+IF (<EVAL <I.<EVAL <REVERSEFIXACTION>>>> = 100.0)
+	//Already grandmaster.
+	RETURN 1
+ENDIF
+
+IF (<REGION.FLAGS> & region_flag_safe)
+	//No skillgain in a safe zone.
+	RETURN 1
+ENDIF
+
+IF ((<EVAL <REVERSEFIXACTION>> > 39) && (<EVAL <REVERSEFIXACTION>> < 44))
+	//Fighting skills are only checked if the player is fighting something wimpy.
+	//Furthermore, they are only checked in graveyards (since that's where the wimpy stuff usually is)
+	IF !((STRMATCH(*graveyard*,<REGION.NAME>))||(STRMATCH(*cemetary*,<REGION.NAME>)))
+		RETURN 1
+	ENDIF
+
+	IF (<ACT.STR> > <STR>)
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF ((<EVAL <REVERSEFIXACTION>> = 25)&&(<ACT.ISCHAR>)&&(<ACT.UID> != <UID>))
+	//Magery has its own conditions.
+	IF (((<ACT.KARMA> < -2000)&&(<ACT.NPC>)) || (<ACT.MEMORYFINDTYPE.memory_war_targ.LINK.UID> = <UID>))
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<EVAL <TAG.MACROSKILL1>> = 0)
+	TAG.MACROSKILL1=<EVAL <REVERSEFIXACTION>>
+	TAG.MACROTIMES1=0
+ENDIF
+
+IF ((<EVAL <REVERSEFIXACTION>> != <EVAL <TAG.MACROSKILL1>>)&&(<EVAL <TAG.MACROSKILL2>> = 0))
+	TAG.MACROSKILL2=<EVAL <REVERSEFIXACTION>>
+	TAG.MACROTIMES2=0
+ENDIF
+
+IF ((<EVAL <REVERSEFIXACTION>> != <EVAL <TAG.MACROSKILL1>>)&&(<EVAL <REVERSEFIXACTION>> != <EVAL <TAG.MACROSKILL2>>)&&(<EVAL <TAG.MACROSKILL3>> = 0))
+	TAG.MACROSKILL3=<EVAL <REVERSEFIXACTION>>
+	TAG.MACROTIMES3=0
+ENDIF
+
+IF (<EVAL <REVERSEFIXACTION>> = <EVAL <TAG.MACROSKILL1>>)
+	TAG.MACROTIMES1=<EVAL <TAG.MACROTIMES1> + 1>
+	TAG.TOTALMACROPENALTY=<EVAL <TAG.TOTALMACROPENALTY> + 1>
+ELSEIF (<EVAL <REVERSEFIXACTION>> = <EVAL <TAG.MACROSKILL2>>)
+	TAG.MACROTIMES2=<EVAL <TAG.MACROTIMES2> + 1>
+	TAG.TOTALMACROPENALTY=<EVAL <TAG.TOTALMACROPENALTY> + 1>
+ELSEIF (<EVAL <REVERSEFIXACTION>> = <EVAL <TAG.MACROSKILL3>>)
+	TAG.MACROTIMES3=<EVAL <TAG.MACROTIMES3> + 1>
+	TAG.TOTALMACROPENALTY=<EVAL <TAG.TOTALMACROPENALTY> + 1>
+ELSE
+	TAG.MACROTIMES1=1
+	TAG.MACROTIMES2=
+	TAG.MACROTIMES3=
+	TAG.TOTALMACROPENALTY=1
+	TAG.MACROSKILL1=<EVAL <REVERSEFIXACTION>>
+	TAG.MACROSKILL2=
+	TAG.MACROSKILL3=
+ENDIF
+
+IF !(<FINDID.i_macro_timer>)
+	IF (<EVAL <TAG.MACROTIMES1>> > 100)
+		MACROCHECK 1
+		TAG.MACROTIMES1=
+		TAG.MACROSKILL1=
+		TAG.MACROTIMES2=
+		TAG.MACROSKILL2=
+		TAG.MACROTIMES3=
+		TAG.MACROSKILL3=
+	ELSEIF (<EVAL <TAG.MACROTIMES2>> > 100)
+		MACROCHECK 2
+		TAG.MACROTIMES1=
+		TAG.MACROSKILL1=
+		TAG.MACROTIMES2=
+		TAG.MACROSKILL2=
+		TAG.MACROTIMES3=
+		TAG.MACROSKILL3=
+	ELSEIF (<EVAL <TAG.MACROTIMES3>> > 100)
+		MACROCHECK 3
+		TAG.MACROTIMES1=
+		TAG.MACROSKILL1=
+		TAG.MACROTIMES2=
+		TAG.MACROSKILL2=
+		TAG.MACROTIMES3=
+		TAG.MACROSKILL3=
+	ENDIF
+ENDIF
+
+[SPEECH spk_macrodragon]
+ON=*
+IF (<SRC.UID> != <FINDID.i_macro_dragon_timer.LINK.UID>)
+SAYU I am not asking you the question, I am asking <FINDID.i_macro_dragon_timer.LINK.NAME>.
+RETURN 1
+ENDIF
+
+IF (STRLEN(<ARGS>) > 1)
+SAYU Just tell me the number. Say "Macro Dragon number" if I don't respond.
+ENDIF
+
+IF (<EVAL <ARGS>> != <EVAL <FINDID.i_macro_dragon_timer.MOREZ> + <FINDID.i_macro_dragon_timer.MOREM>>)
+SAYU <EVAL <FINDID.i_macro_dragon_timer.MOREZ>> + <EVAL <FINDID.i_macro_dragon_timer.MOREM>> is not <EVAL <ARGS>>!
+RETURN 1
+ENDIF
+
+SAYU Correct... you have escaped me... THIS TIME.
+FINDID.i_macro_dragon_timer.REMOVE
+REMOVE
+RETURN 1
+
+[CHARDEF c_dragon_macro]
+NAME=Macro Dragon
+ID=c_dragon_red
+
+TSPEECH=spk_macrodragon
+
+ON=@Create
+KARMA=0
+FAME=0
+STR=3500
+INT=300
+DEX=500
+
+PARRYING=100.0
+TACTICS=100.0
+WRESTLING=100.0
+MAGICRESISTANCE=100.0
+
+NPC=brain_dragon
+
+FOOD=5000
+
+FLAGS=statf_freeze
+SPEECHCOLOR=0481
+
+[ITEMDEF i_macro_dragon_timer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Macro Dragon Memory
+
+ON=@Create
+ATTR=attr_move_never|attr_invis
+
+ON=@Timer
+MORE2=<EVAL <MORE2> +(-1)>
+IF (<MORE2> = 0)
+CONT.SAYU Hmm... you look tasty, <LINK.NAME>!
+CONT.ANIM 12
+TIMER=2
+RETURN 1
+ENDIF
+
+IF (<MORE2> = -1)
+VAR.OLDP=<CONT.P>
+CONT.GOITEMID i_chest_macro_items
+LINK.FINDLAYER.21.NAME=<LINK.NAME>'s pack
+LINK.FINDLAYER.21.ATTR=<LINK.FINDLAYER.21.ATTR> &~ attr_newbie
+LINK.FINDLAYER.21.CONT=<CONT.ACT.UID>
+CONT.GO <VAR.OLDP>
+VAR.OLDP=
+//Adjust the penalty by "the macro multiplier"
+//Uncomment your choice of penalty growth rates.
+//Comment out both if you want the penalty to remain constant at 1x.
+//Uncommenting both will make the penalty cubic... which is nuts.
+
+//Linear:
+//LINK.TAG.TOTALMACROPENALTY=<EVAL ((0<LINK.TAG.TOTALMACROPENALTY> * (0<LINK.TAG.CAUGHTMACROING>+1)) / 3)>
+
+//Quadratic:
+LINK.TAG.TOTALMACROPENALTY=<EVAL ((0<LINK.TAG.TOTALMACROPENALTY> * ((0<LINK.TAG.CAUGHTMACROING>*0<LINK.TAG.CAUGHTMACROING>)+1)) / 3)>
+
+LINK.TITLE=Macroed <MOREX> - Penalty <EVAL <LINK.TAG.TOTALMACROPENALTY>>
+LINK.KILL
+
+IF ((<LINK.FINDID.i_lockskill>)&&(<LINK.FINDID.i_lockskill.MOREX> = <MOREX>))
+	LINK.FINDID.i_lockskill.REMOVE
+ENDIF
+
+CONT.NEWITEM i_lockskill
+CONT.ACT.MOREX=<MOREX>
+
+IF (<EVAL <LINK.TAG.TOTALMACROPENALTY>> < <LINK.<MOREX>>)
+	CONT.ACT.MORE2=<EVAL <LINK.<MOREX>> +(-1*<LINK.TAG.TOTALMACROPENALTY>)>
+ELSE
+	CONT.ACT.MORE2=0.0
+ENDIF
+
+LINK.TAG.TOTALMACROPENALTY=
+LINK.TAG.CAUGHTMACROING=<EVAL 0<LINK.TAG.CAUGHTMACROING>+1>	//This is permanent.
+CONT.ACT.LINK=<LINK.UID>
+LINK.EQUIP <CONT.ACT.UID>
+CONT.ACT.TIMER=1
+CONT.EMOTE takes <LINK.NAME>'s pack to its master
+LINK.SYSMESSAGE You will have to page a GM if you want your items back, your title restored, and the skill lock taken off. They will then decide what to do about your skills.
+TIMER=3
+RETURN 1
+ENDIF
+
+IF (<MORE2> = -2)
+CONT.REMOVE
+RETURN 1
+ENDIF
+
+CONT.SAYU You have <MORE2> minutes left! What is <EVAL <MOREZ>> + <EVAL <MOREM>>?
+TIMER=60
+RETURN 1
+
+[ITEMDEF i_chest_macro_items]
+ID=i_chest_metal_brass
+NAME=Macroers' Items
+
+ON=@Create
+ATTR=attr_move_never|attr_invis
+COLOR=0482
+
+ON=@DClick
+IF !(<SRC.ISGM>)
+RETURN 1
+ENDIF
+
+[ITEMDEF i_lockskill]
+ID=01ea7
+TYPE=t_eq_script
+LAYER=30
+NAME=Skill Lock
+
+ON=@Create
+MOREX=0
+MORE1=288
+MORE2=0
+ATTR=attr_invis|attr_move_never
+TIMER=5*60
+
+ON=@Equip
+IF !(<LINK.ISCHAR>)
+	LINK=<SRC.UID>
+ENDIF
+
+ON=@Timer
+
+IF !(<LINK.ISCHAR>)
+	REMOVE
+ENDIF
+
+IF (<LINK.<MOREX>> > <MORE2>)
+	TRYP 0 LINK.<MOREX>=<MORE2>
+ENDIF
+
+IF (<LINK.<MOREX>> > <MORE2>)
+	//If for some reason the skill was not set...
+	//Stone them and make a GM come.
+	LINK.STONE 1
+	LINK.SYSMESSAGE Your skill lock is not working. Please page a GM.
+ENDIF
+
+MORE1=<MORE1>-1
+TIMER=5*60
+
+IF (<MORE1> <= 1)
+	LINK.SYSMESSAGE Your skill is no longer locked.
+	REMOVE
+ENDIF
+
+RETURN 1

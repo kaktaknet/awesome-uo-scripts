@@ -1,0 +1,318 @@
+////////////////////////////////////////////
+//*******Additional House Functions*********
+//
+//***By Dev. Infinity 11/04/03
+//
+//***Ability to add a Trash Barrel.
+//***Ability to add a Bank Chest.
+//***Can also remove them if ye need to move house.
+//
+//***Designed for use with Amlaruil's Housing menu.
+//
+//***To use this script paste all the code of this into Amlaruil's House Menu version 1.0 or later.
+//*******************************************
+/////////////////////////////////////////////
+//***EDITED 11/12/03 added a custom trash barrel & mini trash barrel.
+//*******************************************
+/////////////////////////////////////////////
+
+
+//***Speech Commands***\\
+
+ON=*place*trashcan*
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || ((<SRC.UID>==<SRC.TAG.COOWNER>) || (<SRC.ISGM>)
+SRC.NEWITEM=i_place_trashcan
+SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+SRC.ACT.ATTR=010
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE>
+SRC.ACT.LINK=<SRC.TAG.MYSIGN>
+ELSE
+SRC.MESSAGE Only the owner and the co-owner can place trash barrels.
+ENDIF
+
+ON=*remove*trashcan*
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || ((<SRC.UID>==<SRC.TAG.COOWNER>) || (<SRC.ISGM>)
+SRC.NEWITEM=i_remove_trashcan
+SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+SRC.ACT.ATTR=010
+SRC.ACT.LINK=<SRC.TAG.MYSIGN>
+SRC.ACT.TRIGGER=@DCLICK
+ELSE
+SRC.MESSAGE Only the owner and the co-owner can remove trash barrels.
+ENDIF
+
+ON=*place*bank*
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>)
+SRC.NEWITEM=i_place_bankchest
+SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+SRC.ACT.ATTR=010
+SRC.ACT.MORE1=<SRC.TAG.MYHOUSE>
+SRC.ACT.LINK=<SRC.TAG.MYSIGN>
+ELSE
+SRC.MESSAGE Only the owner can place a bank chest!
+ENDIF
+
+ON=*remove*bank*
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || (<SRC.ISGM>)
+SRC.NEWITEM=i_remove_bankchest
+SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+SRC.ACT.ATTR=010
+SRC.ACT.LINK=<SRC.TAG.MYSIGN>
+SRC.ACT.TRIGGER=@DCLICK
+ELSE
+SRC.MESSAGE Only the owner can remove a bank chest.
+ENDIF
+
+//***Functional Items***\\
+//***Trashcan***\\
+
+[ITEMDEF i_place_trashcan]
+ID=i_crystal_green
+NAME=Trash Barrel Crystal
+
+ON=@DCLICK
+TARGET Where do you wish to place the Trash Barrel?  (target yourself on that location)
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (0<LINK.TAG.TRASH>==1)
+SRC.MESSAGE You already have a trash barrel!
+REMOVE
+ELSEIF (<SRC.REGION.TYPE>==<SRC.TAG.MYHOUSE>) && (<link.tag.trash>!=1)
+SRC.NEWITEM=i_garbage_can
+SRC.ACT.P=<SRC.TARG.P>
+SRC.ACT.MORE1=<MORE1>
+SRC.ACT.LINK=<MORE1>
+LINK.TAG.TRASH=1
+REMOVE
+ELSEIF !(<SRC.REGION.TYPE>==<SRC.TAG.MYHOUSE>)
+SRC.MESSAGE You can't place trash barrels outside of your house!
+REMOVE
+ENDIF
+RETURN 1
+
+//*****\\
+
+[ITEMDEF i_remove_trashcan]
+ID=i_crystal_green
+NAME=Remove Trash Barrel Crystal
+
+ON=@DCLICK
+TARGET Target the trash barrel you wish to remove.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG.MYHOUSE>) && (<SRC.TARG.BASEID>==i_garbage_can)
+SRC.TARG.REMOVE
+LINK.TAG.TRASH=
+REMOVE
+ELSE
+SRC.MESSAGE This isn't a trash barrel or it is not inside your house.
+REMOVE
+ENDIF
+
+//***Mini Trashcan***\\
+
+[ITEMDEF i_place_minitrashcan]
+ID=i_crystal_green
+NAME=Mini Trash Barrel Crystal
+
+ON=@DCLICK
+TARGET Where do you wish to place the Mini Trash Barrel?  (target yourself on that location)
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (0<LINK.TAG.MTRASH>==1)
+SRC.MESSAGE You already have a trash barrel!
+REMOVE
+ELSEIF (<SRC.REGION.TYPE>==<SRC.TAG.MYHOUSE>) && (<link.tag.mtrash>!=1)
+SRC.NEWITEM=i_garbage_keg
+SRC.ACT.P=<SRC.TARG.P>
+SRC.ACT.MORE1=<MORE1>
+SRC.ACT.LINK=<MORE1>
+LINK.TAG.MTRASH=1
+REMOVE
+ELSEIF !(<SRC.REGION.TYPE>==<SRC.TAG.MYHOUSE>)
+SRC.MESSAGE You can't place mini trash barrels outside of your house!
+REMOVE
+ENDIF
+RETURN 1
+
+//*****\\
+
+[ITEMDEF i_remove_minitrashcan]
+ID=i_crystal_green
+NAME=Remove Mini Trash Barrel Crystal
+
+ON=@DCLICK
+TARGET Target the mini trash barrel you wish to remove.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG.MYHOUSE>) && (<SRC.TARG.BASEID>==i_garbage_keg)
+SRC.TARG.REMOVE
+LINK.TAG.MTRASH=
+REMOVE
+ELSE
+SRC.MESSAGE This isn't a mini trash barrel or it is not inside your house.
+REMOVE
+ENDIF
+
+//***Bank***\\
+
+[ITEMDEF i_place_bankchest]
+ID=i_crystal_green
+NAME=Bank Chest Crystal
+
+ON=@DCLICK
+TARGET Where do you wish to place the Bank Chest?  (target yourself on that location)
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (0<LINK.TAG.BANK>==1)
+SRC.MESSAGE You already have a bank chest!
+REMOVE
+ELSEIF (<SRC.REGION.TYPE>==<SRC.TAG.MYHOUSE>) && (<LINK.TAG.BANK>!=1)
+SRC.NEWITEM=i_bank_chest
+SRC.ACT.P=<SRC.TARG.P>
+SRC.ACT.MORE1=<MORE1>
+SRC.ACT.LINK=<MORE1>
+LINK.TAG.BANK=1
+REMOVE
+ELSEIF !(<SRC.REGION.TYPE>==<SRC.TAG.MYHOUSE>)
+SRC.MESSAGE You can't place bank chests outside of your house!
+REMOVE
+ENDIF
+RETURN 1
+
+//*****\\
+
+[ITEMDEF i_remove_bankchest]
+ID=i_crystal_green
+NAME=Remove Bank Chest Crystal
+
+ON=@DCLICK
+TARGET Target the bank chest you wish to remove.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.REGION.TYPE>==<SRC.TAG.MYHOUSE>) && (<SRC.TARG.BASEID>==i_bank_chest)
+SRC.TARG.REMOVE
+LINK.TAG.BANK=
+REMOVE
+ELSE
+SRC.MESSAGE This isn't a bank chest or it is not inside your house.
+REMOVE
+ENDIF
+
+//*****ITEMS*****\\
+//***Bank Chest***\\
+
+[ITEMDEF i_bank_chest]
+ID=0e43
+NAME=Magical Bank Chest
+WEIGHT=10000
+
+ON=@Create
+COLOR=084d
+
+ON=@Dclick
+SRC.BANKSELF
+RETURN 1
+
+//***Trash Barrel***\\
+
+[ITEMDEF i_garbage_can]  
+ID=i_barrel_open 
+NAME=Trash Barrel
+TYPE=T_container 
+
+ON=@CREATE 
+  COLOR=0967 
+  ATTR=08010
+
+ON=@CLick
+  IF (<DISTANCE> < 5)
+    IF (<TIMER> > 0)
+    SAYU The trash will empty in <timer> seconds!
+    RETURN 1
+    ELSE
+    SAYU The trash barrel is idle, open me to start trashing items.
+    ENDIF
+    RETURN 1
+  ELSE
+  SRC.SYSMESSAGE You are too far away!
+  ENDIF
+  RETURN 1
+
+ON=@DCLICK 
+  IF (<TIMER> <= 0) && (<DISTANCE> < 5)  
+  SAYU The trash will magically empty shortly!
+  TIMER=180
+  RETURN 1
+  ELSEIF (<TIMER> > 0)
+  SAYU These items will soon be lost forever in <timer> seconds!!
+  OPEN
+  ELSE 
+  SRC.SYSMESSAGE You are too far away! 
+  ENDIF 
+  RETURN 1 
+
+ON=@TIMER 
+  EMPTY 
+  SAYU The trash barrel is being emptied!! 
+  RETURN 1 
+
+CATEGORY=Custom Items 
+SUBSECTION=Containers 
+DESCRIPTION=Trash Barrel
+
+//***Mini Trash Barrel***\\
+
+[ITEMDEF i_garbage_keg]  
+ID=i_keg_small 
+NAME=Mini Trash Barrel
+TYPE=T_container 
+WEIGHT=2
+
+ON=@CREATE 
+  COLOR=0967 
+  ATTR=08010
+
+ON=@CLick
+  IF (<DISTANCE> < 5)
+    IF (<TIMER> > 0)
+    SAYU The trash will empty in <timer> seconds!
+    RETURN 1
+    ELSE
+    SAYU The trash barrel is idle, open me to start trashing items.
+    ENDIF
+    RETURN 1
+  ELSE
+  SRC.SYSMESSAGE You are too far away!
+  ENDIF
+  RETURN 1
+
+ON=@DCLICK 
+  IF (<TIMER> <= 0) && (<DISTANCE> < 5)
+  SAYU The trash will magically empty shortly!
+  TIMER=180
+  RETURN 1
+  ELSEIF (<TIMER> > 0)
+  SAYU These items will soon be lost forever in <timer> seconds!!
+  OPEN
+  ELSE 
+  SRC.SYSMESSAGE You are too far away! 
+  ENDIF 
+  RETURN 1
+
+ON=@TIMER 
+  EMPTY 
+  SAYU The trash barrel is being emptied! 
+  RETURN 1 
+
+CATEGORY=Custom Items 
+SUBSECTION=Containers 
+DESCRIPTION=Mini Trash Barrel
+
+[EOF]

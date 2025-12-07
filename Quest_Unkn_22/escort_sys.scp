@@ -1,0 +1,346 @@
+//-------------------------- /////
+////Escort System - by ClouD /////
+//--------------------------
+////E-mail: alexbastos@ism.com.br ////
+//--------------------------
+////ICQ: 133411911 ////
+//--------------------------
+////Note: Edit only the defs if you're a begginer ////
+//--------------------------
+////You can edit the places at the "[FUNCTION escort_setlocation]"
+//--------------------------
+////Made for Trammel/Felucca map
+//--------------------------
+////Please, do not take this header out :D plz? ////
+//-------------------------- /////
+
+//----------------
+//----------------
+//||     /\     ||
+//||    /  \    ||
+//||   /    \   ||
+//||  /      \  ||
+//|| /  ____  \ ||   Brazil!
+//||/  |    |  \||
+//||\  |    |  /||
+//|| \ |____| / ||
+//||  \      /  ||
+//||   \    /   ||
+//||    \  /    ||
+//||     \/     ||
+//----------------
+//----------------
+
+//Commands:
+//Escort - to make the npc follow him
+//Where - to see where the npc wants to go
+//Payment - to see how much the npc will give him
+
+
+[DEFNAME escort_sys]
+escort_offline 3 //<-- time in MINUTES that the player can stay offline before the escort is deleted
+
+[SPEECH spk_pet]  ///<-- you can put this in spherespeech.scp
+ON=RELEASE
+IF (<baseid>==c_escort) 
+IF (<exp>) 
+IF (<findid.i_memory_escort.link>==<src>)
+say @07a1 Certo, adeus entao...
+remove
+endif
+endif
+endif
+
+[NAMES NAMES_Escorter]
+15
+Windor
+Naglash
+Mintor
+Vlakslav
+Thorin
+Manune
+Taoto
+Dinxie
+Lenor
+Magslav
+Ninner
+Tradslav
+Galzan
+Velis
+Monor
+
+[function escort_setlocation]
+DORAND 49
+tag.localnome="Britain"
+tag.localnome="Minoc"
+tag.localnome="Deceit Level 2"
+tag.localnome="Vesper"
+tag.localnome="Cove"
+tag.localnome="Buccaneer's Den"
+tag.localnome="Cove Orc Camp"
+tag.localnome="Covetous Level 2"
+tag.localnome="Delucia"
+tag.localnome="Jhelom"
+tag.localnome="Isle of the Avatar"
+tag.localnome="Ice Isle Cave"
+tag.localnome="Magincia"
+tag.localnome="Trinsic"
+tag.localnome="Hythloth Level 2"
+tag.localnome="Fire Dungeon Level 2"
+tag.localnome="Papua"
+tag.localnome="Hedge Maze"
+tag.localnome="Temple Isle"
+tag.localnome="Great Northern Lake"
+tag.localnome="Moonglow"
+tag.localnome="Nujel'm"
+tag.localnome="Ocllo"
+tag.localnome="Serpent's Hold"
+tag.localnome="Skara Brae"
+tag.localnome="Wind"
+tag.localnome="Yew"
+tag.localnome="Despise Level 2"
+tag.localnome="Destard Level 2"
+tag.localnome="Shame Level 2"
+tag.localnome="Wrong Level 2"
+tag.localnome="Britain Graveyard"
+tag.localnome="Yew Orc Fort"
+tag.localnome="Yew Crypts"
+tag.localnome="Yew Brigand Fort"
+tag.localnome="Honor"
+tag.localnome="Humility"
+tag.localnome="Justice"
+tag.localnome="Chaos"
+tag.localnome="Spirituality"
+tag.localnome="Valor"
+tag.localnome="Ancient Ruins"
+tag.localnome="Crossroads"
+tag.localnome="Great Southern Bog"
+tag.localnome="Great Waterfall"
+tag.localnome="Brit Passage"
+tag.localnome="Hopper's Bog"
+tag.localnome="Ophidian Lair"
+tag.localnome="Orc Valley"
+ENDDO
+
+[CHARDEF c_escort]
+NAME=#NAMES_Escorter the Escorter
+ID=c_man
+DEFNAME=c_escort
+CAN=MT_EQUIP|MT_WALK|MT_RUN|MT_USEHANDS
+TSPEECH=spk_escort
+CATEGORY=Addon
+SUBSECTION=Misc
+DESCRIPTION=Escort
+
+on=@create
+FLAGS |= statf_invul
+title=The traveller
+str=100
+dex=100
+int=100
+level=<eval {2500 9000}>
+
+escort_setlocation
+
+on=@npcrestock
+ITEM=random_platemail_armor
+ITEM=random_female_hair
+ITEM=random_over_armor
+ITEM=random_boots
+ITEM=random_hats
+ITEM=random_pants
+ITEM=random_weapon
+item=random_light
+ITEM=i_cape
+color={07a0 07ad}
+item=i_memory_escort
+timer=10
+
+ON=@click
+message @07ad <name> (<QVAL <tag.aventurado> ? escorted: free>)
+return 1
+
+on=@NpcSeeNewPlayer
+while !(strcmp("<region.name>","<tag.localnome>"))
+escort_setlocation
+endwhile
+
+if (<tag.aventurado>==0)
+say @0ad Hey! I need some help.
+say @0ad Could you take me to <tag.localnome>?
+say @0ad I'll pay you well!
+sector.allclients sfx snd_z_end_mystery3
+endif
+
+ON=@deathcorpse
+try uid.<argo.uid>.remove
+
+ON=@hittry
+return 1
+
+ON=@Attack
+return 1
+
+on=@gethit
+return 1
+
+ON=@EnvironChange
+if (<exp>)
+if !(<findid.i_memory_escort>)
+remove
+endif
+endif
+
+/////////////////////////////
+
+[itemdef i_memory_escort]
+NAME=Escort Memory
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+on=@create
+attr=attr_invis|attr_decay
+
+on=@timer
+IF (<uid.<link.region.uid>.type>==t_multi)
+cont.say @07a1 Eu nao quero entrar ai!
+cont.flags |= statf_stone
+timer=10
+return 1
+ELSE
+cont.flags &= ~statf_stone
+ENDIF
+IF (<cont.exp>) 
+IF !(<link.tag0.event.id>) && !(<LINK.FINDID.i_pvp_time>) && (STRCMPI(<LINK.REGION.NAME>,Arena da Lana))
+IF (<link.isonline>) && (<CONT.DISTANCE <LINK>> > 14)
+cont.removefromview
+cont.p=<link.p>
+cont.update
+ENDIF
+ENDIF
+ENDIF
+IF (<link.tag0.event.id>)
+cont.flags |= statf_stone
+ENDIF
+if !(<cont.exp>)
+timer=-1
+return 1
+endif
+if !(strcmpi(<cont.region.name>,<cont.tag.localnome>))
+serv.newitem=i_gold,<cont.level>
+link.bounce <new>
+cont.say @07ad Obrigado <link.name>, chegamos em <cont.tag.localnome>!
+cont.say @07ad Aqui esta sua recompensa!
+link.tag.escortando
+serv.newitem=i_escort_remove,1,<cont>
+new.timer=10
+cont.release
+cont.findid.i_memory_escort.remove
+return 1
+ENDIF
+if !(<link.isonline>) && !(<cont.findid.i_escort_wait>)
+serv.newitem=i_escort_wait,1,<cont>
+new.timer=<eval 60*<def.escort_offline>>
+new.link=<link>
+cont.flags |= statf_stone
+timer=1
+return 1
+elif (<link.isonline>) && (<cont.findid.i_escort_wait>)
+cont.findid.i_escort_wait.remove
+cont.flags &= ~statf_stone
+timer=1
+return 1
+else
+timer=1
+return 1
+endif
+
+////////////////////////////////
+
+[SPEECH spk_escort]
+on=where
+while !(strcmp("<region.name>","<tag.localnome>"))
+escort_setlocation
+endwhile
+
+say @07a0 I'm going to <tag.localnome>.
+
+on=payment
+say @07a0 I offer <level> GPs as a payment!
+
+on=escort
+while !(strcmp("<region.name>","<tag.localnome>"))
+escort_setlocation
+endwhile
+
+IF (<src.tag0.escortando>) && !(<exp>)
+say You're already helping another traveller!
+elif !(<exp>)
+say @07a0 Thanks <src.name>! Take me to...
+say @07ad ...<tag.localnome>.
+findid.i_memory_escort.link=<src>
+findid.i_memory_escort.timer=1
+serv.newitem=i_memory
+new.color=02
+new.link=<src>
+new.cont=<uid>
+new.timer=-1
+new.name=<src.name>
+exp=1
+home -1,-1
+src.tag.escortando=1
+FORCHARMEMORYTYPE 0200
+IF !(strcmpi(Worldgem bit,<name>))
+remove
+ENDIF
+ENDFOR
+else
+say @07a0 <findid.i_memory_escort.link.name> is already helping me.
+endif
+
+on=quit
+if (<exp>) && (<findid.i_memory_escort.link>==<src>)
+say @07a1 Bye then...
+src.tag.escortando=
+remove
+endif
+
+on=kill*
+IF (<findid.i_memory_escort.link>==<src>)
+say @07a1 I'm just a traveller!
+return 1
+ENDIF
+
+///////////////////
+
+[itemdef i_escort_remove]
+name=escort remover
+id=i_memory
+type=t_eq_script
+layer=layer_special
+
+on=@create
+attr=attr_invis|attr_decay
+
+on=@timer
+cont.remove
+return 1
+
+//////////////////
+
+[itemdef i_escort_wait]
+NAME=escort wait
+id=i_memory
+type=t_eq_script
+layer=layer_special
+
+on=@create
+attr=attr_invis|attr_decay
+
+on=@timer
+link.tag.escortando
+cont.remove
+return 1
+
+[EOF]

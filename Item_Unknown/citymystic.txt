@@ -1,0 +1,292 @@
+//City Travel Agent NPCs for Sphere
+//These go in your spherechar2.scp
+//Dont forget to number them appropriately!
+//See below for items to add to your SPEECH directory! 
+//Thanks to Mara Jade for the initial idea!
+//Modified by Thadius, Tranquillus Decorum 5/21/2000
+
+[XXXX]
+//Male City Travel Agent
+NAME=#HUMANMALE the Mystic Gatemaster
+ID=MALE
+COLOR=all_skin_colors
+//ATT=
+//DEF=
+STR=61-75
+DEX=71-85
+INT=86-100
+HITPOINTS=61-75
+STAMINA=71-85
+MANA=86-100
+INSCRIPTION=50.0-65.0
+MEDITATION=75.0-100.0
+MAGERY=86.0-100.0
+WRESTLING=15.0-38.0
+MAGICRESISTANCE=65.0-88.0
+TACTICS=15.0-38.0
+DESIRES=GOLD,NOTORIETY,MAGIC,REAGENTS
+NPC=brain_human
+
+TSPEECH=humanPRIME
+TSPEECH=jobtravelagent
+TSPEECH=convbye
+TSPEECH=needs
+TSPEECH=rehello
+TSPEECH=TOWN
+TSPEECH=humanGENERAL
+TEVENTS=eHearUnk
+
+TEVENTS=eAcceptItem
+TEVENTS=econvinit
+TEVENTS=egreetings
+TEVENTS=einternalspace
+TEVENTS=eneedresponse
+TEVENTS=erefuseitem
+
+ITEM=hair_long
+COLOR=all_hair_colors
+ITEM=facial_hair
+COLOR=match_hair
+ITEM=robe
+COLOR=all_colors
+ITEM=random_shoes
+COLOR=all_colors
+ITEM=black_staff
+ITEM=random_coin_purse
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=City Mystic (male)
+
+[XXXX]
+//Female City Travel Agent
+NAME=#HUMANFEMALE the Mystic Gatemaster
+ID=FEMALE
+COLOR=all_skin_colors
+//ATT=
+//DEF=
+STR=61-75
+DEX=71-85
+INT=86-100
+HITPOINTS=61-75
+STAMINA=71-85
+MANA=86-100
+MEDITATION=75.0-100.0
+INSCRIPTION=50.0-65.0
+MAGERY=86.0-100.0
+WRESTLING=15.0-38.0
+MAGICRESISTANCE=65.0-88.0
+TACTICS=15.0-38.0
+DESIRES=GOLD,NOTORIETY,MAGIC,REAGENTS
+NPC=brain_human
+
+TSPEECH=humanPRIME
+TSPEECH=jobtravelagent
+TSPEECH=convbye
+TSPEECH=needs
+TSPEECH=rehello
+TSPEECH=TOWN
+TSPEECH=humanGENERAL
+TEVENTS=eHearUnk
+
+TEVENTS=eAcceptItem
+TEVENTS=econvinit
+TEVENTS=egreetings
+TEVENTS=einternalspace
+TEVENTS=eneedresponse
+TEVENTS=erefuseitem
+
+ITEM=hair_long
+COLOR=all_hair_colors
+ITEM=robe
+COLOR=all_colors
+ITEM=random_shoes
+COLOR=all_colors
+ITEM=black_staff
+ITEM=random_coin_purse
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=City Mystic (female)
+
+
+//Below, add this to a new file called
+//jobtravelagent.scp and place it in your speech directory!
+//I added Magincia, Buccaneer's Den and Wind to the mix, 
+//as well as modified the text to give more of a "magical" feel...
+
+ON=*gate*
+ON=*travel*
+IF ( SRC.KARMA.WICKED || SRC.KARMA.BELLIGERANT )
+SAY I'm a Mystic Gate Keeper. Just say I wish to go to "name of the city".
+ELIF ( SRC.KARMA.NEUTRAL )
+IF ( COMPLEXITY.HIGH || COMPLEXITY.MEDIUM )
+DORAND 2
+SAY I'm a Mystic Gate Keeper. Just say I wish to go to "name of the city".
+ENDDO
+ELSE
+DORAND 2
+SAY I'm a Mystic Gate Keeper. Just say I wish to go to "name of the city".
+ENDDO
+ENDIF
+ELSE
+IF ( COMPLEXITY.HIGH )
+DORAND 2
+SAY I cast travel gates to cities. Just say I wish to go to "name of the city".
+ENDDO
+ELIF ( COMPLEXITY.MEDIUM)
+DORAND 2
+SAY I cast travel gates to cities. Just say I wish to go to "name of the city".
+ENDDO
+ELSE
+DORAND 2
+SAY I'm a Mystic Gate Keeper. Just say I wish to go to "name of the city".
+ENDDO
+ENDIF
+ENDIF
+ON=hail*
+ON=greetings*
+ON=hi*
+ON=hello*
+SAY=Greetings, Traveller. What city would you like to visit? I can gate thee! 
+
+ON=*city*
+ON=*City*
+ON=*cities*
+ON=*Cities*
+SAY Yes, there are cities. They have names too!
+
+ON=*names*
+ON=*Names*
+SAY Oh, names like Britain, Minoc, Vesper, Trinsic, and Cove.
+SAY Also Magincia, Ocllo, and Jhelom to name a few. There are more, just ask!
+
+ON=*more*
+ON=*More*
+SAY Hmmm... Oh yes! Nu'jelm, Moonglow, Buccaneer's Den, Serpent's Hold, and Yew.
+
+ON=*I wish to go to wind*
+ON=*I wish to go to Wind* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Outside Wind
+
+ON=*I wish to go to Buccaneer's Den*
+ON=*I wish to go to buccaneer's den* 
+ON=*I wish to go to Buccaneers Den*
+ON=*I wish to go to buccaneers den*
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Buccaneer's Den
+
+ON=*I wish to go to Cove*
+ON=*I wish to go to cove* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Cove
+
+ON=*I wish to go to Jhelom*
+ON=*I wish to go to jhelom* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Jhelom
+
+ON=*I wish to go to Minoc*
+ON=*I wish to go to minoc* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Minoc
+
+ON=*I wish to go to Moonglow*
+ON=*I wish to go to moonglow* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Moonglow
+
+ON=*I wish to go to Magincia*
+ON=*I wish to go to magincia* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Magincia
+
+ON=*I wish to go to Nujelm*
+ON=*I wish to go to nujelm*
+ON=*I wish to go to Nujel'm*
+ON=*I wish to go to nujel'm* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Nujel'm
+
+ON=*I wish to go to Ocllo*
+ON=*I wish to go to ocllo* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Ocllo
+
+ON=*I wish to go to Serpent's Hold*
+ON=*I wish to go to serpents hold*
+ON=*I wish to go to Serpents Hold*
+ON=*I wish to go to serpent's hold* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Serpent's Hold
+
+ON=*I wish to go to Skara Brae*
+ON=*I wish to go to skara brae* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Skara Brae
+
+ON=*I wish to go to Trinsic*
+ON=*I wish to go to trinsic* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Trinsic
+
+ON=*I wish to go to Vesper*
+ON=*I wish to go to vesper* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Vesper
+
+ON=*I wish to go to Yew*
+ON=*I wish to go to yew* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Yew
+
+ON=*I wish to go to Britain*
+ON=*I wish to go to britain* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Britain

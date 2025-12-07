@@ -1,0 +1,2248 @@
+/////////////////////////////////////////////////////////
+//OSI-style vendors originally by Belarm
+//Admin Jamie added stuff
+//Ripped to shreads and pretty much totally redone by Iz
+/////////////////////////////////////////////////////////
+//Version 4.0
+//December 23th, 2003
+//
+//Originally written by Belarm
+//Updates by AdminJamie (electricgod@hotmail.com)
+// Added vendor customization
+// Added text help
+// Dclick vendor brings up the paper doll too
+// Added female vendors
+// All in all I've not made a whole lot of changes but I hope I've helped
+// at least in some small way to make this a more well rounded system
+// for both Belarm and all of the players.
+//
+//
+//Changes by Iz (www.oblivion2.com)  (August, 2002)
+// Payment function used to be by Belgar and since I like him I'll leave the credit here even though the function's gone
+// Distance function by Taran
+//
+// Ok the first thing to note is I changed the header.  EVERYONE still gets
+// credit BUT it was misleading and out of date.  I have redone how the entire
+// script works.  No functional areas are the same and I didn't want bad commands
+// or info in the header to confuse people using this script.  To Belarm, thank
+// you for an amazing idea, I love how these work.  Jamie, your changes are the bomb. ;)
+//
+// Ok, on to it....
+// Some unclosed IF blocks fixed
+// Crazy IF statements tamed
+// Got rid of INPDLG's as I can't stand the sight of them
+// The system uses some really odd looking object references with TRYP but it works.  ;)
+// Vendor HELP is a dialog now
+// The "price input" dialog is a nicer gump now
+// The "description input" dialog is a nicer gump now
+// The Description now can be shown by using the desc/description command as a non owner or single
+// clicking on the item.  (Shows Price/Desc if they exist, independent of each other.)
+// Wages are taken by the vendors, 10gp per sphere day, and the vendors go away when they run out.
+// Basically redid the *whole* script so it would work better and have less
+// bug abuse potential as well as increased the functionality signifigantly.
+// Major changes to how the thing works as far as items being sold/bought, and vendor management
+// These vendors can do some neat tricks.  You can sell a bag in the pack (in the case of a suit
+// of armor for instance where you want the players to buy the whole thing) OR you can sell
+// individual items in a pack without the actual bag being for sale (in the case of mounts.)
+// There is a memory object created that puts the events on the player, when it times out and the
+// player/owner of the vendor is in a different place it cancels it.  So it is important to tell
+// your players NOT TO MOVE MORE THAN 3 TILES AWAY while using the vendor.
+// The reprice/redesc commands allow you to target a container for sale and set the price/desc of everything in it
+// Staff members can use vendors as if they were theirs.  This is for if something is wrong or a "bad" description is set.
+//
+// Payment takes out of pack first then the bankbox.  It's 1337 like that.
+//
+// Add this to your spheretables.scp under the player skillclasses if you want to make STEALING impossible:
+//ON=@SKILLSTART
+//   IF (<ACTION>==skill_stealing)&&(0<SRC.TARG.TOPOBJ.TAG.VENDOR>==01))
+//      SRC.SYSMESSAGE "You can not steal from vendors you scumbag!"
+//      SRC.ACTION=-1
+//      RETURN 1
+//   ENDIF
+//
+//Oblivion change log:
+//12/23/03 - Iz - Updated payment functions to be functioning as opposed to the mess they were before.
+
+[ITEMDEF smc_deed_player_vendor]
+DEFNAME=smc_deed_player_vendor
+NAME=Contract of Employment
+ID=i_deed
+VALUE=1200
+
+CATEGORY=Player Vendors
+SUBSECTION=OSI Player Vendor Deed
+DESCRIPTION=Player Vendor Deed
+
+ON=@DCLICK
+   SRC.TAG.VENDORACT=
+   SRC.TAG.VENDORACTION=
+   IF (<SRC.BODY>==c_man)
+      SRC.NEWNPC=smc_player_vendor_male
+   ELSE
+      SRC.NEWNPC=smc_player_vendor_female
+   ENDIF
+   SRC.ACT.P <SRC.P>
+   SRC.ACT.TAG.OWNER=<SRC.UID>
+   SRC.ACT.SAY "Greetings. I will be working for you for 10 gold per UO day."
+   SRC.ACT.SAY "I currently have enough gold for 10 days."
+   //Make it a pet of the player placing the vendor
+   SRC.ACT.NEWITEM=i_memory
+   SRC.ACT.ACT.LINK=<SRC.UID>
+   SRC.ACT.ACT.ATTR=attr_newbie
+   SRC.ACT.ACT.COLOR=memory_ipet
+   SRC.ACT.ACT.TIMER=-1
+   SRC.ACT.ACT.MORE1 04
+   SRC.ACT.ACT.MORE2 <SERV.TIME>
+   SRC.ACT.ACT.LAYER=126
+   SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+   SRC.ACT.ACT.NAME="<SRC.NAME>"
+   SRC.ACT.NEWITEM=smc_vendor_wage
+   SRC.ACT.ACT.CONT=<SRC.ACT.UID>
+   REMOVE
+RETURN 1
+
+[ITEMDEF smc_vendor_wage]
+ID=i_memory
+NAME="Vendor Wages Object"
+TYPE=t_eq_script
+LAYER=30
+
+CATEGORY=Memory Objects
+SUBSECTION=Vendors
+DESCRIPTION=Wages
+
+ON=@CREATE
+   ATTR=attr_decay
+   TIMER=50
+
+ON=@TIMER
+   //Try from the "bank" first
+   IF (0<CONT.TAG.GOLD>>10)
+      CONT.TAG.GOLD=<CONT.TAG.GOLD>+(-10)
+      TIMER=86400
+      RETURN 1
+   ENDIF
+   //Now take from pack
+   IF <CONT.RESTEST 10 i_gold>
+      CONT.CONSUME 10 i_gold
+      TIMER=86400
+      RETURN 1
+   ENDIF
+
+   //Refill the food
+   CONT.FOOD=32000
+
+   //Oops, no more money.  Kiss the vendor g'bye
+   VAR.UID=<CONT.FINDLAYER(layer_pack).UID>
+   CONT.FINDLAYER(layer_pack).P=<CONT.P>
+   TRYP 0 UID.<VAR.UID>.TIMER=100
+   CONT.REMOVE
+   REMOVE
+RETURN 0
+
+[ITEMDEF smc_vendor_cancel]
+ID=i_memory
+NAME="Vendor Cancel Event Object"
+TYPE=t_eq_script
+LAYER=125
+
+CATEGORY=Memory Objects
+SUBSECTION=Vendors
+DESCRIPTION=Cancel Event
+
+ON=@CREATE
+   ATTR=attr_decay
+   TIMER=15
+
+ON=@TIMER
+   VAR.DELTAX=<EVAL <LINK.P.X>-<CONT.P.X>>
+   IF (<VAR.DELTAX><0)
+      VAR.DELTAX=<EVAL -<VAR.DELTAX>>
+   ENDIF
+   VAR.DELTAY=<EVAL <LINK.P.Y>-<CONT.P.Y>>
+   IF (<VAR.DELTAY><0)
+      VAR.DELTAY=<EVAL -<VAR.DELTAY>>
+   ENDIF
+   IF <VAR.DELTAY>><VAR.DELTAX>
+      VAR.DIST=<VAR.DELTAY>
+   ELSE
+      VAR.DIST=<VAR.DELTAX>
+   ENDIF
+   IF (<VAR.DIST><4)
+      TIMER=5
+      RETURN 1
+   ELSE
+      CONT.SYSMESSAGE "You have moved away from the vendor and can no longer do business with them."
+      LINK.SAY "Good day to thee <CONT.NAME>."
+      CONT.TAG.VENDORACT=
+      CONT.TAG.VENDORACTION=
+      CONT.EVENTS -smc_vendor_browse
+      REMOVE
+      RETURN 0
+   ENDIF
+
+[ITEMDEF smc_bagreprice_target]
+ID=i_memory
+NAME="Vendor Target Object"
+TYPE = t_eq_script
+LAYER = 30
+
+CATEGORY=Memory Objects
+SUBSECTION=Vendors
+DESCRIPTION=Target
+
+ON=@CREATE
+ATTR=attr_decay
+TIMER=100
+
+ON=@TIMER
+REMOVE
+
+ON=@TARGON_ITEM
+   IF (<SRC.TARG.TYPE>==t_gold).
+      SRC.SYSMESSAGE "You can't do anything with the gold."
+      SRC.TAG.VENDORACTION=
+      REMOVE
+      RETURN 1
+   ENDIF
+   IF ((<SRC.UID>==<SRC.TARG.TOPOBJ.TAG.OWNER>)&&(<SRC.TARG.TYPE>==t_container))
+      //price
+      IF (<SRC.TAG.CONTACT>==1)
+         //Ok set the tags and call the recursive function
+         LINK=<SRC.TARG.UID>
+         setbagvalue 0
+         SRC.TAG.VENDORACTION=
+         SRC.TAG.PRICE=
+      //description
+      ELIF (<SRC.TAG.CONTACT>==2)
+         LINK=<SRC.TARG.UID>
+         setbagvalue 0
+         SRC.TAG.DESC=
+      ENDIF
+      SRC.TAG.CONTACT=
+   ELSE
+      LINK.SAY "You can't do that."
+   ENDIF
+RETURN 1
+
+[ITEMDEF smc_vendor_target]
+ID=i_memory
+NAME="Vendor Target Object"
+TYPE = t_eq_script
+LAYER = 30
+
+CATEGORY=Memory Objects
+SUBSECTION=Vendors
+DESCRIPTION=Target
+
+ON=@CREATE
+ATTR=attr_decay
+TIMER=100
+
+ON=@TIMER
+REMOVE
+
+ON=@TARGON_ITEM
+   IF (<SRC.TARG.TYPE>==t_gold)
+      SRC.SYSMESSAGE "You can't do anything with the gold."
+      SRC.TAG.VENDORACTION=
+      REMOVE
+      RETURN 1
+   ENDIF
+   IF ((0<SRC.TAG.VENDORACT>==0<TAG.VENDOR>)&&(0<SRC.TAG.VENDORACT>!=0))
+      //Price
+      IF (<SRC.TAG.VENDORACTION>==1)
+         //Check to see if its legal to set a price on that
+         //It can't be "on" the NPC it has to be in the pack
+         //This prevents abuse of pricing shirts and stuff and
+         //buying them for 1 gold/selling them for their value
+         IF !(<f_check_legal_target>)
+            LINK.SAY "You cannot set the price for that"
+            RETURN 1
+         ENDIF
+         TRYP 0 SRC.TAG.ORIGVAL=<LINK.TAG.<SRC.TARG.UID>.PRICE>
+         SRC.TAG.IUID=<SRC.TARG.UID>
+         SRC.TAG.VID=<LINK.UID>
+         SRC.DIALOG d_vendor_price
+      ENDIF
+
+      //Description
+      IF (<SRC.TAG.VENDORACTION>==2)
+      //Check to see if its legal to set a description on that
+      //It can't be "on" the NPC it has to be in the pack
+      //This prevents abuse of naming shirts and stuff
+         IF !(<f_check_legal_target>)
+            LINK.SAY "You cannot set the description for that"
+            RETURN 1
+         ENDIF
+         TRYP 0 SRC.TAG.ORIGVAL=<LINK.TAG.<SRC.TARG.UID>.DESC>
+         SRC.TAG.IUID=<SRC.TARG.UID>
+         SRC.TAG.VID=<LINK.UID>
+         SRC.DIALOG d_vendor_desc
+      ENDIF
+
+      //Buy an item
+      IF (<SRC.TAG.VENDORACTION>==3)
+      //Check to see if its legal to buy that
+         IF !(<f_check_legal_target>)
+            LINK.SAY "You cannot buy that!"
+            RETURN 1
+         ENDIF
+         IF (<SRC.TARG.ATTR>&attr_forsale)
+            //Check for valid price
+            IF (<EVAL <LINK.TAG.<SRC.TARG.UID>.PRICE>><1)
+               LINK.SAY "The price is set incorrectly on that item and you can't buy it.  Sorry."
+               SRC.TAG.VENDORACTION=
+               REMOVE
+               RETURN 1
+            ENDIF
+            IF (<SRC.TARG.AMOUNT>>1)
+               SRC.TAG.VID=<LINK.UID>
+               SRC.DIALOG d_buystack
+            ELSE
+               TRYP 0 SRC.TAG.GOLD=0<LINK.TAG.<SRC.TARG.UID>.PRICE>
+               VAR.GOLD=<payup>
+               IF (<VAR.GOLD>==0)
+                  LINK.TAG.GOLD=(0<LINK.TAG.GOLD>+<LINK.TAG.<SRC.TARG.UID>.PRICE>)
+                  SRC.TARG.BOUNCE
+                  TRYP 0 LINK.SAY "That will be <EVAL <LINK.TAG.<SRC.TARG.UID>.PRICE>> gp. I thank thee for thy business!"
+                  TRYP 0 LINK.TAG.<SRC.TARG.UID>.PRICE=
+                  TRYP 0 LINK.TAG.<SRC.TARG.UID>.DESC=
+               ELSE
+                  LINK.SAY "You lack the gold for that item."
+               ENDIF
+            ENDIF
+         ELSE
+            LINK.SAY "That item is not for sale"
+         ENDIF
+      ENDIF
+      
+      //Unequip an item
+      IF (<SRC.TAG.VENDORACTION>==4)
+         IF <f_check_layers>
+            SRC.TARG.BOUNCE
+         ENDIF
+      ENDIF
+   ELSE
+      SAY "Wrong Vendor"
+   ENDIF
+   SRC.TAG.VENDORACTION=
+   REMOVE
+RETURN 1
+
+////////////////////////////////////////////
+//The Vendor himself
+////////////////////////////////////////////
+[CHARDEF smc_player_vendor_male]
+DEFNAME=c_house_vendor_male
+NAME="#NAMES_HUMANMALE"
+ID=C_MAN
+CAN=mt_equip
+TSPEECH=smc_vendor_commands
+TEVENTS=smc_vendor_events
+
+ON=@CREATE
+   //vendors cannot be killed, and cannot move
+   FLAGS=statf_invul|statf_freeze
+   TITLE="the Player Vendor"
+   FOOD=32000
+   //He's gotta be able to hold a lot...
+   STR=10000
+   DEX=0
+   TAG.GOLD=100
+   TAG.VENDOR=1
+   COLOR=colors_skin
+   ITEMNEWBIE=random_male_hair
+   COLOR=colors_hair
+   ITEMNEWBIE=random_facial_hair
+   COLOR=match_hair
+   ITEM=i_shirt_fancy
+   COLOR=colors_all
+   ITEM=random_pants
+   COLOR=colors_all
+   ITEM=random_shoes
+   COLOR=colors_neutral
+   ITEMNEWBIE=i_backpack
+
+CATEGORY=Player Vendors
+SUBSECTION=NPCS
+DESCRIPTION=Player Vendor (male)
+
+[CHARDEF smc_player_vendor_female]
+DEFNAME=c_house_vendor_female
+NAME="#NAMES_HUMANFEMALE"
+ID=C_WOMAN
+CAN=mt_equip
+TSPEECH=smc_vendor_commands
+TEVENTS=smc_vendor_events
+
+ON=@CREATE
+   //vendors cannot be killed, and cannot move
+   FLAGS=statf_invul|statf_freeze
+   TITLE="the Player Vendor"
+   FOOD=32000
+   //He's gotta be able to hold a lot...
+   STR=10000
+   DEX=0
+   TAG.GOLD=100
+   TAG.VENDOR=1
+   COLOR=colors_skin
+   ITEMNEWBIE=random_female_hair
+   COLOR=colors_hair
+   COLOR=match_hair
+   ITEM=i_shirt_fancy
+   COLOR=colors_all
+   ITEM=random_pants
+   COLOR=colors_all
+   ITEM=random_shoes
+   COLOR=colors_neutral
+   ITEMNEWBIE=i_backpack
+
+CATEGORY=Player Vendors
+SUBSECTION=NPCS
+DESCRIPTION=Player Vendor (female)
+
+[EVENTS smc_vendor_events]
+ON=@DCLICK
+   //First check distance!
+   IF (<DISTANCE>>3)
+      SRC.SYSMESSAGE "You are too far away."
+      RETURN 1
+   ENDIF
+   //First see if the stupid pet object lost the correct color
+   //If it is the owner, set it correctly
+   IF (<SRC.UID>==<TAG.OWNER>)
+      f_remove_petmem 0
+      //Make it a pet of the player placing the vendor
+      SRC.NEWITEM=i_memory
+      SRC.ACT.LINK=<SRC.UID>
+      SRC.ACT.ATTR=attr_newbie
+      SRC.ACT.COLOR=memory_ipet
+      SRC.ACT.TIMER=-1
+      SRC.ACT.MORE1 04
+      SRC.ACT.MORE2 <SERV.TIME>
+      SRC.ACT.LAYER=126
+      SRC.ACT.CONT=<UID>
+      SRC.ACT.NAME="<SRC.NAME>"
+   ENDIF
+
+   //Check for the event killing obj and if its not there then add it
+   IF (0<SRC.FINDLAYER(125).UID>==0)
+      SRC.NEWITEM=smc_vendor_cancel
+      SRC.ACT.MOREP=<SRC.P>
+      SRC.ACT.LINK=<UID>
+      SRC.ACT.CONT=<SRC.UID>
+   ENDIF
+
+   //Check to see if another vendor owns them
+   IF ((0<SRC.FINDLAYER(125).LINK>!=0<UID>)
+      SAY "Please finish your dealings with other vendors first."
+      RETURN 1
+   ENDIF
+
+   IF <TAG.OWNER>==<SRC.UID>
+      SAY "Place items in here that you wish me to sell."
+      FINDLAYER(21).OPEN
+      SRC.EVENTS +smc_vendor_browse
+      SRC.TAG.VENDORACT=<UID>
+   ELSE
+      SAY "Please, take a look at my goods"
+      FINDLAYER(21).OPEN
+      SRC.EVENTS +smc_vendor_browse
+      SRC.TAG.VENDORACT=<UID>
+   ENDIF
+RETURN 0
+
+ON=@HitTry
+   RETURN 1
+ON=@SpellCast
+   RETURN 1
+ON=@SpellEffect
+   RETURN 1
+ON=@Death
+   HITS=<STR>
+   RETURN 1
+ON=@GetHit
+   RETURN 1
+ON=@CLIPeriodic
+   FOOD=32000
+RETURN 0
+
+[EVENTS smc_vendor_browse]
+ON=@itemCLICK
+   //This says "if the item is the vendor pack do normal CLICK"
+   IF (0<SRC.ACT.TOPOBJ.UID>!=0<SRC.TAG.VENDORACT>)
+      RETURN 0
+   ENDIF
+
+   //If so is it for sale?
+   IF (<ACT.ATTR>|attr_forsale)
+      TRYP 0 VAR.COST=0<ACT.TOPOBJ.TAG.<ACT.UID>.PRICE>
+      //Only say the price if it has one!
+      IF (<EVAL <VAR.COST>>!=0)
+         IF (<ACT.AMOUNT>==1)
+            ACT.MESSAGE "<ACT.NAME> costs <EVAL <VAR.COST>> gp"
+         ELSE
+            ACT.MESSAGE "<ACT.AMOUNT> <ACT.NAME> for sale at <EVAL <VAR.COST>> gp each"
+         ENDIF
+      //No price, show either the cont message or the NFS message
+      ELSE
+         //Be smart, if its a container tell them to dclick it (duh players)
+         IF (<ACT.TYPE>==t_container)
+            ACT.MESSAGE "Open this container to see its contents for sale."
+         ELSE
+            ACT.MESSAGE "This item is not for sale."
+         ENDIF
+      ENDIF
+   //Not for sale
+   ELSE
+      ACT.MESSAGE "(Not for sale)"
+   ENDIF
+
+   //STRMATCH is god....
+   TRYP 0 VAR.DESC=0<ACT.TOPOBJ.TAG.<ACT.UID>.DESC>
+   IF !(STRMATCH("*0","<VAR.DESC>"))
+      TRYP 0 ACT.MESSAGE "Description:  <ACT.TOPOBJ.TAG.<ACT.UID>.DESC>"
+   ENDIF
+RETURN 1
+
+ON=@itemDCLICK
+   //Is it on the vendor?
+   IF (0<SRC.TAG.VENDORACT>==0<SRC.ACT.TOPOBJ.UID>)
+      //If its the backpack open it
+      IF (<SRC.ACT.TOPOBJ.FINDLAYER(layer_pack).UID>==<SRC.ACT.UID>)
+         SRC.ACT.TOPOBJ.FINDLAYER(21).OPEN
+         IF (0<TAG.OWNER>==0<SRC.UID>)
+            SRC.ACT.TOPOBJ.SAY "Place items in here that you wish me to sell."
+         ELSE
+            SRC.ACT.TOPOBJ.SAY "Please, take a look at my goods"
+         ENDIF
+      ELSE
+         IF (<SRC.ACT.TYPE>==t_container)
+            SRC.ACT.OPEN
+         ENDIF
+      ENDIF
+   ELSE
+      RETURN 0
+   ENDIF
+RETURN 1
+
+ON=@DEATH
+   SRC.TAG.VENDORACT=
+   SRC.TAG.VENDORACTION=
+   SRC.EVENTS -smc_vendor_browse
+   SRC.FINDLAYER(125).REMOVE
+RETURN 0
+
+ON=@LOGOUT
+   SRC.TAG.VENDORACT=
+   SRC.TAG.VENDORACTION=
+   SRC.EVENTS -smc_vendor_browse
+   SRC.FINDLAYER(125).REMOVE
+RETURN 0
+
+[SPEECH smc_vendor_commands]
+ON=bye
+ON=*bye*
+ON=*goodbye*
+ON=*peace out*
+   SRC.TAG.VENDORACT=
+   SRC.TAG.VENDORACTION=
+   SRC.EVENTS -smc_vendor_browse
+   SRC.FINDLAYER(125).REMOVE
+   BYE
+   UPDATEX
+RETURN 0
+
+ON=*browse*
+ON=*look*
+ON=*view*
+   IF (<SRC.UID>==<TAG.OWNER>)
+      SAY "Simply place items in my bag and I will sell them for you."
+      FINDLAYER(21).OPEN
+      SRC.EVENTS +smc_vendor_browse
+      SRC.TAG.VENDORACT=<UID>
+   ELSE
+      SAY "Please, take a look at my goods..."
+      FINDLAYER(21).OPEN
+      SRC.EVENTS +smc_vendor_browse
+      SRC.TAG.VENDORACT=<UID>
+   ENDIF
+RETURN 1
+
+//Set the price
+ON=*cost*
+ON=price
+   IF (<SRC.ISSTAFF>)
+      SAY "Master, what shall I set the price of?"
+      SRC.TAG.VENDORACT=<UID>
+      SRC.TAG.VENDORACTION=1
+      SRC.NEWITEM=smc_vendor_target
+      SRC.ACT.CONT=<SRC.UID>
+      SRC.ACT.TAG.VENDOR=<UID>
+      SRC.ACT.TAG.OWNER=<TAG.OWNER>
+      SRC.ACT.LINK=<UID>
+      SRC.ACT.TARGET
+   ENDIF
+   IF (<SRC.UID>==<TAG.OWNER>)
+      SAY "What do you wish to set the price on?"
+      SRC.TAG.VENDORACT=<UID>
+      SRC.TAG.VENDORACTION=1
+      SRC.NEWITEM=smc_vendor_target
+      SRC.ACT.CONT=<SRC.UID>
+      SRC.ACT.TAG.VENDOR=<UID>
+      SRC.ACT.TAG.OWNER=<TAG.OWNER>
+      SRC.ACT.LINK=<UID>
+      SRC.ACT.TARGET
+   ENDIF
+RETURN 1
+
+//Set the description of an item
+ON=desc
+ON=*describe*
+ON=*description*
+   IF (<SRC.ISSTAFF>)
+      SAY "Master, what shall I set the description on?"
+      SRC.TAG.VENDORACT=<UID>
+      SRC.TAG.VENDORACTION=2
+      SRC.NEWITEM=smc_vendor_target
+      SRC.ACT.CONT=<SRC.UID>
+      SRC.ACT.TAG.VENDOR=<UID>
+      SRC.ACT.TAG.OWNER=<TAG.OWNER>
+      SRC.ACT.LINK=<UID>
+      SRC.ACT.TARGET
+   ENDIF      
+   IF (<SRC.UID>==<TAG.OWNER>)
+      SAY "What do you wish to set the description on?"
+      SRC.TAG.VENDORACT=<UID>
+      SRC.TAG.VENDORACTION=2
+      SRC.NEWITEM=smc_vendor_target
+      SRC.ACT.CONT=<SRC.UID>
+      SRC.ACT.TAG.VENDOR=<UID>
+      SRC.ACT.TAG.OWNER=<TAG.OWNER>
+      SRC.ACT.LINK=<UID>
+      SRC.ACT.TARGET
+   ENDIF
+RETURN 1
+
+ON=*buy*
+ON=*purchase*
+   SAY "What do you wish to purchase?"
+   SRC.TAG.VENDORACT=<UID>
+   SRC.TAG.VENDORACTION=3
+   SRC.NEWITEM=smc_vendor_target
+   SRC.ACT.CONT=<SRC.UID>
+   SRC.ACT.TAG.VENDOR=<UID>
+   SRC.ACT.TAG.OWNER=<TAG.OWNER>
+   SRC.ACT.LINK=<UID>
+   SRC.ACT.TARGET
+RETURN 1
+
+ON=*collect*
+ON=*gold*
+ON=*get*
+   IF <TAG.OWNER>=<SRC.UID>
+      IF (0<EVAL <TAG.GOLD>>==0)
+         SAY "I do not have any gold in my vendor account."
+         SAY "If there is gold in my pack you may take it."
+         RETURN 1
+      ELSE
+         SRC.TAG.VENDORACT=<UID>
+         smc_give_gold
+      ENDIF
+   ENDIF
+RETURN 1
+
+ON=*merge*
+   IF <SRC.UID>==<TAG.OWNER>
+      VAR.GOLD=<EVAL <RESCOUNT i_gold>>
+      IF (<VAR.GOLD><=0))
+         RETURN 1
+      ENDIF
+      IF (<VAR.GOLD>>50000)
+         SAY "I will merge the maximum amount of gold, which is 50,000 gold pieces."
+         VAR.GOLD=50000
+      ENDIF
+      TAG.GOLD=<EVAL 0<TAG.GOLD>>+<EVAL <VAR.GOLD>>
+      CONSUME <VAR.GOLD> i_gold
+      SAY "I had <EVAL <VAR.GOLD>> gold in my pack."
+      SAY "It is now in my gold box."
+   ELSE
+      SAY "You can't tell me to do that!"
+   ENDIF
+RETURN 1
+
+ON=*stats*
+   IF <SRC.UID>==<TAG.OWNER>
+      VAR.GOLD=<RESCOUNT i_gold>+<EVAL 0<TAG.GOLD>>
+      VAR.DAYS=(<VAR.GOLD>/10)
+      SAY "I have <EVAL <VAR.GOLD>> gold."
+      SAY "This is enough for <EVAL <VAR.DAYS>> days of work."
+   ENDIF
+RETURN 1
+
+ON=*help*
+   SRC.DIALOG d_vendorhelp
+RETURN 1
+
+ON=*hi*
+ON=*hail*
+ON=*greetings*
+ON=*sup*
+   IF (<SRC.UID>==<TAG.OWNER>)
+      SAY "Greetings master!"
+   ELSE
+      DORAND 4
+         SAY "Greetings."
+         SAY "Hello."
+         SAY "Hi."
+         SAY "Buy something!"
+      ENDDO
+   ENDIF
+RETURN 1
+
+ON=*clothes*
+ON=*outfit*
+ON=*customize*
+   IF <SRC.UID>==<TAG.OWNER>
+      SRC.TAG.VENDORACT=<UID>
+      SRC.DIALOG d_vendor_customize
+   ELSE
+      SAY "Sorry but you may not use this option."
+   ENDIF
+RETURN 1
+
+ON=*sell*
+   SAY "Sorry, I do not buy things."
+RETURN 1
+
+ON=unequip
+ON=remove
+   IF (<SRC.UID>==<TAG.OWNER>)
+      SAY "What do you want me to unequip (Item goes to your pack)?"
+      SRC.TAG.VENDORACT=<UID>
+      SRC.TAG.VENDORACTION=4
+      SRC.NEWITEM=smc_vendor_target
+      SRC.ACT.CONT=<SRC.UID>
+      SRC.ACT.TAG.VENDOR=<UID>
+      SRC.ACT.TAG.OWNER=<TAG.OWNER>
+      SRC.ACT.LINK=<UID>
+      SRC.ACT.TARGET
+   ELSE
+      SAY "Sorry but you may not use this option."
+   ENDIF
+RETURN 1
+
+ON=unequip all
+ON=remove all
+ON=all unequip
+ON=all remove
+   IF (<SRC.UID>==<TAG.OWNER>)
+      f_dump_layers
+   ELSE
+      SAY "Sorry but you may not use this option."
+   ENDIF
+RETURN 1
+
+ON=reprice bag
+ON=reprice cont
+ON=reprice container
+ON=reprice box
+ON=reprice target
+   IF (<SRC.ISSTAFF>)
+      SRC.TAG.CONTACT=1
+      SRC.DIALOG d_vendor_bprice
+   ENDIF
+   IF (<SRC.UID>==<TAG.OWNER>)
+      SRC.TAG.CONTACT=1
+      SRC.DIALOG d_vendor_bprice
+   ELSE
+      SAY "Sorry but you may not use this option."
+   ENDIF
+RETURN 1
+
+ON=redesc bag
+ON=redesc cont
+ON=redesc container
+ON=redesc box
+ON=redesc target
+   IF (<SRC.ISSTAFF>)
+      SRC.TAG.CONTACT=2
+      SRC.DIALOG d_vendor_bprice
+   ENDIF
+   IF (<SRC.UID>==<TAG.OWNER>)
+      SRC.TAG.CONTACT=2
+      SRC.DIALOG d_vendor_bprice
+   ELSE
+      SAY "Sorry but you may not use this option."
+   ENDIF
+RETURN 1
+
+[DIALOG d_vendor_customize]                  // VENDOR CUSTOMIZATION MENU
+0,0                                          // Position
+page 0                                       // Page 0
+resizepic 25 0 2600 500 400                  // Backround
+resizepic 45 60 5100 450 25                  // Backround Rectangle Top
+resizepic 45 330 5100 450 25                 // Backround Rectangle Bottom
+text 130 15 995 0                            // Title Text
+button 340 358 242 241 1 0 2                 // Cancel Button 2
+button 410 358 247 248 1 0 1                 // Okay Button 1
+text 60 60 0 1                               // Upper Torso Text
+button 160 63 5209 5003 0 1 0                // Upper Torso Button
+text 190 60 0 15                             // Over Chest Text
+button 270 63 5209 5003 0 3 0                // Over Chest Button
+text 300 60 0 32                             // Footwear Text
+button 370 63 5209 5003 0 5 0                // Footwear Button
+text 400 60 0 19                             // Hats Text
+button 440 63 5209 5003 0 4 0                // Hats Button
+text 65 330 0 11                             // Lower Torso Text
+button 165 333 5208 5003 0 2 0               // Lower Torso Button
+text 195 330 0 37                            // Back Text
+button 245 333 5208 5003 0 6 0               // Back Button
+text 275 330 0 39                            // Hair Text
+button 320 333 5208 5003 0 7 0               // Hair Button
+page 1                                       // Page 1
+text 70 95 995 3                             // Shirt Text
+button 130 120 210 211 1 0 3                 // Shirt Button
+tilepic 70 120 5399                          // Shirt Picture
+text 70 175 995 4                            // Fancy Shirt Text
+button 130 205 210 211 1 0 4                 // Fancy Shirt Button
+tilepic 75 200 7933                          // Fancy Shirt Picture
+text 70 255 995 7                            // Plain Dress
+button 130 280 210 211 1 0 5                 // Plain Dress Button
+tilepic 75 280 7937                          // Plain Dress Picture
+text 200 95 995 8                            // Fancy Dress Text
+button 270 120 210 211 1 0 6                 // Fancy Dress Button
+tilepic 210 110 7935                         // Fancy Dress Picture
+text 200 175 995 9                           // Robe Text
+button 270 205 210 211 1 0 7                 // Robe Button
+tilepic 210 200 7939                         // Robe Picture
+resizepic 85 358 5100 100 25                 // Color Backround Box
+text 95 360 0 59                             // Color Text
+button 150 361 210 211 1 0 8                 // Color Button
+resizepic 190 358 5100 100 25                // Remove Backround Box
+text 205 360 0 60                            // Remove Text
+button 260 361 210 211 1 0 9                 // Remove Button
+page 2                                       // Page 2
+text 100 120 995 12                          // Fancy Pants Text
+button 145 150 210 211 1 0 10                // Fancy Pants Button
+tilepic 100 140 5433                         // Fancy Pants Picture
+text 100 220 995 13                          // Kilt Text
+button 145 250 210 211 1 0 11                // Kilt Button
+tilepic 100 250 5431                         // Kilt Pic
+text 275 120 995 14                          // Skirt Text
+button 340 150 210 211 1 0 12                // Skirt Button
+tilepic 280 140 5398                         // Skirt Picture
+resizepic 85 358 5100 100 25                 // Color Backround Box
+text 95 360 0 59                             // Color Text
+button 150 361 210 211 1 0 13                // Color Button
+resizepic 190 358 5100 100 25                // Remove Backround Box
+text 205 360 0 60                            // Remove Text
+button 260 361 210 211 1 0 14                // Remove Button
+page 3                                       // Page 3
+text 70 95 995 2                             // Doublet Text
+button 130 120 210 211 1 0 15                // Doublet Button
+tilepic 65 120 8059                          // Doublet Picture
+text 200 95 995 5                            // Tunic Text
+button 270 120 210 211 1 0 16                // Tunic Button
+tilepic 210 110 8097                         // Tunic Picture
+text 200 175 995 6                           // Surcoat Text
+button 270 205 210 211 1 0 17                // Surcoat Button
+tilepic 210 200 8189                         // Surcoat Picture
+text 70 165 995 16                           // Body Sash Text
+button 130 205 210 211 1 0 18                // Body Sash Button
+tilepic 80 200 5441                          // Body Sash Picture
+text 70 255 995 17                           // Half Apron Text
+button 130 280 210 211 1 0 19                // Half Apron Button
+tilepic 75 280 5435                          // Half Apron Picture
+text 200 255 995 18                          // Full Apron Text
+button 270 280 210 211 1 0 20                // Full Apron Button
+tilepic 210 280 5437                         // Full Apron Picture
+text 340 95 995 10                           // Jesters Robe Text
+button 400 120 210 211 1 0 21                // Jesters Robe Button
+tilepic 330 115 8095                         // Jesters Robe Picture
+resizepic 85 358 5100 100 25                 // Color Backround Box
+text 95 360 0 59                             // Color Text
+button 150 361 210 211 1 0 22                // Color Button
+resizepic 190 358 5100 100 25                // Remove Backround Box
+text 205 360 0 60                            // Remove Text
+button 260 361 210 211 1 0 23                // Remove Button
+page 4                                       // Page 4
+text 70 95 995 20                            // Hats Text
+button 130 120 210 211 1 0 24                // Hats Button
+tilepic 75 120 5444                          // Hats Picture
+text 70 175 995 21                           // Bandana Text
+button 130 205 210 211 1 0 25                // Bandana Button
+tilepic 75 200 5440                          // Bandana Picture
+text 70 255 995 22                           // Floopy Text
+button 130 280 210 211 1 0 26                // Floppy Button
+tilepic 75 280 5907                          // Floppy Picture
+text 180 95 995 23                           // Wide Text
+button 240 120 210 211 1 0 27                // Wide Button
+tilepic 190 120 5908                         // Wide Picture
+text 180 175 995 24                          // Cap Text
+button 240 205 210 211 1 0 28                // Cap Button
+tilepic 190 205 5909                         // Cap Picture
+text 180 255 995 25                          // Tall Text
+button 240 280 210 211 1 0 29                // Tall Button
+tilepic 195 280 5910                         // Tall Picture
+text 305 95 995 26                           // Straw Text
+button 350 120 210 211 1 0 30                // Straw Button
+tilepic 305 120 5911                         // Straw Picture
+text 305 175 995 27                          // Wizards Text
+button 350 205 210 211 1 0 31                // Wizards Button
+tilepic 305 205 5912                         // Wizards Picture
+text 305 255 995 28                          // Bonnet Text
+button 350 280 210 211 1 0 32                // Bonnet Button
+tilepic 310 280 5913                         // Bonnet Picture
+text 405 95 995 29                           // Feathered Text
+button 450 120 210 211 1 0 33                // Feathered Button
+tilepic 405 120 5914                         // Feathered Picture
+text 405 175 995 30                          // Tricone Text
+button 450 205 210 211 1 0 34                // Tricone Button
+tilepic 405 205 5915                         // Tricone Picture
+text 405 255 995 31                          // Jesters Text
+button 450 280 210 211 1 0 35                // Jesteres Button
+tilepic 410 280 5916                         // Jesteres Picture
+resizepic 85 358 5100 100 25                 // Color Backround Box
+text 95 360 0 59                             // Color Text
+button 150 361 210 211 1 0 36                // Color Button
+resizepic 190 358 5100 100 25                // Remove Backround Box
+text 205 360 0 60                            // Remove Text
+button 260 361 210 211 1 0 37                // Remove Button
+page 5                                       // Page 5
+text 100 120 995 33                          // Sandals Text
+button 145 150 210 211 1 0 38                // Sandals Button
+tilepic 100 140 5901                         // Sandals Picture
+text 100 220 995 34                          // Shoes Text
+button 145 250 210 211 1 0 39                // Shoes Button
+tilepic 100 250 5904                         // Shoes Picture
+text 275 120 995 35                          // Boots Text
+button 340 150 210 211 1 0 40                // Boots Button
+tilepic 280 140 5899                         // Boots Picture
+text 275 220 995 36                          // Thigh Boots Text
+button 340 250 210 211 1 0 41                // Thigh Boots Button
+tilepic 280 240 5906                         // Thigh Boots Picture
+resizepic 85 358 5100 100 25                 // Color Backround Box
+text 95 360 0 59                             // Color Text
+button 150 361 210 211 1 0 42                // Color Picture
+resizepic 190 358 5100 100 25                // Remove Backround Box
+text 205 360 0 60                            // Remove Text
+button 260 361 210 211 1 0 43                // Remove Button
+page 6                                       // Page 6
+text 100 120 995 38                          // Cloak Text
+button 145 150 210 211 1 0 44                // Cloak Button
+tilepic 85 150 5397                          // Cloak Picture
+resizepic 85 358 5100 100 25                 // Color Backround Box
+text 95 360 0 59                             // Color Text
+button 150 361 210 211 1 0 45                // Color Button
+resizepic 190 358 5100 100 25                // Remove Backround Box
+text 205 360 0 60                            // Remove Text
+button 260 361 210 211 1 0 46                // Remove Button
+page 7                                       // Page 7
+text 90 95 995 40                            // Short Text
+button 70 95 210 211 1 0 47                  // Short Button
+text 90 120 995 41                           // Long Text
+button 70 120 210 211 1 0 48                 // Long Button
+text 90 145 995 42                           // Pony Tail Text
+button 70 145 210 211 1 0 49                 // Pony Tail Button
+text 90 170 995 43                           // Mohawk Text
+button 70 170 210 211 1 0 50                 // Mohawk Button
+text 90 195 995 44                           // Pageboy Text
+button 70 195 210 211 1 0 51                 // Pageboy Button
+text 90 220 995 45                           // Topknot Text
+button 70 220 210 211 1 0 52                 // Topknot Button
+text 90 245 995 46                           // Curly Text
+button 70 245 210 211 1 0 53                 // Curly Button
+text 90 270 995 47                           // Receeding Text
+button 70 270 210 211 1 0 54                 // Receeding Button
+text 90 295 995 48                           // 2 Tails Text
+button 70 295 210 211 1 0 55                 // 2 Tails Button
+text 270 95 995 52                           // Moustache Text
+button 250 95 210 211 1 0 56                 // Moustache Button
+text 270 120 995 53                          // Short Beard Text
+button 250 120 210 211 1 0 57                // Short Beard Button
+text 270 145 995 54                          // Short Beard / Moustache Text
+button 250 145 210 211 1 0 58                // Short Beard / Moustache Button
+text 270 170 995 55                          // Long Beard Text
+button 250 170 210 211 1 0 59                // Long Beard Button
+text 270 195 995 56                          // Long Beard / Moustache Text
+button 250 195 210 211 1 0 60                // Long Beard / Moustache Button
+text 270 220 995 57                          // Goatee Text
+button 250 220 210 211 1 0 61                // Goatee Button
+text 270 245 995 58                          // Vandyke Text
+button 250 245 210 211 1 0 62                // Vandyke Button
+text 270 270 995 79                          // No hair Text
+button 250 270 210 211 1 0 65                // No hair Button
+text 270 295 995 80                          // No facial hair Text
+button 250 295 210 211 1 0 66                // No facial hair Button
+resizepic 85 358 5100 100 25                 // Color Backround Box
+text 95 360 0 59                             // Color Text
+button 150 361 210 211 1 0 63                // Color Button
+resizepic 190 358 5100 100 25                // Remove Backround Box
+text 205 360 0 60                            // Remove Text
+button 260 361 210 211 1 0 64                // Remove Button
+
+[dialog d_vendor_customize TEXT]
+VENDOR CUSTOMIZATION MENU
+Upper Torso
+Doublet
+Shirt
+Fancy shirt
+Tunic                                              //5
+Surcoat
+Plain dress
+Fancy dress
+Robe
+Jester's Robe                                     //10
+Lower Torso
+Fancy pants
+Kilt
+Skirt
+Over chest                                         //15
+Body sash
+Half apron
+Full apron
+Hats
+Skullcap                                           //20
+Bandana
+Floppy
+Wide
+Cap
+Tall                                               //25
+Straw
+Wizards
+Bonnet
+Feathered
+Tricorne                                           //30
+Jester's
+Footwear
+Sandals
+Shoes
+Boots                                              //35
+Thigh Boots
+Back
+Cloak
+Hair
+Short                                              //40
+Long
+Pony Tail
+Mohawk
+Pageboy
+Topknot                                            //45
+Curly
+Receding
+2 Tails
+Bald
+Held Items                                         //50
+None
+Moustache
+Short Beard
+Short Beard / Moustache
+Long Beard                                        //55
+Long Beard / Moustache
+Goatee
+VanDyke
+Color
+Remove                                             //60
+Change Name
+Male
+Change Greeting
+Fishing Pole
+Pickaxe                                            //65
+Pitchfork
+Cleaver
+Mace
+Torch
+Hammer                                            //70
+Long Sword
+Gnarled Staff
+Crossbow
+War Mace
+Two-Handed Axe                                   //75
+Spear
+Katana
+Spellbook
+No Hair
+No Facial Hair                                  //80
+
+[DIALOG d_vendor_customize BUTTON]
+ONBUTTON=0
+   v_rand_message
+RETURN 1
+ONBUTTON=1
+   v_rand_message
+RETURN 1
+ONBUTTON=2
+   v_rand_message
+RETURN 1
+ONBUTTON=3  //shirt
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(layer_shirt).REMOVE
+   SRC.NEWITEM 01517
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=4  //fancy shirt
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(layer_shirt).REMOVE
+   SRC.NEWITEM 01efd
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=5  //plain dress
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(layer_shirt).REMOVE
+   SRC.NEWITEM 01f01
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=6  //fancy dress
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(22).REMOVE
+   SRC.NEWITEM 01eff
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=7  //robe
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(22).REMOVE
+   SRC.NEWITEM 01f03
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=8                 //  <<<<<-----COLOR BUTTON, ADD GUMP THERE d_vend_color_1
+   SRC.SYSMESSAGE "Color changing is currently disabled."
+ONBUTTON=9
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER(5).REMOVE
+   UID.X.FINDLAYER(22).REMOVE
+   v_rand_message
+RETURN 1
+ONBUTTON=10  //fancy pants
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(4).REMOVE
+   SRC.NEWITEM 01539
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=11  //kilt
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(23).REMOVE
+   SRC.NEWITEM 01537
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=12  //skirt
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(23).REMOVE
+   SRC.NEWITEM 01516
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=13                //  <<<<<-----COLOR BUTTON, ADD GUMP THERE d_vend_color_2
+   SRC.SYSMESSAGE "Color changing is currently disabled."
+ONBUTTON=14
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER(4).REMOVE
+   UID.X.FINDLAYER(23).REMOVE
+   v_rand_message
+RETURN 1
+ONBUTTON=15  //doublet
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(17).REMOVE
+   SRC.NEWITEM 01f7b
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=16  //tunic
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(17).REMOVE
+   SRC.NEWITEM 01fa1
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=17  //surcoat
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(17).REMOVE
+   SRC.NEWITEM 01ffd
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=18  //body sash
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(17).REMOVE
+   SRC.NEWITEM 01541
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=19  //half apron
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(17).REMOVE
+   SRC.NEWITEM 0153b
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=20  //full apron
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(17).REMOVE
+   SRC.NEWITEM 0153d
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=21  //jester suit
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(17).REMOVE
+   SRC.NEWITEM 01f9f
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=22                //  <<<<<-----COLOR BUTTON, ADD GUMP THERE d_vend_color_3
+   SRC.SYSMESSAGE "Color changing is currently disabled."
+ONBUTTON=23
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER(12).REMOVE
+   UID.X.FINDLAYER(17).REMOVE
+   v_rand_message
+RETURN 1
+ONBUTTON=24  //skullcap
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 01544
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=25  //bandana
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 0153f
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=26  //floppy
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 01713
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=27  //wide brim
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 01714
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=28  //cap
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 01715
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=29  //tall
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 01716
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=30  //straw
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 01717
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=31  //wizards
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 01718
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=32  //bonet
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 01719
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=33  //feathered
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 0171a
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=34  //tricone
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 0171b
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=35  //jesters
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(6).REMOVE
+   SRC.NEWITEM 0171c
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=36                //  <<<<<-----COLOR BUTTON, ADD GUMP THERE
+   SRC.SYSMESSAGE "Color changing is currently disabled."
+   //IF (<FINDLAYER.6.UID>>0)
+   //   FINDLAYER(6).INPDLG COLOR 5
+   //   RETURN 1
+   //ENDIF
+ONBUTTON=37
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER(6).REMOVE
+   v_rand_message
+RETURN 1
+ONBUTTON=38  //sandals
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(3).REMOVE
+   SRC.NEWITEM 0170d
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=39  //shoes
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(3).REMOVE
+   SRC.NEWITEM 01710
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=40  //boots
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(3).REMOVE
+   SRC.NEWITEM 0170c
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=41  //thigh boots
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(3).REMOVE
+   SRC.NEWITEM 01712
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=42                //  <<<<<-----COLOR BUTTON, ADD GUMP THERE
+   SRC.SYSMESSAGE "Color changing is currently disabled."
+   //IF (<FINDLAYER.3.UID>>0)
+   //   FINDLAYER(3).INPDLG COLOR 5
+   //   RETURN 1
+   //ENDIF
+ONBUTTON=43
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(3).REMOVE
+   v_rand_message
+RETURN 1
+ONBUTTON=44  //cloak
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(20).REMOVE
+   SRC.NEWITEM 01515
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=45                //  <<<<<-----COLOR BUTTON, ADD GUMP THERE d_vend_color_4
+   SRC.SYSMESSAGE "Color changing is currently disabled."
+ONBUTTON=46
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER(20).REMOVE
+   v_rand_message
+RETURN 1
+ONBUTTON=47  //short hair
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(22).REMOVE
+   SRC.NEWITEM 0203b
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=48  //long
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   SRC.NEWITEM 0203c
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=49  //pony tail
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   SRC.NEWITEM 0203d
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=50  //mohawk
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   SRC.NEWITEM 02044
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=51  //pageboy
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   SRC.NEWITEM 02045
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=52  //topknot
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   SRC.NEWITEM 0204a
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=53  //curley
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   SRC.NEWITEM 02047
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=54  //receding
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   SRC.NEWITEM 02048
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=55  //2 tails
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   SRC.NEWITEM 02049
+   SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+   UID.X.EQUIP <ACT.UID>
+   v_rand_message
+RETURN 1
+ONBUTTON=56  //moustache
+   VAR.X=<SRC.TAG.VENDORACT>
+   VAR.SEX=<UID.X.BODY>
+   IF (<VAR.SEX>==c_Man)
+      VAR.X=<SRC.TAG.VENDORACT>
+      UID.X.FINDLAYER.(16).REMOVE
+      SRC.NEWITEM 02041
+      SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+      UID.X.EQUIP <ACT.UID>
+      v_rand_message
+      RETURN 1
+   ELSE
+      SRC.SYSMESSAGE "Female's cannot have facial hair!"
+      RETURN 1
+   ENDIF
+ONBUTTON=57  //short beard
+   VAR.X=<SRC.TAG.VENDORACT>
+   VAR.SEX=<UID.X.BODY>
+   IF (<VAR.SEX>==c_Man)
+      UID.X.FINDLAYER.(16).REMOVE
+      SRC.NEWITEM 0203f
+      SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+      UID.X.EQUIP <ACT.UID>
+      v_rand_message
+      RETURN 1
+   ELSE
+      SRC.SYSMESSAGE "Female's cannot have facial hair!"
+      RETURN 1
+   ENDIF
+ONBUTTON=58  //short beard/moustache
+   VAR.X=<SRC.TAG.VENDORACT>
+   VAR.SEX=<UID.X.BODY>
+   IF (<VAR.SEX>==c_Man)
+      VAR.X=<SRC.TAG.VENDORACT>
+      UID.X.FINDLAYER.(16).REMOVE
+      SRC.NEWITEM 0204b
+      SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+      UID.X.EQUIP <ACT.UID>
+      v_rand_message
+      RETURN 1
+   ELSE
+      SRC.SYSMESSAGE "Female's cannot have facial hair!"
+      RETURN 1
+   ENDIF
+ONBUTTON=59  //long beard
+   VAR.X=<SRC.TAG.VENDORACT>
+   VAR.SEX=<UID.X.BODY>
+   IF (<VAR.SEX>==c_Man)
+      VAR.X=<SRC.TAG.VENDORACT>
+      UID.X.FINDLAYER.(16).REMOVE
+      SRC.NEWITEM 0203e
+      SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+      UID.X.EQUIP <ACT.UID>
+      v_rand_message
+      RETURN 1
+   ELSE
+      SRC.SYSMESSAGE "Female's cannot have facial hair!"
+      RETURN 1
+   ENDIF
+ONBUTTON=60  //long beard/moustache
+   VAR.X=<SRC.TAG.VENDORACT>
+   VAR.SEX=<UID.X.BODY>
+   IF (<VAR.SEX>==c_Man)
+      VAR.X=<SRC.TAG.VENDORACT>
+      UID.X.FINDLAYER.(16).REMOVE
+      SRC.NEWITEM 0204c
+      SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+      UID.X.EQUIP <ACT.UID>
+      v_rand_message
+      RETURN 1
+   ELSE
+      SRC.SYSMESSAGE "Female's cannot have facial hair!"
+      RETURN 1
+   ENDIF
+ONBUTTON=61  //goatee
+   VAR.X=<SRC.TAG.VENDORACT>
+   VAR.SEX=<UID.X.BODY>
+   IF (<VAR.SEX>==c_Man)
+      VAR.X=<SRC.TAG.VENDORACT>
+      UID.X.FINDLAYER.(16).REMOVE
+      SRC.NEWITEM 02040
+      SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+      UID.X.EQUIP <ACT.UID>
+      v_rand_message
+      RETURN 1
+   ELSE
+      SRC.SYSMESSAGE "Female's cannot have facial hair!"
+      RETURN 1
+   ENDIF
+ONBUTTON=62  //vandyke
+   VAR.X=<SRC.TAG.VENDORACT>
+   VAR.SEX=<UID.X.BODY>
+   IF (<VAR.SEX>==c_Man)
+      VAR.X=<SRC.TAG.VENDORACT>
+      UID.X.FINDLAYER.(16).REMOVE
+      SRC.NEWITEM 0204d
+      SRC.ACT.CONT=<SRC.TAG.VENDORACT>
+      UID.X.EQUIP <ACT.UID>
+      v_rand_message
+      RETURN 1
+   ELSE
+      SRC.SYSMESSAGE "Female's cannot have facial hair!"
+      RETURN 1
+   ENDIF
+ONBUTTON=63                //  <<<<<-----COLOR BUTTON, ADD GUMP THERE d_vend_color_5
+   SRC.SYSMESSAGE "Color changing is currently disabled."
+ONBUTTON=64
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER(11).REMOVE
+   UID.X.FINDLAYER(16).REMOVE
+   v_rand_message
+RETURN 1
+ONBUTTON=65  //No hair
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(11).REMOVE
+   v_rand_message
+RETURN 1
+ONBUTTON=66  //No facial hair
+   VAR.X=<SRC.TAG.VENDORACT>
+   UID.X.FINDLAYER.(16).REMOVE
+   v_rand_message
+
+[DIALOG d_vend_color_1]              // Main
+0,0                                   // Position
+resizepic 200 175 5054 400 300        // Curved Grey background
+resizepic 210 185 3000 380 280        // Curved White background
+resizepic 220 195 3000 360 100        // Curved White box
+text 260 315 0000 0                   // Continue Text
+button 220 315 4005 4006 1 0 1        // Continue Button
+text 260 340 0000 1                   // Cancel Text
+button 220 340 4005 4006 1 0 2        // Cancel Button
+text 230 200 0000 2                   // Description
+text 230 215 0000 3                   // Description
+
+[DIALOG d_vend_color_1 TEXT]
+I want to change layer 5.
+I want to change layer 22.
+Your vendor has multiple layers of items equiped.
+Which layer do you wish to set the color of?
+
+[DIALOG d_vend_color_1 BUTTON]
+ONBUTTON=0
+ONBUTTON=1
+   FINDLAYER(5).INPDLG COLOR 5
+RETURN 1
+ONBUTTON=2
+   FINDLAYER(22).INPDLG COLOR 5
+RETURN 1
+
+[DIALOG d_vend_color_2]              // Main
+0,0                                   // Position
+resizepic 200 175 5054 400 300        // Curved Grey background
+resizepic 210 185 3000 380 280        // Curved White background
+resizepic 220 195 3000 360 100        // Curved White box
+text 260 315 0000 0                   // Continue Text
+button 220 315 4005 4006 1 0 1        // Continue Button
+text 260 340 0000 1                   // Cancel Text
+button 220 340 4005 4006 1 0 2        // Cancel Button
+text 230 200 0000 2                   // Description
+text 230 215 0000 3                   // Description
+
+[DIALOG d_vend_color_2 TEXT]
+I want to change layer 4.
+I want to change layer 23.
+Your vendor has multiple layers of items equiped.
+Which layer do you wish to set the color of?
+
+[DIALOG d_vend_color_2 BUTTON]
+ONBUTTON=0
+ONBUTTON=1
+   FINDLAYER(4).INPDLG COLOR 5
+RETURN 1
+ONBUTTON=2
+   FINDLAYER(23).INPDLG COLOR 5
+RETURN 1
+
+[DIALOG d_vend_color_3]              // Main
+0,0                                   // Position
+resizepic 200 175 5054 400 300        // Curved Grey background
+resizepic 210 185 3000 380 280        // Curved White background
+resizepic 220 195 3000 360 100        // Curved White box
+text 260 315 0000 0                   // Continue Text
+button 220 315 4005 4006 1 0 1        // Continue Button
+text 260 340 0000 1                   // Cancel Text
+button 220 340 4005 4006 1 0 2        // Cancel Button
+text 230 200 0000 2                   // Description
+text 230 215 0000 3                   // Description
+text 227 400 995 7                    // Confirm Message 1
+text 227 415 995 8                    // Confirm Message 2
+text 227 430 995 9                    // Confirm Message 3
+
+[DIALOG d_vend_color_3 TEXT]
+I want to change layer 17.
+I want to change layer 12.
+Your vendor has multiple layers of items equiped.
+Which layer do you wish to set the color of?
+
+[DIALOG d_vend_color_3 BUTTON]
+ONBUTTON=0
+ONBUTTON=1
+   FINDLAYER(17).INPDLG COLOR 5
+RETURN 1
+ONBUTTON=2
+   FINDLAYER(12).INPDLG COLOR 5
+RETURN 1
+
+[DIALOG d_vend_color_4]              // Main
+0,0                                   // Position
+resizepic 200 175 5054 400 300        // Curved Grey background
+resizepic 210 185 3000 380 280        // Curved White background
+resizepic 220 195 3000 360 100        // Curved White box
+text 260 315 0000 0                   // Continue Text
+button 220 315 4005 4006 1 0 1        // Continue Button
+text 260 340 0000 1                   // Cancel Text
+button 220 340 4005 4006 1 0 2        // Cancel Button
+text 230 200 0000 2                   // Description
+text 230 215 0000 3                   // Description
+
+[DIALOG d_vend_color_4 TEXT]
+I want to change layer 3.
+I want to change layer 20.
+Your vendor has multiple layers of items equiped.
+Which layer do you wish to set the color of?
+
+[DIALOG d_vend_color_4 BUTTON]
+ONBUTTON=0
+ONBUTTON=1
+   FINDLAYER(3).INPDLG COLOR 5
+RETURN 1
+ONBUTTON=2
+   FINDLAYER(20).INPDLG COLOR 5
+RETURN 1
+
+[DIALOG d_vend_color_5]              // Main
+0,0                                   // Position
+resizepic 200 175 5054 400 300        // Curved Grey background
+resizepic 210 185 3000 380 280        // Curved White background
+resizepic 220 195 3000 360 100        // Curved White box
+text 260 315 0000 0                   // Continue Text
+button 220 315 4005 4006 1 0 1        // Continue Button
+text 260 340 0000 1                   // Cancel Text
+button 220 340 4005 4006 1 0 2        // Cancel Button
+text 230 200 0000 2                   // Description
+text 230 215 0000 3                   // Description
+
+[DIALOG d_vend_color_5 TEXT]
+I want to change layer 11.
+I want to change layer 16.
+Your vendor has multiple layers of items equiped.
+Which layer do you wish to set the color of?
+
+[DIALOG d_vend_color_5 BUTTON]
+ONBUTTON=0
+ONBUTTON=1
+   FINDLAYER(11).INPDLG COLOR 5
+RETURN 1
+ONBUTTON=2
+   FINDLAYER(16).INPDLG COLOR 5
+RETURN 1
+
+[FUNCTION v_rand_message]
+   VAR.X=<SRC.TAG.VENDORACT>
+   DORAND 10
+      UID.X.SPEAK "Good journeys to you."
+      UID.X.SPEAK "Safe travels to you."
+      UID.X.SPEAK "The market will surely be good for such fine wares."
+      UID.X.SPEAK "I only live to serve thee."
+      UID.X.SPEAK "One day, I would like to ride a horse, until then I will wait here and sell goods for you."
+      UID.X.SPEAK "I do only thy bidding."
+      UID.X.SPEAK "Oh goody!  I get to stand here and sell things.  My life is complete."
+      UID.X.SPEAK "It shall be as you say."
+      UID.X.SPEAK "Mother told me to become a mage, but no, I wanted a 'people' position."
+      UID.X.SPEAK "I love you, fair master."
+   ENDDO
+   UID.X.ANIM 32
+RETURN 0
+
+//Price dialog
+[DIALOG d_vendor_price]
+100,50                                // Position
+resizepic 190 175 5054 335 150        // Curved Grey background
+resizepic 200 185 3000 315 130        // Curved White background
+resizepic 220 235 3000 270 22         // Curved White background
+text 215 200 995 0                    // Place wager
+text 255 275 0000 1                   // Continue Text
+button 220 275 4005 4007 1 0 1        // Opens Continue
+text 435 275 0000 2                   // Cancel Text
+button 400 275 4005 4007 1 0 0        // Opens Cancel
+textentry 225 237 253 25 0 0 3        // Text Input
+
+[DIALOG d_vendor_price TEXT]
+What do you want the price set to?
+Ok
+Cancel
+<QVAL (0<EVAL <SRC.TAG.ORIGVAL>>==0) ? : <EVAL <SRC.TAG.ORIGVAL>>>
+
+[DIALOG d_vendor_price BUTTON]
+ONBUTTON=0
+   SRC.SYSMESSAGE="You decide not to change the price."
+   SRC.TAG.ORIGVAL=
+   SRC.TAG.VID=
+   SRC.TAG.IUID=
+ONBUTTON=1
+   IF (<EVAL <ARGTXT[0]>><1)
+      SRC.SYSMESSAGE "You can't set a price that low."
+      RETURN 1
+   ENDIF
+   SRC.ACT.LINK=<SRC.TARG>
+   SRC.SYSMESSAGE="You set a price of <EVAL <ARGTXT[0]>>."
+   TRYP 0 UID.<SRC.TAG.VID>.TAG.<SRC.TAG.IUID>.PRICE=<EVAL <ARGTXT[0]>>
+   TRYP 0 UID.<SRC.TAG.IUID>.ATTR=<UID.<SRC.TAG.IUID>.ATTR>|attr_forsale
+   SRC.TAG.ORIGVAL=
+   SRC.TAG.VID=
+   SRC.TAG.IUID=
+RETURN 1
+
+//Bag price dialog
+[DIALOG d_vendor_bprice]
+100,50                                // Position
+resizepic 190 175 5054 335 150        // Curved Grey background
+resizepic 200 185 3000 315 130        // Curved White background
+resizepic 220 235 3000 270 22         // Curved White background
+text 215 200 995 0                    // Place wager
+text 255 275 0000 1                   // Continue Text
+button 220 275 4005 4007 1 0 1        // Opens Continue
+text 435 275 0000 2                   // Cancel Text
+button 400 275 4005 4007 1 0 0        // Opens Cancel
+textentry 225 237 253 25 0 0 3        // Text Input
+
+[DIALOG d_vendor_bprice TEXT]
+<QVAL <SRC.TAG.CONTACT>==1 ? What do you want the price set to? : What do you want the description set to?>
+Ok
+Cancel
+<QVAL (0<EVAL <SRC.TAG.ORIGVAL>>==0) ? : <EVAL <SRC.TAG.ORIGVAL>>>
+
+[DIALOG d_vendor_bprice BUTTON]
+ONBUTTON=0
+   SRC.SYSMESSAGE="You decide not to change the price."
+ONBUTTON=1
+   IF (<EVAL <ARGTXT[0]>><1)
+      SRC.SYSMESSAGE "You can't set a price that low."
+      RETURN 1
+   ENDIF
+   SRC.NEWITEM=smc_bagreprice_target
+   SRC.ACT.CONT=<SRC.UID>
+   SRC.ACT.TAG.VENDOR=<UID>
+   SRC.ACT.TAG.OWNER=<TAG.OWNER>
+   IF (<SRC.TAG.CONTACT>==1)
+      SRC.ACT.TAG.PRICE=<EVAL <ARGTXT[0]>>
+   ELSE
+      SRC.ACT.TAG.DESC=<ARGTXT[0]>
+   ENDIF
+   SRC.ACT.LINK=<UID>
+   SRC.ACT.TARGET "What container do you want to reprice?"
+RETURN 1
+
+//Buy stack dialog
+[DIALOG d_buystack]
+100,50                                // Position
+resizepic 190 175 5054 335 150        // Curved Grey background
+resizepic 200 185 3000 315 130        // Curved White background
+resizepic 220 235 3000 270 22         // Curved White background
+text 215 200 995 0                    // Place wager
+text 255 275 0000 1                   // Continue Text
+button 220 275 4005 4007 1 0 1        // Opens Continue
+text 435 275 0000 2                   // Cancel Text
+button 400 275 4005 4007 1 0 0        // Opens Cancel
+textentry 225 237 253 25 0 0 3        // Text Input
+
+[DIALOG d_buystack TEXT]
+How many? (Max: <EVAL <SRC.TARG.AMOUNT>>)
+Ok
+Cancel
+<QVAL 1=1 ?  : 0 >
+
+[DIALOG d_buystack BUTTON]
+ONBUTTON=0
+   SRC.SYSMESSAGE="You decide not to buy anything."
+   SRC.TAG.VID=
+RETURN 1
+ONBUTTON=1
+   VAR.X=<SRC.TAG.VID>
+   VAR.NEWAMOUNT=<EVAL <ARGTXT[0]>>
+   //Less than zero
+   IF (<EVAL <ARGTXT[0]>> <= 0))
+      UID.X.SAY "You can't buy less than 1 of an item."
+      SRC.TAG.VID=
+      RETURN 1
+   ENDIF
+   //More than stack
+   IF ((0<EVAL <ARGTXT[0]>> > 0<SRC.TARG.AMOUNT>)
+      UID.X.SAY "You can't buy that many."
+      SRC.TAG.VID=
+      RETURN 1
+   ENDIF
+   TRYP 0 VAR.G=<UID.X.TAG.<SRC.TARG.UID>.PRICE>
+   //Check gold
+   IF 0<VAR.G>==0
+      UID.X.SAY "Something is wrong with that item and it can not be bought.  Please contact my owner."
+      RETURN 1
+   ENDIF
+   SRC.TAG.GOLD=<EVAL (<VAR.G>*<EVAL <ARGTXT[0]>>)>
+   VAR.GOLD=<payup>
+   IF (0<VAR.GOLD>==0)
+      //Get the info out of the tags because we will have to reset it
+      TRYP 0 VAR.UIDP=<UID.X.TAG.<SRC.TARG.UID>.PRICE>
+      TRYP 0 VAR.UIDD=<UID.X.TAG.<SRC.TARG.UID>.DESC>
+
+      //Get the old info
+      VAR.OLDID=<SRC.TARG.UID>
+      VAR.OLDCONT=<SRC.TARG.CONT>
+
+      VAR.AMT=<SRC.TARG.AMOUNT>+(-<EVAL <ARGTXT[0]>>)
+      VAR.DUPEAMT=<EVAL <ARGTXT[0]>>
+      SRC.TARG.AMOUNT=<EVAL <VAR.AMT>>
+
+      //You might wonder why I don't use NEWDUPE?
+      //Because NEWDUPE (in my mind incorrectly) sets the ORIGINAL to ACT
+      //Wtf good is that?!?!?  How the f are you supposed to access the NEW object ever?
+      SRC.NEWITEM <SRC.TARG.BASEID>
+      SRC.ACT.MORE=<SRC.TARG.MORE>
+      SRC.ACT.MORE2=<SRC.TARG.MORE2>
+      SRC.ACT.MOREP=<SRC.TARG.MOREP>
+      SRC.ACT.NAME=<SRC.TARG.NAME>
+      SRC.ACT.COLOR=<SRC.TARG.COLOR>
+      SRC.ACT.AMOUNT=<VAR.DUPEAMT>
+      SRC.ACT.ATTR=(<SRC.TARG.ATTR>&~attr_forsale)
+      SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+
+      IF <VAR.AMT>==0
+         SRC.TARG.REMOVE
+         TRYP 0 UID.X.TAG.<SRC.TARG.UID>.PRICE=
+         TRYP 0 UID.X.TAG.<SRC.TARG.UID>.DESC=
+      ENDIF
+      //Update the vendors gold
+      UID.X.TAG.GOLD=<EVAL <UID.X.TAG.GOLD>>+<EVAL <TAG.GOLD>>
+      TRYP 0 UID.X.SAY "That will be <EVAL <TAG.GOLD>> gp. I thank thee for thy business!"
+   ELSE
+      UID.X.SAY "You lack the gold for those items."
+   ENDIF
+   SRC.TAG.VID=
+RETURN 1
+
+//Desc dialog
+[DIALOG d_vendor_desc]
+100,50                                // Position
+resizepic 190 175 5054 335 150        // Curved Grey background
+resizepic 200 185 3000 315 130        // Curved White background
+resizepic 220 235 3000 270 22         // Curved White background
+text 215 200 995 0                    // Place wager
+text 255 275 0000 1                   // Continue Text
+button 220 275 4005 4007 1 0 1        // Opens Continue
+text 435 275 0000 2                   // Cancel Text
+button 400 275 4005 4007 1 0 0        // Opens Cancel
+textentry 225 237 253 25 0 0 3        // Text Input
+
+[DIALOG d_vendor_desc TEXT]
+What description do you want?
+Ok
+Cancel
+<QVAL (0<SRC.TAG.ORIGVAL>==0) ? none: <SRC.TAG.ORIGVAL>>
+
+[DIALOG d_vendor_desc BUTTON]
+ONBUTTON=0
+   SRC.SYSMESSAGE="You decide not to change the description."
+   SRC.TAG.ORIGVAL=
+   SRC.TAG.VID=
+   SRC.TAG.IUID=
+ONBUTTON=1
+   SRC.ACT.LINK=<SRC.TARG>
+   SRC.SYSMESSAGE="You set the description to <ARGTXT[0]>."
+   TRYP 0 UID.<SRC.TAG.VID>.TAG.<SRC.TAG.IUID>.DESC=<ARGTXT[0]>
+   SRC.TAG.ORIGVAL=
+   SRC.TAG.VID=
+   SRC.TAG.IUID=
+RETURN 1
+
+[DIALOG d_vendorhelp]
+0,0
+page 0
+resizepic 20 25 2620 410 510   //box
+button 390 40 03 04 1 0 0      //cancel X
+text 140 35 1152 16            //Oblivion Vendor Help
+text 40 60 03 17               //Here are commands....
+page 1
+text 40 100 0399 0
+text 40 120 067 1
+text 40 150 067 2
+text 40 170 0399 3
+text 40 200 067 4
+text 40 220 0399 5
+text 40 250 067 6
+text 40 270 0399 7
+text 40 300 067 8
+text 40 320 0399 9
+text 40 350 067 10
+text 40 370 0399 11
+text 40 400 067 12
+text 40 420 0399 13
+text 40 440 067 14
+text 40 460 0399 15
+text 40 490 067 16
+text 325 500 067 18
+button 375 500 4005 4007 0 2 0
+page 2
+text 325 500 067 18
+button 375 500 4005 4007 0 1 0
+text 40 100 0399 36
+text 40 120 067 37
+text 40 140 067 38
+text 40 170 0399 39
+text 40 190 067 40
+text 40 210 067 41
+text 40 240 0399 42
+text 40 260 067 43
+text 40 280 067 44
+text 40 300 067 45
+text 40 330 0399 46
+text 40 350 067 47
+text 40 370 067 48
+text 40 390 067 49
+text 40 420 0399 50
+text 40 440 067 51
+text 40 460 067 52
+text 40 480 067 51
+text 200 500 067 19
+button 250 500 4005 4007 0 1 0
+button 375 500 4005 4007 0 3 0
+page 3
+text 325 500 067 19
+button 375 500 4005 4007 0 2 0
+text 37 100 0399 20
+text 37 150 0399 21
+text 37 170 0399 22
+text 37 190 0399 23
+text 37 220 0399 24
+text 37 240 0399 25
+text 37 260 0399 26
+text 37 290 0399 27
+text 37 310 0399 28
+text 37 340 0399 29
+text 37 370 37 30
+text 37 390 37 31
+text 37 410 37 32
+text 37 430 37 33
+text 37 460 0399 34
+text 37 480 0399 35
+
+[DIALOG d_vendorhelp BUTTON]
+ONBUTTON=0
+RETURN 1
+
+[DIALOG d_vendorhelp TEXT]
+Vendor commands:             //0
+help (duh...)
+Description or desc
+ -Brings up a target to set or view the description
+Buy or purchase
+ -Brings up a target to select an item to buy       //5
+Browse, look, view
+ -Opens the vendors pack
+Price, cost
+ -Brings up a target to set or view the price
+Customize            //10
+ -Allows you to put items on the vendor paperdoll
+Collect, gold, get
+ -The vendor drops or gives you its gold
+Stats
+ -Show how long the vendor will work for you         //15
+<SERV.NAME> Vendor Help (v1.0)
+Here are the commands you can use on a vendor:
+Next
+Back
+General Usage:                                     //20
+To see the vendors inventory double click on
+the vendor.  You can open containers in their pack
+to see the contents.
+To pay a vendor drop gold on them.  When they run
+out they disappear and your items fall to the ground.     //25
+NO REFUNDS IF THIS HAPPENS.
+To BUY from a vendor just type in buy and target
+an item.  The money is taken from you automatically.
+To dress a vendor use the CUSTOMIZE command.
+When you are notified that you are no longer             //30
+dealing with the vendor, do NOT try to click
+on their pack.  You need to double click on the
+actual vendor or you will be snooping.
+Single clicking on an item in the inventory
+shows the price and description.                        //35
+Reprice container (bag,box,cont)
+-Type in a price and pick a container and all the
+objects in it get that price (50 item max)
+Redesc container (bag,box,cont)
+-Type in a description and pick a container and all   //40
+the objects in it get that description (50 item max)
+Merge
+-This takes the gold in the vendors pack and moves
+it to his "gold box" for safe keeping.  He can take
+wages out of this box as well as the pack.            //45
+Unequip/Remove
+Brings up a target to remove something you equiped on
+the vendor for decoration.  No items in the customize
+menu can be unequiped
+Unequip all/Remove all                                   //50
+Dumps everything you decorated the vendor with into
+your pack.  Again, nothing from the customize menu
+gets placed in your pack.                                //53
+
+[FUNCTION payup] // main function
+   IF (<SRC.TAG.GOLD>==0) //empty command line?
+      RETURN 1 //then do nothing
+   ENDIF
+	
+	//Calculate how much we the player actually has:
+   VAR.playersgold=<SRC.RESCOUNT i_gold> + <SRC.BANKBALANCE>
+	VAR.goldtotake=<SRC.TAG.GOLD>
+
+	//Is there enough?
+   IF (<VAR.playersgold> < <VAR.goldtotake>)
+      //No transaction, not enough gold
+      RETURN 1 
+   ENDIF
+   
+   //Player has enough to pay!
+   payfrompack <VAR.goldtotake>
+   IF <VAR.goldtotake>>0
+   	payfrombank <VAR.goldtotake>
+   ENDIF
+
+	//Update the status window and close bankbox so it will update
+   UPDATEX
+RETURN 0
+
+[FUNCTION payfrompack]
+	//Is there enough in the pack?
+
+	VAR.goldinpack=<SRC.RESCOUNT i_gold>
+	IF (<VAR.goldinpack> >= <ARGS>)
+		//Is it greater than 65000?
+		IF (<ARGS>>=65000)
+	      //Take in blocks 65000 so sphere stupidity isn't in the way
+			SRC.CONSUME 65000 i_gold 
+	      VAR.goldtotake=<EVAL (<VAR.goldtotake>+(-65000))>
+	      IF (<VAR.goldtotake>>0)
+		      payfrompack <VAR.goldtotake> //then get the rest
+		   ENDIF
+		ELSE
+			//Take the correct amount less than 65000
+	      SRC.CONSUME <ARGS> i_gold 
+	      VAR.goldtotake=<EVAL (<VAR.goldtotake>+(-<ARGS>))>
+		ENDIF
+	ELSE
+		IF (<ARGS>>=65000)
+	      //Take in blocks 65000 so sphere stupidity isn't in the way
+			SRC.CONSUME 65000 i_gold 
+	      VAR.goldtotake=<EVAL (<VAR.goldtotake>+(-65000))>
+	      IF (<VAR.goldtotake>>0)
+		      payfrompack <VAR.goldtotake> //then get the rest
+		   ENDIF
+		ELSE
+			//Take as much as they have		
+			SRC.CONSUME <VAR.goldinpack> i_gold 
+	      VAR.goldtotake=<EVAL (<VAR.goldtotake>+(-<VAR.goldinpack>))>		
+		ENDIF
+	ENDIF
+RETURN 0
+
+[FUNCTION payfrombank]
+src.say paying from bank <args>
+   IF (<VAR.goldtotake> > 65000) // more then 65000 left to pay??
+      SRC.FINDLAYER(layer_bankbox).CONSUME 65000 i_gold //CONSUME 65000 first
+      VAR.goldtotake=<VAR.goldtotake> +(-65000)
+      payfrombank <VAR.goldtotake> //then get the rest
+   ELSE
+      SRC.FINDLAYER(layer_bankbox).CONSUME <ARGS> i_gold //CONSUME the rest of the needed amount
+      VAR.goldtotake=<VAR.goldtotake> +(-<EVAL <ARGS>>)
+   ENDIF // we are finished
+RETURN 0
+
+
+[FUNCTION setbagvalue]
+//Warning:  Recursive!
+//TAG.PRICE is what to set it at
+//LINK is the containers UID
+   IF (<LINK.FINDCONT(<ARGN>).ID>==0)
+      RETURN 1
+   ENDIF
+   //This is LIMTED to 50 items though for lag reasons!
+   IF (<ARGN>>50)
+      SRC.SAY "Only the first 50 items were set for lag reduction reasons."
+      RETURN 1
+   ENDIF
+   //Set the vendors info
+   VAR.U=<LINK.FINDCONT(<ARGN>).UID>
+   IF (<SRC.TAG.CONTACT>==1)
+      VAR.ATTR=<LINK.FINDCONT(<ARGN>).ATTR>|attr_forsale
+      UID.U.ATTR=<VAR.ATTR>
+      TRYP 0 LINK.TOPOBJ.TAG.<VAR.U>.PRICE=<EVAL <TAG.PRICE>>
+   ELSE
+      TRYP 0 LINK.TOPOBJ.TAG.<VAR.U>.DESC=<TAG.DESC>
+   ENDIF
+   VAR.NEXT=<ARGN>+1
+   setbagvalue <VAR.NEXT>
+RETURN 1
+
+[FUNCTION smc_give_gold]
+   SRC.NEWITEM=i_gold
+   VAR.BGOLD=0<TAG.GOLD>
+   IF  (<VAR.BGOLD><65535)
+      SRC.ACT.AMOUNT=<VAR.BGOLD>
+      TAG.GOLD=0
+   ELSE
+      SRC.ACT.AMOUNT=65535
+      TAG.GOLD=<EVAL <VAR.BGOLD>+(-65535)>
+   ENDIF
+
+   IF <SRC.ACT.AMOUNT>>0
+      SRC.ACT.BOUNCE
+   ELSE
+      SRC.ACT.REMOVE
+   ENDIF
+
+   IF <EVAL <TAG.GOLD>> > 0
+      smc_give_gold
+   ENDIF
+RETURN 1
+
+[FUNCTION f_remove_petmem]
+   IF (<ARGN>>=50)
+      RETURN 1
+   ENDIF
+   MEMORYFINDTYPE(memory_ipet).REMOVE
+   IF <MEMORYFINDTYPE(memory_ipet)>
+      VAR.COUNT=<ARGN>+1
+      f_remove_petmem <VAR.COUNT>
+   ELSE
+      RETURN 0
+   ENDIF
+RETURN 1
+
+[FUNCTION f_check_layers]
+   IF <SRC.TARG.LAYER>==layer_hand1
+      RETURN 1
+   ENDIF
+   IF <SRC.TARG.LAYER>==layer_hand2
+      RETURN 1
+   ENDIF
+   IF <SRC.TARG.LAYER>==layer_gloves
+      RETURN 1
+   ENDIF
+   IF <SRC.TARG.LAYER>==layer_chest
+      RETURN 1
+   ENDIF
+   IF <SRC.TARG.LAYER>==layer_arms
+      RETURN 1
+   ENDIF
+   IF <SRC.TARG.TYPE>==t_armor
+      RETURN 1
+   ENDIF
+   IF <SRC.TARG.TYPE>==t_armor_leather
+      RETURN 1
+   ENDIF
+
+RETURN 0
+
+[FUNCTION f_dump_layers]
+   VAR.PACK=<SRC.FINDLAYER(layer_pack).UID>
+   FINDLAYER(layer_hand1).CONT=<VAR.PACK>
+   FINDLAYER(layer_hand2).CONT=<VAR.PACK>
+   IF ((<FINDLAYER(layer_helm).TYPE>==t_armor)||(<FINDLAYER(layer_helm).TYPE>==t_armor_leather))
+      FINDLAYER(layer_helm).CONT=<VAR.PACK>
+   ENDIF
+   FINDLAYER(layer_gloves).CONT=<VAR.PACK>
+   FINDLAYER(layer_chest).CONT=<VAR.PACK>
+   FINDLAYER(layer_arms).CONT=<VAR.PACK>
+   IF ((<FINDLAYER(layer_pants).TYPE>==t_armor)||(<FINDLAYER(layer_pants).TYPE>==t_armor_leather))
+      FINDLAYER(layer_pants).CONT=<VAR.PACK>
+   ENDIF
+RETURN 0
+
+[FUNCTION f_check_legal_target]
+//Just checks to see if the TOPOBJ is the vendor itself so things like
+//clothing, armor or backpacks can't be priced.  However anything IN the
+//backpack has a CONT that isn't the TOPOBJ.UID so it's OK.
+   IF (<SRC.TARG.CONT>==<SRC.TARG.TOPOBJ.UID>)
+      RETURN 0
+   ELSE
+      RETURN 1
+   ENDIF
+[EOF]    

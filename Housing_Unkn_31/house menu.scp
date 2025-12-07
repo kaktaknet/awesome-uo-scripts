@@ -1,0 +1,1654 @@
+//
+// HOUSES
+//
+
+[FUNCTION house_init_tags]
+  if ( 0<TAG.NUM.STRUCTS>	== 0 )
+     TAG.NUM.STRUCTS	= 0
+  endif
+  if ( 0<TAG.TAX.STRUCTS>	== 0 )
+     TAG.TAX.STRUCTS	= 0
+  endif
+  if ( 0<TAG.MAN.STRUCTS>	== 0 )
+     TAG.MAN.STRUCTS	= 0
+  endif
+
+
+
+[FUNCTION house_init_costs]
+  // house_init_tags
+  VAR.TAX.HOUSE		= <LINK.house_tax>
+  VAR.MAN.HOUSE		= <LINK.house_man>
+
+  VAR.TAX.SERVANTS	= 0
+  VAR.MAN.SERVANTS	= 0
+  VAR.NUM.SERVANTS	= 0
+
+  VAR.TAX.STRUCTS	= <LINK.structs_tax>
+  VAR.MAN.STRUCTS	= <LINK.structs_man>
+  VAR.NUM.STRUCTS	= <LINK.structs_num>
+
+  VAR.TAX.TOTAL		= <eval (<var.tax.house> + <var.tax.servants> + <var.tax.structs>)>
+  VAR.MAN.TOTAL		= <eval (<var.man.house> + <var.man.servants> + <var.man.structs>)>
+  VAR.TOTAL		= <eval (<var.man.total> + <var.tax.total>)>
+  VAR.DAYS		= <eval (<TIMER>/86400)>
+  VAR.HOURS		= <eval ( (3600+ (<TIMER>-(<VAR.DAYS>)*86400))/3600) )>
+
+
+[FUNCTION structs_num]
+  if !( 0<TAG.NUM.STRUCTS> )
+     return 0
+  endif
+  return <TAG.NUM.STRUCTS>
+
+
+[FUNCTION structs_tax]
+  if !( 0<TAG.NUM.STRUCTS> )
+     return 0
+  endif
+
+  return <eval (<TAG.TAX.STRUCTS> * <VAR.TAX> / 20)>
+
+
+[FUNCTION structs_man]
+  if !( 0<TAG.NUM.STRUCTS> )
+     return 0
+  endif
+
+  // 40 per standard piece
+  return <eval ((<TAG.MAN.STRUCTS> * 40)/100)>
+
+  
+[FUNCTION house_license]
+   return <eval (( 1000 + <house_tax> + <house_man> )/2)>
+
+[FUNCTION house_tax]
+  VAR.P		= <P>
+  VAR.TAX	= 0
+
+  // a trick here, move the sign out of the house, to check the right region
+  if ( <LINK.ID> == 0bd1 )
+     LINK.MOVE 0 2
+     VAR.REGION	= <LINK.REGION.NAME>
+     if ( 0<LINK.REGION.TAG.TAX> )
+        VAR.TAX	= <LINK.REGION.TAG.TAX>
+     endif
+     LINK.MOVE 0 -2
+  else
+     LINK.MOVE 2 0
+     VAR.REGION	= <LINK.REGION.NAME>
+     if ( 0<LINK.REGION.TAG.TAX> )
+        VAR.TAX	= <LINK.REGION.TAG.TAX>
+     endif
+     LINK.MOVE -2 0
+  endif
+
+  
+  if ( 0 )
+  elseif ( !strcmpi( "Minoc Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 25
+  elseif ( !strcmpi( "Yew Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Northern Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Vesper Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Trinsic Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Skara Brae Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Serpent's Hold Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Ocllo Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Nujel'm Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Moonglow Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Magincia Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Jhelom Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Cove Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 20
+  elseif ( !strcmpi( "Britain Territory", "<VAR.REGION>" ) )
+     VAR.TAX	= 40
+  else
+  endif
+  
+  return <eval ( ((((40000+<VALUE>)/2)*<VAR.TAX>)/10000)*10 )>
+
+
+[FUNCTION house_man]
+  return <eval ( ((<VALUE>*15)/10000)*10 )>
+
+
+
+[FUNCTION findhouse]
+  VAR.FINDHOUSE	= 0
+  LOOPITEMS findhouse_ <args>
+
+[FUNCTION findhouse_]
+   if ( <BASEID> != i_memory )
+      return 0
+   endif
+   if ( <LINK> != <args> )
+      return 0
+   endif
+   
+   VAR.FINDHOUSE	= <UID>
+
+[FUNCTION SRCHOUSE_friend]
+  if ( (<SRC.UID> == <MORE1>) || (<SRC.ISGM>) )
+     return 1
+  endif
+
+  if ( !strcmp( "<SRC.ACCOUNT.NAME>", "<SRC.UID.<MORE1>.ACCOUNT.NAME>" ) )
+     return 1
+  endif
+
+  if ( <SRCFRIEND> )
+     return 1
+  endif
+  return 0
+
+[FUNCTION SRCHOUSE_owner]
+  if ( (<SRC.UID> == <MORE1>) || (<SRC.ISGM>) )
+     return 1
+  endif
+
+  if ( !strcmp( "<SRC.ACCOUNT.NAME>", "<SRC.UID.<MORE1>.ACCOUNT.NAME>" ) )
+     return 1
+  endif
+
+  if ( <SRCOWNER> )
+     return 1
+  endif
+  return 0
+
+
+[FUNCTION SRCFRIEND]
+  FINDFRIEND <SRC.UID>
+  return <VAR.FINDFRIEND>
+
+
+[FUNCTION findfriend]
+  VAR.FINDFRIEND	= 0
+  if ( 0<TAG.FRIENDS.UID> == 0 )
+     return 0
+  endif
+  SRC.TRY SRC.UID.<TAG.FRIENDS.UID>.SRCLOOPITEMS findfriend_ <args>
+
+
+[FUNCTION findfriend_]
+   if ( <BASEID> != i_house_trust )
+      return 0
+   endif
+   if ( <LINK> != <args> )
+      return 0
+   endif
+   VAR.FINDFRIEND	= <UID>
+
+
+[FUNCTION SRCOWNER]
+  FINDOWNER <SRC.UID>
+  return <VAR.FINDOWNER>
+
+
+[FUNCTION findowner]
+  VAR.findowner	= 0
+  if ( 0<TAG.FRIENDS.UID> == 0 )
+     return 0
+  endif
+  SRC.TRY SRC.UID.<TAG.FRIENDS.UID>.SRCLOOPITEMS findowner_ <args>
+
+
+[FUNCTION findowner_]
+   if ( <BASEID> != i_house_trust )
+      return 0
+   endif
+   if ( <LINK> != <args> )
+      return 0
+   endif
+   if ( <MOREx> == 0 )
+      return 0
+   endif
+   VAR.FINDowner	= <UID>
+
+
+//
+//  SIGNS
+//
+[ITEMDEF 0bd1]
+DEFNAME		= i_sign_brass
+TYPE		= t_script
+TDATA2		= 064
+FLIP		= 1
+DUPELIST	= 0bd2
+CATEGORY	= Decoration - Signs
+SUBSECTION	= Blank
+DESCRIPTION	= Brass Blank
+
+
+ON = @Create
+  COLOR			= house_colour_init
+  TIMER			= 1
+  TAG.INIT_HOUSE	= 1
+  TYPE			= t_sign_gump
+
+ON = @Targon_Char
+  if ( 0<SRC.TAG.HOUSEACTION> == 0 )
+  elseif ( <SRC.TAG.HOUSEACTION> == 45 )
+    if ( <SRC.TARG.UID> == <LINK.MORE1> )
+       src.sysmessage You are the owner of the structure!
+       return 1
+    endif
+
+    if ( <SRC.TARG.NPC> )
+       src.sysmessage NPCs can't own structures!
+       return 1
+    endif
+
+    if ( <SRC.REGION.UID> == <REGION.UID> )
+       src.sysmessage You must leave the structure in order to bestow ownership.
+       return 1
+    endif
+
+    if ( <SRC.findtype(t_eq_trade_window).uid> )
+       SRC.ACT		= <SRC.findtype(t_eq_trade_window).uid>
+
+       //if ( <SRC.ACT.LINK.MOREz> )
+          //SRC.SYSMESSAGE They haven't accepted the trade yet.
+          //return 1
+       //endif
+
+       if ( <SRC.ACT.LINK.CONT> == <SRC.TARG.UID> )
+          SRC.ACT.LINK.CONT	= <SRC.UID>
+          SRC.ACT.CONT	= <SRC.TARG.UID>
+          SRC.ACT.REMOVE
+       endif
+    endif
+
+    SRC.ACT		= <SRC.MEMORYFIND.<LINK.UID>.uid>
+    SRC.ACT.CONT	= <SRC.TARG.UID>
+    LINK.MORE1		= <SRC.TARG.UID>
+    SRC.SYSMESSAGE <SRC.TARG.NAME> is now the owner of <LINK.NAME>.
+    SRC.TARG.SYSMESSAGE You are now the owner of <LINK.NAME>.
+    return 1
+  elseif ( <SRC.TAG.HOUSEACTION> == 50 )
+    // add friend
+    if ( <SRC.TARG.NPC> )
+       src.sysmessage Only players can be trusted to access the structure.
+       return 1
+    endif
+  
+    if ( <SRC.TARG.UID> == <LINK.MORE1> )
+       if ( <SRC.TARG.UID> == <SRC.UID> )
+          src.sysmessage You are the owner of the structure!
+       else
+          src.sysmessage <SRC.TARG.NAME> is the owner of the structure!
+       endif
+       return 1
+    endif
+  
+    LINK.FINDFRIEND <SRC.TARG.UID>
+    if ( <VAR.FINDFRIEND> != 0 )
+       src.sysmessage <SRC.TARG.NAME> is already a trusted person of the structure.
+       return 1
+    endif
+  
+    src.sysmessage Added <SRC.TARG.NAME> as a trusted person of the structure.
+    SRC.NEWITEM	i_house_trust
+    SRC.ACT.NAME	= <SRC.TARG.NAME> (by <SRC.NAME>)
+    SRC.ACT.MORE2	= <SRC.UID>
+    SRC.ACT.LINK	= <SRC.TARG.UID>
+    SRC.ACT.CONT	= <LINK.TAG.FRIENDS.UID>
+    return 1
+  endif
+  return 1
+
+
+ON = @Click
+  if (<LINK> == 04ffffff)
+     return 0
+  endif
+
+  if ( <LINK.TAG.STATUS> != house_status_auction )
+     if ( <LINK.TYPE> == t_multi )
+        MESSAGE <LINK.NAME>
+        return 1
+     endif
+     return 0
+  endif
+
+  if ( <LINK.TAG.AUCTION.BIDDER> == 0 )
+     MESSAGE <NAME> (no bid)
+     return 1
+  endif
+
+  MESSAGE <NAME>
+  MESSAGE (<eval <LINK.TAG.AUCTION.BID>>gp by <SRC.UID.<LINK.TAG.AUCTION.BIDDER>.name>)
+  MESSAGE (<eval ((<timer>+60)/60)>minutes to go)
+  return 1
+
+
+ON = @DCLICK
+  if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE "Get a life..."
+      return 0
+  endif
+
+  if (<LINK> == 04ffffff)
+     return 0
+  endif
+  TYPE			= t_sign_gump
+
+  if !( 0<TAG.INIT_HOUSE> == 0 )
+     return 1
+  endif
+
+  if ( <LINK.TAG.STATUS> != house_status_auction )
+     if !( <LINK.SRCHOUSE_friend> ) 
+        SRC.SYSMESSAGE This structure belongs to <src.uid.<LINK.MORE1>.name>!
+	return 1
+     endif
+  elseif !( <SRC.ISGM> )
+     if ( <LINK.TAG.AUCTION.BIDDER> == <SRC.UID> )
+        SRC.SYSMESSAGE You already have the best bid, at <eval <LINK.TAG.AUCTION.BID>>gp, <eval (<timer>+60)/60)>minutes to go.
+	return 1
+     endif
+
+     f_mnu_house_auction
+     return 1
+  endif
+
+  if ( <LINK.TAG.STATUS> == house_status_init )
+     //if (<SRC.UID> != <LINK.MORE1>)
+        //src.sysmessage This is not your house, and it's not established yet.
+	//return 1
+     //endif
+     house_init_costs
+     MENU mnu_house_init
+     return 1
+  endif
+  
+  DIALOG_house_sign
+  //src.sysmessage The house has <eval <link.tag.paid>>gp paid.
+  //src.sysmessage It's <eval (<TIMER>)> seconds until next payment.
+  RETURN 1
+
+ON=@Timer
+  if ( (<LINK> == 04ffffff) | (<LINK.MORE1> == 0) )
+     TIMER	= 100
+     return 1
+  endif
+
+  // one time initialization
+  if !( 0<TAG.INIT_HOUSE> == 0 )
+     TAG.INIT_HOUSE	=
+     NAME		= <LINK.NAME>
+     TIMER		= house_time_init
+     COLOR		= house_colour_init
+     LINK.TAG.STATUS	= house_status_init
+     LINK.TAG.PAID	= 0
+     return 1
+  endif
+
+  if ( <LINK.TAG.STATUS> == house_status_auction )		// auctioned
+    if ( <LINK.TAG.AUCTION.BIDDER> == 0 )			// no bidder, remove
+       LINK.REMOVE
+       REMOVE
+       return 1
+    endif
+
+    // auction done, change owner
+    VAR.NEW_OWNER	= <LINK.TAG.AUCTION.BIDDER>
+    VAR.PREV_OWNER	= <LINK.MORE1>
+    LINK.TAG.PREV_OWNER	= <VAR.PREV_OWNER>
+    LINK.MORE1		= <VAR.NEW_OWNER>
+
+    VAR.LINK		= <LINK.UID>
+
+    LINK		= <VAR.PREV_OWNER>
+    LINK.FINDHOUSE <VAR.LINK>
+ 
+    LINK		= <VAR.FINDHOUSE>
+    LINK.CONT		= <VAR.NEW_OWNER>
+
+    LINK.CONT.SYSMESSAGE You are now the owner of a <LINK.CONT.UID.<VAR.LINK>.NAME>.
+    LINK		= <VAR.LINK>
+    
+    LINK.TAG.STATUS	= house_status_init	// so that the next IF inits the house
+    // no return here on purpose
+  endif
+
+  if ( <LINK.TAG.STATUS> == house_status_init )		// becoming established
+     TIMER		= house_time_normal
+     COLOR		= house_colour_normal
+     LINK.TAG.STATUS	= house_status_normal
+     LINK.TAG.PAID	= <eval (<LINK.house_tax> + <LINK.house_man>)>
+     LINK.TRIGGER @Init
+     return 1
+  endif
+
+
+  house_init_costs
+  VAR.TAX		= <VAR.TOTAL>
+
+  if ( <VAR.TAX> <= <LINK.TAG.PAID> )
+     LINK.TAG.PAID	= <eval (<LINK.TAG.PAID> - <VAR.TAX>)>
+     TIMER		= house_time_normal
+     if ( <LINK.TAG.PAID> < <VAR.TAX> )		// warn that next tax won't be paid
+        COLOR			= house_colour_tax
+     endif
+     return 1
+  endif
+
+  // failed to pay, auction
+  TIMER				= house_time_auction
+  COLOR				= house_colour_auction
+  LINK.REMOVE
+  REMOVE
+       
+
+  
+  return 1
+ 
+
+ON = @Targon_Item
+  if ( <SRC.TARG.TYPE> == t_struct_built )
+    if ( <SRC.TARG.LINK.uid> != <LINK.UID> )
+      SRC.SYSMESSAGE That structure does not belong here.
+      return 1
+    endif
+  elseif ( <LINK.BASEID> == i_multi_struct )
+    SRC.SYSMESSAGE That's not a structure.
+    return 1
+  elseif ( <SRC.TARG.REGION.UID> != <REGION.UID> )
+    SRC.SYSMESSAGE That's outside boundaries.
+    return 1
+  elseif ( <SRC.TARG.LINK.TYPE> == t_multi )
+    if ( <SRC.TARG.LINK.UID> != <REGION.UID> )
+       SRC.SYSMESSAGE That item is locked to another house!
+       return 1
+    endif
+  endif
+
+  if ( 0 )
+  elseif ( (<SRC.TARG.TYPE> == t_door) || (<SRC.TARG.TYPE> == t_door_locked) || (<SRC.TARG.TYPE> == t_door_open) )
+     if ( 0 )
+     elseif ( <SRC.TAG.HOUSEACTION> == 51 )	// lock
+       if !( <SRC.TARG.ATTR> & attr_blessed )
+          SRC.SYSMESSAGE The door is already locked. Only fully trusted people can enter.
+       else
+          SRC.SYSMESSAGE You lock the door. Only fully trusted people can enter.
+          SRC.TARG.ATTR	= (<SRC.TARG.ATTR> &~ attr_blessed)
+          return 1
+       endif
+     elseif ( <SRC.TAG.HOUSEACTION> == 52 )	// unlock
+       if ( <SRC.TARG.ATTR> & attr_blessed )
+          SRC.SYSMESSAGE The door is not locked. Partially people are free to enter.
+       else
+          SRC.SYSMESSAGE You unlock the door. Partially people are free to enter.
+          SRC.TARG.ATTR	= (<SRC.TARG.ATTR> | attr_blessed)
+       endif
+     endif
+     return 1
+  elseif ( <SRC.TARG.TYPE> == t_sign_gump )
+  //elseif ( <SRC.TARG.TYPE> == t_container )
+  //elseif ( <SRC.TARG.TYPE> == t_container_locked )
+  else
+     if ( 0 )
+     elseif ( <SRC.TAG.HOUSEACTION> == 51 )	// lock
+       if ( (<SRC.TARG.ATTR> & attr_move_never) && (<SRC.TARG.LINK.uid> == <LINK.uid>) )
+          SRC.SYSMESSAGE That is already locked down.
+       else
+          IF (<SRC.TARG.CONT.TOPOBJ.UID> == 0)
+              SRC.SYSMESSAGE You lock down <SRC.TARG.NAME>.
+              SRC.TARG.ATTR	= (<SRC.TARG.ATTR> | attr_move_never )
+              SRC.TARG.LINK	= <LINK.UID>
+              SRC.RESYNC
+          else
+              SRC.SYSMESSAGE You cant lock items that are inside other items.
+          endif
+       endif
+     elseif ( <SRC.TAG.HOUSEACTION> == 52 )	// unlock
+       if ( (<SRC.TARG.ATTR> & attr_move_never) && (<SRC.TARG.LINK.uid> == <LINK.uid>) )
+          SRC.SYSMESSAGE You unlock <SRC.TARG.NAME>.
+          SRC.TARG.ATTR	= ( <SRC.TARG.ATTR> & ~ attr_move_never )
+          SRC.TARG.LINK	= 04fffffff
+       if ((<SRC.TARG.TYPE> == t_forge)||(<SRC.TARG.TYPE> == t_forge_out))
+          SRC.TARG.ATTR = 010
+       endif
+          SRC.RESYNC
+       else
+          SRC.SYSMESSAGE That is not locked down.
+       endif
+     elseif ( <SRC.TAG.HOUSEACTION> == 53 )	// raise
+       SRC.NEWITEM i_gold
+       SRC.ACT.MOREP	= <REGION.P>
+       VAR.Z	= <SRC.ACT.MOREz>
+       SRC.ACT.REMOVE
+
+       if ( <SRC.TARG.Z> < (<VAR.Z> + 15) )
+          SRC.SYSMESSAGE You raise <SRC.TARG.NAME>.
+          SRC.TARG.NUDGEUP 1
+       else
+          SRC.SYSMESSAGE You can't raise it any higher.
+       endif
+     elseif ( <SRC.TAG.HOUSEACTION> == 54 )	// lower
+       SRC.NEWITEM i_gold
+       SRC.ACT.MOREP	= <REGION.P>
+       VAR.Z	= <eval (<SRC.ACT.MOREz> + 7 )>
+       SRC.ACT.REMOVE
+       if ( <SRC.TARG.Z> > <var.z> )
+          SRC.SYSMESSAGE You lower <SRC.TARG.NAME>.
+          SRC.TARG.NUDGEDOWN 1
+       else
+          SRC.SYSMESSAGE You can't move it any lower.
+       endif
+     elseif ( <SRC.TAG.HOUSEACTION> == 55 )	// flip
+       SRC.TARG.FLIP
+     elseif ( <SRC.TAG.HOUSEACTION> == 56 )	// scrap
+       if ( <SRC.TARG.TYPE> != t_struct_built )
+          SRC.SYSMESSAGE That's not a structure.
+          return 1
+       endif
+       SRC.TARG.TRIGGER @Scrap
+     elseif ( <SRC.TAG.HOUSEACTION> == 57 )	// redeed
+       if ( <SRC.TARG.TYPE> != t_struct_built )
+          SRC.SYSMESSAGE That's not a structure.
+          return 1
+       endif
+       SRC.TARG.TRIGGER @Redeed
+     endif
+     endif
+     return 1
+  endif
+
+  SRC.SYSMESSAGE You can't do that!
+  return 1
+
+
+[FUNCTION f_mnu_house_auction]
+if ( <LINK.TAG.AUCTION.BIDDER> == 0 )
+   VAR.bidder	= noone
+   var.minbid	= minimum bid is <eval ((<LINK.TAG.AUCTION.BID> * 110)/100)>gp
+else
+   VAR.bidder	= <uid.<LINK.TAG.AUCTION.BIDDER>.name>
+   var.minbid	= current bid is at <eval ((<LINK.TAG.AUCTION.BID> * 100)/100)>gp
+endif
+SRC.TAG.AUCTION.CURRENTBID	= <LINK.TAG.AUCTION.BID>
+MENU mnu_house_auction
+
+
+
+
+[MENU mnu_house_auction]
+This structure is being bid on by <var.bidder>. The <var.minbid>.
+
+ON = 0 ( <eval ((<LINK.TAG.AUCTION.BID>*110)/100)>gp )   minimum bid
+  f_house_bid <eval ((<LINK.TAG.AUCTION.BID>*110)/100)>
+ON = 0 ( <eval ((<LINK.TAG.AUCTION.BID>*125)/100)>gp )   25% more
+  f_house_bid <eval ((<LINK.TAG.AUCTION.BID>*125)/100)>
+ON = 0 ( <eval ((<LINK.TAG.AUCTION.BID>*150)/100)>gp )   50% more
+  f_house_bid <eval ((<LINK.TAG.AUCTION.BID>*150)/100)>
+ON = 0 ( <eval ((<LINK.TAG.AUCTION.BID>*200)/100)>gp )   double
+  f_house_bid <eval ((<LINK.TAG.AUCTION.BID>*200)/100)>
+ON = 0 ( <eval ((<LINK.TAG.AUCTION.BID>*300)/100)>gp )   triple
+  f_house_bid <eval ((<LINK.TAG.AUCTION.BID>*300)/100)>
+
+
+
+
+[FUNCTION f_house_bid]
+  if ( <LINK.TAG.STATUS> != house_status_auction )
+     src.sysmessage The auction is no longer in progress.
+     return 1
+  endif
+
+  if ( <LINK.TAG.AUCTION.BID> != <SRC.TAG.AUCTION.CURRENTBID> )
+    src.sysmessage While you considered, the bidding conditions have changed.
+    return 1
+  endif
+
+  src.consumegold_everywhere <args>
+  if ( <var.consumegold> > 0 )
+     src.sysmessage You are <eval <var.consumegold>>gp short in your account for such a bid.
+     return 0
+  endif
+
+  if ( <LINK.TAG.AUCTION.BIDDER> != 0 )
+    VAR.PREV_ACT	= <SRC.ACT>
+    SRC.ACT		= <LINK.TAG.AUCTION.BIDDER>
+    SRC.ACT.NEWITEM	i_check
+    SRC.ACT.ACT.MORE2	= <LINK.TAG.AUCTION.BID>
+    SRC.ACT.ACT.CONT	= <SRC.ACT.findlayer(layer_bankbox).uid>
+    SRC.ACT.SYSMESSAGE	A higher bid has been placed on <LINK.NAME>. A cheque has been issued to your bank.
+    SRC.ACT		= <VAR.PREV_ACT>
+  endif
+
+  LINK.TAG.AUCTION.BIDDER	= <SRC.UID>
+  LINK.TAG.AUCTION.BID		= <args>
+  TIMER				= house_time_auction_bid
+
+  src.sysmessage You bid <eval <args>>gp for the <LINK.NAME>.
+
+
+
+
+[MENU mnu_house_init]
+The structure is not established yet (<eval (<TIMER>)>seconds to go). You can either redeed it or establish it now. Once it is established, you can no longer redeed it. The total weekly cost for this structure in this place is currently <eval <var.total>>gp.
+
+ON = 0 Redeed
+  if !( (<SRC.UID> == <LINK.MORE1>) || (<SRC.ISGM>) || (<LINK.TAG.STATUS> == house_status_init) )
+     src.sysmessage You can't redeed this structure.
+     return 1
+  endif
+  
+  SRC.NEWITEM		i_deed
+  SRC.ACT.TYPE		t_deed
+  SRC.ACT.NAME		<LINK.NAME>
+  SRC.ACT.MORE		<LINK.ID>
+  SRC.ACT.MORE2		<LINK.MORE>
+  SRC.ACT.BOUNCE
+  LINK.REMOVE
+  RETURN 1
+
+ON = 0 Establish
+  if !( (<SRC.UID> == <LINK.MORE1>) || (<SRC.ISGM>) || (<LINK.TAG.STATUS> == house_status_init) )
+     src.sysmessage You can't establish this structure.
+     return 1
+  endif
+  TIMER	= 1
+  return 1
+  
+
+[MENU mnu_house_sell]
+This will place the structure up for auction, and the money will be returned to you. If there is no bidder the structure will be demolished. Are you sure you want to proceed?
+
+ON = 0 Continue...
+   SRC.SYSMESSAGE This function is not implemented yet.
+  
+
+
+
+//
+//
+//
+//
+//
+//
+//
+
+//
+//  FIX THE KEYS
+//
+[FUNCTION f_key_targon_item]
+   if ( <MORE1> == 0 )			// blank key
+      SRC.TARG.MORE2 = <MORE2>		// copy MORE2
+      return 0	// proceed as normal
+   endif
+
+   if ( (<SRC.TARG.TYPE> == t_door) || (<SRC.TARG.TYPE> == t_door_locked) )
+     if ( <SRC.TARG.LINK.UID> )		// HOUSE door
+       if ( 0<SRC.TARG.LINK.TAG.LAST_LOCK> == 0 )
+          SRC.TARG.LINK.TAG.LAST_LOCK	= 0
+       elseif ( <MORE2> != <SRC.TARG.LINK.TAG.LAST_LOCK> )
+          src.sysmessage The lock on this door has been changed.
+          return 1
+       endif
+       return 0
+     endif
+   endif
+
+
+
+   
+[ITEMDEF 0100e]
+DEFNAME=i_key_copper
+RESOURCES=3 i_ingot_iron
+WEIGHT=1
+TYPE=T_KEY
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Keys
+DESCRIPTION=Copper Key
+SKILLMAKE=TINKERING 43.0,t_tinker_tools
+RESOURCES2=1 i_ingot_copper
+
+ON=@Create
+   // ATTR		= attr_invis | attr_newbie
+   ATTR		= attr_newbie
+
+ON=@Targon_item
+   return	<f_key_targon_item>
+
+
+
+//
+//  DIALOG
+//
+
+[FUNCTION DIALOG_house_sign]
+  // if the house has no bag of friends, create one
+  SRC.ACT	= <LINK.TAG.FRIENDS.UID>
+  if ( <SRC.ACT.UID> == 0 )
+     SRC.NEWITEM	i_pouch
+     if ( <ID> == 0bd1 )
+       SRC.ACT.FLIP
+     endif
+     SRC.ACT.ATTR	= attr_invis | attr_move_never
+     SRC.ACT.P		= <P>
+     SRC.ACT.Z		= <eval (<Z> + 22)>
+     SRC.ACT.COLOR	= 039b
+     SRC.ACT.TIMER	= -1
+     SRC.ACT.NAME	= group of friends
+     SRC.ACT.LINK	= <LINK.UID>
+     LINK.TAG.FRIENDS.UID	= <SRC.ACT.UID>
+  endif
+
+    
+  // init costs
+  house_init_costs
+
+  //SRC.SAY <eval <VAR.MAN.HOUSE>>gp <eval <VAR.MAN.STRUCTS>>gp <eval <VAR.MAN.SERVANTS>>gp <eval <VAR.MAN.TOTAL>>gp <eval <VAR.TAX.HOUSE>>gp <eval <VAR.TAX.STRUCTS>>gp <eval <VAR.TAX.SERVANTS>>gp <eval <VAR.TAX.TOTAL>>gp
+
+  if ( <LINK.TAG.PAID> < <VAR.TOTAL> )
+     VAR.PAID.CLR	= 32
+     if ( <VAR.DAYS> > 2 )
+        VAR.PAID.CLR	= 42
+     endif
+  else
+     VAR.PAID.CLR	= 88
+  endif
+
+  // init friends
+  house_init_friend 0
+  house_init_friend 1
+  house_init_friend 2
+  house_init_friend 3
+  house_init_friend 4
+  house_init_friend 5
+  house_init_friend 6
+  house_init_friend 7
+  house_init_friend 8
+  house_init_friend 9
+  house_init_friend 10
+  house_init_friend 11
+  house_init_friend 12
+  house_init_friend 13
+  house_init_friend 14
+  house_init_friend 15
+  house_init_friend 16
+  house_init_friend 17
+  house_init_friend 18
+  house_init_friend 19
+
+  if ( 0<SRC.TAG.CONSTRUCTION_LICENSE> )
+     SRC.TAG.CONSTRUCTION_LICENSE	=
+     VAR.PAGE6	= 1
+     VAR.PAGE5	= 5
+     VAR.PAGE1	= 6
+  elseif ( <LINK.BASEID> == i_multi_struct )
+     VAR.PAGE1	= 5
+     VAR.PAGE5	= 1
+     VAR.PAGE6	= 6
+  else
+     VAR.PAGE1	= 1
+     VAR.PAGE5	= 5
+     VAR.PAGE6	= 6
+  endif
+
+  HTMLDIALOG d_house_sign
+
+
+
+[FUNCTION hr]
+   SYSMESSAGE Houses resynced.
+
+[DIALOG d_house_sign]
+100,60
+gumppic    0    0 <eval   0ce>		// left
+gumppic    0   44 <eval   0ca>
+gumppic    0  360 <eval   0cc>
+
+gumppic  471    0 <eval   0cf>		// right
+gumppic  471   44 <eval   0cb>
+gumppic  471  360 <eval   0cd>
+
+gumppic   44    0 <eval   0c9>		// middle
+gumppic   44   44 <eval  0a2c>
+gumppic   44  360 <eval   0e9>
+
+gumppic  350    0 <eval   0cf>		// left 2
+gumppic  350   44 <eval   0cb>
+gumppic  350  360 <eval   0cd>
+
+resizepic 48 25 5100 299 25		// title background
+
+button   415   50 <eval 015a9> <eval 015aa> 0 1		// status
+button   415  125 <eval 015c3> <eval 015c4> 0 2		// costs
+button   415  205 <eval 015bd> <eval 015be> 0 3		// people
+// button   415  280 <eval 015c5> <eval 015c6> 0 4		// items
+
+
+PAGE <VAR.PAGE1>
+   text 160 27 0 1
+
+   text    40 <eval (45+  25)>  0 35			// useful operations
+
+   button  70 <eval (45+  50)> <eval 0fa5> <eval 0fa7> 1 0 10	// bank
+   text   110 <eval (45+  50)>  52 41
+
+   text    40 <eval (100+  45)>   0 36	// owner operations
+   button  70 <eval (100+  70)> <eval 0fa5> <eval 0fa7> 1 0 44	// rename
+   text   110 <eval (100+  70)>  0 44		// rename
+   textentry 170 <eval (100+70)>  250 60 42 0 0	// rename entry
+
+   button  70 <eval (100+  90)> <eval 0fa5> <eval 0fa7> 1 0 45	// bestow ownership
+   text   110 <eval (100+  90)>  26 45		// bestow ownership
+   button  70 <eval (100+ 110)> <eval 0fa5> <eval 0fa7> 1 0 46	// scrap
+   text   110 <eval (100+ 110)>  27 46		// scrap
+   button  70 <eval (100+ 130)> <eval 0fa5> <eval 0fa7> 1 0 47	// license
+   text   110 <eval (100+ 130)>  47 47		// license
+
+
+   text    40 <eval (220+  65)> 0 37	// item operations
+   button  70 <eval (220+  90)> <eval 0fa5> <eval 0fa7> 1 0 51
+   button  70 <eval (220+ 110)> <eval 0fa5> <eval 0fa7> 1 0 52
+   button 180 <eval (220+  90)> <eval 0fa5> <eval 0fa7> 1 0 53
+   button 180 <eval (220+ 110)> <eval 0fa5> <eval 0fa7> 1 0 54
+   button 280 <eval (220+  90)> <eval 0fa5> <eval 0fa7> 1 0 55
+   button 280 <eval (220+ 110)> <eval 0fa5> <eval 0fa7> 1 0 56
+   text   110 <eval (220+  90)>  5 51		// lock
+   text   110 <eval (220+ 110)> 10 52		// unlock
+   text   220 <eval (220+  90)>  5 53		// raise
+   text   220 <eval (220+ 110)> 10 54		// lower
+   text   320 <eval (220+  90)>  5 55		// flip
+   text   320 <eval (220+ 110)> 10 56		// scrap
+
+
+PAGE <VAR.PAGE5>
+   text 160 27 0 1
+
+   text    40 <eval (45+  25)>  0 35			// useful operations
+
+   button  70 <eval (45+ 50)> <eval 0fa5> <eval 0fa7> 1 0 55
+   text   110 <eval (45+ 50)>  5 55		// flip
+
+   button 160 <eval (45+ 50)> <eval 0fa5> <eval 0fa7> 1 0 56
+   text   200 <eval (45+ 50)>  5 56		// scrap
+
+   button 260 <eval (45+ 50)> <eval 0fa5> <eval 0fa7> 1 0 57
+   text   300 <eval (45+ 50)>  5 57		// redeed
+
+
+   text    40 <eval (100+  45)>   0 36	// owner operations
+   button  70 <eval (100+  70)> <eval 0fa5> <eval 0fa7> 1 0 44	// rename
+   text   110 <eval (100+  70)>  0 44		// rename
+   textentry 170 <eval (100+70)>  250 60 42 0 0	// rename entry
+
+   button  70 <eval (100+  90)> <eval 0fa5> <eval 0fa7> 1 0 45	// bestow ownership
+   text   110 <eval (100+  90)>  26 45		// bestow ownership
+   button  70 <eval (100+ 110)> <eval 0fa5> <eval 0fa7> 1 0 46	// scrap
+   text   110 <eval (100+ 110)>  27 46		// scrap
+   button  70 <eval (100+ 130)> <eval 0fa5> <eval 0fa7> 1 0 47	// license
+   text   110 <eval (100+ 130)>  47 47		// license
+
+PAGE <VAR.PAGE6>
+   text 160 27 0 1
+
+   text    40 <eval (45+  25)>  0 6			// useful operations
+   text    70 <eval (65+  25)>  0 0			// useful operations
+   
+   text    40 <eval (120+ 10)>  0 35			// useful operations
+
+   button  70 <eval (145+ 10)> <eval 0fa5> <eval 0fa7> 1 0 55
+   text   110 <eval (145+ 10)>  5 55		// flip
+
+   button 160 <eval (145+ 10)> <eval 0fa5> <eval 0fa7> 1 0 56
+   text   200 <eval (145+ 10)>  5 56		// scrap
+
+   button 260 <eval (145+ 10)> <eval 0fa5> <eval 0fa7> 1 0 57
+   text   300 <eval (145+ 10)>  5 57		// redeed
+
+   htmlgump 40 200 325 145 10 0 1
+
+PAGE 2
+   text 160  27 0  2
+
+   text 180  80 85 11		// maintenance
+   text 290  80 85 12		// tax
+   
+   text  60 110 87 13		// house
+   text  60 130 88 14		// structures
+   text  60 150 89 15		// servants
+   text  60 175 90 16		// total
+
+   text 195 110 51 17		// maintenance: house
+   text 195 130 51 18		// maintenance: structures
+   text 195 150 51 19		// maintenance: servants
+   text 195 175 53 20		// maintenance: total
+
+   text 290 110 51 21		// tax: house
+   text 290 130 51 22		// tax: structures
+   text 290 150 51 23		// tax: servants
+   text 290 175 53 24		// tax: total
+
+   text  60 215 91 25		// total cost
+   text  60 238 91 26		// paid
+   text  60 261 91 27		// days left
+   
+   text 220 215 53 28		// total cost gp
+   text 220 238 <eval <VAR.PAID.CLR>> 29		// paid gp
+   text 220 261 67 30		// days
+
+   button 240 310 <eval 015c3> <eval 015c4> 1 0 30		// costs
+   text  120 320 0 31		// pay
+   text  120 337 0 32		//   text
+   
+PAGE 3
+   text 160 27 0 3
+
+   text <VAR.FRIENDS.0.TEXT>
+   button <VAR.FRIENDS.0.BT1>
+   button <VAR.FRIENDS.0.BT2>
+   text <VAR.FRIENDS.1.TEXT>
+   button <VAR.FRIENDS.1.BT1>
+   button <VAR.FRIENDS.1.BT2>
+   text <VAR.FRIENDS.2.TEXT>
+   button <VAR.FRIENDS.2.BT1>
+   button <VAR.FRIENDS.2.BT2>
+   text <VAR.FRIENDS.3.TEXT>
+   button <VAR.FRIENDS.3.BT1>
+   button <VAR.FRIENDS.3.BT2>
+   text <VAR.FRIENDS.4.TEXT>
+   button <VAR.FRIENDS.4.BT1>
+   button <VAR.FRIENDS.4.BT2>
+   text <VAR.FRIENDS.5.TEXT>
+   button <VAR.FRIENDS.5.BT1>
+   button <VAR.FRIENDS.5.BT2>
+   text <VAR.FRIENDS.6.TEXT>
+   button <VAR.FRIENDS.6.BT1>
+   button <VAR.FRIENDS.6.BT2>
+   text <VAR.FRIENDS.7.TEXT>
+   button <VAR.FRIENDS.7.BT1>
+   button <VAR.FRIENDS.7.BT2>
+   text <VAR.FRIENDS.8.TEXT>
+   button <VAR.FRIENDS.8.BT1>
+   button <VAR.FRIENDS.8.BT2>
+   text <VAR.FRIENDS.9.TEXT>
+   button <VAR.FRIENDS.9.BT1>
+   button <VAR.FRIENDS.9.BT2>
+   text <VAR.FRIENDS.10.TEXT>
+   button <VAR.FRIENDS.10.BT1>
+   button <VAR.FRIENDS.10.BT2>
+   text <VAR.FRIENDS.11.TEXT>
+   button <VAR.FRIENDS.11.BT1>
+   button <VAR.FRIENDS.11.BT2>
+   text <VAR.FRIENDS.12.TEXT>
+   button <VAR.FRIENDS.12.BT1>
+   button <VAR.FRIENDS.12.BT2>
+   text <VAR.FRIENDS.13.TEXT>
+   button <VAR.FRIENDS.13.BT1>
+   button <VAR.FRIENDS.13.BT2>
+   text <VAR.FRIENDS.14.TEXT>
+   button <VAR.FRIENDS.14.BT1>
+   button <VAR.FRIENDS.14.BT2>
+   text <VAR.FRIENDS.15.TEXT>
+   button <VAR.FRIENDS.15.BT1>
+   button <VAR.FRIENDS.15.BT2>
+   text <VAR.FRIENDS.16.TEXT>
+   button <VAR.FRIENDS.16.BT1>
+   button <VAR.FRIENDS.16.BT2>
+   text <VAR.FRIENDS.17.TEXT>
+   button <VAR.FRIENDS.17.BT1>
+   button <VAR.FRIENDS.17.BT2>
+   text <VAR.FRIENDS.18.TEXT>
+   button <VAR.FRIENDS.18.BT1>
+   button <VAR.FRIENDS.18.BT2>
+   text <VAR.FRIENDS.19.TEXT>
+   button <VAR.FRIENDS.19.BT1>
+   button <VAR.FRIENDS.19.BT2>
+
+   gumppic    0  360 <eval   0cc>
+   gumppic  471  360 <eval   0cd>
+   gumppic   44  360 <eval   0e9>
+   gumppic  350  360 <eval   0cd>
+
+   button 240 310 <eval 015bd> <eval 015be> 1 0 50		// people
+   text  110 320 0 33		// add friend
+   text  110 337 0 34		//   text
+
+PAGE 4
+   text 160 27 0 4
+
+
+[DIALOG d_house_sign TEXT]
+<LINK.NAME>
+STRUCTURE
+ COSTS
+PEOPLE
+OPTIONS
+5
+Structure name:
+7
+8
+9
+This construction license allows trusted people to manage and add to the structures attached to your house.<var.br><var.br>For instance, if you hire a carpenter to make fencing for your house, you can add him as a trusted person to the house with no previleges on the house, lock the doors and hand him this construction license. As soon as he's over, you can simply remove him from the trusted list, should you wish.<var.p>Any number of construction licenses can be issued, but it's suggested that you have only one out, so you can easily control who has it.
+Maintenance
+Tax
+base
+structures [ <eval <var.num.structs>> ]
+servants  [ <eval <var.num.servants>> ]
+overall
+<eval <VAR.MAN.HOUSE>>gp
+<eval <VAR.MAN.STRUCTS>>gp
+<eval <VAR.MAN.SERVANTS>>gp
+<eval <VAR.MAN.TOTAL>>gp		// 20
+<eval <VAR.TAX.HOUSE>>gp
+<eval <VAR.TAX.STRUCTS>>gp
+<eval <VAR.TAX.SERVANTS>>gp
+<eval <VAR.TAX.TOTAL>>gp
+total weekly cost
+currently paid
+time until collect
+<eval (<VAR.MAN.TOTAL>+<VAR.TAX.TOTAL>)>gp
+<eval <LINK.TAG.PAID>>gp ( <eval (<LINK.TAG.PAID>/(<VAR.TAX.TOTAL>+<VAR.MAN.TOTAL>))> weeks )
+<eval <var.days>> days, <eval <var.hours>> hours	// 30
+pay total cost
+for one week
+add trusted person
+  to the structure
+Useful operations:
+Structure operations:
+Other operations (fully trusted people only):
+38
+39
+40
+access the bank account
+open personal mail box
+43
+rename:
+bestow ownership
+demolish & scrap
+obtain construction license (<LINK.house_license>gp)
+48
+49
+50
+lock
+unlock
+raise
+lower
+flip
+scrap
+redeed
+58
+noone
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(0).NAME>	// friend 0
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(1).NAME>	// friend 1
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(2).NAME>	// friend 2
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(3).NAME>	// friend 3
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(4).NAME>	// friend 4
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(5).NAME>	// friend 5
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(6).NAME>	// friend 6
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(7).NAME>	// friend 7
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(8).NAME>	// friend 8
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(9).NAME>	// friend 9
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(10).NAME>	// friend 10
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(11).NAME>	// friend 11
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(12).NAME>	// friend 12
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(13).NAME>	// friend 13
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(14).NAME>	// friend 14
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(15).NAME>	// friend 15
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(16).NAME>	// friend 16
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(17).NAME>	// friend 17
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(18).NAME>	// friend 18
+<SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(19).NAME>	// friend 19
+50
+51
+52
+53
+54
+55
+
+
+[ITEMDEF i_openbank]
+ID	= i_memory
+TYPE	= t_eq_script
+LAYER	= layer_special
+
+ON = @Timer
+   if ( (<CONT.P.x> != <MOREx>) || (<CONT.P.y> != <MOREy>) )
+      CONT.SYSMESSAGE You cancel the request to access the bank account.
+      remove
+      return 1
+   endif
+   CONT.BANKSELF
+   CONT.SYSMESSAGE You receive access to your bank account.
+   remove
+   return 1
+
+
+[ITEMDEF i_house_trust]
+ID	= i_scroll_blank
+NAME	= house trust
+TYPE	= t_script
+LAYER	= 0
+
+ON = @Click
+   MESSAGE <LINK.NAME>
+   return 1
+
+
+[DIALOG d_house_sign BUTTON]
+ON = 10
+  if ( <src.findid( i_openbank ).uid> )
+     if ( <src.findid( i_openbank ).timer> < 1 )
+        src.findid.i_openbank.remove
+     else
+        src.sysmessage You already requested access to your account. Please wait.
+        return 1
+     endif
+  endif
+  if ( <DISTANCE> > 5 )
+     SRC.SYSMESSAGE You are too far away.
+     return 1
+  endif
+  src.newitem	= i_openbank
+  src.act.morep	= <src.p>
+  SRC.ACT.TIMER	= 7
+  src.act.EQUIP
+  SRC.SYSMESSAGE You requested access to your bank account. Please wait here.
+
+ON = 11
+  src.sysmessage The personal mailbox is not implemented yet. Please be patient.
+
+ON = 30
+  if ( <DISTANCE> > 5 )
+     SRC.SYSMESSAGE You are too far away.
+     return 1
+  endif
+  house_init_costs
+  VAR.ADJUST	= 0
+  if ( <VAR.TOTAL> == 0 )
+     VAR.TOTAL	= 100
+  endif
+  
+  if ( (<LINK.TAG.PAID> / <VAR.TOTAL>) > 6 )
+     src.sysmessage You can't pay over 6 weeks in advance.
+     return 1
+  endif
+
+  if ( (<LINK.TAG.PAID> > 0) && (<LINK.TAG.PAID> < <VAR.TOTAL>) )
+     VAR.TOTAL	= <eval (<var.total> - <LINK.TAG.PAID>)>
+     VAR.ADJUST	= 1
+  endif
+
+  src.consumegold_everywhere <VAR.TOTAL>
+  if ( <VAR.CONSUMEGOLD> > 0 )
+     if ( <VAR.ADJUST> )
+        src.sysmessage You are <eval <VAR.CONSUMEGOLD>>gp short for the adjustment of <eval <var.total>>gp.
+     else
+        src.sysmessage You are <eval <VAR.CONSUMEGOLD>>gp short of the <eval <var.total>>gp.
+     endif
+     return 1
+  endif
+  if ( <VAR.ADJUST> )
+     src.sysmessage You pay the adjustment of <eval <VAR.TOTAL>>gp.
+  else
+     src.sysmessage You pay the <eval <VAR.TOTAL>>gp.
+  endif
+  LINK.TAG.PAID	= <eval <LINK.TAG.PAID>+<var.total>>
+  COLOR		= house_colour_normal
+
+ON = 44
+  if !( <LINK.SRCHOUSE_owner> )
+    src.sysmessage You do not have the previlege to do that.
+    return 1
+  endif
+
+  LINK.NAME = <argtxt[0]>
+  SRC.SYSMESSAGE House renamed.
+
+ON = 45
+  if !( (<SRC.UID> == <LINK.MORE1>) || (<SRC.ISGM>) )
+    src.sysmessage You are not the owner of the house.
+    return 1
+  endif
+
+  if ( <SRC.REGION.UID> == <REGION.UID> )
+     src.sysmessage You must leave the house in order to bestow ownership.
+     return 1
+  endif
+  SRC.TAG.HOUSEACTION	= 45
+  SRC.SYSMESSAGE @28 WARNING: Use of this option will transfer ALL rights you have on this property to someone else.
+  SRC.SYSMESSAGE (hint: if you have a secure trade window open, this will accept the trade immediatly). Who would you like to bestow ownership upon?
+  TARGET
+
+ON = 46
+  if !( (<SRC.UID> == <LINK.MORE1>) || (<SRC.ISGM>) )
+    src.sysmessage You are not the owner of the house.
+    return 1
+  endif
+
+  MENU mnu_house_scrap
+  return 1
+
+ON = 47
+  if !( <LINK.SRCHOUSE_owner> )
+    src.sysmessage You do not have the previlege to do that.
+    return 1
+  endif
+
+  if !( <SRC.ISGM> )
+    src.consumegold_everywhere <house_license>
+    if ( <var.consumegold> > 0 )
+       src.sysmessage You are <eval <var.consumegold>>gp short in your account.
+       return 0
+    endif
+  endif
+
+  SRC.NEWITEM i_construction_license
+  SRC.ACT.LINK	= <LINK.UID>
+  SRC.ACT.BOUNCE
+
+ON = 51
+  if !( <LINK.SRCHOUSE_owner> )
+     SRC.SYSMESSAGE You don't have enough previleges to do that.
+     return 1
+  endif
+  TARGET What item would you like to lock?
+  SRC.TAG.HOUSEACTION	= 51
+
+ON = 52
+  if !( <LINK.SRCHOUSE_owner> )
+     SRC.SYSMESSAGE You don't have enough previleges to do that.
+     return 1
+  endif
+  TARGET What item would you like to unlock?
+  SRC.TAG.HOUSEACTION	= 52
+
+ON = 53
+  if !( <LINK.SRCHOUSE_owner> )
+     SRC.SYSMESSAGE You don't have enough previleges to do that.
+     return 1
+  endif
+  TARGET What item would you like to raise?
+  SRC.TAG.HOUSEACTION	= 53
+
+ON = 54
+  if !( <LINK.SRCHOUSE_owner> )
+     SRC.SYSMESSAGE You don't have enough previleges to do that.
+     return 1
+  endif
+  TARGET What item would you like to lower?
+  SRC.TAG.HOUSEACTION	= 54
+
+ON = 55
+  if !( <LINK.SRCHOUSE_owner> )
+     SRC.SYSMESSAGE You don't have enough previleges to do that.
+     return 1
+  endif
+
+  if ( <LINK.BASEID> == i_multi_struct )
+     TARGET What item would you like to flip?
+  else
+     TARGET What structure would you like to flip?
+  endif
+  SRC.TAG.HOUSEACTION	= 55
+
+ON = 56
+  if !( <LINK.SRCHOUSE_owner> )
+     SRC.SYSMESSAGE You don't have enough previleges to do that.
+     return 1
+  endif
+  TARGET What structure would you like to destroy?
+  SRC.TAG.HOUSEACTION	= 56
+
+ON = 57
+  if !( <LINK.SRCHOUSE_owner> )
+     SRC.SYSMESSAGE You don't have enough previleges to do that.
+     return 1
+  endif
+  TARGET What structure would you like to redeed?
+  SRC.TAG.HOUSEACTION	= 57
+
+
+ON = 50
+  if ( !<SRC.ISGM> && (<SRC.UID> != <LINK.MORE1>) )
+     LINK.FINDFRIEND <SRC.UID>
+     if ( 0<VAR.FINDFRIEND> == 0 )
+        src.sysmessage You are not trusted to do that.
+        return 1
+     endif
+     SRC.ACT	= <VAR.FINDFRIEND>
+     if ( <SRC.ACT.MOREx> == 0 )
+        src.sysmessage You do not have full previleges on this house.
+	return 1
+     endif
+  endif
+  SRC.TAG.HOUSEACTION	= 50
+  TARGET Who would you like to add as friend of the house?
+  return 1
+
+ON = 60
+  house_friend_button1 0
+  return 1
+ON = 61
+  house_friend_button1 1
+  return 1
+ON = 62
+  house_friend_button1 2
+  return 1
+ON = 63
+  house_friend_button1 3
+  return 1
+ON = 64
+  house_friend_button1 4
+  return 1
+ON = 65
+  house_friend_button1 5
+  return 1
+ON = 66
+  house_friend_button1 6
+  return 1
+ON = 67
+  house_friend_button1 7
+  return 1
+ON = 68
+  house_friend_button1 8
+  return 1
+ON = 69
+  house_friend_button1 9
+  return 1
+ON = 70
+  house_friend_button1 10
+  return 1
+ON = 71
+  house_friend_button1 11
+  return 1
+ON = 72
+  house_friend_button1 12
+  return 1
+ON = 73
+  house_friend_button1 13
+  return 1
+ON = 74
+  house_friend_button1 14
+  return 1
+ON = 75
+  house_friend_button1 15
+  return 1
+ON = 76
+  house_friend_button1 16
+  return 1
+ON = 77
+  house_friend_button1 17
+  return 1
+ON = 78
+  house_friend_button1 18
+  return 1
+ON = 79
+  house_friend_button1 19
+  return 1
+
+ON = 80
+  house_friend_button2 0
+  return 1
+ON = 81
+  house_friend_button2 1
+  return 1
+ON = 82
+  house_friend_button2 2
+  return 1
+ON = 83
+  house_friend_button2 3
+  return 1
+ON = 84
+  house_friend_button2 4
+  return 1
+ON = 85
+  house_friend_button2 5
+  return 1
+ON = 86
+  house_friend_button2 6
+  return 1
+ON = 87
+  house_friend_button2 7
+  return 1
+ON = 88
+  house_friend_button2 8
+  return 1
+ON = 89
+  house_friend_button2 9
+  return 1
+ON = 90
+  house_friend_button2 10
+  return 1
+ON = 91
+  house_friend_button2 11
+  return 1
+ON = 92
+  house_friend_button2 12
+  return 1
+ON = 93
+  house_friend_button2 13
+  return 1
+ON = 94
+  house_friend_button2 14
+  return 1
+ON = 95
+  house_friend_button2 15
+  return 1
+ON = 96
+  house_friend_button2 16
+  return 1
+ON = 97
+  house_friend_button2 17
+  return 1
+ON = 98
+  house_friend_button2 18
+  return 1
+ON = 99
+  house_friend_button2 19
+  return 1
+
+[FUNCTION house_friend_button2]
+  SRC.ACT	= <SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(<args>).uid>
+
+  if ( !<SRC.ISGM> && <SRC.UID> != <LINK.MORE1> )
+     src.sysmessage Only the owner of the house can grant or remove full previleges.
+     return 1
+  endif
+
+  if ( <SRC.ACT.MOREx> )
+     src.sysmessage Full previleges removed for <SRC.ACT.LINK.NAME>.
+     SRC.ACT.MOREx	= 0
+  else
+     src.sysmessage Full previleges added for <SRC.ACT.LINK.NAME>.
+     SRC.ACT.MOREx	= 1
+     SRC.ACT.NAME	= <SRC.ACT.LINK.NAME> (by <SRC.UID.<LINK.MORE1>.NAME>)
+     SRC.ACT.MORE2	= <LINK.MORE1>
+  endif
+  
+[FUNCTION house_friend_button1]
+  SRC.ACT	= <SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(<args>).uid>
+
+  if ( !<SRC.ISGM> )
+    if ( <SRC.ACT.LINK.UID> == <SRC.UID> )
+       src.sysmessage You can't remove yourself from the list of trusted persons of the house.
+       return 1
+    endif
+
+    if ( <SRC.UID> != <LINK.MORE1> )
+       if ( <SRC.UID> != <SRC.ACT.MORE2> )
+          if ( <SRC.ACT.MORE2> == <LINK.MORE1> )
+             src.sysmessage You can't remove trust from that person, only <SRC.UID.<SRC.ACT.MORE2>.NAME> can.
+	  else
+	     src.sysmessage You can't remove trust from that person, only <SRC.UID.<SRC.ACT.MORE2>.NAME> or <SRC.UID.<LINK.MORE1>.NAME> can.
+	  endif
+          return 1
+       endif
+    endif
+  endif
+  
+  SRC.TAG.HOUSE.REMOVING	= <SRC.ACT.UID>
+  SRC.MENU mnu_house_friend_button1
+
+
+[MENU mnu_house_friend_button1]
+Are you sure you want to remove <SRC.ACT.LINK.NAME> from the list of trusted persons of this house?
+
+ON = 0 Yes!
+   SRC.ACT	= <SRC.TAG.HOUSE.REMOVING>
+   if ( <SRC.ACT.BASEID> != i_house_trust )
+      SRC.SYSMESSAGE Already removed!
+      return 1
+   endif
+   SRC.SYSMESSAGE <SRC.ACT.LINK.NAME> is no longer a trusted person of the house.
+   SRC.ACT.REMOVE
+   return 1
+
+
+[MENU mnu_house_scrap]
+Demolishing this house and scraping its parts will generate <eval ((<LINK.VALUE>*4)/5)>gp of income. All items locked to it will be destroyed. Are you sure you want to demolish the house?
+
+ON = 0 Yes!
+   if !( (<SRC.UID> == <LINK.MORE1>) || (<SRC.ISGM>) )
+     src.sysmessage You are not the owner of the house.
+     return 1
+   endif
+
+   SRC.NEWITEM	i_check
+   SRC.ACT.MORE2	= <eval ((<LINK.VALUE>*4)/5)>
+   SRC.ACT.CONT		= <SRC.findlayer(layer_bankbox).uid>
+   SRC.SYSMESSAGE A cheque worth <eval (<LINK.VALUE>/2)>gp has been issued to your bank.
+   LINK.REMOVE
+   return 1
+
+
+[FUNCTION house_init_friend]
+   if ( <SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(<args>).uid> == 0 )
+      TRY VAR.FRIENDS.<args>.TEXT		= 120 360 0 59		// out of screen
+      TRY VAR.FRIENDS.<args>.BT1		= 50 360 <eval 0d8> <eval 0d8> 0 3 0
+      TRY VAR.FRIENDS.<args>.BT2		= 50 360 <eval 0d8> <eval 0d8> 0 3 0
+      return 0
+   endif
+
+   TRY VAR.FRIENDS.<args>.TEXT		= 120 <eval (80+(<args>*16))> 0 <eval (60+<args>)>
+   TRY VAR.FRIENDS.<args>.BT1		= 70 <eval (83+(<args>*16))> <eval 0146f> <eval 0d7> 1 3 <eval (60+<args>)>
+
+   if ( <SRC.UID.<LINK.TAG.FRIENDS.UID>.findcont(<args>).MOREx> == 0 )
+      TRY VAR.FRIENDS.<args>.BT2		= 95 <eval (84+(<args>*16))> <eval 0d7> <eval 0d8> 1 3 <eval (80+<args>)>
+   else
+      TRY VAR.FRIENDS.<args>.BT2		= 95 <eval (84+(<args>*16))> <eval 0d8> <eval 0d7> 1 3 <eval (80+<args>)>
+   endif
+
+//
+//
+//
+//
+//
+[FUNCTION changelocks]
+  IF ( !<SRC.ISGM> )
+    if ( <LINK.MORE1> != <SRC.UID> )
+       SRC.SYSMESSAGE That is not your house!
+       return 1
+    endif
+
+    SRC.totalgold
+    if ( <VAR.TOTALGOLD> < 100 )
+       SRC.SYSMESSAGE You don't have 100gp to pay for the lock change fee.
+       return 1
+    endif
+
+    SRC.SYSMESSAGE You pay the 100gp lock change fee.
+    src.consume2 100 i_gold
+  ENDIF
+
+  if ( 0<LINK.TAG.LAST_LOCK> == 0 )
+     LINK.TAG.LAST_LOCK = 0
+  else
+     src.act = <LINK.TAG.LAST_LOCK>
+     if ( <src.act.type> == t_key )
+	src.act.more1 = <src.act> // something, so it doesn't show up as blank
+	src.act.name = an old key to a <LINK.NAME>
+     endif
+  endif
+
+  SRC.EMOTE replace the locks
+  SRC.ANIM 13
+  SRC.SOUND 573
+
+  // CREATE a new key
+  SRC.NEWITEM i_key_copper
+  SRC.ACT.NAME = a Masterkey to a <LINK.NAME>
+  SRC.ACT.MORE1  = <LINK.UID>		// THE HOUSE UID
+  SRC.ACT.MORE2  = <SRC.ACT.UID>	// THE KEY
+  SRC.ACT.BOUNCE
+
+  // UPDATE the house's last lock
+  LINK.TAG.LAST_LOCK = <SRC.ACT.UID>
+  RETURN 1
+
+
+
+
+[ITEMDEF 06a5]
+DEFNAME=i_door_wood
+RESOURCES=25 I_log
+TYPE=T_DOOR
+CATEGORY=Buildings - Doors
+SUBSECTION=Wooden Door 1
+DESCRIPTION=@ (n / sw)
+DUPELIST=06a7,06a9,06ab,06ad,06af,06b1,06b3
+
+ON = @SpellEffect
+   return 1
+
+ON = @DClick
+   if ( <SRC.ISDEAD> )
+      SRC.SYSMESSAGE "Get a life..."
+      return 0
+   endif
+
+   if ( <TYPE> == t_door_open )
+      TIMER	= 1
+      return 1
+   endif
+
+   if ( (<LINK> == 04fffffff) || (<LINK.TYPE> != t_multi) )
+      return 0
+   endif
+
+   if ( <TIMER> > 0 )
+      TIMER = 1
+      return 1
+   endif
+
+   if ( <TYPE> == t_door )
+      TYPE	= t_door_locked
+   endif
+
+   if ( <LINK.SRCHOUSE_owner> )
+   elseif ( <LINK.SRCHOUSE_friend> ) 
+     if !( <ATTR> & attr_blessed )
+        SRC.SYSMESSAGE You are not trusted enough to enter.
+        return 1
+     endif
+   else
+     SRC.SYSMESSAGE This structure belongs to <src.uid.<LINK.MORE1>.name>, and you're not allowed to enter!
+     return 1
+   endif
+   
+   TYPE	= t_door
+   return 0
+ 
+ON = @Timer
+   if ( (<LINK> == 04fffffff) || (<LINK.TYPE> != t_multi) )
+      return 0
+   endif
+
+   TYPE	= t_door_locked
+

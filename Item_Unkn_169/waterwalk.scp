@@ -1,0 +1,280 @@
+[ITEMDEF i_scroll_water_walk]
+ID=i_scroll_flamestrike
+NAME=Water Walk Scroll
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=020
+
+ON=@DClick
+IF (<SRC.MANA> < 55)
+SRC.SYSMESSAGE You do not have enough mana to cast this spell
+RETURN 1
+ELSE
+SRC.MANA=<SRC.MANA> + {-55 -35}
+SRC.SAY Rel Ylem
+SRC.ANIM 17
+
+TAG.OLDAMOUNT=<AMOUNT>
+AMOUNT=1
+ATTR=<ATTR>|attr_move_never|attr_invis
+P=1,1
+LINK=<SRC.UID>
+SRC.TAG.WALKINGWATER=1
+
+IF (<eval <TAG.OLDAMOUNT>> > 1)
+SRC.NEWITEM i_scroll_water_walk
+SRC.ACT.AMOUNT=<eval <TAG.OLDAMOUNT>> +(-1)
+SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+TAG.OLDAMOUNT=
+ENDIF
+
+SRC.NEWITEM i_waterwalk
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+SRC.NEWITEM i_waterwalk_s
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+SRC.NEWITEM i_waterwalk_n
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+SRC.NEWITEM i_waterwalk_e
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+SRC.NEWITEM i_waterwalk_w
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+SRC.NEWITEM i_waterwalk_sw
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+SRC.NEWITEM i_waterwalk_nw
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+SRC.NEWITEM i_waterwalk_se
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+SRC.NEWITEM i_waterwalk_ne
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.ATTR=attr_move_never
+IF <SRC.ISGM>
+SRC.ACT.ATTR=<SRC.ACT.ATTR>|attr_invis
+ENDIF
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TIMER=1
+
+MORE1={ 180 300 }
+TIMERd=20
+RETURN 1
+ENDIF
+
+ON=@Timer
+IF (<MORE1>=0)
+LINK.TAG.WALKINGWATER=
+REMOVE
+ELSE
+MORE1=<MORE1>-1
+TIMER=1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_waterwalk]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+TIMERd=1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_waterwalk_n]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+MOVE n
+TIMERd=1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_waterwalk_s]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+MOVE s
+TIMERd=1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_waterwalk_e]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+MOVE e
+TIMERd=1
+ENDIF
+RETURN 1
+
+[ITEMDEF i_waterwalk_w]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+MOVE w
+TIMERd=1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_waterwalk_ne]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+MOVE ne
+TIMERd=1
+RETURN 1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_waterwalk_nw]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+MOVE nw
+TIMERd=1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_waterwalk_se]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+MOVE se
+TIMERd=1
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_waterwalk_sw]
+ID=i_floor_marble
+
+ON=@Step
+TRIGGER Timer
+
+ON=@Timer
+IF <eval <LINK.TAG.WALKINGWATER>>=0
+REMOVE
+RETURN 1
+ELSE
+P=<LINK.P>
+MOVE sw
+TIMERd=1
+ENDIF
+
+RETURN 1

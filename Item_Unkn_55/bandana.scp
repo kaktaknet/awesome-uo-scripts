@@ -1,0 +1,87 @@
+[ITEMDEF i_deathband]
+ID=i_BANDANA
+NAME=Kamikazee Bandana
+TYPE=t_clothing
+WEIGHT=2
+
+CATEGORY=Killer Clothes
+SUBSECTION=Headwear
+DESCRIPTION=Bandana
+
+ON=@CREATE
+hitpoints={50 75}
+COLOR=021
+
+ON=@EQUIP
+SRC.SYSMESSAGE Double Click To Blow Up!
+src.emote See <src.name> Is Now A Terrorist
+
+ON=@DCLICK
+timer=2
+src.effect=3,i_fx_explosion_2,16,16,16
+src.newitem=i_selfdestruct
+src.act.name=Combustable Arcanic Flame
+src.act.color=00
+src.act.timer=15
+src.act.bounce
+src.act.attr=attr_static|attr_decay
+src.act.p=<src.p>
+src.act.damage={1000 5000}
+src.damage={5000 7500}
+src.effect=3,i_fx_explosion_2,16,16,16
+src.sfx 011d
+src.sfx 0222
+src.effect=3,i_fire_column,16,16,16
+src.anim 21
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=4
+src.act.move=sw
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=se
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=nw
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=3
+src.act.move=e
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=2
+src.act.move=ne
+SRC.ACT.ATTR=attr_static|attr_decay
+src.act.nudgeup=5
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=8
+src.act.move=n
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=10
+src.act.move=s
+SRC.ACT.ATTR=attr_static|attr_decay
+src.newitem=i_selfdestruct
+src.act.p=<src.p>
+src.act.timer=11
+src.act.move=w
+SRC.ACT.ATTR=attr_static|attr_decay
+
+on=@timer
+remove
+return 1
+
+ON=@UNEQUIP
+Return 0
+
+[EOF]
+
+Scripted By The Dark Fairy

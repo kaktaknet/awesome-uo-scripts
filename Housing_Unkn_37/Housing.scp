@@ -1,0 +1,1911 @@
+//Script by: Theol/Admin Dark for Sphereserver 55r402/55r403 (not tested on higher)
+//If you find anybugs Email me @ theoldark5@hotmail.com or use a private message at
+//scriptsharing to "Dark"
+//House spk commands: can be turned on or off with def(house_spk_cmds) and button
+//commands will appear in dialog.
+//decay timer: can be disabled with def(house_decay_sys=0), or decay timer can be changed
+//with def(house_decay_timer) in days default is 30
+//sell price of house: Can be change in def(MAX_%_SELL_AMOUNT)1=full price, 2=half price ect...
+//accessbank: allow players to access bankbox from sign (1=on 0=off)
+//**note on DEF HOUSE_LINK_OPT: Keep it the same or remove all houses before you change it.**
+//checkertrans only works with clients 4.0 and higher from what I can tell but shouldnt
+//cause any problems with lower clients(you can use lower clients but you wont get the checkertrans effect)
+
+[DEFNAME HOUSE_SYSTEM]
+ACCESSBANK		1   //can the players open bank account from sign (ON=1 OFF=0)
+MAX_SECURE_ITEMS	10  //how many secure cont's
+MAX_LOCK_DOWN_ITEMS	25  //how many locked items thats allowed by speech/menu.
+MAX_%_SELL_AMOUNT	2   //1=full price, 2=half, 3=one-third,ect...
+HOUSE_DECAY_SYS		1   //0=no-decay, 1=decay
+HOUSE_DECAY_TIMER	30  //30 days (if decay is enabled)
+CHANGE_LOCK_PRICE	50  //Gp to charge for new keys.
+HOUSE_SPK_CMDS		1   //to have speech or not (1=on 0=off)
+HOUSE_LINK_OPT		1   //items locked down get removed with house.(keep the same after you start using this house system.)
+SYSMESS_COLOR_0		0af //option message/sysmessage (green)
+SYSMESS_COLOR_1		0c9 //infomational message/sysmessage (blue)
+SYSMESS_COLOR_2		0ef //error message/sysmessage (red)
+
+[ITEMDEF 0bd1] 
+//brass sign 
+DEFNAME=i_sign_brass 
+TYPE=t_script 
+CATEGORY=Decoration - Signs 
+SUBSECTION=Blank 
+DESCRIPTION=Brass Blank 
+DUPELIST=0bd2 
+
+ON=@CREATE 
+TAG.NEWNAME=0
+TAG.ORIGNAME=0
+TAG.CO_OWNER_TOTAL=0
+TAG.FRIEND_HOUSE_TOTAL=0
+TAG.LOCK_CHANGE=0
+TAG.KEYUID=0
+TAG.BANNED_TOTAL=0
+TAG.LOCKED_ITEMS=0
+TAG.SECURE_CONT=0
+TAG.VISIT=0
+TAG.EJECT=0
+TAG.CO_OWNER_1=0
+TAG.CO_OWNER_2=0
+TAG.CO_OWNER_3=0
+TAG.CO_OWNER_4=0
+FOR 1 6
+TRYP 0 TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>=0
+TRYP 0 TAG.BANNED_<EVAL <LOCAL._FOR>>=0
+ENDIF
+END
+
+ON=@DCLICK
+IF !(<LINK>==04fffffff)  
+IF (<MORE2>==0) && (<EVAL <DEF.HOUSE_DECAY_SYS>> >0)
+TIMER=<EVAL <DEF.HOUSE_DECAY_TIMER>*24*60*60>
+MORE2=<SRC.UID> 
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You claim ownership of this house.
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> House will decay in <EVAL <DEF.HOUSE_DECAY_TIMER>> days if not refreshed.
+TAG.ORIGNAME=<LINK.NAME>
+NAME=<LINK.NAME>
+SRC.TAG.CURRP=<SRC.P>
+SRC.P=<P>
+SRC.MOVE <EVAL {-2 2}> <EVAL {2 3}>
+TAG.EJECT=<SRC.P>
+SRC.P=<SRC.TAG.CURRP>
+SRC.UPDATE
+SRC.TAG.CURRP=
+TAG.VISIT += 1
+VAR.HOUSE_SIGN=<UID>
+OBJ=<LINK.UID>
+TRY REGION.EVENTS=+r_house_sys
+TRY REGION.TAG.KEYUID=<REGION.UID>
+TRY REGION.TAG.HOUSE_SIGN=<VAR.HOUSE_SIGN>
+VAR.HOUSE_SIGN=
+RETURN 1
+ELSEIF (<MORE2>==0)
+MORE2=<SRC.UID> 
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You claim ownership of this house.
+TAG.ORIGNAME=<LINK.NAME>
+NAME=<LINK.NAME>
+TAG.EJECT=<SRC.P>
+TAG.VISIT += 1
+VAR.HOUSE_SIGN=<UID>
+OBJ=<LINK.UID>
+TRY REGION.EVENTS=+r_house_sys
+TRY REGION.TAG.KEYUID=0
+TRY REGION.TAG.HOUSE_SIGN=<VAR.HOUSE_SIGN>
+VAR.HOUSE_SIGN=
+RETURN 1
+ENDIF
+IF (<SRC.ISGM>)
+DIALOG d_house_owner
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You open <UID.<MORE2>.NAME>'s house sign.
+RETURN 1
+ELSEIF (<LINK.MORE1>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> Welcome back to the house <UID.<LINK.MORE1>.NAME>.
+DIALOG d_house_Owner
+RETURN 1
+ELSEIF !(<MORE2>==<SRC.UID>) 
+FOR 1 4
+OBJ=<UID>
+IF (<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> Welcome back to the house <UID.<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>.NAME>.
+DIALOG d_house_owner
+RETURN 1
+ENDIF
+END
+FOR 1 6
+OBJ=<UID>
+IF (<OBJ.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> Welcome back to the house <UID.<OBJ.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>.NAME>.
+DIALOG d_house_owner
+RETURN 1
+ENDIF
+END
+TAG.VISIT += 1
+DIALOG d_house_visitor
+RETURN 1
+ENDIF
+
+ON=@TIMER
+IF (<EVAL <DEF.HOUSE_DECAY_SYS>> >0)
+LINK.REMOVE
+ELSE
+RETURN 1
+
+[ITEMDEF i_co_owner_add]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Choose who you wish to add as a co-owner.
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You have <TIMER> seconds to choose a co-owner.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You are the owner.
+RETURN 1
+ENDIF
+FOR 1 4 //check for duplicate UID
+IF (<EVAL <LINK.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>>==<SRC.TARG.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> <SRC.TARG.NAME> is already a Co-Owner.
+RETURN 1
+ENDIF
+END
+IF (<SRC.TARG.ISPLAYER>) 
+FOR 1 4
+IF !(<EVAL <LINK.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>>>0)
+LINK.TRYP 0 TAG.CO_OWNER_<EVAL <LOCAL._FOR>>=<SRC.TARG.UID>
+LINK.TAG.CO_OWNER_TOTAL += 1
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You added <SRC.TARG.NAME> as a Co-Owner.
+RETURN 1
+ENDIF
+END
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You can only have 4 Co-Owners Max.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to target a Player.
+RETURN 1
+ENDIF
+
+[ITEMDEF i_friend_add]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Choose who you wish to add as a Friend of the house.
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You have <TIMER> seconds to choose a Friend.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You are the owner.
+RETURN 1
+ENDIF
+FOR 1 4 //check for duplicate UID
+IF (<EVAL <LINK.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>>==<SRC.TARG.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> <SRC.TARG.NAME> is already a Friend of the house.
+RETURN 1
+ENDIF
+END
+IF (<SRC.TARG.ISPLAYER>) 
+FOR 1 6
+IF !(<EVAL <LINK.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>>>0)
+LINK.TRYP 0 TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>=<SRC.TARG.UID>
+LINK.TAG.FRIEND_HOUSE_TOTAL += 1
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You added <SRC.TARG.NAME> as a Friend of the house.
+RETURN 1
+ENDIF
+END
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You can only have 6 Friends of the house Max.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to target a Player.
+RETURN 1
+ENDIF
+
+[ITEMDEF i_ban_token]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Choose whom you wish banned from this house.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You cannot ban yourself.
+RETURN 1
+ENDIF
+IF (<SRC.TARG.UID>==<UID.<SRC.TARG.REGION.UID>.MORE1>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You cannot ban the owner from their own house.
+RETURN 1
+ENDIF
+FOR 1 4 //check for duplicate UID
+LOCAL.L=<EVAL <LOCAL._FOR>>
+IF (<EVAL <LINK.TAG.BANNED_<EVAL <LOCAL._FOR>>>>==<SRC.TARG.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> <SRC.TARG.NAME> has already been banned from this house.
+RETURN 1
+ENDIF
+END
+IF !(<LINK.LINK.UID>==<SRC.TARG.REGION.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You may only use this while <SRC.TARG.NAME> is in your house.
+RETURN 1
+ENDIF
+IF (<SRC.TARG.ISPLAYER>) 
+FOR 1 6
+IF !(<EVAL <LINK.TAG.BANNED_<EVAL <LOCAL._FOR>>>>>0)
+LINK.TRYP 0 TAG.BANNED_<EVAL <LOCAL._FOR>>=<SRC.TARG.UID>
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You have banned <SRC.TARG.NAME> from this house.
+SRC.TARG.GO <LINK.TAG.EJECT>
+SRC.TARG.SYSMESSAGE <SRC.NAME> has banned you from the house.
+LINK.TAG.BANNED_TOTAL += 1
+RETURN 1
+ENDIF
+END
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You can only ban 6 people from this house.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to target a Player.
+RETURN 1
+ENDIF
+
+[ITEMDEF i_eject_token]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Choose whom you wish to eject from this house.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You cannot eject yourself.
+RETURN 1
+ENDIF
+IF !(<LINK.LINK.UID>==<SRC.TARG.REGION.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You may only use this while <SRC.TARG.NAME> is in your house.
+RETURN 1
+ENDIF
+IF (<SRC.TARG.ISPLAYER>) 
+SRC.TARG.GO <LINK.TAG.EJECT>
+SRC.TARG.SYSMESSAGE <SRC.NAME> Has ejected you from the house.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to target a Player.
+RETURN 1
+ENDIF
+
+[ITEMDEF i_trans_house]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Select who you wish to be the new Owner.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You are already the owner.
+RETURN 1
+ENDIF
+IF (<SRC.TARG.ISPLAYER>)
+LINK.TRYP 0 MORE2=<SRC.TARG.UID>
+LINK.TRYP 0 LINK.MORE1=<SRC.TARG.UID>
+SRC.MEMORYFINDTYPE(0100).CONT=<SRC.TARG.UID>
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You transfer the house over to <SRC.TARG.NAME>.
+SRC.TARG.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You are now the owner of <SRC.NAME>'s <LINK.LINK.NAME>.
+FOR 1 4
+IF (<EVAL <LINK.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>>>0)
+LINK.TRYP 0 TAG.CO_OWNER_<EVAL <LOCAL._FOR>>=0
+LINK.TAG.CO_OWNER_TOTAL=0
+ENDIF
+END
+FOR 1 6
+IF (<EVAL <LINK.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>>>0)
+LINK.TRYP 0 TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>=0
+LINK.TAG.FRIEND_HOUSE_TOTAL=0
+ENDIF
+END
+FOR 1 6
+IF (<EVAL <LINK.TAG.BANNED_<EVAL <LOCAL._FOR>>>>>0)
+LINK.TRYP 0 TAG.BANNED_<EVAL <LOCAL._FOR>>=0
+LINK.TAG.BANNED_TOTAL=0
+ENDIF
+END
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You can only target players for house transfers.
+RETURN 1
+ENDIF
+
+[ITEMDEF i_lock_link]//if they have the link_house enabled
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Target what you wish to lock/release.
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.TYPE>==t_container)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Use "Secure this" instead for the <SRC.TARG.NAME>.
+RETURN 1
+ENDIF
+IF (<SRC.TARG.TYPE>==t_door_locked) || (<SRC.TARG.TYPE>==t_door)
+RETURN 1
+ENDIF
+IF !(<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+IF (<SRC.UID.<SRC.REGION.UID>.UID>==<SRC.TARG.REGION.UID>)  
+IF (<SRC.TARG.ATTR>&attr_move_never) && (<SRC.TARG.LINK>==<SRC.REGION.UID>)
+SRC.TARG.LINK=04fffffff
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.LOCKED_ITEMS -= 1
+RETURN 1
+ELSEIF !(<SRC.TARG.ATTR>&attr_move_never) && !(<SRC.TARG.LINK>==<SRC.REGION.UID>)
+SRC.TARG.LINK=<SRC.REGION.UID>
+SRC.TARG.ATTR |= attr_move_never
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You locked the <SRC.TARG.NAME> down.
+LINK.TAG.LOCKED_ITEMS += 1
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+[ITEMDEF i_lock_down] //no link_house
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Target what you wish to lock/release.
+RETURN 1
+
+ON=@TARGON_ITEM 
+IF (<SRC.TARG.TYPE>==t_container)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Use "Secure this" instead for the <SRC.TARG.NAME>.
+RETURN 1
+ENDIF
+IF !(<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+IF (<SRC.UID.<SRC.REGION.UID>.UID>==<SRC.TARG.REGION.UID>)  
+IF (<SRC.TARG.ATTR>&attr_move_never)
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.LOCKED_ITEMS -= 1
+RETURN 1
+ELSEIF !(<SRC.TARG.ATTR>&attr_move_never)
+SRC.TARG.ATTR |= attr_move_never
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You locked the <SRC.TARG.NAME> down.
+LINK.TAG.LOCKED_ITEMS += 1
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+[ITEMDEF i_unlock_link] //unlock only
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Target what you wish to un-lock.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_container)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Use "Secure this" instead for the <SRC.TARG.NAME>.
+RETURN 1
+ENDIF
+IF (<SRC.UID.<SRC.REGION.UID>.UID>==<SRC.TARG.REGION.UID>)  
+IF (<SRC.TARG.ATTR>&attr_move_never)
+SRC.TARG.LINK=04fffffff
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.LOCKED_ITEMS -= 1
+RETURN 1
+ENDIF
+ENDIF
+
+[ITEMDEF i_unlock_down] //unlock only
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Target what you wish to un-lock.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_container)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Use "Secure this" instead for the <SRC.TARG.NAME>.
+RETURN 1
+ENDIF
+IF (<SRC.UID.<SRC.REGION.UID>.UID>==<SRC.TARG.REGION.UID>)  
+IF (<SRC.TARG.ATTR>&attr_move_never)
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.LOCKED_ITEMS -= 1
+RETURN 1
+ENDIF
+ENDIF
+
+[ITEMDEF i_secure_l]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@CREATE
+TAG.X_UID=0
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Target What you wish to secure/unsecure.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<EVAL <TAG.X_UID>>>0)
+TARGET @<EVAL <DEF.SYSMESS_COLOR_2>> You need to target the container first.
+RETURN 1
+ENDIF
+TRYP 0 UID.<TAG.X_UID>.TAG.PSERIAL=<SRC.TARG.UID>
+TRYP 0 UID.<TAG.X_UID>.TAG.HOWNER=<SRC.UID.<SRC.REGION.UID>.MORE1>
+TRYP 0 UID.<TAG.X_UID>.ATTR=<UID.<TAG.X_UID>.ATTR>|attr_move_never
+TRYP 0 UID.<TAG.X_UID>.LINK=<SRC.REGION.UID>
+TRYP 0 UID.<TAG.X_UID>.EVENTS=e_container_xl
+LINK.TAG.SECURE_CONT += 1
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You just set <SRC.TARG.NAME> as the user of the <UID.<TAG.X_UID>.NAME>.
+RETURN 1
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<EVAL <MOREZ>>==1)
+SRC.TARG.LINK=<SRC.REGION.UID>
+SRC.TARG.ATTR |= attr_move_never
+SRC.TARG.MOREZ=1
+LINK.TAG.SECURE_CONT += 1
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You lock the <SRC.TARG.NAME> in place but leave it unsecured.
+REMOVE
+RETURN 1
+ELSEIF (<EVAL <SRC.TARG.MOREZ>>>0) 
+SRC.TARG.LINK=04fffffff
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.TARG.MOREZ=0
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.SECURE_CONT -= 1
+RETURN 1
+ENDIF
+IF !(<SRC.TARG.TOPOBJ.UID>==<SRC.UID>) 
+IF (<SRC.TARG.TYPE> == t_container) && (<SRC.UID.<SRC.REGION.UID>.UID>==<SRC.TARG.REGION.UID>)
+IF (<SRC.TARG.TAG0.PSERIAL>>0) && (<SRC.TARG.ATTR>&attr_move_never)
+SRC.TARG.TAG.PSERIAL=
+SRC.TARG.TAG.HOWNER=
+SRC.TARG.LINK=04fffffff
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.TARG.EVENTS -e_container_xl
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.SECURE_CONT -= 1
+RETURN 1
+ELSEIF !(<SRC.TARG.TAG0.PSERIAL>>0) && !(<SRC.TARG.ATTR>&attr_move_never)
+TAG.X_UID=<SRC.TARG.UID>
+MOREZ=1
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Select who you wish to own this <SRC.TARG.NAME>. Or target the <SRC.TARG.NAME> again to just lock it in place.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can't think of a way to use that.
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+[ITEMDEF i_secure_x]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@CREATE
+TAG.X_UID=0
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Target What you wish to secure/unsecure.
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<EVAL <TAG.X_UID>>>0)
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> You need to target the container first.
+RETURN 1
+ENDIF
+TRYP 0 UID.<TAG.X_UID>.TAG.PSERIAL=<SRC.TARG.UID>
+TRYP 0 UID.<TAG.X_UID>.TAG.HOWNER=<SRC.UID.<SRC.REGION.UID>.MORE1>
+TRYP 0 UID.<TAG.X_UID>.ATTR=<UID.<TAG.X_UID>.ATTR>|attr_move_never
+TRYP 0 UID.<TAG.X_UID>.EVENTS=e_container_xl
+LINK.TAG.SECURE_CONT += 1
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You just set <SRC.TARG.NAME> as the Owner of the <UID.<TAG.X_UID>.NAME>.
+RETURN 1
+ENDIF
+
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID>==<SRC.UID>) 
+IF (<SRC.TARG.TYPE> == t_container) && (<SRC.UID.<SRC.REGION.UID>.UID>==<SRC.TARG.REGION.UID>)
+IF (<SRC.TARG.TAG0.PSERIAL>>0) && (<SRC.TARG.ATTR>&attr_move_never)
+SRC.TARG.TAG.PSERIAL=
+SRC.TARG.TAG.HOWNER=
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.TARG.EVENTS -e_container_xl
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.SECURE_CONT -= 1
+REMOVE
+RETURN 1
+ELSEIF !(<SRC.TARG.TAG0.PSERIAL>>0) && !(<SRC.TARG.ATTR>&attr_move_never)
+TAG.X_UID=<SRC.TARG.UID>
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Select who you wish to own this <SRC.TARG.NAME>.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You can't think of a way to use that.
+REMOVE
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+[ITEMDEF i_un_secure_l]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Choose which container to unsecure.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.TOPOBJ.UID>==<SRC.UID>) 
+IF (<SRC.TARG.TYPE> == t_container) && (<SRC.UID.<SRC.REGION.UID>.UID>==<SRC.TARG.REGION.UID>) 
+IF (<SRC.TARG.TAG0.PSERIAL>>0) && (<SRC.TARG.ATTR>&attr_move_never)
+SRC.TARG.TAG.PSERIAL=
+SRC.TARG.TAG.HOWNER=
+SRC.TARG.LINK=04fffffff
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.TARG.EVENTS -e_container_xl
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.SECURE_CONT -= 1
+REMOVE
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+[ITEMDEF i_un_secure_x]
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@DCLICK
+TARGET @<EVAL <DEF.SYSMESS_COLOR_0>> Choose which container to unsecure.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.TOPOBJ.UID>==<SRC.UID>) 
+IF (<SRC.TARG.TYPE> == t_container) && (<SRC.UID.<SRC.REGION.UID>.UID>==<SRC.TARG.REGION.UID>)
+IF (<SRC.TARG.TAG0.PSERIAL>>0) && (<SRC.TARG.ATTR>&attr_move_never)
+SRC.TARG.TAG.PSERIAL=
+SRC.TARG.TAG.HOWNER=
+SRC.TARG.ATTR &= ~attr_move_never
+SRC.TARG.EVENTS -e_container_xl
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You released the <SRC.TARG.NAME>.
+LINK.TAG.SECURE_CONT -= 1
+REMOVE
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+[ITEMDEF i_change_locks]
+ID=i_worldgem_bit
+NAME=Changed Locks item
+TYPE=t_normal
+
+[DIALOG d_house_visitor]
+//Scripted by Theol/admin dark ~leave this here~
+0,0 
+page 0
+RESIZEPIC 100 100 2600 400 300
+CHECKERTRANS 100 100 400 300  
+GUMPPIC 230 65 100
+DTEXT 248 105 0 <LINK.NAME>
+
+page 1 
+DTEXT 135 190 995 Owner Name:  
+DTEXT 230 190 46 <UID.<MORE2>.NAME>
+DTEXT 135 210 995 Number of Co-Owners:
+DTEXT 295 210 0 <EVAL <TAG.CO_OWNER_TOTAL>>/4
+DTEXT 135 230 995 Number of Friends:
+DTEXT 270 230 0 <EVAL <TAG.FRIEND_HOUSE_TOTAL>>/6
+DTEXT 135 250 995 Number of Locked down items: 
+DTEXT 350 250 0 <EVAL <TAG.LOCKED_ITEMS>>/<EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+DTEXT 135 270 995 Number of secured containers: 
+DTEXT 340 270 0 <EVAL <TAG.SECURE_CONT>>/<EVAL <DEF.MAX_SECURE_ITEMS>>
+DTEXT 135 290 995 Number of visits this house has had: 
+DTEXT 400 290 0 <EVAL <TAG.VISIT>>
+DTEXT 135 310 995 Number of Banned people: 
+DTEXT 315 310 0 <EVAL <TAG.BANNED_TOTAL>>
+IF <EVAL <DEF.HOUSE_DECAY_SYS>>>0
+DTEXT 135 330 998 Days left before decay:
+DTEXT 295 330 0 <EVAL <EVAL <EVAL <TIMER>/24>/60>/60>
+ENDIF
+IF (<EVAL <TAG.PUBLIC>>>0)
+DTEXT 155 350 999 This House is Designated Public Property.
+ELSE
+DTEXT 155 350 999 This House is Designated Private Property.
+ENDIF
+
+[DIALOG d_house_owner]
+0,0 
+page 0
+RESIZEPIC 100 100 2600 400 300
+RESIZEPIC 116 165 5100 369 25 
+CHECKERTRANS 100 100 400 300  
+GUMPPIC 230 65 100
+DTEXT 248 105 0 <LINK.NAME>
+DTEXT 130 168 0 Info  
+BUTTON 170 169 5209 5003 0 1 0 
+DTEXT 250 168 0 Friends       
+BUTTON 310 169 5209 5003 0 2 0
+DTEXT 395 168 0 Options
+BUTTON 455 169 5209 5003 0 3 0 
+
+page 1
+DTEXT 135 190 995 Owner Name:  
+DTEXT 230 190 46 <UID.<MORE2>.NAME>
+DTEXT 135 210 995 Number of Co-Owners:
+DTEXT 295 210 0 <EVAL <TAG.CO_OWNER_TOTAL>>/4
+DTEXT 135 230 995 Number of Friends:
+DTEXT 270 230 0 <EVAL <TAG.FRIEND_HOUSE_TOTAL>>/6
+DTEXT 135 250 995 Number of Locked down items: 
+DTEXT 350 250 0 <EVAL <TAG.LOCKED_ITEMS>>/<EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+DTEXT 135 270 995 Number of secured containers: 
+DTEXT 340 270 0 <EVAL <TAG.SECURE_CONT>>/<EVAL <DEF.MAX_SECURE_ITEMS>>
+DTEXT 135 290 995 Number of visits this house has had: 
+DTEXT 400 290 0 <EVAL <TAG.VISIT>>
+DTEXT 135 310 995 Number of Banned people: 
+DTEXT 315 310 0 <EVAL <TAG.BANNED_TOTAL>>
+IF <EVAL <DEF.HOUSE_DECAY_SYS>>>0
+DTEXT 135 330 998 Days left before decay:
+DTEXT 295 330 0 <EVAL <EVAL <EVAL <TIMER>/24>/60>/60>
+DTEXT 355 330 998 refresh this house?
+BUTTON 335 330 2714 2714 1 0 1
+ENDIF
+IF (<EVAL <TAG.PUBLIC>>>0)
+DTEXT 155 350 999 This House is Designated Public Property.
+ELSE
+DTEXT 155 350 999 This House is Designated Private Property.
+ENDIF
+IF (<EVAL <TAG0.LOCK_CHANGE>>>=1)
+DTEXT 145 370 992 This houses lock's have been changed <EVAL <TAG.LOCK_CHANGE>> Times.
+ENDIF
+
+page 2 //functions friends, coowners, banning and ejecting
+DTEXT 153 195 0 Co-Owners listing
+BUTTON 125 195 2714 2714 0 4 0		//list coowners
+DTEXT 340 195 0 Friends Listing
+BUTTON 310 195 2714 2714 0 5 0		//list friends
+DTEXT 153 215 0 Add a Co-Owner
+BUTTON 125 215 2714 2714 1 0 3		//add coowner
+DTEXT 340 215 0 Add a Friend
+BUTTON 310 215 2714 2714 1 0 4		//add friend
+DTEXT 225 250 0 List of people banned from house.
+BUTTON 195 250 2714 2714 0 6 0        	// List banned
+DTEXT 225 270 0 Ban someone from the house?
+BUTTON 195 270 2714 2714 1 0 5        	// Ban BUTTON
+DTEXT 225 290 0 Eject someone from the house?
+BUTTON 195 290 2714 2714 1 0 6        	// Eject BUTTON
+
+page 3 //options
+DTEXT 180 195 995 Transfer Ownership of this house?
+BUTTON 155 195 2714 2714 1 0 7        // Transfer BUTTON
+DTEXT 180 215 995 Demolish This house?
+BUTTON 155 215 2714 2714 1 0 8        // Demolish BUTTON
+IF (<EVAL <TAG.PUBLIC>>==0)   
+DTEXT 180 235 995 Declare this building Public?(must be on steps)
+BUTTON 155 235 2714 2714 1 0 9
+ELSE
+DTEXT 180 235 995 Declare this building Private?(must be on steps)
+BUTTON 155 235 2714 2714 1 0 10
+ENDIF        
+DTEXT 180 255 995 Change This houses name?
+BUTTON 155 255 2714 2714 1 0 2
+DTEXT 180 275 995 Change House Sign Type?
+BUTTON 155 275 2714 2715 1 0 200
+DTEXT 180 295 995 Change house locks.(must be on steps) (<EVAL <DEF.CHANGE_LOCK_PRICE>> gp.)
+BUTTON 155 295 2714 2715 1 0 11
+IF !(<MORE2>==<SRC.UID>)
+FOR 1 4
+OBJ=<UID>
+IF (<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+DTEXT 180 315 995 Open the front door.(must be on steps)
+BUTTON 155 315 2714 2715 1 0 13
+ENDIF
+END
+FOR 1 6
+OBJ=<UID>
+IF (<OBJ.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+DTEXT 180 315 995 Open the front door.(must be on steps)
+BUTTON 155 315 2714 2715 1 0 13
+ENDIF
+END
+ENDIF
+IF (<MORE2>==<SRC.UID>) && (<EVAL <TAG0.LOCK_CHANGE>>>0)
+DTEXT 180 315 995 Need replacement Key/keys. (<EVAL <DEF.CHANGE_LOCK_PRICE>> gp.)
+BUTTON 155 315 2714 2715 1 0 14
+ELSEIF (<MORE2>==<SRC.UID>) && !(<EVAL <TAG0.LOCK_CHANGE>>>0)
+DTEXT 180 315 995 Need replacement Key. (<EVAL <DEF.CHANGE_LOCK_PRICE>> gp.)
+BUTTON 155 315 2714 2715 1 0 14
+ENDIF
+IF (<DEF.ACCESSBANK>==1) 
+DTEXT 180 335 995 Open your bank account.
+BUTTON 155 335  2714 2715 1 0 12
+ENDIF
+IF (<EVAL <DEF.HOUSE_SPK_CMDS>>==0) && (<MORE2>==<SRC.UID>)
+BUTTON 390 360 4006 4007 0 7 0 
+ENDIF 
+
+page 4 //co-owner list
+DTEXT 185 195 0 You may add up to 4 Co-Owners to the list.
+FOR 1 4 //four lines max.
+OBJ=<UID> 
+LOCAL.LIST1 += 20
+IF (<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>> > 0)
+DTEXT 155 <EVAL <LOCAL.LIST1>+195> 995 <UID.<TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>.NAME>
+DTEXT 420 <EVAL <LOCAL.LIST1>+200> 0 Remove.
+RADIO 395 <EVAL <LOCAL.LIST1>+200> 210 211 0 <EVAL <LOCAL._FOR>>
+BUTTON 390 310 2463 2464 1 0 300
+ENDIF
+END
+
+page 5 //friend of the house list
+DTEXT 185 195 0 You may add up to 6 friends to the list.
+FOR 1 6 //four lines max.
+OBJ=<UID> 
+LOCAL.LIST2 += 20
+IF (<OBJ.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>> > 0)
+DTEXT 155 <EVAL <LOCAL.LIST2>+195> 995 <UID.<TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>.NAME>
+DTEXT 420 <EVAL <LOCAL.LIST2>+200> 0 Remove.
+RADIO 395 <EVAL <LOCAL.LIST2>+200> 210 211 0 <EVAL <LOCAL._FOR>>
+BUTTON 390 340 2463 2464 1 0 301
+ENDIF
+END
+
+page 6 //banned listing
+DTEXT 185 195 0 You may only Ban 6 People from this house.
+FOR 1 6 //four lines max.
+OBJ=<UID> 
+LOCAL.LIST3 += 20
+IF (<OBJ.TAG.BANNED_<EVAL <LOCAL._FOR>>> > 0)
+DTEXT 155 <EVAL <LOCAL.LIST3>+195> 995 <UID.<TAG.BANNED_<EVAL <LOCAL._FOR>>>.NAME>
+DTEXT 420 <EVAL <LOCAL.LIST3>+200> 0 Remove.
+RADIO 395 <EVAL <LOCAL.LIST3>+200> 210 211 0 <EVAL <LOCAL._FOR>>
+BUTTON 390 340 2463 2464 1 0 302
+ENDIF
+END
+
+page 7 //options 2
+BUTTON 115 360 4015 4016 0 3 0
+DTEXT 180 195 995 unlock/Lock an Item.
+BUTTON 155 195 2714 2714 1 0 15
+DTEXT 180 215 995 Unsecure/Secure a container.
+BUTTON 155 215 2714 2714 1 0 16
+
+[DIALOG d_house_owner BUTTON]
+//Scripted by Theol/admin dark ~leave this here~
+ON=0
+ON=1//refresh house
+IF (<MORE2>==<SRC.UID>)
+OBJ=<UID>
+OBJ.TIMER=<EVAL <DEF.HOUSE_DECAY_TIMER>*24*60*60>
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You refreshed the house for another <EVAL <DEF.HOUSE_DECAY_TIMER>> days.
+DIALOG d_house_owner
+RETURN 1
+ELSEIF !(<MORE2>==<SRC.UID>)
+FOR 1 4
+OBJ=<UID>
+IF (<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+OBJ=<UID>
+OBJ.TIMER=<EVAL <DEF.HOUSE_DECAY_TIMER>*24*60*60>
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You refreshed the house for another <EVAL <DEF.HOUSE_DECAY_TIMER>> days.
+DIALOG d_house_owner
+RETURN 1
+ENDIF
+END
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the Owner and Co-Owners can refresh the house.
+DIALOG d_house_owner
+RETURN 1
+ENDIF
+
+ON=2
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+DIALOG d_rename_house
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the Owner of the house can change its name.
+RETURN 1
+ENDIF
+
+ON=3
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+SERV.NEWITEM=i_co_owner_add
+NEW.P=<SRC.P>
+NEW.EQUIP
+NEW.LINK=<UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+RETURN 1
+ELSEIF !(<MORE2>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the Owner of the house can add Co-Owners.
+RETURN 1
+ENDIF
+
+ON=4
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+SERV.NEWITEM=i_friend_add
+NEW.P=<SRC.P>
+NEW.EQUIP
+NEW.LINK=<UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+RETURN 1
+ELSEIF !(<MORE2>==<SRC.UID>)
+FOR 1 4
+OBJ=<UID>
+IF (<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SERV.NEWITEM=i_friend_add
+NEW.P=<SRC.P>
+NEW.EQUIP
+NEW.LINK=<UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only Owners and Co-Owners can add friends to the House.
+RETURN 1
+ENDIF
+
+ON=5 //(ban)Owner and co~owners only
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+SERV.NEWITEM=i_ban_token
+NEW.P=<SRC.P>
+NEW.EQUIP
+NEW.LINK=<UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+ELSEIF !(<MORE2>==<SRC.UID>)
+FOR 1 4
+OBJ=<UID>
+IF (<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SERV.NEWITEM=i_ban_token
+NEW.P=<SRC.P>
+NEW.EQUIP
+NEW.LINK=<UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the Owner and Co-Owner's can ban people from the house.
+RETURN 1
+ENDIF
+
+ON=6 //eject i_eject_token
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+OBJ=<UID>
+SERV.NEWITEM=i_eject_token
+NEW.P=<SRC.P>
+NEW.EQUIP
+NEW.LINK=<OBJ.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+RETURN 1
+ELSEIF !(<MORE2>==<SRC.UID>)
+FOR 1 4 //co~owners
+OBJ=<UID>
+IF (<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SERV.NEWITEM=i_eject_token
+NEW.P=<SRC.P>
+NEW.EQUIP
+NEW.LINK=<OBJ.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+FOR 1 6 //Friends of the house
+OBJ=<UID>
+IF (<OBJ.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SERV.NEWITEM=i_eject_token
+NEW.P=<SRC.P>
+NEW.EQUIP
+NEW.LINK=<OBJ.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only House members can use this option.
+RETURN 1
+ENDIF
+
+ON=7 //transfer ownership
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_0>> Who do you wish to be the new owner?
+SERV.NEWITEM=i_trans_house
+NEW.P=<SRC.P>
+NEW.LINK=<OBJ.UID>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.DCLICK
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the Owner can transfer ownership.
+RETURN 1
+ENDIF
+
+ON=8
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+MENU m_demolish_house
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the Owner can demolish the house.
+RETURN 1
+ENDIF
+
+ON=9 //declare public
+OBJ=<UID>
+IF !(<SRC.REGION.UID>==<OBJ.REGION.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You must be on the steps to use this option.
+RETURN 1
+ENDIF
+IF (<OBJ.DISTANCE>>3)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+OBJ=<UID>
+SRC.TAG.STARTDOOR=<SRC.P>
+FORITEMS 5
+IF (<TYPE>==t_door_locked)
+IF (<CANSEELOS>=1)
+SRC.TAG.GOTODOOR=<P>
+SRC.P=<SRC.TAG.GOTODOOR>
+TYPE=t_door
+MORE1=0
+SRC.SOUND=snd_spell_unlock
+OBJ.TAG.PUBLIC=1
+ENDIF
+ENDIF
+END
+SRC.P=<SRC.TAG.STARTDOOR>
+SRC.TAG.STARTDOOR=
+SRC.TAG.GOTODOOR=
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You must be the Owner to declare this building Public.
+RETURN 1
+ENDIF
+
+ON=10 //declare private
+OBJ=<UID>
+IF !(<SRC.REGION.UID>==<OBJ.LINK>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You must be on the steps to use this option.
+RETURN 1
+ENDIF
+IF (<OBJ.DISTANCE>>5)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+OBJ=<UID>
+SRC.TAG.STARTDOOR=<SRC.P>
+FORITEMS 5
+IF (<TYPE>==t_door)
+IF (<CANSEELOS>=1)
+SRC.TAG.GOTODOOR=<P>
+SRC.P=<SRC.TAG.GOTODOOR>
+TYPE=t_door_locked
+MORE1=<REGION.TAG.KEYUID>
+SRC.SOUND=snd_spell_magic_lock
+OBJ.TAG.PUBLIC=0
+ENDIF
+ENDIF
+END
+SRC.P=<SRC.TAG.STARTDOOR>
+SRC.TAG.STARTDOOR=
+SRC.TAG.GOTODOOR=
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You must be the Owner to declare this building Private.
+RETURN 1
+ENDIF
+
+ON=11 //change locks
+OBJ=<UID>
+IF !(<SRC.REGION.UID>==<OBJ.LINK>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You must be on the steps to use this option.
+RETURN 1
+ENDIF
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>) && (<SRC.RESTEST <EVAL <DEF.CHANGE_LOCK_PRICE>> i_gold>)
+SRC.CONSUME 50 i_gold
+SERV.NEWITEM=i_change_locks
+NEW.VAR.LOCK_CHANGE=<NEW.UID>
+NEW.P=<OBJ.LINK.P>
+NEW.LINK=<OBJ.REGION.UID>
+NEW.ATTR=attr_invis|attr_move_never
+SRC.NEWITEM=i_key_copper
+SRC.NEW.P=<SRC.P>
+SRC.NEW.LINK=<OBJ.REGION.UID>
+SRC.NEW.MORE1=<VAR.LOCK_CHANGE>
+SRC.NEW.BOUNCE
+OBJ.TAG.LOCK_CHANGE += 1
+FORITEMS 25
+IF (<TYPE>==t_door_locked) || (<TYPE>==t_door)
+IF (<MORE1>==<SRC.REGION.UID>) || (<MORE1>==<SRC.REGION.TAG.KEYUID>)
+MORE1=<VAR.LOCK_CHANGE>
+SRC.SOUND=snd_spell_magic_lock
+ENDIF
+ENDIF
+END
+REGION.TAG.KEYUID=<VAR.LOCK_CHANGE>
+RETURN 1
+ELSEIF (<MORE2>==<SRC.UID>) && !(<SRC.RESTEST <EVAL <DEF.CHANGE_LOCK_PRICE>> i_gold>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need <EVAL <DEF.CHANGE_LOCK_PRICE>>gp to change the locks.
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the Owner can change the house locks.
+RETURN 1
+ENDIF
+
+ON=12
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+SRC.BANKSELF
+RETURN 1
+ENDIF
+FOR 1 6
+OBJ=<UID>
+IF (<OBJ.TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SRC.BANKSELF
+RETURN 1
+ENDIF
+END
+FOR 1 4
+OBJ=<UID>
+IF (<OBJ.TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SRC.BANKSELF
+RETURN 1
+ENDIF
+END
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You must be a member of this house.
+RETURN 1
+
+ON=13
+IF !(<SRC.REGION.UID>==<LINK>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You must be on the steps to use this option.
+RETURN 1
+ENDIF
+FORITEMS 5
+IF <TYPE>==t_door_locked
+OBJ=<UID>
+OBJ.TYPE=t_door
+SRC.ACT=<OBJ.UID>
+SRC.ACT.DCLICK
+SRC.ACT=
+OBJ.TYPE=t_door_locked
+RETURN 1
+ENDIF
+END
+
+ON=14//master key (both keys)
+IF !(<SRC.RESTEST <EVAL <DEF.CHANGE_LOCK_PRICE>> i_gold>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need <EVAL <DEF.CHANGE_LOCK_PRICE>>gp's to recieve the key/keys.
+RETURN 1
+ENDIF
+IF !(<EVAL <TAG.LOCK_CHANGE>>>0)
+SRC.NEWITEM=i_key_copper
+SRC.NEW.P=<SRC.P>
+SRC.NEW.MORE1=<REGION.UID>
+SRC.NEW.LINK=<REGION.UID>
+SRC.NEW.ATTR=attr_newbie
+SRC.NEW.BOUNCE
+SRC.CONSUME <EVAL <DEF.CHANGE_LOCK_PRICE>> i_gold
+RETURN 1
+ELSE
+SRC.NEWITEM=i_key_copper
+SRC.NEW.P=<SRC.P>
+SRC.NEW.MORE1=<REGION.UID>
+SRC.NEW.LINK=<REGION.UID>
+SRC.NEW.ATTR=attr_newbie
+SRC.NEW.NAME=Original key
+SRC.NEW.BOUNCE
+SRC.NEWITEM=i_key_copper
+SRC.NEW.P=<SRC.P>
+SRC.NEW.MORE1=<REGION.TAG.KEYUID>
+SRC.NEW.LINK=<REGION.UID>
+SRC.NEW.ATTR=attr_newbie
+SRC.NEW.NAME=key to the door
+SRC.NEW.BOUNCE
+SRC.CONSUME <EVAL <DEF.CHANGE_LOCK_PRICE>> i_gold
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> the houses locks have been changed so you also recieve the original key.
+RETURN 1
+ENDIF
+
+ON=15//owner only
+IF (<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && !(<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.LOCKED_ITEMS>> >= <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>)
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+FOR 0 <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+SERV.NEWITEM=i_lock_link
+NEW.P=<SRC.P>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF (<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && (<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.LOCKED_ITEMS>>==<EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>)
+SRC.SYSMESSAGE You need to unlock an item before you can lock anymore down.
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+FOR 0 <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+SERV.NEWITEM=i_unlock_link
+NEW.P=<SRC.P>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF !(<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && !(<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.LOCKED_ITEMS>> >= <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>)
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+FOR 0 <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+SERV.NEWITEM=i_lock_down
+NEW.P=<SRC.P>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF !(<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && (<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.LOCKED_ITEMS>>==<EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to unlock an item before you can lock anymore down.
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+FOR 0 <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+SERV.NEWITEM=i_unlock_down
+NEW.P=<SRC.P>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+ENDIF
+ENDIF
+
+ON=16
+IF (<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && !(<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.SECURE_CONT>> >= <EVAL <DEF.MAX_SECURE_ITEMS>>)
+FOR 0 <EVAL <DEF.MAX_SECURE_ITEMS>>
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+SERV.NEWITEM=i_secure_l
+NEW.P=<SRC.P>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF (<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && (<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.SECURE_CONT>>==<EVAL <DEF.MAX_SECURE_ITEMS>>)
+SRC.SYSMESSAGE You need to un-secure an item before being able to secure anymore.
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+SERV.NEWITEM=i_un_secure_l //only unsecure
+NEW.P=<SRC.P>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+IF !(<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && !(<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.SECURE_CONT>> >= <EVAL <DEF.MAX_SECURE_ITEMS>>)
+FOR 0 <EVAL <DEF.MAX_SECURE_ITEMS>>
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+SERV.NEWITEM=i_secure_x
+NEW.P=<SRC.P>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF !(<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && (<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.SECURE_CONT>> >= <EVAL <DEF.MAX_SECURE_ITEMS>>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to un-secure an item before being able to secure anymore.
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+SERV.NEWITEM=i_un_secure_x //only unsecure
+NEW.P=<SRC.P>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+ENDIF
+
+ON=200
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+DIALOG d_house_sign
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the Owner may change the house sign.
+
+ON=300  //only owner can remove from lists
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+FOR 1 4
+IF (<ARGCHK[<EVAL <LOCAL._FOR>>]>==1)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You remove <UID.<TAG.CO_OWNER_<EVAL <LOCAL._FOR>>>.NAME> from the Co-Owners list.
+TRYP 0 TAG.CO_OWNER_<EVAL <LOCAL._FOR>>=0
+TAG.CO_OWNER_TOTAL -= 1
+DIALOG d_house_owner 4
+ENDIF
+END
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the owner can use this option.
+DIALOG d_house_owner 4
+RETURN 1
+ENDIF
+
+ON=301  //only owner can remove from lists
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+FOR 1 6
+IF (<ARGCHK[<EVAL <LOCAL._FOR>>]>==1)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You remove <UID.<TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>>.NAME> from the Co-Owners list.
+TRYP 0 TAG.FRIEND_HOUSE_<EVAL <LOCAL._FOR>>=0
+TAG.FRIEND_HOUSE_TOTAL -= 1
+DIALOG d_house_owner 5
+ENDIF
+END
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the owner can use this option.
+DIALOG d_house_owner 5
+RETURN 1
+ENDIF
+
+ON=302 //only owner can remove from lists
+OBJ=<UID>
+IF (<OBJ.DISTANCE>>8)
+SRC.SYSMESSAGE You can't seem to reach that.
+RETURN 1
+ENDIF
+IF (<MORE2>==<SRC.UID>)
+FOR 1 6
+IF (<ARGCHK[<EVAL <LOCAL._FOR>>]>==1)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You remove <UID.<TAG.BANNED_<EVAL <LOCAL._FOR>>>.NAME> from the Banned list.
+TRYP 0 TAG.BANNED_<EVAL <LOCAL._FOR>>=0
+TAG.BANNED_TOTAL -= 1
+DIALOG d_house_owner 6
+ENDIF
+END
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Only the owner can use this option.
+DIALOG d_house_owner 6
+RETURN 1
+ENDIF
+
+[DIALOG d_house_sign]
+//Scripted by Theol/admin dark ~leave this header here~
+0,0
+PAGE 0
+RESIZEPIC 90 100 2600 480 400
+CHECKERTRANS 90 100 480 400
+BUTTON 495 115 4024 4025 1 0 1
+DTEXT 120 115 999 Choose the box next to the Sign you want and Click here >>
+
+PAGE 1
+BUTTON 490 460 4006 4007 0 2 0
+TILEPIC 155 135 2965
+TILEPIC 175 135 2966
+RADIO 145 140 210 211 0 2965
+RADIO 210 140 210 211 0 2966
+DTEXT 170 165 0 Library
+TILEPIC 155 185 2979
+TILEPIC 175 185 2980
+RADIO 145 190 210 211 0 2979
+RADIO 210 190 210 211 0 2980
+DTEXT 170 215 0 Bakery
+TILEPIC 155 235 2981
+TILEPIC 175 235 2982
+RADIO 145 240 210 211 0 2981
+RADIO 210 240 210 211 0 2982
+DTEXT 170 265 0 Tailor
+TILEPIC 155 285 2983
+TILEPIC 175 285 2984
+RADIO 145 290 210 211 0 2983
+RADIO 210 290 210 211 0 2984
+DTEXT 170 315 0 Tinker
+TILEPIC 155 335 2985
+TILEPIC 175 335 2986
+RADIO 145 340 210 211 0 2985
+RADIO 210 340 210 211 0 2986
+DTEXT 170 365 0 Butcher
+TILEPIC 155 385 2987
+TILEPIC 175 385 2988
+RADIO 145 390 210 211 0 2987
+RADIO 210 390 210 211 0 2988
+DTEXT 170 415 0 Healer
+/////////D//////////
+TILEPIC 255 135 2989
+TILEPIC 275 135 2990
+RADIO 245 140 210 211 0 2989
+RADIO 310 140 210 211 0 2990
+DTEXT 270 165 0 Mage
+TILEPIC 255 185 2991
+TILEPIC 275 185 2992
+RADIO 245 190 210 211 0 2991
+RADIO 310 190 210 211 0 2992
+DTEXT 270 215 0 Woodworker
+TILEPIC 255 235 2993
+TILEPIC 275 235 2994
+RADIO 245 240 210 211 0 2993
+RADIO 310 240 210 211 0 2994
+DTEXT 270 265 0 Customs
+TILEPIC 255 285 2995
+TILEPIC 275 285 2996
+RADIO 245 290 210 211 0 2995
+RADIO 310 290 210 211 0 2996
+DTEXT 270 315 0 Inn
+TILEPIC 255 335 2997
+TILEPIC 275 335 2998
+RADIO 245 340 210 211 0 2997
+RADIO 310 340 210 211 0 2998
+DTEXT 270 365 0 Shipwright
+TILEPIC 255 385 2999
+TILEPIC 275 385 3000
+RADIO 245 390 210 211 0 2999
+RADIO 310 390 210 211 0 3000
+DTEXT 270 415 0 Stables
+/////////A//////////
+TILEPIC 355 135 3001
+TILEPIC 375 135 3002
+RADIO 345 140 210 211 0 3001
+RADIO 410 140 210 211 0 3002
+DTEXT 370 165 0 Barber
+TILEPIC 355 185 3003
+TILEPIC 375 185 3004
+RADIO 345 190 210 211 0 3003
+RADIO 410 190 210 211 0 3004
+DTEXT 370 215 0 Bard
+TILEPIC 355 235 3005
+TILEPIC 375 235 3006
+RADIO 345 240 210 211 0 3005
+RADIO 410 240 210 211 0 3006
+DTEXT 370 265 0 Fletcher
+TILEPIC 355 285 3007
+TILEPIC 375 285 3008
+RADIO 345 290 210 211 0 3007
+RADIO 410 290 210 211 0 3008
+DTEXT 370 315 0 Armourer
+TILEPIC 355 335 3009
+TILEPIC 375 335 3010
+RADIO 345 340 210 211 0 3009
+RADIO 410 340 210 211 0 3010
+DTEXT 370 365 0 Jeweler
+TILEPIC 355 385 3011
+TILEPIC 375 385 3012
+RADIO 345 390 210 211 0 3011
+RADIO 410 390 210 211 0 3012
+DTEXT 370 415 0 Tavern
+/////////R//////////
+TILEPIC 455 135 3013
+TILEPIC 475 135 3014
+RADIO 445 140 210 211 0 3013
+RADIO 510 140 210 211 0 3014
+DTEXT 470 165 0 Reagent's
+TILEPIC 455 185 3015
+TILEPIC 475 185 3016
+RADIO 445 190 210 211 0 3015
+RADIO 510 190 210 211 0 3016
+DTEXT 470 215 0 Blacksmith
+TILEPIC 455 235 3017
+TILEPIC 475 235 3018
+RADIO 445 240 210 211 0 3017
+RADIO 510 240 210 211 0 3018
+DTEXT 470 265 0 Painter
+TILEPIC 455 285 3019
+TILEPIC 475 285 3020
+RADIO 445 290 210 211 0 3019
+RADIO 510 290 210 211 0 3020
+DTEXT 470 315 0 Provisioner
+TILEPIC 455 335 3021
+TILEPIC 475 335 3022
+RADIO 445 340 210 211 0 3021
+RADIO 510 340 210 211 0 3022
+DTEXT 470 365 0 Bowyer
+TILEPIC 455 385 3025
+TILEPIC 475 385 3026
+RADIO 445 390 210 211 0 3025
+RADIO 510 390 210 211 0 3026
+DTEXT 470 415 0 Blank
+/////////K////////////
+TILEPIC 205 435 3083
+TILEPIC 225 435 3084
+RADIO 195 440 210 211 0 3083
+RADIO 260 440 210 211 0 3084
+DTEXT 220 465 0 Banker
+TILEPIC 305 435 3085
+TILEPIC 325 435 3086
+RADIO 295 440 210 211 0 3085
+RADIO 360 440 210 211 0 3086
+DTEXT 320 465 0 Theatre
+TILEPIC 405 435 3139
+TILEPIC 425 435 3140
+RADIO 395 440 210 211 0 3139
+RADIO 460 440 210 211 0 3140
+DTEXT 420 465 0 Beekeeper
+
+PAGE 2
+BUTTON 115 460 4015 4016 0 1 0
+TILEPIC 155 135 3027
+TILEPIC 175 135 3028
+RADIO 145 140 210 211 0 3027
+RADIO 210 140 210 211 0 3028
+DTEXT 170 165 0 Armaments
+TILEPIC 155 185 3029
+TILEPIC 175 185 3030
+RADIO 145 190 210 211 0 3029
+RADIO 210 190 210 211 0 3030
+DTEXT 170 215 0 Armourers
+TILEPIC 155 235 3031
+TILEPIC 175 235 3032
+RADIO 145 240 210 211 0 3031
+RADIO 210 240 210 211 0 3032
+DTEXT 170 265 0 Blacksmiths
+TILEPIC 155 285 3033
+TILEPIC 175 285 3034
+RADIO 145 290 210 211 0 3033
+RADIO 210 290 210 211 0 3034
+DTEXT 170 315 0 Weapons
+TILEPIC 155 335 3035
+TILEPIC 175 335 3036
+RADIO 145 340 210 211 0 3035
+RADIO 210 340 210 211 0 3036
+DTEXT 170 365 0 Bardic
+TILEPIC 155 385 3037
+TILEPIC 175 385 3038
+RADIO 145 390 210 211 0 3037
+RADIO 210 390 210 211 0 3038
+DTEXT 170 415 0 Barters
+/////////D//////////
+TILEPIC 255 135 3039
+TILEPIC 275 135 3040
+RADIO 245 140 210 211 0 3039
+RADIO 310 140 210 211 0 3040
+DTEXT 270 165 0 Provisioners
+TILEPIC 255 185 3041
+TILEPIC 275 185 3042
+RADIO 245 190 210 211 0 3041
+RADIO 310 190 210 211 0 3042
+DTEXT 270 215 0 Traders
+TILEPIC 255 235 3043
+TILEPIC 275 235 3044
+RADIO 245 240 210 211 0 3043
+RADIO 310 240 210 211 0 3044
+DTEXT 270 265 0 Cooks
+TILEPIC 255 285 3045
+TILEPIC 275 285 3046
+RADIO 245 290 210 211 0 3045
+RADIO 310 290 210 211 0 3046
+DTEXT 270 315 0 Healers
+TILEPIC 255 335 3047
+TILEPIC 275 335 3048
+RADIO 245 340 210 211 0 3047
+RADIO 310 340 210 211 0 3048
+DTEXT 270 365 0 Mages
+TILEPIC 255 385 3049
+TILEPIC 275 385 3050
+RADIO 245 390 210 211 0 3049
+RADIO 310 390 210 211 0 3050
+DTEXT 270 415 0 Sorcerers
+/////////A//////////
+TILEPIC 355 135 3051
+TILEPIC 375 135 3052
+RADIO 345 140 210 211 0 3051
+RADIO 410 140 210 211 0 3052
+DTEXT 370 165 0 Illusionist
+TILEPIC 355 185 3053
+TILEPIC 375 185 3054
+RADIO 345 190 210 211 0 3053
+RADIO 410 190 210 211 0 3054
+DTEXT 370 215 0 Miners
+TILEPIC 355 235 3055
+TILEPIC 375 235 3056
+RADIO 345 240 210 211 0 3055
+RADIO 410 240 210 211 0 3056
+DTEXT 370 265 0 Archers
+TILEPIC 355 285 3057
+TILEPIC 375 285 3058
+RADIO 345 290 210 211 0 3057
+RADIO 410 290 210 211 0 3058
+DTEXT 370 315 0 Seamens
+TILEPIC 355 335 3059
+TILEPIC 375 335 3060
+RADIO 345 340 210 211 0 3059
+RADIO 410 340 210 211 0 3060
+DTEXT 370 365 0 Fishermans
+TILEPIC 355 385 3061
+TILEPIC 375 385 3062
+RADIO 345 390 210 211 0 3061
+RADIO 410 390 210 211 0 3062
+DTEXT 370 415 0 Sailors
+/////////R//////////
+TILEPIC 455 135 3063
+TILEPIC 475 135 3064
+RADIO 445 140 210 211 0 3063
+RADIO 510 140 210 211 0 3064
+DTEXT 470 165 0 Shipwrights
+TILEPIC 455 185 3065
+TILEPIC 475 185 3066
+RADIO 445 190 210 211 0 3065
+RADIO 510 190 210 211 0 3066
+DTEXT 470 215 0 Tailors
+TILEPIC 455 235 3067
+TILEPIC 475 235 3068
+RADIO 445 240 210 211 0 3067
+RADIO 510 240 210 211 0 3068
+DTEXT 470 265 0 Thieves
+TILEPIC 455 285 3069
+TILEPIC 475 285 3070
+RADIO 445 290 210 211 0 3069
+RADIO 510 290 210 211 0 3070
+DTEXT 470 315 0 Rogues
+TILEPIC 455 335 3071
+TILEPIC 475 335 3072
+RADIO 445 340 210 211 0 3071
+RADIO 510 340 210 211 0 3072
+DTEXT 470 365 0 Assassins
+TILEPIC 455 385 3073
+TILEPIC 475 385 3074
+RADIO 445 390 210 211 0 3073
+RADIO 510 390 210 211 0 3074
+DTEXT 470 415 0 Tinkers
+//////////K///////////
+TILEPIC 155 435 3075
+TILEPIC 175 435 3076
+RADIO 145 440 210 211 0 3075
+RADIO 210 440 210 211 0 3076
+DTEXT 170 465 0 Warriors
+TILEPIC 255 435 3077
+TILEPIC 275 435 3078
+RADIO 245 440 210 211 0 3077
+RADIO 310 440 210 211 0 3078
+DTEXT 270 465 0 Cavalry
+TILEPIC 355 435 3079
+TILEPIC 375 435 3080
+RADIO 345 440 210 211 0 3079
+RADIO 410 440 210 211 0 3080
+DTEXT 370 465 0 Fighters
+TILEPIC 355 435 3081
+TILEPIC 375 435 3082
+RADIO 345 440 210 211 0 3081
+RADIO 410 440 210 211 0 3082
+DTEXT 370 465 0 Merchants
+
+[dialog d_house_sign button]
+//Scripted by Theol/admin dark ~leave this header here~
+ON=1
+FOR 2965 3140
+OBJ=<UID>
+IF (<ARGCHK[<EVAL <LOCAL._FOR>>]>==1)
+LOCAL.SIGN=<EVAL <LOCAL._FOR>>
+OBJ.DISPID=<LOCAL.SIGN>
+OBJ.REMOVEFROMVIEW
+OBJ.UPDATEX
+SRC.SYSMESSAGE You change your sign.
+OBJ.DIALOG d_house_owner 3
+RETURN 1
+ENDIF
+END
+
+[DIALOG d_rename_house]
+0,0
+gumppic 250 180 100
+resizepic 255 213 2620 150 30
+dtextentry 265 218 110 32 995 1 <LINK.NAME>
+BUTTON 265 245 2714 2714 1 0 1
+dtext 290 245 0 Change name.
+
+[DIALOG d_rename_house BUTTON]
+ON=0
+SRC.SYSMESSAGE House renaming cancelled.
+RETURN 1
+ON=1
+LINK.NAME=<ARGTXT[1]>
+TAG.NEWNAME=<ARGTXT[1]>
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You changed the name of the house to <ARGTXT[1]>.
+NAME=<ARGTXT[1]>
+VAR.HOUSEUID=
+RETURN 1
+
+[MENU m_demolish_house]
+Are you sure you wish to remove this house.
+ON=0 Yes, demolish it and give the deed back.(cannot be sold to vendors)
+SERV.NEWITEM=i_deed
+NEW.P=<SRC.P>
+NEW.MORE1=<LINK.BASEID>
+NEW.NAME=a non-sellable Deed to a <TAG.ORIGNAME>
+NEW.BOUNCE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You demolish the <LINK.NAME>.
+LINK.REMOVE
+RETURN 1
+ON=0 Yes, demolish this house and give me <EVAL <LINK.VALUE>/<DEF.MAX_%_SELL_AMOUNT>> Gold
+SRC.HOUSE_RETURNG <EVAL <LINK.VALUE>/<DEF.MAX_%_SELL_AMOUNT>>
+LINK.REMOVE 
+RETURN 1
+ON=0 No, I wish to keep it awhile longer.
+DIALOG d_house_owner
+RETURN 1
+
+[FUNCTION HOUSE_RETURNG]
+//Scripted by Theol/admin dark ~leave this header here~
+SRC.TAG.TAMOUNT_0=<ARGS>
+SRC.TAG.ACTUAL_T=0
+FOR 1 2000 
+IF (<EVAL <LOCAL._FOR>>==1)
+SRC.TRYP 0 SRC.TAG.TAMOUNT_<EVAL <LOCAL._FOR>>=<EVAL <SRC.TAG.TAMOUNT_<EVAL <LOCAL._FOR>-1>>-65535>
+SRC.TAG.ACTUAL_T += 1
+ENDIF
+IF (<EVAL <SRC.TAG.TAMOUNT_<EVAL <LOCAL._FOR>-1>>> > 65535)
+SRC.TRYP 0 SRC.TAG.TAMOUNT_<EVAL <LOCAL._FOR>>=<EVAL <SRC.TAG.TAMOUNT_<EVAL <LOCAL._FOR>-1>>-65535>
+SRC.TAG.ACTUAL_T += 1
+ENDIF
+IF (<EVAL <SRC.TAG.TAMOUNT_<EVAL <LOCAL._FOR>>>> < 65535)
+SRC.TAG.t_remainder=<EVAL <SRC.TAG.TAMOUNT_<EVAL <LOCAL._FOR>>>>
+SRC.HOUSE_GIVEG
+RETURN 1
+ENDIF
+END
+
+[FUNCTION HOUSE_GIVEG]
+//Scripted by Theol/admin dark ~leave this header here~
+FOR <EVAL <TAG.ACTUAL_t>>
+IF (<EVAL <TAG.ACTUAL_t>-<EVAL <LOCAL._FOR>>> >0)
+SERV.NEWITEM=i_gold 
+NEW.AMOUNT=65535
+NEW.BOUNCE
+ENDIF
+IF (<EVAL <TAG.ACTUAL_t>-<EVAL <LOCAL._FOR>>>==0)
+SERV.NEWITEM=i_gold 
+NEW.AMOUNT=<EVAL <TAG.T_REMAINDER>>
+NEW.BOUNCE
+TAG.T_REMAINDER=
+TAG.ACTUAL_T=
+ENDIF
+END
+FOR 0 20 //clear the tag/s
+TRYP 0 TAG.TAMOUNT_<EVAL <LOCAL._FOR>>=
+END
+
+[TYPEDEF e_container_xl]
+ON=@CLICK
+SAY @<EVAL <DEF.SYSMESS_COLOR_0>> Owner: <UID.<TAG0.PSERIAL>.NAME> [SECURED]
+RETURN 0
+ON=@DCLICK
+OBJ=<UID>
+IF (<SRC.ISGM>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> You open the Secured container.
+RETURN 0
+ENDIF
+IF (<EVAL <OBJ.TAG0.HOWNER>>==<SRC.UID>) || (<EVAL <OBJ.TAG0.PSERIAL>>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_1>> <NAME>: Welcome back <SRC.NAME>.
+RETURN 0
+ELSE
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> Seems to be locked.
+SRC.SOUND=04a
+RETURN 1
+ENDIF
+
+[REGIONTYPE r_house_sys]
+ON=@STEP
+IF <SRC.ISGM>
+RETURN 0
+ENDIF
+OBJ=<SRC.REGION.TAG0.HOUSE_SIGN>
+FOR 1 6
+IF (<OBJ.TAG.BANNED_<EVAL <LOCAL._FOR>>>==<SRC.UID>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You are currently banned from this house!
+SRC.GO <OBJ.TAG.EJECT>
+RETURN 1
+ENDIF
+END
+
+[SPEECH spk_player] //this only works if you have HOUSE_SPK_CMDS=1 in the defs section
+ON=*lock this*
+IF (<EVAL <DEF.HOUSE_SPK_CMDS>> >0)
+IF (<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && !(<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.LOCKED_ITEMS>> >= <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>)
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+FOR 0 <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+SERV.NEWITEM=i_lock_link
+NEW.P=<SRC.P>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF (<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && (<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.LOCKED_ITEMS>>==<EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to unlock an item before you can lock anymore down.
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+FOR 0 <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+SERV.NEWITEM=i_unlock_link
+NEW.P=<SRC.P>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF !(<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && !(<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.LOCKED_ITEMS>> >= <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>)
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+FOR 0 <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+SERV.NEWITEM=i_lock_down
+NEW.P=<SRC.P>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF !(<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && (<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.LOCKED_ITEMS>>==<EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to unlock an item before you can lock anymore down.
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+FOR 0 <EVAL <DEF.MAX_LOCK_DOWN_ITEMS>>
+SERV.NEWITEM=i_unlock_down
+NEW.P=<SRC.P>
+NEW.EQUIP=<SRC.UID>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+ENDIF
+ENDIF
+ON=*Secure this*
+IF (<EVAL <DEF.HOUSE_SPK_CMDS>> >0)
+IF (<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && !(<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.SECURE_CONT>> >= <EVAL <DEF.MAX_SECURE_ITEMS>>)
+FOR 0 <EVAL <DEF.MAX_SECURE_ITEMS>>
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+SERV.NEWITEM=i_secure_l
+NEW.P=<SRC.P>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF (<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && (<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.SECURE_CONT>>==<EVAL <DEF.MAX_SECURE_ITEMS>>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to un-secure an item before being able to secure anymore.
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+SERV.NEWITEM=i_un_secure_l //only unsecure
+NEW.P=<SRC.P>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+IF !(<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && !(<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.SECURE_CONT>> >= <EVAL <DEF.MAX_SECURE_ITEMS>>)
+FOR 0 <EVAL <DEF.MAX_SECURE_ITEMS>>
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+SERV.NEWITEM=i_secure_x
+NEW.P=<SRC.P>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+END
+IF !(<EVAL <DEF.HOUSE_LINK_OPT>> >0) && (<SRC.UID.<SRC.REGION.UID>.TYPE>==t_multi) && (<SRC.UID.<SRC.REGION.UID>.MORE1>==<SRC.UID>) && (<EVAL <SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.TAG.SECURE_CONT>> >= <EVAL <DEF.MAX_SECURE_ITEMS>>)
+SRC.SYSMESSAGE @<EVAL <DEF.SYSMESS_COLOR_2>> You need to un-secure an item before being able to secure anymore.
+OBJ=<SRC.UID.<SRC.REGION.TAG.HOUSE_SIGN>.SERIAL>
+SERV.NEWITEM=i_un_secure_x //only unsecure
+NEW.P=<SRC.P>
+NEW.ATTR=attr_decay
+NEW.TIMER=25
+NEW.LINK=<OBJ>
+NEW.DCLICK
+RETURN 1
+ENDIF
+ENDIF
+[EOF]

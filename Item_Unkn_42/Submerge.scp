@@ -1,0 +1,466 @@
+[FUNCTION submerge]
+
+
+IF (<ISCHAR>)
+
+
+RETURN 0
+
+
+ELIF (<LINK.TYPE> != t_multi) || (<REGION.UID> != <LINK.UID>)
+
+
+RETURN 0
+
+
+ELIF (<SRC.FINDID.i_submerge>) || (<LINK.MORE2H> == 1)
+
+
+RETURN 0
+
+
+ENDIF
+
+
+
+
+
+SRC.NEWITEM i_submerge
+
+
+IF (<LINK.MORE2L> == 1)
+
+
+SRC.ACT.TAG.GROUND <EVAL <LINK.Z> + (<sub_height> + 15)>
+
+
+ELSE
+
+
+SRC.ACT.TAG.GROUND <LINK.Z>
+
+
+ENDIF
+
+
+SRC.ACT.TAG.SINKZ <EVAL <LINK.Z> - (<sub_height> + 15)>
+
+
+SRC.ACT.TAG.RAISEZ <EVAL <LINK.Z> + (<sub_height> + 15)>
+
+
+SRC.ACT.LINK <LINK.UID>
+
+
+SRC.ACT.CONT <SRC.UID>
+
+
+
+
+
+[ITEMDEF i_submerge]
+
+
+ID=i_memory
+
+
+TYPE=t_eq_script
+
+
+NAME=Submerge
+
+
+
+
+
+ON=@Create
+
+
+ATTR attr_decay
+
+
+TIMER 1
+
+
+
+
+
+ON=@Timer
+
+
+LINK.MORE2H 1
+
+
+VAR.GROUND <TAG.GROUND>
+
+
+IF (<LINK.MORE2L> == 1)
+
+
+CONT.NEWITEM i_gold
+
+
+VAR.TEMP <CONT.ACT.UID>
+
+
+CONT.ACT.P <LINK.P>
+
+
+CONT.ACT.MOVE nw 20
+
+
+CONT.NUKE sub_nudgeup <LINK.UID>
+
+
+CONT.LAST
+
+
+CONT.ACT.MOVE se 40
+
+
+CONT.LAST
+
+
+TRYP 0 CONT.UID.<VAR.TEMP>.REMOVE
+
+
+
+
+
+LINK.NUDGEUP 3
+
+
+
+
+
+CONT.NEWITEM i_gold
+
+
+VAR.TEMP <CONT.ACT.UID>
+
+
+CONT.ACT.P <LINK.P>
+
+
+CONT.ACT.MOVE nw 20
+
+
+CONT.NUKECHAR sub_nudgeup <LINK.UID>
+
+
+CONT.LAST
+
+
+CONT.ACT.MOVE se 40
+
+
+CONT.LAST
+
+
+TRYP 0 CONT.UID.<VAR.TEMP>.REMOVE
+
+
+
+
+
+REGION.ALLCLIENTS sub_nudgeup <LINK.UID>
+
+
+CONT.HIDEMESSAGE
+
+
+
+
+
+IF (<LINK.Z> < <TAG.RAISEZ>)
+
+
+TIMER 1
+
+
+RETURN 1
+
+
+ELSE
+
+
+LINK.MORE2L 0
+
+
+LINK.MORE2H 0
+
+
+CONT.SAYUA <TAG.BLANK>,0,0,eng,<LINK.NAME> - Emerged
+
+
+ENDIF
+
+
+ELSE
+
+
+CONT.NEWITEM i_gold
+
+
+VAR.TEMP <CONT.ACT.UID>
+
+
+CONT.ACT.P <LINK.P>
+
+
+CONT.ACT.MOVE nw 20
+
+
+CONT.NUKE sub_nudgedown <LINK.UID>
+
+
+CONT.LAST
+
+
+CONT.ACT.MOVE se 40
+
+
+CONT.LAST
+
+
+TRYP 0 CONT.UID.<VAR.TEMP>.REMOVE
+
+
+
+
+
+LINK.NUDGEDOWN 3
+
+
+
+
+
+CONT.NEWITEM i_gold
+
+
+VAR.TEMP <CONT.ACT.UID>
+
+
+CONT.ACT.P <LINK.P>
+
+
+CONT.ACT.MOVE nw 20
+
+
+CONT.NUKECHAR sub_nudgedown <LINK.UID>
+
+
+CONT.LAST
+
+
+CONT.ACT.MOVE se 40
+
+
+CONT.LAST
+
+
+TRYP 0 CONT.UID.<VAR.TEMP>.REMOVE
+
+
+
+
+
+REGION.ALLCLIENTS sub_nudgedown <LINK.UID>
+
+
+CONT.HIDEMESSAGE
+
+
+
+
+
+IF (<LINK.Z> > <TAG.SINKZ>)
+
+
+TIMER 1
+
+
+RETURN 1
+
+
+ELSE
+
+
+LINK.MORE2L 1
+
+
+LINK.MORE2H 0
+
+
+CONT.SAYUA <TAG.BLANK>,0,0,eng,<LINK.NAME> - Submerged
+
+
+ENDIF
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION sub_nudgedown]
+
+
+IF (<REGION.UID> == <ARGN>) && (<UID> != <ARGN>)
+
+
+IF (<ISCHAR>)
+
+
+VAR.Z <Z>
+
+
+Z 126
+
+
+FIX
+
+
+
+
+
+IF (<Z> <= <VAR.Z>)
+
+
+Z <VAR.Z>
+
+
+FIX
+
+
+RETURN 0
+
+
+ENDIF
+
+
+
+
+
+Z <VAR.Z>
+
+
+P <P.X> <EVAL <P.Y> + 1> <Z>
+
+
+IF (<REGION.UID> != <ARGN>)
+
+
+P <P.X> <EVAL <P.Y> - 1> <Z>
+
+
+FIX
+
+
+RETURN 0
+
+
+ENDIF
+
+
+P <P.X> <EVAL <P.Y> - 1> <Z>
+
+
+ENDIF
+
+
+NUDGEDOWN 3
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION sub_nudgeup]
+
+
+IF (<REGION.UID> == <ARGN>) && (<UID> != <ARGN>)
+
+
+IF (<ISCHAR>)
+
+
+IF (<Z> >= <VAR.GROUND>)
+
+
+FIX
+
+
+RETURN 0
+
+
+ENDIF
+
+
+ENDIF
+
+
+NUDGEUP 3
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION sub_height]
+
+
+VAR.ACT <SRC.ACT>
+
+
+
+
+
+SRC.NEWITEM <LINK.DISPID>
+
+
+VAR.TEMP <SRC.ACT.UID>
+
+
+SRC.ACT.P 5242,1084
+
+
+SRC.NEWITEM i_gold
+
+
+SRC.ACT.P 5242,1084
+
+
+SRC.ACT.Z 126
+
+
+SRC.ACT.FIX
+
+
+
+
+
+TRYP 0 SRC.UID.<VAR.TEMP>.REMOVE
+
+
+VAR.TEMP <SRC.ACT.Z>
+
+
+SRC.ACT.REMOVE
+
+
+
+
+
+SRC.ACT <VAR.ACT>
+
+
+
+
+
+RETURN <VAR.TEMP>

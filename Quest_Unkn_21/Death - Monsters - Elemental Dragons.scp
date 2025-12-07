@@ -1,0 +1,308 @@
+[CHARDEF c_dragon_elem_air]
+DEFNAME=c_dragon_elem_air
+NAME=Air Elemental Dragon
+ID=c_dragon_red
+SOUND=snd_ELEMENTL_AIRELEM1
+ICON=i_pet_dragon
+DAM=8,13
+ARMOR=26
+CAN=MT_WALK|MT_FLY|MT_RUN
+FOODTYPE=
+//SHELTER=r_mountains
+DESIRES=r_mountains
+BLOODCOLOR=colors_white
+
+TEVENTS=e_show_hits
+TEVENTS=e_looting
+TEVENTS=e_monster_turbo
+
+
+CATEGORY=Monsters
+SUBSECTION=Dragons and Drakes
+DESCRIPTION=Air Elemental Dragon
+
+ON=@Create
+COLOR=color_air
+NPC=brain_dragon
+FAME={1000 6000}
+KARMA={-4000 -4999}
+
+//ALIGNMENT=EVIL
+STR={155 195}
+DEX={185 200}
+INT={95 107}
+MAXHITS={3000 5000}
+MAXSTAM={400 1200}
+MAXMANA={200 500}
+
+PARRYING={75.0 90.0}
+MAGERY={75.0 90.0}
+MAGICRESISTANCE={75.0 90.0}
+TACTICS={80.0 90.0}
+WRESTLING={75.0 80.0}
+
+ON=@NPCRestock
+ITEM={ i_gem_air 1 0 10 }
+ITEM=loot_elem_air
+ITEM=random_food,{3 8}
+
+[CHARDEF c_dragon_elem_earth]
+DEFNAME=c_dragon_elem_earth
+NAME=Earth Elemental Dragon
+ID=c_dragon_red
+SOUND=snd_ELEMENTL_ERTHEL1
+ICON=i_pet_dragon
+DAM=10,15
+ARMOR=34
+RESOURCES=8 tm_rocks
+CAN=MT_WALK|MT_FLY|MT_RUN|MT_GHOST
+FOODTYPE=15 t_arock,t_coin,t_ore,t_ingot
+//SHELTER=r_mountains,r_caves,r_dungeon
+DESIRES=r_caves
+BLOODCOLOR=colors_brown
+
+TEVENTS=e_show_hits
+TEVENTS=e_looting
+TEVENTS=e_monster_turbo
+
+CATEGORY=Monsters
+SUBSECTION=Dragons and Drakes
+DESCRIPTION=Earth Elemental Dragon
+
+ON=@Create
+COLOR=color_earth
+NPC=brain_dragon
+FAME={1000 6000}
+KARMA={-3000 -3999}
+
+STR={175 200}
+DEX={90 150}
+INT={90 125}
+MAXHITS={4000 6000}
+MAXSTAM={400 500}
+MAXMANA={200 400}
+
+PARRYING={75.0 90.0}
+MAGICRESISTANCE={75.0 95.0}
+TACTICS={75.0 100.0}
+WRESTLING={75.0 100.0}
+
+
+ON=@NPCRestock
+ITEM=loot_elem_earth
+ITEM={ i_gem_earth 1 0 10 }
+ITEM=random_reagent,{2 8}
+
+[CHARDEF c_elem_dragon_fire]
+DEFNAME=c_elem_dragon_fire
+NAME=Fire Elemental Dragon
+ID=c_dragon_red
+SOUND=snd_ELEMENTL_FIRELEM1
+ICON=i_pet_dragon
+DAM=6,12
+ARMOR=25
+RESOURCES=8 t_MAGIC
+CAN=MT_WALK|MT_FIRE_IMMUNE|MT_RUN|MT_FLY
+FOODTYPE=t_fire
+//SHELTER=t_LAVA
+DESIRES=t_LAVA
+BLOODCOLOR=colors_red
+
+TEVENTS=e_show_hits
+TEVENTS=e_looting
+TEVENTS=e_monster_turbo
+
+CATEGORY=Monsters
+SUBSECTION=Dragons and Drakes
+DESCRIPTION=Fire Elemental Dragon
+
+ON=@Create
+COLOR=color_fire
+NPC=brain_dragon
+
+STR={155 170}
+DEX={165 185}
+INT={95 115}
+MAXHITS={2500 4000}
+MAXSTAM={250 300}
+MAXMANA={200 350}
+
+PARRYING={75.0 85.0}
+MAGERY={75.0 90.0}
+MAGICRESISTANCE={75.0 85.0}
+TACTICS={90.0 100.0}
+WRESTLING={85.0 100.0}
+
+FAME={1000 6000}
+KARMA={-4000 -4999}
+
+ITEMNEWBIE=i_light_source
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_magic_arrow
+ADDSPELL=s_fireball
+ADDSPELL=s_fire_field
+ADDSPELL=s_explosion
+ADDSPELL=s_flamestrike
+ADDSPELL=s_meteor_swarm
+ADDSPELL=s_summon_elem_fire
+ADDSPELL=s_fire_bolt
+ADDSPELL=s_greater_heal
+ADDSPELL=s_mass_dispel
+ADDSPELL=s_dispel_field
+ADDSPELL=s_cure
+
+ON=@NPCRestock
+ITEM=loot_elem_fire
+ITEM={ i_gem_fire 1 0 10 }
+ITEM=random_gem,{5 15}
+
+ON=@Death
+NEWITEM=i_fx_explode
+act.TYPE=T_EXPLOSION
+act.ATTR=ATTR_MOVE_NEVER | ATTR_CAN_DECAY
+act.LINK=<uid>
+act.morex=10
+act.morey=090
+act.morez=2
+act.p=<p>
+act.TIMERD=1
+
+[CHARDEF c_elem_dragon_water]
+DEFNAME=c_elem_dragon_water
+NAME=Water Elemental Dragon
+ID=c_dragon_red
+SOUND=snd_ELEMENTL_WATREL1
+ICON=i_pet_dragon
+DAM=6,12
+ARMOR=25
+RESOURCES=8 t_MAGIC
+CAN=MT_WALK|MT_SWIM|MT_FLY
+FOODTYPE=t_water_wash
+//SHELTER=r_water
+DESIRES=r_WATER
+BLOODCOLOR=colors_blue
+
+TEVENTS=e_show_hits
+TEVENTS=e_looting
+TEVENTS=e_monster_turbo
+
+CATEGORY=Monsters
+SUBSECTION=Dragons and Drakes
+DESCRIPTION=Water Elemental Dragon
+
+ON=@Create
+COLOR=color_water
+NPC=brain_dragon
+FAME={1000 5000}
+KARMA={-3000 -3999}
+
+STR={155 175}
+DEX={85 115}
+INT={95 125}
+MAXHITS={3000 5000}
+MAXSTAM={250 350}
+MAXMANA={250 300}
+
+PARRYING={65.0 80.0}
+MAGERY={75.0 85.0}
+MAGICRESISTANCE={75.0 85.0}
+TACTICS={75.0 90.0}
+WRESTLING={80.0 90.0}
+
+ON=@NPCRestock
+ITEM=loot_elem_water
+ITEM={ i_gem_water 1 0 10 }
+ITEM=random_food,{5 10}
+ITEM=random_sword,R2
+
+[CHARDEF c_elem_dragon_blood]
+DEFNAME=c_elem_dragon_blood
+NAME=Blood Elemental Dragon
+ID=c_dragon_red
+SOUND=snd_ELEMENTL_WATREL1
+DAM=12,40
+ARMOR=38
+RESOURCES=
+CAN=MT_WALK|MT_FLY|MT_RUN
+//SHELTER=r_dungeon
+DESIRES=r_dungeon
+
+TEVENTS=e_show_hits
+TEVENTS=e_looting
+TEVENTS=e_monster_turbo
+
+CATEGORY=Monsters
+SUBSECTION=Dragons and Drakes
+DESCRIPTION=Blood Elemental Dragon
+
+ON=@Create
+NPC=BRAIN_DRAGON
+COLOR=colors_blood
+STR={625 700}
+DEX={85 125}
+INT={315 400}
+MAXHITS={5000 7500}
+MAXSTAM={200 350}
+MAXMANA={750 1000}
+
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+FAME={1000 2000}
+KARMA={-5000 -5999}
+
+ON=@NPCRestock
+ITEM=loot_elem_blood
+ITEM={ i_gem_blood 1 0 10 }
+ITEM=random_reagent,{2 4}
+
+[CHARDEF c_elem_dragon_poison]
+DEFNAME=c_elem_dragon_poison
+NAME=Poison Elemental Dragon
+ID=c_dragon_red
+SOUND=snd_ELEMENTL_WATREL1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=15,25
+ARMOR=45
+RESOURCES=3 t_magic
+//SHELTER=r_dungeon
+DESIRES=r_dungeon
+
+TEVENTS=e_show_hits
+TEVENTS=e_looting
+TEVENTS=e_monster_turbo
+
+ON=@Create
+NPC=brain_dragon
+COLOR=colors_poison
+STR={550 700}
+DEX={200 300}
+INT={450 600}
+MAXHITS={2500 4000}
+MAXSTAM={500 650}
+MAXMANA={800 1250}
+
+PARRYING={85.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+POISONING={85.0 100.0}
+
+FAME={1000 2000}
+KARMA={-5000 -5999}
+
+ON=@NPCRestock
+ITEM=loot_elem_poison
+ITEM={ i_gem_poison 1 0 10 }
+ITEM=random_food,{2 3}
+
+CATEGORY=Monsters
+SUBSECTION=Dragons and Drakes
+DESCRIPTION=Poison Elemental Dragon
+
+[EOF]

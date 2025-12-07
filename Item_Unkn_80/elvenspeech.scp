@@ -1,0 +1,102 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//Please do not remove this header..
+
+//Enjoy!
+
+[function e]
+VAR.KNOWNELVENSPEECH=<args> // <args> is the text that has been passed as an argument. So that means it is the text that must be spoken
+var.elvenspeech= // resets the variable
+generateElvenSpeech {0 4} // generates a new sentence in elven
+VAR.ELVENSPEAKER=<uid> // <uid> is the unique id of the player who has used the command
+serv.allclients hearelven <p> // This calls the 'hearelven' function on all logged clients
+
+[function hearelven]
+if (<distance>>0f) // Prevents from hearing the speech from anywhere on the map
+return 1
+endif
+try uid.<var.elvenspeaker>.speakelven <uid> // This calls the function 'speakelven' on the person using the .e command passing the uid of the person hearing it as an argument
+
+[function speakelven]
+var.oldact=<act> // This stores the 'act' value of the player into a temporary variable
+act=<args> // This sets the 'act' value of the elven speaker (remember this function is called by the elven speaker :P ) to the uid of the person which must hear him
+
+act.newitem=i_elven_speaker // this creates a new item (i_elven_speaker) on the person which must hear the words
+act.equip <act.act> // this makes the person which must hear the words equip the item which has been created.  This is a very little known trick and I might have to go into more details :P
+act=<var.oldact>
+
+[itemdef i_elven_speaker]
+id=i_memory
+
+on=@equip
+var.oldact2=<src.act> // stores the old 'act' value into a variable
+src.act=<var.elvenspeaker> // puts the 'uid' of the elvenspeaker into the 'act' value
+
+if (0<src.tag.knowsElven>==0) // Determines if the player knows the elven language
+src.act.message <var.elvenspeech> // shows up the message
+else
+src.act.message <var.knownelvenspeech> // shows up the message
+src.act=<var.oldact2>
+remove // removes the temporary item
+
+[function generateElvenSpeech] // Generates a random elven speech from the following word list from 2 words up to 6 words sentences
+if (<args>>5)
+return 1
+endif
+
+var.rand=rand(50)
+doswitch (<eval <var.rand>>)
+var.elvenspeech=<var.elvenspeech> aimenal
+var.elvenspeech=<var.elvenspeech> aiquen
+var.elvenspeech=<var.elvenspeech> aiya
+var.elvenspeech=<var.elvenspeech> alae
+var.elvenspeech=<var.elvenspeech> amortala
+var.elvenspeech=<var.elvenspeech> calmacil
+var.elvenspeech=<var.elvenspeech> carca
+var.elvenspeech=<var.elvenspeech> curna
+var.elvenspeech=<var.elvenspeech> ekkaia
+var.elvenspeech=<var.elvenspeech> ela
+var.elvenspeech=<var.elvenspeech> elda
+var.elvenspeech=<var.elvenspeech> falma
+var.elvenspeech=<var.elvenspeech> fanya
+var.elvenspeech=<var.elvenspeech> hwerme
+var.elvenspeech=<var.elvenspeech> hresta
+var.elvenspeech=<var.elvenspeech> ilqua
+var.elvenspeech=<var.elvenspeech> ilya
+var.elvenspeech=<var.elvenspeech> ingwe
+var.elvenspeech=<var.elvenspeech> irmo
+var.elvenspeech=<var.elvenspeech> kemen
+var.elvenspeech=<var.elvenspeech> laica
+var.elvenspeech=<var.elvenspeech> lalwende
+var.elvenspeech=<var.elvenspeech> lavaralda
+var.elvenspeech=<var.elvenspeech> lelya
+var.elvenspeech=<var.elvenspeech> lestanore
+var.elvenspeech=<var.elvenspeech> lia
+var.elvenspeech=<var.elvenspeech> lindi
+var.elvenspeech=<var.elvenspeech> lisse
+var.elvenspeech=<var.elvenspeech> maitimo
+var.elvenspeech=<var.elvenspeech> mamil
+var.elvenspeech=<var.elvenspeech> mannar
+var.elvenspeech=<var.elvenspeech> nisimaldar
+var.elvenspeech=<var.elvenspeech> nolme
+var.elvenspeech=<var.elvenspeech> nuhta
+var.elvenspeech=<var.elvenspeech> palantir
+var.elvenspeech=<var.elvenspeech> pelori
+var.elvenspeech=<var.elvenspeech> quelle
+var.elvenspeech=<var.elvenspeech> quetta
+var.elvenspeech=<var.elvenspeech> rasse
+var.elvenspeech=<var.elvenspeech> sina
+var.elvenspeech=<var.elvenspeech> telda
+var.elvenspeech=<var.elvenspeech> teleri
+var.elvenspeech=<var.elvenspeech> tercen
+var.elvenspeech=<var.elvenspeech> ullume
+var.elvenspeech=<var.elvenspeech> untupa
+var.elvenspeech=<var.elvenspeech> ur-anar
+var.elvenspeech=<var.elvenspeech> voronwe
+var.elvenspeech=<var.elvenspeech> yavanna
+var.elvenspeech=<var.elvenspeech> yulda
+enddo
+
+generateElvenSpeech <eval (<args>+1)>

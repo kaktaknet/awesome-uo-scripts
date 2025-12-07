@@ -1,0 +1,660 @@
+////////////////////////////////////////////////////////////////////////////////////////
+//Name : 55i Poison System Fix
+//Author : Marox
+//Contact : marox_gm@hotmail.com
+//Description : Fixes 55i Poison System which does Percentage damage. New poison system 
+//introduced. Also, Poisoning skill made more useful, Poison spell is weakest poison ingame.
+//
+//Skillgain : Skillgain for the Poison spell is NOT supported. Skillgain for poisoning skill
+//IS supported.
+//Installation : For the Poison spell only fix each player must have the e_poisonfix event //on them.
+//To install the full script (also the poisoning skill) :
+//Each player must have these events : e_poisonfix, e_skill_poisoning, e_poisoned_weapon
+//
+//ADDITIONAL NOTES :
+//Poison can be cured by casting cure/archcure or by drinking the potions
+//Some bandage systems will also heal this poison (because they have a spelleffect cure)
+//Poisons on weapons can be identified using the TasteID skill.
+////////////////////////////////////////////////////////////////////////////////////////
+
+[FUNCTION POISONSELF]
+NEWITEM=i_poisoned_spell
+EQUIP <ACT> 
+RETURN 1
+
+[ITEMDEF i_poisoned_spell]
+DEFNAME=i_poisoned_spell
+ID=i_memory
+NAME=Poison spell
+TYPE=t_eq_script
+
+ON=@EQUIP
+SRC.EMOTE feel ill.
+SRC.VAR.POISONTIMERS=1
+SRC.EVENTS=+e_poisonedbyspell
+LINK=<SRC.UID>
+TIMER=2
+RETURN 1
+
+ON=@TIMER
+IF (<LINK.HITS> <= 0)
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+ELSEIF (<LINK.VAR.POISONTIMERS> < 60)
+LINK.VAR.POISONTIMERS=<LINK.VAR.POISONTIMERS> + 1
+LINK.HITS=<LINK.HITS> + -1
+LINK.BARK=3
+TIMER=2
+RETURN 1
+ELSE
+LINK.MESSAGE The poison wears off..
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+
+[ITEMDEF i_mage_poison_spell]
+DEFNAME=i_mage_poison_spell
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+
+LINK=<SRC.VAR.POYSUID>
+
+IF (<LINK.FLAGS>&000000001) || (<LINK.FLAGS>&000040000) || (<LINK.FLAGS>&000000002)
+
+SRC.SYSMESSAGE The target does not seem to be affected by this spell..
+RETURN 1
+
+ELSEIF (<LINK.EVENTS>=e_poisonedbyspell)
+SRC.SYSMESSAGE That person is already affected by this spell!
+RETURN 1
+ELSEIF (<LINK.CANSEELOS>)
+SRC.ANIM=16
+SRC.SOUND=01f1
+SRC.SAY In Nox
+SRC.MANA=<SRC.MANA> + -4
+SRC.CONSUME 1 i_reag_nightshade
+SRC.VAR.POISTYM=1
+LINK=<SRC.UID>
+TIMER=2
+RETURN 1
+ELSE
+
+SRC.SYSMESSAGE ERROR(VTARG ILLEGAL END) : If this error persists, contact a GM.
+RETURN 1
+ENDIF
+
+
+ON=@TIMER
+LINK.VAR.POISTYM=0
+LINK=<LINK.VAR.POYSUID>
+LINK.POISONSELF
+LINK.DAMAGE=1
+REMOVE
+RETURN 1
+
+
+[EVENTS e_poisonedbyspell]
+
+On=@SpellEffect 
+   IF (<argn>==0b)   //Cure
+      MESSAGE The poison wears off..
+      CONSUME 50 i_poisoned_spell
+      CONSUME 50 i_poisoned_less
+      CONSUME 50 i_poisoned_medium
+      CONSUME 50 i_poisoned_great
+      CONSUME 50 i_poisoned_deadly
+      EVENTS=-e_poisonedbyspell
+
+
+   ELSEIF (<argn>==019)   //Arch Cure
+      MESSAGE The poison wears off..
+      CONSUME 50 i_poisoned_spell
+      CONSUME 50 i_poisoned_less
+      CONSUME 50 i_poisoned_medium
+      CONSUME 50 i_poisoned_great
+      CONSUME 50 i_poisoned_deadly
+      EVENTS=-e_poisonedbyspell
+
+[EVENTS e_poisonfix]
+
+On=@SpellCast 
+   IF (<argn>==014)   //Poison
+      IF (<SRC.RESTEST 1 i_reag_nightshade>) && (<SRC.MANA> > 3)
+      IF (<SRC.VAR.POISTYM> == 1)
+      SRC.MESSAGE The spell fizzles.
+      RETURN 1
+ELSE
+      SRC.VAR.POYSUID=<SRC.ACT.UID>
+      SRC.NEWITEM=i_mage_poison_spell
+      SRC.ACT.EQUIP
+      RETURN 1
+ENDIF
+
+ELSE
+
+      SRC.SYSMESSAGE You either lack nightshade or mana for this spell!
+      RETURN 1
+ENDIF
+
+
+
+
+
+
+//POISONING SKILL FIX BELOW....
+
+
+
+
+
+
+
+
+
+//Skill-gain related functions
+
+
+[FUNCTION PSNAKS]
+POISONING = <POISONING>+0.1 
+
+[FUNCTION PSNGHC] 
+IF (<POISONING><=150) && ((RAND(5)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>150) && (<POISONING><=225) && (rand(10)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>225) && (<POISONING><=325) && (rand(20)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>325) && (<POISONING><=425) && (rand(30)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>425) && (<POISONING><=525) && (rand(40)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>525) && (<POISONING><=625) && (rand(50)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>625) && (<POISONING><=725) && (rand(55)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>725) && (<POISONING><=825) && (rand(60)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>725) && (<POISONING><=925) && (rand(65)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>>925) && (<POISONING><=1000) && (rand(70)==1) 
+PSNAKS
+RETURN 1
+ELSEIF (<POISONING>==1000) 
+RETURN 1
+ENDIF
+
+
+//New functions - which poison you, basically, the poisoned system beginning
+
+[FUNCTION POISONSLESS]
+NEWITEM=i_poisoned_less
+EQUIP <ACT> 
+RETURN 1
+
+[FUNCTION POISONSMED]
+NEWITEM=i_poisoned_medium
+EQUIP <ACT> 
+RETURN 1
+
+[FUNCTION POISONSGRT]
+NEWITEM=i_poisoned_great
+EQUIP <ACT> 
+RETURN 1
+
+
+[FUNCTION POISONSDEA]
+NEWITEM=i_poisoned_deadly
+EQUIP <ACT> 
+RETURN 1
+
+//The items that poison you (works for the func's above)
+
+[ITEMDEF i_poisoned_less]
+DEFNAME=i_poisoned_less
+ID=i_memory
+NAME=Lesser Poison memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+IF (<SRC.EVENTS>==e_poisonedbyspell)
+REMOVE
+RETURN 1
+ELSE
+SRC.EMOTE feel very ill.
+SRC.VAR.POISONTIMERS=1
+SRC.EVENTS=+e_poisonedbyspell
+LINK=<SRC.UID>
+TIMER=2
+RETURN 1
+
+ON=@TIMER
+IF (<LINK.HITS> <= 0)
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+ELSEIF (<LINK.VAR.POISONTIMERS> < 80)
+LINK.VAR.POISONTIMERS=<LINK.VAR.POISONTIMERS> + 1
+LINK.HITS=<LINK.HITS> + -1
+LINK.BARK=3
+TIMER=2
+RETURN 1
+ELSE
+LINK.MESSAGE The poison wears off..
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+
+
+[ITEMDEF i_poisoned_medium]
+DEFNAME=i_poisoned_medium
+ID=i_memory
+NAME=Medium Poison memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+IF (<SRC.EVENTS>==e_poisonedbyspell)
+REMOVE
+RETURN 1
+ELSE
+SRC.EMOTE feel sick.
+SRC.VAR.POISONTIMERS=1
+SRC.EVENTS=+e_poisonedbyspell
+LINK=<SRC.UID>
+TIMER=2
+RETURN 1
+
+ON=@TIMER
+IF (<LINK.HITS> <= 0)
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+ELSEIF (<LINK.VAR.POISONTIMERS> < 80)
+LINK.VAR.POISONTIMERS=<LINK.VAR.POISONTIMERS> + 1
+LINK.HITS=<LINK.HITS> + -3
+LINK.BARK=3
+TIMER=2
+RETURN 1
+ELSE
+LINK.MESSAGE The poison wears off..
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+
+
+
+[ITEMDEF i_poisoned_great]
+DEFNAME=i_poisoned_great
+ID=i_memory
+NAME=Great Poison memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+IF (<SRC.EVENTS>==e_poisonedbyspell)
+REMOVE
+RETURN 1
+ELSE
+SRC.EMOTE feel extemely sick.
+SRC.VAR.POISONTIMERS=1
+SRC.EVENTS=+e_poisonedbyspell
+LINK=<SRC.UID>
+TIMER=2
+RETURN 1
+
+ON=@TIMER
+IF (<LINK.HITS> <= 0)
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+ELSEIF (<LINK.VAR.POISONTIMERS> < 80)
+LINK.VAR.POISONTIMERS=<LINK.VAR.POISONTIMERS> + 1
+LINK.HITS=<LINK.HITS> + -4
+LINK.BARK=3
+TIMER=2
+RETURN 1
+ELSE
+LINK.MESSAGE The poison wears off..
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+
+
+[ITEMDEF i_poisoned_deadly]
+DEFNAME=i_poisoned_deadly
+ID=i_memory
+NAME=Deadly Poison memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+IF (<SRC.EVENTS>==e_poisonedbyspell)
+REMOVE
+RETURN 1
+ELSE
+SRC.EMOTE feel deathly sick.
+SRC.VAR.POISONTIMERS=1
+SRC.EVENTS=+e_poisonedbyspell
+LINK=<SRC.UID>
+TIMER=2
+RETURN 1
+
+ON=@TIMER
+IF (<LINK.HITS> <= 0)
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+ELSEIF (<LINK.VAR.POISONTIMERS> < 80)
+LINK.VAR.POISONTIMERS=<LINK.VAR.POISONTIMERS> + 1
+LINK.HITS=<LINK.HITS> + -5
+LINK.BARK=3
+TIMER=2
+RETURN 1
+ELSE
+LINK.MESSAGE The poison wears off..
+LINK.EVENTS=-e_poisonedbyspell
+REMOVE
+RETURN 1
+
+
+
+//Memory which puts time to wait between new potions
+
+[ITEMDEF i_poisonwaitpot]
+DEFNAME=i_poisonwaitpot
+NAME=Poison potions memory
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+LINK=<SRC.UID>
+TIMER=5
+
+ON=@TIMER
+LINK.VAR.POISLV1C=0
+REMOVE
+RETURN 1
+
+
+//Remake the old poisons
+
+[ITEMDEF i_potion_PoisonLess]
+DEFNAME=i_potion_PoisonLess
+NAME=Lesser Poison potion%s
+ID=i_bottle_empty
+TYPE=t_script
+
+RESOURCES=i_reag_nightshade 1, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 0
+
+ON=@Create
+COLOR=0010b
+
+ON=@Dclick
+IF (<SRC.VAR.POISLV1C> != 1)
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying that item in order to use it!
+RETURN 1
+ELSE
+SRC.NEWITEM i_poisonwaitpot
+SRC.ACT.EQUIP
+SRC.VAR.POISLV1C=1
+TARGET What weapon do you wish to apply the poison to?
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must wait before using this again..
+RETURN 1
+ENDIF
+ENDIF
+
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying the item you wish to poison!
+RETURN 1
+ELSEIF ((<SRC.TARG.MORE2> == 701) || (<SRC.TARG.MORE2> == 702) || (<SRC.TARG.MORE2> == 703) || (<SRC.TARG.MORE2> == 704) || (<SRC.TARG.MORE2> == 0)) && ((<SRC.TARG.TYPE> == t_weapon_sword) || (<SRC.TARG.TYPE> == t_weapon_fence) || (<SRC.TARG.TYPE> == t_weapon_axe) || (<SRC.TARG.TYPE> == t_weapon_mace_sharp))
+SRC.TARG.MORE2=701
+SRC.MESSAGE You apply the poison
+SRC.SOUND=0247
+SRC.CONSUME 1 i_potion_poisonless
+SRC.NEWITEM=i_bottle_Empty
+SRC.ACT.BOUNCE
+SRC.PSNGHC
+RETURN 1
+ELSE
+SRC.SYSMESSAGE That item cannot be poisoned!
+RETURN 1
+
+
+
+[ITEMDEF i_potion_Poison]
+DEFNAME=i_potion_Poison
+NAME=Poison potion%s
+ID=i_bottle_empty
+TYPE=t_script
+
+RESOURCES=i_reag_nightshade 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 15.1
+
+ON=@Create
+COLOR=0010b
+
+ON=@Dclick
+IF (<SRC.POISONING> >= 650)
+IF (<SRC.VAR.POISLV1C> != 1)
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying that item in order to use it!
+RETURN 1
+ELSE
+SRC.NEWITEM i_poisonwaitpot
+SRC.ACT.EQUIP
+SRC.VAR.POISLV1C=1
+TARGET What weapon do you wish to apply the poison to?
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must wait before using this again..
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are not skilled enough to use this!
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying the item you wish to poison!
+RETURN 1
+ELSEIF ((<SRC.TARG.MORE2> == 701) || (<SRC.TARG.MORE2> == 702) || (<SRC.TARG.MORE2> == 703) || (<SRC.TARG.MORE2> == 704) || (<SRC.TARG.MORE2> == 0)) && ((<SRC.TARG.TYPE> == t_weapon_sword) || (<SRC.TARG.TYPE> == t_weapon_fence) || (<SRC.TARG.TYPE> == t_weapon_axe) || (<SRC.TARG.TYPE> == t_weapon_mace_sharp))
+SRC.TARG.MORE2=702
+SRC.MESSAGE You apply the poison
+SRC.SOUND=0247
+SRC.CONSUME 1 i_potion_poison
+SRC.NEWITEM=i_bottle_Empty
+SRC.ACT.BOUNCE
+SRC.PSNGHC
+RETURN 1
+ELSE
+SRC.SYSMESSAGE That item cannot be poisoned!
+RETURN 1
+
+
+[ITEMDEF i_potion_PoisonGreat]
+DEFNAME=i_potion_PoisonGreat
+NAME=Greater Poison potion%s
+ID=i_bottle_empty
+TYPE=t_script
+
+RESOURCES=i_reag_nightshade 4, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 55.1
+
+ON=@Create
+COLOR=0010b
+
+ON=@Dclick
+IF (<SRC.POISONING> >= 800)
+IF (<SRC.VAR.POISLV1C> != 1)
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying that item in order to use it!
+RETURN 1
+ELSE
+SRC.NEWITEM i_poisonwaitpot
+SRC.ACT.EQUIP
+SRC.VAR.POISLV1C=1
+TARGET What weapon do you wish to apply the poison to?
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must wait before using this again..
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are not skilled enough to use this!
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying the item you wish to poison!
+RETURN 1
+ELSEIF ((<SRC.TARG.MORE2> == 701) || (<SRC.TARG.MORE2> == 702) || (<SRC.TARG.MORE2> == 703) || (<SRC.TARG.MORE2> == 704) || (<SRC.TARG.MORE2> == 0)) && ((<SRC.TARG.TYPE> == t_weapon_sword) || (<SRC.TARG.TYPE> == t_weapon_fence) || (<SRC.TARG.TYPE> == t_weapon_axe) || (<SRC.TARG.TYPE> == t_weapon_mace_sharp))
+SRC.TARG.MORE2=703
+SRC.MESSAGE You apply the poison
+SRC.SOUND=0247
+SRC.CONSUME 1 i_potion_poisongreat
+SRC.NEWITEM=i_bottle_Empty
+SRC.ACT.BOUNCE
+SRC.PSNGHC
+RETURN 1
+ELSE
+SRC.SYSMESSAGE That item cannot be poisoned!
+RETURN 1
+
+
+[ITEMDEF i_potion_PoisonDeadly]
+DEFNAME=i_potion_PoisonDeadly
+NAME=Deadly Poison potion%s
+ID=i_bottle_empty
+TYPE=t_script
+
+RESOURCES=i_reag_nightshade 20, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+ON=@Create
+COLOR=0010b
+
+
+ON=@Dclick
+IF (<SRC.POISONING> >= 1000)
+IF (<SRC.VAR.POISLV1C> != 1)
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying that item in order to use it!
+RETURN 1
+ELSE
+SRC.NEWITEM i_poisonwaitpot
+SRC.ACT.EQUIP
+SRC.VAR.POISLV1C=1
+TARGET What weapon do you wish to apply the poison to?
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must wait before using this again..
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are not skilled enough to use this!
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE You must be carrying the item you wish to poison!
+RETURN 1
+ELSEIF ((<SRC.TARG.MORE2> == 701) || (<SRC.TARG.MORE2> == 702) || (<SRC.TARG.MORE2> == 703) || (<SRC.TARG.MORE2> == 704) || (<SRC.TARG.MORE2> == 0)) && ((<SRC.TARG.TYPE> == t_weapon_sword) || (<SRC.TARG.TYPE> == t_weapon_fence) || (<SRC.TARG.TYPE> == t_weapon_axe) || (<SRC.TARG.TYPE> == t_weapon_mace_sharp))
+SRC.TARG.MORE2=704
+SRC.MESSAGE You apply the poison
+SRC.SOUND=0247
+SRC.CONSUME 1 i_potion_poisondeadly
+SRC.NEWITEM=i_bottle_Empty
+SRC.ACT.BOUNCE
+SRC.PSNGHC
+RETURN 1
+ELSE
+SRC.SYSMESSAGE That item cannot be poisoned!
+RETURN 1
+
+
+
+//Do not allow players to use the Poisoning skill from the skill menu, only by double clicking poison pots.
+
+[EVENTS e_skill_poisoning]
+ON=@SKILLSTART
+
+IF (<SRC.ACTION>==30)||(<SRC.ACTION>==SKILL_POISONING)
+SRC.SYSMESSAGE You cannot use Poisoning this way. You may use this skill by double clicking a Poison potion.
+RETURN 1
+ENDIF
+
+if (<src.action>==36)||(<src.action>==skill_tasteid)
+
+IF (<SRC.ACT.MORE2> == 701) && (<SRC.TASTEID> <= 499)
+SRC.MESSAGE The fluid on the weapon tastes like a poison but you cannot determine which.
+RETURN 1
+
+ELSEIF (<SRC.ACT.MORE2> == 702) && (<SRC.TASTEID> <= 599)
+SRC.MESSAGE The fluid on the weapon tastes like a poison but you cannot determine which.
+RETURN 1
+
+ELSEIF (<SRC.ACT.MORE2> == 703) && (<SRC.TASTEID> <= 699)
+SRC.MESSAGE The fluid on the weapon tastes like a poison but you cannot determine which.
+RETURN 1
+
+ELSEIF (<SRC.ACT.MORE2> == 704) && (<SRC.TASTEID> <= 799)
+SRC.MESSAGE The fluid on the weapon tastes like a poison but you cannot determine which.
+RETURN 1
+
+//Second section - theres poison and you ID it
+
+ELSEIF (<SRC.ACT.MORE2> == 701) && (<SRC.TASTEID> >= 500)
+SRC.MESSAGE The fluid on the weapon tastes like a lesser poison.
+RETURN 1
+
+ELSEIF (<SRC.ACT.MORE2> == 702) && (<SRC.TASTEID> >= 600)
+SRC.MESSAGE The fluid on the weapon tastes like a poison.
+RETURN 1
+
+ELSEIF (<SRC.ACT.MORE2> == 703) && (<SRC.TASTEID> >= 700)
+SRC.MESSAGE The fluid on the weapon tastes like a greater poison.
+RETURN 1
+
+ELSEIF (<SRC.ACT.MORE2> == 704) && (<SRC.TASTEID> >= 800)
+SRC.MESSAGE The fluid on the weapon tastes like a deadly poison.
+RETURN 1
+
+ENDIF
+ENDIF
+
+
+[EVENTS e_poisoned_weapon]
+ON=@HIT
+   IF (<EVAL <FINDLAYER.1.MORE2>>==701) || (<EVAL <FINDLAYER.2.MORE2>>==701)
+	SRC.DAMAGE = 1
+	SRC.POISONSLESS
+   ELSEIF (<EVAL <FINDLAYER.1.MORE2>>==702) || (<EVAL <FINDLAYER.2.MORE2>>==702)
+	SRC.DAMAGE = 1
+	SRC.POISONSMED
+   ELSEIF (<EVAL <FINDLAYER.1.MORE2>>==703) || (<EVAL <FINDLAYER.2.MORE2>>==703)
+	SRC.DAMAGE = 1
+	SRC.POISONSGRT
+   ELSEIF (<EVAL <FINDLAYER.1.MORE2>>==704) || (<EVAL <FINDLAYER.2.MORE2>>==704)
+	SRC.DAMAGE = 1
+	SRC.POISONSDEA

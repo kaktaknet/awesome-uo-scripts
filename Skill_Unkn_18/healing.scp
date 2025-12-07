@@ -1,0 +1,515 @@
+[COMMENT Tabain's healing script]
+Thought I would try my hand at a new bandage script. This healing script includes:
+
+	- Custom skill gains including gaining anatomy when bandaging.
+	- Skill dependant failing, including skill gain (even though hard to get) on failing.
+	- Timer and heal amount calculations taking Anatomy/AnimalLore into account.
+	- Use of Healing and Anatomy while healing humans, Veterinary and AnimalLore when healing animals.
+	- Distance and LOS checks when starting to heal, Distance check right before healing.
+	- Healers hitpoints affect his ability to heal.
+	- Faster but lighter healing with Warmode toggled on, Slower but heavier healing out of Warmode.
+	- Resurrecting with high skill
+	- Skill depandant curing of poisons.
+	- Unequipping while healing.
+	- Skill based interruptions while healing, at 100.0 Healing you have a 40% chance of not getting interrupted while applying bandages.
+	- Options for letting more than 1 person heal a being at a time and to let pets be the only healable animals.
+	- Uses server settings to determine if a person should become a criminal when healing/ressing a criminal.
+	- Bloody bandages returned to healer depending on his skill in healing.
+	- Uses R features such as MAXHITS
+	- Includes Deathsystem checks, if you do not use a deathsystem this will simply be ignored.
+
+The Healdistance script is from the sphere community (I do not remember whom made it).
+Newresurrect and Newcure used to avoid bugs in SPELLEFFECT.
+Script is untested in a live shard environment and has only been used on my testserver, hence I do not guarantee it to be bugfree.
+Comments, suggestions and bug reports are gladly accepted at klas.nyholm at comcast.net (at = @, avoiding spambots.)
+I hold no responsibility for the use of this script and it should be tested before put to use on a live shard.
+
+Requires my skillgain script to enable skillgains.
+
+[ITEMDEF 0e21]
+DEFNAME=i_bandage
+RESOURCES=i_cloth
+TYPE=T_BANDAGE
+WEIGHT=.2
+DUPELIST=0ee9
+CATEGORY=Items by Professions
+SUBSECTION=Healer
+DESCRIPTION=Clean Bandages
+
+ON=@Dclick
+IF (<TOPOBJ.UID> == <SRC.UID>)
+	TARGET What do you want to use the bandages on?
+	RETURN 1
+ENDIF
+RETURN 1
+
+ON=@Targon_Char
+VAR.MULTIPLEHEALERS=1 // 0 = Only 1 can heal a person at a time. 1 = Several can heal the same person at the same time
+VAR.ONLYPETHEAL=1 // 0 = You can heal all animals. 1 = You can only heal pets.
+
+// Checks for valid healing
+IF (<SRC.TARG.FINDLAYER(99).TAG0.KO>) // If KO, don't res. Used for deathsystem.
+	SRC.SYSMESSAGE This person has merely been knocked out.
+	RETURN 1
+ENDIF
+
+IF !(<SRC.TARG.FINDLAYER(99).TAG0.DEAD>) // If not dead, move on. Used for deathsystem.
+  ELSEIF !(<EVAL(<SERV.TIME>)> >= <EVAL(<SRC.TARG.FINDLAYER(99).TAG0.DEAD>)> + 3000) // 5 mins before we can res after death
+	SRC.SYSMESSAGE This person's spirit is not yet ready to return to his body.
+	RETURN 1
+ENDIF
+
+IF (<SRC.FINDID(i_band_heal)>)
+	SRC.SYSMESSAGE You are already trying to bandage somebody.
+	RETURN 1
+ENDIF
+
+IF (<SRC.FINDID(i_band_res)>)
+	SRC.SYSMESSAGE You are still trying to resurrect.
+	RETURN 1
+ENDIF
+
+IF (<SRC.TARG.DISTANCE> > 3) || !(<SRC.TARG.CANSEELOS>)
+	SRC.SYSMESSAGE You are too far away to bandage that person.
+	RETURN 1
+ENDIF
+
+IF !(<VAR.MULTIPLEHEALERS>)
+	IF (<SRC.TARG.FINDID(i_heal_mem)>)
+		SRC.SYSMESSAGE That person is already being healed.
+		RETURN 1
+	ENDIF
+ENDIF
+
+// All checks valid, check for resurrection
+
+IF (!<SRC.TARG.NPC> && ((<SRC.TARG.ID>==c_ghost_man) || (<SRC.TARG.ID>==c_ghost_woman))) // Not NPC, but man or woman ghost.
+	IF (<SRC.HITS> < <EVAL(<SRC.MAXHITS> / 5)> // Need 20% of own HP to be able to res.
+		SRC.SYSMESSAGE You are currently too weak to try and resurrect anybody.
+		RETURN 1
+	ENDIF
+
+	IF !(<SRC.RESTEST 15 i_bandage>) // 15 bandages needed to resurrect.
+		SRC.SYSMESSAGE You do not have enough bandages to resurrect this person.
+		RETURN 1
+	ENDIF
+
+// All checks valid, let's res the person.
+
+	IF (<SRC.FINDLAYER(1)>) // Need both hands to res.
+		SRC.FINDLAYER(1).UNEQUIP
+	ENDIF
+	IF (<SRC.FINDLAYER(2)>)
+		SRC.FINDLAYER(2).UNEQUIP
+	ENDIF
+
+	VAR.RESAVG=<EVAL(((<SRC.HEALING> * 4) + <SRC.ANATOMY>) / 10)> //Resurrection timer determined by skill
+
+	IF (<VAR.RESAVG> < 400)
+		VAR.RESTIMER=8  // Higher skill, faster resurrection
+	ELSEIF (<VAR.RESAVG> < 425)
+		VAR.RESTIMER=7
+	ELSEIF (<VAR.RESAVG> < 450)
+		VAR.RESTIMER=6	
+	ELSEIF (<VAR.RESAVG> < 475)
+		VAR.RESTIMER=5
+	ELSEIF (<VAR.RESAVG> < 500)
+		VAR.RESTIMER=4
+	ELSE
+		VAR.RESTIMER=3
+	ENDIF
+
+	SRC.NEWITEM=i_band_res // Create res delay.
+	SRC.NEW.LINK=<SRC.TARG.UID>
+	SRC.NEW.CONT=<SRC.UID>
+	SRC.NEW.TIMER=<VAR.RESTIMER>
+	SRC.NEW.EQUIP
+	SRC.EMOTE focus as <SRC.SEX he/she> tries to resurrect <SRC.TARG.NAME>
+
+	IF !(<VAR.MULTIPLEHEALERS>)
+		SRC.NEWITEM=i_heal_mem
+		SRC.NEW.CONT=<SRC.TARG.UID>
+	ENDIF
+
+	RETURN 1
+ENDIF
+
+IF (<SRC.TARG.OBODY> == c_man) || (<SRC.TARG.OBODY> == c_woman)
+	LOCAL.HEALSKILL1=HEALING
+	LOCAL.HEALSKILL2=ANATOMY
+ELSEIF (<VAR.ONLYPETHEAL>) && (!<SRC.TARG.FLAGS>&statf_pet)
+	SRC.SYSMESSAGE You cannot heal that!
+	RETURN 1
+ELSE
+	LOCAL.HEALSKILL1=VETERINARY
+	LOCAL.HEALSKILL2=ANIMALLORE
+ENDIF
+
+IF (<SRC.TARG.FLAGS>&statf_poisoned) // If poisoned, cure
+  ELSEIF (<SRC.TARG.HITS> >= <SRC.TARG.MAXHITS>)  //If not poisoned and have full HP, don't heal.
+	SRC.SYSMESSAGE They are not wounded.
+	RETURN 1
+ENDIF
+
+VAR.HEALAVG=<EVAL(((<SRC.<LOCAL.HEALSKILL1>> * 2) + <SRC.<LOCAL.HEALSKILL2>>) / 10)> // Heal timer
+
+IF (<VAR.HEALAVG> < 50)
+	VAR.HEALTIMERSELF=5 // Higher skill, faster Healing
+	VAR.HEALTIMEROTHER=5
+ELSEIF (<VAR.HEALAVG> < 100)
+	VAR.HEALTIMERSELF=5
+	VAR.HEALTIMEROTHER=4
+ELSEIF (<VAR.HEALAVG> < 150)
+	VAR.HEALTIMERSELF=4
+	VAR.HEALTIMEROTHER=4
+ELSEIF (<VAR.HEALAVG> < 200)
+	VAR.HEALTIMERSELF=4
+	VAR.HEALTIMEROTHER=3
+ELSEIF (<VAR.HEALAVG> < 250)
+	VAR.HEALTIMERSELF=3
+	VAR.HEALTIMEROTHER=3
+ELSEIF (<VAR.HEALAVG> < 300)
+	VAR.HEALTIMERSELF=3
+	VAR.HEALTIMEROTHER=2
+ELSE
+	VAR.HEALTIMERSELF=2
+	VAR.HEALTIMEROTHER=2
+ENDIF
+
+IF (<SRC.FINDLAYER(1)>) // Need both hands to heal
+	SRC.FINDLAYER(1).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(2)>)
+	SRC.FINDLAYER(2).UNEQUIP
+ENDIF
+
+SRC.NEWITEM=i_band_heal // Create heal delay.
+SRC.NEW.LINK=<SRC.TARG.UID>
+SRC.NEW.CONT=<SRC.UID>
+SRC.NEW.TAG0.HEALSKILL1=<LOCAL.HEALSKILL1>
+SRC.NEW.TAG0.HEALSKILL2=<LOCAL.HEALSKILL2>
+
+IF !(<SRC.FLAGS>&statf_war)
+	SRC.NEW.TAG0.WARMODE=1
+	VAR.HEALTIMERSELF=<EVAL(<VAR.HEALTIMERSELF> + RAND(1) + 1)>
+	VAR.HEALTIMEROTHER=<EVAL(<VAR.HEALTIMEROTHER> + RAND(1) + 1)>
+ENDIF
+
+IF (<SRC.TARG.UID>==<SRC.UID>)
+	SRC.NEW.TIMER=<VAR.HEALTIMERSELF>
+	SRC.EMOTE try to heal <SRC.SEX himself/herself> with bandages
+ELSE
+	SRC.NEW.TIMER=<VAR.HEALTIMEROTHER>
+	SRC.EMOTE try to heal <SRC.TARG.NAME> with bandages
+ENDIF
+
+SRC.NEW.EQUIP
+SRC.EVENTS +e_heal_interrupt
+
+IF !(<VAR.MULTIPLEHEALERS>)
+	SRC.NEWITEM=i_heal_mem
+	SRC.NEW.CONT=<SRC.TARG.UID>
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_band_res]
+NAME=Resurrect memory - DO NOT REMOVE
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@Equip
+SRC.EVENTS=+e_heal_interrupt
+
+ON=@UnEquip
+SRC.EVENTS=-e_heal_interrupt
+
+ON=@Timer
+IF !(<CONT.RESTEST 15 i_bandage>)
+	CONT.SYSMESSAGE You need 15 clean bandages for the resurrection process.
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (<CONT.HITS> < <EVAL(<CONT.MAXHITS> / 5)>) // Need 20% of own HP to be able to res.
+	CONT.SYSMESSAGE You are currently too weak to finish the resurrection process.
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (<HEALDISTANCE> > 3)
+	CONT.SYSMESSAGE Your subject has moved too far away.
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+CONT.CONSUME 15 i_bandage
+
+IF !(<CONT.SKILLCHECK HEALING 80>)
+	CONT.EMOTE fail to resurrect <LINK.NAME>
+	CONT.skill_gain 25 HEALING
+	CONT.CONSUME 7 i_bandage
+	f_criminal_check
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+CONT.EMOTE resurrect <LINK.NAME>
+LINK.SYSMESSAGE You have been resurrected by <CONT.NAME>.
+CONT.skill_gain 150 HEALING
+CONT.skill_gain 150 ANATOMY
+CONT.CONSUME 15 i_bandage
+LINK.NEWRESURRECT
+f_criminal_check
+LINK.f_multiple_remove
+REMOVE
+RETURN 1
+
+[ITEMDEF i_band_heal]
+NAME=Heal with bandage
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@Equip
+SRC.EVENTS +e_heal_interrupt
+
+ON=@UnEquip
+SRC.EVENTS -e_heal_interrupt
+
+ON=@Timer
+IF !(<CONT.RESTEST 1 i_bandage>)
+	CONT.SYSMESSAGE You do not have any bandages with which to heal.
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (<LINK.HITS> = 0)
+	CONT.SYSMESSAGE Your healing came too late, they are already dead.
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (<HEALDISTANCE> > 3)
+	CONT.SYSMESSAGE Your subject has moved too far away, try again.
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (RAND(1000) > <EVAL((<CONT.<TAG0.HEALSKILL1>> / 2) + 475)>) 
+	CONT.EMOTE hands slip as <CONT.SEX he/she> tries to apply bandages to <LINK.NAME>
+	CONT.SKILL_GAIN 20 <TAG0.HEALSKILL1>
+	CONT.SKILL_GAIN 15 <TAG0.HEALSKILL2>
+	f_bloody_return
+	f_criminal_check
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (<LINK.FLAGS>&statf_poisoned)
+	IF (<CONT.<TAG0.HEALSKILL1>> > <LINK.FINDLAYER(42).MOREY>)
+		LINK.NEWCURE
+		IF (<CONT.UID>==<LINK.UID>)
+		     	CONT.SYSMESSAGE You have cured yourself!
+		ELSE
+			CONT.SYSMESSAGE You have cured <LINK.NAME>!
+			LINK.SYSMESSAGE You have been cured by <CONT.NAME>!
+		ENDIF
+		CONT.SKILL_GAIN 75 <TAG0.HEALSKILL1>
+		f_bloody_return
+		f_criminal_check
+		LINK.f_multiple_remove
+		REMOVE
+		RETURN 1
+	ELSE
+		CONT.SYSMESSAGE You are not skilled enough to cure the poison, wait until it wears off some.
+	ENDIF
+  ELSEIF (<LINK.HITS> >= <LINK.MAXHITS>)  //If not poisoned and have full HP, don't heal.
+	CONT.SYSMESSAGE They are not wounded.
+	LINK.f_multiple_remove
+	REMOVE
+	RETURN 1
+ENDIF
+
+DOSWITCH <EVAL((((<CONT.<TAG0.HEALSKILL1>> / 10) + (<CONT.<TAG0.HEALSKILL2>> / 100)) / 10)>
+	VAR.HEAL = <EVAL(RAND(1,5) + RAND(5))>		// < 10
+	VAR.HEAL = <EVAL(RAND(5,10) + RAND(5))>		// 10 - 20
+	VAR.HEAL = <EVAL(RAND(8,13) + RAND(7))>		// 20 - 30
+	VAR.HEAL = <EVAL(RAND(11,16) + RAND(7))>	// 30 - 40
+	VAR.HEAL = <EVAL(RAND(17,22) + RAND(7))>	// 40 - 50
+	VAR.HEAL = <EVAL(RAND(20,27) + RAND(7))>	// 50 - 60
+	VAR.HEAL = <EVAL(RAND(25,31) + RAND(7))>	// 60 - 70
+	VAR.HEAL = <EVAL(RAND(27,33) + RAND(7))>	// 70 - 80
+	VAR.HEAL = <EVAL(RAND(30,37) + RAND(9))>	// 80 - 90
+	VAR.HEAL = <EVAL(RAND(32,39) + RAND(11))>	// 90 - 100
+	VAR.HEAL = <EVAL(RAND(35,43) + RAND(13))>	// 100 - 110
+	VAR.HEAL = <EVAL(RAND(40,47) + RAND(13))>	// > 110
+ENDDO
+
+IF (<TAG0.WARMODE> == 1)
+	VAR.HEAL=<EVAL(<VAR.HEAL> - (<CONT.MAXHITS> / <CONT.HITS>))>
+ELSE
+	VAR.HEAL=<EVAL(((<VAR.HEAL> * 2) / 3) - ((<CONT.MAXHITS> / <CONT.HITS>) - 1))>
+ENDIF
+
+IF (0 > <EVAL(<VAR.HEAL>)>)
+	IF (<CONT.UID>==<LINK.UID>
+		VAR.HEAL=<EVAL(RAND(1,3)>
+	ELSE
+		CONT.EMOTE tremble as <CONT.SEX he/she> is too weak to heal
+		CONT.SKILL_GAIN 20 <TAG0.HEALSKILL1>
+		CONT.SKILL_GAIN 15 <TAG0.HEALSKILL2>
+		f_bloody_return
+		LINK.f_multiple_remove
+		REMOVE
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<VAR.HEAL> == 0)
+	VAR.HEAL=1
+ENDIF
+
+VAR.HEAL2=<EVAL(<VAR.HEAL> + <LINK.HITS>)>
+
+IF (<EVAL(<VAR.HEAL2>)> > <LINK.MAXHITS>)
+	VAR.HEAL=<EVAL(<LINK.MAXHITS> - <LINK.HITS>)>
+	VAR.HEAL2=<LINK.MAXHITS>
+ENDIF
+
+LINK.HITS=<VAR.HEAL2>
+LINK.UPDATE
+
+DOSWITCH <EVAL(<VAR.HEAL> / 10)>
+	VAR.HEALOUTPUT=negligibly
+	VAR.HEALOUTPUT=badly
+	VAR.HEALOUTPUT=poorly
+	VAR.HEALOUTPUT=decently
+	VAR.HEALOUTPUT=nicely
+	VAR.HEALOUTPUT=skillfully
+ENDDO
+
+IF (<CONT.UID> == <LINK.UID>)
+	CONT.SYSMESSAGE You heal yourself <VAR.HEALOUTPUT>.
+	CONT.SYSMESSAGE You heal yourself for <EVAL(<VAR.HEAL>)> hitpoints.
+ELSE
+	LINK.SYSMESSAGE <CONT.NAME> healed you <VAR.HEALOUTPUT>.
+	LINK.SYSMESSAGE <CONT.NAME> healed you for <EVAL(<VAR.HEAL>)> hitpoints.
+	CONT.SYSMESSAGE You healed <LINK.NAME> for <EVAL(<VAR.HEAL>)> hitpoints.
+ENDIF
+
+CONT.SKILL_GAIN 100 <TAG0.HEALSKILL1>
+CONT.SKILL_GAIN 75 <TAG0.HEALSKILL2>
+
+f_bloody_return
+CONT.EVENTS=-e_heal_interrupt
+f_criminal_check
+LINK.f_multiple_remove
+REMOVE
+RETURN 1
+
+[EVENTS e_heal_interrupt]
+ON=@GetHit
+IF (<FINDID(i_band_heal)>)
+	IF (RAND(1000) > <EVAL((<<FINDID(i_heal_mem).TAG0.HEALSKILL1>> / 2) + (-100))>)
+		SYSMESSAGE @140 <SRC.NAME> broke your concentration and disturbed your healing.
+		FINDID(i_band_heal).LINK.f_multiple_remove
+		FINDID(i_band_heal).REMOVE
+		CONSUME 1 i_bandage
+	ENDIF
+  ELSEIF (<FINDID(i_band_res)>)
+	IF (RAND(1000) > <EVAL((<<FINDID(i_res_mem).TAG0.HEALSKILL1>> / 2) + (-150)>)
+		SYSMESSAGE <SRC.NAME> broke your concentration and disturbed your resurrection.
+		FINDID(i_band_res).LINK.f_multiple_remove
+		FINDID(i_band_res).REMOVE
+
+		CONSUME 3 i_bandage
+	ENDIF
+ENDIF
+EVENTS=-e_heal_interrupt
+
+[FUNCTION HEALDISTANCE]
+IF (<CONT.P.X>><LINK.P.X>) 
+   VAR.DX=<EVAL <CONT.P.X>-<LINK.P.X>> 
+ELSE 
+   VAR.DX=<EVAL <LINK.P.X>-<CONT.P.X>> 
+ENDIF 
+
+IF (<CONT.P.Y>><LINK.P.Y>) 
+   VAR.DY=<EVAL <CONT.P.Y>-<LINK.P.Y>> 
+ELSE 
+   VAR.DY=<EVAL <LINK.P.Y>-<CONT.P.Y>> 
+ENDIF 
+
+IF (<VAR.DX>><VAR.DY>) 
+   RETURN <EVAL(<VAR.DX>)> 
+ELSE 
+   RETURN <EVAL(<VAR.DY>)> 
+ENDIF 
+
+
+[FUNCTION f_multiple_remove]
+IF !(<VAR.MULTIPLEHEALERS>)
+	FINDID(i_heal_mem).REMOVE	
+ENDIF
+
+[FUNCTION f_criminal_check]
+IF (<SERV.HELPINGCRIMINALSISACRIME>)
+	IF (<LINK.OBODY> == c_man) || (<LINK.OBODY> == c_woman)
+		IF (<LINK.KARMA> < -2000) || (<LINK.FLAGS>&statf_criminal) || (<LINK.KILLS> > <SERV.MURDERMINCOUNT>)
+			IF !(<CONT.FLAGS>&statf_criminal)
+				CONT.FLAGS=<CONT.FLAGS>|statf_criminal
+				CONT.SYSMESSAGE Criminal!
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+[FUNCTION f_bloody_return]
+IF (RAND(1000) < <CONT.<TAG0.HEALSKILL1>>)
+	CONT.NEWITEM i_bandage_bloody
+	CONT.NEW.CONT=<CONT.UID>
+	CONT.NEW.BOUNCE
+ENDIF
+
+[ITEMDEF i_heal_mem] 
+ID=i_memory 
+TYPE=t_eq_script 
+NAME=Heal Memory 
+
+[FUNCTION NEWRESURRECT] 
+NEWITEM i_res_mem 
+EQUIP <NEW> 
+
+
+[ITEMDEF i_res_mem] 
+ID=i_memory 
+TYPE=t_eq_script 
+NAME=Res Memory 
+
+
+ON=@EQUIP 
+SRC.RESURRECT 
+REMOVE
+
+[FUNCTION NEWCURE] 
+NEWITEM i_cure_mem 
+EQUIP <NEW> 
+
+
+[ITEMDEF i_cure_mem] 
+ID=i_memory 
+TYPE=t_eq_script 
+NAME=Res Memory 
+
+
+ON=@EQUIP 
+SRC.SPELLEFFECT S_CURE 1000
+REMOVE

@@ -1,0 +1,168 @@
+[comment on this script ...]
+made for Sphere.55R4.0.1 by Moe
+NPCs loot valuables and equipment from chars they killed. Chars that can equip armor or weapons (mt_equip) will use the looted items, if they are better than the old ones.
+To enable looting for a monster simply give the event e_looting to it.
+
+[defname looting_constants]
+loot.considerweight	1 //1=load up till half of maxweight is reached; 0=grab anything no matter if you can walk 
+loot.dropyunk		1 //1=drop armor or weapons that are not needed (only refers to chars that can equip items); 0=keep anything
+
+
+[EVENTS e_looting]
+on=@hit
+if !<src.brain> // loot players only
+	//if a char is hit, mark him for looting
+	src.events +e_looted
+	src.tag.looter=<uid>
+endif
+
+
+[EVENTS e_looted]
+on=@death
+
+if ( <distance <tag.looter>> < 3 ) //if the char is less than 3 spaces away then go and loot
+	var.looting.act=<act.uid> //save the uid of the killer, may differ from the NPC that loots
+	act=<tag.looter>
+	
+	//gold has no weight on many shards, if so then grab it no matter how much you carry
+	if <serv.itemdef.i_gold.weight>==0
+		f_loot_type t_gold
+	endif
+
+	// don't load up too much
+	if ( <act.weight>*<def.loot.considerweight> < (<act.weightmax>/2) )
+
+		f_loot_type t_gold //in case gold does weigh something, get it here
+		f_loot_type t_gem
+		f_loot_type t_jewelry
+		f_loot_type t_rune
+
+		if (<act.can>&mt_equip) //search for equipment, if it's usefull
+
+			f_addloot_layer layer_hand1
+			f_addloot_layer layer_hand2
+			f_addloot_layer layer_shoes
+			f_addloot_layer layer_pants
+			f_addloot_layer layer_shirt
+			f_addloot_layer layer_helm
+			f_addloot_layer layer_gloves
+			f_addloot_layer layer_collar
+			f_addloot_layer layer_half_apron
+			f_addloot_layer layer_chest
+			f_addloot_layer layer_tunic
+			f_addloot_layer layer_arms
+			f_addloot_layer layer_cape
+			f_addloot_layer layer_robe
+			f_addloot_layer layer_skirt
+			f_addloot_layer layer_legs
+
+			// unequip old armor and equip new armor
+			act.f_redress
+			
+		endif
+	else
+		// weight maximum reached
+	endif
+
+	act=<var.looting.act> //set act back to the uid of the killer
+endif
+events -e_looted
+tag.looter
+
+[function f_loot_type]
+if <act.ischar>
+	if <findtype.<args>>
+		obj=<findtype.<args>>
+		obj.attr = <obj.attr>&~attr_newbie
+		act.bounce <obj.uid>
+		f_loot_type <args>
+		return 1
+	endif
+endif
+return 0
+
+[function f_addloot_layer]
+if <findlayer.<args>> //is there an item to loot?
+	obj=<findlayer.<args>.uid>
+	if !(<obj.attr>&attr_newbie) //don't loot newbiefied items
+		if <act.findlayer.<args>> //do i have an item of that kind?
+			if ((<eval <act.findlayer.<args>.armor>>*<act.findlayer.<args>.more1l>*100)/<act.findlayer.<args>.more1h>)<((<eval <obj.armor>>*<obj.more1l>*100)/<obj.more1h>)
+				//is this item better than the one I allready have? (armor is damage in weapons)
+				act.bounce <obj.uid>
+			endif
+		else
+			act.bounce <obj.uid>
+		endif
+	endif
+endif
+
+[function f_drop_yunk]
+if <findlayer.layer_pack.findtype.t_armor>
+	drop <findlayer.layer_pack.findtype.t_armor.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_armor_leather>
+	drop <findlayer.layer_pack.findtype.t_armor_leather.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_sword>
+	drop <findlayer.layer_pack.findtype.t_weapon_sword.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_axe>
+	drop <findlayer.layer_pack.findtype.t_weapon_axe.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_fence>
+	drop <findlayer.layer_pack.findtype.t_weapon_fence.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_mace_staff>
+	drop <findlayer.layer_pack.findtype.t_weapon_mace_staff.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_mace_smith>
+	drop <findlayer.layer_pack.findtype.t_weapon_mace_smith.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_mace_sharp>
+	drop <findlayer.layer_pack.findtype.t_weapon_mace_sharp.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_mace_pick>
+	drop <findlayer.layer_pack.findtype.t_weapon_mace_pick.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_bow>
+	drop <findlayer.layer_pack.findtype.t_weapon_bow.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_weapon_xbow>
+	drop <findlayer.layer_pack.findtype.t_weapon_xbow.uid>
+	f_drop_yunk
+elseif <findlayer.layer_pack.findtype.t_shield>
+	drop <findlayer.layer_pack.findtype.t_shield.uid>
+	f_drop_yunk
+endif
+
+[function f_unequipall]
+unequip <findlayer.layer_hand1.uid>
+unequip <findlayer.layer_hand2.uid>
+unequip <findlayer.layer_shoes.uid>
+unequip <findlayer.layer_pants.uid>
+unequip <findlayer.layer_shirt.uid>
+unequip <findlayer.layer_helm.uid>
+unequip <findlayer.layer_gloves.uid>
+unequip <findlayer.layer_ring.uid>
+unequip <findlayer.layer_collar.uid>
+unequip <findlayer.layer_half_apron.uid>
+unequip <findlayer.layer_chest.uid>
+unequip <findlayer.layer_wrist.uid>
+unequip <findlayer.layer_tunic.uid>
+unequip <findlayer.layer_ears.uid>
+unequip <findlayer.layer_arms.uid>
+unequip <findlayer.layer_cape.uid>
+unequip <findlayer.layer_robe.uid>
+unequip <findlayer.layer_skirt.uid>
+unequip <findlayer.layer_legs.uid>
+
+
+[function f_redress]
+f_unequipall
+equiparmor
+equipweapon
+if <var.dropyunk>
+	f_drop_yunk //get rid of unused items
+endif
+
+[EOF]

@@ -1,0 +1,145 @@
+//Platinum bars and the process to get/cash them in
+//GM Iz - Oblivion Shard www.oblivion2.com
+
+[ITEMDEF i_ingot_platinum]
+ID=01be6
+
+NAME="platinum ingot%s"
+WEIGHT=2
+PILE=1
+TYPE=0
+VALUE=50000
+
+ON=@CREATE
+   COLOR=0481
+
+CATEGORY=Oblivion Items
+SUBSECTION=Economy
+DESCRIPTION=Platinum Ingot
+
+[ITEMDEF i_platinum_stone]
+NAME="Platinum Transfer Stone"
+ID=i_gravestone_17
+
+ON=@CREATE
+   COLOR=0874
+
+ON=@DCLICK
+   //Check to see if they have used it before
+   IF (0<SRC.TAG.PLATINUM>==0)
+      SRC.DIALOG d_platinum_trader
+   ELSE
+      TARGET "Target either a stack of gold or a platinum bar to convert"
+   ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+   IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+      SRC.SYSMESSAGE "You have to have the target in your inventory."
+      RETURN 1
+   ENDIF
+   IF (<SRC.TARG.BASEID>==i_gold)
+      IF (<SRC.TARG.AMOUNT><50000)
+         SRC.SYSMESSAGE "Platinum bars are worth 50,000 gold."
+         SRC.SYSMESSAGE "You don't have enough gold in that stack."
+      ELSE
+         SRC.f_maxweight 3
+         IF (<VAR.fMWEIGHT>==0)
+            SRC.TARG.AMOUNT=(<SRC.TARG.AMOUNT>+(-50000))
+            IF (<SRC.TARG.AMOUNT>==0)
+               SRC.TARG.REMOVE
+            ENDIF
+            SRC.TARG.UPDATE
+            SRC.NEWITEM=i_ingot_platinum
+            SRC.ACT.BOUNCE
+            SRC.SYSMESSAGE "Thank you for using the Oblivion Platinum Trading Post."
+         ELSE
+            SRC.SYSMESSAGE "You are holding too much to carry a platinum ingot."
+         ENDIF
+      ENDIF
+   ELIF (<SRC.TARG.BASEID>==i_ingot_platinum)
+      f_consume_platinum 1
+      IF (<SRC.TARG.AMOUNT><=0)
+         SRC.TARG.REMOVE
+      ENDIF
+      SRC.TARG.UPDATE
+      SRC.SYSMESSAGE "Thank you for using the Oblivion Platinum Trading Post."
+   ELSE
+      SRC.SYSMESSAGE "Gold and platinum.  Nothing else...."
+   ENDIF
+RETURN 1
+
+CATEGORY=Oblivion Items
+SUBSECTION=Economy
+DESCRIPTION=Platinum Vending Stone
+
+[FUNCTION f_maxweight]
+   IF (<EVAL (<ARGN>+<WEIGHT>)> > <WEIGHTMAX>)
+      VAR.fMWEIGHT=1
+      RETURN 1
+   ELSE
+      VAR.fMWEIGHT=0
+      RETURN 0
+   ENDIF
+
+[FUNCTION f_consume_platinum]
+   IF (<ARGN>>10)
+      SRC.SYSMESSAGE "10 ingot max per transaction.  The gold has been placed in your pack."
+      RETURN 1
+   ENDIF
+   IF (<SRC.TARG.AMOUNT>>=1)
+      SRC.TARG.AMOUNT=(<SRC.TARG.AMOUNT>+(-1))
+      SRC.NEWITEM=i_gold
+      SRC.ACT.AMOUNT=50000
+      SRC.ACT.CONT=<SRC.FINDLAYER(layer_pack).UID>
+      f_consume_platinum <EVAL <ARGN>+1>
+   ENDIF
+RETURN 0
+
+[DIALOG d_platinum_trader]
+0,0
+resizepic 20 25 2620 375 380   //box
+button 365 40 03 04 1 0 0      //cancel X
+button 175 375 247 248 1 0 1   //Ok button
+text 100 35 1152 12            //Oblivion Trading Co
+text 40 60 0399 0              //Contract
+text 40 90 067 1              //By clicking 1
+text 40 110 067 2              //By clicking 2
+text 40 140 0399 3             //Item 1 line 1
+text 40 160 0399 4             //Item 1 line 2
+text 40 180 0399 5             //Item 1 line 3
+text 40 210 0399 6             //Item 2 line 1
+text 40 230 0399 7             //Item 2 line 2
+text 40 250 0399 8             //Item 2 line 3
+text 40 280 067 9              //Dont page 1
+text 40 300 067 10             //Dont page 2
+text 40 320 067 11             //Dont page 3
+text 40 350 0399 13            //click x
+
+[DIALOG d_platinum_trader BUTTON]
+ONBUTTON=0
+RETURN 1
+ONBUTTON=1
+   SRC.TAG.PLATINUM=1
+   SRC.SYSMESSAGE "Thank you for agreeing to the contract."
+   SRC.SYSMESSAGE "We hope you enjoy using our services!"
+   SRC.SYSMESSAGE "Double click on the stone to start using it."
+RETURN 1
+
+[DIALOG d_platinum_trader TEXT]
+Terms of use contract                           //0
+By clicking the yes button you agree to
+the following conditions:
+- These ingots are only for player to
+  player transactions as the vendors will
+  not accept them.  (50k gold = 1 ingot.)       //5
+- If you trade in gold for an ingot, and
+  are overloaded, you *may* drop the ingot.
+  You are responsible for this.
+Do not page, as we have nothing to do
+with the GM's and are an independent            //10
+trading organization.  ;)
+Oblivion Platinum Trading, LLC
+(Click the X to cancel and not agree)           //13
+
+[EOF]

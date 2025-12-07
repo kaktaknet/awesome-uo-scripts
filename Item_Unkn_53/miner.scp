@@ -1,0 +1,78 @@
+[chardef c_demo_miner]
+id=c_man
+name=Miner
+
+on=@create
+flags=000000005
+Color=Colors_skin
+karma=0
+str={100 110}
+dex={80 100}
+int={80 100}
+wrestling={60.0 90.0}
+tactics={50.0 70.0}
+parrying={70.0 85.0}
+swordsmanship={50.0 60.0}
+macefighting={50.60.0}
+ITEMNEWBIE=i_pickaxe
+ITEMNEWBIE=i_bandana
+color=COLORS_ALL
+ITEM=i_pants_short
+color=COLORS_ALL
+
+on=@EnvironChange
+flags=000000005
+if (<eval <src.tag.npcminer>>==0)
+src.tag.npcminer=1
+src.newitem=i_anim_m1
+src.act.link=<src.uid>
+src.act.timer=2
+src.act.equip
+src.newitem=i_anim_m2
+src.act.link=<src.uid>
+src.act.timer=3
+src.act.equip
+endif
+
+on=@hit
+flags=000000005
+Return 1
+
+on=@gethit
+flags=000000005
+Return 1
+
+on=@damage 
+FLAGS=000000005 
+return 1
+
+[itemdef i_anim_m1]
+id=i_memory
+type=t_eq_script
+name=esclavo minando
+
+on=@create
+attr=attr_decay|attr_newbie|attr_invis
+color=0ba5
+
+on=@equip
+timer=2
+return 0
+
+on=@timer
+link.anim= 11
+timer 2
+return 1
+
+[itemdef i_anim_m2]
+id=i_memory
+type=t_eq_script
+name=esclavo minando
+
+on=@create
+attr=attr_decay|attr_newbie|attr_invis
+color=0ba5
+
+on=@equip
+timer=3
+return 0

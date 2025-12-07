@@ -1,0 +1,106 @@
+//Sphereserver 51a: 
+
+//NPC that Spawns another NPC: 
+//ok this one requires more then one item in Sphereitem2.scp one for the spawn one for the removal of the newnpc so you dont have millions of them wandering around LOL Here are the items first....... 
+
+//Sphereitem2.scp items: 
+
+[60c9] 
+//Written by Theol AKA Admin Dark 
+//needs to be placed at the start of the char's item list 
+ID=0e75 
+NAME=backpack 
+MORE=2 
+
+ONTRIGGER=TIMER 
+IF <MORE>>1 
+MORE=<MORE>+-1 
+TIMER=3 
+RETURN 1 
+ELSEIF <MORE>=1 
+MORE=<MORE>+-1 
+CONT.NEWNPC=0415f //you will have to change this to the spawn NPC 
+RETURN 1 
+ELSE 
+MORE=15 
+TIMER=2 
+RETURN 1 
+
+[60ca] 
+//Written by Theol AKA Admin Dark 
+//needs to be placed at the start of the char's item list 
+ID=0e75 
+NAME=backpack 
+
+ONTRIGGER=TIMER 
+CONT.REMOVE //removes the NPC 
+RETURN 1 
+
+
+//NPC section: 
+
+[415e] 
+ID=05f 
+NAME=Darkness 
+DEF=27 
+ATT=32-28 
+COLOR=08c4 
+
+RESOURCES=15ME 
+
+STR=600-700 
+DEX=120-150 
+INT=12-45 
+
+CAN=MT_WALK|MT_FLY|MT_EQUIP|MT_USEHANDS 
+
+KARMA=-6000 
+FAME=200 
+
+NPC=BRAIN_MONSTER 
+
+WRESTLING=87.0-93.3 
+TACTICS=78.0-83.3 
+PARRYING=50.6-65.0 
+
+ITEM=060c9 
+TIMER=2 
+ITEM=GOLD 
+AMOUNT=600-1100 
+ITEM=020e7,R101 
+
+CATEGORY=Custom 
+SUBSECTION=Monsters 
+DESCRIPTION=Darkness 
+
+[415f] 
+ID=0033 
+Name=darkness minion 
+DEF=47 
+ATT=23-38 
+COLOR=08c4 
+
+STR=200-450 
+DEX=120-150 
+INT=12-45 
+
+CAN=MT_WALK|MT_FLY|MT_EQUIP|MT_USEHANDS 
+
+KARMA=-6000 
+FAME=200 
+
+NPC=BRAIN_MONSTER 
+
+WRESTLING=87.0-93.3 
+TACTICS=78.0-83.3 
+PARRYING=50.6-65.0 
+
+ITEM=060c1 
+LAYER=21 
+TIMER=60 //they hang around for 60 seconds then get removed 
+ITEM=GOLD 
+AMOUNT=600-1100 
+
+CATEGORY=Custom 
+SUBSECTION=Monsters 
+DESCRIPTION=Darkness Minion(auto)

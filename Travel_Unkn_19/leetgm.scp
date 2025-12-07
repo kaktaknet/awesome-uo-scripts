@@ -1,0 +1,52 @@
+/// script made by Admin Laz the idea from flash Losin It. You can view it from http://personal.inet.fi/clan/ub3r_n3rds/losinit.htm
+/// add some of the script to spheredialog.scp under admin menu....
+/// first part add to spheredialog.scp
+
+[dialog d_admin_ch button]
+on=1
+invis
+ go <t.p>
+	newitem i_leet_timer
+	act.equip
+	newitem i_leet_gate
+	ACT.P <P>
+	act.nudgeup 2
+	
+on=2
+ t.summonto
+/// ect
+/// ect...
+/// find that part and copy this to there
+/// then the items :) add these anywhere u like in sphere scripts
+
+[ITEMDEF i_leet_gate]
+ID=i_moongate_blue_fx
+name=summon moongate
+type=t_light_lit
+ON=@CREATE
+color=colors_disco
+timer=3
+ON=@TIMER 
+remove
+
+[ITEMDEF i_leet_timer]
+id=i_handr_1
+name=poof timer
+type=t_eq_script
+ON=@CREATE
+ATTR=04002
+ON=@EQUIP
+TIMER=3
+ON=@TIMER
+cont.invis
+cont.say GM <cont.name> in ur service.
+remove
+return 1
+
+/// Colors :) u may add anycolors u like to this color set
+
+[DEFNAME HUES_DISCO]
+colors_disco	{048a 1 048b 1 048d 1 048e 1 0499 1 0502 1 0508 1 0512 1 0501 1 0504 1 049e 1 050b 1 054c 1 07f7 1 07fc 1 080e 1 050f 1 0483 1 0487 1}
+
+
+//// thx hope u like it :D 

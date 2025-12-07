@@ -1,0 +1,19 @@
+//Put EVENTS = +e_occupied_fix into the ON=@Login event for players (Spheretables.scp)
+
+[EVENTS e_occupied_fix]
+ON=@itempickup_pack
+IF ( ( ( ( ( ( ( ( ( (<SRC.ACTION> == skill_alchemy ) || (<SRC.ACTION> == skill_blacksmith ) || (<SRC.ACTION> == skill_bowcraft ) || (<SRC.ACTION> == skill_carpentry ) || (<SRC.ACTION> == skill_cooking ) || (<SRC.ACTION> == skill_cartography ) || (<SRC.ACTION> == skill_inscription ) || (<SRC.ACTION> == skill_magery ) || (<SRC.ACTION> == skill_tailoring ) || (<SRC.ACTION> == skill_tinkering) ) ) ) ) ) ) ) ) )
+ SRC.MESSAGE = "You may only do that when you're less occupied in your actions!"
+ SRC.ACTION = -1
+ SRC.CONSUME 1 i_skill_fix_timer_Alchemy
+ SRC.CONSUME 1 i_skill_fix_timer_Blacksmithing
+ SRC.CONSUME 1 i_skill_fix_timer_Bowcraft
+ SRC.CONSUME 1 i_skill_fix_timer_Carpentry
+ SRC.CONSUME 1 i_skill_fix_timer_Cooking
+ SRC.CONSUME 1 i_skill_fix_timer_Cartography
+ SRC.CONSUME 1 i_skill_fix_timer_Inscription
+ SRC.CONSUME 1 i_skill_fix_timer_Magery
+ SRC.CONSUME 1 i_skill_fix_timer_Tailoring
+ SRC.CONSUME 1 i_skill_fix_timer_Tinkering
+ RETURN 1
+ENDIF

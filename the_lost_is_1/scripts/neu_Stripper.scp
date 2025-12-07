@@ -1,0 +1,384 @@
+[CHARDEF C_STRIPPER]
+NAME=#NAMES_STRIPPER the Stripper
+ID=C_WOMAN
+
+DAM=1, 1
+//ARMOR=
+
+CAN=MT_WALK|MT_EQUIP|MT_FEMALE
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_stripper
+
+TSPEECH=jobstripper
+TSPEECH=spk_rehello
+
+ON=@Create
+COLOR=colors_hot_bod
+STR={86 90}
+DEX={91 100}
+INT={71 85}
+
+WRESTLING=(100.0)
+MAGICRESISTANCE=(100.0)
+TACTICS=(100.0)
+
+NPC=brain_Human
+
+KARMA=(100)
+FAME=(2000)
+
+ITEMNEWBIE=i_hair_buns
+COLOR=colors_red
+ITEMNEWBIE=i_show_timer
+TIMER=10
+ITEMNEWBIE=i_backpack
+
+ON=@NPCRestock
+ITEM=i_earrings_gold
+COLOR=colors_all
+ITEM=i_ring_gold
+COLOR=colors_all
+ITEM=i_bracelet_gold
+COLOR=colors_all
+ITEM=i_necklace_gold
+COLOR=colors_all
+ITEM=loot_strip_clothes
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=Stripper
+
+[SPEECH jobstripper]
+ON=*bravo*
+ON=*awesome*
+ON=*yeah*
+ON=*again*
+DORAND 3
+SAY Glad you like my show <SRC.NAME> Buy me a drink?
+SAY Thank You, Thank You, Next show in five minutes.
+SAY You Talk to much, How bout a drink for a workin girl?
+ENDDO
+ON=*gold*
+ON=*tip*
+ON=*money*
+DORAND 3
+SAY Tips are always welcome <SRC.NAME>
+EMOTE Eyes light up
+SAY You know damned well gold is the way to a womans heart <SRC.NAME>
+ENDDO
+
+ON=*love*
+SAY My heart is yours <src.sex Mister/Girlfriend>.
+
+ON=*show*
+ON=*undress*
+ON=*strip*
+ON=*dance*
+ANIM 01e
+DORAND 2
+SAY Next show will be shortly <SRC.SEX Mister/Lady> Till then how bout a drink?
+EMOTE smiling at <SRC.NAME>
+ENDDO
+ON=*drink*
+ON=*ale*
+ON=*wine*
+ON=*liquor*
+DORAND 3
+SAY I'd love a drink
+SAY Whatever your drinking is fine with me too <SRC.NAME>
+SAY ohhh Please <SRC.NAME> I'm so thirsty.
+ENDDO
+
+ON=*bitch*
+ON=*cunt*
+ON=*slut*
+ON=*dyke*
+ON=*pussy*
+ON=*fuck*
+DORAND 3
+SAY Such a thing to say in front of a lady. Your a real asshole aren't you?
+EMOTE Giving <SRC.NAME> the finger
+SAY Go get a life <SRC.SEX Dickhead/Bitch>
+ENDDO
+
+ON=*tits*
+ON=*boobs*
+ON=*ass*
+ON=*butt*
+DORAND 3
+SAY A little gold might get you somewhere honey.
+SAY How about something to drink first <SRC.NAME>
+EMOTE Shaking her booty
+ENDDO
+
+[ITEMDEF i_strip_timer]
+ID= i_memory
+TYPE= t_eq_script
+NAME=stripper
+ON=@CREATE
+TIMER=10
+MORE=19
+
+ON=@TIMER
+IF (<MORE>==19)
+CONT.FINDLAYER(21).EMPTY
+CONT.ANIM 020
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==18)
+CONT.ANIM 011
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==17)
+CONT.ANIM 01e
+CONT.EMOTE Smiling Seductivly
+CONT.FINDLAYER(6).remove //hat
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==16)
+CONT.ANIM 010
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==15)
+CONT.ANIM 0c
+CONT.FINDLAYER(7).remove //gloves
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==14)
+CONT.ANIM 01e
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==13)
+CONT.ANIM 0d
+CONT.FINDLAYER(20).remove //cape
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==12)
+CONT.ANIM 01e
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==11)
+CONT.ANIM 013
+CONT.FINDLAYER(23).remove //skirt
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==10)
+CONT.ANIM 01e
+CONT.EMOTE Blushing shyly
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==9)
+CONT.ANIM 0c
+CONT.FINDLAYER(3).remove //shoes
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==8)
+CONT.ANIM 01e
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>=7)
+CONT.ANIM 0e
+CONT.FINDLAYER(5).remove //shirt
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==6)
+CONT.FINDLAYER(11).remove
+CONT.NEWITEM=i_hair_long
+CONT.ACT.COLOR=colors_red
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.ANIM 01e
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==5)
+CONT.ANIM 0d
+CONT.FINDLAYER(17).remove //corset
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==4)
+CONT.ANIM 01e
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==3)
+CONT.ANIM 01f
+CONT.EMOTE Blowing Kisses
+CONT.FINDLAYER(4).remove //shorts
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==2)
+CONT.ANIM 01e
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==1)
+CONT.ANIM 011
+MORE=<MORE>+-1
+TIMER=2
+RETURN 1
+
+ELSEIF (<MORE>==0)
+CONT.ANIM 020
+CONT.NEWITEM=i_studded_gloves
+CONT.ACT.COLOR=colors_stripper
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.NEWITEM=i_hat_feather
+CONT.ACT.COLOR=colors_stripper
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.NEWITEM=i_shirt_fancy
+CONT.ACT.COLOR=colors_stripper
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.NEWITEM=i_shoes_plain
+CONT.ACT.COLOR=colors_stripper
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.NEWITEM=i_doublet
+CONT.ACT.COLOR=colors_stripper
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.NEWITEM=i_armor_female_shorts
+CONT.ACT.COLOR=colors_stripper
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.NEWITEM=i_skirt_long
+CONT.ACT.COLOR=colors_stripper
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.NEWITEM=i_cape
+CONT.ACT.COLOR=colors_stripper
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+CONT.FINDLAYER(11).remove
+CONT.NEWITEM=i_hair_buns
+CONT.ACT.COLOR=colors_red
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+REMOVE
+RETURN 1
+
+ENDIF
+
+
+[TEMPLATE loot_strip_clothes]
+
+CATEGORY=Item Templates
+SUBSECTION=clothes
+DESCRIPTION=Stripper
+ITEM=i_hat_feather
+COLOR=colors_stripper
+ITEM=i_shirt_fancy
+COLOR=colors_stripper
+ITEM=i_cape
+COLOR=colors_stripper
+ITEM=i_armor_female_shorts
+COLOR=colors_stripper
+ITEM=i_skirt_long
+COLOR=colors_stripper
+ITEM=i_doublet
+COLOR=colors_stripper
+ITEM=i_sandals
+COLOR=colors_stripper
+
+[DEFNAME HUES_STRIPPER]
+colors_stripper {{1 201}}
+
+[ITEMDEF i_show_timer]
+ID= i_memory
+TYPE= t_eq_script
+NAME=show timer
+ON=@CREATE
+TIMER=300
+ON=@TIMER
+IF !(<CONT.RESTEST 1 i_strip_timer>  
+CONT.NEWITEM=i_strip_timer
+CONT.ACT.CONT=<CONT.UID>
+CONT.ACT.EQUIP
+TIMER=300
+CONT.EMOTE Beginning to Dance
+RETURN 1
+ELSE
+TIMER=300
+RETURN 1
+ENDIF
+
+[EVENTS e_stripper]
+ON=@NPCSeeNewPlayer
+DORAND 3
+SAY Care for a little dance?
+SAY Buy a girl a drink?
+SAY Where you been hidin?
+ENDDO
+ON=@PersonalSpace
+DORAND 3
+SAY Whoa there <SRC.SEX Big fella/Little lady> No touchy touchy.
+SAY Hey not so close please. Ya ruffian.
+SAY Get off my foot ya big tub of lard!
+ENDDO
+
+[NAMES NAMES_STRIPPER]
+23
+Aurora
+Cherry
+Kitten
+Venus
+Silver
+Scarlet
+Sapphire
+Ivy
+Alexis
+Summer
+Pandora
+Kitty
+Flame
+Skye
+Harley
+Crystal
+Angel
+Amber
+Jasmine
+Phoenix
+Britney Spears // lol 
+Lolita
+Ivory
+[EOF] 

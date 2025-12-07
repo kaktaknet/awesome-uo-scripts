@@ -1,0 +1,72 @@
+[PLEVEL 1]
+ipfilter
+
+[FUNCTION ipfilter]
+dialog d_ipFilter
+
+[DIALOG d_ipFilter]
+50, 50
+noclose
+PAGE 0
+resizepic 0 0 3500 362 173
+
+text 82 11 1152 0
+text 48 41 995 1
+text 73 77 1152 2
+
+button 55 125 249 248 1 0 1
+button 250 125 243 241 1 0 2
+
+[DIALOG d_ipFilter TEXT]
+IP Filter by Silver Ghost
+Your IP: <ACCOUNT.LASTIP>    Filtered: <QVAL <isEvent.e_ipFilter> ? YES : NO>  
+Would you like to filter it?
+
+[DIALOG d_ipFilter BUTTON]
+on=1	//filter
+TAG.ipFilter = <ACCOUNT.LASTIP>
+if !( <isEvent.e_ipFilter> )
+	EVENTS +e_ipFilter
+endif
+SYSMESSAGE Your IP is now being filtered!
+
+on=2	//no filter
+TAG.ipFilter = 
+if ( <isEvent.e_ipFilter> )
+	EVENTS -e_ipFilter
+endif
+SYSMESSAGE Your IP is not being filtered!
+
+
+[EVENTS e_ipFilter]
+ON=@LOGIN
+SYSMESSAGE *** THIS IP IS FILTERED ***
+SYSMESSAGE *** THIS IP IS FILTERED ***
+SYSMESSAGE *** THIS IP IS FILTERED ***
+IF !STRCMPI( "<TAG.ipFilter>","<ACCOUNT.LASTIP>" )
+	SYSMESSAGE *** YOUR IP MATCHES THE FILTERED IP! ***
+	SYSMESSAGE *** YOU MAY LOGIN! ***
+else
+	SYSMESSAGE *** YOUR IP DOESN'T MATCH THE FILTERED IP! ***
+	SYSMESSAGE *** YOU MAY ONLY LOGIN FROM <TAG.ipFilter>! ***
+	bye
+endif
+
+[FUNCTION bye]
+NEWITEM i_disconnector 
+ACT.EQUIP 
+ACT.TIMER=0
+ACT.LINK=<UID>
+
+[ITEMDEF i_disconnector] 
+ID=i_memory 
+TYPE=t_eq_script 
+NAME=Disconnector 
+
+ON=@CREATE 
+ATTR=attr_invis|attr_static 
+
+ON=@TIMER 
+LINK.DISCONNECT 
+REMOVE
+RETURN 1

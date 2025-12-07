@@ -1,0 +1,353 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//Travel Stone v1.0
+
+[ITEMDEF i_travel_stone]
+DEFNAME=i_travel_stone
+NAME="Travel Stone"
+ID=i_grave_stone
+
+ON=@CREATE
+COLOR=00214
+
+On=@DCLICK
+IF (<DISTANCE> >= 3)
+	SRC.SYSMESSAGE=You can't reach that. 
+	RETURN 1
+ENDIF
+IF ( <SRC.FLAGS> & 000000002 )
+	SRC.RESURRECT
+	SRC.NEWITEM=i_invul_delay
+	SRC.ACT.EQUIP
+	RETURN 1
+ENDIF
+IF (<SRC.RESTEST i_tele_delay>)
+	SRC.CONSUME=i_tele_delay
+ENDIF
+SRC.DIALOG=d_map
+RETURN 1
+
+[DIALOG d_map]
+0,0
+page 1
+resizepic 50 50 083 550 400
+gumppic 55 60 5528
+gumppic 60 60 5609
+//Towns
+//Guarded
+button 165 210 2103 2104 1 0 1 //britain
+text 146 190 100 1
+button 221 170 2103 2104 1 0 2 //cove
+text 210 150 100 2
+button 157 405 2103 2104 1 0 3 //jhelom
+text 140 385 200 3
+button 330 258 2103 2104 1 0 4 //Magincia
+text 303 238 100 4
+button 240 105 2103 2104 1 0 5 //Minoc
+text 222 85 100 5
+button 390 167 2103 2104 1 0 6 //Moonglow
+text 355 147 100 6
+button 330 175 2103 2104 1 0 7 //Nujelm
+text 310 155 100 7
+button 330 290 2103 2104 1 0 8 //Occlo
+text 318 270 100 8
+button 278 370 2103 2104 1 0 9 //Serpent's Hold
+text 238 350 100 9
+button 95 255 2103 2104 1 0 10 //Skara Brae
+text 70 235 100 10
+button 195 310 2103 2104 1 0 11 //Trinsic
+text 172 290 100 11
+button 272 122 2103 2104 1 0 12 //Vesper
+text 252 102 100 12
+button 98 150 2103 2104 1 0 13 //Yew
+text 86 130 100 13
+//Unguarded
+button 255 255 2103 2104 1 0 14 //Buccarneer's Den
+text 215 225 32 14
+//Dungeons
+button 240 142 2103 2104 1 0 15 //Covetous
+text 215 122 32 15
+button 355 100 2103 2104 1 0 16 //Deceit
+text 337 80 32 16
+button 160 160 2103 2104 1 0 17 //Despise
+text 140 140 32 17
+button 140 305 2103 2104 1 0 18 //Destard
+text 120 285 32 18
+button 400 408 2103 2104 1 0 19 //Hythloth
+text 365 388 32 19
+button 90 207 2103 2104 1 0 20 //Shame
+text 70 187 32 20
+button 205 82 2103 2104 1 0 21 //Wrong
+text 185 67 32 21
+//Other Places
+text 470 65 5 22
+button 450 100 2103 2104 1 0 22 //Mt. Kendall
+text 465 94 100 23
+//Graveyards
+text 475 144 43 24
+button 450 175 2103 2104 1 0 23 //Britain Graveyard
+text 465 169 32 25
+button 450 200 2103 2104 1 0 24 //Cove Graveyard
+text 465 194 32 26
+button 450 225 2103 2104 1 0 25 //Jhelom Graveyard
+text 465 219 32 27
+button 450 250 2103 2104 1 0 26 //Moonglow Graveyard
+text 465 244 32 28
+button 450 275 2103 2104 1 0 27 //Vesper Graveyard
+text 465 269 32 29
+
+[DIALOG d_map TEXT]
+<VAR.BLANKLINE>
+Britain
+Cove
+Jhelom
+Magincia
+Minoc
+Moonglow
+Nujelm
+Occlo
+Serpent's Hold
+Skara Brae
+Trinsic
+Vesper
+Yew
+Buccarneer's Den
+Covetous
+Deceit
+Despise
+Destard
+Hythloth
+Shame
+Wrong
+Other Places
+Mt. Kendall
+Graveyards
+Britain Graveyard
+Cove Graveyard
+Jhelom Graveyard
+Moonglow Gy.
+Vesper Graveyard
+
+[DIALOG d_map BUTTON]
+ON=1
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=1423,1697
+SRC.ACT.EQUIP
+ON=2
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2274,1208
+SRC.ACT.EQUIP
+ON=3
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=1379,3756
+SRC.ACT.EQUIP
+ON=4
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=3731,2164,20
+SRC.ACT.EQUIP
+ON=5
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2504,563
+SRC.ACT.EQUIP
+ON=6
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=4471,1178
+SRC.ACT.EQUIP
+ON=7
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=3770,1314
+SRC.ACT.EQUIP
+ON=8
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=3691,2523
+SRC.ACT.EQUIP
+ON=9
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2892,3476,15
+SRC.ACT.EQUIP
+ON=10
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=595,2172
+SRC.ACT.EQUIP
+ON=11
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=1823,2822
+SRC.ACT.EQUIP
+ON=12
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2899,676
+SRC.ACT.EQUIP
+ON=13
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=564,987
+SRC.ACT.EQUIP
+ON=14
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2731,2194
+SRC.ACT.EQUIP
+ON=15
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2499,919
+SRC.ACT.EQUIP
+ON=16
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=4111,433,5
+SRC.ACT.EQUIP
+ON=17
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=1300,1081
+SRC.ACT.EQUIP
+ON=18
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=1176,2638
+SRC.ACT.EQUIP
+ON=19
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=4722,3823,1
+SRC.ACT.EQUIP
+ON=20
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=513,1563
+SRC.ACT.EQUIP
+ON=21
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2044,237,10
+SRC.ACT.EQUIP
+ON=22
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2559,503
+SRC.ACT.EQUIP
+ON=23
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=1384,1492,10
+SRC.ACT.EQUIP
+ON=24
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2442,1117,8
+SRC.ACT.EQUIP
+ON=25
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=1295,3719
+SRC.ACT.EQUIP
+ON=26
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=4546,1338,8
+SRC.ACT.EQUIP
+ON=27
+SRC.SYSMESSAGE=There is a 5 second delay before teleportation.
+SRC.SAY=5
+SRC.NEWITEM=i_tele_delay
+SRC.ACT.TAG.P=2786,868
+SRC.ACT.EQUIP
+
+[ITEMDEF i_tele_delay]
+DEFNAME=i_tele_delay
+ID=i_handr_1
+NAME=Teleportation Delay
+TYPE=T_EQ_SCRIPT
+LAYER=30
+WEIGHT=0
+
+ON=@CREATE
+ATTR=attr_invis
+MORE1=4
+
+ON=@EQUIP
+TIMER=1
+
+ON=@TIMER
+IF (<CONT>)
+	IF (<MORE1>)
+		CONT.MESSAGE=<EVAL <MORE1>>
+		MORE1=<MORE1> +- 1
+		TIMER=1
+		RETURN 1
+	ENDIF
+	CONT.GO=<TAG.P>
+ENDIF
+REMOVE
+RETURN 1
+
+[ITEMDEF i_invul_delay]
+NAME=Invulnerability Delay
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=attr_invis|attr_decay
+MORE1=4
+
+ON=@EQUIP
+SRC.INVUL=1
+TIMER=1
+	
+ON=@TIMER
+IF ( <CONT> )
+	IF ( <MORE1> )
+		MORE1=<MORE1>-1
+		TIMER=1
+		RETURN 1
+	ELSE
+		CONT.INVUL=0
+		REMOVE
+	ENDIF
+ENDIF
+RETURN 1
+
+[EOF]

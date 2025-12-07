@@ -1,0 +1,2239 @@
+//////////////////////////////////
+//// Book of the Shapeshifter ////
+//////////////////////////////////
+//Version 3.0.2
+
+//Scripted using EditPlus v2.11 with Swindler's SphereScript Syntax module installed
+//Built for & tested on Sphere 0.55i
+
+//Created by Warpe– Dragon
+//http://warped.ods.org
+//warped_dragon@hotmail.com
+//ICQ: 86428337
+//AIM: Warped Dragon
+//MSN: Use Email...
+//YIM: Not Telling
+
+//Gumps & Dialogs borrowed from
+//Avendore's Book of Shape Change
+//Used without permission
+//(Couldn't find him to ask)
+
+//This script contains some functions originaly written by others.
+//In most cases, they have been either rescripted or modified slightly
+//for use with this system. The functions and the original authers
+//can be found recorded in the version history.
+
+//Please don't remove this header//
+
+//INSTALLATION: Drop it into the script directory, Restart server
+
+//USEAGE: Set the Defname options below this header to suit your liking or needs
+//If you wish to use this with your own race system, some modification
+//will be needed (see Appendix III). It is already set up to run with Dubious Advocates's
+//race system. Just change the Race_Req option to 1.
+
+//There is an appendix attached to the end of this header, containing information
+//and explanations for some things in the script. Feel free to read it.
+
+//If you have problems, suggestions or questions about this script,
+//please don't hesitate to email me.
+
+//Have fun!
+
+
+//Version History:
+
+//v3.0.2
+//- Fixed a bug with f_shapeshift_skill_gain. Now it won't let you gain past 100.0
+//- Changed f_shapeshift_mount_check and f_shapeshift_mount to remove the need for a VAR.
+//- Changed f_shapeshift_aqquire_stats. Removed the need for a VAR and cut the amount of code
+
+//v3.0.1
+//- Decided to add another digit to the version numbers. Previously, I'd wait until I had a bunch of
+//  new features or bugfixes before releasing the new version, to justify a whole version number. Now
+//  I can release a new version as soon as I fix a bug :)
+//- Re-wrote the version history in the new format. Now they're easy to read :)
+//- Changed the e_race_shape_shifter event to e_shapeshifter, just for the hell of it.
+//- Fixed a bug in the f_shapeshift_skill_gain function. Now it displays the skill increase message
+//  correctly.
+
+//v3.0
+//- Fixed a bug involving initial tag creation.
+//- Fixed a small  bug with shapeshifters being able to copy other shapeshifters. Had it set up to my race
+//  system  rather then the more generalized book system.
+//- Added a defname option to set whether or not shifters can copy other shifters.
+//- Changed the TYPE of the book from t_eq_script to t_script, it wasn't equippable anyways.
+//- Changed the way the shapeshifter skill is stored, used, and increased. It's now more like a
+//  "real" skill. 
+//- Added a defname to control skill increase.
+//- Included a bunch of Taran's Fixed Point Math functions in this script. Had to use them for the
+//  percentage calculations on the skill. All that work just to avoid some IF blocks. The ones needed
+//  by this script are included, no need to go download and install his library. If you 
+//  already have his library installed, it shouldn't cause any problems. One set of functions will simply
+//  overwrite the other set, the end result is the functions are there.
+//- Updated the header, stating that a few functions written by others have been included in this script.
+//- Fixed a bug with the e_race_shape_shifter event, now it removes hair and items you gained through a shift.
+//- I'm  beginning to think I should have used a three-digit version system, it's climbing fast :)
+
+//v2.9
+//- Used more functions to cut the amount of code. Figured out how to call a function from ON=@CREATE :)
+//- Fixed a bug with f_shapeshift_aqquire_stats. 
+//- Added a defname for the book's ID.
+//- Finished the f_shapeshift_mount function. If you shapeshift into a mount form, you will move at a
+//  mount's speed. Found a script by Moe on the sphereserver forums, allowing non-human body's to run 
+//  at horse speeds. Modified it to finish the f_shapeshift_mount function (Finally I started that thing
+//  in v0.8!).
+//- Found a minor bug in the clothing copy system. Realized it was a major bug, and that it was in the
+//  actual shape copy system as well. Fixed that in a jiffy.
+//- Read Taran's tutorial on lag and re-wrote parts of the system to reduce possible lag.
+
+//v2.8
+//- Added a function to set a players shapeshifting skill level. See Appendix I for details.
+//- Rescripted the button code for increased efficiency. Seperated the diffrent parts of the script 
+//  with comment headers.
+
+//v2.7
+//- Fixed a bug reported by Admin Trinity. 
+//- Changed the way the shifting is done so a GM can shift even if he doesn't pass the checks.
+
+//v2.6
+//- Not one day after I released 2.5 and sent it off to some people who were waiting, Acratia pointed out
+//  to me on the Sphereserver forums that I could use TRY for assigning some numbers rather then a zillion
+//  IF blocks... So I changed it, and released a new, more condensed version. 8600+ lines down to just over
+//  5000. Not a bad reduction :) 
+//- Fixed another bug with the hair change system reported by Shoghul.
+
+//v2.5
+//- Fixed a bug reported by Shoghul involving hair. Apparently I coded it to fit my race system where
+//  shapeshifters don't have hair and are not allowed hair unless shapeshifted :)
+//- Added option for changing to clothing of target. See Appendix V for details on this. 
+//- Reduced the amount of VAR's used with the hair change system (had plenty of practice while making
+//  the clothing change system)
+
+//v2.4
+//- Added options to have a shapeshift timed, rather then lasting as long as the player wants. Time can
+//  either be set in the options or determined using the Shapeshifter skill. The maximium time acheivable
+//  using the skill is 10 minutes.
+//- Added option to prevent shapeshifting directly from one form to another
+//  without reverting to original form.
+//- Fixed a bug in the basic shifting code.
+
+//v2.3
+//- Added options to disable the aqquiring of pets and summoned npc's.
+//- Changed the sound function to use defnames for easy customization and added two new sounds for a 
+//  shifting failure and lack of mana.
+//- Fixed a huge error with the Race Requirment System. 
+//- Changed all MESSAGE and SYSMESSAGE to colored SYSMESSAGEs (with the exception of the GM functions in
+//  Appendix I), in order to set the book apart from other scripts, and make information displayed this way
+//  more noticeable. Some players just don't seem to see the gray text in the corner :P Color is configurable
+// via defname options.
+//- Added defname options for displaying Fame or Karma gained/lost while in a shift. The message is displayed
+//  at the end of the shift when it gets calculated.
+
+//v2.2
+//- Organized all the loose info in the header into an appendix. Yes I know an appendix is supposed to go at
+//  the end of the book/script/etc, but I put it at the end of the header for easier access. Deal with it.
+//- Finished the new system for aqquiring forms, see Appendix IV for details on how to use it.
+
+//v2.1
+//- Updated the defnames, now there's one for the book's color. 
+//- Added more functionality to the health/mana/stam change systems, now theres an option for leaving
+//  health/mana/stam unchanged. See defname comments for more details.
+
+//v2.0
+//- Added ability for gm's to set tags on npc's and other players so shapeshifters cannot aqquire them. 
+//  Useful for quest monsters and such. Type .ssb_noaqquire and target the npc/player to prevent him from
+//  being aqquired.
+//- Fixed a bug with the original form button, now you don't lose your fame/karma when pressing it while 
+//  already in original form.
+//- Added a a function to allow GM's to force a shifter to return to its original form.
+//- Added options at the request of Ceno for use on PK shards, allows you to set a standerd start value 
+//  for stats, overriding the skill based system.
+//- NOTE: This version contains incomplete code for use in a new aqquire form system. It has been disabled
+//  and will not affect the books operation... Provided you dont mess with the wrong settings and screw
+//  it up :)
+
+//v1.9
+//- Fixed yet another bug with the hair system. Now, it works. *crosses fingers*. 
+//- Added support for the benificial spells (Bless, Strength, Cunning, Agility) to the spellcurse function.
+//  Yes I know they arn't curses, but theres a stat gain bug there all the same.
+//- Fixed a bug with the fame/karma system, now you can't gain above 9999 fame or karma using it.
+//- Fixed a bug inolving stat loss while shifitng with cursed clothing/armor equipped. 
+//- Added a section to the header describing the functions/features that currently are untested or not 
+//  working. The idea being, that someone will test/fix them and send me the information ;P Full credit will
+//  be given, of course. 
+
+//v1.8
+//- Fixed a bug with the hair copy system. In doing so, found a way to reduce the amount of code on quite a
+//  few functions. Cut the code by over 500 lines!
+//- Added more contact info at the top of this header.
+
+//v1.7
+//- Added option to disable all shapeshifting. Useful for when I'm working on the book and someone tries
+//  shfiting and it screws up on them. 
+//- Added option to let shifters copy the hair of their targets, rather then remaining bald.
+
+//v1.6
+//- Added check to see if users have the race tag set, if not it sets it to 1. Avoids console errors when 
+//  GM's use the book but havnt been through a race stone.
+
+//v1.5
+//- Changed the Aqquire Form system so trying to aqquire yourself will reset that slot to empty. Edited 
+//  f_shapeshift_aqquire_stats function accordingly.
+
+//v1.4
+//- Fixed a bug with the mana requirment system. Now it works, you can't shapeshift if you don't have the 
+//  mana for it.
+
+//v1.3
+//- Changed the Karma-Fame Gain/Loss system. Now uses VAR's instead of TAG's, thus doing away with the 
+//  storage item.
+//- Moved some code from ON=@DCLICK to a function, simply to make it easier to read.
+//- Moved the color sysmessage function from another script into this one so all refrenced functions are
+//  included.
+
+//v1.2
+//- Fixed a bug where players got stuck in the shifted body. Couldn't find a reason for it happening, so
+//  I put in some backup code to take care of it.
+
+//v1.1
+//- Added function to dismount players from a mount before every shift. Fixes a bug with the mounted flags.
+//- Fixed bug with the Require Mana system, now you can't shift if you don't have enough, unless its to
+//  original form. 
+//- Reorganized some functions in an attempt decrease the amount of code.
+//- Added a colored sysmessage function to notify of skill gain. The function is borrowed from Taran's 
+//  Scripting Compendium
+//- Fixed bug with the fame/karma system.
+
+//v1.0
+//- Added options to require mana for every shift, and an option for how much.
+
+//v0.9
+//- Added functions to compensate for curse/weaken/clumsiness/feeblemind/drunkeness when shifting. The 
+//  possible stat exploits should be removed
+
+//v0.8
+//- Various bug fixes and code cleanups. Should now display almost no errors on the console.
+//- Added a few new functions, one to unequip all items before a change (and thus avoid a possable stat
+//  loss bug), and one to get players to move fast while shapeshifted into mounts. (does not work yet).
+
+//v0.7
+//- Added a DEFNAME from D.A.s Race System. If this book is used stand alone without his race system, It
+//  causes an error where nothing can be aqquired. This fixes that. May cause an error if his system IS
+//  installed, if so comment the line "RACE_Shapeshifter 20" out. it's under the rest of the defnames.
+
+//v0.6
+//- Added code to prevent the annoying "Undefined Syboml" errors when first using the custem shapeshifter
+//  skill. Errors happened because players didn't have the tags defined. Now it checks when you open the book,
+//  adds them if you don't.
+
+//v0.5
+//- Added checks to ensure all aqquired stats are at least 10. If they are below 10, Shapeshifters die when
+//  shapeshifting into them, and cannot be ressed.
+
+//v0.4
+//- Added ability to keep any Karma/Fame gains (or losses) aqquired while shapechanged. In previous versions
+//  any gains/losses were discarded when the players origianl karma/fame was restored at the end of the
+//  shapeshift.
+
+//v0.3
+//- Added Limit options to prevent players from using forms with insanly high stats.
+//- Decided to start keeping track of versions with a version history. Previous three entries were written
+//  from memory :)
+
+//v0.2
+//- Fixed a bug with the Dex and Int Full Health options.
+//- Fixed bug with the aqquire form system.
+
+//v0.1
+//- First completed and (supposedly) bug free release. Sumbmitted to Scirpt Sharing for distribution.
+
+//v0.0
+//- I got the idea, and started work on this script. 
+
+
+//*************************
+//****APPENDIX CONTENTS****
+//*************************
+//Appendix I:	Gamemaster Functions
+//Appendix II:	Untested/Non-working Features
+//Appendix III:	Converting to your Race System
+//Appendix IV:	The Form Aqquireing System
+//Appendix V:	The Aqquire/Change Clothing System
+
+
+//*************************
+//**APPENDIX I: Functions**
+//*************************
+
+//.ssb_unshift		//This will force an uncooperative player back into his/her original form. Please 
+			//note, this may be buggier then the Original Form button in the book itself. It pays
+			//for the player to cooperate.
+
+//.ssb_noaqquire	//Makes the targeted NPC/Player unaqquirable by a shapeshifter.
+
+//.ssb_yesaqquire	//Makes an NPC/Player targeted with ssb_noaqquire, aqquireable again.
+
+//.ssb_setaqquire #	//Sets the skill needed for a shapeshifter to aqquire this NPC
+			//# must be a whole number between 1-1000, same as for any other skill
+			//SSB_opt_Aqquire_Sys must be set to 1 for this to be useful
+
+//.ssb_setskill #	//Sets the shapeshifting skill of the targeted player
+			//# must be a whole number between 1-1000, same as for any other skill
+
+
+//**********************************
+//**APPENDIX II: Untested Features**
+//**********************************
+
+//FEATURE: Spellcurse system
+//STATUS: Untested
+//DESCRIPTION: Designed to prevent stat loss/gain bugs, it records any
+//curse/weaken/clumsy/feeblemind/drunkness/bless/strength/cunning/agility information before a shift, 
+//removes the effects, then re-adds it to the player after the shift.
+
+
+//************************************************
+//**APPENDIX III: Converting to your Race System**
+//************************************************
+
+//To use this book with a race system other then D.A's, there are a few things you may have to change/do.
+
+//In most cases, simply add the tag TAG.Race=014 to all the shapeshifters.
+
+//If your race system already uses TAG.Race to store race ID Numbers, simply change the defname 
+//RACE_Shapeshifter to the number for shapeshifters.
+
+//Set SSB_opt_Race_Req to 1, and the book should now work with your race system.
+
+
+//*******************************************
+//**Appendix IV: The Form Aqquireing System**
+//*******************************************
+
+//The book has two ways of letting the player aqquire new forms, and it can be toggled with
+//the SSB_opt_Aqquire_Sys. If set to 0, only the most basic checks are performed when the
+//player attempts to aqquire something. If set to 1, the book will use a more advanced system
+//defined below, in addition to the basic checks. Please note that this system will take some
+//effort on your part to install.
+
+//Basic (0): The book checks that the target being aqquired is not a GM, not another shapeshifter, 
+//that line of sight exists between the player and the target, and that the NoUse tag in't on.
+//This tag is toggled via a function and can be used to let Staff make some creatures
+//unaqquriable for quests and such.
+
+//Advanced (1): This option has the book compare the players Shapeshifting skill with a number contained
+//in a tag on the target. If the players skill is higher then the number, then it lets the player aqquire
+//the target. Now, for this to work, you will need to set the tags on ALL of your NPC's. Every last one.
+//Now, you may ask, how do I do this? Under each [CHARDEF], there should be an ON=@CREATE somewhere.
+//If there isn't, add one. Under this, add the following line(without the //):
+
+//TAG.SSB_Aqquire_Req=x
+
+//Of course, you don't really use 'x'. You replace it with a number (1-1000) of your choosing, and that 
+//will be the skill level required for the player to aqquire that NPC. Or, if you look in the defnames 
+//in this script, you'll find ten defnames ranging from 10 to 100. You can replace the 'x' with one of
+//the defnames to have that number set for the skill req. Using the defnames is the recomended way of 
+//doing it, since it's easier to classify all your NPC's into ten simple, easy to remember defnames, 
+//rather then assign each one its own number.
+
+//Once you've added that tag to all your NPC's, set SSB_opt_Aqquire_Sys to 1 and your good to go!
+
+//If an NPC dosen't have the tag, and the player attempts to aqquire it, the book will default to
+//the Basic Checks only, as if SSB_opt_Aqquire_Sys were set to 0
+
+
+//**************************************************
+//**Appendix V: The Aqquire/Change Clothing System**
+//**************************************************
+
+//This system is based on the Hair/Beard changing system. However, it is signifigantly larger. How much?
+//This script was just over 3000 lines before I added it. It's now over 8600 lines long. Yikes eh?
+//Most of the size is due to the amount of new tags that are refrenced. I've done my damndest, using every
+//shortcut and trick I know, to reduce the memory load this system will cause. So don't freak out about
+//the size :) Now, on to how it works...
+
+//v2.6 Edit: Thanks to Acratia, I was able to reduce it to 5000 lines.
+
+//v2.9 Edit: Thanks to Taran's tutorial on reducing lag, I've re-arranged some code to help
+//reduce possible lag even more.
+
+//To use this system, set SSB_opt_Clothing_Change to either 1, 2, or 3.
+
+//Setting it to 1 will cause the script to only copy items with the type t_clothing that are equipped on
+//the target.
+
+//Setting it to 2 will copy items with type t_clothing or t_armor/t_shield
+
+//Setting it to 3, will copy Clothing, Armor, and Weapons.
+
+//I wrote this section of the script to be very versitile as far as custom items go. Rather then just go
+//by layers, it goes by item types as well. This means that if you have a custom item that is a peice of
+//clothing (t_clothing), but it gets equipped on the layer normelly reserved for, say, earrings, the system
+//will still see it as clothing and it will be copied. Ditto for custom weapons and armor's
+
+//Now, if your concerned about players using this as a cheap way to get magic weapons and armor, worry not.
+//I got that covered as well. The system won't record MoreY, so any weapons of ruin and such will be copied,
+//but the Ruin won't be. It will be a normel weapon. Now, if say you have a custom sword that does some cool
+//effects, that will not be copied either. The system takes the ID, not the BASEID, so if your custom weapon
+//is based on a viking sword recolored, thats all the shifter will get. A re-colored viking sword. Ditto for
+//armor and shield. And even clothing.
+
+//And finally, to keep those unscrupulas shifters from using this to obtain free stuff, the system will record
+//the UID of all items it creates for the shifter. At the end of the shift, it deletes those UID's, whether
+//they are equipped on the shifter, in his bank, or halfway accross the map. It will get deleted. And as an
+//added precuation, all items created will be ATTR 010, unmoveable except by GM. The shifter won't be able to
+//unequip it. And if he somehow does, it ain't leaving his pack.
+
+//***********************************
+//****Begin Shapeshifter Defnames****
+//***********************************
+
+[DEFNAME Shapeshifter_Book_Options]
+//0 = off, 1 = on
+
+//The following defnames configure how the book works
+SSB_opt_Disable_Book	0	//Disables use of the book while its being worked on
+SSB_opt_Change_Fame	0	//Sets Fame change on/off for a shapeshift
+SSB_opt_Change_Name	0	//Sets Name change on/off for a shapeshift
+SSB_opt_Change_Karma	0	//Sets Karma change on/off for a shapeshift
+SSB_opt_Change_Title	0	//Sets Title change on/off for a shapeshift
+SSB_opt_Change_Color	0	//Sets Color change on/off for a shapeshift
+SSB_opt_Change_Str	0	//Sets Stat Changes on/off for a shapeshift
+SSB_opt_Change_Dex	0	//Sets Stat Changes on/off for a shapeshift
+SSB_opt_Change_Int	0	//Sets Stat Changes on/off for a shapeshift
+SSB_opt_Full_Hitpoints	0	//Sets whether or not you get full health when you shapeshift. If off, health determined by Custom Shapeshifter Skill. No effect if STR Change is off
+SSB_opt_Full_Stamina	0	//Sets whether or not you get full stamina when you shapeshift. If off, stamina determined by Custom Shapeshifter Skill. No Effect if DEX Change is off
+SSB_opt_Full_Mana	0	//Sets whether or not you get full mana when you shapeshift. If off, mana determined by Custom Shapeshifter Skill. No Effect is INT Change is off
+SSB_opt_Start_Hitpoints	0	//Forces a shifter to start with a set amount of health on a shift. Setting above 0 will override SSB_opt_Full_Health. Setting to -1 will leave health unchanged
+SSB_opt_Start_Stamina	0	//Forces a shifter to start with a set amount of stamina on a shift. Setting above 0 will override SSB_opt_Full_Stamina. Setting to -1 will leave stamina unchanged
+SSB_opt_Start_Mana	0	//Forces a shifter to start with a set amount of mana on a shift. Setting above 0 will override SSB_opt_Full_Mana. Setting to -1 will leave mana unchanged
+SSB_opt_Race_Req	0	//Sets whether or not only D.A.'s shapeshifter race can use
+SSB_opt_Mana_Req	0	//Sets whether or not it takes mana to shift
+SSB_opt_Mana_Amount	10	//Sets the amount of mana needed to shift
+SSB_opt_Sound		0	//Sets whether or not to use sound effects
+SSB_opt_Limit		0	//Sets whether or not the stats are limited when shifting. Use to prevent complete newbies from getting a form with 4000 Str
+SSB_opt_Limit_Max	200	//Sets the max number that any stat can be. No effect if SSB_Limit is 0
+SSB_opt_Karma_Gain	0	//Sets whether or not you can keep any Karma gained while shapeshifted. No effect if Karma change is off
+SSB_opt_Fame_Gain	0	//Sets whether or not you can keep any Fame gained while shapeshifted. No effect if Fame change is off
+SSB_opt_Hair_Change	0	//Sets whether or not the shifter copys the hair & beard of his target
+SSB_opt_Clothing_Change	0	//Sets whether or not the shifter copys the clothing of the target. See Appendix V for details
+SSB_opt_Aqquire_Sys	0	//Sets how the book handles form aqquring. See Appendix IV for details on how to set it up correctly.
+SSB_opt_Aqquire_Pets	0	//Sets whether or not players can aqquire NPC's that are pets
+SSB_opt_Aqquire_Summon	0	//Sets whether or not Players can aqquire NPC's that are summoned
+SSB_opt_Aqquire_Shifter	0	//Sets whether or not Shapeshifters can aqquire other shapeshifters
+SSB_opt_Fame_Msg	0	//Sets whether or not Fame Gain/Loss messages are displayed when a players fame changes while in a shift. Note, Message is displayed at the end of the shift.
+SSB_opt_Karma_Msg	0	//Sets whether or not Karma Gain/Loss messages are displayed when a players karma changes while in a shift. Note, Message is displayed at the end of the shift.
+SSB_opt_Timed_Shift	0	//Sets whether or not the shapeshift has a time limit before reverting to original form
+SSB_opt_Time_Limit	0	//Sets the amount of time (in seconds) a shift lasts. If 0, time is determined using shifting skill. No effect if SSB_opt_Timed_Shift is 0.
+SSB_opt_Shift_Between	0	//Sets whether or not a player can shift between forms, or if he must revert to original form first.
+SSB_opt_Skill_Inc	5	//Sets how fast the shapershifter skill increases. Higher numbers mean faster gain, lower numbers equal slower gain.
+
+//The following defnames are used for the form aqquiring system.
+SSB_Tag_Easy		100
+SSB_Tag_Above_Easy	200
+SSB_Tag_Below_Average	300
+SSB_Tag_Average		400
+SSB_Tag_Above_Average	500
+SSB_Tag_Hard		600
+SSB_Tag_Beyond_Hard	700
+SSB_Tag_Difficult	800
+SSB_Tag_Deity		900
+SSB_Tag_Godlike		1000
+
+//Other Important Defnames
+RACE_Shapeshifter	20	//Don't edit this. Here for compatability on shards without DA's race system
+SSB_Book_ID		0efa	//The ID of the book
+SSB_Book_Color		00	//The color of the book
+SSB_Msg_Color		0482	//The color of all colored sysmessages
+SSB_Skill_Gain_Color	057	//The color of Shifter skillgain messages. 057 is the clients default color for skillgain messages
+SSB_Sound_Shift		527	//Sound used when shifting to another form
+SSB_Sound_UnShift	489	//Sound used when shifting back to original form
+SSB_Sound_Fail		484	//Sound used when Shifting fails
+SSB_Sound_ManaFail	504	//Sound used when mana is insufficant
+
+//*********************************
+//****End Shapeshifter Defnames****
+//*********************************
+//****Begin Shapeshifter Events****
+//*********************************
+
+[EVENTS e_shapeshifter]
+ON=@Death
+IF ((<SRC.HITS> < 1) && (<EVAL (<SRC.TAG.Shapeshifter_Polymorph>)> == 1))
+	SRC.TAG.Shapeshifter_Polymorph=-1
+	SRC.NAME=<SRC.TAG.NAMEO>
+	SRC.BODY=<SRC.OBODY>
+	SRC.STR=<SRC.TAG.STRO>
+	SRC.DEX=<SRC.TAG.DEXO>
+	SRC.INT=<SRC.TAG.INTO>
+	SRC.TITLE=<SRC.TAG.TITLEO>
+	SRC.COLOR=<SRC.OSKIN>
+	SRC.KARMA=<SRC.TAG.KARMAO>
+	SRC.FAME=<SRC.TAG.FAMEO>
+	f_shapeshift_haircopy 0
+	f_shapeshift_clothingcopy 0
+	RETURN 0
+
+ENDIF
+
+//*************************************
+//*******End Shapeshifter Events*******
+//*************************************
+//*****Begin Shapeshifter Book Item****
+//*************************************
+
+[ITEMDEF i_shapeshifter_book]
+ID=SSB_Book_ID
+TYPE=t_script
+WEIGHT=1
+VALUE=500000
+
+CATEGORY=Warped
+SUBSECTION=Race Items
+DESCRIPTION=Book of the Shapeshifter
+
+ON=@CREATE
+NAME=Book of the Shapeshifter
+COLOR=SSB_Book_Color
+ATTR=attr_newbie
+TIMERD=1
+
+ON=@DCLICK
+f_shapeshift_checktags
+
+IF ((<EVAL SSB_opt_disable_book> == 1) && (!<SRC.ISGM>))
+	VAR.SSB_SYS_Color=SSB_Msg_Color
+	SRC.f_shapeshift_sysmessageua Shapeshifting is currently Disabled. The Staff are making changes to it.
+	RETURN 1
+
+ELSEIF (<EVAL (<SRC.TAG.SSB_Timer_Up>)> == 1)
+	f_shapeshift_main_original_shape
+	f_shapeshift_check_body
+	RETURN 1
+
+ELSE
+
+	IF (<EVAL SSB_opt_Race_Req> == 1)
+		IF ((<SRC.TAG.Race> == RACE_Shapeshifter) || (<SRC.GM> == 1))
+			SRC.EVENTS +e_shapeshifter
+			SRC.SYSMESSAGE The Book Opens!
+
+			IF (<EVAL (<SRC.TAG.Shapeshifter_Polymorph>)> == -1)
+				f_shapeshift_set_initial_tags
+
+			ENDIF
+
+			DIALOG d_shape_change 
+			RETURN 1
+
+		ELSE
+			SRC.SAY *<SRC.NAME> tried to read the Book of Shapeshifting!*
+			SRC.DAMAGE={4 20}
+			SRC.Anim 20
+			SRC.Bark 3
+			RETURN 1
+
+		ENDIF 
+
+	ELSE
+		SRC.EVENTS +e_shapeshifter
+		SRC.SYSMESSAGE The Book Opens!
+
+		IF (<EVAL (<SRC.TAG.Shapeshifter_Polymorph>)> == -1)
+			f_shapeshift_set_initial_tags
+
+		ENDIF
+
+		DIALOG d_shape_change
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+ON=@TARGON_CHAR
+VAR.SSB_No_Go=0
+
+IF (0<SRC.TARG.TAG.SSB_NoUse> == 01)
+	VAR.SSB_No_Go=1
+
+ELSEIF (<SRC.TARG.CanSeeLos> != 1)
+	VAR.SSB_No_Go=1
+
+ELSEIF (<EVAL (<SRC.TARG.GM>)> == 1)
+	VAR.SSB_No_Go=1
+
+ELSEIF (0<SRC.TARG.TAG.Shapeshifter_Polymorph> != 0)
+	IF (<SRC.UID> != <SRC.TARG.UID>)
+		VAR.SSB_No_Go=1
+
+	ENDIF
+
+ENDIF
+
+IF (<EVAL SSB_opt_Aqquire_Sys> == 1)
+	IF (<SRC.TARG.TAG.SSB_Aqquire_Req>)
+		IF !(<EVAL (<SRC.TAG.Skill_Shapeshifting>)> >= <EVAL (<SRC.TARG.TAG.SSB_Aqquire_Req>)>)
+			VAR.SSB_No_Go=1
+
+		ENDIF
+	ENDIF
+ENDIF
+
+IF ((<EVAL SSB_opt_Aqquire_Pets> == 0) && (<SRC.MEMORYFINDTYPE.MEMORY_IPET.UID>))
+	VAR.SSB_No_Go=1
+
+ELSEIF (<EVAL SSB_opt_Aqquire_Summon> == 0) && (<SRC.TARG.FLAGS>&Statf_Conjured)
+	VAR.SSB_No_Go=1
+
+ENDIF
+
+IF (<EVAL (<VAR.SSB_No_Go>)> == 1)
+	f_shapeshift_sound 4
+	VAR.SSB_SYS_Color=SSB_Msg_Color
+
+	IF (<SRC.TARG.CanSeeLos> != 1)
+		SRC.f_shapeshift_sysmessageua You need to have Line of Sight!
+		RETURN 1
+
+	ELSEIF (<SRC.TARG.GM> == 1)
+		SRC.f_shapeshift_sysmessageua You cannot aqquire Gamemasters!
+		RETURN 1
+
+	ELSEIF (<EVAL SSB_opt_Aqquire_Shifter> == 0)
+		IF (0<SRC.TARG.TAG.Shapeshifter_Polymorph> != 0)
+			SRC.f_shapeshift_sysmessageua You cannot aqquire other Shapeshifters!
+			RETURN 1
+
+		ENDIF
+		
+	ELSEIF (0<SRC.TARG.TAG.SSB_NoUse> == 01)
+		SRC.f_shapeshift_sysmessageua A GM has ordained that to be unaqquirable!
+		RETURN 1
+
+	ELSEIF (<EVAL SSB_opt_Aqquire_Sys> == 1)
+		SRC.f_shapeshift_sysmessageua You lack sufficiant skill!
+		RETURN 1
+
+	ELSEIF ((<EVAL SSB_opt_Aqquire_Pets> == 0) && (<SRC.MEMORYFINDTYPE.MEMORY_IPET.UID>))
+		SRC.f_shapeshift_sysmessageua You cannot aqquire Pets!
+		RETURN 1
+
+	ELSEIF (<EVAL SSB_opt_Aqquire_Summon> == 0) && (<SRC.TARG.FLAGS>&Statf_Conjured)
+		SRC.f_shapeshift_sysmessageua You cannot aqquire summoned creatures!
+		RETURN 1
+
+	ENDIF
+
+ELSE
+	IF (<SRC.UID> == <SRC.TARG.UID>)
+		f_shapeshift_create_tags <MORE2>
+		DIALOG d_shape_change
+		RETURN 1
+
+	ELSE
+
+		TRY TAG.NAME<EVAL (<MORE2>)> = <SRC.TARG.NAME>
+		TRY TAG.SHAPE<EVAL (<MORE2>)> = <SRC.TARG.DISPID>
+		TRY TAG.STR<EVAL (<MORE2>)> = <SRC.TARG.STR>
+		TRY TAG.DEX<EVAL (<MORE2>)> = <SRC.TARG.DEX>
+		TRY TAG.INT<EVAL (<MORE2>)> = <SRC.TARG.INT>
+		TRY TAG.COLOR<EVAL (<MORE2>)> = <SRC.TARG.COLOR>
+		TRY TAG.TITLE<EVAL (<MORE2>)> = <SRC.TARG.TITLE>
+		TRY TAG.KARMA<EVAL (<MORE2>)> = <SRC.TARG.KARMA>
+		TRY TAG.FAME<EVAL (<MORE2>)> = <SRC.TARG.FAME>
+		f_shapeshift_aqquire_hair <MORE2>
+		f_shapeshift_aqquire_clothing <MORE2>
+		f_shapeshift_aqquire_stats STR<MORE2>
+		f_shapeshift_aqquire_stats DEX<MORE2>
+		f_shapeshift_aqquire_stats INT<MORE2>
+		DIALOG d_shape_change
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE You cannot set that.
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE You cannot set that.
+RETURN 1
+
+ON=@TIMER
+LINK=<UID>
+f_shapeshift_create_tags 1
+f_shapeshift_create_tags 2
+f_shapeshift_create_tags 3
+f_shapeshift_create_tags 4
+f_shapeshift_create_tags 5
+f_shapeshift_create_tags 6
+f_shapeshift_create_tags 7
+f_shapeshift_create_tags 8
+f_shapeshift_create_tags 9
+f_shapeshift_create_tags 10
+f_shapeshift_create_tags 11
+f_shapeshift_create_tags 12
+f_shapeshift_create_tags 13
+f_shapeshift_create_tags 14
+f_shapeshift_create_tags 15
+f_shapeshift_create_tags 16
+TIMER=-1
+RETURN 1
+
+
+[DIALOG d_shape_change]
+0, 0
+page 0
+gumppic 100 10 500
+text 130 20 137 0
+button 129 45 4005 4007 1 0 10
+button 159 45 4002 4004 1 0 11
+text 190 45 0 1
+button 129 65 4005 4007 1 0 20
+button 159 65 4002 4004 1 0 21
+text 190 65 0 2
+button 129 85 4005 4007 1 0 30
+button 159 85 4002 4004 1 0 31
+text 190 85 0 3
+button 129 105 4005 4007 1 0 40
+button 159 105 4002 4004 1 0 41
+text 190 105 0 4
+button 129 125 4005 4007 1 0 50
+button 159 125 4002 4004 1 0 51
+text 190 125 0 5
+button 129 145 4005 4007 1 0 60
+button 159 145 4002 4004 1 0 61
+text 190 145 0 6
+button 129 165 4005 4007 1 0 70
+button 159 165 4002 4004 1 0 71
+text 190 165 0 7
+button 129 185 4005 4007 1 0 80
+button 159 185 4002 4004 1 0 81
+text 190 185 0 8
+button 330 20 4002 4004 1 0 82
+text 385 20 0 9
+button 325 45 4005 4007 1 0 90
+button 355 45 4002 4004 1 0 91
+text 390 45 0 10
+button 325 65 4005 4007 1 0 100
+button 355 65 4002 4004 1 0 101
+text 390 65 0 11
+button 325 85 4005 4007 1 0 110
+button 355 85 4002 4004 1 0 111
+text 390 85 0 12
+button 325 105 4005 4007 1 0 120
+button 355 105 4002 4004 1 0 121
+text 390 105 0 13
+button 325 125 4005 4007 1 0 130
+button 355 125 4002 4004 1 0 131
+text 390 125 0 14
+button 325 145 4005 4007 1 0 140
+button 355 145 4002 4004 1 0 141
+text 390 145 0 15
+button 325 165 4005 4007 1 0 150
+button 355 165 4002 4004 1 0 151
+text 390 165 0 16
+button 325 185 4005 4007 1 0 160
+button 355 185 4002 4004 1 0 161
+text 390 185 0 17
+text 325 203 0 18
+gumppic 129 205 4005
+text 159 205 192 19
+gumppic 185 205 4002
+text 215 205 192 20
+
+
+[DIALOG d_shape_change TEXT]
+Book of the Shapeshifter
+<TAG.NAME1>
+<TAG.NAME2>
+<TAG.NAME3>
+<TAG.NAME4>
+<TAG.NAME5>
+<TAG.NAME6>
+<TAG.NAME7>
+<TAG.NAME8>
+Original Form
+<TAG.NAME9>
+<TAG.NAME10>
+<TAG.NAME11>
+<TAG.NAME12>
+<TAG.NAME13>
+<TAG.NAME14>
+<TAG.NAME15>
+<TAG.NAME16>
+Shifter Skill: <EVAL (<SRC.TAG.Skill_Shapeshifting> / 10)>.<EVAL (<SRC.TAG.Skill_Shapeshifting> + (-<EVAL ((<SRC.TAG.Skill_Shapeshifting> / 10) * 10)>))>%
+Set
+Change Shape
+
+
+[DIALOG d_shape_change BUTTON]
+
+ONBUTTON=10
+MORE2=1
+TARGET Which creature would you like to record?
+
+ONBUTTON=11
+f_shapeshift_main 1
+
+ONBUTTON=20
+MORE2=2
+TARGET Which creature would you like to record?
+
+ONBUTTON=21
+f_shapeshift_main 2
+
+ONBUTTON=30
+MORE2=3
+TARGET Which creature would you like to record?
+
+ONBUTTON=31
+f_shapeshift_main 3
+
+ONBUTTON=40
+MORE2=4
+TARGET Which creature would you like to record?
+
+ONBUTTON=41
+f_shapeshift_main 4
+
+ONBUTTON=50
+MORE2=5
+TARGET Which creature would you like to record?
+
+ONBUTTON=51
+f_shapeshift_main 5
+
+ONBUTTON=60
+MORE2=6
+TARGET Which creature would you like to record?
+
+ONBUTTON=61
+f_shapeshift_main 6
+
+ONBUTTON=70
+MORE2=7
+TARGET Which creature would you like to record?
+
+ONBUTTON=71
+f_shapeshift_main 7
+
+ONBUTTON=80
+MORE2=8
+TARGET Which creature would you like to record?
+
+ONBUTTON=81
+f_shapeshift_main 8
+
+ONBUTTON=82
+f_shapeshift_main_original_shape
+
+ONBUTTON=90
+MORE2=9
+TARGET Which creature would you like to record?
+
+ONBUTTON=91
+f_shapeshift_main 9
+
+ONBUTTON=100
+MORE2=10
+TARGET Which creature would you like to record?
+
+ONBUTTON=101
+f_shapeshift_main 10
+
+ONBUTTON=110
+MORE2=11
+TARGET Which creature would you like to record?
+
+ONBUTTON=111
+f_shapeshift_main 11
+
+ONBUTTON=120
+MORE2=12
+TARGET Which creature would you like to record?
+
+ONBUTTON=121
+f_shapeshift_main 12
+
+ONBUTTON=130
+MORE2=13
+TARGET Which creature would you like to record?
+
+ONBUTTON=131
+f_shapeshift_main 13
+
+ONBUTTON=140
+MORE2=14
+TARGET Which creature would you like to record?
+
+ONBUTTON=141
+f_shapeshift_main 14
+
+ONBUTTON=150
+MORE2=15
+TARGET Which creature would you like to record?
+
+ONBUTTON=151
+f_shapeshift_main 15
+
+ONBUTTON=160
+MORE2=16
+TARGET Which creature would you like to record?
+
+ONBUTTON=161
+f_shapeshift_main 16
+
+//*****************************************
+//******End of Shapeshifter Book Item******
+//*****************************************
+//****Begin Shapeshifter Book Functions****
+//*****************************************
+
+[FUNCTION f_shapeshift_main]
+IF ((0<ARGN> == 0) || (0<ARGN> == 00))
+	VAR.SSB_SYS_Color=SSB_Msg_Color
+	SRC.f_shapeshift_sysmessageua Error in f_shapeshift_main function
+	SRC.f_shapeshift_sysmessageua Page a scriptor to repair
+	RETURN 1
+ENDIF
+
+IF (0<TAG.STR<ARGN>> == 0)
+	VAR.SSB_SYS_Color=SSB_Msg_Color
+	SRC.f_shapeshift_sysmessageua You cannot shift into nothing!
+	RETURN 0
+
+ENDIF
+
+IF (<SRC.ISGM>)
+	f_shapeshift_main_slot_shape <ARGN>
+
+ELSE
+	f_shapeshift_reqmana
+	f_shapeshift_between
+
+	IF (<EVAL (<VAR.SSB_Shapeshift_Allow>)> == 0)
+		//Do Nothing
+
+	ELSEIF (<EVAL (<VAR.SSB_Shapeshift_Allow>)> == 1)
+		f_shapeshift_main_slot_shape <ARGN>
+		f_shapeshift_timer
+	ELSE
+		VAR.SSB_SYS_Color=SSB_Msg_Color
+		SRC.f_shapeshift_sysmessageua Error in f_shapeshift_manareq function or f_shapeshift_between function
+		SRC.f_shapeshift_sysmessageua Page a scriptor to repair
+		RETURN 1
+
+	ENDIF
+ENDIF
+
+SRC.RESEND
+DIALOG d_shape_change
+
+
+[FUNCTION f_shapeshift_main_slot_shape]
+IF (<EVAL (<SRC.TAG.Shapeshifter_Polymorph>)> == 1)
+	f_shapeshift_haircopy 0
+	f_shapeshift_clothingcopy 0
+
+ENDIF
+
+SRC.TAG.Shapeshifter_Slot=<ARGN>
+VAR.SSB_Shapeshift_Allow=
+f_shapeshift_mount 0
+f_shapeshift_spellcurse_check
+f_shapeshift_unequip
+SRC.BODY=<TAG.SHAPE<ARGN>>
+SRC.TAG.Shapeshifter_Polymorph=1
+SRC.FLAGS=<SRC.FLAGS>|statf_polymorph
+
+IF ((<SRC.BODY> == c_man) || (<SRC.BODY> == c_woman))
+	f_shapeshift_haircopy <ARGN>
+	f_shapeshift_clothingcopy <ARGN>
+ENDIF
+
+f_shapeshift_value NAME
+f_shapeshift_value TITLE
+f_shapeshift_value COLOR
+f_shapeshift_value KARMA
+f_shapeshift_value FAME
+f_shapeshift_stats STR
+f_shapeshift_stats DEX
+f_shapeshift_stats INT
+
+VAR.SSB_Temp_1=HITPOINTS
+f_shapeshift_full_stats STR
+VAR.SSB_Temp_1=MANA
+f_shapeshift_full_stats INT
+VAR.SSB_Temp_1=STAMINA
+f_shapeshift_full_stats DEX
+VAR.SSB_Temp_1=
+
+f_shapeshift_skill_gain
+f_shapeshift_sound 1
+f_shapeshift_mount <ARGN>
+f_shapeshift_spellcurse_check
+
+
+[FUNCTION f_shapeshift_main_original_shape]
+IF (<SRC.TAG.Shapeshifter_Polymorph> == -1)
+	SRC.SYSMESSAGE You are already in your original form!
+
+ELSE
+	f_shapeshift_mount 0
+	f_shapeshift_spellcurse_check
+	f_shapeshift_unequip
+	SRC.TAG.Shapeshifter_Polymorph=-1
+	SRC.NAME=<SRC.TAG.NAMEO>
+	SRC.BODY=<SRC.OBODY>
+	SRC.STR=<SRC.TAG.STRO>
+	SRC.DEX=<SRC.TAG.DEXO>
+	SRC.INT=<SRC.TAG.INTO>
+	SRC.TITLE=<SRC.TAG.TITLEO>
+	SRC.COLOR=<SRC.OSKIN>
+	f_shapeshift_spellcurse_check
+	f_shapeshift_clothingcopy 0
+	f_shapeshift_karma_fame_gain karma
+	f_shapeshift_karma_fame_gain fame
+
+	VAR.SSB_Temp_1=HITPOINTS
+	f_shapeshift_full_stats STR
+	VAR.SSB_Temp_1=MANA
+	f_shapeshift_full_stats INT
+	VAR.SSB_Temp_1=STAMINA
+	f_shapeshift_full_stats DEX
+	VAR.SSB_Temp_1=
+
+	f_shapeshift_skill_gain
+	f_shapeshift_sound 2
+
+	SRC.FINDLAYER(layer_hair).REMOVE
+	SRC.FINDLAYER(layer_beard).REMOVE
+	f_shapeshift_haircopy 0
+
+	SRC.FLAGS=<SRC.FLAGS>&~statf_polymorph
+	SRC.TAG.Shapeshifter_Slot=0
+	SRC.TAG.Shapeshift_Allow=0
+	SRC.TAG.SSB_Timer_Up=
+	SRC.FINDID.i_shapeshift_timer.REMOVE
+
+	f_shapeshift_check_body
+
+ENDIF
+
+SRC.RESEND
+DIALOG d_shape_change
+
+
+[FUNCTION f_shapeshift_check_body]
+IF ((<SRC.OBODY> != c_man) && (<SRC.OBODY> != c_woman))
+	IF (<EVAL (<SRC.TAG.Shapeshifter_Sex>)> == 1)
+		SRC.OBODY=c_man
+		SRC.BODY=c_man
+		RETURN 0
+
+	ELSEIF (<EVAL (<SRC.TAG.Shapeshifter_Sex>)> == 2)
+		SRC.OBODY=c_woman
+		SRC.BODY=c_woman
+		RETURN 0
+
+	ENDIF
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_value]
+IF (<EVAL SSB_opt_Change_<ARGS>> == 1)
+	TRY SRC.<ARGS>=<TAG.<ARGS><EVAL (<SRC.TAG.Shapeshifter_Slot>)>>
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_stats]
+IF (<EVAL SSB_opt_Change_<ARGS>> != 1)
+	RETURN 0
+
+ELSE
+	TRY SRC.<ARGS>=<TAG.<ARGS><EVAL (<SRC.TAG.Shapeshifter_Slot>)>>
+
+	IF (<EVAL SSB_opt_Limit> == 1)
+		IF (<SRC.<ARGS>> > <EVAL SSB_opt_Limit_Max>)
+			TRY SRC.<ARGS>=<EVAL SSB_opt_Limit_Max>
+
+		ENDIF
+
+	ENDIF
+
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_full_stats]
+IF !(<EVAL SSB_opt_Change_<ARGS>> == 1)
+	RETURN 0
+
+ELSE
+	IF (<EVAL SSB_opt_Start_<VAR.SSB_Temp_1>> == 0)
+		IF (<EVAL SSB_opt_Full_<VAR.SSB_Temp_1>> == 0)
+			//Damn sphere and it's fixed point decimals...
+			//Gotta be creative and use Taran's math functions
+			//to do some percentage calculations...
+			INTFIX <EVAL (<SRC.TAG.Skill_Shapeshifting>)>
+			FIXSET <VAR.FIX_OUT>
+			DIVINT 1000
+			VAR.SSB_Temp_2=<FIXGET>
+			INTFIX <SRC.<ARGS>>
+			FIXSET <VAR.FIX_OUT>
+			MULFIX <VAR.SSB_Temp_2>
+			VAR.SSB_Temp_2=<FIXGET>
+			FIXTOINT <VAR.SSB_Temp_2>
+			TRY SRC.<VAR.SSB_Temp_1>=<EVAL (<VAR.INT_OUT>)>
+
+		ELSEIF (<EVAL SSB_opt_Full_<VAR.SSB_Temp_1>> == 1)
+			TRY SRC.<VAR.SSB_Temp_1>=<SRC.<ARGS>>
+
+		ENDIF
+
+	ELSEIF (<EVAL SSB_opt_Start_<VAR.SSB_Temp_1>> == -1)
+		//No effect on hitpoints if it equals -1
+		//Can't RETURN yet
+
+	ELSE
+		TRY SRC.<VAR.SSB_Temp_1>=<EVAL SSB_opt_Start_<VAR.SSB_Temp_1>>
+
+	ENDIF
+
+	IF (<SRC.<VAR.SSB_Temp_1>> > <SRC.<ARGS>>)
+		TRY SRC.<VAR.SSB_Temp_1>=<SRC.<ARGS>>
+
+	ENDIF
+
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_skill_gain]
+IF <EVAL (<SRC.TAG.Skill_Shapeshifting>)> >= 1000)
+	SRC.TAG.Skill_Shapeshifting=1000
+	SRC.TAG.Skill_Shapeshifting_Subskill=0
+	RETURN 0
+
+ELSE
+	SRC.TAG.Skill_Shapeshifting_Subskill=<SRC.TAG.Skill_Shapeshifting_Subskill> + <EVAL SSB_opt_Skill_Inc>
+	IF !(<SRC.TAG.Skill_Shapeshifting_Subskill> > <SRC.TAG.Skill_Shapeshifting>)
+		RETURN 0
+
+	ELSE
+		VAR.SSB_SYS_Color=SSB_Skill_Gain_Color
+		SRC.TAG.Skill_Shapeshifting_Subskill=0
+		SRC.TAG.Skill_Shapeshifting=<SRC.TAG.Skill_Shapeshifting> + 1
+		SRC.f_shapeshift_sysmessageua Your skill in Shapeshifting has increased by 0.1%. It is now <EVAL (<SRC.TAG.Skill_Shapeshifting> / 10)>.<EVAL (<SRC.TAG.Skill_Shapeshifting> + (-<EVAL ((<SRC.TAG.Skill_Shapeshifting> / 10) * 10)>))>%
+		RETURN 0
+
+	ENDIF
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_sysmessageua]
+//Modified from the function sysmessageua
+//found in Taran's 55i Scripting Compendium
+IF (0<VAR.SSB_SYS_Color> == 0)
+	VAR.SSB_SYS_Color=0
+
+ENDIF
+
+VAR.SSB_Old_P <P>
+VAR.SSB_Old_Region_Flags <REGION.FLAGS>
+VAR.SSB_Old_Region_Events <REGION.EVENTS>
+VAR.SSB_Old_Act <ACT.UID>
+REGION.EVENTS -0
+REGION.FLAGS=0
+P 11 11 0 1
+NEWITEM i_memory
+ACT.CONT <UID>
+ACT.SAYUA <VAR.SSB_SYS_Color> 0 0 1 <args>
+ACT.REMOVE
+P <VAR.SSB_Old_P>
+REGION.FLAGS <VAR.SSB_Old_Region_Flags>
+REGION.EVENTS <VAR.SSB_Old_Region_Events>
+ACT <VAR.SSB_Old_Act>
+
+VAR.SSB_Old_P=
+VAR.SSB_Old_Region_Flags=
+VAR.SSB_Old_Region_Events=
+VAR.SSB_Old_Act=
+VAR.SSB_SYS_Color=
+
+
+[FUNCTION f_shapeshift_sound]
+IF (<EVAL SSB_opt_Sound> == 1)
+	IF (<ARGS> == 1)	//Sound used when shifting to another form
+		SRC.SFX SSB_Sound_Shift
+
+	ELSEIF (<ARGS> == 2)	//Sound used when shifting back to original form
+		SRC.SFX SSB_Sound_UnShift
+
+	ELSEIF (<ARGS> == 3)	//Sound used when mana is insufficant
+		SRC.SFX SSB_Sound_ManaFail
+
+	ELSEIF (<ARGS> == 4)	//Sound used when Shifting fails
+		SRC.SFX SSB_Sound_Fail	
+
+	ENDIF
+ENDIF
+
+
+[FUNCTION f_shapeshift_checktags]
+IF (0<SRC.TAG.Race> == 0)
+	SRC.TAG.Race=0
+
+ENDIF
+
+IF (0<SRC.TAG.SSB_Timer_Up> == 0)
+	SRC.TAG.SSB_Timer_Up=0
+
+ENDIF
+
+IF (0<SRC.TAG.Shapeshifter_Sex> == 0)
+	SRC.TAG.Shapeshifter_Sex=0
+
+ENDIF
+
+IF (0<SRC.TAG.Shapeshifter_Sex> == 00)
+	IF (<SRC.OBODY> == c_man)
+		SRC.TAG.Shapeshifter_Sex=1
+
+	ELSEIF (<SRC.OBODY> == c_woman)
+		SRC.TAG.Shapeshifter_Sex=2
+
+	ENDIF
+
+ENDIF
+
+IF (0<SRC.TAG.Shapeshifter_Polymorph> == 0)
+	SRC.TAG.Shapeshifter_Polymorph=-1
+
+ENDIF
+
+IF (0<SRC.TAG.Shapeshifter_Slot> == 0)
+	SRC.TAG.Shapeshifter_Slot=0
+
+ENDIF
+
+IF (0<SRC.TAG.Skill_Shapeshifting> == 0)
+	SRC.TAG.Skill_Shapeshifting=0
+
+ENDIF
+
+IF (0<SRC.TAG.Skill_Shapeshifting_Subskill> == 0)
+	SRC.TAG.Skill_Shapeshifting_Subskill=0
+
+ENDIF
+
+IF (0<SRC.TAG.Spell_Curse> == 0)
+	SRC.TAG.Spell_Curse=0
+
+ENDIF
+
+IF (0<SRC.TAG.Spell_Curse_Level> == 0)
+	SRC.TAG.Spell_Curse_Level=0
+
+ENDIF
+
+IF (0<VAR.SSB_Shapeshift_Allow> == 0)
+	SRC.TAG.Shapeshift_Allow=0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_reqmana]
+VAR.SSB_SYS_Color=SSB_Msg_Color
+
+IF (<EVAL SSB_opt_Mana_Req> != 1)
+	RETURN 0
+
+ELSE
+	IF (<SRC.MANA> >= <EVAL SSB_opt_Mana_Amount>)
+		SRC.MANA=(<SRC.MANA>+(-<EVAL SSB_opt_Mana_Amount>))
+		VAR.SSB_Shapeshift_Allow=1
+		RETURN 0
+
+	ELSE
+		f_shapeshift_sound 3
+		SRC.f_shapeshift_sysmessageua You need <EVAL SSB_opt_Mana_Amount> mana to shapeshift!
+		VAR.SSB_Shapeshift_Allow=0
+		RETURN 0
+
+	ENDIF
+ENDIF
+
+
+[FUNCTION f_shapeshift_timer]
+IF ((<EVAL SSB_opt_Timed_Shift> != 1) && (<EVAL (0<SRC.TAG.SSB_Timer_Up>)> != 0))
+	RETURN 0
+
+ELSE
+	SRC.NEWITEM i_shapeshift_timer
+	SRC.ACT.EQUIP
+		
+	IF (<EVAL SSB_opt_Time_Limit> != 0)\
+		SRC.ACT.TIMER=<EVAL SSB_opt_Time_Limit>
+		RETURN 0
+	
+	ELSE
+		IF (<EVAL (<SRC.TAG.Skill_Shapeshifting>)> == 0)
+			SRC.ACT.TIMER=6
+
+		ELSE
+			SRC.ACT.TIMER=(<EVAL (<SRC.TAG.Skill_Shapeshifting>)> * 6)
+		
+		ENDIF
+
+		RETURN 0
+
+	ENDIF
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_between]
+IF !((<EVAL SSB_opt_Shift_Between> == 0) && (<EVAL (<SRC.TAG.Shapeshifter_Polymorph>)> == 1))
+	VAR.SSB_Shapeshift_Allow=1
+	RETURN 0
+
+ELSE
+	VAR.SSB_SYS_Color=SSB_Msg_Color
+	f_shapeshift_sound 4
+	SRC.f_shapeshift_sysmessageua You must revert to your original form first!
+	VAR.SSB_Shapeshift_Allow=0
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_clothingcopy_assist]
+IF ((<EVAL SSB_opt_Clothing_Change> == 1) && (<EVAL (<VAR.SSB_Temp_1>)> == t_clothing))
+	RETURN 1
+
+ELSEIF ((<EVAL SSB_opt_Clothing_Change> == 2) && ((<EVAL (<VAR.SSB_Temp_1>)> == t_clothing) || (<EVAL (<VAR.SSB_Temp_1>)> == t_armor) || (<EVAL (<VAR.SSB_Temp_1>)> == t_shield)))
+	RETURN 1
+
+ELSEIF ((<EVAL SSB_opt_Clothing_Change> == 3) && ((<EVAL (<VAR.SSB_Temp_1>)> == t_clothing) || (<EVAL (<VAR.SSB_Temp_1>)> == t_armor) || (<EVAL (<VAR.SSB_Temp_1>)> == t_shield)  || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_axe) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_sword) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_mace_sharp) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_fence) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_bow) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_xbow) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_mace_smith) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_mace_staff) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_mace_smith) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_mace_crook) || (<EVAL (<VAR.SSB_Temp_1>)> == t_weapon_mace_pick)))
+	RETURN 1
+
+ELSE
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_clothingcopy_remove]
+IF (0<SRC.TAG.SSB_Clothing_<ARGS>_UID> == 0)
+	RETURN 0
+
+ELSE
+	SRC.ACT = <SRC.TAG.SSB_Clothing_<ARGS>_UID>
+	SRC.ACT.REMOVE
+	TRY SRC.TAG.SSB_Clothing_<ARGS>_UID=
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_clothingcopy_create]
+VAR.SSB_Temp_1=<TAG.Clothing_<ARGS>_TYPE<EVAL (<VAR.SSB_Slot_Number>)>>
+IF (<f_shapeshift_clothingcopy_assist> == 0)
+	TRY SRC.TAG.SSB_Clothing_<ARGS>_UID=0
+	VAR.SSB_Temp_1=
+	RETURN 0
+
+ELSE
+	SRC.NEWITEM <TAG.Clothing_<ARGS><EVAL (<VAR.SSB_Slot_Number>)>>
+	SRC.ACT.EQUIP
+	SRC.ACT.ATTR attr_move_never
+	SRC.ACT.NAME=<TAG.Clothing_<ARGS>_Name<EVAL (<VAR.SSB_Slot_Number>)>>
+	SRC.ACT.DISPID=<TAG.Clothing_<ARGS>_ID<EVAL (<VAR.SSB_Slot_Number>)>>
+	SRC.ACT.COLOR=<TAG.Clothing_<ARGS>_COLOR<EVAL (<VAR.SSB_Slot_Number>)>>
+	TRY SRC.TAG.SSB_Clothing_<ARGS>_UID=<SRC.ACT.UID>
+	VAR.SSB_Temp_1=
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_clothingcopy]
+VAR.SSB_Temp_Act = <SRC.ACTION>
+VAR.SSB_Slot_Number=<ARGN>
+
+IF (<EVAL (<VAR.SSB_Slot_Number>)> == 0)
+	f_shapeshift_clothingcopy_remove Hand1
+	f_shapeshift_clothingcopy_remove Hand2
+	f_shapeshift_clothingcopy_remove Shoes
+	f_shapeshift_clothingcopy_remove Pants
+	f_shapeshift_clothingcopy_remove Shirt
+	f_shapeshift_clothingcopy_remove Helm
+	f_shapeshift_clothingcopy_remove Gloves
+	f_shapeshift_clothingcopy_remove Ring
+	f_shapeshift_clothingcopy_remove Collar
+	f_shapeshift_clothingcopy_remove Apron
+	f_shapeshift_clothingcopy_remove Chest
+	f_shapeshift_clothingcopy_remove Wrist
+	f_shapeshift_clothingcopy_remove Tunic
+	f_shapeshift_clothingcopy_remove Ears
+	f_shapeshift_clothingcopy_remove Arms
+	f_shapeshift_clothingcopy_remove Cape
+	f_shapeshift_clothingcopy_remove Robe
+	f_shapeshift_clothingcopy_remove Skirt
+	f_shapeshift_clothingcopy_remove Legs
+
+	SRC.ACTION=<VAR.SSB_Temp_Act>
+
+	VAR.SSB_Temp_Act=
+	VAR.SSB_Slot_Number=
+	RETURN 0
+
+ELSE
+	IF !(<EVAL SSB_opt_Clothing_Change> > 0)
+		RETURN 0
+	
+	ELSE
+		f_shapeshift_clothingcopy_create Hand1
+		f_shapeshift_clothingcopy_create Hand2
+		f_shapeshift_clothingcopy_create Shoes
+		f_shapeshift_clothingcopy_create Pants
+		f_shapeshift_clothingcopy_create Shirt
+		f_shapeshift_clothingcopy_create Helm
+		f_shapeshift_clothingcopy_create Gloves
+		f_shapeshift_clothingcopy_create Ring
+		f_shapeshift_clothingcopy_create Collar
+		f_shapeshift_clothingcopy_create Apron
+		f_shapeshift_clothingcopy_create Chest
+		f_shapeshift_clothingcopy_create Wrist
+		f_shapeshift_clothingcopy_create Tunic
+		f_shapeshift_clothingcopy_create Ears
+		f_shapeshift_clothingcopy_create Arms
+		f_shapeshift_clothingcopy_create Cape
+		f_shapeshift_clothingcopy_create Robe
+		f_shapeshift_clothingcopy_create Skirt
+		f_shapeshift_clothingcopy_create Legs
+
+		SRC.ACTION=<VAR.SSB_Temp_Act>
+
+		VAR.SSB_Temp_Act=
+		VAR.SSB_Slot_Number=
+		VAR.SSB_Clothing_Copy_Ok=
+		RETURN 0
+
+	ENDIF
+ENDIF
+
+
+[FUNCTION f_shapeshift_haircopy]
+IF (<EVAL SSB_opt_Hair_Change> == 1)
+	VAR.SSB_Temp_Act=<SRC.ACTION>
+	IF (<EVAL (<ARGS>)> == 0)
+		IF (<EVAL (<SRC.TAG.HAIRO>)> == 0)
+			SRC.FINDLAYER(layer_hair).REMOVE
+
+		ELSE
+			SRC.NEWITEM <SRC.TAG.HAIRO>
+			SRC.ACT.EQUIP
+			SRC.FINDLAYER(layer_hair).DISPID=<SRC.TAG.HAIRIDO>
+			SRC.FINDLAYER(layer_hair).COLOR=<SRC.TAG.HAIRCOLORO>
+
+		ENDIF
+
+		IF (<EVAL (<SRC.TAG.BEARDO>)> == 0)
+			SRC.FINDLAYER(layer_beard).REMOVE
+			SRC.ACTION=<VAR.SSB_Temp_Act>
+			VAR.SSB_Temp_Act=
+			RETURN 0
+
+		ELSE
+			SRC.NEWITEM <SRC.TAG.BEARDO>
+			SRC.ACT.EQUIP
+			SRC.FINDLAYER(layer_beard).DISPID=<SRC.TAG.BEARDIDO>
+			SRC.FINDLAYER(layer_beard).COLOR=<SRC.TAG.BEARDCOLORO>
+			SRC.ACTION=<VAR.SSB_Temp_Act>
+			VAR.SSB_Temp_Act=
+			RETURN 0
+
+		ENDIF		
+		
+	ELSE
+		IF (<EVAL (<TAG.HAIR<EVAL (<ARGS>)>>)> == 0)
+			SRC.FINDLAYER(layer_hair).REMOVE
+
+		ELSE
+			SRC.NEWITEM <TAG.HAIR<EVAL (<ARGS>)>>
+			SRC.ACT.EQUIP
+			SRC.FINDLAYER(layer_hair).DISPID=<TAG.HAIRID<EVAL (<ARGS>)>>
+			SRC.FINDLAYER(layer_hair).COLOR=<TAG.HAIRCOLOR<EVAL (<ARGS>)>>
+
+		ENDIF
+
+		IF (<EVAL (<TAG.BEARD<EVAL (<ARGS>)>>)> == 0)
+			SRC.FINDLAYER(layer_beard).REMOVE
+			SRC.ACTION=<VAR.SSB_Temp_Act>
+			VAR.SSB_Temp_Act=
+			RETURN 0
+
+		ELSE
+			SRC.NEWITEM <TAG.BEARD<EVAL (<ARGS>)>>
+			SRC.ACT.EQUIP
+			SRC.FINDLAYER(layer_beard).DISPID=<TAG.BEARDID<EVAL (<ARGS>)>>
+			SRC.FINDLAYER(layer_beard).COLOR=<TAG.BEARDCOLOR<EVAL (<ARGS>)>>
+			SRC.ACTION=<VAR.SSB_Temp_Act>
+			VAR.SSB_Temp_Act=
+			RETURN 0
+
+		ENDIF
+
+	ENDIF
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_spellcurse_check]
+IF ((<EVAL (<SRC.TAG.Spell_Curse>)> == 0) && ((<SRC.FINDLAYER(32).BASEID>==i_rune_curse) || (<SRC.FINDLAYER(47).BASEID>==i_rune_curse) || (<SRC.FINDLAYER(32).BASEID>==i_rune_weaken) || (<SRC.FINDLAYER(32).BASEID>==i_rune_feeblemind) || (<SRC.FINDLAYER(32).BASEID>==i_rune_clumsy)))
+	f_shapeshift_spellcurse_remove
+
+ELSEIF ((<EVAL (<SRC.TAG.Spell_Curse>)> == 0) && ((<SRC.FINDLAYER(32).BASEID>==i_rune_bless) || (<SRC.FINDLAYER(32).BASEID>==i_rune_strength) || (<SRC.FINDLAYER(32).BASEID>==i_rune_cunning) || (<SRC.FINDLAYER(32).BASEID>==i_rune_agility)))
+	f_shapeshift_spellcurse_remove
+
+ELSEIF (<EVAl (<SRC.TAG.Spell_Curse>)> == 1)
+	f_shapeshift_spellcurse_add
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_spellcurse_remove]
+//Dispel's Curse, Weaken, Clumsy, Feeblemind, and Drunkenness
+SRC.TAG.Spell_Curse=0
+SRC.TAG.Spell_Curse_Level=0
+IF (<SRC.FINDLAYER(32).BASEID>==i_rune_curse)
+	SRC.TAG.Spell_Curse=1
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(32).MORE2>
+	SRC.FINDLAYER(32).REMOVE
+
+ELSEIF (<SRC.FINDLAYER(47).BASEID>==i_rune_curse)
+	SRC.TAG.Spell_Curse=5
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(47).MORE2>
+	SRC.FINDLAYER(47).REMOVE
+
+ELSEIF (<SRC.FINDLAYER(32).BASEID>==i_rune_weaken)
+	SRC.TAG.Spell_Curse=2
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(32).MORE2>
+	SRC.FINDLAYER(32).REMOVE
+
+ELSEIF (<SRC.FINDLAYER(32).BASEID>==i_rune_clumsy)
+	SRC.TAG.Spell_Curse=3
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(32).MORE2>
+	SRC.FINDLAYER(32).REMOVE
+
+ELSEIF (<SRC.FINDLAYER(32).BASEID>==i_rune_feeblemind)
+	SRC.TAG.Spell_Curse=4
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(32).MORE2>
+	SRC.FINDLAYER(32).REMOVE
+
+ELSEIF (<SRC.FINDLAYER(32).BASEID>==i_rune_bless)
+	SRC.TAG.Spell_Curse=6
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(32).MORE2>
+	SRC.FINDLAYER(32).REMOVE
+
+ELSEIF (<SRC.FINDLAYER(32).BASEID>==i_rune_strength)
+	SRC.TAG.Spell_Curse=7
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(32).MORE2>
+	SRC.FINDLAYER(32).REMOVE
+
+ELSEIF (<SRC.FINDLAYER(32).BASEID>==i_rune_cunning)
+	SRC.TAG.Spell_Curse=8
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(32).MORE2>
+	SRC.FINDLAYER(32).REMOVE
+
+ELSEIF (<SRC.FINDLAYER(32).BASEID>==i_rune_agility)
+	SRC.TAG.Spell_Curse=9
+	SRC.TAG.Spell_Curse_Level=<SRC.FINDLAYER(32).MORE2>
+	SRC.FINDLAYER(32).REMOVE
+
+ENDIF
+SRC.UPDATE
+
+
+[FUNCTION f_shapeshift_spellcurse_add]
+IF (<EVAL(<SRC.TAG.Spell_Curse>)>==1)
+	SRC.NEWITEM i_rune_curse
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=32
+
+ELSEIF (<EVAL(<SRC.TAG.Spell_Curse>)>==5)
+	SRC.NEWITEM i_rune_curse
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=47
+
+ELSEIF (<EVAL(<SRC.TAG.Spell_Curse>)>==2)
+	SRC.NEWITEM i_rune_weaken
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=32
+
+ELSEIF (<EVAL(<SRC.TAG.Spell_Curse>)>==3)
+	SRC.NEWITEM i_rune_clumsy
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=32
+
+ELSEIF (<EVAL(<SRC.TAG.Spell_Curse>)>==4)
+	SRC.NEWITEM i_rune_feeblemind
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=32
+
+ELSEIF (<EVAL(<SRC.TAG.Spell_Curse>)>==6)
+	SRC.NEWITEM i_rune_bless
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=32
+
+ELSEIF (<EVAL(<SRC.TAG.Spell_Curse>)>==7)
+	SRC.NEWITEM i_rune_strength
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=32
+
+
+ELSEIF (<EVAL(<SRC.TAG.Spell_Curse>)>==8)
+	SRC.NEWITEM i_rune_cunning
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=32
+
+ELSEIF (<EVAL(<SRC.TAG.Spell_Curse>)>==9)
+	SRC.NEWITEM i_rune_agility
+	SRC.ACT.MORE2=<SRC.TAG.Spell_Curse_Level>
+	SRC.ACT.EQUIP
+	SRC.ACT.LAYER=32
+
+ENDIF
+SRC.TAG.Spell_Curse=0
+SRC.TAG.Spell_Curse_Level=0
+SRC.UPDATE
+
+
+[FUNCTION f_shapeshift_mount]
+//Modified from a script Moe posted on www.sphereserver.com forums
+IF (<ARGN> == 0)
+	IF (<SRC.FINDLAYER(25).BASEID> == i_shapeshift_mount)
+		SRC.FINDLAYER(25).REMOVE
+		SRC.FLAGS=<SRC.FLAGS>&~statf_onhorse
+		RETURN 0
+
+	ELSEIF (<SRC.FINDLAYER(25).UID>)
+		SRC.ACT=<SRC.FINDLAYER(25).MORE2> 
+		SRC.ACT.P=<SRC.P> 
+		SRC.FINDLAYER(25).REMOVE
+		SRC.FLAGS=<SRC.FLAGS>&~statf_onhorse
+		RETURN 0
+
+	ENDIF
+
+ELSE
+	
+	IF (<f_shapeshift_mount_check> == 0)
+		RETURN 0
+
+	ELSE
+		IF (<SRC.FINDLAYER(25).UID>)
+			RETURN 0
+
+		ELSE
+			SRC.NEWITEM i_shapeshift_mount
+			SRC.ACT.EQUIP
+			SRC.FLAGS=<SRC.FLAGS>|statf_onhorse
+			RETURN 0
+
+		ENDIF
+
+	ENDIF
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_mount_check]
+IF ((<SRC.BODY> == c_horse_brown_dk) || (<SRC.BODY> == c_horse_brown_lt) || (<SRC.BODY> == c_horse_tan) || (<SRC.BODY> == c_horse_gray) || (<SRC.BODY> == c_llama) || (<SRC.BODY> == c_ostard_zostrich) || (<SRC.BODY> == c_ostard_forest) || (<SRC.BODY> == c_ostard_desert))
+	RETURN 1
+
+ELSE
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_unequip]
+SRC.FINDLAYER(layer_hand1).unequip
+SRC.FINDLAYER(layer_hand2).unequip
+SRC.FINDLAYER(layer_pants).unequip
+SRC.FINDLAYER(layer_shirt).unequip
+SRC.FINDLAYER(layer_helm).unequip
+SRC.FINDLAYER(layer_gloves).unequip
+SRC.FINDLAYER(layer_ring).unequip
+SRC.FINDLAYER(layer_collar).unequip
+SRC.FINDLAYER(layer_half_apron).unequip
+SRC.FINDLAYER(layer_chest).unequip
+SRC.FINDLAYER(layer_wrist).unequip
+SRC.FINDLAYER(layer_tunic).unequip
+SRC.FINDLAYER(layer_ears).unequip
+SRC.FINDLAYER(layer_arms).unequip
+SRC.FINDLAYER(layer_cape).unequip
+SRC.FINDLAYER(layer_robe).unequip
+SRC.FINDLAYER(layer_skirt).unequip
+SRC.FINDLAYER(layer_shoes).unequip
+SRC.FINDLAYER(layer_legs).unequip
+
+IF (<EVAL (<SRC.TAG.Shapeshifter_Polymorph>)> != -1)
+	RETURN 0
+
+ELSE
+	SRC.TAG.DEXO=<SRC.DEX>
+	SRC.TAG.STRO=<SRC.STR>
+	SRC.TAG.INTO=<SRC.INT>
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_aqquire_clothing]
+IF !((<SRC.TARG.UID> != <SRC.UID>) && ((<SRC.TARG.BODY> == c_man) || (<SRC.TARG.BODY> == c_woman)))
+	RETURN 0
+
+ELSE
+	TRY TAG.CLOTHING_HAND1<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand1).ID>
+	TRY TAG.CLOTHING_HAND1_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand1).DISPID>
+	TRY TAG.CLOTHING_HAND1_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand1).NAME>
+	TRY TAG.CLOTHING_HAND1_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand1).COLOR>
+	TRY TAG.CLOTHING_HAND1_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand1).TYPE>
+	TRY TAG.CLOTHING_HAND2<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand2).ID>
+	TRY TAG.CLOTHING_HAND2_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand2).DISPID>
+	TRY TAG.CLOTHING_HAND2_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand2).NAME>
+	TRY TAG.CLOTHING_HAND2_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand2).COLOR>
+	TRY TAG.CLOTHING_HAND2_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hand2).TYPE>
+	TRY TAG.CLOTHING_SHOES<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shoes).ID>
+	TRY TAG.CLOTHING_SHOES_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shoes).DISPID>
+	TRY TAG.CLOTHING_SHOES_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shoes).NAME>
+	TRY TAG.CLOTHING_SHOES_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shoes).COLOR>
+	TRY TAG.CLOTHING_SHOES_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shoes).TYPE>
+	TRY TAG.CLOTHING_PANTS<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_pants).ID>
+	TRY TAG.CLOTHING_PANTS_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_pants).DISPID>
+	TRY TAG.CLOTHING_PANTS_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_pants).NAME>
+	TRY TAG.CLOTHING_PANTS_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_pants).COLOR>
+	TRY TAG.CLOTHING_PANTS_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_pants).TYPE>
+	TRY TAG.CLOTHING_SHIRT<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shirt).ID>
+	TRY TAG.CLOTHING_SHIRT_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shirt).DISPID>
+	TRY TAG.CLOTHING_SHIRT_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shirt).NAME>
+	TRY TAG.CLOTHING_SHIRT_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shirt).COLOR>
+	TRY TAG.CLOTHING_SHIRT_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_shirt).TYPE>
+	TRY TAG.CLOTHING_HELM<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_helm).ID>
+	TRY TAG.CLOTHING_HELM_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_helm).DISPID>
+	TRY TAG.CLOTHING_HELM_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_helm).NAME>
+	TRY TAG.CLOTHING_HELM_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_helm).COLOR>
+	TRY TAG.CLOTHING_HELM_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_helm).TYPE>
+	TRY TAG.CLOTHING_GLOVES<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_gloves).ID>
+	TRY TAG.CLOTHING_GLOVES_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_gloves).DISPID>
+	TRY TAG.CLOTHING_GLOVES_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_gloves).NAME>
+	TRY TAG.CLOTHING_GLOVES_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_gloves).COLOR>
+	TRY TAG.CLOTHING_GLOVES_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_gloves).TYPE>
+	TRY TAG.CLOTHING_RING<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ring).ID>
+	TRY TAG.CLOTHING_RING_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ring).DISPID>
+	TRY TAG.CLOTHING_RING_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ring).NAME>
+	TRY TAG.CLOTHING_RING_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ring)COLOR>
+	TRY TAG.CLOTHING_RING_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ring).TYPE>
+	TRY TAG.CLOTHING_COLLAR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_collar).ID>
+	TRY TAG.CLOTHING_COLLAR_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_collar).DISPID>
+	TRY TAG.CLOTHING_COLLAR_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_collar).NAME>
+	TRY TAG.CLOTHING_COLLAR_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_collar).COLOR>
+	TRY TAG.CLOTHING_COLLAR_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_collar).TYPE>
+	TRY TAG.CLOTHING_APRON<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_half_apron).ID>
+	TRY TAG.CLOTHING_APRON_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_half_apron).DISPID>
+	TRY TAG.CLOTHING_APRON_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_half_apron).NAME>
+	TRY TAG.CLOTHING_APRON_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_half_apron).COLOR>
+	TRY TAG.CLOTHING_APRON_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_half_apron).TYPE>
+	TRY TAG.CLOTHING_CHEST<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_chest).ID>
+	TRY TAG.CLOTHING_CHEST_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_chest).DISPID>
+	TRY TAG.CLOTHING_CHEST_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_chest).NAME>
+	TRY TAG.CLOTHING_CHEST_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_chest).COLOR>
+	TRY TAG.CLOTHING_CHEST_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_chest).TYPE>
+	TRY TAG.CLOTHING_WRIST<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_wrist).ID>
+	TRY TAG.CLOTHING_WRIST_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_wrist).DISPID>
+	TRY TAG.CLOTHING_WRIST_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_wrist).NAME>
+	TRY TAG.CLOTHING_WRIST_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_wrist).COLOR>
+	TRY TAG.CLOTHING_WRIST_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_wrist).TYPE>	
+	TRY TAG.CLOTHING_TUNIC<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_tunic).ID>
+	TRY TAG.CLOTHING_TUNIC_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_tunic).DISPID>
+	TRY TAG.CLOTHING_TUNIC_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_tunic).NAME>
+	TRY TAG.CLOTHING_TUNIC_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_tunic).COLOR>
+	TRY TAG.CLOTHING_TUNIC_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_tunic).TYPE>
+	TRY TAG.CLOTHING_EARS<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ears).ID>
+	TRY TAG.CLOTHING_EARS_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ears).DISPID>
+	TRY TAG.CLOTHING_EARS_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ears).NAME>
+	TRY TAG.CLOTHING_EARS_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ears).COLOR>
+	TRY TAG.CLOTHING_EARS_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_ears).TYPE>
+	TRY TAG.CLOTHING_ARMS<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_arms).ID>
+	TRY TAG.CLOTHING_ARMS_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_arms).DISPID>
+	TRY TAG.CLOTHING_ARMS_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_arms).NAME>
+	TRY TAG.CLOTHING_ARMS_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_arms).COLOR>
+	TRY TAG.CLOTHING_ARMS_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_arms).TYPE>
+	TRY TAG.CLOTHING_CAPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_cape).ID>
+	TRY TAG.CLOTHING_CAPE_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_cape).DISPID>
+	TRY TAG.CLOTHING_CAPE_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_cape).NAME>
+	TRY TAG.CLOTHING_CAPE_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_cape).COLOR>
+	TRY TAG.CLOTHING_CAPE_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_cape).TYPE>
+	TRY TAG.CLOTHING_ROBE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_robe).ID>
+	TRY TAG.CLOTHING_ROBE_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_robe).DISPID>
+	TRY TAG.CLOTHING_ROBE_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_robe).NAME>
+	TRY TAG.CLOTHING_ROBE_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_robe).COLOR>
+	TRY TAG.CLOTHING_ROBE_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_robe).TYPE>
+	TRY TAG.CLOTHING_SKIRT<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_skirt).ID>
+	TRY TAG.CLOTHING_SKIRT_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_skirt).DISPID>
+	TRY TAG.CLOTHING_SKIRT_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_skirt).NAME>
+	TRY TAG.CLOTHING_SKIRT_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_skirt).COLOR>
+	TRY TAG.CLOTHING_SKIRT_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_skirt).TYPE>
+	TRY TAG.CLOTHING_LEGS<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_legs).ID>
+	TRY TAG.CLOTHING_LEGS_ID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_legs).DISPID>
+	TRY TAG.CLOTHING_LEGS_NAME<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_legs).NAME>
+	TRY TAG.CLOTHING_LEGS_COLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_legs).COLOR>
+	TRY TAG.CLOTHING_LEGS_TYPE<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_legs).TYPE>
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_aqquire_hair]
+IF !((<SRC.TARG.UID> != <SRC.UID>) && ((<SRC.TARG.BODY> == c_man) || (<SRC.TARG.BODY> == c_woman)))
+	RETURN 0
+	
+ELSE	
+	TRY TAG.HAIR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hair).BASEID>
+	TRY TAG.HAIRDID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hair).DISPID>
+	TRY TAG.HAIRCOLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_hair).COLOR>
+	TRY TAG.BEARD<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_beard).BASEID>
+	TRY TAG.BEARDID<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_beard).DISPID>
+	TRY TAG.BEARDCOLOR<EVAL (<ARGS>)> = <SRC.TARG.FINDLAYER(layer_beard).COLOR>
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_aqquire_stats]
+IF ((<TAG.<ARGS> >= 1) && (<TAG.<ARGS> < 10))
+	TRY TAG.<ARGS>=10
+	RETURN 0
+
+ENDIF
+
+
+[FUNCTION f_shapeshift_set_initial_tags]
+SRC.TAG.Shapeshifter_Polymorph=-1
+SRC.TAG.STRO=<SRC.STR>
+SRC.TAG.DEXO=<SRC.DEX>
+SRC.TAG.INTO=<SRC.INT>
+SRC.TAG.TITLEO=<SRC.TITLE>
+SRC.TAG.NAMEO=<SRC.NAME>
+SRC.TAG.KARMAO=<SRC.KARMA>
+SRC.TAG.FAMEO=<SRC.FAME>
+SRC.TAG.HAIRO=<SRC.FINDLAYER(layer_hair).BASEID>
+SRC.TAG.HAIRIDO=<SRC.FINDLAYER(layer_hair).DISPID>
+SRC.TAG.HAIRCOLORO=<SRC.FINDLAYER(layer_hair).COLOR>
+SRC.TAG.BEARDO=<SRC.FINDLAYER(layer_beard).BASEID>
+SRC.TAG.BEARDIDO=<SRC.FINDLAYER(layer_beard).DISPID>
+SRC.TAG.BEARDCOLORO=<SRC.FINDLAYER(layer_beard).COLOR>
+RETURN 0
+
+
+[FUNCTION f_shapeshift_create_tags]
+TRY LINK.TAG.NAME<ARGN>=Empty Slot
+TRY LINK.TAG.SHAPE<ARGN>=c_man
+TRY LINK.TAG.STR<ARGN>=0
+TRY LINK.TAG.DEX<ARGN>=0
+TRY LINK.TAG.INT<ARGN>=0
+TRY LINK.TAG.COLOR<ARGN>=00
+TRY LINK.TAG.TITLE<ARGN>=Empty
+TRY LINK.TAG.KARMA<ARGN>=0
+TRY LINK.TAG.FAME<ARGN>=0
+TRY LINK.TAG.HAIR<ARGN>=0
+TRY LINK.TAG.HAIRID<ARGN>=0
+TRY LINK.TAG.HAIRCOLOR<ARGN>=0
+TRY LINK.TAG.BEARD<ARGN>=0
+TRY LINK.TAG.BEARDID<ARGN>=0
+TRY LINK.TAG.BEARDCOLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND1<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND1_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND1_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND1_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND1_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND2<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND2_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND2_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND2_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_HAND2_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHOES<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHOES_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHOES_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHOES_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHOES_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_PANTS<ARGN>=0
+TRY LINK.TAG.CLOTHING_PANTS_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_PANTS_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_PANTS_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_PANTS_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHIRT<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHIRT_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHIRT_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHIRT_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_SHIRT_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_HELM<ARGN>=0
+TRY LINK.TAG.CLOTHING_HELM_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_HELM_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_HELM_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_HELM_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_GLOVES<ARGN>=0
+TRY LINK.TAG.CLOTHING_GLOVES_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_GLOVES_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_GLOVES_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_GLOVES_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_RING<ARGN>=0
+TRY LINK.TAG.CLOTHING_RING_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_RING_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_RING_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_RING_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_COLLAR<ARGN>=0
+TRY LINK.TAG.CLOTHING_COLLAR_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_COLLAR_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_COLLAR_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_COLLAR_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_APRON<ARGN>=0
+TRY LINK.TAG.CLOTHING_APRON_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_APRON_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_APRON_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_APRON_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_CHEST<ARGN>=0
+TRY LINK.TAG.CLOTHING_CHEST_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_CHEST_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_CHEST_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_CHEST_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_WRIST<ARGN>=0
+TRY LINK.TAG.CLOTHING_WRIST_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_WRIST_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_WRIST_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_WRIST_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_TUNIC<ARGN>=0
+TRY LINK.TAG.CLOTHING_TUNIC_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_TUNIC_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_TUNIC_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_TUNIC_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_EARS<ARGN>=0
+TRY LINK.TAG.CLOTHING_EARS_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_EARS_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_EARS_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_EARS_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_ARMS<ARGN>=0
+TRY LINK.TAG.CLOTHING_ARMS_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_ARMS_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_ARMS_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_ARMS_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_CAPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_CAPE_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_CAPE_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_CAPE_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_CAPE_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_ROBE<ARGN>=0
+TRY LINK.TAG.CLOTHING_ROBE_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_ROBE_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_ROBE_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_ROBE_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_SKIRT<ARGN>=0
+TRY LINK.TAG.CLOTHING_SKIRT_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_SKIRT_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_SKIRT_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_SKIRT_TYPE<ARGN>=0
+TRY LINK.TAG.CLOTHING_LEGS<ARGN>=0
+TRY LINK.TAG.CLOTHING_LEGS_ID<ARGN>=0
+TRY LINK.TAG.CLOTHING_LEGS_NAME<ARGN>=0
+TRY LINK.TAG.CLOTHING_LEGS_COLOR<ARGN>=0
+TRY LINK.TAG.CLOTHING_LEGS_TYPE<ARGN>=0
+RETURN 0
+
+
+[FUNCTION f_shapeshift_karma_fame_gain]
+IF (<EVAL SSB_opt_Change_<ARGS>> != 1)
+	RETURN 0
+
+ELSE
+	IF (<EVAL SSB_opt_<ARGS>_Gain> == 1)	
+		VAR.SSB_Main_Org=<TAG.<ARGS><EVAL (<SRC.TAG.Shapeshifter_Slot>)>>
+		VAR.SSB_Main_Have=<SRC.<ARGS>>
+
+		IF (<EVAL (<VAR.SSB_Main_Org>)> > <EVAL (<VAR.SSB_Main_Have>)>)
+			VAR.SSB_FK_Gain=-1
+			VAR.SSB_Temp_1=<EVAL(<VAR.SSB_Main_Org> - <VAR.SSB_Main_Have>)>
+			VAR.SSB_Temp_2=<SRC.TAG.<ARGS>O>
+			VAR.SSB_Temp_3=<EVAL(<VAR.SSB_Temp_2> - <VAR.SSB_Temp_1>)>
+	
+		ELSEIF (<EVAL (<VAR.SSB_Main_Org>)> < <EVAL (<VAR.SSB_Main_Have>)>)
+			VAR.SSB_FK_Gain=1
+			VAR.SSB_Temp_1=<EVAL(<VAR.SSB_Main_Have> - <VAR.SSB_Main_Org>)>
+			VAR.SSB_Temp_2=<SRC.TAG.<ARGS>O>
+			VAR.SSB_Temp_3=<EVAL(<VAR.SSB_Temp_2> + <VAR.SSB_Temp_1>)>
+	
+		ELSEIF (<EVAL (<VAR.SSB_Main_Org>)> == <EVAL (<VAR.SSB_Main_Have>)>)
+			VAR.SSB_FK_Gain=0
+			VAR.SSB_Temp_3=<SRC.TAG.<ARGS>O>
+
+		ENDIF
+
+		IF (<EVAL (<VAR.SSB_Temp_3>)> > 9999)
+			TRY SRC.<ARGS>=9999
+
+		ELSEIF ((<EVAL (<VAR.SSB_Temp_3>)> < -9999) && (STRCMPI(<ARGS>,Karma) == 0))
+			TRY SRC.<ARGS>=-9999
+
+		ELSEIF ((<EVAL (<VAR.SSB_Temp_3>)> <= 0) && (STRCMPI(<ARGS>,Fame) == 0))
+			TRY SRC.<ARGS>=0
+
+		ELSE
+			TRY SRC.<ARGS>=<VAR.SSB_Temp_3>
+
+		ENDIF
+
+		VAR.SSB_Main_Org=
+		VAR.SSB_Main_Have=
+		VAR.SSB_Temp_1=
+		VAR.SSB_Temp_2=
+		VAR.SSB_Temp_3=
+
+	ELSE
+		TRY SRC.<ARGS>=<EVAL<SRC.TAG.<ARGS>O>>
+
+	ENDIF
+
+	IF (<EVAL SSB_opt_<ARGS>_Msg> == 1)
+		VAR.SSB_SYS_Color=SSB_Msg_Color
+
+		IF (<EVAL (<VAR.SSB_FK_Gain>)> == 1)
+			SRC.f_shapeshift_sysmessageua You gained some <ARGS> while shapeshifted!
+		
+		ELSEIF (<EVAL (<VAR.SSB_FK_Gain>)> == -1)
+			SRC.f_shapeshift_sysmessageua You lost some <ARGS> while shapeshifted!
+
+		ENDIF
+
+	ENDIF
+
+	VAR.SSB_FK_Gain=
+	RETURN 0
+
+ENDIF
+
+
+//The following functions are copied straight from Taran's Fixed Point Math library.
+//They are included in this script to reduce the extra work of anyone
+//who wants to use it. No need to go download an extra script.
+
+//If you want the full set of functions in his library, they can be found here: 
+//http://www.cs.rit.edu/~djr7581/fixed.scp
+
+[FUNCTION INTFIX]
+// VAR.FIX_CURR is the fixed point number
+// ARGN is the integer with 0 decimal places
+VAR.FIX_OUT <EVAL (<ARGN>*0100)>
+RETURN 0
+
+[FUNCTION FIXSET]
+VAR.FIX_CURR <ARGN>
+RETURN 0
+
+[FUNCTION DIVINT]
+IF (<ARGN>==0)
+	VAR.FIXERR Division by zero!
+	RETURN 0
+
+ENDIF
+
+IF (<VAR.FIX_CURR> > 0FFFFFF)
+	VAR.FIX_CURR -1
+	VAR.FIXERR Division > 65535!
+	RETURN 0
+
+ENDIF
+
+VAR.FIX_CURR <EVAL <VAR.FIX_CURR>/<ARGN>>
+RETURN 0
+
+[FUNCTION FIXGET]
+RETURN <VAR.FIX_CURR>
+
+[FUNCTION MULFIX]
+// VAR.FIX_CURR is the first number
+// ARGN is the second number
+VAR.FIX_CURR <EVAL ( (<VAR.FIX_CURR>/010) * (<ARGN>/010) )>
+RETURN 0
+
+[FUNCTION FIXTOINT]
+// VAR.FIX_CURR is the fixed point number converted to an integer
+// ARGN is a fixed point number to convert to an integer
+VAR.INT_OUT <EVAL <ARGN>/0100>
+RETURN 0
+
+
+//******************************************
+//****End of Shapeshifter Book Functions****
+//******************************************
+//********Begin Gamemaster Functions********
+//******************************************
+
+[FUNCTION ssb_unshift]
+SRC.NEWITEM=i_shapeshift_targeter
+SRC.ACT.TAG.N=1
+SRC.ACT.P=<P>
+SRC.ACT.TARGET Select the shapeshifter
+
+[FUNCTION ssb_noaqquire]
+SRC.NEWITEM=i_shapeshift_targeter
+SRC.ACT.TAG.N=2
+SRC.ACT.P=<P>
+SRC.ACT.TARGET Select the NPC/Player
+
+[FUNCTION ssb_yesaqquire]
+SRC.NEWITEM=i_shapeshift_targeter
+SRC.ACT.TAG.N=3
+SRC.ACT.P=<P>
+SRC.ACT.TARGET Select the NPC/Player
+
+[FUNCTION ssb_setaqquire]
+SRC.NEWITEM=i_shapeshift_targeter
+SRC.ACT.TAG.N=4
+SRC.ACT.TAG.Extra=<ARGN>
+SRC.ACT.P=<P>
+SRC.ACT.TARGET Select the NPC
+
+[FUNCTION ssb_setskill]
+SRC.NEWITEM=i_shapeshift_targeter
+SRC.ACT.TAG.N=5
+SRC.ACT.TAG.Extra=<ARGN>
+SRC.ACT.P=<P>
+SRC.ACT.TARGET Select the Player whose skill you wish to change
+
+[PLEVEL 4]
+ssb_unshift
+ssb_noaqquire
+ssb_yesaqquire
+ssb_setaqquire
+ssb_setskill
+
+[ITEMDEF i_shapeshift_targeter]
+ID=i_memory
+NAME=Shifter Targeter
+TYPE=t_script
+
+ON=@CREATE
+ATTR=0090
+TIMER=120
+
+ON=@TARGON_CHAR
+IF (<TAG.N> == 1)
+	IF (<SRC.TARG.NPC> != 0)
+		SRC.SYSMESSAGE You must target a player.
+	
+	ELSEIF (0<SRC.TARG.TAG.Shapeshifter_Polymorph> == 0)
+		SRC.SYSMESSAGE That is not a shapeshifter!
+	
+	ELSEIF (<SRC.TARG.TAG.Shapeshifter_Polymorph> == -1)
+		SRC.SYSMESSAGE Target is already in its original form!
+
+	ELSE
+		SRC.TARG.f_shapeshift_main_original_form
+
+	ENDIF
+
+ELSEIF (<TAG.N> == 2)
+	SRC.TARG.TAG.SSB_NoUse=1
+	SRC.SYSMESSAGE <SRC.TARG.NAME> is now unaqquirable by shapeshifters
+
+ELSEIF (<TAG.N> == 3)
+	SRC.TARG.TAG.SSB_NoUse=0
+	SRC.SYSMESSAGE <SRC.TARG.NAME> is now aqquirable by shapeshifters
+
+ELSEIF (<TAG.N> == 4)
+	IF (<SRC.TARG.NPC>)
+		SRC.TARG.TAG.SSB_Aqquire_Req=<EVAL (<TAG.Extra>)>
+		SRC.SYSMESSAGE Required level of skill set
+	ELSE
+		SRC.SYSMESSAGE You must target an NPC!
+	ENDIF
+
+ELSEIF (<TAG.N> == 5)
+	IF (!<SRC.TARG.NPC>)
+		SRC.TARG.TAG.Skill_Shapeshifting=<EVAL (<TAG.Extra>)>
+		SRC.SYSMESSAGE New skill level set
+	ENDIF
+
+ENDIF
+REMOVE
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+//***********************************
+//*****End of Gamemster Functions****
+//***********************************
+//*****Begin Miscellaneous Items*****
+//***********************************
+
+[ITEMDEF i_shapeshift_timer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Shifter Timer
+
+ON=@CREATE
+ATTR=0090
+
+ON=@TIMER
+SRC.TAG.SSB_Timer_Up=1
+UID.MORE.TRIGGER @DCLICK
+REMOVE
+RETURN 1
+
+
+[ITEMDEF i_shapeshift_mount]
+ID=i_pet_horse
+NAME=Fake Horse for Shapeshifter System
+LAYER=30
+TYPE=t_eq_script
+
+ON=@EQUIP
+LINK=<SRC.UID>
+MORE2=<SRC.UID>
+LAYER=25
+TYPE=t_eq_horse
+UPDATE
+
+//************************************
+//*****End of Miscellaneous Items*****
+//************************************
+//************End of Script***********
+//************************************
+
+[EOF]

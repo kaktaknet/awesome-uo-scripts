@@ -1,0 +1,161 @@
+//Requires OF flags to be set to 080 to enable the filewriting commands. 
+//Needs a folder in the mainsphere folder called Copyrects 
+//Saves the files as .scp 
+//Retains ID, color, relative X, Y, Z and name currently. 
+//Copies all items within the designated rectangle to a file which can later be imported using .importrect 
+//Installation: Just put wherever in your scripts and reboot server 
+//Usage: .copyrect to copy, .importrect to extract 
+
+[FUNCTION f_make_copyrect]
+NEWITEM=<ARGV 0>
+ACT.P=<VAR.TARGP>
+ACT.COLOR=<ARGV 1>
+ACT.MOVE=<EVAL(<ARGV 2>)>,<EVAL(<ARGV 3>)>,<EVAL(<ARGV 4>)>
+ACT.NAME=<ARGV 5>
+
+[FUNCTION importrect]
+NEWITEM=i_import_thing
+ACT.LINK=<UID>
+ACT.TAG.FILENAME=<ARGS>
+ACT.EQUIP
+
+[ITEMDEF i_import_thing]
+ID=i_memory
+NAME=An item importer
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_DECAY
+MORE1=0
+
+ON=@EQUIP
+TARGETG Click the top left corner of the place where you want to import the file <TAG.FILENAME>.scp.
+
+ON=@TARGON_GROUND
+VAR.TARGP=<LINK.TARGP>
+FOR LINE <EVAL(<FILELINES copyrects/<TAG.FILENAME>.scp>+-1)>
+LINK.f_make_copyrect <READFILE copyrects/<TAG.FILENAME>.scp <EVAL(<LOCAL.LINE>)>>
+ENDFOR
+VAR.TARGP=
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+VAR.TARGP=<LINK.TARGP>
+FOR LINE <EVAL(<FILELINES copyrects/<TAG.FILENAME>.scp>+-1)>
+LINK.f_make_copyrect <READFILE copyrects/<TAG.FILENAME>.scp <EVAL(<LOCAL.LINE>)>>
+ENDFOR
+VAR.TARGP=
+REMOVE
+RETURN 1
+
+ON=@TARGON_ITEM
+VAR.TARGP=<LINK.TARGP>
+FOR LINE <EVAL(<FILELINES copyrects/<TAG.FILENAME>.scp>+-1)>
+LINK.f_make_copyrect <READFILE copyrects/<TAG.FILENAME>.scp <EVAL(<LOCAL.LINE>)>>
+ENDFOR
+VAR.TARGP=
+REMOVE
+RETURN 1
+
+[FUNCTION ploop]
+VAR.X1=<ARGV 0>
+VAR.Y1=<ARGV 1>
+VAR.Z=<ARGV 2>
+LOCAL.X2=<ARGV 3>
+LOCAL.Y2=<ARGV 4>
+LOCAL.FUNCTION=<ARGV 6>
+NEWITEM=i_memory
+ACT.LINK=<UID>
+ACT.P=<EVAL(<VAR.X1>)>,<EVAL(<VAR.Y1>)>
+LOCAL.XLOOP=<EVAL(<LOCAL.X2>+-<VAR.X1>+1)>
+LOCAL.YLOOP=<EVAL(<LOCAL.Y2>+-<VAR.Y1>+1)>
+LOCAL.LOOPTIME=<EVAL(<LOCAL.XLOOP>*<LOCAL.YLOOP>)>
+LOCAL.MOVEX=<VAR.X1>
+LOCAL.MOVEY=<VAR.Y1>
+ACT.P=<EVAL(<LOCAL.MOVEX>)>,<EVAL(<LOCAL.MOVEY>)>
+FOR <EVAL(<LOCAL.LOOPTIME>+1)>
+	IF (<LOCAL.MOVEX>==<EVAL(<LOCAL.X2>+1)>
+		LOCAL.MOVEX=<VAR.X1>
+		LOCAL.MOVEY=<EVAL(<LOCAL.MOVEY>+1)>
+	ENDIF
+	TRY ACT.<LOCAL.FUNCTION>
+	ACT.P=<EVAL(<LOCAL.MOVEX>)>,<EVAL(<LOCAL.MOVEY>)>
+	LOCAL.MOVEX=<EVAL(<LOCAL.MOVEX>+1)>
+ENDFOR
+VAR.Y1=
+VAR.X1=
+VAR.Z=
+ACT.REMOVE
+RETURN 1
+
+[FUNCTION copyrect]
+IF (<ISEMPTY <ARGS>>)
+	SYSMESSAGE You need to define a filename.
+	RETURN 1
+ENDIF
+NEWITEM=i_copy_thing
+ACT.LINK=<UID>
+ACT.TAG.FILENAME=<ARGS>
+ACT.EQUIP
+
+[FUNCTION f_copy_rect]
+FORITEMS 0
+IF (<SRC.ACT.UID>==<UID>
+ELSE
+SERV.WRITEFILE copyrects/<ARGS>.scp <ID>,<COLOR>,<EVAL(<P.X>+-<VAR.X1>)>,<EVAL(<P.Y>+-<VAR.Y1>)>,<EVAL(<P.Z>+-<VAR.Z>)>,<NAME>,
+REMOVE
+ENDIF
+ENDFOR
+
+[ITEMDEF i_copy_thing]
+ID=i_memory
+NAME=An item exporter
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_DECAY
+MORE1=0
+
+ON=@EQUIP
+TARGETG Mark the top left corner of what you want to copy.
+
+ON=@DCLICK
+TARGETG Mark the bottom right corner of what you want to copy.
+RETURN 1
+
+On=@TARGON_ITEM
+IF (<MORE1>==0)
+	TAG.P1=<LINK.TARGP>
+	MORE1=1
+	LINK.ACT.USE
+	RETURN 1
+ENDIF
+TAG.P2=<LINK.TARGP>
+LINK.ploop <TAG.P1>,<TAG.P2>,f_copy_rect <TAG.FILENAME>
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+IF (<MORE1>==0)
+	TAG.P1=<LINK.TARGP>
+	MORE1=1
+	LINK.ACT.USE
+	RETURN 1
+ENDIF
+TAG.P2=<LINK.TARGP>
+LINK.ploop <TAG.P1>,<TAG.P2>,f_copy_rect <TAG.FILENAME>
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<MORE1>==0)
+	TAG.P1=<LINK.TARGP>
+	MORE1=1
+	LINK.ACT.USE
+	RETURN 1
+ENDIF
+TAG.P2=<LINK.TARGP>
+LINK.ploop <TAG.P1>,<TAG.P2>,f_copy_rect <TAG.FILENAME>
+REMOVE
+RETURN 1

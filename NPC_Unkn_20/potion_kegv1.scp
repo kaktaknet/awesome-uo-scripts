@@ -1,0 +1,136 @@
+//Script by Theol, Admin Dark
+//works with anything type t_potion and saves it as the baseid
+//** notes on def_max_amount tested up to 500 total potions works good ;P
+//**notes on def_make_bottle if set to 0 will not consume bottles when taking~
+//potion's out of kegs and will not give bottles for pouring potions into keg.**
+
+[DEFNAME potion_keg1]
+def_max_amount		50 //max amount in keg
+def_make_bottle		1  //1 for bottles 0 for none
+
+[ITEMDEF i_Potion_keg]
+//scripted by Theol, Admin Dark
+ID=I_KEG_WOOD
+NAME=Potion keg
+TYPE=t_script
+WEIGHT=25
+DYE=0
+SKILLMAKE=Tinkering 50.0, Alchemy 50.0, carpentry 50.0 
+RESOURCES=15 i_log, 10 i_bottle_EMPTY, 10 i_ingot_iron
+
+ON=@CREATE
+NAME=Potion keg [EMPTY]
+TAG.POTION_TYPE=0
+TAG.MAXAMOUNT=<DEF.def_max_amount>
+TAG.AMOUNT=0
+
+ON=@DROPON_SELF
+IF !(<SRC.FINDLAYER(layer_dragging).TYPE>=t_potion)
+SRC.SYSMESSAGE <ARGO.NAME> can't be put in the potion keg.
+SRC.FINDLAYER(layer_dragging).BOUNCE
+RETURN 1
+ENDIF
+IF !(<EVAL <TAG0.POTION_TYPE>>0)
+CALL ADD_POTION
+RETURN 1
+ELSEIF !(STRCMPI(<TAG0.POTION_TYPE>,<SRC.FINDLAYER(layer_dragging).BASEID>)==0) 
+SRC.SYSMESSAGE <ARGO.NAME> is not the same type of potion that is in the keg.
+SRC.FINDLAYER(layer_dragging).BOUNCE
+RETURN 1
+ELSEIF <EVAL (<TAG0.AMOUNT>)>>=<DEF.def_max_amount>
+SRC.SYSMESSAGE The potion keg is full.
+SRC.FINDLAYER(layer_dragging).BOUNCE
+RETURN 1
+ELSE
+CALL ADD_POTION
+RETURN 1
+
+ON=@DCLICK
+IF !(<SRC.RESTEST 1 i_bottle_empty>)
+SRC.SYSMESSAGE You have no empty bottles for your potion.
+RETURN 1
+ENDIF
+IF (<EVAL (<TAG0.AMOUNT>)>>0)
+CALL MAKE_POTION
+RETURN 1
+ELSE
+SRC.SYSMESSAGE Potion Keg is empty.
+RETURN 1
+ENDIF
+
+[FUNCTION MAKE_POTION]
+//scripted by Theol, Admin Dark
+IF (<EVAL (<TAG.AMOUNT>)>>1) && (<EVAL (<DEF.def_make_bottle>)>==1)
+SOUND=snd_z_end_liquid
+SRC.NEWITEM=<EVAL (<TAG0.POTION_TYPE>)>
+SRC.ACT.BOUNCE
+TAG.AMOUNT=<EVAL (<TAG.AMOUNT>)>+-1
+SRC.CONSUME 1 i_bottle_empty
+NAME=Potion keg <SRC.ACT.NAME> [<EVAL (<TAG0.AMOUNT>)> potions]
+RETURN 1
+ELSEIF (<EVAL (<TAG.AMOUNT>)>=1) && (<EVAL (<DEF.def_make_bottle>)>==1)
+SOUND=snd_z_end_liquid
+SRC.NEWITEM=<EVAL (<TAG0.POTION_TYPE>)>
+SRC.ACT.BOUNCE
+TAG.AMOUNT=<EVAL (<TAG.AMOUNT>)>+-1
+TAG.POTION_TYPE=0
+SRC.CONSUME 1 i_bottle_empty
+NAME=Potion keg [EMPTY]
+RETURN 1
+ELSEIF (<EVAL (<TAG.AMOUNT>)>>1) && (<EVAL (<DEF.def_make_bottle>)>==0)
+SOUND=snd_z_end_liquid
+SRC.NEWITEM=<EVAL (<TAG0.POTION_TYPE>)>
+SRC.ACT.BOUNCE
+TAG.AMOUNT=<EVAL (<TAG.AMOUNT>)>+-1
+NAME=Potion keg <SRC.ACT.NAME> [<EVAL (<TAG0.AMOUNT>)> potions]
+RETURN 1
+ELSEIF (<EVAL (<TAG.AMOUNT>)>=1) && (<EVAL (<DEF.def_make_bottle>)>==0)
+SOUND=snd_z_end_liquid
+SRC.NEWITEM=<EVAL (<TAG0.POTION_TYPE>)>
+SRC.ACT.BOUNCE
+TAG.AMOUNT=<EVAL (<TAG.AMOUNT>)>+-1
+TAG.POTION_TYPE=0
+NAME=Potion keg [EMPTY]
+RETURN 1
+ENDIF
+
+[FUNCTION ADD_POTION]
+//scripted by Theol, Admin Dark
+IF (<EVAL (<TAG0.POTION_TYPE>)>==0) && (<EVAL (<DEF.def_make_bottle>)>==1) 
+TAG.POTION_TYPE=<SRC.FINDLAYER(layer_dragging).BASEID>
+TAG.AMOUNT=<EVAL (<TAG0.AMOUNT>)>+1
+NAME=Potion keg <SRC.FINDLAYER(layer_dragging).NAME> [<EVAL (<TAG0.AMOUNT>)> potion]
+SOUND=snd_z_end_liquid
+SRC.SYSMESSAGE You pour the <SRC.FINDLAYER(layer_dragging).NAME> into the Potion keg.
+SRC.FINDLAYER(layer_dragging).REMOVE
+SRC.NEWITEM=i_bottle_empty
+SRC.ACT.BOUNCE
+RETURN 1
+ELSEIF (<EVAL (<DEF.def_make_bottle>)>==0)
+TAG.POTION_TYPE=<SRC.FINDLAYER(layer_dragging).BASEID>
+TAG.AMOUNT=<EVAL (<TAG0.AMOUNT>)>+1
+NAME=Potion keg <SRC.FINDLAYER(layer_dragging).NAME> [<EVAL (<TAG0.AMOUNT>)> potion]
+SOUND=snd_z_end_liquid
+SRC.SYSMESSAGE You pour the <SRC.FINDLAYER(layer_dragging).NAME> into the Potion keg.
+SRC.FINDLAYER(layer_dragging).REMOVE
+RETURN 1
+ENDIF
+IF (<EVAL (<DEF.def_make_bottle>)>==1)
+TAG.AMOUNT=<EVAL (<TAG0.AMOUNT>)>+1
+NAME=Potion Keg <SRC.FINDLAYER(layer_dragging).NAME> [<EVAL (<TAG0.AMOUNT>)> potions]
+SOUND=snd_z_end_liquid
+SRC.SYSMESSAGE You pour the <SRC.FINDLAYER(layer_dragging).NAME> into the Potion keg.
+SRC.FINDLAYER(layer_dragging).REMOVE
+SRC.NEWITEM=i_bottle_empty
+SRC.ACT.BOUNCE
+RETURN 1
+ELSEIF (<EVAL (<DEF.def_make_bottle>)>==0)
+TAG.AMOUNT=<EVAL (<TAG0.AMOUNT>)>+1
+NAME=Potion Keg <SRC.FINDLAYER(layer_dragging).NAME> [<EVAL (<TAG0.AMOUNT>)> potions]
+SOUND=snd_z_end_liquid
+SRC.SYSMESSAGE You pour the <SRC.FINDLAYER(layer_dragging).NAME> into the Potion keg.
+SRC.FINDLAYER(layer_dragging).REMOVE
+RETURN 1
+ENDIF
+
+[EOF]

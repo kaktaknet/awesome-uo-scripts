@@ -1,0 +1,198 @@
+[CHARDEF c_drugdealer]
+NAME=Drug Dealer
+CAM=MT_WALK|MT_USEHANDS|MT_RUN|MT_EQUIP
+
+CATEGORY=Uniques
+SUBSECTION=Chars
+DESCRIPTION=Drug Dealer
+
+TSPEECH=Dealing
+TSPEECH=Weed
+TSPEECH=Bongs
+TSPEECH=Papers
+TSPEECH=Snitch
+
+TEVENTS=e_Human_HearUnk
+
+ON=@Create
+COLOR=Colors_Skin
+DEX{300 310}
+STR{500 510}
+INT{400 410}
+
+WRESTLING={200.0 250.0}
+
+NPC=Brain_human
+
+//******************************//
+//*           SPEECH           *//
+//******************************//
+
+[SPEECH Dealing]
+ON=wassup
+SAY=Wassup my man, you looking to get [high]?
+ON=yo
+SAY=Wassup my man, you looking to get [high]?
+ON=hi
+SAY=Wassup my man, you looking to get [high]?
+ON=*hello*
+SAY=Wassup my man, you looking to get [high]?
+ON=*hail*
+SAY=Wassup my man, you looking to get [high]?
+ON=*hello*
+SAY=Wassup my man, you looking to get [high]?
+ON=high
+SAY=I'm selling [weed], [bongs], and rolling [papers].
+
+[SPEECH Weed]
+ON=weed
+SAY=Thats gonna cost you 50k. Still wanna [buy] some?
+ON=buy
+IF (<SRC.RESTEST 50000 i_gold>)  //check to make sure src has 50k
+SRC.CONSUME 50000 i_gold         //take 50k from src
+SRC.NEWITEM=i_marijuana          //newitem
+SRC.ACT.BOUNCE                   //put newitem in pack
+SAY=Enjoy...
+ELSE
+SAY=You broke, The price is 50K
+
+[SPEECH Bongs]
+ON=bongs
+SAY=Thats gonna cost you 30K. Still wanna [invest] in one?
+ON=invest
+IF (<SRC.RESTEST 30000 i_gold>)
+SRC.CONSUME 30000 i_gold
+SRC.NEWITEM=i_bong
+SRC.ACT.BOUNCE
+SAY=Enjoy...
+ELSE
+SAY=You broke, The price is 30K
+
+[SPEECH Papers]
+ON=papers
+SAY=Thats gonna cost you 20K. Still wanna [purchase] some?
+ON=purchase
+IF (<SRC.RESTEST 20000 i_gold>)
+SRC.CONSUME 20000 i_gold
+SRC.NEWITEM=i_rolling_papers
+SRC.ACT.BOUNCE
+SAY=Enjoy...
+ELSE
+SAY=You broke, The price is 20K
+
+[SPEECH Snitch]
+ON=*guards*
+SAY=You Snitch!!
+ON=*drugs*
+SAY=Shhhh, like tell everyone i'm dealing.
+ON=*dealing*
+SAY=Shhhh, like tell everyone i'm dealing.
+
+
+//******************************//
+//*           ITEMS            *//
+//******************************//
+
+[ITEMDEF i_marijuana]
+NAME=Marijuana
+ID=0cb2
+
+CATEGORY=Uniques
+SUBSECTION=Misc
+DESCRIPTION=Marijuana
+
+ON=@CREATE
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_rolling_papers>)
+SRC.CONSUME 1 i_marijuana
+SRC.CONSUME 1 i_rolling_papers
+SRC.NEWITEM=i_joint
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You need rolling papers.
+
+[ITEMDEF i_rolling_papers]
+NAME=Rolling Papers
+ID=0e16
+
+CATEGORY=Uniques
+SUBSECTION=Misc
+DESCRIPTION=Rolling Papers
+
+ON=@CREATE
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_marijuana>)
+SRC.CONSUME 1 i_marijuana
+SRC.CONSUME 1 i_rolling_papers
+SRC.NEWITEM=i_joint
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You need some marijuana.
+
+
+[ITEMDEF i_bong]
+NAME=Bong
+ID=0e28
+
+CATEGORY=Uniques
+SUBSECTION=Misc
+DESCRIPTION=Bong
+
+ON=@CREATE
+HITPOINTS={3 5}
+COLOR=0480
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_marijuana>)
+SRC.CONSUME 1 i_marijuana
+ELSE
+SRC.MESSAGE You need some marijuana.
+
+
+[ITEMDEF i_joint]
+NAME=Joint
+ID=09a5
+
+CATEGORY=Uniques
+SUBSECTION=Misc
+DESCRIPTION=Joint
+
+ON=@Create
+COLOR=00429
+
+ON=@Timer
+IF <MORE2>=0
+CONT.FLAGS=(<CONT.FLAGS>+(-000400000))
+CONT.FIX
+CONT.UPDATE
+CONT.EMOTE=sobering up. 
+REMOVE
+Return 1
+
+ON=@DCLICK
+IF <SRC.FINDID.i_joint>
+SRC.FLAGS=<SRC.FLAGS>+000400000 
+SRC.FINDID.i_joint.MORE2=<SRC.FINDID.i_joint.MORE2>+2
+SRC.SYSMESSAGE=Dayum, I must be tripp'n
+Timer=10
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE=Dayum, I must be tripp'n
+SRC.ANIM 33
+SRC.ACT.EQUIP
+SRC.ACT.TIMER 10
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF i_shrooms]
+NAME=Shrooms
+ID=0d0d
+
+CATEGORY=Uniques
+SUBSECTION=Misc
+DESCRIPTION=Shrooms

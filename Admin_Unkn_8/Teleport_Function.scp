@@ -1,0 +1,63 @@
+[ITEMDEF i_gm_teleport_staff]
+
+NAME= Event Teleporting Staff
+
+ID=i_staff_black
+
+WEIGHT=5000
+
+
+
+ON=@CREATE
+
+COLOR= {0800 0834}
+
+HITPOINTS={5 10}
+
+ATTR=attr_newbie|attr_move_never|attr_magic
+
+
+
+CATEGORY=GM Items
+
+SUBSECTION=Other Items
+
+DESCRIPTION=Teleporting Staff
+
+
+
+ON=@DCLICK
+
+TARGET Select the player you would like to move.
+
+RETURN 1
+
+
+
+ON=@TARGON_ITEM
+
+SRC.SYSMESSAGE You cannot move <SRC.TARG.NAME> or any other item.
+
+RETURN 1
+
+
+
+ON=@TARGON_CHAR
+
+LINK=<SRC.TARG.UID>
+
+TARGETG Where would you like to move <SRC.TARG.NAME>?
+
+RETURN 1
+
+
+
+ON=@TARGON_GROUND
+
+LINK.GO <SRC.TARGP>
+
+RETURN 1
+
+
+
+[EOF]

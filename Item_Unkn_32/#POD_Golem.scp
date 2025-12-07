@@ -1,0 +1,271 @@
+//POD Golem Script
+
+
+//Iron Golem DEF if you don't have it
+
+//REMOVE '//' if you need DEF, starting here
+//[CHARDEF 02F0]
+//NAME		= iron golem
+//CAN		= MT_WALK|MT_USEHANDS|MT_RUN
+//DAM		= 50
+//ARMOR		= 50
+//Category	= LBR_Creatures_Monster
+//Subsection	= Mechanics
+//Description	= Iron Golem
+
+//ON=@Create
+//	EVENTS	+e_Mechanics
+//	EVENTS	+e_ParaRes
+//	EVENTS	+e_m_poisonres
+//	EVENTS	+e_m_Anti_Field
+//	SPEECH	+spk_golem_pet
+//	
+//	NPC		= BRAIN_MONSTER
+//	FAME		= 0
+//	KARMA		= {-120 -250}
+//	STR		= {735 863}
+//	DEX		= {87 99}
+//	INT		= {146 287}
+//	PARRYING	= {1500 1800}
+//	MAGICRESISTANCE	= {1500 1644}
+//	SWORDSMANSHIP	= {1500 1700}
+//	WRESTLING	= {800 900}
+
+//ON=@NPCRESTOCK
+//	return 1
+
+//ON=@UserClick
+//	if ( <eval <src.safe.tag.nomenu>> == 1 )
+//		return 0
+//	endif
+//	
+//	if ( <src.uid> == <memoryfindtype.02.link.uid> ) //is owner
+//		src.act	= <uid>
+//		src.dialog d_golem_pet
+//		return 0
+//	endif
+
+//ON=@Death
+//	Newitem i_Clockwork_Assembly
+//	act.p	= <p>
+//	Newitem i_Crystal_Power
+//	act.p	= <p>
+//	Newitem i_gears
+//	act.amount	= {1 5}
+//	act.p	= <p>
+//	remove
+//	return 0
+
+//ON=@NPCRESTOCk
+//	ITEM	= I_GOLD,{1800 2400}
+//DEF END HERE, Stop removing '//'
+
+
+
+[ITEMDEF i_Clockwork_Assembly]	//Actually a winch
+ID	= 01eac
+NAME	= Clockwork Assembly
+TYPE	= t_script
+
+on=@create
+	color	= 03da
+
+[ITEMDEF i_Crystal_Power]	//Just a purple Crystal
+ID	= 01f1c
+NAME	= Power Crystal
+TYPE	= T_Script
+
+[ITEMDEF i_Golem_Icon]
+ID	= 020D7
+NAME	= Golem
+TYPE	= 37
+RESOURCES= 1 i_Clockwork_Assembly, 1 I_Crystal_Power, 50 I_Ingot_Iron, 5 i_gears
+SKILLMAKE= TINKERING 90.0, t_tinker_tools
+
+
+[skillmenu sm_Tinker_Golem]
+Make a Golem
+
+ON=i_Golem_Icon Make a Golem
+	if ( <canmake i_golem_icon> )
+		if ( <eval rand(2000)> >= <tinkering> )
+			src.sysmessage "You have failed to create the golem"
+			consume 1 i_Clockwork_Assembly
+			consume 1 I_Crystal_Power
+			consume 20 I_Ingot_Iron
+			consume 3 I_Gears
+			return 1
+		endif
+		
+		if ( <Src.restest 1 i_Clockwork_Assembly> ) && ( <Src.restest 1 I_Crystal_Power> ) && ( <Src.restest 50 I_Ingot_Iron> ) && ( <Src.restest 5 i_gears> )
+		else
+			src.sysmessage "You lack resources to create a golem"
+			return 1
+		endif
+
+
+		newnpc 02F0
+		tag.curAct	= <act.uid>
+		act.p	= <p>
+		act.addflag	008000000
+		act.karma	= -500
+		act.fame	= 0
+		act.Name	= Golem Created By <name>
+		act.link	= <uid>
+						
+		act.update
+		
+		newitem I_Memory
+		act.attr	= 04
+		act.timer	= -1
+		act.color	= 02	
+		act.more2	= <uid>
+		act.link	= <uid>
+		act.layer	= 30
+		act.update
+		act.cont	= <tag.CurAct>
+		
+		try uid.<tag.curact>.act	= <UID>
+		try uid.<tag.curact>.hear "come"
+		
+		tag.curact	=
+		
+		updatex
+		consume 1 i_Clockwork_Assembly
+		consume 1 I_Crystal_Power
+		consume 50 I_Ingot_Iron
+		consume 5 I_Gears
+	endif
+
+
+
+[DIALOG D_Golem_Pet]
+50, 50
+PAGE 0
+resizepic 0 0 5054 220 130
+checkertrans  5 5 210 120
+text 45 15 1152 0
+text 45 40 1152 1
+text 45 65 1152 2
+text 45 90 1152 3
+button 10 15 4005 4006 1 0 1
+button 10 40 4005 4006 1 0 2
+button 10 65 4005 4006 1 0 3
+button 10 90 4005 4006 1 0 4
+
+[DIALOG D_Golem_Pet TEXT]
+Repair
+Self Destruct
+Command: Stop
+Command: Kill
+
+[DIALOG D_Golem_Pet BUTTON]
+ON=0
+        
+ON=1   //Repair
+	src.act.src	= <src.uid>
+        SRC.ACT.HEAR "Repair"
+ON=2
+        SRC.ACT.SRC     = <SRC.UID>
+        SRC.ACT.HEAR "Self Destruct"
+                
+ON=3
+        SRC.ACT.SRC     = <SRC.UID>
+        SRC.ACT.HEAR "Stop"
+ON=4
+        SRC.ACT.SRC     = <SRC.UID>
+        SRC.ACT.HEAR "Kill"
+ 
+[itemdef i_golem_repair_mem]
+id	= i_memory
+name	= repair memory
+type	= t_eq_script
+
+on=@create
+	layer	= 30
+
+[itemdef i_self_destruct_confirm_mem]
+id	= i_memory
+name	= repair memory
+type	= t_eq_script
+
+on=@create
+	layer	= 30
+	timer	= 10
+	
+
+[Speech spk_golem_pet]
+
+ON=Repair
+	if ( <src.uid> == <memoryfindtype.02.link.uid> ) //is owner
+	
+		if ( <src.findid.i_golem_repair_mem.timer> <= 0 )
+			src.findid.i_golem_repair_mem.remove
+		endif
+		
+		if ( <src.findid.i_golem_repair_mem> )
+			src.sysmessage "You have to wait awhile to do another repair"
+			return 1
+		endif
+		
+		if ( <hits> >= <str> )
+			SAY "I do not need to be repaired"
+			return 1
+		endif
+		
+		if ( <src.restest i_ingot_iron> <= 10 )
+			Src.sysmessage "You do not have enough Iron Ingots to repair the golem"
+			return 1
+		endif
+		
+		var.IntHP = <eval <Str> - <Hits>>
+		var.IntResCount	= <eval <src.restest i_ingot_iron>>
+		
+		if ( <var.intHP> >= <var.intResCount> )
+			//Lack Ingots to do full repair
+			var.intHP = <eval <Var.IntHP> +- <Var.intResCount>>
+		Endif
+		
+		src.consume <var.intHP> i_ingot_iron
+		
+		//repair
+		hits	= ( <hits> + <var.intHP> )
+		
+		src.newitem i_golem_repair_mem
+		src.act.layer	= 30
+		src.act.timer	= 12
+		src.act.update
+		src.act.cont	= ( <src.uid> )
+		
+		
+		var.intHP	=
+		Var.IntResCount	=
+
+
+ON=Self Destruct
+
+	if ( <src.findid.i_self_destruct_confirm_mem.timer> <= 0 )
+		src.findid.i_self_destruct_confirm_mem.remove
+	endif
+	
+	if ( <src.findid.i_self_destruct_confirm_mem> )
+		suicide
+		src.findid.i_self_destruct_confirm_mem.remove
+	else
+		src.newitem i_self_destruct_confirm_mem
+		src.act.layer	= 30
+		src.act.timer	= 10
+		src.act.update
+		src.act.cont	= <src.uid>
+		
+		SAYU "You have 10 seconds to confirm the self destruction request. To confirm, either send the request again, or say 'YES' to me."
+	endif
+
+ON=YES
+	if ( <src.findid.i_self_destruct_confirm_mem> )
+		suicide
+		src.findid.i_self_destruct_confirm_mem.remove
+	endif
+	
+	
+[EOF]

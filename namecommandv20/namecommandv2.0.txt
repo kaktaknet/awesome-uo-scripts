@@ -1,0 +1,85 @@
+[comment]
+Oname by Ankron
+Version 2.0a
+
+What it does:
+The command optomises temproray name changes, and attempts to save
+the client from multiple charactor desktop files.
+This command creates a "temporary tag" so to speak for the name.
+The tempory tag is not usually saved in the world file.
+Thus it frees up resources. It also makes it possible to include
+things like title, guild name, ect... if you can dream it you can put
+it in the name.
+
+Instructions:
+in any event that has a name change for charactors, simply add "oname" to the top
+this will tell the script that you want the name saved. Next add what ever you like
+For example:
+
+	Oname
+	if <isstaff>
+		name=Staff Member: <name>
+	endif
+
+What happens here is if you are a staff member, your name is "Kelly",
+and you have karma level blue status; then the words "Staff Member: Kelly"
+will appear above your head in blue. same thing if you are red karma status
+only in red.
+
+How about another example say you think a player is a lamer and you hate the name ;)
+try this...
+
+oname
+if <src.isstaff>
+	name Imalamer
+endif
+
+the player might click all day long and still see they're name, but now if your staff...
+The players name will show up "lamer" in red blue or grey depending on the karma level.
+Fun hu? LOL. 
+
+The other benifit is should the name of the player change in game, since this doesn't rely
+on some permanent tage to change, name changes are far easier.
+
+//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
+//----------------------------------- Actual script --------------------------------------
+//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
+
+[events e_namer] //This is an example
+on=@click
+Oname
+if <isstaff>
+	name=Staff Member: <name>
+endif
+
+[function isstaff]
+if <account.plevel>>1
+	return 1
+endif
+return 0
+
+[function oname]
+if <serv.uid.0<tag.onamer>.uid>!=0
+	name=<serv.uid.0<tag.onamer>.name>
+	return 1
+else
+	newitem i_namer
+	tag.onamer=<act.uid>
+	act.p=<p>
+	act.link=<uid>
+	act.timerd 1
+	act.name=<name>
+endif
+
+[itemdef i_namer]
+id=02007
+type=t_script
+
+on=@timer
+link.name=<name>
+remove
+return 1
+
+[EOF]

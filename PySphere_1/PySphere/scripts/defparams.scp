@@ -1,0 +1,28 @@
+//defparams.scp compiled by PySphere Release 17 from defparams.py.
+//#prefix-local
+//
+//#This tests default parameters
+//
+//def testParamPassing2():
+[function testParamPassing2]
+//	test_defparams(  5 , 9 , 73 , 99   )
+test_defparams(5,9,73,99)
+//	test_defparams(1)
+test_defparams(1)
+//
+//def test_defparams(i=10, a=20):
+[function test_defparams]
+ARG(i,<?argv[0]?>)
+if (!(strlen(<?ARG(i)?>)))
+ARG(i,10)
+endif
+ARG(a,<?argv[1]?>)
+if (!(strlen(<?ARG(a)?>)))
+ARG(a,20)
+endif
+//	sysmessage("i="+local.i)
+sysmessage(i=<?ARG(i)?>)
+//	sysmessage("a="+local.a)
+sysmessage(a=<?ARG(a)?>)
+//
+//	

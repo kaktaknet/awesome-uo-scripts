@@ -1,0 +1,242 @@
+///////////////////////////////////////////////
+//// The Matrix: Reloaded Magic Key System ////
+///////////////////////////////////////////////
+//Version 0.2
+
+//Scripted using EditPlus v2.11 with Swindler's SphereScript Syntax module installed
+//Built for & tested on Sphere 0.55i
+
+//Created by Warpe– Dragon
+//http://warped.ods.org
+//warped_dragon@hotmail.com
+//ICQ: 86428337
+//AIM: Warped Dragon
+//MSN: Use Email...
+//YIM: Not Telling
+
+//Please don't remove this header//
+
+//INSTALLATION: Drop it into the script directory, restart server
+
+//DESCRIPTION: This script is designed to emulate the strange keys seen on The Matrix: Reloaded. Add a
+//"magical key" with .add i_mrmks_key. Double click it and target a door. They are now linked. Now, you
+//can use this key on any door on the map, and the door will open. Go through, and you will find yourself
+//standing in the doorway of the door you linked the key to. To sever the connection simply close the door
+//at either end, or wait for the timer to reach zero. 
+
+//If you have problems, suggestions or questions about this script,
+//please don't hesitate to email me.
+
+//Have fun!
+
+//Version History:
+
+//v0.2
+//- Fixed a bug wherin the type's of the doors would get screwed up. Now it resets them properly.
+//- Made the keys dyeable, so they can be color-coded by players.
+//- Made the keys newbie. Would suck to loose the one to your house to some pking screwhead.
+
+//v0.1
+//- First Release Version.
+
+[DEFNAME Magic_Keys]
+MRMKS_Delay	15	//The time in seconds before the door's automaticly close, severing the connection
+
+[ITEMDEF i_mrmks_key]
+DEFNAME=i_magical_key
+ID=i_key_magic
+TYPE=t_script
+DYE=1
+WEIGHT=0
+
+DESCRIPTION=Warped
+SUBSECTION=The Matirx: Reloaded Magic Key System
+CATEGORY=Magic Key
+
+ON=@CREATE
+ATTR=attr_newbie
+NAME="a magical key"
+LINK=0
+
+ON=@DCLICK
+IF (<LINK> == 0)
+	TARGET Select the door to link this key to:
+	RETURN 1
+
+ELSE
+	TARGET Select the door to use they key on:
+	RETURN 1
+
+ENDIF
+
+ON=@TARGON_ITEM
+IF (<LINK> == 0)
+	IF (<SRC.TARG.TYPE> == t_door_locked)
+		SRC.SYSMESSAGE You cannot link the key to a locked door!
+		RETURN 1
+
+	ELSEIF (<SRC.TARG.TYPE> == t_door)
+		LINK=<SRC.TARG.UID>
+		NAME="a key to <SRC.TARG.REGION.NAME>"
+		SRC.SYSMESSAGE The key is linked to the door
+		RETURN 1
+
+	ELSE
+		SRC.SYSMESSAGE That is not a door!
+		RETURN 1
+
+	ENDIF
+
+ELSEIF (<SRC.TARG.UID> == <UID>)
+	LINK=0
+	SRC.SYSMESSAGE Key has been reset
+	RETURN 1
+
+ELSE
+	IF (<SRC.TARG.TYPE> == t_door_locked)
+		SRC.SYSMESSAGE You cannot use the key on a locked door!
+		RETURN 1
+
+	ELSEIF (<SRC.TARG.TYPE> == t_door)
+		IF (<SRC.TARG.UID> == <LINK.UID>)
+			SRC.SYSMESSAGE You cannot use this on the door it is linked to!
+			RETURN 1
+		
+		ELSE
+			VAR.MRMKS_Temp_1=<SRC.TARG.UID>
+
+
+			SRC.NEWITEM i_mrmks_tele
+			SRC.ACT.P=<SRC.TARG.P>
+			SRC.ACT.MOREP=<LINK.P>
+			SRC.ACT.LINK=<VAR.MRMKS_Temp_1>
+			SRC.ACT.TAG.Door1_Link=<SRC.TARG.LINK>
+			SRC.ACT.TAG.Door1_More1=<SRC.TARG.MORE1>
+			SRC.ACT.TAG.Door1_Type=<SRC.TARG.TYPE>
+			SRC.ACT.TAG.Door2_Link=<LINK.LINK>
+			SRC.ACT.TAG.Door2_More1=<LINK.MORE1>
+			SRC.ACT.TAG.Door2_Type=<LINK.TYPE>
+			VAR.MRMKS_Temp_2=<SRC.ACT.UID>
+			
+			SRC.TARG.USE
+			SRC.TARG.TYPE=t_door_mrmks
+			SRC.TARG.LINK=<VAR.MRMKS_Temp_2>
+			SRC.TARG.MORE1=<LINK.UID>
+
+			SRC.FLAGS=<SRC.FLAGS>|statf_insubstantial
+			MOREP=<SRC.P>
+			SRC.P=<LINK.P>
+			LINK.USE
+			SRC.P=<MOREP>
+			SRC.FLAGS=<SRC.FLAGS>&~statf_insubstantial
+
+			LINK.TYPE=t_door_mrmks
+			LINK.LINK=<VAR.MRMKS_Temp_2>
+			LINK.MORE1=<VAR.MRMKS_Temp_1>
+
+			TRY UID.<VAR.MRMKS_Temp_1>.TIMER=<EVAL MRMKS_Delay>
+			LINK.TIMER=<EVAl MRMKS_Delay>
+			
+			SRC.SYSMESSAGE Door is open. You have <EVAL MRMKS_Delay> seconds
+
+			VAR.VAR.MRMKS_Temp_2=
+			VAR.VAR.MRMKS_Temp_1=
+
+			RETURN 1
+
+		ENDIF
+
+	ELSE
+		SRC.SYSMESSAGE That is not a door!
+		RETURN 1
+
+	ENDIF
+
+ENDIF
+
+[ITEMDEF i_mrmks_tele]
+ID=i_worldgem_bit
+TYPE=t_script
+WEIGHT=0
+
+DESCRIPTION=Warped
+SUBSECTION=The Matirx: Reloaded Magic Key System
+CATEGORY=Teleporter
+
+ON=@CREATE
+ATTR=attr_invis|attr_move_never
+NAME="MRMKS Teleporter"
+LINK=0
+TAG.Door1_Link=0
+TAG.Door1_More1=0
+TAG.Door1_Type=0
+TAG.Door2_Link=0
+TAG.Door2_More1=0
+TAG.Door2_Type=0
+
+ON=@STEP
+SRC.P=<MOREP>
+SRC.UPDATE
+RETURN 1
+
+[TYPEDEF t_door_mrmks]
+ON=@CLICK
+VAR.MRMKS_Temp_1=<LINK>
+LINK=<MORE1>
+MESSAGE a door leading to <LINK.REGION.NAME>
+LINK=<VAR.MRMKS_Temp_1>
+VAR.MRMKS_Temp_1=
+RETURN 1
+
+ON=@DCLICK
+f_mrmks_reset_doors
+RETURN 1
+
+ON=@TIMER
+f_mrmks_reset_doors
+RETURN 1
+
+[FUNCTION f_mrmks_reset_doors]
+VAR.MRMKS_Door1_Link=<LINK.TAG.Door1_Link>
+VAR.MRMKS_Door1_More1=<LINK.TAG.Door1_More1>
+VAR.MRMKS_Door1_Type=<LINK.TAG.Door1_Type>
+VAR.MRMKS_Door2_Link=<LINK.TAG.Door2_Link>
+VAR.MRMKS_Door2_More1=<LINK.TAG.Door2_More1>
+VAR.MRMKS_Door2_Type=<LINK.TAG.Door2_Type>
+
+IF (<LINK.LINK.UID> == <UID>)
+	VAR.MRMKS_Temp_1=2
+	VAR.MRMKS_Temp_2=1
+	f_mrmks_restore_doors
+
+ELSE
+	VAR.MRMKS_Temp_1=1
+	VAR.MRMKS_Temp_2=2
+	f_mrmks_restore_doors
+
+ENDIF
+
+VAR.MRMKS_Door1_Link=
+VAR.MRMKS_Door1_More1=
+VAR.MRMKS_Door2_Link=
+VAR.MRMKS_Door2_More1=
+VAR.MRMKS_Door1_Type=
+VAR.MRMKS_Door2_Type=
+VAR.MRMKS_Temp_1=
+VAR.MRMKS_Temp_2=
+TIMERD=1
+RETURN 1
+
+[FUNCTION f_mrmks_restore_doors]
+TYPE=<VAR.MRMKS_Door<EVAL (<VAR.MRMKS_Temp_1>)>_TYPE>
+LINK.REMOVE
+LINK=<MORE1>
+LINK.TYPE=<VAR.MRMKS_Door<EVAL (<VAR.MRMKS_Temp_2>)>_TYPE>
+LINK.LINK=<VAR.MRMKS_Door<EVAL (<VAR.MRMKS_Temp_1>)>_link>
+LINK.MORE1=<VAR.MRMKS_Door<EVAL (<VAR.MRMKS_Temp_1>)>_More1>
+LINK.TIMERD=1
+LINK=<VAR.MRMKS_Door<EVAL (<VAR.MRMKS_Temp_2>)>_Link>
+MORE1=<VAR.MRMKS_Door<EVAL (<VAR.MRMKS_Temp_2>)>_More1>
+RETURN 1
+
+[EOF]

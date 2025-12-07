@@ -1,0 +1,584 @@
+[FUNCTION explosionhouse]
+explosiontower <Z>
+explosiontower <Z>+5
+explosiontower <Z>+10
+explosiontower <Z>+15
+explosiontower <Z>+20
+explosiontower <Z>+25
+explosiontower <Z>+30
+explosiontower <Z>+35
+explosiontower <Z>+40
+explosiontower <Z>+45
+explosiontower <Z>+50
+explosiontower <Z>+55
+explosiontower <Z>+60
+explosiontower <Z>+65
+explosiontower <Z>+70
+explosiontower <Z>+75
+explosiontower <Z>+80
+explosiontower <Z>+85
+explosiontower <Z>+90
+explosiontower <Z>+95
+explosiontower <Z>+100
+RETURN 1
+
+
+[FUNCTION explosiontower]
+
+SRC.NEWITEM i_potion_explosion
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE -1,1,<ARGN>
+SRC.NEWITEM i_potion_explosion
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE -1,-1,<ARGN>
+SRC.NEWITEM i_potion_explosion
+SRC.ACT.BOUNCE
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE 1,-1,<ARGN>
+SRC.NEWITEM i_potion_explosion
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE 1,1,<ARGN>
+SRC.NEWITEM i_potion_explosion
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE -1,0,<ARGN>
+SRC.NEWITEM i_potion_explosion
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE 1,0,<ARGN>
+SRC.NEWITEM i_potion_explosion
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE 0,1,<ARGN>
+SRC.NEWITEM i_potion_explosion
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE 0,-1,<ARGN>
+SRC.ACT.BOUNCE
+SRC.ACT.DROP
+SRC.ACT.MOVE 0,0,<ARGN>
+RETURN 1
+
+[CHARDEF 0478]
+DEFNAME=c_h_suicide_squad
+NAME=Suicide Squad
+ID=C_MAN
+DESIRES=i_gold,e_notoriety,t_log,t_board,t_feather
+AVERSIONS=t_TRAP,t_eerie_stuff
+RESOURCES=1 i_dagger
+
+ON=@Create
+NPC=brain_vendor
+COLOR=colors_skin
+STR={66 80}
+DEX={71 85}
+INT={61 75}
+
+ARCHERY={65.0 88.0}
+BOWCRAFT={65.0 88.0}
+LUMBERJACKING={55.0 75.0}
+SWORDSMANSHIP={15.0 38.0}
+WRESTLING={25.0 48.0}
+TACTICS={35.0 55.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRestock
+ITEMNEWBIE=RANDOM_LIGHT
+ITEMNEWBIE=i_platemail_chest
+ITEMNEWBIE=i_platemail_leggings
+ITEMNEWBIE=i_platemail_arms
+ITEMNEWBIE=i_platemail_gloves
+ITEMNEWBIE=i_platemail_gorget
+ITEMNEWBIE=random_helmet
+ITEMNEWBIE=i_shield_heater
+ITEMNEWBIE=i_sword_viking
+
+ON=@NPCSEENEWPLAYER
+SAY Suicide Squad! Ataaack!
+SUICIDE
+RETURN 1
+
+[CHARDEF 01DD]
+NAME=Magical Boots
+DEFNAME=c_boots_magic
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_boots_magic
+DAM=10
+ARMOR=15
+RESOURCES=25 i_cloth
+CAN=MT_WALK|MT_RUN
+FOODTYPE=t_cloth
+SHELTER=t_normal
+DESIRES=t_cloth
+AVERSIONS=t_scissors
+
+ON=@Create
+STR={70 90}
+DEX={100 200}
+INT={6 10}
+
+MAGICRESISTANCE=100.0
+TACTICS=40.0
+WRESTLING=500.0
+TAMING=95.0
+
+ON=@DCLICK
+IF <SRC.ISGM>
+	SRC.NEWITEM i_boots_magic
+	SRC.ACT.EQUIP
+	SRC.ACT.COLOR=<COLOR>
+	SRC.ACT.NAME=<NAME>
+	REMOVE
+	RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+NPC=brain_monster
+
+FAME=0
+KARMA=5000
+
+[ITEMDEF i_boots_magic]
+ID=i_boots_calf
+NAME=Magic Boots
+TYPE=t_clothing
+
+ON=@DCLICK
+IF !(<P>==0,0,3)
+SRC.NEWNPC c_boots_magic
+SRC.ACT.COLOR=<COLOR>
+SRC.ACT.NAME=<NAME>
+SRC.ACT.P=<P>
+REMOVE
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+[EVENTS e_noname]
+ON=@CLICK
+RETURN 1
+
+[FUNCTION travel]
+IF (0<SRC.TAG.CUSTOMP1>=0)
+	SRC.TAG.CUSTOMP1=1,1
+ENDIF
+IF (0<SRC.TAG.CUSTOMP2>=0)
+	SRC.TAG.CUSTOMP2=1,1
+ENDIF
+IF (0<SRC.TAG.CUSTOMP3>=0)
+	SRC.TAG.CUSTOMP3=1,1
+ENDIF
+MENU M_TRAVEL_PLACE
+RETURN 1
+
+[MENU M_TRAVEL_PLACE]
+Where do you wish to go?
+ON=0 Britain
+SRC.GO 1428,1697,1
+SRC.RESEND
+RETURN 1
+ON=0 Britain Bridge
+SRC.GO 1376,1748
+SRC.RESEND
+RETURN 1
+ON=0 Pits
+SRC.GO 4596,3575,75
+SRC.RESEND
+RETURN 1
+ON=0 Custom Location 1
+SRC.GO <SRC.TAG.CUSTOMP1>
+SRC.RESEND
+RETURN 1
+ON=0 Custom Location 2
+SRC.GO <SRC.TAG.CUSTOMP2>
+SRC.RESEND
+RETURN 1
+ON=0 Custom Location 3
+SRC.GO <SRC.TAG.CUSTOMP3>
+SRC.RESEND
+RETURN 1
+ON=0 Set Custom Locations
+MENU M_TRAVEL_CUSTOM
+RETURN 1
+
+[MENU M_TRAVEL_CUSTOM]
+Custom Travel Locations
+ON=0 Set Custom 1
+SRC.TAG.CUSTOMP1=<SRC.P>
+SRC.SYSMESSAGE You have set Custom 1 to <SRC.REGION.NAME> (<SRC.P>).
+RETURN 1
+ON=0 Set Custom 2
+SRC.TAG.CUSTOMP2=<SRC.P>
+SRC.SYSMESSAGE You have set Custom 2 to <SRC.REGION.NAME> (<SRC.P>).
+RETURN 1
+ON=0 Set Custom 3
+SRC.TAG.CUSTOMP3=<SRC.P>
+SRC.SYSMESSAGE You have set Custom 3 to <SRC.REGION.NAME> (<SRC.P>).
+RETURN 1
+
+
+[ITEMDEF i_stone_tourney]
+ID=i_gravestone_5
+NAME=TourneyStone
+TYPE=t_script
+
+ON=@DCLICK
+IF !<SRC.ISGM>
+	SRC.NEWITEM i_deed
+	SRC.ACT.NAME=<SRC.NAME>
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.CONT=<TAG.NOFIGHT>
+	SRC.SYSMESSAGE You have been added to the tournement.
+ELSE
+	MENU M_TOURNEY
+ENDIF
+RETURN 1
+
+[MENU M_TOURNEY]
+Tournement Stone Options
+
+ON=0 Select New Players (<SRC.UID.<TAG.NOFIGHT>.RESCOUNT> left this round)
+	LINK <SRC.UID.<TAG.NOFIGHT>.FINDCONT.<EVAL {0,<EVAL <SRC.UID.<TAG.NOFIGHT>.RESCOUNT>+-1>}>.UID>
+	REGION.SECTORS ALLCLIENTS SYSMESSAGE <LINK.NAME> and
+	LINK.CONT=<TAG.FIGHTING>
+	LINK <SRC.UID.<TAG.NOFIGHT>.FINDCONT.<EVAL {0,<EVAL <SRC.UID.<TAG.NOFIGHT>.RESCOUNT>+-1>}>.UID>
+	REGION.SECTORS ALLCLIENTS SYSMESSAGE <LINK.NAME> are to fight!
+	LINK.CONT=<TAG.FIGHTING>
+	RETURN 1
+ON=0 Win/Lose
+	LINK=<SRC.UID.<TAG.FIGHTING>.FINDCONT.1.UID>
+	MENU M_TOURNEY_WINLOSE
+	RETURN 1
+ON=0 Start New Round
+	IF (0 < <SRC.UID.<TAG.FIGHTING>.RESCOUNT>)
+	tourney_round_fighting <EVAL <SRC.UID.<TAG.FIGHTING>.RESCOUNT>+-1>
+	ENDIF
+	IF (0 < <SRC.UID.<TAG.FIGHT>.RESCOUNT>)
+	tourney_round_fight <EVAL <SRC.UID.<TAG.FIGHT>.RESCOUNT>+-1>
+	ENDIF
+	REGION.SECTORS ALLCLIENTS SYSMESSAGE A new round has started!
+	RETURN 1
+ON=0 Reset Tourney Participants
+	LINK=<TAG.NOFIGHT>
+	LINK.REMOVE
+	LINK=<TAG.FIGHTING>
+	LINK.REMOVE
+	LINK=<TAG.FIGHT>
+	LINK.REMOVE
+	SRC.NEWITEM i_bag
+	TAG.NOFIGHT=<SRC.ACT.UID>
+	SRC.ACT.ATTR=080
+	SRC.ACT.NAME=Hasn't Fought
+	SRC.ACT.P=<P>
+	SRC.NEWITEM i_bag
+	TAG.FIGHTING=<SRC.ACT.UID>
+	SRC.ACT.ATTR=080
+	SRC.ACT.NAME=Is Fighting
+	SRC.ACT.P=<P>
+	SRC.NEWITEM i_bag
+	TAG.FIGHT=<SRC.ACT.UID>
+	SRC.ACT.ATTR=080
+	SRC.ACT.NAME=Has Fought
+	SRC.ACT.P=<P>
+	RETURN 1
+ON=0 Cancel
+	RETURN 1
+
+[MENU M_TOURNEY_WINLOSE]
+Win/Lose
+	ON=0 <LINK.NAME> Won
+		LINK.CONT=<TAG.FIGHT>
+		SRC.TRY SRC.UID.<TAG.FIGHTING>.EMPTY
+		RETURN 1
+	ON=0 <LINK.NAME> Lost
+		LINK=<SRC.UID.<TAG.FIGHTING>.FINDCONT.0.UID>
+		LINK.CONT=<TAG.FIGHT>
+		SRC.TRY SRC.UID.<TAG.FIGHTING>.EMPTY
+		RETURN 1
+	
+[FUNCTION tourney_round_fighting]
+LINK <SRC.UID.<TAG.FIGHTING>.FINDCONT.<ARGN>.UID>
+LINK.CONT=<TAG.NOFIGHT>
+IF (0 < <ARGN>)
+tourney_round_fighting <EVAL <ARGN>+-1>
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+[FUNCTION tourney_round_fight]
+LINK=<SRC.UID.<TAG.FIGHT>.FINDCONT.<ARGN>.UID>
+LINK.CONT=<TAG.NOFIGHT>
+IF (0 < <ARGN>)
+tourney_round_fight <EVAL <ARGN>+-1>
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_lance_game]
+ID=i_spear
+TYPE=t_weapon_fence
+WEIGHT=40
+NAME=Lance
+RESOURCES=1 i_spear
+DAM=2,5
+SKILL=Fencing
+REQSTR=10
+TWOHANDS=N
+
+ON=@DCLICK
+IF (<MORE> == 0)
+TARGET Who do you wish to fight?
+RETURN 1
+ELSEIF (<MORE> == 1)
+MORE=2
+If (<LINK.DISTANCE> == 1)
+	LINK.SLEEP
+	LINK.STONE
+	SRC.SAY Victory!
+ELSEIF (<LINK.DISTANCE> == 2)
+	LINK.HITS=(<LINK.STR>/2)
+	SRC.SYSMESSAGE You deal your opponent a staggering blow.
+	RETURN 1
+ELSEIF (<LINK.DISTANCE> == 3)
+	LINK.HITS=(<LINK.STR>/3)
+	SRC.SYSMESSAGE You deal your opponent a glancing blow.
+	RETURN 1
+ENDIF
+ELSEIF (<MORE> == 0)
+	EQUIP
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE You may only try to hit your opponent once!
+	RETURN 1
+ENDIF
+	
+ON=@TARGON_CHAR
+LINK=<SRC.TARG.UID>
+SRC.SYSMESSAGE You choose to fight <SRC.TARG.NAME>.
+MORE=1
+RETURN 1
+
+[ITEMDEF i_arrowquest_book_start]
+ID=i_book_lg
+TYPE=t_book
+
+ON=@CREATE
+MOREP=1,1
+ATTR=attr_move_never
+
+ON=@DCLICK
+SRC.SYSMESSAGE You see a light pointing towards the horizon.
+SRC.ARROWQUEST <MOREP>
+SRC.EVENTS +e_arrowquest
+SRC.TAG.QUEST=<MOREP>
+RETURN 1
+
+[ITEMDEF i_arrowquest_book_point]
+ID=i_book_lg
+TYPE=t_book
+
+ON=@CREATE
+MOREP=1,1
+ATTR=attr_move_never
+
+ON=@DCLICK
+SRC.ARROWQUEST
+SRC.SYSMESSAGE You see a light pointing towards another point on the horizon.
+SRC.ARROWQUEST <MOREP>
+SRC.TAG.QUEST=<MOREP>
+RETURN 1
+
+[ITEMDEF i_arrowquest_book_end]
+ID=i_book_lg
+TYPE=t_book
+
+ON=@CREATE
+ATTR=attr_move_never
+
+ON=@DCLICK
+SRC.ARROWQUEST
+SRC.SYSMESSAGE You have reached your final destination
+SRC.EVENTS -e_arrowquest
+SRC.TAG.QUEST=
+RETURN 1
+
+
+[EVENTS e_arrowquest]
+ON=@LOGIN
+SRC.ARROWQUEST <SRC.TAG.QUEST>
+RETURN 1
+
+[ITEMDEF i_arrowquest_readme]
+ID=i_deed
+TYPE=t_script
+
+ON=@DCLICK
+SRC.SCROLL SCROLL_QUEST_README
+RETURN 1
+
+[SCROLL SCROLL_QUEST_README]
+Welcome to the arrowquest book readme.
+The first thing you will need to do is add i_arrowquest_book_start.
+Then set the MOREP of this to your 2nd desination.
+Then add a i_arrowquest_book_point in your second destination,
+and set its MOREP to that of the 3rd..
+Continue using "point" books until you are at your final destination.
+At your final destination, put a i_arrowquest_book_end book.
+If you want you may have an unlocked door be triggered by the book.
+If this is what you wish, link the book to the door.
+After the quest, make sure all players have dclicked the i_arrowquest_book_end book.
+*NOTE*
+Do not use points inside of dungeons unless you have one of the books outside the enterance and tell the players to go inside.
+
+G'day - Tio'l
+
+[ITEMDEF i_stone_karma]
+ID=i_gravestone_7
+NAME=Karma/Fame Restoring Stone
+TYPE=T_SCRIPT
+
+ON=@CREATE
+COLOR=078e
+ATTR=010
+
+ON=@DCLICK
+IF !(<SRC.TAG.KARMAR> == 0) || !(<SRC.TAG.FAMER> == 0) || !(<SRC.TAG.DEATHSR> == 0)
+SRC.SYSMESSAGE Your Fame was restored from <SRC.FAME> to <EVAL <SRC.TAG.FAMER>>.
+SRC.SYSMESSAGE Your Karma was restored from <SRC.KARMA> to <EVAL <SRC.TAG.KARMAR>>.
+SRC.SYSMESSAGE Your Deaths were restored from <SRC.DEATHS> to <EVAL <SRC.TAG.DEATHSR>>.
+SRC.KARMA=<SRC.TAG.KARMAR>
+SRC.FAME=<SRC.TAG.FAMER>
+SRC.DEATHS=<SRC.TAG.DEATHSR>
+SRC.TAG.KARMAR=
+SRC.TAG.FAMER=
+SRC.TAG.DEATHSR=
+ELSE
+SRC.TAG.KARMAR=<SRC.KARMA>
+SRC.TAG.FAMER=<SRC.FAME>
+SRC.TAG.DEATHSR=<SRC.DEATHS>
+SRC.SYSMESSAGE Your Karma was stored at <SRC.KARMA>.
+SRC.SYSMESSAGE Your Fame was stored at <SRC.FAME>.
+SRC.SYSMESSAGE Your Deaths were stored at <SRC.DEATHS>.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_club_nerf]
+ID=i_club
+TYPE=t_weapon_mace_smith
+NAME=Nerf Club
+WEIGHT=1
+DAM={0 1}
+
+ON=@CREATE
+Color=035
+HITPOINTS={51 60}
+
+ON=@damage
+SRC.SOUND 555
+IF (<SRC.HITS> < (<SRC.STR> +-20))
+SRC.HITS=<SRC.HITS>+3
+ENDIF
+RETURN 0
+
+ON=@HIT
+RETURN 0
+
+ON=@EQUIP
+SRC.TAG.PMACE=<SRC.MACEFIGHTING>
+RETURN 0
+
+ON=@UNEQUIP
+IF (<SRC.MACEFIGHTING> > <SRC.PMACE>)
+SRC.MACEFIGHTING=<SRC.TAG.PMACE>
+SRC.TAG.PMACE=
+ENDIF
+RETURN 0
+
+[ITEMDEF i_spellbook_bad]
+ID=i_spellbook
+Name=Bad Circle Spellbook
+
+ON=@Create
+	COLOR=01
+
+ON=@DCLICK
+	IF <SRC.GM>
+		MENU M_BAD
+		RETURN 1
+	ELSE
+		SRC.MESSAGE Your not a GM!
+		CONSUME
+		RETURN 1
+	ENDIF
+	RETURN 1
+
+[MENU M_BAD]
+Bad Circle
+
+ON=0 Summon Undead
+SRC.CAST 65
+RETURN 1
+
+ON=0 Animate Dead
+SRC.CAST 66
+RETURN 1
+
+ON=0 Bone Armor
+SRC.CAST 67
+RETURN 1
+
+ON=0 Light
+SRC.CAST 68
+RETURN 1
+
+ON=0 Fire Bolt
+SRC.CAST 69
+RETURN 1
+
+ON=0 Hallucination
+SRC.CAST 70
+RETURN 1
+
+ON=0 Gender Swap
+SRC.CAST s_gender_swap
+RETURN 1
+
+[ITEMDEF i_dagger_throwing]
+ID=i_dagger
+NAME=throwing dagger
+Weight=2
+TYPE=t_weapon_fence
+RESOURCES=1 i_ingot_iron
+SKILLMAKE=55 BLACKSMITHING
+VALUE=5
+
+ON=@DCLICK
+	TARGET What do you wish to throw at?
+
+ON=@TARGON_CHAR
+	IF <SRC.RESTEST 1 i_dagger_throwing>
+		IF ( <SRC.ACT.CHECKLOS> && <SRC.TARG.CHECKLOS> )
+			SRC.CONSUME 1 i_dagger_throwing
+			SRC.TARG.EFFECT=0,i_dagger,20,0,14
+			SRC.TARG.DAMAGE=((<SRC.STR>/20))
+			RETURN 1
+		ELSE
+			SRC.SYSMESSAGE You cannot see your target.
+			RETURN 1
+		ENDIF
+	ELSE
+		SRC.SYSMESSAGE You most possess the dagger.
+		RETURN 1
+	ENDIF

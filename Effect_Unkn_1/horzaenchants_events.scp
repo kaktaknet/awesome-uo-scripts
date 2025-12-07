@@ -1,0 +1,878 @@
+//HORZA WEAPON ENCHANTMENTS***********FILE: horzaenchants_events.scp**********
+//SPHERE by : Menasoft ©1997-2000 
+//www.sphereserver.com 
+// All SPHERE script files and formats are copyright Menasoft & Partners. 
+// All donations and contributions become the property of Menasoft 
+// & Partners. 
+// 
+// This file was create by Developer Horza and Admin Lazerus for Private and 
+// shared use on The Arilum Shard and Script Sharing Network. All Code and Copyright 
+// is the property of Menasoft & Partners. 
+// 
+//      ______________________________________________________________________
+// ----| All thanks and credit to Bringer of death, this is a remake of his   |
+// ----| enchantments script for The Dark Shard and Dawn of Britannia & Dawn  |
+// ----| of Britannia 2, remade from start to finish. Concept given by him.   |
+//      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+// Please do not edit this header to give Credit to its writers and Creators.
+//****************************************************************************
+//Version 1.0
+//****************************************************************************
+//                                   Intentions 
+//---------------------------------------------------------------------------- 
+//
+//	-For admins/hosts to put the scrolls into large monster loot at random
+//	 along with magic weapons. Does not work well with weapons which
+//	 already use effects for the enchantments give all useable weapons
+//	 there own effect although not scripted on. This was intended for
+//	 larger monsters or maybe as rewards for various things.
+//
+//**************************************************************************** 
+// FILE LAST UPDATED: Friday, September 27th, 2002
+
+[EVENTS E_enchant]
+ON=@HIT
+   IF <EVAL <FINDLAYER.1.MOREM>>==01
+	SYSMESSAGE The enchantment upon your weapon does +1 electricity.
+	SRC.DAMAGE = 2
+	SRC.ELECTRICITY
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==02
+	SYSMESSAGE The enchantment upon your weapon does +1 flame.
+	SRC.DAMAGE = 2
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==03
+	SYSMESSAGE The enchantment upon your weapon does +1 vortex.
+	SRC.DAMAGE = 2
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==05
+	SYSMESSAGE The enchantment upon your weapon does +2 flame.
+	SRC.DAMAGE = 4
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==06
+	SYSMESSAGE The enchantment upon your weapon does +2 vortex.
+	SRC.DAMAGE = 4
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==07
+	SYSMESSAGE The enchantment upon your weapon does +4 electricity.
+	SRC.DAMAGE = 6
+	SRC.ELECTRICITY
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==08
+	SYSMESSAGE The enchantment upon your weapon does +4 flame.
+	SRC.DAMAGE = 6
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==09
+	SYSMESSAGE The enchantment upon your weapon does +4 vortex.
+	SRC.DAMAGE = 6
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==10
+	SYSMESSAGE The enchantment upon your weapon does +8 electricity.
+	SRC.DAMAGE = 10
+	SRC.ELECTRICITY
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==11
+	SYSMESSAGE The enchantment upon your weapon does +8 flame.
+	SRC.DAMAGE = 10
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==12
+	SYSMESSAGE The enchantment upon your weapon does +8 vortex.
+	SRC.DAMAGE = 10
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==13
+	SYSMESSAGE The enchantment upon your weapon does +1 stormblast.
+	SRC.DAMAGE = 2
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==14
+	SYSMESSAGE The enchantment upon your weapon does +2 stormblast.
+	SRC.DAMAGE = 4
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==15
+	SYSMESSAGE The enchantment upon your weapon does +4 stormblast.
+	SRC.DAMAGE = 6
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==16
+	SYSMESSAGE The enchantment upon your weapon does +8 stormblast.
+	SRC.DAMAGE = 10
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==17
+	SYSMESSAGE The enchantment upon your weapon does +10 electricity.
+	SRC.DAMAGE = 15
+	SRC.ELECTRICITY
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==18
+	SYSMESSAGE The enchantment upon your weapon does +10 flame.
+	SRC.DAMAGE = 15
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==19
+	SYSMESSAGE The enchantment upon your weapon does +10 vortex.
+	SRC.DAMAGE = 15
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==20
+	SYSMESSAGE The enchantment upon your weapon does +10 stormblast.
+	SRC.DAMAGE = 15
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==21 //RESERVED FOR CURSED ENCHANTMENTS
+	SYSMESSAGE The enchantment upon your weapon is cursed.
+	DAMAGE = 2
+	EFFECT = 3,i_fx_curse,6,15,1
+	SOUND = snd_SPELL_POISON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==22
+	SYSMESSAGE The enchantment upon your weapon does +1 frost.
+	SRC.DAMAGE = 2
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==23
+	SYSMESSAGE The enchantment upon your weapon does +2 frost.
+	SRC.DAMAGE = 4
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==24
+	SYSMESSAGE The enchantment upon your weapon does +4 frost.
+	SRC.DAMAGE = 6
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==25
+	SYSMESSAGE The enchantment upon your weapon does +8 frost.
+	SRC.DAMAGE = 10
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==26
+	SYSMESSAGE The enchantment upon your weapon does +10 frost.
+	SRC.DAMAGE = 15
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==27
+	SYSMESSAGE The enchantment upon your weapon does +1 green house effect.
+	SRC.DAMAGE = 2
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==28
+	SYSMESSAGE The enchantment upon your weapon does +2 green house effect.
+	SRC.DAMAGE = 4
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==29
+	SYSMESSAGE The enchantment upon your weapon does +4 green house effect.
+	SRC.DAMAGE = 6
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==30
+	SYSMESSAGE The enchantment upon your weapon does +8 green house effect.
+	SRC.DAMAGE = 10
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==31
+	SYSMESSAGE The enchantment upon your weapon does +10 green house effect.
+	SRC.DAMAGE = 15
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==32
+	SYSMESSAGE The enchantment upon your weapon does +1 inferno.
+	SRC.DAMAGE = 2
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==33
+	SYSMESSAGE The enchantment upon your weapon does +2 inferno.
+	SRC.DAMAGE = 4
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==34
+	SYSMESSAGE The enchantment upon your weapon does +4 inferno.
+	SRC.DAMAGE = 6 
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==35
+	SYSMESSAGE The enchantment upon your weapon does +8 inferno.
+	SRC.DAMAGE = 10
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==36
+	SYSMESSAGE The enchantment upon your weapon does +10 inferno.
+	SRC.DAMAGE = 15
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==37
+	SYSMESSAGE The enchantment upon your weapon does +1 unholy cloud.
+	SRC.DAMAGE = 2
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==38
+	SYSMESSAGE The enchantment upon your weapon does +2 unholy cloud.
+	SRC.DAMAGE = 4
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==39
+	SYSMESSAGE The enchantment upon your weapon does +4 unholy cloud.
+	SRC.DAMAGE = 6
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==40
+	SYSMESSAGE The enchantment upon your weapon does +8 unholy cloud.
+	SRC.DAMAGE = 10
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==41
+	SYSMESSAGE The enchantment upon your weapon does +10 unholy cloud.
+	SRC.DAMAGE = 15
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==42
+	SYSMESSAGE The enchantment upon your weapon does +1 lemonzest.
+	SRC.DAMAGE = 2
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==43
+	SYSMESSAGE The enchantment upon your weapon does +2 lemonzest.
+	SRC.DAMAGE = 4
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==44
+	SYSMESSAGE The enchantment upon your weapon does +4 lemonzest.
+	SRC.DAMAGE = 6
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==45
+	SYSMESSAGE The enchantment upon your weapon does +8 lemonzest.
+	SRC.DAMAGE = 10
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==46
+	SYSMESSAGE The enchantment upon your weapon does +10 lemonzest.
+	SRC.DAMAGE = 15
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==47
+	SYSMESSAGE The enchantment upon your weapon does +1 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 5
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==48
+	SYSMESSAGE The enchantment upon your weapon does +2 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 7
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==49
+	SYSMESSAGE The enchantment upon your weapon does +4 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 9
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==50
+	SYSMESSAGE The enchantment upon your weapon does +8 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 13
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==51
+	SYSMESSAGE The enchantment upon your weapon does +10 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 18
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==52
+	SYSMESSAGE The enchantment upon your weapon does +1 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==53
+	SYSMESSAGE The enchantment upon your weapon does +2 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==54
+	SYSMESSAGE The enchantment upon your weapon does +4 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==55
+	SYSMESSAGE The enchantment upon your weapon does +8 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==56
+	SYSMESSAGE The enchantment upon your weapon does +10 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==57
+	SYSMESSAGE The enchantment upon your weapon does +1 daemon breath.
+	SRC.DAMAGE = 5
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==58
+	SYSMESSAGE The enchantment upon your weapon does +2 daemon breath.
+	SRC.DAMAGE = 7
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==59
+	SYSMESSAGE The enchantment upon your weapon does +4 daemon breath.
+	SRC.DAMAGE = 9
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==60
+	SYSMESSAGE The enchantment upon your weapon does +8 daemon breath.
+	SRC.DAMAGE = 13
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==61
+	SYSMESSAGE The enchantment upon your weapon does +10 daemon breath.
+	SRC.DAMAGE = 18
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==62
+	SYSMESSAGE The enchantment upon your weapon does +1 devils magic.
+	SRC.DAMAGE = 5
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==63
+	SYSMESSAGE The enchantment upon your weapon does +2 devils magic.
+	SRC.DAMAGE = 7
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==64
+	SYSMESSAGE The enchantment upon your weapon does +4 devils magic.
+	SRC.DAMAGE = 9
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==65
+	SYSMESSAGE The enchantment upon your weapon does +8 devils magic.
+	SRC.DAMAGE = 13
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==66
+	SYSMESSAGE The enchantment upon your weapon does +10 devils magic.
+	SRC.DAMAGE = 18
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==67
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +1 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==68
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +2 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==69
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +4 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==70
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +8 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==71
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +10 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==72
+	SYSMESSAGE The enchantment upon your weapon does +1 dragoon blade.
+	SRC.DAMAGE = 1
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==73
+	SYSMESSAGE The enchantment upon your weapon does +2 dragoon blade.
+	SRC.DAMAGE = 2
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==74
+	SYSMESSAGE The enchantment upon your weapon does +4 dragoon blade.
+	SRC.DAMAGE = 4
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==75
+	SYSMESSAGE The enchantment upon your weapon does +8 dragoon blade.
+	SRC.DAMAGE = 8
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==76
+	SYSMESSAGE The enchantment upon your weapon does +10 dragoon blade.
+	SRC.DAMAGE = 10
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==77
+	SYSMESSAGE The enchantment upon your weapon does +1 althalus.
+	SRC.DAMAGE = 1
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==78
+	SYSMESSAGE The enchantment upon your weapon does +2 althalus.
+	SRC.DAMAGE = 2
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==79
+	SYSMESSAGE The enchantment upon your weapon does +4 althalus.
+	SRC.DAMAGE = 4
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==80
+	SYSMESSAGE The enchantment upon your weapon does +8 althalus.
+	SRC.DAMAGE = 8
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==81
+	SYSMESSAGE The enchantment upon your weapon does +10 althalus.
+	SRC.DAMAGE = 10
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==82
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 1.
+	SRC.DAMAGE = 1
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==83
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 2.
+	SRC.DAMAGE = 2
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==84
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 4.
+	SRC.DAMAGE = 4
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==85
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 8.
+	SRC.DAMAGE = 8
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==86
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 10.
+	SRC.DAMAGE = 10
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==87
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 1.
+	SRC.DAMAGE = 1
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==88
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 2.
+	SRC.DAMAGE = 2
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==89
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 4.
+	SRC.DAMAGE = 4
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==90
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 8.
+	SRC.DAMAGE = 8
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==91
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 10.
+	SRC.DAMAGE = 10
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==92
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 1.
+	SRC.DAMAGE = 1
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==93
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 2.
+	SRC.DAMAGE = 2
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==94
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 4.
+	SRC.DAMAGE = 4
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==95
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 8.
+	SRC.DAMAGE = 8
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==96
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 10.
+	SRC.DAMAGE = 10
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==97
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 1.
+	SRC.DAMAGE = 1
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==98
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 2.
+	SRC.DAMAGE = 2
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==99
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 4.
+	SRC.DAMAGE = 4
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==100
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 8.
+	SRC.DAMAGE = 8
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==101
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 10.
+	SRC.DAMAGE = 10
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.1.MOREM>>==102
+	DORAND 10
+		SRC.EMOTE get struck by an element bursting from <NAME>'s weapon.
+		SRC.EMOTE block the elements attack
+		SRC.SYSMESSAGE <NAME> is hitting you with a weapon enchanted not of this world
+		SAY Spirit of the world! Come from thyne entrapment and strike my enemy down!
+		SAY Thou shall not win!
+		EMOTE become possessed with the magic of the spirit.
+		SYSMESSAGE Your element begins to tire of <SRC.NAME>'s weekness
+		VAR.CHECKHITS=1
+		SRC.EMOTE have blackened eye from the pain.
+		SAY Never before have a faced such a week enemy!
+	ENDDO
+	IF <VAR.CHECKHITS>==1
+		IF <SRC.HITS><20
+			SRC.SAY Please stop. I am critically injured! I give to your mighty weapon!
+		ENDIF
+	ENDIF
+	SRC.DAMAGE = 30
+	DORAND 4
+		SRC.RUNE_LIGHT
+		SRC.RUNE_FIRE
+		SRC.RUNE_WATER
+		SRC.RUNE_ICE
+	ENDDO
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==01
+	SYSMESSAGE The enchantment upon your weapon does +1 electricity.
+	SRC.DAMAGE = 2
+	SRC.ELECTRICITY
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==02
+	SYSMESSAGE The enchantment upon your weapon does +1 flame.
+	SRC.DAMAGE = 2
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==03
+	SYSMESSAGE The enchantment upon your weapon does +1 vortex.
+	SRC.DAMAGE = 2
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==05
+	SYSMESSAGE The enchantment upon your weapon does +2 flame.
+	SRC.DAMAGE = 4
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==06
+	SYSMESSAGE The enchantment upon your weapon does +2 vortex.
+	SRC.DAMAGE = 4
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==07
+	SYSMESSAGE The enchantment upon your weapon does +4 electricity.
+	SRC.DAMAGE = 6
+	SRC.ELECTRICITY
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==08
+	SYSMESSAGE The enchantment upon your weapon does +4 flame.
+	SRC.DAMAGE = 6
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==09
+	SYSMESSAGE The enchantment upon your weapon does +4 vortex.
+	SRC.DAMAGE = 6
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==10
+	SYSMESSAGE The enchantment upon your weapon does +8 electricity.
+	SRC.DAMAGE = 10
+	SRC.ELECTRICITY
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==11
+	SYSMESSAGE The enchantment upon your weapon does +8 flame.
+	SRC.DAMAGE = 10
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==12
+	SYSMESSAGE The enchantment upon your weapon does +8 vortex.
+	SRC.DAMAGE = 10
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==13
+	SYSMESSAGE The enchantment upon your weapon does +1 stormblast.
+	SRC.DAMAGE = 2
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==14
+	SYSMESSAGE The enchantment upon your weapon does +2 stormblast.
+	SRC.DAMAGE = 4
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==15
+	SYSMESSAGE The enchantment upon your weapon does +4 stormblast.
+	SRC.DAMAGE = 6
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==16
+	SYSMESSAGE The enchantment upon your weapon does +8 stormblast.
+	SRC.DAMAGE = 10
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==17
+	SYSMESSAGE The enchantment upon your weapon does +10 electricity.
+	SRC.DAMAGE = 15
+	SRC.ELECTRICITY
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==18
+	SYSMESSAGE The enchantment upon your weapon does +10 flame.
+	SRC.DAMAGE = 15
+	SRC.FLAME
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==19
+	SYSMESSAGE The enchantment upon your weapon does +10 vortex.
+	SRC.DAMAGE = 15
+	SRC.VORTEX
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==20
+	SYSMESSAGE The enchantment upon your weapon does +10 stormblast.
+	SRC.DAMAGE = 15
+	SRC.STORMBLAST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==21 //RESERVED FOR CURSED ENCHANTMENTS
+	SYSMESSAGE The enchantment upon your weapon is cursed.
+	DAMAGE = 2
+	EFFECT = 3,i_fx_curse,6,15,1
+	SOUND = snd_SPELL_POISON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==22
+	SYSMESSAGE The enchantment upon your weapon does +1 frost.
+	SRC.DAMAGE = 2
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==23
+	SYSMESSAGE The enchantment upon your weapon does +2 frost.
+	SRC.DAMAGE = 4
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==24
+	SYSMESSAGE The enchantment upon your weapon does +4 frost.
+	SRC.DAMAGE = 6
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==25
+	SYSMESSAGE The enchantment upon your weapon does +8 frost.
+	SRC.DAMAGE = 10
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==26
+	SYSMESSAGE The enchantment upon your weapon does +10 frost.
+	SRC.DAMAGE = 15
+	SRC.FROST
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==27
+	SYSMESSAGE The enchantment upon your weapon does +1 green house effect.
+	SRC.DAMAGE = 2
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==28
+	SYSMESSAGE The enchantment upon your weapon does +2 green house effect.
+	SRC.DAMAGE = 4
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==29
+	SYSMESSAGE The enchantment upon your weapon does +4 green house effect.
+	SRC.DAMAGE = 6
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==30
+	SYSMESSAGE The enchantment upon your weapon does +8 green house effect.
+	SRC.DAMAGE = 10
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==31
+	SYSMESSAGE The enchantment upon your weapon does +10 green house effect.
+	SRC.DAMAGE = 15
+	SRC.GHE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==32
+	SYSMESSAGE The enchantment upon your weapon does +1 inferno.
+	SRC.DAMAGE = 2
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==33
+	SYSMESSAGE The enchantment upon your weapon does +2 inferno.
+	SRC.DAMAGE = 4
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==34
+	SYSMESSAGE The enchantment upon your weapon does +4 inferno.
+	SRC.DAMAGE = 6 
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==35
+	SYSMESSAGE The enchantment upon your weapon does +8 inferno.
+	SRC.DAMAGE = 10
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==36
+	SYSMESSAGE The enchantment upon your weapon does +10 inferno.
+	SRC.DAMAGE = 15
+	SRC.INFERNO
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==37
+	SYSMESSAGE The enchantment upon your weapon does +1 unholy cloud.
+	SRC.DAMAGE = 2
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==38
+	SYSMESSAGE The enchantment upon your weapon does +2 unholy cloud.
+	SRC.DAMAGE = 4
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==39
+	SYSMESSAGE The enchantment upon your weapon does +4 unholy cloud.
+	SRC.DAMAGE = 6
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==40
+	SYSMESSAGE The enchantment upon your weapon does +8 unholy cloud.
+	SRC.DAMAGE = 10
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==41
+	SYSMESSAGE The enchantment upon your weapon does +10 unholy cloud.
+	SRC.DAMAGE = 15
+	SRC.CLOUD
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==42
+	SYSMESSAGE The enchantment upon your weapon does +1 lemonzest.
+	SRC.DAMAGE = 2
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==43
+	SYSMESSAGE The enchantment upon your weapon does +2 lemonzest.
+	SRC.DAMAGE = 4
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==44
+	SYSMESSAGE The enchantment upon your weapon does +4 lemonzest.
+	SRC.DAMAGE = 6
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==45
+	SYSMESSAGE The enchantment upon your weapon does +8 lemonzest.
+	SRC.DAMAGE = 10
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==46
+	SYSMESSAGE The enchantment upon your weapon does +10 lemonzest.
+	SRC.DAMAGE = 15
+	SRC.LEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==47
+	SYSMESSAGE The enchantment upon your weapon does +1 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 5
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==48
+	SYSMESSAGE The enchantment upon your weapon does +2 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 7
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==49
+	SYSMESSAGE The enchantment upon your weapon does +4 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 9
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==50
+	SYSMESSAGE The enchantment upon your weapon does +8 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 13
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==51
+	SYSMESSAGE The enchantment upon your weapon does +10 poisoned cocktail.
+	SRC.POISON,5000
+	SRC.DAMAGE = 18
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==52
+	SYSMESSAGE The enchantment upon your weapon does +1 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==53
+	SYSMESSAGE The enchantment upon your weapon does +2 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==54
+	SYSMESSAGE The enchantment upon your weapon does +4 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==55
+	SYSMESSAGE The enchantment upon your weapon does +8 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==56
+	SYSMESSAGE The enchantment upon your weapon does +10 egyptian magic.
+	MAGIC
+	SRC.EGYPT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==57
+	SYSMESSAGE The enchantment upon your weapon does +1 daemon breath.
+	SRC.DAMAGE = 5
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==58
+	SYSMESSAGE The enchantment upon your weapon does +2 daemon breath.
+	SRC.DAMAGE = 7
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==59
+	SYSMESSAGE The enchantment upon your weapon does +4 daemon breath.
+	SRC.DAMAGE = 9
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==60
+	SYSMESSAGE The enchantment upon your weapon does +8 daemon breath.
+	SRC.DAMAGE = 13
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==61
+	SYSMESSAGE The enchantment upon your weapon does +10 daemon breath.
+	SRC.DAMAGE = 18
+	SRC.DAEMON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==62
+	SYSMESSAGE The enchantment upon your weapon does +1 devils magic.
+	SRC.DAMAGE = 5
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==63
+	SYSMESSAGE The enchantment upon your weapon does +2 devils magic.
+	SRC.DAMAGE = 7
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==64
+	SYSMESSAGE The enchantment upon your weapon does +4 devils magic.
+	SRC.DAMAGE = 9
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==65
+	SYSMESSAGE The enchantment upon your weapon does +8 devils magic.
+	SRC.DAMAGE = 13
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==66
+	SYSMESSAGE The enchantment upon your weapon does +10 devils magic.
+	SRC.DAMAGE = 18
+	SRC.DEVIL
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==67
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +1 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==68
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +2 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==69
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +4 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==70
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +8 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==71
+	SYSMESSAGE The enchantment upon your weapon poisons <SRC.NAME> with +10 poison.
+	SRC.POISON 500
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==72
+	SYSMESSAGE The enchantment upon your weapon does +1 dragoon blade.
+	SRC.DAMAGE = 1
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==73
+	SYSMESSAGE The enchantment upon your weapon does +2 dragoon blade.
+	SRC.DAMAGE = 2
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==74
+	SYSMESSAGE The enchantment upon your weapon does +4 dragoon blade.
+	SRC.DAMAGE = 4
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==75
+	SYSMESSAGE The enchantment upon your weapon does +8 dragoon blade.
+	SRC.DAMAGE = 8
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==76
+	SYSMESSAGE The enchantment upon your weapon does +10 dragoon blade.
+	SRC.DAMAGE = 10
+	SRC.DRAGOON
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==77
+	SYSMESSAGE The enchantment upon your weapon does +1 althalus.
+	SRC.DAMAGE = 1
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==78
+	SYSMESSAGE The enchantment upon your weapon does +2 althalus.
+	SRC.DAMAGE = 2
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==79
+	SYSMESSAGE The enchantment upon your weapon does +4 althalus.
+	SRC.DAMAGE = 4
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==80
+	SYSMESSAGE The enchantment upon your weapon does +8 althalus.
+	SRC.DAMAGE = 8
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==81
+	SYSMESSAGE The enchantment upon your weapon does +10 althalus.
+	SRC.DAMAGE = 10
+	SRC.ALTHALUS
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==82
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 1.
+	SRC.DAMAGE = 1
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==83
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 2.
+	SRC.DAMAGE = 2
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==84
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 4.
+	SRC.DAMAGE = 4
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==85
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 8.
+	SRC.DAMAGE = 8
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==86
+	SYSMESSAGE The weapon you hit with supports a tidal rune enchantment at level 10.
+	SRC.DAMAGE = 10
+	SRC.RUNE_WATER
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==87
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 1.
+	SRC.DAMAGE = 1
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==88
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 2.
+	SRC.DAMAGE = 2
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==89
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 4.
+	SRC.DAMAGE = 4
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==90
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 8.
+	SRC.DAMAGE = 8
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==91
+	SYSMESSAGE The weapon you hit with supports a inferno rune enchantment at level 10.
+	SRC.DAMAGE = 10
+	SRC.RUNE_FIRE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==92
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 1.
+	SRC.DAMAGE = 1
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==93
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 2.
+	SRC.DAMAGE = 2
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==94
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 4.
+	SRC.DAMAGE = 4
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==95
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 8.
+	SRC.DAMAGE = 8
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==96
+	SYSMESSAGE The weapon you hit with supports a blizzard rune enchantment at level 10.
+	SRC.DAMAGE = 10
+	SRC.RUNE_ICE
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==97
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 1.
+	SRC.DAMAGE = 1
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==98
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 2.
+	SRC.DAMAGE = 2
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==99
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 4.
+	SRC.DAMAGE = 4
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==100
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 8.
+	SRC.DAMAGE = 8
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==101
+	SYSMESSAGE The weapon you hit with supports a light rune enchantment at level 10.
+	SRC.DAMAGE = 10
+	SRC.RUNE_LIGHT
+   ELSEIF <EVAL <FINDLAYER.2.MOREM>>==102
+	DORAND 10
+		SRC.EMOTE get struck by an element bursting from <NAME>'s weapon.
+		SRC.EMOTE block the elements attack
+		SRC.SYSMESSAGE <NAME> is hitting you with a weapon enchanted not of this world
+		SAY Spirit of the world! Come from thyne entrapment and strike my enemy down!
+		SAY Thou shall not win!
+		EMOTE become possessed with the magic of the spirit.
+		SYSMESSAGE Your element begins to tire of <SRC.NAME>'s weekness
+		VAR.CHECKHITS=1
+		SRC.EMOTE have blackened eye from the pain.
+		SAY Never before have a faced such a week enemy!
+	ENDDO
+	IF <VAR.CHECKHITS>==1
+		IF <SRC.HITS><20
+			SRC.SAY Please stop. I am critically injured! I give to your mighty weapon!
+		ENDIF
+	ENDIF
+	SRC.DAMAGE = 30
+	DORAND 4
+		SRC.RUNE_LIGHT
+		SRC.RUNE_FIRE
+		SRC.RUNE_WATER
+		SRC.RUNE_ICE
+	ENDDO
+   ENDIF
+[EOF]

@@ -1,0 +1,533 @@
+/////////////////////////////////////////////////////////////////////////
+// Socketed items 
+//
+// Developed by BaRBariaN
+// E-Mail: barbarian_on_road@yahoo.com , killers_inn@yahoo.com
+//
+//  Due to "Morem" can only take values from 0 to 255, only two 
+// sockets will be available. Script can hold 15 different items
+// to be placed into sockets, and 15 different functions for
+// these items.
+//
+// Based on script created by Belgar of 'A Virtual Paradise'.
+// www.virtual-paradise.org 
+/////////////////////////////////////////////////////////////////////////
+
+[itemdef i_paramem] 
+id=i_bottle_empty 
+type=t_eq_script 
+CATEGORY=Weapons - Socketed
+SUBSECTION=Add-Ons
+DESCRIPTION=Paralyze Add-On 
+NAME=Paralyze Add-On 
+layer=30 
+
+on=@create 
+	attr 090 
+on=@equip 
+	link=<src.uid> 
+	timer=1 
+on=@timer 
+	link.spelleffect 38 100 
+	remove 
+	return 1 
+
+[FUNCTION f_socket_newitem]
+if (<src.targ.dispid>==i_gold) 
+if (<var.socket>==1) 
+morem =(<morem>|1) 
+name <name> [Gold]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|16) 
+name <name> [Gold]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_amethyst)||(<src.targ.dispid>==i_gem_amethyst_2)||(<src.targ.dispid>==i_gem_amethyst_3)||(<src.targ.dispid>==i_gem_amethyst_4)
+if (<var.socket>==1) 
+morem =(<morem>|2) 
+name <name> [Amethyst]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|32) 
+name <name> [Amethyst]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_citrine)||(<src.targ.dispid>==i_gem_citrine_2)||(<src.targ.dispid>==i_gem_citrine_3)||(<src.targ.dispid>==i_gem_citrine_4)
+if (<var.socket>==1) 
+morem =(<morem>|3) 
+name <name> [Citrine]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|48) 
+name <name> [Citrine]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_diamond)||(<src.targ.dispid>==i_gem_diamond_2)||(<src.targ.dispid>==i_gem_diamond_3)||(<src.targ.dispid>==i_gem_diamond_4)||(<src.targ.dispid>==i_gem_diamond_5)
+if (<var.socket>==1) 
+morem =(<morem>|4) 
+name <name> [Diamond]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|64) 
+name <name> [Diamond]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_emerald)||(<src.targ.dispid>==i_gem_emerald_2)
+if (<var.socket>==1) 
+morem =(<morem>|5) 
+name <name> [Emerald]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|80) 
+name <name> [Emerald]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_amber)
+if (<var.socket>==1) 
+morem =(<morem>|6) 
+name <name> [Amber]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|96) 
+name <name> [Amber]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_ruby)||(<src.targ.dispid>==i_gem_ruby_2)||(<src.targ.dispid>==i_gem_ruby_3)||(<src.targ.dispid>==i_gem_ruby_4)||(<src.targ.dispid>==i_gem_ruby_5)||(<src.targ.dispid>==i_gem_ruby_6)||(<src.targ.dispid>==i_gem_ruby_7)
+if (<var.socket>==1) 
+morem =(<morem>|7) 
+name <name> [Ruby]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|112) 
+name <name> [Ruby]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_sapphire)||(<src.targ.dispid>==i_gem_sapphire_2)||(<src.targ.dispid>==i_gem_sapphire_3)||(<src.targ.dispid>==i_gem_sapphire_4)
+if (<var.socket>==1) 
+morem =(<morem>|8) 
+name <name> [Sapphire]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|128) 
+name <name> [Sapphire]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_star_sapphire)||(<src.targ.dispid>==i_gem_star_sapphire_2)||(<src.targ.dispid>==i_gem_star_sapphire_3)
+if (<var.socket>==1) 
+morem =(<morem>|9) 
+name <name> [Star Sapphire]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|144) 
+name <name> [Star Sapphire]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_gem_tourmaline)||(<src.targ.dispid>==i_gem_tourmaline_2)||(<src.targ.dispid>==i_gem_tourmaline_3)||(<src.targ.dispid>==i_gem_tourmaline_4)
+if (<var.socket>==1) 
+morem =(<morem>|10) 
+name <name> [Tourmaline]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|160) 
+name <name> [Tourmaline]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+elseif (<src.targ.dispid>==i_bone_skull)||(<src.targ.dispid>==0a0001ae0)||(<src.targ.dispid>==0a0001ae1)||(<src.targ.dispid>==0a0001ae2)||(<src.targ.dispid>==0a0001ae3)||(<src.targ.dispid>==0a0001ae4)
+if (<var.socket>==1) 
+morem =(<morem>|11) 
+name <name> [Skull]
+src.targ.remove
+return 1 
+else 
+morem=(<morem>|176) 
+name <name> [Skull]
+src.targ.remove
+return 1 
+endif 
+return 1 
+
+else 
+src.sysmessage "You can't insert it to this socket!"
+return 1
+endif 
+return 1
+
+[FUNCTION f_socket_display]
+var.sock1=<morem>&0f 
+var.sock2=<eval ((<morem>&0f0)/0f)> 
+if (0<var.sock1>==0) 
+var.locx=85
+var.locy=113
+var.pic1=16383 
+elseif (0<var.sock1>==1) 
+var.locx=95
+var.locy=117
+var.pic1=3821 // gold gold
+elseif (0<var.sock1>==2) 
+var.locx=84
+var.locy=116
+var.pic1=3862 // amethyst magenta 
+elseif (0<var.sock1>==3) 
+var.locx=81
+var.locy=116
+var.pic1=3861 // citrine orange 
+elseif (0<var.sock1>==4) 
+var.locx=90
+var.locy=115
+var.pic1=3878 // diamond light blue 
+elseif (0<var.sock1>==5) 
+var.locx=104
+var.locy=115
+var.pic1=3856 // emerald green 
+elseif (0<var.sock1>==6) 
+var.locx=83
+var.locy=114
+var.pic1=3877 // (piece of) amber light orange
+elseif (0<var.sock1>==7) 
+var.locx=95
+var.locy=115
+var.pic1=3882 // ruby red  
+elseif (0<var.sock1>==8) 
+var.locx=98
+var.locy=115
+var.pic1=3858 // sapphire dark blue  
+elseif (0<var.sock1>==9) 
+var.locx=91
+var.locy=115
+var.pic1=3867 // star sapphire white blue  
+elseif (<var.sock1>==10) 
+var.locx=94
+var.locy=116
+var.pic1=3872 // tourmaline yellow green  
+elseif (<var.sock1>==11) 
+var.locx=105
+var.locy=113
+var.pic1=6882 // skull white  
+else
+var.locx=85
+var.locy=113
+var.pic1=16383 // null
+endif 
+
+if (0<var.sock2>==0) 
+var.locxs=85
+var.locys=134
+var.pic2=16383 
+elseif (0<var.sock2>==1) 
+var.locxs=95
+var.locys=138
+var.pic2=3821 // gold gold
+elseif (0<var.sock2>==2) 
+var.locxs=84
+var.locys=137
+var.pic2=3862 // amethyst magenta 
+elseif (0<var.sock2>==3) 
+var.locxs=81
+var.locys=137
+var.pic2=3861 // citrine orange 
+elseif (0<var.sock2>==4) 
+var.locxs=90
+var.locys=136
+var.pic2=3878 // diamond light blue 
+elseif (0<var.sock2>==5) 
+var.locxs=104
+var.locys=136
+var.pic2=3856 // emerald green 
+elseif (0<var.sock2>==6) 
+var.locxs=83
+var.locys=135
+var.pic2=3877 // (piece of) amber light orange
+elseif (0<var.sock2>==7) 
+var.locxs=95
+var.locys=136
+var.pic2=3882 // ruby red  
+elseif (0<var.sock2>==8) 
+var.locxs=98
+var.locys=136
+var.pic2=3858 // sapphire dark blue  
+elseif (0<var.sock2>==9) 
+var.locxs=91
+var.locys=136
+var.pic2=3867 // star sapphire white blue  
+elseif (<var.sock2>==10) 
+var.locxs=94
+var.locys=137
+var.pic2=3872 // tourmaline yellow green  
+elseif (<var.sock2>==11) 
+var.locxs=105
+var.locys=134
+var.pic2=6882 // skull white 
+else
+var.locxs=85
+var.locys=134
+var.pic2=16383 // null
+endif 
+
+src.act=<uid> 
+dialog d_socket_weapon 
+return 0 
+
+[FUNCTION f_socket_damage]
+var.sock1=<morem>&0f 
+var.sock2=<eval ((<morem>&0f0)/0f)> 
+var.dam=<eval <dam>> 
+var.damh=<eval (<var.dam>*4)> 
+var.damage=<eval (<var.dam> + RAND(<var.damh>))> 
+var.damage=<eval (<var.damage> + (<link.str>/10))> 
+src.damage <var.damage> 
+
+if (0<var.sock1>==01)||(0<var.sock2>==01) //damage good 
+if (<src.karma> > 2000) 
+src.hits=(<src.hits>-{5 10}) 
+if (0<var.sock1>==0<var.sock2>)
+src.hits=(<src.hits>-{5 10}) 
+endif
+endif 
+endif 
+
+if (0<var.sock1>==02)||(0<var.sock2>==02) //cause terror. Only works on npc brains! 
+if !(rand(4))
+src.emote escape 
+if (<link.dir>==0) 
+src.run n 
+src.run n 
+ELSEIF (<link.dir>==1) 
+src.run ne 
+src.run ne 
+ELSEIF (<link.dir>==2) 
+src.run e 
+src.run e 
+ELSEIF (<link.dir>==3) 
+src.run se 
+src.run se 
+ELSEIF (<link.dir>==4) 
+src.run s 
+src.run s 
+ELSEIF (<link.dir>==5) 
+src.run sw 
+src.run sw 
+ELSEIF (<link.dir>==6) 
+src.run w 
+src.run w 
+ELSEIF (<link.dir>==7) 
+src.run nw 
+src.run nw 
+endif 
+endif 
+if (0<var.sock1>==0<var.sock2>)
+if !(rand(4))
+src.emote escape 
+if (<link.dir>==0) 
+src.run n 
+src.run n 
+ELSEIF (<link.dir>==1) 
+src.run ne 
+src.run ne 
+ELSEIF (<link.dir>==2) 
+src.run e 
+src.run e 
+ELSEIF (<link.dir>==3) 
+src.run se 
+src.run se 
+ELSEIF (<link.dir>==4) 
+src.run s 
+src.run s 
+ELSEIF (<link.dir>==5) 
+src.run sw 
+src.run sw 
+ELSEIF (<link.dir>==6) 
+src.run w 
+src.run w 
+ELSEIF (<link.dir>==7) 
+src.run nw 
+src.run nw 
+endif 
+endif 
+endif
+endif 
+
+
+
+if (0<var.sock1>==03)||(0<var.sock2>==03) //paralyze 
+if !(rand(4))
+src.newitem i_paramem 
+src.act.equip 
+if (0<var.sock1>==0<var.sock2>)
+if !(rand(4))
+src.newitem i_paramem 
+src.act.equip 
+endif
+endif 
+endif 
+endif
+
+
+if (0<var.sock1>==04)||(0<var.sock2>==04) //double damage undead 
+if (<src.npc>==12) 
+src.damage <var.damage>
+if (0<var.sock1>==0<var.sock2>)
+src.damage <var.damage>
+endif
+endif 
+endif 
+
+if (0<var.sock1>==05)||(0<var.sock2>==05) //poison 
+if !(rand(4))
+if (0<var.sock1>==0<var.sock2>)
+if !(rand(4))
+morez=128
+endif
+endif
+morez=128
+endif
+endif
+
+if (0<var.sock1>==06)||(0<var.sock2>==06) //dispel
+if !(rand(2))
+SRC.SPELLEFFECT s_dispel 1000
+endif 
+if (0<var.sock1>==0<var.sock2>)
+SRC.SPELLEFFECT s_dispel 1000
+endif
+endif 
+
+if (0<var.sock1>==07)||(0<var.sock2>==07) //fire damage
+src.effect 3,i_fx_explode,1,10,0
+SFX=snd_SPELL_FIREBALL
+src.hits=(<src.hits>-{5 10})
+if (0<var.sock1>==0<var.sock2>)
+src.hits=(<src.hits>-{5 10}) 
+endif
+endif
+
+if (0<var.sock1>==08)||(0<var.sock2>==08) //cold damage 
+src.effect 2,i_fx_BLESS_EFFECT,1,10,0
+SFX=snd_SPELL_DISPEL_FIELD
+src.hits=(<src.hits>-{5 10})
+if (0<var.sock1>==0<var.sock2>)
+src.hits=(<src.hits>-{5 10}) 
+endif
+endif 
+
+if (0<var.sock1>==09)||(0<var.sock2>==09) //damage evil
+if (<src.karma> < -2000) 
+src.hits=(<src.hits>-{5 10}) 
+if (0<var.sock1>==0<var.sock2>)
+src.hits=(<src.hits>-{5 10}) 
+endif
+endif 
+endif 
+
+if (<var.sock1>==10)||(<var.sock2>==10) //lightning damage 
+src.effect=1,1
+SFX=snd_SPELL_LIGHTNING
+src.hits=(<src.hits>-{5 10})
+if (<var.sock1>==<var.sock2>)
+src.hits=(<src.hits>-{5 10}) 
+endif
+endif 
+
+if (<var.sock1>==11)||(<var.sock2>==11) //Life & Mana drain
+link.hits=<link.hits> + (<var.damage> / 4)
+link.mana=<link.mana> + (<var.damage> / 4)
+if (<var.sock1>==<var.sock2>)
+link.hits=<link.hits> + (<var.damage> / 4)
+link.mana=<link.mana> + (<var.damage> / 4)
+endif
+if (<link.hits> > <link.str>) 
+link.hits=<link.str> 
+endif 
+if (<link.mana> > <link.int>) 
+link.mana=<link.int> 
+endif 
+endif 
+
+if (<var.sock1>==12)||(<var.sock2>==12) //null
+
+endif
+
+if (<var.sock1>==13)||(<var.sock2>==13) //null
+
+endif
+
+if (<var.sock1>==14)||(<var.sock2>==14) //null
+
+endif
+
+if (<var.sock1>==15)||(<var.sock2>==15) //null
+
+endif
+
+[dialog d_socket_weapon] 
+0,0 
+resizepic 100 100 5054 120 60 
+tilepic 125 120 <src.act.dispiddec> 
+button 108 109 209 209 1 0 1 
+button 108 130 209 209 1 0 2 
+tilepic <var.locx> <var.locy> <eval <var.pic1>> 
+tilepic <var.locxs> <var.locys> <eval <var.pic2>> 
+
+[dialog d_socket_weapon text] 
+
+[dialog d_socket_weapon button] 
+onbutton=0 
+return 1 
+
+onbutton=1 
+var.sock1=<src.act.morem>&0f 
+if !(<var.sock1>) 
+target Select a jewel to insert 
+var.socket=1 
+return 1 
+endif 
+
+onbutton=2 
+var.sock2=<eval ((<src.act.morem>&0f0)/0f)> 
+if !(<var.sock2>) 
+target Select a jewel to insert 
+var.socket=2 
+return 1 
+endif 
+
+[EOF]

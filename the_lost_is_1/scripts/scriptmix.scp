@@ -1,0 +1,4341 @@
+//Items  Z.  14
+//NPCs   Z.4087
+//Events Z.4296
+
+[ITEMDEF i_e_allremove]
+DEFNAME=i_e_allremove
+ID=i_hole
+NAME="All-Events-Remover"
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=All-Events-Remover
+ON=@STEP
+	SRC.EVENTS -e_race_mensch
+	SRC.EVENTS -e_race_ratte
+	SRC.EVENTS -e_race_ork
+	SRC.EVENTS -e_race_vampir
+	SRC.EVENTS -e_race_zwerg
+	SRC.EVENTS -e_race_barbar
+	SRC.EVENTS -e_race_elf
+	SRC.EVENTS -e_race_waldelf
+	SRC.EVENTS -e_race_drow
+	SRC.EVENTS -e_race_halbling
+	SRC.EVENTS -e_race_gargy	
+	SRC.EVENTS -e_race_cat	
+
+	SRC.EVENTS -00
+	SRC.EVENTS -01
+	SRC.EVENTS -02
+	SRC.EVENTS -03
+	SRC.EVENTS -04
+	SRC.EVENTS -05
+	SRC.EVENTS -06
+	SRC.EVENTS -e_class_warrior
+	SRC.EVENTS -e_class_ratwarrior
+	SRC.EVENTS -e_class_elfwarrior
+	SRC.EVENTS -e_class_elfwarrior2
+	SRC.EVENTS -e_class_worker
+	SRC.EVENTS -e_class_mage
+	SRC.EVENTS -e_class_woodrunner
+	SRC.EVENTS -e_class_gargywarrior
+	SRC.EVENTS -e_class_magelehrling
+	SRC.EVENTS -e_class_mage
+	SRC.EVENTS -e_class_mage2
+	SRC.EVENTS -e_class_mage3
+	SRC.EVENTS -e_class_mage4
+	SRC.EVENTS -e_class_necro
+
+	SRC.EVENTS -e_tot
+	SRC.EVENTS -e_armor_noplate
+	SRC.EVENTS -e_armor_noring
+	SRC.EVENTS -e_armor_nochain
+	SRC.EVENTS -e_armor_noshield
+	SRC.EVENTS -e_dam_bonus
+	//SRC.EVENTS -e_skill_fix
+	//SRC.EVENTS -e_nofiz
+	SRC.EVENTS -e_no_fizzle
+	SRC.EVENTS -e_autohit
+	SRC.EVENTS -e_taming   
+	SRC.update
+
+[ITEMDEF i_magic_tool]
+ID=i_wand_1
+TYPE=T_wand
+Name="Magischer Stab"
+VALUE=500
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=Magischer Stab
+ON=@Create
+COLOR=color_o_starnin	//anpassen
+
+ON=@DCLICK
+	IF (<SRC.Blacksmithing>>290)&&(<SRC.magery>>301)&&(<SRC.armslore>>290)
+		TARGET "Whaele das Ruestungsteil (keine Schilder!)"
+	ELSE
+		SRC.MESSAGE "Ihr habt noch nicht genug erfahrung !"
+	RETURN 1
+	ENDIF						//<SRC.TARG.NAME>  = der name des targets
+ON=@TARGON_CHAR
+	SRC.MESSAGE "Dass ist kein Ruestungsteil!"
+	RETURN 1
+
+ON=@TARGON_ITEM
+	IF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>>301 )&&( <SRC.MAGERY><400 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name>* 
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+1)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,100			//+2 =+ AR
+		src.targ.name=<src.targ.name> of Light	//>30.1 -<40.0
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed	//	
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9 
+		SRC.MESSAGE Ihr habt das Teil verzaubert!
+	ELSEIF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>>399)&&( <SRC.MAGERY><500 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name>* 
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+2)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,200			//+3 =+1AR
+		src.targ.name=<src.targ.name> of Dexar	//>40.0-<50.0
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed		
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9
+	ELSEIF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>>499)&&( <SRC.MAGERY><600 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name>* 
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+3)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,300			//+5 =+2AR
+		src.targ.name=<src.targ.name> of Arkane	//>50.0-<60.0
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed		
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9
+ 
+	ELSEIF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>>599)&&( <SRC.MAGERY><700 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name>* 
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+4)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,400			//+6 =+ AR
+		src.targ.name=<src.targ.name> of Thour	//>60.0-<70.0
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed		
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9
+	ELSEIF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>>699)&&( <SRC.MAGERY><800 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name>* 
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+5)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,500			//+8 =+3AR	
+		src.targ.name=<src.targ.name> of Ancient//>70.0-<80.0
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed		
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9
+	ELSEIF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>>799)&&( <SRC.MAGERY><900 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name>* 
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+6)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,600			//+9 =+ AR
+		src.targ.name=<src.targ.name> of Valory	//>80.0-<90.0
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed		
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9
+	ELSEIF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>>899)&&( <SRC.MAGERY><949 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name>* 
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+7)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,700			//+10 =+4AR
+		src.targ.name=<src.targ.name> of Wonderous//>90.0-<94.9
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed		
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9
+	ELSEIF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>>949)&&( <SRC.MAGERY><1000 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name>* 
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+8)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,800			//+12 =+ AR
+		src.targ.name=<src.targ.name> of Thunder//>94.9-<100.0
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed		
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9
+	ELSEIF ( <SRC.TARG.TYPE> == t_armor )&&( <SRC.TARG.ATTR> != attr_magic )&&( <SRC.MANA>>30 )&&( <SRC.MAGERY>==1000 )
+		cont.Say *Ihr sieht <src.name> verzaubert <src.targ.name> mit bester Wirkung*
+		SRC.MANA=(<SRC.MANA>-29)
+		SRC.TARG.HITPOINTS=(<src.targ.hitpoints>+10)
+		src.targ.attr=attr_magic
+		src.targ.MOREP=0,900			   //+13 =+5AR
+		src.targ.name=<src.targ.name> of Lightning //=100.0
+		EFFECT 3,i_fx_heal_effect,1,15,1
+		//SRC.TARG.ATTR=attr_blessed		
+		src.effect=3,0376a,1,30,1
+		src.EFFECT=2,0376a,1,15,1 
+		SRC.SOUND=530
+		SRC.ANIM=9 
+		SRC.MESSAGE Ihr habt das Teil verzaubert!
+	ELSEIF ( <SRC.TARG.ATTR> == attr_magic )
+		SRC.MESSAGE Das ist schon verzaubert!
+	ELSEIF ( <SRC.TARG.MOREY>>0)
+		SRC.MESSAGE Das ist schon verzaubert!
+	ELSEIF ( <SRC.TARG.ATTR> == attr_blessed)
+		SRC.MESSAGE Das ist schon verzaubert!
+	ELSE
+		SRC.MESSAGE "Ihr schafft es nicht das Teil zu verzaubern!"
+	ENDIF
+
+[ITEMDEF i_gm_robe] 
+DEFNAME=i_gm_robe 
+ID=0204f 
+TYPE=t_clothing 
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=GM Robe
+
+ON=@create 
+NAME=GM Robe
+HITPOINTS=-1 
+
+ON=@equip 
+IF (0<SRC.FINDLAYER(11)> 
+SRC.TAG.HaarID=<SRC.FINDLAYER(11).ID> 
+SRC.TAG.HaarFarbe=<SRC.FINDLAYER(11).color> 
+SRC.FINDLAYER(11).REMOVE 
+ELSE 
+SRC.TAG.HaarID=0 
+ENDIF 
+
+ON=@unequip 
+IF !(<SRC.TAG.HaarID> == 0) 
+SRC.NEWITEM=<src.tag.haarid> 
+SRC.ACT.EQUIP 
+SRC.FINDLAYER(11).color=<src.tag.HaarFarbe> 
+ENDIF
+
+
+[ITEMDEF i_gargy_tool]
+ID=I_VIRTSTONE_1
+TYPE=T_SCRIPT
+Name=Mensch-Wandler
+
+ON=@Create
+COLOR=color_o_bronze
+ATTR=attr_newbie
+
+ON=@DCLICK
+IF ( <SRC.OBODY> == c_gargoyle )&&( <SRC.BODY> == c_gargoyle )&&( <SRC.tag.race> == Gargy )		//test
+		SRC.SOUND=527
+		SRC.SOUND=515
+		
+		src.tag.body_1=<src.body>								//merken
+    		src.tag.color_1=<src.color>
+    		src.tag.name=<src.name>
+		src.tag.title=<src.title>
+		src.tag.karma=<src.karma>
+    		src.tag.str=<src.str>
+    		src.tag.hits=<src.hits>
+    		src.tag.dex=<src.dex>
+    		src.tag.mana=<src.mana>
+    		src.tag.int=<src.int>
+    		src.tag.stam=<src.stam>
+		src.tag.verwandlung=1
+		fix
+		
+		src.newitem=i_mem_verwandlung_gargy							//memory anlege
+		src.act.link=<src.serial>
+		src.act.timer=1200									//1200 = 20min
+    		src.act.color=<src.serial>
+    		src.act.layer=30
+    		src.act.cont=<src.serial>
+		
+		SRC.BODY=c_man										//morph
+		SRC.COLOR=00
+		SRC.NAME=Man
+		SRC.INT=80
+		SRC.DEX=80
+		SRC.STR=80
+		SRC.TITLE= ,Mensch
+		SRC.EFFECT=3,i_FX_BLESS_EFFECT
+		SRC.FIX
+	ELSE
+		SRC.MESSAGE Ihr seid kein Gargoyle !		//Falls anforderung nicht
+	RETURN 1
+	ENDIF
+	
+[itemdef i_mem_verwandlung_gargy]
+id=i_memory
+type=t_eq_script
+name=Verwandlungs_mem_gargy
+ON=@timer
+link.body=<link.tag.body_1>
+link.color=<link.tag.color_1>
+link.name=<link.tag.name>
+link.title=<link.tag.title>
+link.karma=<link.tag.karma>
+link.str=<link.tag.str>
+link.hits=<link.tag.hits>
+link.dex=<link.tag.dex>
+link.mana=<link.tag.mana>
+link.int=<link.tag.int>
+link.stam=<link.tag.stam>
+link.tag.verwandlung=0
+link.effect=2,03728,1,20,1
+fix
+remove
+return 1
+return 1
+
+
+
+[ITEMDEF i_gm_layers]
+DEFNAME=i_gm_layers
+ID=i_book_sm_pub
+NAME=Zeigt die Layers (fuer GMs)
+TYPE=t_normal
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=Layer-Shower
+
+ON=@CREATE
+TIMER=-1 
+ATTR=attr_newbie
+COLOR=color_o_starnin	//muss angepasst werden :P
+ON=@Dclick
+SRC.ACTION = -1
+TARGET Waehle den Char !
+ON=@TARGON_CHAR
+//
+SRC.DIALOG d_gmlayers
+RETURN 1
+
+[DIALOG d_gmlayers]
+0,1	//an.       br.	höhe
+resizepic 0 0 3500 540 600
+//noclose
+PAGE 0		//1. 2.
+button 250 550 4021 4022 1 0 0 //Exit Button
+button 11 27 4018 4017 1 0 1 // unequipp layer 1
+button 11 47 4018 4017 1 0 2 // unequipp layer 2 ...
+//button 11 67 4018 4017 1 0 3 // aus
+button 11 87 4018 4017 1 0 4 //
+//button 11 107 4018 4017 1 0 5 // aus
+button 11 127 4018 4017 1 0 6 //
+button 11 147 4018 4017 1 0 7 //
+//button 11 167 4018 4017 1 0 8 // aus
+button 11 187 4018 4017 1 0 9 //
+button 11 207 4018 4017 1 0 10//
+button 11 227 4018 4017 1 0 11// sind die haare :P
+button 11 247 4018 4017 1 0 12//
+button 11 267 4018 4017 1 0 13//
+//button 11 287 4018 4017 1 0 14// aus
+button 11 307 4018 4017 1 0 15//
+button 11 327 4018 4017 1 0 16// ist der Bart :P
+//button 11 347 4018 4017 1 0 17// aus
+//button 11 367 4018 4017 1 0 18// aus
+button 11 387 4018 4017 1 0 19//
+//button 11 407 4018 4017 1 0 20// aus
+//button 11 427 4018 4017 1 0 21//aus ist der Backpack!
+//button 11 447 4018 4017 1 0 22// aus
+//button 11 467 4018 4017 1 0 23//  aus
+button 11 487 4018 4017 1 0 24//
+//button 11 507 4018 4017 1 0 25// aus
+
+
+text 19 550 600 0 	//credit
+//text 35 15 1400 1
+text 50 27 2212 1	//layer1
+text 50 47 2212 2	//layer2 ...
+text 50 67 2212 3
+text 50 87 2212 4
+text 50 107 2212 5
+text 50 127 2212 6
+text 50 147 2212 7
+text 50 167 2212 8
+text 50 187 2212 9
+text 50 207 2212 10
+text 50 227 2212 11
+text 50 247 2212 12
+text 50 267 2212 13
+text 50 287 2212 14
+text 50 307 2212 15
+text 50 327 2212 16
+text 50 347 2212 17
+text 50 367 2212 18
+text 50 387 2212 19
+text 50 407 2212 20
+text 50 427 2212 21
+text 50 447 2212 22
+text 50 467 2212 23
+text 50 487 2212 24
+text 50 507 2212 25
+
+[DIALOG d_gmlayers TEXT]
+Layer1[Hand 1]: <SRC.TARG.FINDLAYER(1).name>
+Layer2[Hand 2]: <src.targ.FINDLAYER(2).name>
+Layer3[Shoes]: <src.targ.FINDLAYER(3).name>
+Layer4[Pants]: <src.targ.FINDLAYER(4).name>
+Layer5[Shirt]: <src.targ.FINDLAYER(5).name>
+Layer6[Helm]: <src.targ.FINDLAYER(6).name>
+Layer7[Gloves]: <src.targ.FINDLAYER(7).name>
+Layer8[Ring]: <src.targ.FINDLAYER(8).name> 
+Layer9[Unused]: <src.targ.FINDLAYER(9).name>
+Layer10[Collar]: <src.targ.FINDLAYER(10).name>
+Layer11[Hair]: <src.targ.FINDLAYER(11).name>
+Layer12[Half_apron]: <src.targ.FINDLAYER(12).name>
+Layer13[Chest]: <src.targ.FINDLAYER(13).name>
+Layer14[Wirst]: <src.targ.FINDLAYER(14).name>
+Layer15[Pack2]: <src.targ.FINDLAYER(15).name>
+Layer16[Beard]: <src.targ.FINDLAYER(16).name>
+Layer17[Tunic]: <src.targ.FINDLAYER(17).name>
+Layer18[Ears]: <src.targ.FINDLAYER(18).name>
+Layer19[Arms]: <src.targ.FINDLAYER(19).name>
+Layer20[Cape]: <src.targ.FINDLAYER(20).name>
+Layer21[Pack]: <src.targ.FINDLAYER(21).name>
+Layer22[Robe]: <src.targ.FINDLAYER(22).name>
+Layer23[Skirt]: <src.targ.FINDLAYER(23).name>
+Layer24[Legs]: <src.targ.FINDLAYER(24).name>
+Layer25[Horse]: <src.targ.FINDLAYER(25).name>
+
+[DIALOG d_gmlayers BUTTON]
+ONBUTTON=1
+IF (<SRC.TARG.FINDLAYER(1).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(1).UNEQUIP
+ENDIF
+ONBUTTON=2
+IF (<SRC.TARG.FINDLAYER(2).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(2).UNEQUIP
+ENDIF
+ONBUTTON=3
+IF (<SRC.TARG.FINDLAYER(3).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(3).UNEQUIP
+ENDIF
+ONBUTTON=4
+IF (<SRC.TARG.FINDLAYER(4).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(4).UNEQUIP
+ENDIF
+ONBUTTON=5
+IF (<SRC.TARG.FINDLAYER(5).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(5).UNEQUIP
+ENDIF
+ONBUTTON=6
+IF (<SRC.TARG.FINDLAYER(6).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(6).UNEQUIP
+ENDIF
+ONBUTTON=7
+IF (<SRC.TARG.FINDLAYER(7).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(7).UNEQUIP
+ENDIF
+ONBUTTON=8
+IF (<SRC.TARG.FINDLAYER(8).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(8).UNEQUIP
+ENDIF
+ONBUTTON=9
+IF (<SRC.TARG.FINDLAYER(9).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(9).UNEQUIP
+ENDIF
+ONBUTTON=10
+IF (<SRC.TARG.FINDLAYER(10).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(10).UNEQUIP
+ENDIF
+ONBUTTON=11
+IF (<SRC.TARG.FINDLAYER(11).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(11).UNEQUIP
+ENDIF
+ONBUTTON=12
+IF (<SRC.TARG.FINDLAYER(12).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(12).UNEQUIP
+ENDIF
+ONBUTTON=13
+IF (<SRC.TARG.FINDLAYER(13).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(13).UNEQUIP
+ENDIF
+ONBUTTON=14
+IF (<SRC.TARG.FINDLAYER(14).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(14).UNEQUIP
+ENDIF
+ONBUTTON=15
+IF (<SRC.TARG.FINDLAYER(15).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(15).UNEQUIP
+ENDIF
+ONBUTTON=16
+IF (<SRC.TARG.FINDLAYER(16).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(16).UNEQUIP
+ENDIF
+ONBUTTON=17
+IF (<SRC.TARG.FINDLAYER(17).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(17).UNEQUIP
+ENDIF
+ONBUTTON=18
+IF (<SRC.TARG.FINDLAYER(18).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(18).UNEQUIP
+ENDIF
+ONBUTTON=19
+IF (<SRC.TARG.FINDLAYER(19).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(19).UNEQUIP
+ENDIF
+ONBUTTON=20
+IF (<SRC.TARG.FINDLAYER(20).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(20).UNEQUIP
+ENDIF
+ONBUTTON=21
+IF (<SRC.TARG.FINDLAYER(21).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(21).UNEQUIP
+ENDIF
+ONBUTTON=22
+IF (<SRC.TARG.FINDLAYER(22).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(22).UNEQUIP
+ENDIF
+ONBUTTON=23
+IF (<SRC.TARG.FINDLAYER(23).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(23).UNEQUIP
+ENDIF
+ONBUTTON=24
+IF (<SRC.TARG.FINDLAYER(24).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(24).UNEQUIP
+ENDIF
+ONBUTTON=25
+IF (<SRC.TARG.FINDLAYER(25).ID> == 0 )
+RETURN 1
+ELSE
+SRC.TARG.FINDLAYER(25).UNEQUIP
+ENDIF
+//ende
+
+// No Fizzle Adder
+[ITEMDEF i_nofiz]
+DEFNAME=i_nofiz
+ID=i_hole
+NAME=No Fizzle Adder
+
+ON=@STEP
+	SRC.EVENTS +e_no_fizzle
+
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=No Fizzle Adder
+
+
+[ITEMDEF i_layers]
+DEFNAME=i_layers
+ID=i_book_sm_pub
+NAME=Zeigt die Layers (fuer Players)
+TYPE=t_normal
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=Layer-Shower-Players
+
+ON=@CREATE
+TIMER=-1 
+ATTR=attr_newbie
+COLOR=color_o_starnin	//muss angepasst werden :P
+ON=@Dclick
+SRC.DIALOG d_layers
+RETURN 1
+//
+
+
+[DIALOG d_layers]
+0,1	//an.       br.	höhe
+resizepic 0 0 3500 540 300	//def: resizepic 0 0 3500 540 300
+gumppic 265 -29 12 //man	265= x coordinaten , -29= y coord. 12=gumppic
+//gumppic 295 -29 120 //
+//noclose
+PAGE 0		//1. 2.
+button 250 250 4021 4022 1 0 0//Exit Button
+button 11 27 4018 4017 1 0 1  // unequipp layer 1
+button 11 47 4018 4017 1 0 2  // unequipp layer 2 ...
+button 11 67 4018 4017 1 0 3  //
+button 11 87 4018 4017 1 0 4  //
+button 11 107 4018 4017 1 0 5 //
+button 11 127 4018 4017 1 0 6 //
+button 11 147 4018 4017 1 0 7 //
+button 11 167 4018 4017 1 0 8 //
+button 11 187 4018 4017 1 0 9 // unequipp layer 4; Hose
+text 19 270 290 0 	//credit
+text 50 27 2212 1	//layer1
+text 50 47 2212 2	//layer2 ...
+text 50 67 2212 3	//Kopf
+text 50 87 2212 4	//hals
+text 50 107 2212 5	//Heande
+text 50 127 2212 6	//Brust
+text 50 147 2212 7	//Arme
+text 50 167 2212 8	//Beine
+text 50 187 2212 9	//Leggins / Hose
+
+
+[DIALOG d_layers TEXT]
+Hier wird dir deine Koerper belegung angezeigt (0= Nichts)
+-Linke Hand: <src.FINDLAYER(1).name>
+-Rechte Hand: <src.FINDLAYER(2).name>
+-Kopf: <src.FINDLAYER(6).name>
+-Hals: <src.FINDLAYER(10).name>
+-Haende: <src.FINDLAYER(7).name>
+-Brust: <src.FINDLAYER(13).name>
+-Arme: <src.FINDLAYER(19).name>
+-Beine: <src.FINDLAYER(24).name>
+-Hose: <src.FINDLAYER(4).name>
+
+[DIALOG d_layers BUTTON]
+ONBUTTON=1
+IF (<SRC.FINDLAYER(1).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(1).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+ONBUTTON=2
+IF (<SRC.FINDLAYER(2).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(2).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+ONBUTTON=3
+IF (<SRC.FINDLAYER(6).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(6).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+ONBUTTON=4
+IF (<SRC.FINDLAYER(10).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(10).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+ONBUTTON=5
+IF (<SRC.FINDLAYER(7).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(7).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+ONBUTTON=6
+IF (<SRC.FINDLAYER(13).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(13).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+ONBUTTON=7
+IF (<SRC.FINDLAYER(19).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(19).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+ONBUTTON=8
+IF (<SRC.FINDLAYER(24).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(24).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+ONBUTTON=9
+IF (<SRC.FINDLAYER(4).ID> == 0 )
+RETURN 1
+ELSE
+SRC.FINDLAYER(4).UNEQUIP
+SRC.DIALOG d_layers
+ENDIF
+//ende
+
+//Gate Travel Potion
+[ITEMDEF i_potion_gatetravel]
+DEFNAME=i_potion_gatetravel
+NAME=Gate Travell Potion
+ID=i_bottle_empty
+TYPE=t_script
+RESOURCES=i_reag_daemon_bone 2, i_reag_pig_iron 10, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 80.0
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=Gate Travel Potion
+
+ON=@Create
+Color=022
+
+ON=@DClick
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+ SRC.SYSMESSAGE="Der Trank muss in eurem Rucksack sein."
+ RETURN 1
+ ENDIF
+IF (<SRC.RESTEST 1 i_mem_lastuse_potion>) 
+ SRC.SYSMESSAGE Ihr muesst noch einwenig warten bis ihr den Trank wieder benuetzen koennt.
+ RETURN 1
+ENDIF
+ SRC.FINDLAYER(1).UNEQUIP
+ SRC.ANIM=34
+ SRC.SOUND=48
+ SRC.EMOTE consume a Gate Travel Potion
+ SRC.NEWITEM=i_gatetravel_mem
+ SRC.ACT.EQUIP
+ RETURN 1
+ENDIF
+[ITEMDEF i_gatetravel_mem]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Recall Potion
+ON=@Create
+TIMER 30
+ON=@Equip
+TIMER 30
+TARGET Waehle die Rune:
+RETURN 1
+
+ON=@TargOn_Item
+IF <SRC.TARG.BASEID>==i_rune_marker
+IF <SRC.TARG.MOREP>
+SRC.SOUND=526
+SRC.NEWITEM=i_bottle_empty
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_mem_lastuse_potion
+SRC.ACT.TIMER=40		// 40 sek. warten bis nochmal trinken kann
+SRC.ACT.EQUIP
+src.newitem=I_GATETRAVEL_TOR
+src.act.type=t_telepad
+src.act.p=<src.p>
+src.act.morep=<src.targ.morep>
+src.act.timer=17	 	//dauer des Tores
+
+src.newitem=I_GATETRAVEL_TOR
+src.act.type=t_telepad
+src.act.p=<src.targ.morep>
+src.act.morep=<src.p>
+src.act.sound=526
+src.act.timer=17		//dauer des tores
+SRC.CONSUME i_potion_gatetravel 1
+ELSE
+SRC.SYSMESSAGE Die Rune ist noch nicht beschrieben.
+RETURN 1
+ENDIF
+ENDIF
+REMOVE
+RETURN 1
+
+ON=@TargOn_CHAR
+SRC.SYSMESSAGE Waehlt eine beschriebene Rune aus!
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[ITEMDEF I_GATETRAVEL_TOR]
+ID=0dda
+NAME=Moongate
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=Gatetravel Tor
+
+ON=@CREATE
+COLOR=022
+
+on=@timer
+remove
+return 1
+
+ON=@PICKUP_GROUND
+return 1
+
+
+//Not needed:
+[ITEMDEF i_mem_lastuse]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Last Use
+
+ON=@EQUIP
+ATTR=attr_decay
+
+ON=@TIMER
+REMOVE
+return 1
+//end
+
+//"Umhang"
+//Orginaly made by -->JyzJmz
+
+[itemdef i_robe_invis]
+DEFNAME=i_robe_invis
+ID=i_robe
+TYPE=T_CLOTHING
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=Invis Robe
+
+ON=@create 
+NAME Umhang
+COLOR=colors_all
+
+ON=@equip
+IF (<SRC.MANA> < 4)				//Mana
+SRC.SYSMESSAGE Ihr habt nicht genuegend Mentale Ausdauer.
+UNEQUIP
+RETURN 1
+ELSE
+SRC.invis=1
+TIMER=3				//3 sek
+ENDIF
+ENDIF
+
+ON=@Unequip
+SRC.INVIS 0
+
+ON=@TIMER
+IF (<CONT.MANA> >= 4)
+CONT.mana <cont.MANA>+(-4)	//-4 mana
+TIMER=3				//3 sek
+RETURN 1
+ELSE
+cont.INVIS=0 
+CONT.SYSMESSAGE Ihr habt nicht genuegend Mentale Ausdauer! 
+UNEQUIP
+RETURN 1
+ENDIF
+
+
+//fuer players ?
+[ITEMDEF i_banner]
+DEFNAME i_banner
+NAME=Stab des Bannens
+ID=i_staff_black
+
+CATEGORY=Farbige Waffen
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Staff
+
+ON=@CREATE
+HITPOINTS=-1
+COLOR=color_o_ligten
+MOREP=1498,1629,10		//Britain Inn (nach der Geburt) nach ablauf des timers
+
+ON=@DCLICK
+TARGET
+SRC.SYSMESSAGE Wer soll fuer 5min verbannt werden?
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE Das geht nicht.
+RETURN 1
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.BRAIN>==0)
+SRC.SYSMESSAGE Ihr koennt das nicht verbannen!
+RETURN 1
+ENDIF
+IF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE Ihr koennt euch nicht selbst verbannen!
+RETURN 1
+ENDIF
+IF (<SRC.TARG.isGM>)
+SRC.SAY <src.name> versucht <src.targ.name> zu verbannen!
+SRC.SYSMESSAGE Ihr koennt keinen GM verbannen!
+RETURN 1
+ELSE
+SRC.TARG.NEWITEM i_mem_verbann
+SRC.TARG.ACT.TIMER=300				//dauer in sek.   ;300=5min
+SRC.TARG.ACT.MOREP=<SRC.TARG.P>
+SRC.TARG.ACT.CONT=<SRC.TARG.UID>
+SRC.SYSMESSAGE Ihr habt <SRC.TARG.NAME> verbannt.
+SRC.TARG.GO 2182,1988				// Insel
+SRC.TARG.EVENTS +e_bann
+SRC.TARG.SYSMESSAGE Ihr wurdet fuer 5min verbannt
+SRC.TARG.SYSMESSAGE Ihr duerft in dieser Zeit die Insel nicht verlassen!
+SRC.ANIM 17
+SRC.SFX 020e
+SRC.Emote verbannt <SRC.TARG.NAME>
+Return 1
+ENDIF
+[ITEMDEF i_mem_verbann]
+// Memory Item
+ID=i_memory
+TYPE=t_eq_script
+NAME=Verbannungs Dauer
+
+CATEGORY=Memory Objekts
+SUBSECTION=Memory Items
+DESCRIPTION=Verbannungs Dauer
+
+ON=@EQUIP
+ATTR=attr_decay
+
+ON=@TIMER
+CONT.EVENTS -e_bann
+CONT.GO <MOREP>
+CONT.FIX
+CONT.Message Die Zeit der Verbannung ist vorueber !
+REMOVE
+Return 1
+
+//verbannungs Event
+[EVENTS e_bann]
+ON=@SPELLCAST
+SRC.MESSAGE Ihr koennt das nicht tuen wenn ihr verbannt worden seid!
+RETURN 1
+ON=@itemDCLICK
+IF !(<SRC.TARG.TYPE>==t_container)
+SRC.MESSAGE Ihr koennt das nicht machen wenn ihr verbannt worden seid!
+SRC.ACT.BOUNCE
+SRC.ACTION = -1
+RETURN 1
+ENDIF
+ON=@HIT
+SRC.ACTION=-1
+RETURN 1
+
+//fuer gms
+[ITEMDEF i_gm_banner]
+DEFNAME i_gm_banner
+NAME=Stab des Bannens (Gms)
+ID=i_staff_black
+
+CATEGORY=Farbige Waffen
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Staff
+
+ON=@CREATE
+HITPOINTS=-1
+COLOR=color_o_ligten
+MOREP=1498,1629,10		//Britain Inn (nach der Geburt)
+
+ON=@DCLICK
+IF (<SRC.isGM>)
+TARGET
+SRC.SYSMESSAGE Wer soll fuer 10min verbannt werden?
+RETURN 1
+ELSE
+SRC.SYSMESSAGE Ihr duerft so etwas nicht benuetzen !!!
+SRC.ACT.UNEQUIP
+RETURN 1
+ENDIF
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE Das geht nicht.
+RETURN 1
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE Ihr koennt euch nicht selbst bannen!
+RETURN 1
+ENDIF
+IF (<SRC.TARG.isGM>)
+SRC.SYSMESSAGE Ihr koennt keinen GM bannen!
+RETURN 1
+ELSE
+SRC.TARG.NEWITEM i_mem_verbann2
+SRC.TARG.ACT.TIMER=600				//dauer in sek.   ;600=10min
+SRC.TARG.ACT.MOREP=<SRC.TARG.P>
+SRC.TARG.ACT.CONT=<SRC.TARG.UID>
+SRC.SYSMESSAGE Die Coords des Bann Ortes: 2182,1988
+SRC.SYSMESSAGE Ihr habt <SRC.TARG.NAME> verbannt.
+SRC.TARG.GO 2182,1988				// Insel
+SRC.TARG.EVENTS +e_bann
+SRC.TARG.SYSMESSAGE Ihr wurdet fuer 10min verbannt
+SRC.TARG.SYSMESSAGE Ihr duerft in dieser Zeit die Insel nicht verlassen!
+SRC.ANIM 17
+SRC.SFX 020e
+//SRC.Emote verbannt <SRC.TARG.NAME>
+Return 1
+ENDIF
+
+[ITEMDEF i_mem_verbann2]
+// Memory Item zu Festlegung der Dauer der Verbannung
+ID=i_memory
+TYPE=t_eq_script
+NAME=Verbannungs Dauer
+
+CATEGORY=Memory Objekts
+SUBSECTION=Memory Items
+DESCRIPTION=Verbannungs Dauer
+
+ON=@EQUIP
+ATTR=attr_decay
+
+ON=@TIMER
+CONT.EVENTS -e_bann
+CONT.GO <MOREP>
+CONT.FIX
+CONT.Message Die Zeit der Verbannung ist vorueber !
+REMOVE
+Return 1
+
+//Muelleimer
+[ITEMDEF i_fass_muell] 
+DEFNAME=i_fass_muell 
+ID=i_barrel_open 
+NAME=Muelleimer
+TYPE=T_container	//def:TYPE=T_container
+
+ON=@CREATE 
+COLOR=03DD 
+ATTR=attr_move_never|attr_static
+
+ON=@CLICK
+SAY Muelleimer
+EMPTY
+RETURN 1
+ON=@DCLICK 
+OPEN
+TIMER 0
+RETURN 1 
+
+ON=@TIMER 
+EMPTY 
+//SAYU The trash barrel has being emptied! 
+RETURN 1 
+
+CATEGORY=Aveltarius
+SUBSECTION=Containers 
+DESCRIPTION=Trash Barrel (neu)
+
+
+
+
+
+//Rassen Teles
+//wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+//wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+//Drow
+[ITEMDEF i_rt2_drow]
+DEFNAME=i_rt2_drow
+Name=Teleporter
+ID=i_rune_alchem_6
+CATEGORY=Aveltarius
+SUBSECTION=Rassenteleporter
+DESCRIPTION=Drow
+ON=@Create
+WEIGHT=0
+TYPE=t_floor
+COLOR=color_o_shadow
+MORE2=1
+ON=@STEP
+	IF ((<SRC.TAG.RACE>==Drow)
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE="Ihr seid kein Dunkelelf"
+		RETURN 1
+	ENDIF
+	
+//Rattenmenschen
+[ITEMDEF i_rt2_rat]
+Name=Teleporter
+ID=i_rune_alchem_6
+CATEGORY=Aveltarius
+SUBSECTION=Rassenteleporter
+DESCRIPTION=Rattenmensch
+ON=@Create
+WEIGHT=0
+TYPE=t_floor
+COLOR=00749
+MORE2=1
+ON=@STEP
+	IF (<SRC.TAG.RACE>==Ratte)
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE="Ihr seid kein Rattenmensch"
+		RETURN 1
+	ENDIF
+
+//Ork
+[ITEMDEF i_rt2_ork]
+Name=Teleporter
+ID=i_rune_alchem_6
+CATEGORY=Aveltarius
+SUBSECTION=Rassenteleporter
+DESCRIPTION=Ork
+ON=@Create
+WEIGHT=0
+TYPE=t_floor
+COLOR=0453
+MORE2=1
+ON=@STEP
+	IF (<SRC.TAG.RACE>==Ork)
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE="Ihr seid kein Ork"
+		RETURN 1
+	ENDIF
+	
+//Vampir
+[ITEMDEF i_rt2_vamp]
+Name=Teleporter
+ID=i_rune_alchem_6
+CATEGORY=Aveltarius
+SUBSECTION=Rassenteleporter
+DESCRIPTION=Vampir-Daywalker
+ON=@Create
+WEIGHT=0
+TYPE=t_floor
+COLOR=003d5
+MORE2=1
+ON=@STEP
+	IF (<SRC.TAG.RACE> == Vampir)
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE="Ihr seid kein Vampir"
+		RETURN 1
+	ENDIF
+
+//Zwerg
+[ITEMDEF i_rt2_dwarf]
+Name=Teleporter
+ID=i_rune_alchem_6
+CATEGORY=Aveltarius
+SUBSECTION=Rassenteleporter
+DESCRIPTION=Zwerg
+ON=@Create
+WEIGHT=0
+TYPE=t_floor
+COLOR=083ea
+MORE2=1
+ON=@STEP
+	IF (<SRC.TAG.RACE> == Zwerg)
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE="Ihr seid kein Zwerg"
+		RETURN 1
+	ENDIF
+
+//Barbar
+[ITEMDEF i_rt2_barbar]
+Name=Teleporter
+ID=i_rune_alchem_6
+CATEGORY=Aveltarius
+SUBSECTION=Rassenteleporter
+DESCRIPTION=Barbar
+ON=@Create
+WEIGHT=0
+TYPE=t_floor
+COLOR=07e1
+MORE2=1
+ON=@STEP
+	IF (<SRC.TAG.RACE> == Barbar)
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE="Ihr seid kein Barbar"
+		RETURN 1
+	ENDIF
+
+//Lichtelf
+[ITEMDEF i_rt2_lichtelf]
+Name=Teleporter
+ID=i_rune_alchem_6
+CATEGORY=Aveltarius
+SUBSECTION=Rassenteleporter
+DESCRIPTION=Lichtelf
+ON=@Create
+WEIGHT=0
+TYPE=t_floor
+COLOR=07e1
+MORE2=1
+ON=@STEP
+	IF (<SRC.TAG.RACE> == Elf)
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE="Ihr seid kein Lichtelf"
+		RETURN 1
+	ENDIF
+
+//Waldelf
+[ITEMDEF i_rt2_waldelf]
+Name=Teleporter
+ID=i_rune_alchem_6
+CATEGORY=Aveltarius
+SUBSECTION=Rassenteleporter
+DESCRIPTION=Waldelf
+ON=@Create
+WEIGHT=0
+TYPE=t_floor
+COLOR=07e1
+MORE2=1
+ON=@STEP
+	IF (<SRC.TAG.RACE> == Waldelf)
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE="Ihr seid kein Waldelf"
+		RETURN 1
+	ENDIF
+
+//wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+//wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+
+//Potion Keg [55i]
+
+[ITEMDEF i_potion_keg2] 
+Defname=i_potion_keg2
+ID=0e7f 
+Name=Potion Keg 
+Type=T_Script 
+Weight=50 
+RESOURCES=50 I_Log, 25 i_wire_iron, 1000 i_gold 
+SKILLMAKE=Tinkering 65.0 
+on=@Create 
+color=color_o_starnin 
+Attr=0000B 
+Tag.Potion= 
+Tag.PotionName= 
+Tag.Number=0 
+
+on=@Click 
+More1=<Tag.Number> 
+if (<more1>==0) 
+Message an empty potion keg 
+return 1 
+endif 
+Message Keg containing : <eval(<More1>)> potions of <Tag.PotionName> 
+return 1 
+
+on=@DClick 
+
+if (<cont>==0) 
+if (<distance>>1) 
+src.message You are too far away to turn the tap 
+return 1 
+endif 
+else 
+if !(<cont>==<src.findlayer(21).uid>) 
+Src.message That must be at the top of your pack to use 
+return 1 
+endif 
+endif 
+
+Target Please select a potion bottle,a keg or your backpack 
+return 1 
+
+
+on=@Targon_Item 
+// I am trying to fill an empty bottle 
+if (<src.targ.baseid>=i_bottle_empty) 
+//Am I an empty keg 
+More1=<Tag.Number> 
+if (<more1><1) 
+Src.Message The Barrel is empty. Please fill it with full potions 
+Src.Resend 
+return 1 
+endif 
+//Stack potion bottle fill 
+More2=<src.Targ.Amount> 
+if (<more2>>1) //Are the potions stacked 
+more1=<Tag.Number> //How many bottles can the keg fill 
+//If there are more bottles in the pile than can be filled 
+//Then reduce more2 to the amount the keg can fill 
+if (<More2>><more1>) 
+More2=<more1> 
+endif 
+//Set the <Amount> in the bottle stack to <amount>-<more2> 
+//(more2=number of potion bottles to make) 
+Src.Targ.Amount=<src.Targ.Amount>+-<more2> 
+if (<src.targ.Amount><1) //remove a Zero sized stack 
+src.targ.remove 
+endif 
+//Reduce the amount in the potion keg by the amount being made 
+More1=<Tag.Number> 
+More1=<More1>+-<More2> 
+Tag.Number=<More1> 
+//Create the new potions 
+More1=<Tag.Potion> 
+Src.Newitem i_potion_maker 
+src.act.link=<src.uid> 
+src.act.More1=<More2> 
+src.act.more2=<More1> 
+src.act.PotionMaker_CreatePotions 
+Src.Resend 
+return 1 
+endif 
+//Single Bottle Fill 
+Src.Targ.Remove //Remove the empty bottle 
+More1=<Tag.Potion> 
+Src.Newitem <more1> 
+Src.Act.Bounce 
+//Reduce the amout in the keg 
+More1=<Tag.Number> 
+More1=<More1>+-1 
+Tag.Number=<More1> 
+Src.Resend 
+Return 1 
+endif 
+//Am I trying to fill the potion keg from a potion bottle? 
+if (<src.targ.Type>==t_potion) 
+
+//Does the keg already have potions in? if so check that we are tyring 
+//to fill with the same kind of potion 
+More1=<Tag.Number> 
+if (<more1>>0) 
+more2=<Tag.Potion> 
+if !(<src.targ.baseid>==<more2>) 
+Src.Message You cannot mix your <Src.Targ.Name> with <Tag.PotionName> 
+Src.Resend 
+return 1 
+endif 
+endif 
+
+//Get the number of potions in the stack 
+More2=<src.targ.amount> 
+
+//Add this number to the number of potions in the keg 
+More1=<Tag.Number> 
+More1=<More1>+<More2> 
+Tag.Number=<More1> 
+Src.Message You add <eval(<Src.Targ.Amount>)> potions of <src.targ.name> to the keg 
+
+//Set the name 
+Tag.PotionName=<Src.Targ.Name> 
+
+//Set the potion id 
+Tag.Potion=<src.Targ.baseid> 
+
+//Remove the source potions 
+More2=<src.Targ.Amount> 
+Src.Targ.Remove 
+
+//Create the number of empty bottles 
+Src.newitem i_bottle_empty 
+src.act.amount=<more2> 
+src.act.bounce 
+Src.Resend 
+return 1 
+endif 
+
+
+//Am I trying to fill another potion keg? 
+more1=<src.targ.baseid> 
+more2=i_potion_keg2 
+if (<more1>==<more2>) 
+//Am I targetting myself? 
+
+if (<UID>==<Src.Targ>) 
+Src.Message You stir the potion a little 
+Src.Resend 
+return 1 
+endif 
+
+if (<eval(<tag.Number>)>==0) 
+Src.Message Your keg is empty 
+return 1 
+endif 
+//Does it already already have a potion in me? 
+more1=<src.targ.tag.Number> 
+if (<more1>>0) 
+// It already has a potion so check that it is the same as the one I have 
+more1=<tag.potion> 
+more2=<src.targ.tag.Potion> 
+if !(<more1>==<more2>) 
+src.message You cannot mix the contents of these kegs 
+Src.Resend 
+return 1 
+endif 
+endif 
+
+//Add my contents to those of the targetted keg's 
+More1=<Tag.Number> 
+More2=<src.targ.tag.number> 
+More2=<more2>+<More1> 
+Src.Targ.Tag.Number=<More2> 
+Src.Message You put <eval(<More1>)> potions of <Tag.PotionName> into the keg 
+
+//Set the tags on the other keg 
+Src.Targ.Tag.Potion=<Tag.Potion> 
+Src.Targ.Tag.PotionName=<Tag.PotionName> 
+
+//Remove my contents 
+Tag.Number=0 
+Src.Resend 
+Return 1 
+
+endif 
+
+
+//Am I targetting my backpack? 
+if (<src.targ.type>==t_container) 
+if (<src.targ>==<src.findlayer(21).uid>) 
+
+//if the keg already has potions try to eat those 
+more1=<Tag.Potion> 
+more2=<src.findlayer(21).ResCount <More1>> 
+if (<More2>>0) 
+
+// Consume all the potions 
+src.Consume <More2> <More1> 
+
+//Add the number of potions to the keg 
+More1=<Tag.Number> 
+More1=<More1>+<More2> 
+Tag.Number=<More1> 
+
+Src.Message You put <eval(<more2>)> potions of <Tag.PotionName> into the keg 
+
+//Create empty bottles 
+Src.Newitem i_bottle_empty 
+src.act.amount=<more2> 
+src.act.bounce 
+
+Src.Resend 
+Return 1 
+endif 
+
+//Find a potion 
+More2=<Src.FindLayer(21).FindType.t_potion.uid> 
+if !(<more2>==0) 
+
+Src.Act=<More2> 
+
+//Set the tags 
+Tag.Potion=<src.Act.baseid> 
+Tag.PotionName=<src.Act.Name> 
+
+More2=<Src.Act.BaseID> 
+//Count the number of the potion 
+more1=<src.rescount <More2> > 
+
+//Consume the potions 
+Src.Consume <More1> <More2> 
+
+//Add the number 
+Tag.Number=<More1> 
+
+//Create the empties 
+Src.newitem i_bottle_empty 
+src.act.amount=<more1> 
+src.act.bounce 
+
+Src.Message you put <eval(<more1>)> potions of <Tag.PotionName> into the keg 
+
+Return 1 
+endif 
+
+Src.Message You cannot find any potions in your pack 
+Src.Resend 
+return 1 
+endif 
+
+Src.Message You may only batch pour from your backpack 
+Src.Resend 
+return 1 
+endif 
+Src.Message You cannot fill a potion keg with that item 
+return 1 
+
+CATEGORY=Items 
+SUBSECTION=Misc 
+DESCRIPTION=Aeryns Potion Keg 
+
+//** POTION MAKER ** 
+
+[ITEMDEF i_potion_maker] 
+Defname=i_potion_maker 
+id=i_rune_marker 
+type=t_normal 
+on=@Create 
+more1=0 
+more2=0 
+link=04fffffff 
+
+[Function PotionMaker_CreatePotions] 
+
+if (<More1>>0) 
+
+Link.Newitem <more2> 
+Link.act.cont=<link.findlayer(21).uid> 
+More1=<more1>+-1 
+PotionMaker_CreatePotions 
+endif 
+
+remove 
+return 1
+//*****************************************************************
+
+
+
+
+
+
+
+
+
+[PLEVEL 2]
+infos
+
+[FUNCTION infos]
+IF (0<ARGS>==1)
+SRC.NEWITEM=i_infos_1
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+ELSEIF (0<ARGS>==2)
+SRC.NEWITEM=i_infos_2
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+ELSEIF (0<ARGS>==3)
+SRC.NEWITEM=i_infos_3
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+ELSEIF (0<ARGS>==4)
+SRC.NEWITEM=i_infos_4
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+ELSEIF (0<ARGS>==5)
+SRC.NEWITEM=i_infos_5
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+ELSE
+SRC.NEWITEM=i_infos
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+ENDIF
+
+[ITEMDEF i_infos]
+DEFNAME=i_infos
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=082
+TIMER=60
+
+ON=@DCLICK
+TARGET Choose a target!
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.DIALOG d_infos_item
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.DIALOG d_infos
+REMOVE
+RETURN 1
+
+[ITEMDEF i_infos_1]
+DEFNAME=i_infos_1
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=082
+TIMER=60
+
+ON=@DCLICK
+SRC.DIALOG d_infos
+REMOVE
+RETURN 1
+
+[ITEMDEF i_infos_2]
+DEFNAME=i_infos_2
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=082
+TIMER=60
+
+ON=@DCLICK
+SRC.DIALOG d_infos_2
+REMOVE
+RETURN 1
+
+[ITEMDEF i_infos_3]
+DEFNAME=i_infos_3
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=082
+TIMER=60
+
+ON=@DCLICK
+SRC.DIALOG d_infos_3
+REMOVE
+RETURN 1
+
+[ITEMDEF i_infos_4]
+DEFNAME=i_infos_4
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=082
+TIMER=60
+
+ON=@DCLICK
+SRC.DIALOG d_infos_4
+REMOVE
+RETURN 1
+
+[ITEMDEF i_infos_5]
+DEFNAME=i_infos_5
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=082
+TIMER=60
+
+ON=@DCLICK
+SRC.DIALOG d_infos_item
+REMOVE
+RETURN 1
+
+[DIALOG d_infos]		//1. dialog
+150,75
+page 0
+resizepic 0 0 5120 500 500		//def: 2620 500 450 , 2.: 5054 500 450
+
+page 1
+
+//Serial
+text 10 08 1000 0
+gumppic 75 08 2440
+text 80 10 100 29
+
+//Account
+text 10 30 1160 1
+gumppic 75 30 2440
+text 80 32 100 30
+
+//Name
+text 10 52 1160 2
+gumppic 75 52 2440
+text 80 54 100 31
+
+//Title
+text 10 74 1160 3
+gumppic 75 74 2440
+text 80 76 100 32
+
+//Color
+text 10 96 1000 4
+gumppic 75 96 2440
+text 80 98 100 33
+
+//OSkin
+text 10 118 1160 5
+gumppic 75 118 2440
+text 80 120 100 34
+
+//ID
+text 10 140 1000 6
+gumppic 75 140 2440
+text 80 142 100 35
+
+//Body
+text 10 162 1160 7
+gumppic 75 162 2440
+text 80 164 100 36
+
+//OBody
+text 10 184 1160 8
+gumppic 75 184 2440
+text 80 186 100 37
+
+//Timer
+text 10 206 1000 9
+gumppic 75 206 2440
+text 80 208 100 38
+
+//P
+text 10 228 1000 10
+gumppic 75 228 2440
+text 80 230 100 39
+
+//Home
+text 10 250 1160 11
+gumppic 75 250 2440
+text 80 252 100 40
+
+//Action
+text 10 272 1160 12
+gumppic 75 272 2440
+text 80 274 100 41
+
+//Food
+text 10 294 1000 16
+gumppic 75 294 2440
+text 80 296 100 42
+
+//NPC
+text 10 316 1000 17
+gumppic 75 316 2440
+text 80 318 100 43
+
+//Speech
+text 10 338 1000 18
+gumppic 75 338 2440
+text 80 340 100 44
+
+//Str
+text 10 360 1160 19
+gumppic 75 360 2440
+text 80 362 100 45
+
+
+text 5 380 1160 62	//Plevel
+//gumppic 75 380 2440
+text 120 382 100 63
+
+text 5 400 1160 64	//1. Login
+text 120 402 100 65
+
+text 5 415 1160 66	//Zuletzt. eingeloggt
+text 165 415 100 67
+
+text 5 430 1160 68	//Letze Loginzeit
+text 120 432 100 69
+
+text 5 445 1160 70	//Gesamte Spielzeit
+text 120 448 100 76
+
+text 5 460 1160 72	//Status
+text 120 460 100 73
+
+text 5 475 1160 74	//Name im Chat
+text 120 475 100 75
+
+//Hit P
+text 250 08 1160 13
+gumppic 305 08 2440
+text 310 10 100 46
+
+//Dex
+text 250 30 1160 20
+gumppic 305 30 2440
+text 310 32 100 47
+
+//Stam
+text 250 52 1160 14
+gumppic 305 52 2440
+text 310 54 100 48
+
+//Int
+text 250 74 1160 21
+gumppic 305 74 2440
+text 310 76 100 49
+
+//Mana
+text 250 96 1160 15
+gumppic 305 96 2440
+text 310 98 100 50
+
+//Karma
+text 250 118 1000 22
+gumppic 305 118 2440
+text 310 120 100 51
+
+//Fame
+text 250 140 1000 23
+gumppic 305 140 2440
+text 310 142 100 52
+
+//Kills
+text 250 162 1000 24
+gumppic 305 162 2440
+text 310 164 100 53
+
+//Deaths
+text 250 184 1000 25
+gumppic 305 184 2440
+text 310 186 100 54
+
+//Last Edited by:
+text 250 224 1160 26
+text 375 224 1000 59
+
+//Account:
+text 250 246 1160 27
+text 375 246 1000 60
+
+//Time:
+text 250 268 1160 28
+text 300 268 1000 61
+
+//Last Viewed by:
+text 250 312 1000 55
+text 375 312 1000 56
+
+//Account:
+text 250 334 1000 27
+text 375 334 1000 57
+
+//Time:
+text 250 356 1000 28
+text 300 356 1000 58
+
+//Previous Page
+button 435 421 4014 4015 1 0 27
+
+//Next Page
+button 465 421 4007 4006 1 0 28
+
+[DIALOG d_infos TEXT]
+Serial  //0
+Account
+Name
+Title
+Color
+OSkin  //5
+ID
+Body
+OBody
+Timer
+P  //10
+Home
+Action
+Hits
+Stam
+Mana  //15
+Food
+NPC
+Speech
+Str
+Dex  //20
+Int
+Karma
+Fame
+Kills
+Deaths  //25
+Last Edited by:
+Account:
+Time:
+<SRC.TARG.SERIAL>
+<SRC.TARG.ACCOUNT>  //30
+<SRC.TARG.NAME>
+<SRC.TARG.TITLE>
+<SRC.TARG.COLOR>
+<SRC.TARG.OSKIN>
+<SRC.TARG.ID>  //35
+<SRC.TARG.BODY>
+<SRC.TARG.OBODY>
+<SRC.TARG.TIMER>
+<SRC.TARG.P>
+<SRC.TARG.HOME>  //40
+<SRC.TARG.ACTION>
+<SRC.TARG.FOOD>
+<SRC.TARG.NPC>
+<SRC.TARG.SPEECH>
+<SRC.TARG.STR> //45
+<SRC.TARG.HITS>
+<SRC.TARG.DEX>
+<SRC.TARG.STAM>
+<SRC.TARG.INT>
+<SRC.TARG.MANA>  //50
+<SRC.TARG.KARMA>
+<SRC.TARG.FAME>
+<SRC.TARG.KILLS>
+<SRC.TARG.DEATHS>
+Last Viewed by:  //55
+<SRC.TARG.LASTVIEWED>
+<SRC.TARG.LASTVIEWEDACCOUNT>
+<SRC.TARG.LASTVIEWEDTIME>
+<SRC.TARG.LASTEDITED>
+<SRC.TARG.LASTEDITEDACCOUNT>  //60
+<SRC.TARG.LASTEDITEDTIME>	
+
+Plevel:
+<src.targ.account.plevel>
+1. Login am:
+<src.targ.account.firstconnectdate>
+Zuletzt eingeloggt am: 
+<src.targ.account.lastconnectdate>
+Letze Loginzeit:
+<src.targ.account.lastconnecttime> Minuten
+Spielzeit(Total)?:
+<src.targ.account.totalconnecttime>
+Status:
+<src.targ.account.status>
+Name im Chat:
+<src.targ.account.chatname>
+
+
+
+[DIALOG d_infos BUTTON]
+
+ONBUTTON=27
+SRC.DIALOG d_infos
+
+ONBUTTON=28
+SRC.DIALOG d_infos_2
+
+[DIALOG d_infos_2]		//Flags!
+150,75
+page 0
+resizepic 0 0 5120 500 500		/def: 2620
+
+page 1
+
+//Invulnerability
+text 10 08 1000 0
+button 120 08 239 240 1 0 3	
+text 125 10 100 32
+
+//Dead
+text 10 30 1000 1
+button 120 30 239 240 1 0 4
+text 125 32 100 33
+
+//Paralyzed
+text 10 52 1000 2
+button 120 52 239 240 1 0 5
+text 125 54 100 34
+
+//Invisible
+text 10 74 1000 3
+button 120 74 239 240 1 0 6
+text 125 76 100 35
+
+//Sleeping
+text 10 96 1000 4
+button 120 96 239 240 1 0 7
+text 125 98 100 36
+
+//Warmode
+text 10 118 1000 5
+button 120 118 239 240 1 0 8
+text 125 120 100 37
+
+//Reactive Armor
+text 10 140 1000 6
+button 120 140 239 240 1 0 9
+text 125 142 100 38
+
+//Poisoned
+text 10 162 1000 7
+button 120 162 239 240 1 0 10
+text 125 164 100 39
+
+//Nightsight
+text 10 184 1000 8
+button 120 184 239 240 1 0 11
+text 125 186 100 40
+
+//Magic Reflect
+text 10 206 1000 9
+button 120 206 239 240 1 0 12
+text 125 208 100 41
+
+//Polymorphed
+text 10 228 1000 10
+button 120 228 239 240 1 0 13
+text 125 230 100 42
+
+//Incognito
+text 10 250 1000 11
+button 120 250 239 240 1 0 14
+text 125 252 100 43
+
+//Spirit Speak
+text 10 272 1000 12
+button 120 272 239 240 1 0 15
+text 125 274 100 44
+
+//Insubstantial
+text 10 294 1000 13
+button 120 294 239 240 1 0 16
+text 125 296 100 45
+
+//Emote
+text 10 316 1000 14
+button 120 316 239 240 1 0 17
+text 125 318 100 46
+
+//Comm Crystal
+text 10 338 1000 15
+button 120 338 239 240 1 0 18
+text 125 340 100 47
+
+//Has Shield
+text 10 360 1000 16
+button 120 360 239 240 1 0 19
+text 125 362 100 48
+
+//Playing Script
+text 10 382 1000 17
+button 120 382 239 240 1 0 20
+text 125 384 100 49
+
+//Stone
+text 10 404 1000 18
+button 120 404 239 240 1 0 21
+text 125 406 100 50
+
+
+text 10 425 1160 64	//Char FLAGS (total)
+text 175 425 100 65
+
+text 10 440 1160 66	//Rassen Tag
+text 175 440 100 67
+
+text 10 465 1160 68	//Events
+text 10 480 100 69
+
+//Rec'ing Script
+text 275 08 1000 19
+button 385 08 239 240 1 0 22
+text 390 10 100 51
+
+//Flying
+text 275 30 1000 20
+button 385 30 239 240 1 0 23
+text 390 32 100 52
+
+//Respawn
+text 275 52 1000 21
+button 385 52 239 240 1 0 24
+text 390 54 100 53
+
+//Hallucinating
+text 275 74 1000 22
+button 385 74 239 240 1 0 25
+text 390 76 100 54
+
+//Hidden
+text 275 96 1000 23
+button 385 96 239 240 1 0 26
+text 390 98 100 55
+
+//Indoors
+text 275 118 1000 24
+button 385 118 239 240 1 0 27
+text 390 120 100 56
+
+//Criminal
+text 275 140 1000 25
+button 385 140 239 240 1 0 28
+text 390 142 100 57
+
+//Conjured
+text 275 162 1000 26
+button 385 162 239 240 1 0 29
+text 390 164 100 58
+
+//Pet
+text 275 184 1000 27
+button 385 184 239 240 1 0 30
+text 390 186 100 59
+
+//Spawned
+text 275 206 1000 28
+button 385 206 239 240 1 0 31
+text 390 208 100 60
+
+//Saved
+text 275 228 1000 29
+button 385 228 239 240 1 0 32
+text 390 230 100 61
+
+//Ridden
+text 275 250 1000 30
+button 385 250 239 240 1 0 33
+text 390 252 100 62
+
+//Mounted
+text 275 272 1000 31
+button 385 272 239 240 1 0 34
+text 390 274 100 63
+
+
+//Alle FLAGS "RESETEN" (00)
+text 225 292 1160 70
+button 385 292 239 240 1 0 35
+
+
+//Previous Page
+button 435 421 4014 4015 1 0 1
+
+//Next Page
+button 465 421 4007 4006 1 0 2
+
+[DIALOG d_infos_2 TEXT]
+Invulnerability  //0
+Dead
+Paralyzed
+Invisible
+Sleeping
+Warmode  //5
+Reactive Armor
+Poisoned
+Nightsight
+Magic Reflect
+Polymorphed  //10
+Incognito
+Spirit Speak
+Insubstantial
+Emote
+Comm Crystal  //15
+Has Shield
+Playing Script
+Stone
+Rec'ing Script
+Flying  //20
+Respawn
+Hallucinating
+Hidden
+Indoors
+Criminal  //25
+Conjured
+Pet
+Spawned
+Saved
+Ridden  //30
+Mounted
+<SRC.TARG.FLAGS01>
+<SRC.TARG.FLAGS02>
+<SRC.TARG.FLAGS04>
+<SRC.TARG.FLAGS08>  //35
+<SRC.TARG.FLAGS010>
+<SRC.TARG.FLAGS020>
+<SRC.TARG.FLAGS040>
+<SRC.TARG.FLAGS080>
+<SRC.TARG.FLAGS0100>  //40
+<SRC.TARG.FLAGS0200>
+<SRC.TARG.FLAGS0400>
+<SRC.TARG.FLAGS0800>
+<SRC.TARG.FLAGS01000>
+<SRC.TARG.FLAGS02000>  //45
+<SRC.TARG.FLAGS04000>
+<SRC.TARG.FLAGS08000>
+<SRC.TARG.FLAGS010000>
+<SRC.TARG.FLAGS020000>
+<SRC.TARG.FLAGS040000>  //50
+<SRC.TARG.FLAGS080000>
+<SRC.TARG.FLAGS0100000>
+<SRC.TARG.FLAGS0200000>
+<SRC.TARG.FLAGS0400000>
+<SRC.TARG.FLAGS0800000>  //55
+<SRC.TARG.FLAGS01000000>
+<SRC.TARG.FLAGS02000000>
+<SRC.TARG.FLAGS04000000>
+<SRC.TARG.FLAGS08000000>
+<SRC.TARG.FLAGS010000000>  //60
+<SRC.TARG.FLAGS020000000>
+<SRC.TARG.FLAGS040000000>
+<SRC.TARG.FLAGS080000000>
+
+Char-FLAGS(Total):
+<src.targ.FLAGS>
+Rassen-TAG:
+<SRC.TARG.TAG.RACE>
+Char-Events:
+<SRC.TARG.EVENTS>
+Alle FLAGS zuruecksetzen:
+
+
+[DIALOG d_infos_2 BUTTON]
+ONBUTTON=1
+SRC.DIALOG d_infos
+
+ONBUTTON=2
+SRC.DIALOG d_infos_3
+
+ONBUTTON=3
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=01
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=4
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=02
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=5
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=04
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=6
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=08
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=7
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=010
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=8
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=020
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=9
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=040
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=10
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=080
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=11
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0100
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=12
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0200
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=13
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0400
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=14
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0800
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=15
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=01000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=16
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=02000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=17
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=04000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=18
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=08000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=19
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=010000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=20
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=020000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=21
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=040000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=22
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=080000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=23
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0100000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=24
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0200000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=25
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0400000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=26
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0800000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=27
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=01000000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=28
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=02000000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=29
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=04000000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=30
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=08000000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=31
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=010000000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=32
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=020000000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=33
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=040000000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=34
+SRC.NEWITEM=i_changeflags
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=080000000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=35		
+SRC.TARG.FLAGS=000000000
+SRC.DIALOG d_infos_2
+RETURN 1
+
+[DIALOG d_infos_3]
+150,75
+page 0
+resizepic 0 0 5120 500 500		//def:2620
+
+page 1
+
+//Alchemy
+text 10 08 1000 0
+gumppic 120 08 2445 2445
+text 125 10 100 37
+
+//Anatomy
+text 10 30 1000 1
+gumppic 120 30 2445 2445
+text 125 32 100 38
+
+//Animal Lore
+text 10 52 1000 2
+gumppic 120 52 2445 2445
+text 125 54 100 39
+
+//Archery
+text 10 74 1000 3
+gumppic 120 74 2445 2445
+text 125 76 100 40
+
+//Arms Lore
+text 10 96 1000 4
+gumppic 120 96 2445 2445
+text 125 98 100 41
+
+//Begging
+text 10 118 1000 5
+gumppic 120 118 2445 2445
+text 125 120 100 42
+
+//Blacksmithing
+text 10 140 1000 6
+gumppic 120 140 2445 2445
+text 125 142 100 43
+
+//Bowcraft
+text 10 162 1000 7
+gumppic 120 162 2445 2445
+text 125 164 100 44
+
+//Camping
+text 10 184 1000 8
+gumppic 120 184 2445 2445
+text 125 186 100 45
+
+//Carpentry
+text 10 206 1000 9
+gumppic 120 206 2445 2445
+text 125 208 100 46
+
+//Cartography
+text 10 228 1000 10
+gumppic 120 228 2445 2445
+text 125 230 100 47
+
+//Cooking
+text 10 250 1000 11
+gumppic 120 250 2445 2445
+text 125 252 100 48
+
+//Detecting Hidden
+text 10 272 1000 12
+gumppic 120 272 2445 2445
+text 125 274 100 49
+
+//Enticement
+text 10 294 1000 13
+gumppic 120 294 2445 2445
+text 125 296 100 50
+
+//Evaluating Intel
+text 10 316 1000 14
+gumppic 120 316 2445 2445
+text 125 318 100 51
+
+//Fencing
+text 10 338 1000 15
+gumppic 120 338 2445 2445
+text 125 340 100 52
+
+//Fishing
+text 10 360 1000 16
+gumppic 120 360 2445 2445
+text 125 362 100 53
+
+//Forensics
+text 10 382 1000 17
+gumppic 120 382 2445 2445
+text 125 384 100 54
+
+//Healing
+text 10 404 1000 18
+gumppic 120 404 2445 2445
+text 125 406 100 55
+//
+text 10 435 1160 74	//Skillclass
+text 125 435 100 75
+text 10 455 1160 76	//Skillpunkte(total)
+text 145 455 100 77
+
+//Herding
+text 275 08 1000 19
+gumppic 385 08 2445 2445
+text 390 10 100 56
+
+//Hiding
+text 275 30 1000 20
+gumppic 385 30 2445 2445
+text 390 32 100 57
+
+//Inscription
+text 275 52 1000 21
+gumppic 385 52 2445 2445
+text 390 54 100 58
+
+//ItemID
+text 275 74 1000 22
+gumppic 385 74 2445 2445
+text 390 76 100 59
+
+//Lockpicking
+text 275 96 1000 23
+gumppic 385 96 2445 2445
+text 390 98 100 60
+
+//Lumberjacking
+text 275 118 1000 24
+gumppic 385 118 2445 2445
+text 390 120 100 61
+
+//Mace Fighting
+text 275 140 1000 25
+gumppic 385 140 2445 2445
+text 390 142 100 62
+
+//Magery
+text 275 162 1000 26
+gumppic 385 162 2445 2445
+text 390 164 100 63
+
+//Magic Resist
+text 275 184 1000 27
+gumppic 385 184 2445 2445
+text 390 186 100 64
+
+//Meditation
+text 275 206 1000 28
+gumppic 385 206 2445 2445
+text 390 208 100 65
+
+//Mining
+text 275 228 1000 29
+gumppic 385 228 2445 2445
+text 390 230 100 66
+
+//Musicianship
+text 275 250 1000 30
+gumppic 385 250 2445 2445
+text 390 252 100 67
+
+//Necromancy
+text 275 272 1000 31
+gumppic 385 272 2445 2445
+text 390 274 100 68
+
+//Parrying
+text 275 294 1000 32
+gumppic 385 294 2445 2445
+text 390 296 100 69
+
+//PeaceMaking
+text 275 316 1000 33
+gumppic 385 316 2445 2445
+text 390 318 100 70
+
+//Poisoning
+text 275 338 1000 34
+gumppic 385 338 2445 2445
+text 390 340 100 71
+
+//Provocation
+text 275 360 1000 35
+gumppic 385 360 2445 2445
+text 390 362 100 72
+
+//Remove Traps
+text 275 382 1000 36
+gumppic 385 382 2445 2445
+text 390 384 100 73
+
+//Previous Page
+button 435 421 4014 4015 1 0 1
+
+//Next Page
+button 465 421 4007 4006 1 0 2
+
+[DIALOG d_infos_3 TEXT]
+Alchemy  //0
+Anatomy
+Animal Lore
+Archery
+Arms Lore
+Begging  //5
+Blacksmithing
+Bowcraft
+Camping
+Carpentry
+Cartography  //10
+Cooking
+Detect Hidden
+Enticement
+Evaluating Int
+Fencing  //15
+Fishing
+Forensics
+Healing
+Herding
+Hiding  //20
+Inscription
+ItemID
+Lockpicking
+Lumberjacking
+Mace Fighting  //25
+Magery
+Magic Resist
+Meditation
+Mining
+Musicianship  //30
+Necromancy
+Parrying
+PeaceMaking
+Poisoning
+Provocation  //35
+Remove Traps
+<SRC.TARG.ALCHEMY>
+<SRC.TARG.ANATOMY>
+<SRC.TARG.ANIMALLORE>
+<SRC.TARG.ARCHERY>  //40
+<SRC.TARG.ARMSLORE>
+<SRC.TARG.BEGGING>
+<SRC.TARG.BLACKSMITHING>
+<SRC.TARG.BOWCRAFT>
+<SRC.TARG.CAMPING> //45
+ <SRC.TARG.CARPENTRY>
+ <SRC.TARG.CARTOGRAPHY>
+ <SRC.TARG.COOKING>
+ <SRC.TARG.DETECTINGHIDDEN>
+ <SRC.TARG.ENTICEMENT> //50
+ <SRC.TARG.EVALUATINGINTEL>
+ <SRC.TARG.FENCING>
+ <SRC.TARG.FISHING>
+ <SRC.TARG.FORENSICS>
+ <SRC.TARG.HEALING>  //55
+ <SRC.TARG.HERDING>
+ <SRC.TARG.HIDING>
+ <SRC.TARG.INSCRIPTION>
+ <SRC.TARG.ITEMID>
+ <SRC.TARG.LOCKPICKING>  //60
+ <SRC.TARG.LUMBERJACKING>
+ <SRC.TARG.MACEFIGHTING>
+ <SRC.TARG.MAGERY>
+ <SRC.TARG.MAGICRESISTANCE>
+ <SRC.TARG.MEDITATION>  //65
+ <SRC.TARG.MINING>
+ <SRC.TARG.MUSICIANSHIP>
+ <SRC.TARG.NECROMANCY>
+ <SRC.TARG.PARRYING>
+ <SRC.TARG.POISONING>  //70
+ <SRC.TARG.PEACEMAKING>
+ <SRC.TARG.PROVOCATION>
+ <SRC.TARG.REMOVETRAP>
+Char-Skillclass:
+<SRC.TARG.SKILLCLASS>
+Skillpunkte(Total):
+<src.targ.skilltotal>
+
+
+[DIALOG d_infos_3 BUTTON]
+ONBUTTON=1
+SRC.DIALOG d_infos_2
+
+ONBUTTON=2
+SRC.DIALOG d_infos_4
+
+[DIALOG d_infos_4]
+150,75
+page 0
+resizepic 0 0 5120 500 500		//def:2620
+
+page 1
+
+//Snooping
+text 10 08 1000 0
+gumppic 120 08 2445 2445
+text 125 10 100 12
+
+//Stealing
+text 10 30 1000 1
+gumppic 120 30 2445 2445
+text 125 32 100 13
+
+//Stealth
+text 10 52 1000 2
+gumppic 120 52 2445 2445
+text 125 54 100 14
+
+//Spirit Speak
+text 10 74 1000 3
+gumppic 120 74 2445 2445
+text 125 76 100 15
+
+//Swordsmanship
+text 10 96 1000 4
+gumppic 120 96 2445 2445
+text 125 98 100 16
+
+//Tactics
+text 10 118 1000 5
+gumppic 120 118 2445 2445
+text 125 120 100 17
+
+//Tailoring
+text 275 08 1000 6
+gumppic 385 08 2445 2445
+text 390 10 100 18
+
+//Taming
+text 275 30 1000 7
+gumppic 385 30 2445 2445
+text 390 32 100 19
+
+//TasteID
+text 275 52 1000 8
+gumppic 385 52 2445 2445
+text 390 54 100 20
+
+//Tracking
+text 275 74 1000 9
+gumppic 385 74 2445 2445
+text 390 76 100 21
+
+//Veterinary
+text 275 96 1000 10
+gumppic 385 96 2445 2445
+text 390 98 100 22
+
+//Wrestling
+text 275 118 1000 11
+gumppic 385 118 2445 2445
+text 390 120 100 23
+
+//Previous Page
+button 435 421 4014 4015 1 0 1
+
+//Next Page
+button 465 421 4007 4006 1 0 2
+
+[DIALOG d_infos_4 TEXT]
+Snooping  //0
+Stealing
+Stealth
+Spirit Speak
+Swordsmanship
+Tactics  //5
+Tailoring
+Taming
+TasteID
+Tracking
+Veterinary  //10
+Wrestling
+ <SRC.TARG.SNOOPING>
+ <SRC.TARG.STEALING>
+ <SRC.TARG.STEALTH>
+ <SRC.TARG.SPIRITSPEAK>  //15
+ <SRC.TARG.SWORDSMANSHIP>
+ <SRC.TARG.TACTICS>
+ <SRC.TARG.TAILORING>
+ <SRC.TARG.TAMING>
+ <SRC.TARG.TASTEID>  //20
+ <SRC.TARG.TRACKING>
+ <SRC.TARG.VETERINARY>
+ <SRC.TARG.WRESTLING>
+
+[DIALOG d_infos_4 BUTTON]
+ONBUTTON=1
+SRC.DIALOG d_infos_3
+
+ONBUTTON=2
+SRC.DIALOG d_infos_4
+
+[ITEMDEF i_mem_lastedited]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Last Edited
+
+[ITEMDEF i_mem_lastviewed]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Last Viewed
+
+[ITEMDEF i_SetLastEdited]
+DEFNAME=i_SetLastEdited
+ID=i_floor_blue
+
+ON=@DCLICK
+LINK.FINDID(i_mem_lastedited).LINK=<SRC.UID>
+LINK.FINDID(i_mem_lastedited).TAG.TIME=<SERV.RTIME>
+REMOVE
+RETURN 1
+
+[ITEMDEF i_changeflags]
+DEFNAME=i_changeflags
+ID=i_floor_blue
+
+ON=@DCLICK
+IF (<SRC.ACCOUNT.PLEVEL>>3)
+IF (<LINK.FLAGS>&0<MORE1>)
+LINK.FLAGS=<LINK.FLAGS>+(-<MORE1>)
+ELSE
+LINK.FLAGS=<LINK.FLAGS>+<MORE1>
+ENDIF
+SRC.infos 2
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are not allowed to modify this value.
+SRC.infos 2
+REMOVE
+RETURN 1
+ENDIF
+
+[DIALOG d_infos_item]
+150,75
+page 0
+resizepic 0 0 5120 500 500		//def:2620
+
+page 1
+
+//Serial			
+text 10 08 1000 0
+button 75 08 2440 2440 0 0 1
+text 80 10 100 23
+
+//Name
+text 10 30 1000 1
+button 75 30 2440 2440 1 0 2
+text 80 32 100 24
+
+//Color
+text 10 52 1000 2
+button 75 52 2440 2440 1 0 3
+text 80 54 100 25
+
+//ID
+text 10 74 1000 3
+button 75 74 2440 2440 1 0 4
+text 80 76 100 26
+
+//Timer
+text 10 96 1000 4
+button 75 96 2440 2440 1 0 5
+text 80 98 100 27
+
+//P
+text 10 118 1000 5
+button 75 118 2440 2440 1 0 6
+text 80 120 100 28
+
+//Hitpoints
+text 10 140 1000 6
+button 75 140 2440 2440 1 0 7
+text 80 142 100 29
+
+//Amount
+text 10 162 1000 7
+button 75 162 2440 2440 1 0 8
+text 80 164 100 30
+
+//Type
+text 10 184 1000 8
+button 75 184 2440 2440 1 0 9
+text 80 186 100 31
+
+//Weight
+text 10 206 1000 9
+button 75 206 2440 2440 0 0 0
+text 80 208 100 32
+
+//Armor
+text 10 228 1000 10
+button 75 228 2440 2440 0 0 0
+text 80 230 100 33
+
+//Value
+text 10 250 1000 11
+button 75 250 2440 2440 0 0 0
+text 80 252 100 34
+
+//Dye
+text 10 272 1000 12
+button 75 272 2440 2440 0 0 0
+text 80 274 100 35
+
+//Link
+text 10 294 1000 13
+button 75 294 2440 2440 1 0 10
+text 80 296 100 36
+
+//More1
+text 10 316 1000 14
+button 75 316 2440 2440 1 0 11
+text 80 318 100 37
+
+//More2
+text 10 338 1000 15
+button 75 338 2440 2440 1 0 12
+text 80 340 100 38
+
+//MoreX
+text 10 360 1000 16
+button 75 360 2440 2440 1 0 13
+text 80 362 100 39
+
+// 
+text 10 385 1160 82	//Item-Attr
+text 80 385 100 83
+
+//MoreY
+text 250 08 1000 17
+button 305 08 2440 2440 1 0 14
+text 310 10 100 40
+
+//MoreZ
+text 250 30 1000 18
+button 305 30 2440 2440 1 0 15
+text 310 32 100 41
+
+//MoreM
+text 250 52 1000 19
+button 305 52 2440 2440 1 0 16
+text 310 54 100 42
+
+//Identified				//ATTR
+text 250 74 1000 50
+button 305 74 239 240 1 0 17
+text 310 76 100 66
+
+//Decay
+text 250 96 1000 51
+button 305 96 239 240 1 0 18
+text 310 98 100 67
+
+//Newbie
+text 250 118 1000 52
+button 305 118 239 240 1 0 19
+text 310 120 100 68
+
+//Always Movable
+text 250 140 1000 53
+button 305 140 239 240 1 0 20
+text 310 142 100 69
+
+//Never Movable
+text 250 162 1000 54
+button 305 162 239 240 1 0 21
+text 310 164 100 70
+
+//Magic
+text 250 184 1000 55
+button 305 184 239 240 1 0 22
+text 310 186 100 71
+
+//Owned by Town
+text 250 206 1000 56
+button 305 206 239 240 1 0 23
+text 310 208 100 72
+
+//Invisible
+text 250 228 1000 57
+button 305 228 239 240 1 0 24
+text 310 230 100 73
+
+//Cursed
+text 250 250 1000 58
+button 305 250 239 240 1 0 25
+text 310 252 100 74
+
+//Damned
+text 250 272 1000 59
+button 305 272 239 240 1 0 26
+text 310 274 100 75
+
+//Blessed
+text 250 294 1000 60
+button 305 294 239 240 1 0 27
+text 310 296 100 76
+
+//Sacred
+text 250 316 1000 61
+button 305 316 239 240 1 0 28
+text 310 318 100 77
+
+//For Sale
+text 250 338 1000 62
+button 305 338 239 240 1 0 29
+text 310 340 100 78
+
+//Stolen
+text 250 360 1000 63
+button 305 360 239 240 1 0 30
+text 310 362 100 79
+
+//Can't Decay
+text 250 382 1000 64
+button 305 382 239 240 1 0 31
+text 310 384 100 80
+
+//Static
+text 250 404 1000 65
+button 305 404 239 240 1 0 32
+text 310 406 100 81
+
+//
+//Attr "Reseter"
+text 150 424 1160 84
+button 305 424 239 240 1 0 33
+
+
+
+[DIALOG d_infos_item TEXT]
+Serial  //0
+Name
+Color
+ID
+Timer
+P  //5
+Hitpoints
+Amount
+Type
+Weight
+Armor  //10
+Value
+Dye
+Link
+More1
+More2  //15
+MoreX
+MoreY
+MoreZ
+MoreM
+Last Edited by:  //20
+Account:
+Time:
+<SRC.TARG.SERIAL>
+<SRC.TARG.NAME>
+<SRC.TARG.COLOR>  //25
+<SRC.TARG.ID>
+<SRC.TARG.TIMER>
+<SRC.TARG.P>
+<SRC.TARG.HITPOINTS>
+<SRC.TARG.AMOUNT>  //30
+t_			//<SRC.TARG.TYPE>
+<SRC.TARG.WEIGHT>
+<SRC.TARG.ARMOR>
+<SRC.TARG.VALUE>
+<SRC.TARG.DYE>  //35
+<SRC.TARG.LINK>
+<SRC.TARG.MORE1>
+<SRC.TARG.MORE2>
+<SRC.TARG.MOREX>
+<SRC.TARG.MOREY>  //40
+<SRC.TARG.MOREZ>
+<SRC.TARG.MOREM>
+Last Viewed by:
+<SRC.TARG.LASTVIEWED>
+<SRC.TARG.LASTVIEWEDACCOUNT>  //45
+<SRC.TARG.LASTVIEWEDTIME>
+<SRC.TARG.LASTEDITED>
+<SRC.TARG.LASTEDITEDACCOUNT>
+<SRC.TARG.LASTEDITEDTIME>
+Identifi  //50
+Decay
+Newbie
+Always
+Never
+Magic  //55
+Owned
+Invisibl
+Cursed
+Damned
+Blessed  //60
+Sacred
+For Sa
+Stolen
+Can't D
+Static  //65
+<SRC.TARG.ATTR01>
+<SRC.TARG.ATTR02>
+<SRC.TARG.ATTR04>
+<SRC.TARG.ATTR08>
+<SRC.TARG.ATTR010>  //70
+<SRC.TARG.ATTR020>
+<SRC.TARG.ATTR040>
+<SRC.TARG.ATTR080>
+<SRC.TARG.ATTR0100>
+<SRC.TARG.ATTR0200>  //75
+<SRC.TARG.ATTR0400>
+<SRC.TARG.ATTR0800>
+<SRC.TARG.ATTR01000>
+<SRC.TARG.ATTR02000>
+<SRC.TARG.ATTR04000>  //80
+<SRC.TARG.ATTR08000>
+//
+Item-attr:
+<SRC.TARG.ATTR>
+Alle Attr. zuruecksetzen:
+
+
+[DIALOG d_infos_item BUTTON]
+
+ONBUTTON=2
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_name_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=3
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_color_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=4
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_id_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=5
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_timer_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=6
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_p_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=7
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_hitpoints_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=8
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_amount_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=9
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_type_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=10
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_link_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=11
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_more1_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=12
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_more2_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=13
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_morex_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=14
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_morey_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=15
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_morez_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=16
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+SRC.DIALOG d_morem_item
+ELSE
+SRC.SYSMESSAGE You aren't allowed to modify this value.
+SRC.DIALOG d_infos_item
+ENDIF
+
+ONBUTTON=17
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=01
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=18
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=02
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=19
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=04
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=20
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=08
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=21
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=010
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=22
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=020
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=23
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=040
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=24
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=080
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=25
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0100
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=26
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0200
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=27
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0400
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=28
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=0800
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=29
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=01000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=30
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=02000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=31
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=04000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=32
+SRC.NEWITEM=i_changeattr
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.TARG.SERIAL>
+SRC.ACT.MORE1=08000
+SRC.ACT.TRIGGER=@DCLICK
+
+ONBUTTON=33
+SRC.TARG.ATTR=000000000
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_name_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_name_item TEXT]
+What is the new name?
+Continue
+Cancel
+<SRC.TARG.NAME>
+
+[DIALOG d_name_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Name is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.NAME=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.NAME <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_color_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_color_item TEXT]
+What is the new color?
+Continue
+Cancel
+<SRC.TARG.COLOR>
+
+[DIALOG d_color_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Color is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.COLOR=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.COLOR <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_id_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_id_item TEXT]
+What is the new ID?
+Continue
+Cancel
+<SRC.TARG.ID>
+
+[DIALOG d_id_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE ID is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.ID=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.ID <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_timer_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_timer_item TEXT]
+What is the new Timer?
+Continue
+Cancel
+<SRC.TARG.TIMER>
+
+[DIALOG d_timer_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Timer is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.TIMER=<ARGTXT[0]>
+SRC.ACT.TRIGGER=@DCLICK
+TRY UID.<SRC.TARG.SERIAL>.TIMER <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_p_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_p_item TEXT]
+What is the new P?
+Continue
+Cancel
+<SRC.TARG.P>
+
+[DIALOG d_p_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE P is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.NEWITEM=i_test_magicfield
+SRC.ACT.P=<ARGTXT[0]>
+SRC.TARG.TEST=<SRC.ACT.UID>
+IF !(<UID.<SRC.TARG.TEST>.REGION.FLAGS>>&01)
+SRC.TARG.P=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.P <ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.FIX
+SRC.DIALOG d_infos_item
+ELSE
+SRC.SYSMESSAGE Invalid location
+SRC.DIALOG d_p_item
+ENDIF
+TRY UID.<SRC.TARG.TEST>.REMOVE
+RETURN 1
+
+[DIALOG d_hitpoints_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_hitpoints_item TEXT]
+What is the new Hitpoints?
+Continue
+Cancel
+<SRC.TARG.HITPOINTS>
+
+[DIALOG d_hitpoints_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Hitpoints are unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.HITPOINTS=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.HITPOINTS <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_amount_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_amount_item TEXT]
+What is the new Hitpoints?
+Continue
+Cancel
+<SRC.TARG.AMOUNT>
+
+[DIALOG d_amount_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Amount is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.AMOUNT=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.AMOUNT <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_type_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_type_item TEXT]
+What is the new Type?
+Continue
+Cancel
+t_	//<SRC.TARG.TYPE>
+
+[DIALOG d_type_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Type is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+//SRC.TARG.TYPE=<ARGTXT[0]>
+//TRY UID.<SRC.TARG.SERIAL>.TYPE <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_link_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_link_item TEXT]
+What is the new Link?
+Continue
+Cancel
+<SRC.TARG.LINK>
+
+[DIALOG d_link_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Link is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.LINK=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.LINK <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_more1_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_more1_item TEXT]
+What is the new More1?
+Continue
+Cancel
+<SRC.TARG.MORE1>
+
+[DIALOG d_more1_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE More1 is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.MORE1=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.MORE1 <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_more2_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_more2_item TEXT]
+What is the new More2?
+Continue
+Cancel
+<SRC.TARG.MORE2>
+
+[DIALOG d_more2_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE More2 is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.MORE2=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.MORE2 <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_morex_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_morex_item TEXT]
+What is the new MoreX?
+Continue
+Cancel
+<SRC.TARG.MOREX>
+
+[DIALOG d_morex_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE MoreX is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.MOREX=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.MOREX <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_morey_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_morey_item TEXT]
+What is the new MoreY?
+Continue
+Cancel
+<SRC.TARG.MOREY>
+
+[DIALOG d_morey_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE MoreY is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.MOREY=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.MOREY <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_morez_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_morez_item TEXT]
+What is the new MoreZ?
+Continue
+Cancel
+<SRC.TARG.MOREZ>
+
+[DIALOG d_morez_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE MoreZ is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.MOREZ=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.MOREZ <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[DIALOG d_morem_item]
+250,250
+resizepic 0 0 5120 335 150
+resizepic 30 60 3000 270 22
+text 40 40 995 0
+text 80 100 1000 1
+button 65 105 2104 2103 1 0 1
+text 175 100 1000 2
+button 160 105 2104 2103 1 0 0
+textentry 40 62 253 25 0 0 3
+
+[DIALOG d_morem_item TEXT]
+What is the new MoreM?
+Continue
+Cancel
+<SRC.TARG.MOREM>
+
+[DIALOG d_morem_item BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE MoreM is unchanged.
+SRC.DIALOG d_infos_item
+ONBUTTON=1
+SRC.TARG.MOREM=<ARGTXT[0]>
+TRY UID.<SRC.TARG.SERIAL>.MOREM <ARGTXT[0]>
+SRC.DIALOG d_infos_item
+RETURN 1
+
+[ITEMDEF i_changeattr]
+DEFNAME=i_changeattr
+ID=i_floor_blue
+
+ON=@DCLICK
+IF (<SRC.ACCOUNT.PLEVEL>>4)
+IF (<LINK.ATTR>&0<MORE1>)
+LINK.ATTR=<LINK.ATTR>+(-<MORE1>)
+ELSE
+LINK.ATTR=<LINK.ATTR>+<MORE1>
+ENDIF
+SRC.infos 5
+REMOVE
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are not allowed to modify this value.
+SRC.infos 5
+REMOVE
+RETURN 1
+ENDIF
+//************************************************************************************
+
+
+
+
+
+
+
+
+
+
+//***************************************************************************************
+[PLEVEL 2]
+flashy
+[FUNCTION flashy]
+//Created by Solitary Boy87 ||Solitary_Boy87@hotmail.com|| 
+SRC.ANIM=17
+SRC.SOUND=0208
+SRC.SOUND=0207
+SRC.SOUND=0206
+SRC.EFFECT=3,03715,6,15,1
+SRC.EFFECT=1,0000,6,15,1
+SRC.NEWITEM=03779
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ATTR=attr_decay|attr_move_never 
+SRC.ACT.TIMER 2
+SRC.ACT.MOVE=N
+SRC.NEWITEM=03715
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ATTR=attr_decay|attr_move_never 
+SRC.ACT.TIMER 1
+SRC.ACT.MOVE=N
+SRC.NEWITEM=03779
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ATTR=attr_decay|attr_move_never 
+SRC.ACT.TIMER 2
+SRC.ACT.MOVE=E
+SRC.NEWITEM=03715
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ATTR=attr_decay|attr_move_never 
+SRC.ACT.TIMER 1
+SRC.ACT.MOVE=E
+SRC.NEWITEM=03779
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ATTR=attr_decay|attr_move_never 
+SRC.ACT.TIMER 2
+SRC.ACT.MOVE=W
+SRC.NEWITEM=03715
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ATTR=attr_decay|attr_move_never 
+SRC.ACT.TIMER 1
+SRC.ACT.MOVE=W
+SRC.NEWITEM=03779
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ATTR=attr_decay|attr_move_never 
+SRC.ACT.TIMER 2
+SRC.ACT.MOVE=S
+SRC.NEWITEM=03715
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ATTR=attr_decay|attr_move_never 
+SRC.ACT.TIMER 1
+SRC.ACT.MOVE=S
+Return 1
+
+//Funktion um zu prüfen ob Player auf Pferd:
+[FUNCTION ISRIDING]
+   if ( <FLAGS> & statf_onhorse )
+      return 1
+   endif
+   return 0
+
+//Funktion um Player vom pferd zu hauen ( ideal für Tavernen Eingänge)
+
+[ITEMDEF i_getoffhorse]
+DEFNAME=i_getoffhorse
+ID=i_hole
+NAME="Runter vom Pferd!"
+CATEGORY=Aveltarius
+SUBSECTION=Items
+DESCRIPTION=get off horse-Item
+ON=@CREATE
+ATTR=attr_invis|attr_move_never
+ON=@STEP
+SRC.HORSEBUMP2
+RETURN 1
+
+   // version:
+[FUNCTION HORSEBUMP2]
+  if !( <ISRIDING> )
+    return 1
+  endif
+  VAR.ACT		= <ACT>
+  ACT		= <findlayer(layer_horse).more2>
+  findlayer(layer_horse).MORE2	= 0
+  findlayer(layer_horse).REMOVE
+  ACT.P		= <P>
+  ACT.FLAGS	= 0
+  FLAGS		= <FLAGS> & ~statf_onhorse
+  IF (<BODY> ==c_man)
+	TRY SOUND 34<EVAL RAND(6)>
+	SOUND=87
+	SOUND=66
+  ELSEIF (<BODY> ==c_woman)
+	TRY SOUND 33<EVAL RAND(5) + 1>
+	SOUND=87
+	SOUND=66
+//	FLAGS	= <FLAGS> & ~statf_freeze
+  ENDIF
+  UPDATE
+  ACT.UPDATE
+  ACTION=-1
+  if ( 0<args> )
+    ACT.ANIM=21
+    ACT.SOUND=<ACT.SOUND>
+  endif
+  ANIM=21
+  ACT		= <VAR.ACT>
+
+
+  //bumps a player off its ride
+  //Orginal Funktion:
+[FUNCTION HORSEBUMP]
+  if !( <ISRIDING> )
+    return 1
+  endif
+  VAR.ACT		= <ACT>
+  ACT		= <findlayer(layer_horse).more2>
+  findlayer(layer_horse).MORE2	= 0
+  findlayer(layer_horse).REMOVE
+  ACT.P		= <P>
+  ACT.FLAGS	= 0
+  FLAGS		= <FLAGS> & ~statf_onhorse
+  UPDATE
+  ACT.UPDATE
+  if ( 0<args> )
+    ACT.ANIM=5
+    ACT.SOUND=<ACT.SOUND>
+  endif
+  ANIM=21
+  ACT		= <VAR.ACT>
+
+
+[ITEMDEF I_HAIR_TIE]
+NAME="hair tie"
+ID=i_fishing_weight
+TYPE=0
+CATEGORY="Aveltarius"
+SUBSECTION="Items"
+DESCRIPTION="Hair tie"
+ON=@Create
+	COLOR=038a // grey color
+ON=@DCLICK
+	IF ( <SRC.FINDLAYER(11).DISPID>==i_hair_LONG )
+		SRC.TAG.HaarFarbe=<SRC.FINDLAYER(11).color>
+		SRC.FINDLAYER(11).REMOVE
+		SRC.NEWITEM=i_hair_ponytail
+		SRC.ACT.EQUIP 
+		SRC.FINDLAYER(11).color=<src.tag.HaarFarbe>
+		SRC.EMOTE "ties the hair"
+		RETURN 1
+	ELSEIF (<SRC.FINDLAYER(11).DISPID>==i_hair_ponytail )
+		SRC.TAG.HaarFarbe=<SRC.FINDLAYER(11).color>
+		SRC.FINDLAYER(11).REMOVE
+		SRC.NEWITEM=i_hair_long
+		SRC.ACT.EQUIP
+		SRC.FINDLAYER(11).color=<src.tag.HaarFarbe> 
+		SRC.EMOTE "unties the hair"
+		RETURN 1
+	ELSE 
+		SRC.SYSMESSAGE "You need long hair to tie !"
+		RETURN 1
+	ENDIF 
+
+
+
+
+
+
+
+
+//NPC Vendoren Section **********************************************
+
+
+//DROWS
+//DRow Armourer
+[CHARDEF c_drow_armour]
+DEFNAME=c_a_drow
+NAME=#NAMES_ELF_MALE the Drow Armourer
+ID=c_man
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_human_prime
+TSPEECH=jobArmourer
+TSPEECH=spk_shopkeep
+TSPEECH=spk_rehello
+
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+
+ON=@Create
+NPC=brain_vendor
+COLOR=0455
+FLAGS=028000005
+STR={85 90}
+DEX={86 90}
+INT={81 95}
+
+MINING={75.0 85.0}
+ARMSLORE=100.0
+BLACKSMITHING=100.0
+FENCING={35.0 55.0}
+PARRYING={35.0 50.0}
+SWORDSMANSHIP={35.0 50.0}
+WRESTLING={85.0 98.0}
+MACEFIGHTING={35.0 50.0}
+TACTICS={35.0 55.0}
+
+ITEMNEWBIE=i_hair_long
+COLOR=00965
+ITEMNEWBIE=i_pants_long
+ITEMNEWBIE=i_boots_calf
+ITEMNEWBIE=i_apron_half
+ITEMNEWBIE=i_shirt_fancy
+
+ON=@NPCRestock
+ITEM=i_gold , 100
+
+SELL=i_teran1, { 15 24}
+SELL=i_teran2, { 15 24}
+SELL=i_teran3, { 15 24}
+SELL=i_teran4, { 15 24}
+SELL=i_teran5, { 15 24}
+SELL=i_teran6, { 15 24}
+SELL=i_teran7, { 15 24}
+SELL=i_teran8, { 15 24}
+SELL=i_teran9, { 15 24}
+BUY=VENDOR_B_ARMORER_RING
+BUY=VENDOR_B_ARMORER_CHAIN
+BUY=VENDOR_B_ARMORER_PLATE
+BUY=VENDOR_B_ARMORER_SHIELDS
+
+CATEGORY=SonderVendoren
+SUBSECTION=Drows
+DESCRIPTION=Armourer-Ruestung
+
+//Drow Wache
+[CHARDEF c_drow_wache]
+DEFNAME=c_w_drow
+NAME=#NAMES_HUMANMALE Drow Wache
+ID=C_MAN
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE
+
+TSPEECH=drow_guard
+TEVENTS=e_wache_drow
+
+DAM=15,20
+ARMOR=25
+
+ON=@Create
+COLOR=0455
+STR={85 110}
+DEX={80 95}
+INT={80 95}
+//ALIGNMENT=EVIL
+
+MAGICRESISTANCE={50.0 75.0}
+TACTICS={98.0 100.0}
+WRESTLING={98.0 100.0}
+SWORDSMANSHIP={98.0 100.0}
+PARRYING={98.0 100.0}
+
+NPC=BRAIN_Monster
+
+KARMA=-2000
+FAME={3500 5000}
+
+ITEMNEWBIE=i_hair_long
+COLOR=00965
+ITEMNEWBIE=i_SILVER_CHAINMAIL_COIF
+COLOR=0455
+NAME=Chainmail Coif
+ITEMNEWBIE=i_silver_sword_viking
+COLOR=0
+NAME=Viking Sword
+ITEMNEWBIE=i_SILVER_METAL_SHIELD
+COLOR=0455
+NAME=Metal Shield
+ITEMNEWBIE=i_SILVER_CHAINMAIL_LEGGINGS
+COLOR=0455
+NAME=Chainmail Leggings
+ITEMNEWBIE=i_SILVER_RINGMAIL_SLEEVES
+COLOR=0455
+NAME=Ringmail Sleeves
+ITEMNEWBIE=i_SILVER_CHAINMAIL_TUNIC
+COLOR=0455
+NAME=Ringmail Tunic
+ITEMNEWBIE=i_SILVER_RINGMAIL_GLOVES
+COLOR=0455
+NAME=Ringmail Gloves
+
+ON=@NPCRestock
+ITEM=i_boots_calf
+COLOR=0455
+ITEM=i_gold, {10 15}
+
+CATEGORY=SonderWachen
+SUBSECTION=Drows
+DESCRIPTION=Wache-Schwert
+
+[EVENTS e_wache_drow]
+ON=@NPCSeeNewPlayer
+	IF ( <DISTANCE> >3 )
+	RETURN 1
+	ENDIF
+	IF !( <SRC.TAG.RACE>==Drow )&!( <DISTANCE> >3 ) //
+	DORAND 3
+				SAY Oloth plynn dos !
+				SAY Dos wird sterben !
+				SAY Ussan werde dos mal'ai naurka Lloth or'shanse !
+	ENDDO
+		ATTACK	
+	ELSEIF ( <DISTANCE> <4 )
+	DORAND 3
+				SAY Vendui <SRC.NAME> !
+				SAY Ussan gruesst Dos !
+				SAY Lloth tlu malla !
+	ENDDO
+			FACE
+			RETURN 1
+	ENDIF
+
+[SPEECH drow_guard]
+DEFAULT=
+ON=Vendui
+ON=Vendui`
+ON=Vendui'
+	SAY=Ussan sagt dos Wilkommen in <REGION.NAME>.
+ON=Job
+ON=*Aufgabe*
+ON=What do you do
+ON=Was tut dos
+ON=*Bewacht dos*
+	DORAND 2
+		SAY=Ussan ist eine rith'tar.
+		SAY=Ussan beschuetzt Lloth unsere quarval-sharess.
+	ENDDO
+ON=Goodbye
+ON=Farewell
+ON=Aluve
+ON=Aluve'
+ON=Aluve`
+	SAY=Aluve'.
+	BYE
+	return 1
+ON=*Elfenbogen*
+ON=Elvenbow
+	SAY=Xas. Einen guten Elfenbogen zu dieser Zeit zu bekommen ist sehr schwer.
+ON=Lloth
+ON=Göttin
+ON=Goettin
+	DORAND 2
+	SAY=Lloth tlu malla; jal ultrinnan zhah xundus.
+	SAY=Ulu z'hin maglust dal Qu'ellar lueth Valsharess zhah ulu z'hin wund lil phalar.
+	ENDDO
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// T  EVENTS fuer NPC`s or Events for PC`s
+
+//swindlers fix NO FiIzzle
+[EVENTS e_nofiz] 
+ON=@GetHit 
+   IF STRMATCH(<ACTION>,Skill_Magery) 
+      IF (<BODY> == c_man) 
+         TRY SOUND 34<EVAL RAND(6)> 
+         ANIM 014 
+      ELIF (<BODY> == c_woman) 
+         TRY SOUND 33<EVAL RAND(5) + 1> 
+         ANIM 014 
+      ELSE 
+         SOUND <SOUND> 
+      ENDIF 
+      HITS <EVAL <HITS> - <ARGN>> 
+      RETURN 1 
+   ENDIF
+
+
+[EVENTS e_nogift] 
+ON=@gethit 
+if (<flags> & statf_poisoned) 
+if (<findid.i_rune_poison.uid>) 
+spelleffect s_cure 1000 
+SRC.UPDATE 
+endif 
+endif 
+
+[EVENTS e_Dispel_Summon] 
+ON=@GetHit 
+if ( <src.flags>&statf_conjured ) 
+Src.SpellEffect s_dispel,1000 
+endif 
+
+[EVENTS e_nobow] 
+ON=@gethit 
+IF ((<SRC.FINDLAYER(LAYER_HAND2).TYPE>==T_WEAPON_BOW)||(<SRC.FINDLAYER(LAYER_HAND2).TYPE>==T_WEAPON_XBOW)) 
+SRC.SYSMESSAGE=Es scheint als waere die Kreatur resistent gegen Eure Pfeile, oder Bolzen. 
+RETURN 1 
+ENDIF 
+
+[EVENTS e_lifeleech] 
+ON=@hit 
+VAR.X=(RAND(3)) 
+IF (<SRC.TARG.X>==1) 
+IF (<HITS><<STR>) 
+IF (<HITS><50) 
+EMOTE=<NAME> leechs some Life 
+SRC.SYSMESSAGE=Die Kreatur stiehlt Euch einen Teil Eurer Lebenskraft! 
+HITS=<HITS>+10 
+SRC.HITS=(<SRC.HITS>+(-10)) 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+ENDIF 
+ENDIF 
+
+ON=@gethit 
+VAR.X=(RAND(3)) 
+IF (<SRC.TARG.X>==1) 
+IF (<HITS><<STR>) 
+IF (<HITS><50) 
+EMOTE=<NAME> leechs some Life 
+SRC.SYSMESSAGE=Die Kreatur stiehlt Euch einen Teil Eurer Lebenskraft! 
+HITS=<HITS>+10 
+SRC.HITS=(<SRC.HITS>+(-10)) 
+RETURN 0 
+ELSE 
+RETURN 0 
+ENDIF 
+ENDIF 
+ENDIF 
+
+[EVENTS e_nomagie] 
+ON=@SPELLEFFECT 
+IF <ARGN>>0 
+SRC.SYSMESSAGE "Die Kreatur scheint resistent gegen Eure Magie zu sein." 
+RETURN 1 
+ENDIF
+
+[EVENTS e_electrical_immune] 
+ON=@GETHIT 
+IF (<ARGN2>&020) 
+    RETURN 1 
+ENDIF 
+
+[EVENTS e_fire_immune] 
+ON=@GETHIT 
+IF (<ARGN2>&010) 
+    RETURN 1 
+ENDIF
+
+[EVENTS e_physical_immune] 
+ON=@GETHIT 
+IF (<ARGN2>&02) 
+    RETURN 1 
+ENDIF 
+
+
+[EVENTS e_gift_reduz] 
+
+ON=@gethit 
+if (<flags> & statf_poisoned) 
+if (<findid.i_rune_poison.uid>) 
+spelleffect s_cure 80 
+SRC.UPDATE 
+endif 
+endif 
+
+
+
+
+
+
+
+[EOF]

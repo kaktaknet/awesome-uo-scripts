@@ -1,0 +1,224 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//				    SANCTUS AEVUM PROJECT : ARROW SYSTEM
+//					     Scripted by Marox
+//
+// First of all, this isn't a "arrow" system more like a "arrow liquid" system. So, no, its not like Belgar's.
+// Basically, players double click a arrow liquid and its applied to the arrows that are shot. Unlike Belgar's system,
+// this one does not require a special type of bow / screws up custom scripted bows, instead it works with any bow type you
+// give it. Basically these "arrow liquids" run out of "charges" which could also be called the amount of liquid they hold.
+//
+// Ok, now, to install this, you simply make the i_fire_liquid , i_frost_liquid , i_acid_liquid and i_liquid_speed craftable
+// or sold at vendors, or obtained as loot, or neither. But do know that these liquids are whats this script all about.
+// If you want to make them craftable, I'd suggest to customize the resources and/or skillmake.
+//
+//
+// Contact :
+// Email : marox_gm@hotmail.com
+// AIM : C1vilian
+//
+//
+// -Marox
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+[EVENTS e_fire_arrows]
+
+ON=@ITEMUNEQUIP
+IF (<ACT.DISPID> == i_bow) || (<ACT.DISPID> == 013b2)
+SRC.EVENTS=-e_fire_arrows
+SRC.TAG.ARROWTYPE=0
+
+ON=@HIT
+SRC.DAMAGE=1
+SRC.HITS=<SRC.HITS> + -{5 10}
+SOUND=015e
+FINDLAYER(21).FINDID(i_fire_liquid).MORE2=<FINDLAYER(21).FINDID(i_fire_liquid).MORE2> + -1
+
+ON=@HITTRY
+IF (<FINDLAYER(21).FINDID(i_fire_liquid).MORE2> >= 1)
+ELSE
+SYSMESSAGE You do not have any fire liquid left.
+RETURN 1
+
+
+[ITEMDEF i_fire_liquid]
+DEFNAME=i_fire_liquid
+NAME=Fire Liquid
+ID=i_jar_honey
+TYPE=t_script
+RESOURCES=200 i_reag_volcanic_ash, 1 i_bottle_empty
+SKILLMAKE=75.0 Bowcraft
+
+ON=@CREATE
+COLOR=004eb
+MORE2=50
+
+ON=@CLICK
+MESSAGE [Uses remaining : <EVAL <MORE2> >]
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+IF (<SRC.TAG.ARROWTYPE> != 0)
+SRC.SYSMESSAGE You are already using some arrow liquid. Unequip the bow to reset.
+RETURN 1
+ELSEIF (<SRC.FINDLAYER(02).DISPID> == i_bow) || (<SRC.FINDLAYER(02).DISPID> == 013b2)
+SRC.SYSMESSAGE You sip some fire liquid on your arrows.
+SRC.EVENTS=+e_fire_arrows
+SRC.TAG.ARROWTYPE=1
+RETURN 1
+
+
+
+
+
+
+
+
+[EVENTS e_ice_arrows]
+
+ON=@ITEMUNEQUIP
+IF (<ACT.DISPID> == i_bow) || (<ACT.DISPID> == 013b2)
+SRC.EVENTS=-e_ice_arrows
+SRC.TAG.ARROWTYPE=0
+
+ON=@HIT
+SRC.DAMAGE=1
+SRC.HITS=<SRC.HITS> + -{6 7}
+SRC.EFFECT=3,i_fx_sparkle_2,6,15,1
+FINDLAYER(21).FINDID(i_frost_liquid).MORE2=<FINDLAYER(21).FINDID(i_frost_liquid).MORE2> + -1
+
+ON=@HITTRY
+IF (<FINDLAYER(21).FINDID(i_frost_liquid).MORE2> >= 1)
+ELSE
+SYSMESSAGE You do not have any frost liquid left.
+RETURN 1
+
+
+[ITEMDEF i_frost_liquid]
+DEFNAME=i_frost_liquid
+NAME=Frost Liquid
+RESOURCES=200 i_reag_garlic, 1 i_bottle_empty
+SKILLMAKE=75.0 Bowcraft
+ID=i_jar_honey
+TYPE=t_script
+
+ON=@CREATE
+COLOR=00482
+MORE2=50
+
+ON=@CLICK
+MESSAGE [Uses remaining : <EVAL <MORE2> >]
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+IF (<SRC.TAG.ARROWTYPE> != 0)
+SRC.SYSMESSAGE You are already using some arrow liquid. Unequip the bow to reset.
+RETURN 1
+ELSEIF (<SRC.FINDLAYER(02).DISPID> == i_bow) || (<SRC.FINDLAYER(02).DISPID> == 013b2)
+SRC.SYSMESSAGE You sip some frost liquid on your arrows.
+SRC.EVENTS=+e_ice_arrows
+SRC.TAG.ARROWTYPE=2
+RETURN 1
+
+
+
+
+
+[EVENTS e_acid_arrows]
+
+ON=@ITEMUNEQUIP
+IF (<ACT.DISPID> == i_bow) || (<ACT.DISPID> == 013b2)
+SRC.EVENTS=-e_acid_arrows
+SRC.TAG.ARROWTYPE=0
+
+ON=@HIT
+SRC.DAMAGE=1
+SRC.HITS=<SRC.HITS> + -{1 3}
+SRC.SPELLEFFECT=s_poison,1000
+SRC.EFFECT=3,i_fx_curse,6,15,1
+SOUND=01f1
+FINDLAYER(21).FINDID(i_acid_liquid).MORE2=<FINDLAYER(21).FINDID(i_acid_liquid).MORE2> + -1
+
+ON=@HITTRY
+IF (<FINDLAYER(21).FINDID(i_acid_liquid).MORE2> >= 1)
+ELSE
+SYSMESSAGE You do not have any acid liquid left.
+RETURN 1
+
+
+[ITEMDEF i_acid_liquid]
+DEFNAME=i_acid_liquid
+NAME=Acid Liquid
+ID=i_jar_honey
+TYPE=t_script
+RESOURCES=200 i_reag_nightshade, 1 i_bottle_empty
+SKILLMAKE=75.0 Bowcraft
+
+ON=@CREATE
+COLOR=07d2
+MORE2=50
+
+ON=@CLICK
+MESSAGE [Uses remaining : <EVAL <MORE2> >]
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+IF (<SRC.TAG.ARROWTYPE> != 0)
+SRC.SYSMESSAGE You are already using some arrow liquid. Unequip the bow to reset.
+RETURN 1
+ELSEIF (<SRC.FINDLAYER(02).DISPID> == i_bow) || (<SRC.FINDLAYER(02).DISPID> == 013b2)
+SRC.SYSMESSAGE You sip some acid liquid on your arrows.
+SRC.EVENTS=+e_acid_arrows
+SRC.TAG.ARROWTYPE=3
+RETURN 1
+
+
+
+
+[EVENTS e_speed_arrows]
+
+ON=@ITEMUNEQUIP
+IF (<ACT.DISPID> == i_bow) || (<ACT.DISPID> == 013b2)
+SRC.EVENTS=-e_speed_arrows
+SRC.TAG.ARROWTYPE=0
+
+ON=@HIT
+SRC.DAMAGE=1
+SRC.HITS=<SRC.HITS> + -{1 3}
+SRC.EFFECT=3,i_fx_curse,6,15,1
+SRC.STAM=<SRC.STAM> + -4
+SOUND=01e6
+FINDLAYER(21).FINDID(i_liquid_speed).MORE2=<FINDLAYER(21).FINDID(i_liquid_speed).MORE2> + -1
+
+ON=@HITTRY
+IF (<FINDLAYER(21).FINDID(i_liquid_speed).MORE2> >= 1)
+ELSE
+SYSMESSAGE You do not have any agility liquid left.
+RETURN 1
+
+
+[ITEMDEF i_liquid_speed]
+DEFNAME=i_liquid_speed
+NAME=Liquid of Agility
+SKILLMAKE=95.0 Bowcraft
+RESOURCES=200 i_reag_bloodmoss, 1 i_bottle_empty
+ID=i_jar_honey
+TYPE=t_script
+
+ON=@CREATE
+COLOR=0076c
+MORE2=50
+
+ON=@CLICK
+MESSAGE [Uses remaining : <EVAL <MORE2> >]
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+IF (<SRC.TAG.ARROWTYPE> != 0)
+SRC.SYSMESSAGE You are already using some arrow liquid. Unequip the bow to reset.
+RETURN 1
+ELSEIF (<SRC.FINDLAYER(02).DISPID> == i_bow) || (<SRC.FINDLAYER(02).DISPID> == 013b2)
+SRC.SYSMESSAGE You sip some agility liquid on your arrows.
+SRC.EVENTS=+e_speed_arrows
+SRC.TAG.ARROWTYPE=4
+RETURN 1

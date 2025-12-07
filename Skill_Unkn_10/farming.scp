@@ -1,0 +1,1055 @@
+//#################################################### 
+//############Tracker's Farming System################ 
+//#################################################### 
+//By Tracker of Shattered Alliance 
+//http://gray-cat.com/alliance 
+//This is tested on version 99x5 
+// 
+//Use at your own risk, yada yada... 
+// 
+// 
+//INSTRUCTIONS!! 
+// 
+//This script is terribly easy to use. Put it in your Sphere folder in a .scp file 
+//that is in your spheretables under [RESOURCES], or make a new one and put it there. 
+// 
+//IF YOU ARE GOING TO INSTALL THIS...READ THIS DOCUMENTATION!!!!
+//
+//Type .newseed(name) to get a seed of the type you want.
+//
+//The "name" is simply the obvious name of the item, ie: Wheat, cotton, etc...
+//Be careful to spell it correctly. If you don't, it will spit out an error message, but
+//it shouldn't break anything because I actually put in error detection (yay!).
+//
+//When you dclick the seed, it tests your skill, which is stored in tag.farming on your character
+//The farming skill ranges from 0 to 1000, 1000 being GM, or 100.0. Players should start at 10.0 skill, with farmer
+//professionals starting a little higher, perhaps at 30.0 or so.
+//
+//To test if you are successful, it tests your farming skill against the difficulty of the plant, which ranges from 1-10
+//The formula that it uses to test is simply "seed difficulty" x "random number from 1 to 200"
+//If your farming skill beats that number, you succeed.
+//For instance:
+//5*123=615
+//If your farming skill is above 615 (61.5), you succeed.
+//
+//Plant Difficulty:    1      2      3      4      5       6       7       8       9       10
+//Failure Range:     1-200  2-400  3-600  4-800  5-1000  6-1200  7-1400  8-1600  9-1800  10-2000
+//Always succeed at:  20.0   40.0   60.0   80.0   100.0   n/a      n/a     n/a     n/a     n/a
+//
+//So, most very simple plants (ie: flowers) should be difficulty 3 or 4, while plants with
+//valuable products should be difficulty 6-8. With GM farming, for instance, you will fail (roughly) one out of 5 times
+//with a difficulty 6 seed. We want decorative "useless" seeds to be easy to use and always successful at GM skill.
+//
+//Plants are defined using a list of information in a defname. It has 7 or 8 lines, depending on it's type.
+//
+//Example:
+//farm_grass		0cbb
+//farm_grasscolor		07f3
+//farm_grassdiff		3
+//farm_grass_immature	0cbd
+//farm_grass_mature	0cbb
+//farm_grass_yield	1
+//farm_grass_type		2
+//
+//They mean this:
+//  FARM_name, this is what the plant produces, it's crop. In this, you can place 3 things:
+//		1) The defname of an item. i_banana, i_coconut, i_sword_long...any of those could go there 
+//			 and the plant would produce them  when it was mature
+//    2) The "hex" value for an item. 0cbb, for instance, is a piece of grass. 085b is an iron door, etc..
+//    3) A random list of objects. ou can use either the defname of a random object types (see sphere_d_defs.scp for examples
+//			 or you can use a random list, ie: { i_ring_gold 1 i_ring_silver 1 }
+//	FARM_nameCOLOR, this is the color that the plant will be in it's mature and immature stages.
+//		It is also the color that the seed of the plant will be, to allow for organization. You could make it random
+//		if you really wanted to, ie: {04cb 07c1} would give you a random color between those two, or use { 04cb 1 07c1 1 }
+//		to get an "either this or that" random color. To make it the normal color for it's type, use 00
+//	FARM_nameDIFF, this is the difficulty of the plant to grow and it also determines how much farming skill 
+//		you gain when playing with this plant. See the info above on how to use difficulty. 
+//	FARM_name_IMMATURE, this is the defname or hex id of what the plant will look like when it grows from a seeded plant to
+//		a half-grown plant. Choose something that looks vaguely like the mature form, or even choose the same one as the mature one.
+//		If the immature and mature id's are the same, then it won't change shape when picked. You can choose a random value, making it
+//		so that all of your flowers won't look exactly the same. Wildflowers, for instance: 
+//		{ i_crop_flax 1 i_flower_campion 1 i_flower_foxglove 1 i_flower_redpoppies 1 i_flower_campion_2 1 i_flower_snowdrops 1 }
+//	FARM_name_MATURE, this is what the plant looks like when it's ready to be picked. Use a defname or hex id of an item. Like the
+//		immature plant, you can choose a random value using a list.
+//	FARM_name_yield, this is the amount of crop the the plant will yield. If it is one, it will always give one, otherwise
+//		it will give a random amount based on that amount using an over-complicated formula that hurts my head.
+//	FARM_name_type, this it the type of plant. It can be 1, 2, or 3.
+//		1) This is an "annual". It grows once, gets picked, and is gone forever.
+//		2) This is a "perennial". It will grow to maturity, and once it is picked, it will revery back to it's "immature"
+//			 state, until it reaches maturity again, allowing it to be picked over-and-over, as long as it is taken care of.
+//		3) This is a tree. This is pretty much just a perennial that has a few differences, mainly that it makes a "trunk"
+//				when it becomes mature. It doesn't actually revert to immaturity when picked, it just stays mature all the time,
+//				but can only be picked once every 30 hours, minus an hour for every ten points of farming skill the owner has. At GM
+//				skill, it will bear fruit once every 20 hours. Trees also have an additional bit of info:
+//	FARM_name_TREE, this is what the "trunk" piece of the treeappears as. It uses a defname or hex ID and is only used
+//		for tree-type plants. On other plants it is simply ignored.
+//
+//Note: PLayers can type .otherskills ingame to see their farming skill.
+
+
+
+[defnames farming_stuff_list]
+farm_color		00
+
+farm_snowdrops
+
+farm_poppy 0
+farm_poppycolor 00
+farm_poppydiff 3
+farm_poppy_immature { i_plant_poppies 1 i_plant_poppies_2 1 }
+farm_poppy_mature i_flower_redpoppies
+farm_poppy_yield -
+farm_poppy_type 1
+
+farm_campion	0
+farm_campioncolor 00
+farm_campiondiff 3
+farm_campion_immature { i_flower_campion_2 1 i_flower_campion_3 1 }
+farm_campion_mature i_flower_campion
+farm_campion_yield	0
+farm_campion_type 1
+
+farm_hops	i_fruit_hops
+farm_hopscolor	00
+farm_hopsdiff	4
+farm_hops_immature	i_crop_hops1
+farm_hops_mature	01aa0
+farm_hops_yield	1
+farm_hops_type 2
+
+farm_flax		i_flax_bundle
+farm_flaxcolor	00
+farm_flaxdiff		6
+farm_flax_immature	i_crop_flax1
+farm_flax_mature	i_crop_flax
+farm_flax_yield	6
+farm_flax_type	1
+
+farm_juniper	i_juniper_bark
+farm_junipercolor	00
+farm_juniperdiff	5
+farm_juniper_immature	i_plant_juniper
+farm_juniper_mature i_plant_juniper
+farm_juniper_yield	1
+farm_juniper_type	2
+
+farm_sabadilla		i_sabadilla_leaves
+farm_sabadillacolor	00
+farm_sabadilladiff	3
+farm_sabadilla_immature	0cb9
+farm_sabadilla_mature	i_plant_pampasgrass
+farm_sabadilla_yield	1
+farm_sabadilla_type	2
+
+farm_apple		09d0
+farm_applecolor		00
+farm_applediff		6
+farm_apple_immature	0cea
+farm_apple_mature	0d96
+farm_apple_yield	4
+farm_apple_type		3
+farm_apple_tree		0d94	//Only trees need this last value. It's the ID of the
+				//trunk part. If it's a tree without this part (ie, a banana palm) you'll want to just use something
+				//that will either blend in, or an invisible item. i recommend a iece of it's fruit, as if it had dropped it  
+
+farm_foxglove		0c84
+farm_foxglovecolor	00
+farm_foxglovediff	3
+farm_foxglove_immature	0c84
+farm_foxglove_mature	0c84
+farm_foxglove_yield	1
+farm_foxglove_type	1
+
+farm_grass		0cbb	//this is what it yields....the crop
+farm_grasscolor		00	//hex value of the seed's color
+farm_grassdiff		2	//difficulty
+farm_grass_immature	0cbd	//ID of what the immature plant looks like
+farm_grass_mature	0cbb	//ID of what the mature plant looks like
+farm_grass_yield	1	//1 will always yield one of the product when it is ripe, no more no less
+				//more uses this amount as a lower boundry, the higher one 
+				//is based on their skill, so "3" will yield about 3-8
+farm_grass_type		2	//1=annual, 2=perennial, 3=tree
+
+farm_wheat		i_wheat_sheaf
+farm_wheatcolor		00
+farm_wheatdiff		4
+farm_wheat_immature	i_crop_wheat4
+farm_wheat_mature	i_crop_wheat
+farm_wheat_yield	4
+farm_wheat_type		1
+
+farm_cotton		i_cotton
+farm_cottoncolor	00
+farm_cottondiff		6
+farm_cotton_immature	{ 0c51 1 0c52 1 }
+farm_cotton_mature	{ 0c4f 1 0c50 1 }
+farm_cotton_yield	6	
+farm_cotton_type	1
+
+farm_shoe			i_shoes_plain
+farm_shoecolor		05bb
+farm_shoediff			8
+farm_shoe_immature	i_plant_smallpalm
+farm_shoe_mature		i_tree_ohii
+farm_shoe_yield		1
+farm_shoe_type		2
+
+farm_orfluer			i_flower_orfluer
+farm_orfluercolor		00
+farm_orfluerdiff			3
+farm_orfluer_immature	i_flower_orfluer_2
+farm_orfluer_mature		i_flower_orfluer_3
+farm_orfluer_yield		1
+farm_orfluer_type		2
+
+farm_hedge			01b22
+farm_hedgecolor		00
+farm_hedgediff			7
+farm_hedge_immature	{ i_plant_hedge_4 1 i_plant_hedge_3 1 }
+farm_hedge_mature		{ i_plant_hedge 1 i_plant_hedge_5 1 }
+farm_hedge_yield		1
+farm_hedge_type		2
+
+farm_mimic			random_all_items
+farm_mimiccolor		{0423 05af}
+farm_mimicdiff			5
+farm_mimic_immature	random_all_items
+farm_mimic_mature		random_all_items
+farm_mimic_yield		3
+farm_mimic_type		2
+
+//================================================
+//========================seed====================
+//================================================
+
+
+[ITEMDEF i_farm_seed]
+ID=i_plant_lilypad
+NAME="seed"
+TYPE=t_script
+VALUE=20
+RESOURCES=1 i_plant_lilypad
+
+DESCRIPTION=Seed
+SUBSECTION=Seeds
+CATEGORY=Farming
+
+
+on=@create
+ color=07f3
+
+on=@Userclick
+ name="<?tag.plant?> seed"
+ color=<?farm_<tag.plant>color?>
+ return 0
+
+ON=@UserDclick
+//if (<src.notbusy>)
+if (<eval farm_<tag.plant>>!=0)  //if the seed is not a defined type (ie: you try making it a "wheet" seed)
+ 																	//If this happens, it will return an error to the console, and complain 
+ 																	//to the player. Error prevention=good
+	ARG(sPlantDiff, <?farm_<tag.plant>diff?>)
+	ARG(sPlantingDiff, <?eval <sPlantDiff>*<eval RAND(200)>?>)
+	if (<?src.tag.farming?><<?sPlantingDiff?>) //if they didn't plant it right
+		src.lastnew.morem=123
+		//if morem=123, it will most likely die instead of maturing
+		//with proper care, it can live.
+		src.lastnew.more1=1
+	else	
+		SRC.lastnew.MORE1=<src.tag.farming>/100
+ 		//more1=skill with which it was planted
+	endif
+	SRC.EMOTE "plant some <tag.plant> seed"
+	SRC.BOW
+	SRC.NEWITEM i_farm_seeded
+	src.lastnew.tag.plant=<tag.plant>
+	SRC.lastnew.P=<SRC.P>
+	SRC.lastnew.LINK=<SRC.UID>
+	src.sfx 012d
+	SRC.lastnew.MORE2=<hval 30-(<src.tag.farming>/100)>
+ 	 //MORE2=number of hours till matures 1 stage
+	SRC.ACT.MOREZ=<hval rand(<SRC.ACT.MORE2>)>+1
+ //MOREZ=amount of water it has
+ 
+	ARG(sSkillGain, <eval(farm_<tag.plant>diff)>)
+	ARG(sSkillGain, <sSkillGain>*3)
+	src.f_farming_skill_gain(<sSkillGain>)
+
+
+	//Add skill gain in
+	
+	remove
+else
+  src.sysmessage "This seed is not a properly created seed. Please page to have it replaced."
+ 	serv.smsg "WARNING!!!!!!! BAD SEED EXISTS! UID <?UID?>, tag.plant=<?tag.plant?> (used by <?SRC.NAME?>)\r"
+ENDIF
+//else
+// src.sysmessage You are currently busy.
+//endif
+RETURN 1
+
+
+//================================================
+//========================Seeded blotch===========
+//================================================
+
+
+
+[ITEMDEF i_farm_seeded]
+ID=0913
+NAME="seeded plant"
+TYPE=t_script
+VALUE=10
+RESOURCES=1 i_clay
+
+on=@userclick
+ name="seeded <?tag.plant?>"
+ IF (<eval farm_<tag.plant>_type>==3) //If it's a tree
+	name="seeded <tag.plant> tree" //call it a tree
+ endif
+
+ return 0
+
+
+on=@create
+ attr=012
+ MOREZ=8 //# of hours till plant will be out of water.
+ 				 //If it runs out, it stops growing until it is watered.
+ MORE2=13 //# hours till "upgrades" to next level
+ MORE1=1 //Skill planted with
+ MOREX=0 //how well it's been cared for...fertilizer, tending, etc...
+ TIMER=60*60 //one hour
+ tag.slug=0
+ tag.caterpillar=0
+ tag.aphid=0
+ tag.crow=0
+ tag.moth=0
+ tag.slugbait=0
+ tag.catstink=0
+ tag.sabadilla=0
+
+ON=@TIMER
+ MOREZ=<MOREZ>+-2  	//amount of water it has decreases
+ MORE2=<MORE2>+-1  	//amount of time before maturity decreases
+ IF (<MOREZ><1)   	//if it is out of water
+	MOREZ=1		//set it to 1 water
+	MORE2=<MORE2>+2	//increase the time until it matures by 2
+ ENDIF
+	IF (<MORE2><1)		//if it is ready to mature
+	 if !(<morem>==123)	//if it wasn't planted badly
+		LINK.NEWITEM i_farm_immature	//make the immature plant
+ 		link.lastnew.tag.plant=<tag.plant>		//it's plant type
+		LINK.lastnew.P=<P>			//move it to the right spot
+		LINK.lastnew.DISPID=<eval farm_<tag.plant>_immature>	//make it look right
+		LINK.lastnew.MORE1=<MORE1>		//give it the attributes of the current plant
+		link.lastnew.tag.plant=<tag.plant>		//it's plant type
+		link.lastnew.MORE2=30-(<more1>/100)		//it's amount of time before maturity
+		LINK.lastnew.MOREZ=<hval rand(<LINK.ACT.MORE2>)/2>	//the amount of water it'll start with
+		LINK.lastnew.LINK=<LINK.UID>		//the person it's link'ed to	
+		LINK.lastnew.MOREX=<MOREX>			//how well it's been cared for
+		LINK.LASTNEW.MOREM=<MOREM>			//Morem=If it was planted wrong, it'll equal 123
+		link.resync
+	 else	//if it was planted badly to start with
+  	if (<eval {1 60}><=<morex>)  //give it a random chance of survival 
+			LINK.NEWITEM i_farm_immature	//make the immature plant
+			LINK.ACT.DISPID=<hval farm_<tag.plant>_immature>  //make it look right
+			LINK.ACT.P=<P>			//move it to the right spot
+			LINK.ACT.MORE1=<MORE1>		//give it the attributes of the current plant
+			link.ACT.MORE2=30-(<more1>/200)		//it's amount of time before maturity
+			LINK.ACT.MOREZ=<hval rand(<LINK.ACT.MORE2>)/2>	//the amount of water it'll need
+			LINK.ACT.LINK=<LINK.UID>		//the person it's link'ed to
+			LINK.LASTNEW.MOREM=<MOREM>		//Morem=If it was planted wrong, it'll equal 123
+			link.resync
+		endif
+	 endif
+ 	 remove
+ ENDIF
+ IF (<MORE2>>150) //if it hasn't been watered in a very long time it should die
+	EMOTE "die"
+	REMOVE
+ ENDIF
+ TIMER=60*60
+ RETURN 1
+
+
+on=@userdclick
+ name="seeded <?tag.plant?>"
+ IF (<eval farm_<tag.plant>_type>==3) //If it's a tree
+	name="seeded <tag.plant> tree" //call it a tree
+ endif
+
+//var.plantname="<name>"
+if (<morez>><more2>) //if it has enough water to grow for a while
+	if (<morez>><more2>*2)
+		var.water_text="Fully Watered"
+			var.water_color=6
+	else
+		var.water_text="Watered"
+		var.water_color=4
+	endif
+elif (<morez><2)  //amount of water is 1 or 0
+	var.water_text="Needs Water Badly"
+	var.water_color=38
+elif (<morez><=(<more2>/2)) //hours worth of water less then half the amount until grown
+	var.water_text="Needs Water"
+	var.water_color=54
+endif
+//var.growth_time=<?more2?>
+//var.slug=<?safe.tag.slug?>*3
+//var.caterpillar=<?safe.tag.caterpillar?>*4
+//var.aphid=<?safe.tag.aphid?>*5
+//var.crow=<?safe.tag.crow?>*6
+//var.moth=<?safe.tag.moth?>*7
+//var.owner=<?link.name?>
+if (<safe.src.tag.farming>>300) //if they are fairly knowing about farming
+	if (<more2>>70)
+		var.plant_care="in bad need of care and water."
+	elif (<more2>>120)
+		var.plant_care="drying up and near death."
+	else
+		var.plant_care="in good condition physically."
+	endif
+else //if they don't know much about farming
+	if (<more2><89)
+		var.plant_care="looking fine to you."
+	else
+		var.plant_care="not looking good."
+	endif
+endif
+//var.plant_dialog_uid=<uid>
+dialog d_examine_plant
+return 1
+
+
+
+//================================================
+//========================immature plant==========
+//================================================
+
+
+[ITEMDEF i_farm_immature]
+ID=0cb6
+NAME="immature plant"
+TYPE=t_script
+value=10
+resources=1 i_dagger
+
+on=@create
+ attr=012
+ MOREZ=8 //# of hours till plant will be out of water.
+ 				 //If it runs out, it stops growing until it is watered.
+ MORE2=13 //# hours till "upgrades" to next level
+ MORE1=1 //Skill planted with
+ MOREX=0 //how well it's been cared for...fertilizer, tending, etc...
+ TIMER=60*60 //one hour
+ tag.slug=0
+ tag.caterpillar=0
+ tag.aphid=0
+ tag.crow=0
+ tag.moth=0
+ tag.slugbait=0
+ tag.catstink=0
+ tag.sabadilla=0
+ TIMER=60*60 //one hour
+
+on=@userclick
+	color=<?farm_<tag.plant>color?>
+	name="immature <?tag.plant?>"
+	IF (<eval farm_<tag.plant>_type>==3) //If it's a tree
+		name="immature <tag.plant> tree" //call it a tree
+	endif
+	return 0
+
+
+ON=@TIMER
+ color=<?farm_<tag.plant>color?>
+ if (<safe.tag.caterpillar>==0)
+  if (<safe.tag.moth>==0)
+   if (<safe.tag.slug>==0)
+	MORE2=<MORE2>+-1  	//amount of time before maturity decreases
+   else
+	MORE2=<MORE2>+(-<eval RAND(1)>)  //50% chance of not growing
+   endif
+  endif
+ endif
+ MOREZ=<MOREZ>+-1  	//amount of water it has decreases
+ IF (<MOREZ><1)   	//if it is out of water
+	MOREZ=1		//set it to 1 water
+	MORE2=<MORE2>+2	//increase the time until it matures by 2
+ ENDIF
+ IF (<MORE2><1)		//if it is ready to mature
+	LINK.NEWITEM i_farm_mature	//make the immature plant
+	LINK.lastnew.P=<P>			//move it to the right spot
+	LINK.lastnew.DISPID=<?farm_<tag.plant>_mature?>	//make it look right
+	LINK.lastnew.MORE1=<MORE1>		//give it the attributes of the current plant
+	link.lastnew.tag.plant=<tag.plant>		//it's plant type
+	link.lastnew.tag.fruit_eaten=<tag.fruit_eaten>		//some fruit eaten
+	link.lastnew.MORE2=30+(-<more1>)		//it's amount of time before maturity
+	LINK.lastnew.MOREZ=<hval rand(<LINK.ACT.MORE2>)/2>	//the amount of water it'll need
+	LINK.lastnew.LINK=<LINK.UID>		//the person it's link'ed to	
+	LINK.lastnew.MOREX=<MOREX>			//how well it's been cared for
+	VAR.TREE_UID=<LINK.ACT.UID>
+	
+	
+
+
+	IF (<?farm_<tag.plant>_type?>==3)
+		LINK.NEWITEM i_farm_tree_trunk
+		LINK.ACT.DISPID=<?farm_<tag.plant>_tree?>
+		LINK.ACT.P=<P>
+		LINK.ACT.LINK=<VAR.TREE_UID>
+		LINK.ACT.TIMER=10
+		LINK.ACT.NAME="<?tag.plant?>"
+	ENDIF
+	link.resync
+	REMOVE
+  endif
+
+ IF (<MORE2>>150)
+	EMOTE "die."
+	REMOVE
+ ENDIF
+
+ if (<safe.tag.slugbait>==0)  //if no slugbait has been used
+  if (<safe.tag.slug>==0)
+	//slugs are unattracted by well-planted, well-cared for plants at high elevation
+	//slugs are attracted to mature, leafy plants with lots of fertilizer+water
+	var.slugresist=<eval RAND(<more1>+<morex>+<z>)>
+	var.slugattract=<eval RAND(<eval 0<tag.fertilizer>+((20+(-<more2>))+<morez>)>)>
+	say "att=<?var.slugattract?> vs. res=<?var.slugresist?>"
+	 if (<?var.slugattract?>><?var.slugresist?>)
+	 		tag.slug=<eval RAND(2)>
+	 endif
+  endif
+ else  	//if slugbait has been used
+	tag.slug=0  //the slugs die
+ endif
+
+ if (<safe.tag.caterpillar>==0)
+	//caterpillars are unattracted by well-planted, well-cared for plants
+	//caterpillars are attracted to mature, leafy plants
+	var.caterpillarresist=<eval RAND((<more1>*10)+(<morex>*4))>
+	var.caterpillarattract=<eval RAND(<eval ((10+(-<more2>))+<morez>)>)>
+	if (<eval <var.caterpillarattract>>><eval <var.caterpillarresist>>)
+		tag.caterpillar=<eval RAND(2)>
+	endif
+ else  	//50% chance of caterpillars dying off
+	MORE2=<MORE2>+2	//increase the time until it matures by 2
+	tag.caterpillar=<eval RAND(2)>
+ endif
+
+
+
+
+if (<?tag.sabadilla?>==0)  //if no poison has been used
+ if (<?tag.moth?>==0)
+	//moths are unattracted by well-planted, well-cared for plants
+	//moths are attracted to mature, leafy plants
+	tag.mothresist=<eval RAND((<more1>*5)+(<morex>*3))>
+	tag.mothattract=<eval RAND(<eval ((10+(-<more2>))+<morez>)>)>
+	if (<eval <tag.mothattract>>><eval <tag.mothresist>>)
+		tag.moth=<eval RAND(2)>
+	endif
+ else  	//50% chance of moths leaving
+	MORE2=<MORE2>+5	//increase the time until it matures by 2
+	tag.moth=<eval RAND(2)>  //50% chance
+	tag.fruit_eaten=1	//tag it that fruit has been eaten
+ endif
+else
+ tag.moth=0 //poison is there, so no moths
+endif
+
+if (<?tag.catstink?>==0)  //if no catstink has been used
+  if (<?tag.crow?>==0)
+	//crows are unattracted by well-planted, well-cared for plants
+	//crows are attracted to mature, leafy plants with lots of fruit
+	tag.crowresist=<eval RAND((<more1>*5)+(<morex>*3)+0<eval 0<tag.fruit_eaten>*10>)>
+	tag.crowattract=<eval RAND(<eval ((10+(-<more2>))+<morez>)>)>
+	if (<eval <tag.crowattract>>><eval <tag.crowresist>>)
+		tag.crow=<eval RAND(2)>
+	endif
+ else  	//50% chance of crows leaving
+	tag.crow=<eval RAND(2)>  //50% chance
+	tag.fruit_eaten=1	//tag it that fruit has been eaten
+ endif
+else
+ tag.crow=0
+endif
+
+if (<?tag.sabadilla?>==0)  //if no slugbait has been used
+ if (<?tag.aphid?>==0)
+	//aphids are unattracted by well-planted, well-cared for plants
+	//aphids are attracted to mature, leafy plants
+	tag.aphidresist=<eval RAND((<more1>*10)+(<morex>*10))>
+	tag.aphidattract=<eval RAND(<eval ((50+(-<more2>))+<morez>)>)>
+	if (<eval <tag.aphidattract>>><eval <tag.aphidresist>>)
+		tag.aphid=<eval RAND(2)>
+	endif
+ else  	//will continue till sabadilla used
+	MORE2=<MORE2>+(-<eval RAND(3)>)	//increase the time until it matures by 0-2
+	tag.fruit_eaten=1	//tag it that fruit has been eaten
+ endif
+else
+ tag.aphid=0 //poison is there, so no aphids
+endif
+
+ TIMER=60*60
+ RETURN 1
+
+
+on=@userdclick
+color=<?farm_<tag.plant>color?>
+name="immature <?tag.plant?>"
+if (<eval farm_<tag.plant>_type>==3) //If it's a tree
+	name="immature <tag.plant> tree" //call it a tree
+endif
+
+if (<morez>><more2>) //if it has enough water to grow for a while
+ if (<morez>><more2>*2)
+	var.water_text="Fully Watered"
+	var.water_color=6
+ else
+	var.water_text="Watered"
+	var.water_color=4
+ endif
+elif (<morez><2)  //amount of water is 1 or 0
+	var.water_text="Needs Water Badly"
+	var.water_color=38
+elif (<morez><=(<more2>/2)) //hours worth of water less then half the amount until grown
+	var.water_text="Needs Water"
+	var.water_color=54
+endif
+if (<safe.src.tag.farming>>300) //if they are fairly knowing about farming
+	if (<more2>>70)
+		var.plant_care="in bad need of care and water."
+	elif (<more2>>120)
+		var.plant_care="drying up and near death."
+	else
+		var.plant_care="in good condition physically."
+	endif
+else //if they don't know much about farming
+	if (<more2><89)
+		var.plant_care="looking fine to you."
+	else
+		var.plant_care="not looking good."
+	endif
+endif
+dialog d_examine_plant
+return 1
+
+
+
+
+//================================================
+//========================mature plant============
+//================================================
+
+
+
+[ITEMDEF i_farm_mature]
+ID=0cbb
+NAME="mature plant"
+TYPE=t_script
+
+on=@create
+ attr=012
+ MORE2=1
+ TIMER=60*60 //one hour
+ MOREY=0
+
+on=@userclick
+ color=<?farm_<tag.plant>color?>
+ name="mature <?tag.plant?>"
+ IF (<eval farm_<tag.plant>_type>==3) //If it's a tree
+	name="mature <?tag.plant?> tree" //call it a damned tree
+					//because "immature peach" is asking for lawsuits
+ endif
+ return 0
+
+ON=@TIMER
+ color=<?farm_<tag.plant>color?>
+ MORE2=<MORE2>+1
+ MOREZ=<MOREZ>-1
+ MOREY=<MOREY>+1
+ IF (<MORE2>>192)
+		EMOTE "die."
+		REMOVE
+		RETURN 1
+ ENDIF
+ TIMER=60*60
+RETURN 1
+
+
+ON=@userDclick
+color=<?farm_<tag.plant>color?>
+name="mature <?tag.plant?>"
+if (<eval farm_<tag.plant>_type>==3) //If it's a tree
+	name="mature <?tag.plant?> tree" //call it a tree
+endif
+
+IF (<LINK>==<SRC.UID>) //Make sure they're the owner
+ if (<eval farm_<tag.plant>>!=0) //and that the plant is properly created
+	if (<morex>>5)		//if you took good care of it
+		ARG(sGoodCare, 50)  //give you more yield and such
+	else									//if it only has the minimum care
+		ARG(sGoodCare, 1) 	//it doesn't help much
+	endif
+	ARG(sFarmingCheck, <?eval {100 (<src.tag.farming>+<sGoodCare>)}?>)
+	ARG(sPlantYield, <?farm_<tag.plant>_yield?>)
+	if (<eval farm_<tag.plant>_type>!=3) //if it's a tree it has to act differently
+		SRC.BOW
+		if (<?eval farm_<tag.plant>_yield?>>1)  //if it should yield more then one
+			ARG(tPickingDiff, <?farm_<tag.plant>diff?>*300)
+			var.yield=<?eval <sPlantYield>*<sFarmingCheck>?> //these are calculating 
+			var.yield=<?eval <var.yield>/<tPickingDiff>?>							//how much it yields
+			var.yield=<?eval <var.yield>+1?>
+			if !(<var.yield><1) //make sure that it won't do this if it shouldn't yield anything
+				while (<?var.yield?>>0)
+					link.newitem farm_<tag.plant>  //give them the amount it's supposed to yield
+					link.lastnew.cont=<link.findlayer(layer_pack).uid> //put it in their pack
+					var.yield=<?var.yield?>-1
+				endwhile
+			else
+				src.sysmessage "This item is attempting to yield less than one of it's product. You will be given one instead."
+				serv.smsg "Warning!! A plant is attempting to yield less then one 'fruit'. User '<?src.name?>' Plant's tag.plant: '<?tag.plant?> Var.yield: <?var.yield?> \r"
+				src.newitem farm_<tag.plant> //only give them one!
+				src.lastnew.cont=<src.findlayer(layer_pack).uid> //put it in their pack
+			endif
+		else	//if it should always yield just one
+			if (<?eval farm_<tag.plant>_yield?>)  //and it should exactly one
+				src.newitem farm_<tag.plant> //only give them one!
+				src.lastnew.cont=<src.findlayer(layer_pack).uid> //put it in their pack
+			endif
+		endif
+		f_give_extra_seeds //test if they deserve getting extra seeds, if they do, give 'em
+		ARG(sSkillGain, <eval(farm_<tag.plant>diff)>)
+		ARG(sSkillGain, <sSkillGain>*3)
+		src.f_farming_skill_gain(<sSkillGain>)
+ 	ELSE //if it is a tree
+		IF (<MOREY>>=30-<more1>)  //If it has been 30+ hours since it was last picked then there should be more ripe fruit...patience has rewards
+			MOREY=0
+			src.f_farming_skill_gain(2) //Gain farming skill
+			SRC.NEWSEED("<?tag.plant?>")
+			f_give_extra_seeds
+			src.newitem farm_<tag.plant> //give one of what te plant produces
+				src.lastnew.cont=<src.findlayer(layer_pack).uid> //put it in their pack
+			if (<eval farm_<tag.plant>_yield>>1)  //if it should yield more then one
+				ARG(tTreeYield, <eval farm_<tag.plant>_yield>)
+				src.lastnew.dupe(<tTreeYield>)
+				src.lastnew.bounce
+			//f_yield_results(<?eval farm_<tag.plant>_yield + <var.result_dice>-(<safe.tag.fruit_eaten>* RAND(4))?>)
+	 			//if it should always yield just one
+	 		endif	
+	 ENDIF
+	ENDIF
+
+	IF (<eval farm_<tag.plant>_type>==2)//If it's a perennial-type plant
+		//perrennials don't go away when picked, they just switch back to their immature form
+		LINK.NEWITEM i_farm_immature	//make the immature plant
+		link.act.tag.plant=<?tag.plant?>		//it's plant type
+		LINK.ACT.P=<P>			//move it to the right spot
+		LINK.ACT.DISPID=<eval farm_<tag.plant>_immature>	//make it look right
+		LINK.ACT.MORE1=<MORE1>		//give it the attributes of the current plant
+		link.act.tag.plant=<?tag.plant?>		//it's plant type
+		link.ACT.MORE2=30+(-<more1>)		//it's amount of time before maturity
+		LINK.ACT.MOREZ=<hval rand(<LINK.ACT.MORE2>)/2>	//the amount of water it'll need
+		LINK.ACT.LINK=<LINK.UID>		//the person it's link'ed to	
+		LINK.ACT.MOREX=<MOREX>			//how well it's been cared for
+		link.resync
+		remove
+	ELIF (<eval farm_<tag.plant>_type>==1)
+		SRC.NEWSEED("<?tag.plant?>")
+		remove
+	endif
+	src.sfx 013a
+ else
+	src.sysmessage "This was not properly created. Tag.plant is `<?tag.plant?>`?"
+	remove
+ endif
+ELSE
+	SRC.SYSMESSAGE "This belongs to <?LINK.NAME?>, so hands off."
+ENDIF
+RETURN 1
+
+
+
+
+//================================================
+//========================TREE TRUNK==============
+//================================================
+
+
+[ITEMDEF i_farm_tree_trunk]
+ID=0cca
+NAME="tree trunk"
+TYPE=t_normal
+
+on=@create
+ attr=012
+ TIMER=30
+
+on=@timer
+ IF !(<LINK.BASEID>==i_farm_mature)
+	REMOVE
+ ELSE
+	TIMER=30
+ ENDIF
+RETURN 1
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++Buckets++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+[ITEMDEF i_watering_bucket]
+ID=i_bucket_of_water
+NAME="Bucket"
+TYPE=T_normal
+WEIGHT=15
+
+DESCRIPTION=Watering Bucket
+SUBSECTION=Bucket
+CATEGORY=Farming
+
+
+ON=@Create
+MOREZ=20		//number of "charges"
+
+ON=@userClick
+NAME="Bucket(<?MOREZ?> gallons)"
+
+ON=@userDclick
+
+TARGET "What plant would you like to water?"
+RETURN 1
+
+on=@targon_char
+src.emote "dump a bucket of water over <?src.targ.name?>"
+REMOVE
+SRC.NEWITEM i_watering_bucket_empty
+SRC.lastnew.P=<SRC.P>
+SRC.lastnew.BOUNCE
+return 1
+
+ON=@TARGON_ITEM
+if (<src.checklos(<src.targ.uid>)>) && (<src.checkdist(<src.targ.uid>)><3)
+ IF (<SRC.TARG.BASEID>==i_farm_seeded)||(<SRC.TARG.BASEID>==i_farm_immature) //waterable plant
+	SRC.TARG.morez=<SRC.TARG.morez>+5
+	MOREZ=<MOREZ>-1
+	SRC.SFX 004e
+	SRC.BOW
+ ENDIF
+ IF (<SRC.TARG.BASEID>==i_farm_mature)
+	MOREZ=96
+	MORE2=0
+	SRC.SFX 004e
+	SRC.BOW
+ ENDIF
+ELSE
+ 	SRC.SYSMESSAGE "Ya'll cant do that from over here."
+ENDIF
+IF (<MOREZ>==0)
+	REMOVE
+	SRC.NEWITEM i_watering_bucket_empty
+	SRC.lastnew.P=<SRC.P>
+	SRC.lastnew.BOUNCE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_watering_bucket_empty]
+ID=i_bucket
+NAME="Bucket (Empty)"
+TYPE=T_normal
+VALUE=250
+RESOURCES=10 i_board, 2 i_barrel_hoops,t_tinker_tools
+skillmake=78.0 tinkering
+
+DESCRIPTION=Watering Bucket(empty)
+SUBSECTION=Bucket
+CATEGORY=Farming
+
+ON=@userDclick
+
+TARGET "Use this on an animal to milk it, or a fountain, trough, or vat to fill it with water."
+RETURN 1
+
+ON=@TARGON_item
+IF (<SRC.TARG.BASEID>==i_fountain_1)||(<SRC.TARG.BASEID>==i_fountain_2)||(<SRC.TARG.BASEID>==i_trough_water)||(<SRC.TARG.BASEID>==i_vat_3)
+	REMOVE
+	SRC.SFX 0240
+	SRC.BOW
+	SRC.NEWITEM i_watering_bucket
+	SRC.lastnew.P=<SRC.P>
+	SRC.lastnew.BOUNCE
+ELSE
+	src.sysmessage "Fill this at a trough, or fountain."
+ENDIF
+RETURN 1
+
+
+//*****************************************************
+//************************newseed**********************
+//**********Gives you 1 of the plant's seed************
+//*****************************************************
+
+//useage: src.newseed("wheat")
+//Ingame: .newseed(wheat)
+[function newseed]
+if (<eval farm_<ARGS>>!=0) //and that the plant is properly created
+	newitem i_farm_seed
+	lastnew.tag.plant="<?ARGS?>"
+	lastnew.color <eval farm_<act.tag.plant>color>
+	lastnew.cont=<findlayer(21).uid>
+else
+  sysmessage "A seed creation attempt was not done properly. The seed type `<?ARGS?>` is invalid. Please page."
+ 	serv.smsg "WARNING!!!!!!! BAD SEED CREATION ATTEMPT!, tag.plant=<?ARGS?> (created on <?NAME?>)\r"
+endif
+
+//*****************************************************
+//****************f_farming_skill_gain*****************
+//*************raises your farming skill***************
+//*****************************************************
+
+//Useage:
+//f_farming_skill_gain(amount)
+//Raises the farming skill by one point after enough gain has been accumulated.
+[FUNCTION f_farming_skill_gain]
+TAG.farming_GAIN=<?eval <TAG.farming_GAIN>+(<ARGV[0]>*<eval RAND(55)>)?>
+say "gain=<?tag.farming_gain?> curfarm=<?tag.farming?>"
+IF (<TAG.farming_GAIN>><tag.farming>)
+  IF (<eval <TAG.farming>><1000)
+		TAG.farming_GAIN=0
+		TAG.farming=<eval <TAG.farming>+1>
+		VAR.farmingHI=<eval (<TAG.farming>/10)>
+		VAR.farmingPT=<eval (<TAG.farming>-(<VAR.farmingHI>*10))>
+		SYSMESSAGE "You have gained .1 Farming skill. You are currently at <?EVAL (<VAR.farmingHI>)?>.<?eval (<VAR.farmingPT>)?>."
+  ENDIF
+ENDIF
+
+//*****************************************************
+//**********************farming************************
+//*****************************************************
+
+//Usage:
+//src.farming(<src.farming>+1)
+//This method sets their farming to the args you give.
+//Also:
+//var.farming_amount=<?src.farming?>
+//This method returns their farming skill.
+
+//For example:
+//In game you can do .x.show farming to show their farming skill  or...
+//You can do .x.farming(100) to set their farmig skill to a certain amount.
+
+[FUNCTION farming]
+ARG(sARG, <?SAFE.ARGV(0)?>+0)
+if (<?sARG?>>0)
+	tag.farming=<?sARG?>
+	VAR.farmingHI=<eval (<TAG.farming>/10)>
+	VAR.farmingPT=<eval (<TAG.farming>-(<VAR.farmingHI>*10)>
+	SYSMESSAGE "Your skill in Farming is now: <?EVAL (<VAR.farmingHI>)?>.<?eval (<VAR.farmingPT>)?>."
+endif
+return <?tag.farming?>+0
+
+//================================================
+//============Give Extra Seeds function===========
+//================================================
+//This functions only use is in the farming process.
+[function f_give_extra_seeds]
+ARG(sFarmingCheck, <?RAND(<src.tag.farming>)?>)
+ARG(sFarmingDiff, <?farm_<tag.plant>diff?>)
+if (sFarmingCheck > sFarmingDiff*160)  //if they get 160,320,480,or 640 (dep. on diff of plant)
+	SRC.SYSMESSAGE "You manage to get some extra seed from it."
+	SRC.NEWSEED("<?tag.plant?>")	//give them extra seed as a reward
+endif
+
+if (sFarmingCheck > sFarmingDiff*230)  //if they get 230,460,690,920 
+	SRC.SYSMESSAGE "You manage to get some extra seed from it."
+	SRC.NEWSEED("<?tag.plant?>")	//give them extra seed as a reward
+endif
+
+
+//================================================
+//========================GROW FUNCTION===========
+//================================================
+//This function just sets a plant up for "insta-growth"
+//To make a group of plants grow, do .nuke grow
+[function grow]  //use .x.grow to make a plant instantly grow
+morez=10				 //..by setting it to be watered
+more2=1					 //and ready to go
+timer=1					 
+tag.slug=0			 //it also erases any status ailments on it
+tag.caterpillar=0
+tag.aphid=0
+tag.crow=0
+tag.moth=0
+
+//================================================
+//==============DIALOG D_EXAMINE_PLANT============
+//================================================
+//This is the dialog that is used when you examine a plant by dclicking it.
+
+[dialog d_examine_plant]
+0,0
+page 0
+resizepic 0 0 3600 440 440
+resizepic 8 8 3500 422 422
+
+tilepic 8 6 6816 //hops
+tilepic 370 370 3310  //vines
+tilepic 370 351 3310  //vines
+tilepic 370 322 3310  //vines
+
+tilepic 370 10 3224  //fern
+tilepic 0 350 3233   //fern
+
+button 130 400 2501 2501 1 0 1110 //"Tend To Plant" button
+
+text 40 20 0 1
+text 60 40 0 8
+text 60 60 <?var.water_color?> 2 
+text 60 80 0 9
+text 60 280 54 <?eval(<tag.slug>*3)?>
+text 60 300 32 <?eval(<tag.caterpillar>*4)?>
+text 60 320 32 <?eval(<tag.moth>*5)?>
+text 60 340 54 <?eval(<tag.crow>*6)?>
+text 60 360 54 <?eval(<tag.aphid>*7)?>
+text 160 400 0 10
+text 60 380 0 11
+
+[dialog d_examine_plant TEXT]
+<?var.blankline?>
+<?link.name?>'s <?name?>
+<?var.water_text?>
+Slugs are stunting this plant's growth!
+Caterpillars are devouring this plant!
+Harvester Moths are killing this plant!
+Crows have been eating your crop!
+Aphids are stunting this plant's growth!
+Estimated Time until maturity: <?eval(<more2>)?> hours
+This plant is in <?var.plant_care?>
+Tend To Plant
+Your farming skill: <?eval(<src.farming>/10)?>
+
+[dialog d_examine_plant BUTTON]
+ONBUTTON=1110
+src.emote "tend to the <?name?>"
+src.bow
+tag.slug=0
+tag.caterpillar=0
+src.sysmessage "You trim dead ends and pull pests from the plant. If it could talk, it would certainly be thanking you."
+if !(<safe.tag.tendedto>)
+	morex=<morex>+<eval(RAND(3))>
+	tag.tendedto=1
+	ARG(sSkillGain, <eval(farm_<tag.plant>diff)>)
+	ARG(sSkillGain, <sSkillGain>*2)
+	src.f_farming_skill_gain(<sSkillGain>)
+endif
+
+
+[plevel 1]
+otherskills
+
+[function otherskills]
+sysmessage "Farming: <?farming?>"

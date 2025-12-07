@@ -1,0 +1,39 @@
+///////////////////////////////////////////////////////////////////////////////////////////
+//MODSKILLS Function.							Mordaunt
+//This function can be used to modify a players skills either up or down ingame.
+//To use this, simply call the function modskills <args>
+//Where <args> is the amount you wish to adjust the skills by, this can be a + or -
+//number.
+//
+//The function is scripted to run through EVERY skill.
+//Meaning that every skill will be adjusted by the amount you specify.
+//The script has been successfully used in an anti-macro punishment script.
+//
+//I received a LOT of help to make this script from people who's names I unfortunately
+//don't remember (it is an OLD script) so I appologise for not giving credit to them
+/////////////////////////////////////////////////////////////////////////////////////////
+
+[FUNCTION MODSKILLS] 
+VAR.SKILL=0 
+modskills_rec <args> 
+
+[FUNCTION MODSKILLS_rec] 
+// stop at the 50th skill (which is non-existing) 
+if ( <VAR.SKILL>==50 ) 
+return 0 
+endif 
+
+// calculate the new value for the skill 
+VAR.NEWVALUE = <eval (<<VAR.SKILL>> + (<args>))> 
+if ( <VAR.NEWVALUE> > 1000 ) // cap at 100.0% 
+VAR.NEWVALUE = 1000 
+elseif ( <VAR.NEWVALUE> < 0 ) // cap at 0.0% 
+VAR.NEWVALUE = 0 
+endif 
+
+// set the new value 
+TRY <VAR.SKILL>=<VAR.NEWVALUE> 
+
+// next skill 
+VAR.SKILL=<eval (<VAR.SKILL>+1)> 
+MODSKILLS_rec <args>

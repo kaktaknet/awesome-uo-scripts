@@ -1,0 +1,273 @@
+//**********************************************
+//**      Big_boy_uk89-(www.crazypk.com)      **
+//**      Any Problems With this email me     **
+//**          On Admin@crazypk.com            **
+//**********************************************
+
+
+[ITEMDEF i_Crystal_Robe]
+DEFNAME=i_Crystal_robe
+NAME=Crystal Robe (6)
+TYPE=13
+ID=i_person_black_thorne
+REQSTR=150
+ARMOR=80
+
+ON=@CREATE
+COLOR=00a20
+HITPOINTS={200 300}
+
+
+ON=@Equip
+SRC.STR = <SRC.STR> + 15
+SRC.DEX = <SRC.DEX> + 15
+SRC.INT = <SRC.INT> + 15
+
+ON=@Unequip
+SRC.STR = <SRC.STR> + (-15)
+SRC.DEX = <SRC.DEX> + (-15)
+SRC.INT = <SRC.INT> + (-15)
+
+
+[ITEMDEF i_Crystal_plate_arms]
+ID=01410
+Name=Crystal Arms
+Type=t_armor
+
+Weight=5
+Armor=180
+Reqstr=40
+VALUE=1200
+
+ON=@Create
+	Color=00a20
+	Hitpoints={351 500}
+
+CATEGORY=Provisions - Armor - Rare
+SUBSECTION=Crystal Plate
+DESCRIPTION=Crystal Platemail Arms
+
+[ITEMDEF i_Crystal_platemail_legs]
+ID=i_platemail_leggings
+NAME=Crystal Legs
+
+WEIGHT=15
+ARMOR=180
+REQSTR=60
+VALUE=1200
+
+ON=@Create
+	Color=00a20
+	Hitpoints={350 500}
+
+CATEGORY=Provisions - Armor - Rare
+SUBSECTION=Crystal Plate
+DESCRIPTION=Crystal Platemail Legs
+
+[ITEMDEF i_Crystal_PLATE_HELM]
+ID=i_platemail_helm
+NAME=Crystal Helm
+
+ARMOR=180
+REQSTR=40
+WEIGHT=5
+VALUE=1200
+
+ON=@Create
+	Color=00a20
+	Hitpoints={350 500}
+
+CATEGORY=Provisions - Armor - Rare
+SUBSECTION=Blue Chrome Plate
+DESCRIPTION=Blue Platemail Helm
+
+[ITEMDEF i_Crystal_PLATEMAIL_GORGET]
+ID=i_platemail_gorget
+NAME=Crystal Gorget
+
+ARMOR=180
+REQSTR=30
+VALUE=1200
+WEIGHT=2
+
+ON=@Create
+	Color=00a20
+	Hitpoints={305 500}
+
+CATEGORY=Provisions - Armor - Rare
+SUBSECTION=Crystal Plate
+DESCRIPTION=Crystal Platemail Gorget
+
+[ITEMDEF i_Crystal_PLATEMAIL_GAUNTLETS]
+ID=i_platemail_gloves
+NAME=Crystal Gauntlets
+
+ARMOR=180
+REQSTR=30
+VALUE=1200
+WEIGHT=2
+
+ON=@Create
+	Color=00a20
+	Hitpoints={350 500}
+
+CATEGORY=Provisions - Armor - Rare
+SUBSECTION=Crystal Plate
+DESCRIPTION=Crystal Platemail Gauntlets
+
+[ITEMDEF i_Crystal_PLATEMAIL]
+ID=i_platemail_chest
+NAME=Crystal Chest
+
+ARMOR=180
+REQSTR=60
+VALUE=1200
+WEIGHT=10
+
+ON=@Create
+	Color=00a20
+	Hitpoints={305 500}
+
+CATEGORY=Provisions - Armor - Rare
+SUBSECTION=Crystal Plate
+DESCRIPTION=Crystal Platemail Chest
+
+[ITEMDEF i_Crystal_platemail_SHIELD]
+ID=I_SHIELD_HEATER
+NAME=Crystal Sheild
+
+ARMOR=180
+REQSTR=30
+VALUE=1200
+WEIGHT=8
+
+ON=@Create
+	Color=00a20
+	Hitpoints={350 500}
+
+CATEGORY=Provisions - Armor - Rare
+SUBSECTION=Crystal Plate
+DESCRIPTION=Crystal Platemail Shield
+
+
+
+[ITEMDEF i_Crystal_sword]
+ID=i_war_fork
+DEFNAME=i_war_Crystal
+NAME=Crystal Warfork
+TYPE=14
+DAM=28,42
+SKILL=fencing
+REQSTR=120
+
+ON=@Create
+COLOR=00a20
+HITPOINTS={310 700}
+
+ON=@EQUIP
+SRC.fencing=<SRC.fencing> +15.0
+SRC.parrying=<SRC.parrying> +15.0
+SRC.tactics=<SRC.tactics> +5.0
+
+ON=@UNEQUIP
+SRC.fencing=<SRC.fencing> +-15.0
+SRC.parrying=<SRC.parrying> +-15.0
+SRC.tactics=<SRC.tactics> +-5.0
+
+[TEMPLATE backpack_c]
+CATEGORY=Item Templates
+SUBSECTION=Loot Templates
+DESCRIPTION=crystal
+CONTAINER=i_bag
+ITEM={ i_crystal_sword 1 i_Crystal_Robe 1 i_Crystal_PLATEMAIL_GAUNTLETS 1 i_Crystal_PLATE_HELM 1 i_Crystal_plate_arms 1 i_Crystal_PLATEMAIL_GORGET 1 i_Crystal_platemail_legs 1 i_Crystal_PLATEMAIL 1 i_Crystal_platemail_SHIELD 1 }
+
+[CHARDEF c_c_warrior] 
+ID=C_MAN 
+NAME=Lord Crystal Fighter
+SOUND=snd_HUMAN_M_DIE_01 
+DAM=30,40 
+ARMOR=430 
+CAN=MT_WALK|MT_RUN|MT_EQUIP
+
+
+ON=@Create 
+STR={550 600} 
+DEX={250 350} 
+INT={200 250} 
+HITPOINTS=1500
+
+PARRYING={185.0 198.0}  
+SWORDSMANSHIP={190.0 195.0} 
+FENCING={167.0 190.0} 
+MAGICRESISTANCE={285.0 298.0}  
+TACTICS={190.0 198.0} 
+POISONING={190.0 200.0}  
+NPC=brain_monster 
+ 
+KARMA=-9999 
+
+
+ON=@NPCRestock 
+ITEMnewbie=i_Crystal_PLATEMAIL_GAUNTLETS
+ITEMnewbie=i_Crystal_PLATE_HELM
+ITEMnewbie=i_Crystal_plate_arms
+ITEMnewbie=i_Crystal_PLATEMAIL_GORGET 
+ITEMnewbie=i_Crystal_platemail_legs
+ITEMnewbie=i_Crystal_PLATEMAIL
+ITEMnewbie=i_Crystal_platemail_SHIELD
+ITEMnewbie=i_Crystal_Robe
+ITEMnewbie=i_crystal_sword
+ITEM=backpack_c,1,R10
+ITEM=i_gold,15000
+ITEM=i_mt_llama
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+ITEM=i_potion_templek9
+
+CATEGORY=Npcs
+SUBSECTION=Lord Crystal Fighter
+DESCRIPTION=Lord Crystal Fighter 
+
+ON=@gethit // heal twice (two bottles) 
+IF (<hitpoints> < 500) 
+IF (<RESTEST 1 i_potion_templek9>) 
+SPELLEFFECT s_greater_heal,100.0 
+SPELLEFFECT s_cure,100.0
+CONSUME i_potion_templek9 
+endif
+
+[ITEMDEF i_potion_templek9]
+NAME=potion from the temple
+ID=i_bottle_YELLOW
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_ginseng 7, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.9
+
+ON=@Create
+COLOR=0482
+MORE1=s_greater_heal
+MORE2=160.0
+
+[ITEMDEF i_potion_templek1]
+NAME=potion from the temple
+ID=i_bottle_YELLOW
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_ginseng 7, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.9
+
+ON=@Create
+COLOR=0481
+MORE1=s_cure
+MORE2=100.0
+
+
+[EOF]

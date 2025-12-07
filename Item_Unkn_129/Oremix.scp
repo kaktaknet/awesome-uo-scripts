@@ -1,0 +1,66 @@
+///////////////////////////////////////////////\          /\    
+///Ore Mixing System 0.1v                   //  \        /  \
+///Made by Lynchy For Middle Earth         //    \      /    \
+///Any Questions Email to                 //      \    /      \ 
+///paul@Sailirc.net                      //        \  /        \
+//////////////////////////////////////////          \/          \ akar
+
+[ITEMDEF i_mixing_tongs]
+DEFNAME=i_mixing_tongs
+NAME=Ore Mixing Tongs
+ID=i_tongs
+TYPE=T_normal
+TEVENTS=t_ore_mix //Maby more than one item??
+
+
+//Just incase i want to do more items for ore mixing
+[TYPEDEF t_ore_mix] 
+ON=@DCLICK 
+IF <SRC.FINDLAYER(1).TYPE>==t_weapon_mace_smith 
+  SDIALOG d_ore_mix
+ELSE 
+   SRC.SYSMESSAGE You don't have a smithing hammer ready! 
+ENDIF 
+RETURN 1 
+
+[DIALOG d_ore_mix]
+100,100
+Page 1
+resizepic 0 0 2620 500 300
+//Text Stuff
+dtext 60 10 1152 Ore Mixing, Select the ingot you wish to create
+
+dorigin 220 70 
+button *0 *15 2087 2087 0 2 
+   dtext +20 - 1152 Tainted Mithril
+
+
+Page 2
+resizepic 0 0 2620 500 300
+dtext 60 10 1152 Tainted Mithril 
+Dtext 20 30 1152 This Ingot is an Mixture of Naraglak and Mithril
+dtext 20 45 1152 Its sleek black look from narglark
+dtext 20 65 1152 and its tough yet light from Mithril
+dtext 130 165 1152 Make 
+button 180 170 5601 5605 1 0 1
+
+[DIALOG d_ore_mix BUTTON] 
+ON=1 
+   SRC.MAKEITEM i_ingot_tmithril
+   SRC.TAG.SMITHING=i_ingot_tmithril
+
+//METALS//
+//We can always add more metals so heres an example that WORKS!!
+
+[ITEMDEF i_ingot_tmithril]  // This could be placed anywhere but nice to keep it close
+ID=i_ingot_iron
+NAME=Tainted Mithril Ingot
+TYPE=t_ingot
+SKILLMAKE=BLACKSMITHING 150.0
+RESOURCES=1 i_ingot_mithril, 1 i_ingot_naraglak //Edit this to your metels
+WEIGHT=2
+
+ON=@CREATE
+COLOR=00BAF
+
+[EOF]

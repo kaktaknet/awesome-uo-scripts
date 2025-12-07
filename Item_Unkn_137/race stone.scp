@@ -1,0 +1,654 @@
+//==============================================================//
+// Race System Script Files 1 of 3 By Samson (Aka Sanchezuk)	//
+//								//
+// To setup this race system, you need to put the 3 files in 	//
+// your scripts folder, add the stone in a room that no player 	//
+// can get too and set the new char login to that room. Then 	//
+// change the go co-ords to match your shard because this was	//
+// made for a custom map shard. Most race events are left empty //
+// so you can add your own later of you want.			//
+//								//
+// Feel free to change whatever you want, please dont remove	//
+// this header. Necromancy spells by Geist.			//
+//==============================================================//
+
+[ITEMDEF i_race_stone] 
+ID=i_grave_stone 
+Name=Race Stone
+TYPE=t_normal 
+
+ON=@Create
+Color=00848
+
+ON=@DCLICK
+IF <DISTANCE> > 1 
+    SRC.MESSAGE You must move closer to use the stone. 
+    RETURN 1
+ELSE
+SRC.MENU m_race_select
+RETURN 1
+
+[MENU m_race_select]
+Race info is on our forum, read it carefully before making your choice.
+
+ON=0 Race Guide
+src.weblink krackatoah.suddenlaunch3.com/index.cgi?board=manual&action=display&num=1090405654
+RETURN 1
+
+ON=0 Stay Human
+SRC.STR=35
+SRC.DEX=35
+SRC.INT=35
+
+SRC.NEWITEM=i_gold,2500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013ce
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01711
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_robe
+	SRC.ACT.COLOR=0084a
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+RETURN 1
+
+ON=0 Pick Another Race
+SRC.ALLSKILLS=(<SRC.ALLSKILLS>0.0)
+SRC.MENU m_race_select2
+RETURN 1
+
+[MENU m_race_select2]
+You must now pick a race to continue, it is too late to be a human at this point.
+
+//========================================================================Necromancer
+
+ON=0 Necromancer
+SRC.STR=25
+SRC.DEX=30
+SRC.INT=50
+
+SRC.f_race_INITIALIZE_necromancer 
+SRC.NECROMANCY=(<SRC.NECROMANCY>+50.0)
+SRC.MEDITATION=(<SRC.MEDITATION>+50.0)
+SRC.MAGICRESISTANCE=(<SRC.MAGICRESISTANCE>+40.0)
+SRC.EvaluatingIntel=(<SRC.EvaluatingIntel>+40.0)
+SRC.MAGERY=(<SRC.MAGERY>+30.0)
+SRC.ALCHEMY=(<SRC.ALCHEMY>+30.0)
+
+SRC.COLOR=0386
+SRC.OSKIN=0386
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013c7
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bone_helmet
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bone_gloves
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_boots_calf
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_skirt_short
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_necro_stone
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_bottle_empty, 10
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_mortar_pestle
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=tpl_newbie_necro
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=tpl_newbie_magic
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+
+SRC.FINDLAYER(11).COLOR=006b6 //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Elf
+
+ON=0 Elf
+SRC.STR=25
+SRC.DEX=40
+SRC.INT=40
+
+SRC.f_race_INITIALIZE_elf
+SRC.ARCHERY=(<SRC.ARCHERY>+50.0)
+SRC.MAGERY=(<SRC.MAGERY>+50.0)
+SRC.BOWCRAFT=(<SRC.BOWCRAFT>+40.0)
+SRC.MEDITATION=(<SRC.MEDITATION>+40.0)
+SRC.TACTICS=(<SRC.TACTICS>+30.0)
+SRC.INSCRIPTION=(<SRC.INSCRIPTION>+30.0)
+
+SRC.COLOR=096e
+SRC.OSKIN=096e
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013ce
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013c7
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01711
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01515
+	SRC.ACT.COLOR=007d3
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_arrow, 50
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_arrow_shaft, 10
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_feather, 10
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_elf_stone
+	SRC.ACT.BOUNCE 
+	SRC.NEWITEM=i_bow
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=tpl_newbie_magic
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+
+SRC.FINDLAYER(11).COLOR=045e //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Dwarf
+
+ON=0 Dwarf
+SRC.STR=50
+SRC.DEX=35
+SRC.INT=20
+
+SRC.f_race_INITIALIZE_dwarf
+SRC.BLACKSMITHING=(<SRC.BLACKSMITHING>+50.0)
+SRC.MAGICRESISTANCE=(<SRC.MAGICRESISTANCE>+50.0)
+SRC.MINING=(<SRC.MINING>+30.0)
+SRC.MACEFIGHTING=(<SRC.MACEFIGHTING>+40.0)
+SRC.TACTICS=(<SRC.TACTICS>+30.0)
+SRC.ARMSLORE=(<SRC.ARMSLORE>+40.0)
+
+SRC.COLOR=07e2
+SRC.OSKIN=07e2
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013ce
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013c7
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01711
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01515
+	SRC.ACT.COLOR=0096e
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_hammer_war
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_hammer_smith
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_pickaxe
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_ingot_iron, 10
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_dwarf_stone
+	SRC.ACT.EQUIP
+
+SRC.FINDLAYER(11).COLOR=colors_brown //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Halfling
+
+ON=0 Halfling
+SRC.STR=20
+SRC.DEX=50
+SRC.INT=35
+
+SRC.f_race_INITIALIZE_halfling
+SRC.ARCHERY=(<SRC.ARCHERY>+50.0)
+SRC.COOKING=(<SRC.COOKING>+50.0)
+SRC.FISHING=(<SRC.FISHING>+30.0)
+SRC.TACTICS=(<SRC.TACTICS>+40.0)
+SRC.LOCKPICKING=(<SRC.LOCKPICKING>+40.0)
+SRC.MAGICRESISTANCE=(<SRC.MAGICRESISTANCE>+30.0)
+
+SRC.COLOR=0419
+SRC.OSKIN=0419
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013c7
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01711
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01515
+	SRC.ACT.COLOR=00666
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bow
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_arrow, 25
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_fishing_pole
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_lockpick, 5
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_halfling_stone
+	SRC.ACT.EQUIP
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Gnome
+
+ON=0 Gnome
+SRC.STR=30
+SRC.DEX=40
+SRC.INT=35
+
+SRC.f_race_INITIALIZE_gnome
+SRC.FENCING=(<SRC.FENCING>+50.0)
+SRC.TACTICS=(<SRC.TACTICS>+40.0)
+SRC.TINKERING=(<SRC.TINKERING>+50.0)
+SRC.PARRYING=(<SRC.PARRYING>+30.0)
+SRC.MAGERY=(<SRC.MAGERY>+30.0)
+SRC.MEDITATION=(<SRC.MEDITATION>+40.0)
+
+SRC.COLOR=0035c
+SRC.OSKIN=0035c
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013ce
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01711
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_robe
+	SRC.ACT.COLOR=00551
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_spellbook
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_tinker_tools
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_ingot_iron, 10
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_kryss
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_shield_round_metal
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=tpl_newbie_magic
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_gnome_stone
+	SRC.ACT.EQUIP
+
+SRC.FINDLAYER(11).COLOR=colors_hair //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Half-Elf
+
+ON=0 Half-Elf
+SRC.STR=35
+SRC.DEX=40
+SRC.INT=30
+
+SRC.f_race_INITIALIZE_half_elf
+SRC.TAMING=(<SRC.TAMING>+40.0)
+SRC.CARPENTRY=(<SRC.CARPENTRY>+50.0)
+SRC.ARCHERY=(<SRC.ARCHERY>+40.0)
+SRC.TACTICS=(<SRC.TACTICS>+30.0)
+SRC.ANIMALLORE=(<SRC.ANIMALLORE>+50.0)
+SRC.LUMBERJACKING=(<SRC.LUMBERJACKING>+30.0)
+
+SRC.COLOR=02d
+SRC.OSKIN=02d
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013ce
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013c7
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01711
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_cape
+	SRC.ACT.COLOR=0040a
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_crook_thin
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bow
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_tinker_tools
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_arrow, 25
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_hatchet
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_saw
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_log, 5
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_half_elf_stone
+	SRC.ACT.EQUIP
+
+SRC.FINDLAYER(11).COLOR=045e //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Half-Orc
+
+ON=0 Half-Orc
+SRC.STR=40
+SRC.DEX=35
+SRC.INT=30
+
+SRC.f_race_INITIALIZE_half_orc
+SRC.MACEFIGHTING=(<SRC.MACEFIGHTING>+50.0)
+SRC.ANATOMY=(<SRC.ANATOMY>+50.0)
+SRC.TACTICS=(<SRC.TACTICS>+40.0)
+SRC.MAGICRESISTANCE=(<SRC.MAGICRESISTANCE>+40.0)
+SRC.HEALING=(<SRC.HEALING>+30.0)
+SRC.WRESTLING=(<SRC.WRESTLING>+30.0)
+
+SRC.COLOR=05a6
+SRC.OSKIN=05a6
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013ce
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013c7
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01711
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_hammer_pick
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bandage, 50
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_Orc_Stone
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+
+
+SRC.FINDLAYER(11).COLOR=05ab //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Drow
+
+ON=0 Drow
+SRC.STR=40
+SRC.DEX=35
+SRC.INT=30
+
+SRC.f_race_INITIALIZE_drow
+SRC.FENCING=(<SRC.FENCING>+50.0)
+SRC.TACTICS=(<SRC.TACTICS>+40.0)
+SRC.PARRYING=(<SRC.PARRYING>+30.0)
+SRC.ALCHEMY=(<SRC.ALCHEMY>+40.0)
+SRC.MAGERY=(<SRC.MAGERY>+50.0)
+SRC.MEDITATION=(<SRC.MEDITATION>+30.0)
+
+SRC.COLOR=0800e
+SRC.OSKIN=0800e 
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_bone_helmet
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bone_chest
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bone_gloves
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_studded_leggings
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_boots_calf
+	SRC.ACT.COLOR=0455
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_kryss
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_shield_round_metal
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bottle_empty, 10
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_mortar_pestle
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=tpl_newbie_magic
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_drow_stone
+	SRC.ACT.BOUNCE 
+
+SRC.FINDLAYER(11).COLOR=0 //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Barbarian
+
+ON=0 Barbarian
+SRC.STR=50
+SRC.DEX=35
+SRC.INT=20
+
+SRC.f_race_INITIALIZE_barbarian
+SRC.SWORDSMANSHIP=(<SRC.SWORDSMANSHIP>+50.0)
+SRC.SPIRITSPEAK=(<SRC.SPIRITSPEAK>+30.0)
+SRC.ANATOMY=(<SRC.ANATOMY>+50.0)
+SRC.TACTICS=(<SRC.TACTICS>+40.0)
+SRC.HEALING=(<SRC.HEALING>+30.0)
+SRC.MAGICRESISTANCE=(<SRC.MAGICRESISTANCE>+40.0)
+
+SRC.COLOR=05e1
+SRC.OSKIN=05e1
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_mask_deer
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_kilt
+	SRC.ACT.COLOR=01bb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013ce
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013c7
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_boots_calf
+	SRC.ACT.COLOR=01bb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_axe_double
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_bandage, 50
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_barbarian_stone
+	SRC.ACT.EQUIP
+
+SRC.FINDLAYER(11).COLOR=03c7 //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+//========================================================================Half-Daemon
+
+ON=0 Half-Daemon
+SRC.STR=40
+SRC.DEX=30
+SRC.INT=35
+
+SRC.f_race_INITIALIZE_half_daemon
+SRC.WRESTLING=(<SRC.WRESTLING>50.0)
+SRC.TACTICS=(<SRC.TACTICS>50.0)
+SRC.PARRYING=(<SRC.PARRYING>40.0)
+SRC.MAGERY=(<SRC.MAGERY>40.0)
+SRC.EVALUATINGINTEL=(<SRC.EVALUATINGINTEL>30.0)
+SRC.MAGICRESISTANCE=(<SRC.MAGICRESISTANCE>30.0)
+
+SRC.COLOR=004b9
+SRC.OSKIN=004b9
+
+SRC.NEWITEM=i_gold,1500
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=013cc
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cb
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013cd
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013ce
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=013c7
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01711
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=01515
+	SRC.ACT.COLOR=007d3
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=i_pet_horse_brown_dk
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_shield_round_metal
+	SRC.ACT.EQUIP
+	SRC.NEWITEM=tpl_newbie_magic
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_daemon_stone
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_dagger
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM=i_scissors
+	SRC.ACT.EQUIP
+
+SRC.FINDLAYER(11).COLOR=0455 //Hair Colour
+
+SRC.MESSAGE Welcome <SRC.NAME> to the World of <serv.servname> !
+SRC.GO Fort Benden
+
+[EOF]

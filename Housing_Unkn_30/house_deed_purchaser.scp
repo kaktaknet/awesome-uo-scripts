@@ -1,0 +1,1302 @@
+[ITEMDEF I_house_deed_purchase_machine]
+ID=0ed4
+ON=@Create
+COLOR=000b3
+NAME=House deed purchasing machine
+CATEGORY=Maul
+SUBSECTION=Stones
+DESCRIPTION=House deed purchasing machine
+
+ON=@DCLICK
+SRC.SFX 555
+DIALOG d_house_deed_purchase_stone
+RETURN 1
+
+
+////////////////////////////////////////////////////////////////////
+// BEGIN GUMP 
+////////////////////////////////////////////////////////////////////
+
+[DIALOG d_house_deed_purchase_stone]
+0,0                                    	// Position
+resizepic 50 100 2600 530 300          	// Curved Grey background 
+
+////////////////////////////////////////////////////////////////////
+page 0                                 	// Page 0
+resizepic 66 155 5100 498 25          	// Square Grey box
+button 270 360 247 248 1 0 0           	// Okay, button 0
+
+////Headings/////////////////////////////////////////////////////////
+text 180 120 0 0			// menu heading
+text 200 133 0 1			// By Maul
+
+text 125 158 0 2                       	// 1
+text 235 158 0 3                       	// 2
+text 345 158 0 4                       	// 3
+text 455 158 0 5                       	// 4
+
+button 90 159 5209 5003 0 1 1         	// 1
+button 200 159 5209 5003 0 2 2         	// 2
+button 310 159 5209 5003 0 3 3         	// 3
+button 420 159 5209 5003 0 4 4         	// 4
+
+/////////////////////////////////////////////////////////////////////
+page 1                                 	// Actions Page
+
+/////////menu text and screen location
+
+text 115 200 0 6			// 
+text 115 225 0 7			// 
+text 115 250 0 8			// 
+text 115 275 0 9			// 
+text 115 300 0 10			// 
+text 115 325 0 11			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 5 		// 
+button 90 225 2714 2714 1 0 6		// 
+button 90 250 2714 2714 1 0 7		// 
+button 90 275 2714 2714 1 0 8		// 
+button 90 300 2714 2714 1 0 9		// 
+button 90 325 2714 2714 1 0 10		// 
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+page 2                                 	// Actions Page
+
+/////////menu text and screen location
+
+text 115 200 0 12			// 
+text 115 225 0 13			// 
+text 115 250 0 14			// 
+text 115 275 0 15			// 
+text 115 300 0 16			// 
+text 115 325 0 17			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 11 		// 
+button 90 225 2714 2714 1 0 12		// 
+button 90 250 2714 2714 1 0 13		// 
+button 90 275 2714 2714 1 0 14		// 
+button 90 300 2714 2714 1 0 15		// 
+button 90 325 2714 2714 1 0 16		// 
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+page 3                                 	// Actions Page
+
+/////////menu text and screen location
+
+text 115 200 0 18			// 
+text 115 225 0 19			// 
+text 115 250 0 20			// 
+text 115 275 0 21			// 
+text 115 300 0 22			// 
+text 115 325 0 23			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 17 		// 
+button 90 225 2714 2714 1 0 18		// D
+button 90 250 2714 2714 1 0 19		// 
+button 90 275 2714 2714 1 0 20		// 
+button 90 300 2714 2714 1 0 21		// 
+button 90 325 2714 2714 1 0 22		// 
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+page 4                                 	// Actions Page
+
+/////////menu text and screen location
+
+text 115 200 0 24			// 
+text 115 225 0 25			// 
+text 115 250 0 26			// 
+text 115 275 0 27			// 
+text 115 300 0 28			// 
+
+////////button types and screen location
+
+button 90 200 2714 2714 1 0 23 		// 
+button 90 225 2714 2714 1 0 24		// 
+button 90 250 2714 2714 1 0 25		// 
+button 90 275 2714 2714 1 0 26		// 
+button 90 300 2714 2714 1 0 27		// 
+
+/////////////////////////////////////////////////////////////////////
+
+[DIALOG d_house_deed_purchase_stone TEXT]
+Select the deed type you wish to sell.
+Deed Purchase stone by Maul
+
+Cheap
+Medium
+High
+Exspensive
+
+///page 1
+$20,100 for a Blue Tent deed
+$20,100 for a Green Tent deed			
+$40,100 for a Small Stone and Plaster House deed				
+$40,500 for a Small Stone House deed			
+$40,100 for a Small Brick House deed	
+$40,100 for a Small Wood House deed			
+
+///page 2
+$40,100 for a Small Wood and Plaster House deed
+$40,100 for a Small Wood House Thatched Roof deed
+$55,750 for a Small Stone Shop deed	
+$57,950 for a Small Marble Shop deed	
+$69,000 for a Wheat Cottage deed		
+$83,620 for a Sandstone Patio House deed			
+
+///page 3
+$89,970 for a Two Story Log Cabin deed	
+$125,580 for a Two Story Villa deed		
+$132,940 for a Three Room House deed	
+$165,600 for a Large Black Smithy deed	
+$176,640 for a Large Marble Patio House deed
+$177,000 for a Two Story Wood & Plaster House deed	
+
+///page 4
+$177,000 for a Two Story Stone & Plaster House deed
+$398,540 for a Tower deed			
+$611,980 for a Keep deed			
+$940,970 for a Castle deed		
+$9,200,000 for a Evil Compound deed				
+
+///////////////////////////////////////////////////////////////////////////////////
+[DIALOG d_house_deed_purchase_stone BUTTON]
+
+ONBUTTON=5 
+IF <SRC.RESTEST i_deed_tent_blue>  // Blue Tent
+	SRC.CONSUME=i_deed_tent_blue
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 20100
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=6 
+IF <SRC.RESTEST i_deed_tent_green> // Green Tent
+	SRC.CONSUME=i_deed_tent_green
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 20100
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=7
+IF <SRC.RESTEST i_deed_house_stone_plaster_small> // Small Stone and Plaster House
+	SRC.CONSUME=i_deed_house_stone_plaster_small
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 40100
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=8
+IF <SRC.RESTEST i_deed_House_stone_small> // Small Stone House
+	SRC.CONSUME=i_deed_House_stone_small
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 40500
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=9
+IF <SRC.RESTEST i_deed_House_stone_brick_small> // Small Brick House
+	SRC.CONSUME=i_deed_House_stone_brick_small
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 40100
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=10
+IF <SRC.RESTEST i_deed_House_stone_wood_small> // Small Wood House
+	SRC.CONSUME=i_deed_House_stone_wood_small
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 40100
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=11
+IF <SRC.RESTEST i_deed_House_wood_plaster_small> // Small Wood and Plaster House
+	SRC.CONSUME=i_deed_House_wood_plaster_small
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 40100
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=12
+IF <SRC.RESTEST i_deed_House_wood_thatched_small> // Small Wood House Thatched Roof
+	SRC.CONSUME=i_deed_House_wood_thatched_small
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 40100
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=13
+IF <SRC.RESTEST i_deed_shop_stone_small> // Small Stone Shop
+	SRC.CONSUME=i_deed_shop_stone_small
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 55750
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=14
+IF <SRC.RESTEST i_deed_shop_marble_small> // Small Marble Shop
+	SRC.CONSUME=i_deed_shop_marble_small
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 57950
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=15
+IF <SRC.RESTEST i_deed_house_wheat_cottage> // Wheat Cottage
+	SRC.CONSUME=i_deed_house_wheat_cottage
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 19000
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=16
+IF <SRC.RESTEST i_deed_house_patio_sand> // Sandstone Patio House
+	SRC.CONSUME=i_deed_house_patio_sand
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 33620
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=17
+IF <SRC.RESTEST i_deed_cabin_log_2story> // Two Story Log Cabin
+	SRC.CONSUME=i_deed_cabin_log_2story
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 39970
+	SRC.ACT.BOUNCE
+	RETURN 0
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=18
+IF <SRC.RESTEST i_deed_villa_2story> // Two Story Villa
+	SRC.CONSUME=i_deed_villa_2story
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 25580
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=19
+IF <SRC.RESTEST i_deed_house_3room> // Three Room House
+	SRC.CONSUME=i_deed_house_3room
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 32940
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=20
+IF <SRC.RESTEST i_deed_shop_blacksmithy_large> // Large Black Smithy
+	SRC.CONSUME=i_deed_shop_blacksmithy_large
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 15600
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=21
+IF <SRC.RESTEST i_deed_house_patio_marble> // Large Marble Patio House
+	SRC.CONSUME=i_deed_house_patio_marble
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 26640
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=22
+IF <SRC.RESTEST i_deed_house_wood_plaster_2story> // Two Story Wood & Plaster House
+	SRC.CONSUME=i_deed_house_wood_plaster_2story
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 27000
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=23
+IF <SRC.RESTEST i_deed_house_stone_plaster_2story> // Two Story Stone & Plaster House
+	SRC.CONSUME=i_deed_house_stone_plaster_2story
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 27000
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=24
+IF <SRC.RESTEST i_deed_tower> // Tower
+	SRC.CONSUME=i_deed_tower
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 48540
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=25
+IF <SRC.RESTEST i_deed_keep> // Keep
+	SRC.CONSUME=i_deed_keep
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 11980
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=26
+IF <SRC.RESTEST i_deed_Castle> // Castle
+	SRC.CONSUME=i_deed_Castle
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 40970
+	SRC.ACT.BOUNCE
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+ONBUTTON=27
+IF <SRC.RESTEST i_deed_evil_compound> // Evil Compound
+	SRC.CONSUME=i_deed_evil_compound
+	SRC.MESSAGE Thank you for your business
+	SOUND 0F7
+
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+/////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+////////////////////////////////////
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+	SRC.NEWITEM i_gold
+	SRC.ACT.AMOUNT 50000
+	SRC.ACT.BOUNCE
+////////////////////////////////////
+	RETURN 0 
+ELSE
+	SRC.MESSAGE You do not have a deed for that type of house.
+	RETURN 1
+ENDIF
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//Deed item def				House type			purchase value	resell value
+
+//i_deed_tent_blue			Blue Tent			$25,300		$20,100
+//i_deed_tent_green			Green Tent			$25,300		$20,100
+//i_deed_house_stone_plaster_small	Small Stone and Plaster House	$50,370		$40,100
+//i_deed_House_stone_small		Small Stone House		$52,900		$40,500
+//i_deed_House_stone_brick_small	Small Brick House		$50,370		$40,100
+//i_deed_House_stone_wood_small		Small Wood House		$50,370		$40,100
+
+//i_deed_House_wood_plaster_small	Small Wood and Plaster House	$50,370		$40,100
+//i_deed_House_wood_thatched_small	Small Wood House Thatched Roof	$50,370		$40,100
+//i_deed_shop_stone_small		Small Stone Shop		$69,690		$55,750
+//i_deed_shop_marble_small		Small Marble Shop		$72,450		$57,950
+//i_deed_house_wheat_cottage		Wheat Cottage			$86,250		$69,000
+//i_deed_house_patio_sand		Sandstone Patio House		$104,535	$83,620
+
+//i_deed_cabin_log_2story		Two Story Log Cabin		$112,470	$89,970
+//i_deed_villa_2story			Two Story Villa			$156,975	$125,580
+//i_deed_house_3room			Three Room House		$166,175	$132,940
+//i_deed_shop_blacksmithy_large		Large Black Smithy		$207,000	$165,600
+//i_deed_house_patio_marble		Large Marble Patio House	$220,800	$176,640
+//i_deed_house_wood_plaster_2story	Two Story Wood & Plaster House	$221,260	$177,000
+
+//i_deed_house_stone_plaster_2story	Two Story Stone & Plaster House	$221,260	$177,000
+//i_deed_tower				Tower				$498,180	$398,540
+//i_deed_keep				Keep				$764,980	$611,980
+//i_deed_Castle				Castle				$1,176,220	$940,970
+//i_deed_evil_compound			Evil Compound			$11,500,000	$9,200,000
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[EOF]

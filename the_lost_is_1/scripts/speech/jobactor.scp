@@ -1,0 +1,84 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Friday, April 28, 2000
+//
+// COPYRIGHT NOTICE: All files and content are copyright 1997-1999 Menasoft & Partners. All
+// donations and contributions become the property of Menasoft.
+
+// Purpose: Britannia Actor Script
+// Notes:  This is used for general information pertaining to all Britannian Actor's
+// Current Keyword List:
+//	job, ac*tor, what*do*do, ac-tore, stage, perform, Noble, Lord British,
+//	art, theatre, theater, costume, clothe, sissy, wuss, priss,  real job
+//
+[SPEECH jobActor]
+ON=Hi*
+ON=Greet*
+ON=Hello*
+ON=Hail*
+ON=*grues*
+	IF ( <SRC.KARMA> >= 0 )
+		SAY=Ah! Hello, <SRC.NAME>!  Willst du ein Autogram?
+	ELIF ( <SRC.KARMA> >= -1000 )
+		SAY=Guten Tag Wanderer! Willst du ein Autogram?
+	ELSE
+		SAY=Lasst mich in Ruhe!
+	ENDIF
+
+ON=*job*
+ON=*work*
+ON=*what*do*do*
+ON=*profession*
+ON=*occupation*
+ON=*ac*tor*
+ON=*ac-tore*
+on=*was*mach*
+	DORAND 4
+		SAY Ich bin ein Schauspieler!
+		SAY Ich bin vor den beruehmtesten Persoenlichkeiten dieses Landes aufgetreten!
+		SAY Die Buehne, mein Freund, ist meine - wie ihr sagen wuerdet - Beruf.
+	ENDDO
+
+ON=*Noble*
+ON=*Lord British*
+ON=*kunst*
+	IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+		DORAND 2
+			SAY Die groﬂen Persoenlichkeiten in diesem Land unterstuetzen die Kuenste.
+			SAY Lord British ist bekannt als Liebhaber der schoenen Kuenste.
+			
+		ENDDO
+	ELSE
+		DORAND 2
+			SAY Der Adel dieses Landes unterstuetzt und oft.
+			SAY Lord British geniesst das Theater. Er ist bekannt als Unterstuetzer der Kuenste.
+		ENDDO
+ON=*theatre*
+ON=*theater*
+	DORAND 2
+		SAY Theater ist mein Leben
+		SAY Ah! Die grosse Analogie des Leben! Das Theater!
+	ENDDO
+
+ON=Job
+ON=What do you do
+	SAY=Das muesst ihr fragen? Ich bin Schauspieler    *applaudiert*    Danke!
+
+ON=Bye
+ON=Goodbye
+ON=Farewell
+ON=*auf*bald*
+ON=*auf*wieder*sehen*
+	SAY=Auf Bald <src.sex der Herr/die Dame>.
+	BYE
+	return 1
+
+
+[EOF]

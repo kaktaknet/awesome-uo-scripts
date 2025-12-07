@@ -1,0 +1,1035 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+// Runebook v1.01
+// by Vjacheslav Kanivetc, vjaka@ctco.lv
+//
+// based on Admin Vaticus (gump) and Xeno's runebooks (gate)
+//
+// base list of features :
+// (o) has 1 + 8 pages - first makes fast recall on charges, the others -
+// fast recall, rune extract, reagents recall and gate
+// (o) book recharges from it's gump using recall or gate scroll
+// (o) full from-to coordinates check
+// (o) criminal cannot use the runebook (but criminal + murderer can)
+// (o) when recalling with reagents - they and mana is used, but requires less
+// magery skills
+// (o) gate takes 6-15 seconds depending on Magery, recall takes 3-5 seconds
+// (o) on getting hit spell freezes
+// (o) have 1-15 charges depending on inscription skill
+//
+// 17-Oct-2001 Vjaka bug in using charges when recalling with reagents, bug with t_rune
+//
+
+VERSION=0.55
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// i_runebook
+// just the purpose of this script :)
+//
+[ITEMDEF i_runebook]
+ID=i_spellbook
+TYPE=t_eq_script
+NAME=runebook
+RESOURCES=1 i_scroll_recall, 1 i_scroll_gate_travel, 1 i_rune_marker, 8 i_scroll_blank
+VALUE=10000
+WEIGHT=10
+
+ON=@Create
+MORE=5
+MORE2=5
+TIMER=0
+COLOR=545
+ATTR=attr_newbie
+
+TAG.NAME1=Empty
+TAG.NAME2=Empty
+TAG.NAME3=Empty
+TAG.NAME4=Empty
+   TAG.NAME5=Empty
+TAG.NAME6=Empty
+TAG.NAME7=Empty
+TAG.NAME8=Empty
+TAG.NAME9=Empty
+TAG.NAME10=Empty
+TAG.NAME11=Empty
+TAG.NAME12=Empty
+TAG.NAME13=Empty
+   TAG.NAME14=Empty
+TAG.NAME15=Empty
+TAG.NAME16=Empty
+
+TAG.POS1=0
+TAG.POS2=0
+TAG.POS3=0
+TAG.POS4=0
+TAG.POS5=0
+TAG.POS6=0
+TAG.POS7=0
+TAG.POS8=0
+TAG.POS9=0
+TAG.POS10=0
+TAG.POS11=0
+TAG.POS12=0
+TAG.POS13=0
+TAG.POS14=0
+TAG.POS15=0
+TAG.POS16=0
+
+ON=@DClick
+SRC.SOUND=snd_SPELL_telekinesis
+if !(<CONT.CONT.UID>==<SRC.UID>)
+SRC.sysmessage Maybe take it first?
+elseif (<TIMER>>0)
+SRC.sysmessage This book needs time to recharge.
+else
+dialog d_runebook
+endif
+return 1
+
+ON=@Targon_Char
+SRC.sysmessage That is not a rune, it is a person!.
+return 1
+
+ON=@Targon_Item
+if (<SRC.TARG.CONT.CONT.UID>!=<SRC.UID>)
+SRC.sysmessage Rune must be in your pack!
+return 1
+elseif !(<SRC.TARG.BASEID>==i_rune_marker)
+SRC.sysmessage That is not a recall rune.
+return 1
+elseif (<eval <SRC.TARG.MOREP>>==0)
+SRC.sysmessage This rune does not have a marked location. 
+return 1
+endif
+VAR.MOREP=<SRC.TARG.MOREP>
+VAR.NAME=<SRC.TARG.NAME>
+if (<eval <TAG.POS1>>==0)
+f_rb_scribe 1
+elseif (<eval <TAG.POS2>>==0)
+f_rb_scribe 2
+elseif (<eval <TAG.POS3>>==0)
+f_rb_scribe 3
+elseif (<eval <TAG.POS4>>==0)
+f_rb_scribe 4
+elseif (<eval <TAG.POS5>>==0)
+f_rb_scribe 5
+elseif (<eval <TAG.POS6>>==0)
+f_rb_scribe 6
+elseif (<eval <TAG.POS7>>==0)
+f_rb_scribe 7
+elseif (<eval <TAG.POS8>>==0)
+f_rb_scribe 8
+elseif (<eval <TAG.POS9>>==0)
+f_rb_scribe 9
+elseif (<eval <TAG.POS10>>==0)
+f_rb_scribe 10
+elseif (<eval <TAG.POS11>>==0)
+f_rb_scribe 11
+elseif (<eval <TAG.POS12>>==0)
+f_rb_scribe 12
+elseif (<eval <TAG.POS13>>==0)
+f_rb_scribe 13
+elseif (<eval <TAG.POS14>>==0)
+f_rb_scribe 14
+elseif (<eval <TAG.POS15>>==0)
+f_rb_scribe 15
+elseif (<eval <TAG.POS16>>==0)
+f_rb_scribe 16
+else
+SRC.sysmessage No any empty slots available!
+return 1
+endif
+SRC.TARG.remove
+return 1
+
+ON=@Timer
+TIMER=-1
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// d_runebook
+//
+[DIALOG d_runebook]
+0,0
+gumppic 225 200 2200 
+page 0
+gumppic 250 240 57 
+gumppic 280 240 58
+gumppic 290 240 58
+gumppic 300 240 58
+gumppic 310 240 58
+gumppic 320 240 58
+gumppic 330 240 58
+gumppic 340 240 58
+gumppic 355 240 59
+gumppic 415 240 57 
+gumppic 445 240 58
+gumppic 455 240 58
+gumppic 465 240 58
+gumppic 475 240 58
+gumppic 485 240 58
+gumppic 495 240 58
+gumppic 505 240 58
+gumppic 520 240 59
+text 263 228 0 0
+text 355 228 0 1
+text 425 228 0 2
+text 529 228 0 3
+button 255 377 2225 2225 0 2
+button 290 377 2226 2226 0 3
+button 325 377 2227 2227 0 4
+button 360 377 2228 2228 0 5
+button 425 377 2229 2229 0 6
+button 460 377 2230 2230 0 7
+button 495 377 2231 2231 0 8
+button 530 377 2232 2232 0 9
+page 1
+text 435 210 0 69
+button 415 213 2118 2117 1 0 100
+text 280 210 0 4
+button 250 205 2472 2473 1 0 1
+button 518 204 2206 2206 0 2
+croppedtext 270 250 115 20 0 5
+button 255 255 2104 2103 1 0 2
+croppedtext 270 265 115 20 0 6
+button 255 270 2104 2103 1 0 3
+croppedtext 270 280 115 20 0 7
+button 255 285 2104 2103 1 0 4
+croppedtext 270 295 115 20 0 8
+button 255 300 2104 2103 1 0 5
+croppedtext 270 310 115 20 0 9
+button 255 315 2104 2103 1 0 6
+croppedtext 270 325 115 20 0 10
+button 255 330 2104 2103 1 0 7
+croppedtext 270 340 115 20 0 11
+button 255 345 2104 2103 1 0 8
+croppedtext 270 355 115 20 0 12
+button 255 360 2104 2103 1 0 9
+croppedtext 430 250 115 20 0 13
+button 415 255 2104 2103 1 0 10
+croppedtext 430 265 115 20 0 14
+button 415 270 2104 2103 1 0 11
+croppedtext 430 280 115 20 0 15
+button 415 285 2104 2103 1 0 12
+croppedtext 430 295 115 20 0 16
+button 415 300 2104 2103 1 0 13
+croppedtext 430 310 115 20 0 17
+button 415 315 2104 2103 1 0 14
+croppedtext 430 325 115 20 0 18
+button 415 330 2104 2103 1 0 15
+croppedtext 430 340 115 20 0 19
+button 415 345 2104 2103 1 0 16
+croppedtext 430 355 115 20 0 20
+button 415 360 2104 2103 1 0 17
+page 2
+button 250 204 2205 2205 0 1   //page back
+text 300 205 0 21                               //default
+croppedtext 270 250 115 20 0 5   ///recall with text of rune
+button 255 255 2104 2103 2 0 2   ///recall with text of rune
+croppedtext 260 275 115 20 0 53  //pos
+text 290 304 0 37                               //drop rune
+button 260 305 4005 4006 2 0 53   //drop rune
+button 260 330 2271 2271 2 0 20   //recall
+button 330 330 2291 2291 2 0 21   //gate
+text 430 205 0 22                               //default
+croppedtext 430 250 115 20 0 6   ///recall with text of rune
+button 415 255 2104 2103 2 0 3   ///recall with text of rune
+croppedtext 430 275 115 20 0 54  //pos
+text 460 304 0 38                               //drop rune
+button 430 305 4005 4006 2 0 55   //drop rune
+button 430 330 2271 2271 2 0 22   //recall
+button 500 330 2291 2291 2 0 23   //gate
+page 3
+text 300 205 0 23                               //default
+croppedtext 270 250 115 20 0 7   ///recall with text of rune
+button 255 255 2104 2103 3 0 4   ///recall with text of rune
+croppedtext 260 275 115 20 0 55  //pos
+text 290 304 0 39                               //drop rune
+button 260 305 4005 4006 3 0 57   //drop rune
+button 260 330 2271 2271 3 0 24   //recall
+button 330 330 2291 2291 3 0 25   //gate
+text 430 205 0 24                               //default
+croppedtext 430 250 115 20 0 8   ///recall with text of rune
+button 415 255 2104 2103 3 0 5   ///recall with text of rune
+croppedtext 430 275 115 20 0 56  //pos
+text 460 304 0 40                               //drop rune
+button 430 305 4005 4006 3 0 59   //drop rune
+button 430 330 2271 2271 3 0 26   //recall
+button 500 330 2291 2291 3 0 27   //gate
+page 4
+text 300 205 0 25                               //default
+croppedtext 270 250 115 20 0 9   ///recall with text of rune
+button 255 255 2104 2103 4 0 6   ///recall with text of rune
+croppedtext 260 275 115 20 0 57  //pos
+text 290 304 0 41                               //drop rune
+button 260 305 4005 4006 4 0 61   //drop rune
+button 260 330 2271 2271 4 0 28   //recall
+button 330 330 2291 2291 4 0 29   //gate
+text 430 205 0 26                               //default
+croppedtext 430 250 115 20 0 10   ///recall with text of rune
+button 415 255 2104 2103 4 0 7   ///recall with text of rune
+croppedtext 430 275 115 20 0 58  //pos
+text 460 304 0 42                               //drop rune
+button 430 305 4005 4006 4 0 63   //drop rune
+button 430 330 2271 2271 4 0 30   //recall
+button 500 330 2291 2291 4 0 31   //gate
+page 5
+text 300 205 0 27                               //default
+croppedtext 270 250 115 20 0 11   ///recall with text of rune
+button 255 255 2104 2103 5 0 8   ///recall with text of rune
+croppedtext 260 275 115 20 0 59  //pos
+text 290 304 0 43                               //drop rune
+button 260 305 4005 4006 5 0 65   //drop rune
+button 260 330 2271 2271 5 0 32   //recall
+button 330 330 2291 2291 5 0 33   //gate
+text 430 205 0 28                              //default
+croppedtext 430 250 115 20 0 12  ///recall with text of rune
+button 415 255 2104 2103 5 0 9   ///recall with text of rune
+croppedtext 430 275 115 20 0 60  //pos
+text 460 304 0 44                               //drop rune
+button 430 305 4005 4006 5 0 67   //drop rune
+button 430 330 2271 2271 5 0 34   //recall
+button 500 330 2291 2291 5 0 35   //gate
+page 6
+text 300 205 0 29                               //default
+croppedtext 270 250 115 20 0 13   ///recall with text of rune
+button 255 255 2104 2103 6 0 10   ///recall with text of rune
+croppedtext 260 275 115 20 0 61  //pos
+text 290 304 0 45                               //drop rune
+button 260 305 4005 4006 6 0 69   //drop rune
+button 260 330 2271 2271 6 0 36   //recall
+button 330 330 2291 2291 6 0 37   //gate
+text 430 205 0 30                              //default
+croppedtext 430 250 115 20 0 14   ///recall with text of rune
+button 415 255 2104 2103 6 11   ///recall with text of rune
+croppedtext 430 275 115 20 0 62  //pos
+text 460 304 0 46                               //drop rune
+button 430 305 4005 4006 6 0 71   //drop rune
+button 430 330 2271 2271 6 0 38   //recall
+button 500 330 2291 2291 6 0 39   //gate
+page 7
+text 300 205 0 31                               //default
+croppedtext 270 250 115 20 0 15   ///recall with text of rune
+button 255 255 2104 2103 7 0 12   ///recall with text of rune
+croppedtext 260 275 115 20 0 63  //pos
+text 290 304 0 47                              //drop rune
+button 260 305 4005 4006 7 0 73   //drop rune
+button 260 330 2271 2271 7 0 40   //recall
+button 330 330 2291 2291 7 0 41   //gate
+text 430 205 0 32                              //default
+croppedtext 430 250 115 20 0 16   ///recall with text of rune
+button 415 255 2104 2103 7 0 13   ///recall with text of rune
+croppedtext 430 275 115 20 0 64  //pos
+text 460 304 0 48                               //drop rune
+button 430 305 4005 4006 7 0 75   //drop rune
+button 430 330 2271 2271 7 0 42   //recall
+button 500 330 2291 2291 7 0 43   //gate
+page 8
+text 300 205 0 33                               //default
+croppedtext 270 250 115 20 0 17  ///recall with text of rune
+button 255 255 2104 2103 8 0 14   ///recall with text of rune
+croppedtext 260 275 115 20 0 65  //pos
+text 290 304 0 49                               //drop rune
+button 260 305 4005 4006 8 0 77   //drop rune
+button 260 330 2271 2271 8 0 44   //recall
+button 330 330 2291 2291 8 0 45   //gate
+text 430 205 0 34                              //default
+croppedtext 430 250 115 20 0 18   ///recall with text of rune
+button 415 255 2104 2103 8 0 15   ///recall with text of rune
+croppedtext 430 275 115 20 0 66  //pos
+text 460 304 0 50                               //drop rune
+button 430 305 4005 4006 8 0 79   //drop rune
+button 430 330 2271 2271 8 0 46   //recall
+button 500 330 2291 2291 8 0 47   //gate
+page 9
+text 300 205 0 35                               //default
+croppedtext 270 250 115 20 0 19   ///recall with text of rune
+button 255 255 2104 2103 9 0 16   ///recall with text of rune
+croppedtext 260 275 115 20 0 67 //pos
+text 290 304 0 51                              //drop rune
+button 260 305 4005 4006 9 0 81   //drop rune
+button 260 330 2271 2271 9 0 48   //recall
+button 330 330 2291 2291 9 0 49   //gate
+text 430 205 0 36                              //default
+croppedtext 430 250 115 20 0 20   ///recall with text of rune
+button 415 255 2104 2103 9 0 17   ///recall with text of rune
+croppedtext 430 275 115 20 0 68  //pos
+text 460 304 0 52                               //drop rune
+button 430 305 4005 4006 83   //drop rune
+button 430 330 2271 2271 9 0 50   //recall
+button 500 330 2291 2291 9 0 51   //gate
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// d_runebook text
+//
+[DIALOG d_runebook text]
+Charges:
+<MORE>
+Max Charges:
+<eval <MORE2>>
+Recharge
+<TAG.NAME1>   //5
+<TAG.NAME2>
+<TAG.NAME3>
+<TAG.NAME4>
+<TAG.NAME5>
+<TAG.NAME6>
+<TAG.NAME7>
+<TAG.NAME8>
+<TAG.NAME9>
+<TAG.NAME10>
+<TAG.NAME11>      //15
+<TAG.NAME12>
+<TAG.NAME13>
+<TAG.NAME14>
+<TAG.NAME15>
+<TAG.NAME16>  //20
+<TAG.NAME1>
+<TAG.NAME2>
+<TAG.NAME3>
+<TAG.NAME4>
+<TAG.NAME5>   //25
+<TAG.NAME6>
+<TAG.NAME7>
+<TAG.NAME8>
+<TAG.NAME9>
+<TAG.NAME10>   //30
+<TAG.NAME11>
+<TAG.NAME12>
+<TAG.NAME13>
+<TAG.NAME14>
+<TAG.NAME15>   //35
+<TAG.NAME16>
+drop <TAG.NAME1>//37
+drop <TAG.NAME2>
+drop <TAG.NAME3>
+drop <TAG.NAME4>//40
+drop <TAG.NAME5>
+drop <TAG.NAME6>
+drop <TAG.NAME7>
+drop <TAG.NAME8>
+drop <TAG.NAME9>//45
+drop <TAG.NAME10>
+drop <TAG.NAME11>
+drop <TAG.NAME12>
+drop <TAG.NAME13>
+drop <TAG.NAME14>//50
+drop <TAG.NAME15>
+drop <TAG.NAME16>//52
+<TAG.POS1> //page1      //53
+<TAG.POS2> //page1      //53
+<TAG.POS3> //page1      //53   //55
+<TAG.POS4> //page1      //53
+<TAG.POS5> //page1      //53
+<TAG.POS6> //page1      //53
+<TAG.POS7> //page1      //53
+<TAG.POS8> //page1      //53   //60
+<TAG.POS9> //page1      //53
+<TAG.POS10> //page1      //53
+<TAG.POS11> //page1      //53
+<TAG.POS12> //page1      //53
+<TAG.POS13> //page1      //53  //65
+<TAG.POS14> //page1      //53
+<TAG.POS15> //page1      //53
+<TAG.POS16> //page1      //53  //68
+Add rune
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// d_runebook button
+//
+[DIALOG d_runebook button]
+ONBUTTON=0
+ONBUTTON=1
+if (<MORE2>==<MORE1>)
+SRC.sysmessage The book is not needed for recharge!
+elseif (<SRC.restest 1 i_scroll_recall>)
+SRC.consume 1 i_scroll_recall
+MORE1=<eval (<MORE1>+1)>
+TIMER=5
+elseif (<SRC.restest 1 i_scroll_gate_travel>)
+SRC.consume 1 i_scroll_gate_travel
+MORE1=<eval (<MORE1>+1)>
+TIMER=5
+else
+SRC.sysmessage You have no scrolls to recharge!
+endif
+return 1
+ONBUTTON=2
+f_rb_canrecall <TAG.POS1>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS1>
+endif
+return 1
+ONBUTTON=3
+f_rb_canrecall <TAG.POS2>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS2>
+endif
+return 1
+ONBUTTON=4
+f_rb_canrecall <TAG.POS3>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS3>
+endif
+return 1
+ONBUTTON=5
+f_rb_canrecall <TAG.POS4>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS4>
+endif
+return 1
+ONBUTTON=6
+f_rb_canrecall <TAG.POS5>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS5>
+endif
+return 1
+ONBUTTON=7
+f_rb_canrecall <TAG.POS6>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS6>
+endif
+return 1
+ONBUTTON=8
+f_rb_canrecall <TAG.POS7>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS7>
+endif
+return 1
+ONBUTTON=9
+f_rb_canrecall <TAG.POS8>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS8>
+endif
+return 1
+ONBUTTON=10
+f_rb_canrecall <TAG.POS9>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS9>
+endif
+return 1
+ONBUTTON=11
+f_rb_canrecall <TAG.POS10>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS10>
+endif
+return 1
+ONBUTTON=12
+f_rb_canrecall <TAG.POS11>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS11>
+endif
+return 1
+ONBUTTON=13
+f_rb_canrecall <TAG.POS12>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS12>
+endif
+return 1
+ONBUTTON=14
+f_rb_canrecall <TAG.POS13>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS13>
+endif
+return 1
+ONBUTTON=15
+f_rb_canrecall <TAG.POS14>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS14>
+endif
+return 1
+ONBUTTON=16
+f_rb_canrecall <TAG.POS15>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS15>
+endif
+return 1
+ONBUTTON=17
+f_rb_canrecall <TAG.POS16>
+if (<VAR.X>==0)
+f_rb_makerecall2 <TAG.POS16>
+endif
+return 1
+ONBUTTON=20
+f_rb_canselfrecall <TAG.POS1>
+return 1
+ONBUTTON=21
+f_rb_canselfgate <TAG.POS1>
+return 1
+ONBUTTON=22
+f_rb_canselfrecall <TAG.POS2>
+return 1
+ONBUTTON=23
+f_rb_canselfgate <TAG.POS2>
+return 1
+ONBUTTON=24
+f_rb_canselfrecall <TAG.POS3>
+return 1
+ONBUTTON=25
+f_rb_canselfgate <TAG.POS3>
+return 1
+ONBUTTON=26
+f_rb_canselfrecall <TAG.POS4>
+return 1
+ONBUTTON=27
+f_rb_canselfgate <TAG.POS4>
+return 1
+ONBUTTON=28
+f_rb_canselfrecall <TAG.POS5>
+return 1
+ONBUTTON=29
+f_rb_canselfgate <TAG.POS5>
+return 1
+ONBUTTON=30
+f_rb_canselfrecall <TAG.POS6>
+return 1
+ONBUTTON=31
+f_rb_canselfrecall <TAG.POS6>
+return 1
+ONBUTTON=32
+f_rb_canselfrecall <TAG.POS7>
+return 1
+ONBUTTON=33
+f_rb_canselfgate <TAG.POS7>
+return 1
+ONBUTTON=34
+f_rb_canselfrecall <TAG.POS8>
+return 1
+ONBUTTON=35
+f_rb_canselgate <TAG.POS8>
+return 1
+ONBUTTON=36
+f_rb_canselfrecall <TAG.POS9>
+return 1
+ONBUTTON=37
+f_rb_canselfgate <TAG.POS9>
+return 1
+ONBUTTON=38
+f_rb_canselfrecall <TAG.POS10>
+return 1
+ONBUTTON=39
+f_rb_canselfgate <TAG.POS10>
+return 1
+ONBUTTON=40
+f_rb_canselfrecall <TAG.POS11>
+return 1
+ONBUTTON=41
+f_rb_canselfgate <TAG.POS11>
+return 1
+ONBUTTON=42
+f_rb_canselfrecall <TAG.POS12>
+return 1
+ONBUTTON=43
+f_rb_canselfgate <TAG.POS12>
+return 1
+ONBUTTON=44
+f_rb_canselfrecall <TAG.POS13>
+return 1
+ONBUTTON=45
+f_rb_canselfgate <TAG.POS13>
+return 1
+ONBUTTON=46
+f_rb_canselfrecall <TAG.POS14>
+return 1
+ONBUTTON=47
+f_rb_canselfgate <TAG.POS14>
+return 1
+ONBUTTON=48
+f_rb_canselfrecall <TAG.POS15>
+return 1
+ONBUTTON=49
+f_rb_canselfgate <TAG.POS15>
+return 1
+ONBUTTON=50
+f_rb_canselfrecall <TAG.POS16>
+return 1
+ONBUTTON=51
+f_rb_canselfgate <TAG.POS16>
+return 1
+ONBUTTON=52
+ONBUTTON=53
+f_rb_moveout 1
+return 1
+ONBUTTON=54
+ONBUTTON=55
+f_rb_moveout 2
+return 1
+ONBUTTON=56
+ONBUTTON=57
+f_rb_moveout 3
+return 1
+ONBUTTON=58
+ONBUTTON=59
+f_rb_moveout 4
+return 1
+ONBUTTON=60
+ONBUTTON=61
+f_rb_moveout 5
+return 1
+ONBUTTON=62
+ONBUTTON=63
+f_rb_moveout 6
+return 1
+ONBUTTON=64
+ONBUTTON=65
+f_rb_moveout 7
+return 1
+ONBUTTON=66
+ONBUTTON=67
+f_rb_moveout 8
+return 1
+ONBUTTON=68
+ONBUTTON=69
+f_rb_moveout 9
+return 1
+ONBUTTON=70
+ONBUTTON=71
+f_rb_moveout 10
+return 1
+ONBUTTON=72
+ONBUTTON=73
+f_rb_moveout 11
+return 1
+ONBUTTON=74
+ONBUTTON=75
+f_rb_moveout 12
+return 1
+ONBUTTON=76
+ONBUTTON=77
+f_rb_moveout 13
+return 1
+ONBUTTON=78
+ONBUTTON=79
+f_rb_moveout 14
+return 1
+return 1
+f_rb_moveout 15
+return 1
+return 1
+ONBUTTON=82
+ONBUTTON=83
+f_rb_moveout 16
+return 1
+return 1
+ONBUTTON=100
+target
+SRC.sysmessage Which rune would you like to add?
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_cangate
+// base part of checking gate availability
+//
+[FUNCTION f_rb_cangate]
+VAR.X=0
+if (<eval <ARGS>>==0)
+SRC.sysmessage No rune in this spot!
+VAR.X=10
+elseif (<SRC.isgm>)
+return 1
+elseif (<MORE>==0)
+SRC.sysmessage No charges left!
+VAR.X=10
+elseif ((<SRC.FLAGS>&statf_criminal) && (<SERV.MURDERMINCOUNT>><SRC.KILLS>))
+SRC.sysmessage You cannot recall until you are no longer a criminal.
+VAR.X=10
+elseif (<SRC.REGION.FLAGS>&(region_antimagic_gate|region_antimagic_all))
+SRC.sysmessage This place prevents you to create a gate!
+VAR.X=10
+endif
+SRC.HOME=<SRC.P>
+SRC.P=<ARGS>
+if (<SRC.REGION.FLAGS>&(region_antimagic_gate|region_antimagic_all))
+SRC.sysmessage You cannot create a gate to that place!
+VAR.X=10
+endif
+SRC.P=<SRC.HOME>
+SRC.fix
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_canrecall
+// base part of checking for recall availability
+//
+[FUNCTION f_rb_canrecall]
+VAR.X=0
+if (<eval <ARGS>>==0)
+SRC.sysmessage No rune in this spot!
+VAR.X=10
+elseif (<SRC.isgm>)
+return 1
+elseif (<MORE>==0)
+SRC.sysmessage No charges left!
+VAR.X=10
+elseif ((<SRC.FLAGS>&statf_criminal) && (<SERV.MURDERMINCOUNT>><SRC.KILLS>))
+SRC.sysmessage You cannot recall until you are no longer a criminal.
+VAR.X=10
+elseif (<SRC.REGION.FLAGS>&(region_antimagic_recall_out|region_antimagic_all))
+SRC.sysmessage This place prevents you to recall out!
+VAR.X=10
+endif
+SRC.HOME=<SRC.P>
+SRC.P=<ARGS>
+if (<SRC.REGION.FLAGS>&(region_antimagic_recall_in|region_antimagic_all))
+SRC.sysmessage You cannot recall to that place!
+VAR.X=10
+endif
+SRC.P=<SRC.HOME>
+SRC.fix
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_canselfgate
+// checks if can gate to <ARGS> - if ok, then initializes gating
+//
+[FUNCTION f_rb_canselfgate]
+f_rb_cangate <ARGS>
+if (<VAR.X>==10)
+return 1
+elseif (<SRC.isgm>)
+elseif ((!<SRC.restest 1 i_reag_mandrake_root>) || (!<SRC.restest 1 i_reag_sulfur_ash>) || (!<SRC.restest 1 i_reag_black_pearl>))
+SRC.sysmessage You lack the reagents for this spell.
+VAR.X=10
+elseif (<SRC.MANA><40)
+SRC.sysmessage Insufficient mana for this spell.
+VAR.X=10
+elseif (<SRC.Magery><65)
+SRC.sysmessage You are not skilled enough.
+VAR.X=10
+endif
+if (<VAR.X>==0)
+SRC.consume=1 i_reag_mandrake_root
+SRC.consume=1 i_reag_sulfur_ash
+SRC.consume=1 i_reag_black_pearl
+SRC.MANA=<eval <SRC.MANA>-40>
+TIMER=10
+f_rb_makegate <ARGS>
+endif
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_canselfrecall
+// checks if can recall to <ARGS> - if ok, then initializes recalling
+//
+[FUNCTION f_rb_canselfrecall]
+f_rb_canrecall <ARGS>
+if (<VAR.X>==10)
+return 1
+elseif (<SRC.isgm>)
+elseif ((!<SRC.restest 1 i_reag_mandrake_root>) || (!<SRC.restest 1 i_reag_blood_moss>) || (!<SRC.restest 1 i_reag_black_pearl>))
+SRC.sysmessage You lack the reagents for this spell.
+VAR.X=10
+elseif (<SRC.MANA><11)
+SRC.sysmessage Insufficient mana for this spell.
+VAR.X=10
+elseif (<SRC.Magery><20)
+SRC.sysmessage You are not skilled enough.
+VAR.X=10
+endif
+if (<VAR.X>==0)
+SRC.consume=1 i_reag_mandrake_root
+SRC.consume=1 i_reag_blood_moss
+SRC.consume=1 i_reag_black_pearl
+SRC.MANA=<eval <SRC.MANA>-11>
+TIMER=10
+f_rb_makerecall <ARGS>
+endif
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_makegate
+// initializes the gates creation process
+//
+[FUNCTION f_rb_makegate]
+SRC.speak Vas Rel Por
+SRC.ANIM=17
+SRC.newitem i_rb_makegate
+SRC.ACT.MOREP=<ARGS>
+if (<SRC.isgm>)
+SRC.ACT.TIMER=1
+elseif (10.0><SRC.Magery>)
+SRC.ACT.TIMER=15
+else
+SRC.ACT.TIMER=<eval (100.0/<SRC.Magery>)+5>
+endif
+SRC.ACT.equip
+SRC.EVENTS=+e_rb_breakspell
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// i_rb_gate
+// Xeno's animated gate
+//
+[ITEMDEF i_rb_gate]
+ID=01af3
+RESOURCES=i_scroll_gate_travel
+TYPE=t_telepad
+
+ON=@Create
+COLOR=032
+MORE1=36
+ATTR=attr_static
+
+ON=@TIMER
+SOUND=snd_SPELL_DISPEL_FIELD
+remove
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// i_rb_makegate
+// creates Xeno's animated gate
+//
+[ITEMDEF i_rb_makegate]
+ID=i_memory
+TYPE=t_eq_script
+name=Gater
+
+on=@equip
+ATTR=attr_decay
+return 1
+
+on=@timer
+CONT.SOUND=snd_SPELL_GATE_TRAVEL
+CONT.newitem=i_rb_gate
+CONT.ACT.P=<CONT.P>
+CONT.ACT.MOREP=<MOREP>
+CONT.ACT.MORE2=1
+CONT.ACT.TIMER=<eval 20+<eval <CONT.Magery>/10.0>>
+CONT.ACT.ATTR=attr_static|attr_decay
+CONT.newitem=i_rb_gate
+CONT.ACT.P=<MOREP>
+CONT.ACT.MOREP=<CONT.P>
+CONT.ACT.MORE2=1
+CONT.ACT.TIMER=<eval 20+<eval <CONT.Magery>/10.0>>
+CONT.ACT.ATTR=attr_static|attr_decay
+CONT.EVENTS=-e_rb_breakspell
+remove
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_makerecall
+// initialises the recalling process
+//
+[FUNCTION f_rb_makerecall]
+SRC.speak Kal Ort Por
+SRC.ANIM=17
+SRC.newitem i_rb_makerecall
+SRC.ACT.MOREP=<ARGS>
+if (<SRC.isgm>)
+SRC.ACT.TIMER=1
+elseif (10.0><SRC.Magery>)
+SRC.ACT.TIMER=5
+else
+SRC.ACT.TIMER=<eval (100.0/<SRC.Magery>)+2>
+endif
+SRC.ACT.equip
+SRC.EVENTS=+e_rb_breakspell
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_makerecall2
+// same as makerecall, but also takes one charge off from the book
+//
+[FUNCTION f_rb_makerecall2]
+if (<eval <MORE1>>>0)
+MORE1=<eval <MORE1>-1>
+f_rb_makerecall <ARGS>
+else
+SRC.sysmessage Not enough charges!
+endif
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// i_rb_makerecall
+// makes recall, moves the player to the MOREP coordinates
+//
+[ITEMDEF i_rb_makerecall]
+ID=i_memory
+TYPE=t_eq_script
+name=Recaller
+
+on=@equip
+ATTR=attr_decay
+return 1
+
+on=@timer
+CONT.SOUND=snd_SPELL_RECALL
+CONT.GO=<MOREP>
+CONT.fix
+CONT.EVENTS=-e_rb_breakspell
+remove
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_moveout
+// recreates a rune back from the runebook (slot ARGS)
+//
+[FUNCTION f_rb_moveout]
+if (<eval <TAG.POS<ARGS>>>==0)
+SRC.sysmessage No rune exists here!
+else
+SRC.newitem=i_rune_marker
+SRC.ACT.NAME=<TAG.NAME<ARGS>>
+SRC.ACT.MOREP=<TAG.POS<ARGS>>
+SRC.ACT.bounce
+try TAG.NAME<ARGS>=Empty
+try TAG.POS<ARGS>=0
+endif
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_scribe
+// scribbes a rune (VAR.MOREP, VAR.NAME) to the slot <ARGS>
+//
+[FUNCTION f_rb_scribe]
+SRC.sysmessage You scribe into slot <ARGS>
+TRY TAG.POS<ARGS>=<VAR.MOREP>
+TRY TAG.NAME<ARGS>=<VAR.NAME>
+VAR.MOREP=
+VAR.NAME=
+return 1
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// f_rb_breakspell
+// spell-breaking function
+//
+[FUNCTION f_rb_breakspell]
+if (<SRC.restest 1 i_rb_makegate>)
+SRC.consume 1 i_rb_makegate
+endif
+if (<SRC.restest 1 i_rb_makerecall>)
+SRC.consume 1 i_rb_makerecall
+endif
+SRC.EVENTS=-e_rb_breakspell
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// e_rb_breakspell
+// spell-breaking event
+//
+[EVENTS e_rb_breakspell]
+ON=@Logout
+f_rb_breakspell
+return 0
+
+ON=@GetHit
+sysmessage <SRC.NAME> ruined your spell.
+f_rb_breakspell
+return 0
+
+[EOF]

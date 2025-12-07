@@ -1,0 +1,436 @@
+// ***** Soccer Script by PoP_Choco *****
+//
+// Just place this file in your scripts folder and resync the server :-)
+// To this script works in the right way you need to create a new region
+// called Soccer Field, and the ball ll run only inside this are (except
+// for GMs)
+//
+// Steps:
+// 1st: Place all the items --> Ball, Score, Center, Goals (Red and Blue)
+// 2nd: 2click on the ball and select the Score Board
+// 3rd: 2click the Score Board and select the Center Tile
+// 4th: 2click each Goal Piece (both colors) and select the Soccer Ball
+//
+// Atention: Place the Goals out of the Soccer Field Region, or the players
+// ll be able to pass with the ball over the Goal Tiles without Scores.
+// 
+// Obs1: The Center Tile can be any floor tile. There is no specific one in
+//       the script.
+//
+// Obs2: If the Goal Tiles stop to work, use the command .xtimer 1 and select
+//       the tile.
+//
+// Obs3: To reset the Score Board use .resetscore and target the Score Board.
+//
+// The Soccer Heads are only regular heads that can be kicked by anyone anywhere
+// I like to give it like prize for the winners with loosers name on it :-)
+// 
+// Any problem or new idea e-mail me: popchoco@terra.com.br
+//
+// Goal's Fireworks came from a Fireworks Wand script that I don't know the author
+// Tkx anyway :-)
+
+[ITEMDEF i_soccer_ball]
+DEFNAME= i_soccer_ball
+ID=i_cannon_ball
+NAME=Soccer Ball
+WEIGHT=500
+TYPE=t_script
+
+ON=@CREATE
+color=0481
+attr= 08010
+timer = -1
+
+ON=@DCLICK
+IF (<LINK>=04fffffff)
+  SRC.SYSMESSAGE Select the Score Board!!!
+  TARGET
+ELSE
+   IF (STRCMPI("<REGION.NAME>","Soccer Field"))
+      TARGETG Choose a player to throw the ball?
+   ENDIF
+ENDIF
+RETURN 1
+
+ON=@STEP
+IF (<SRC.ISGM>) || !(STRCMPI("<REGION.NAME>","Soccer Field"))
+   IF (<SRC.DIR> = 2)
+      move 1
+   ELIF (<SRC.DIR> = 6)
+      move -1 
+   ELIF (<SRC.DIR> = 4)
+      move 0 1 
+   ELIF (<SRC.DIR> = 0)
+      move 0 -1 
+   ELIF (<SRC.DIR> = 3)
+      move 1 1 
+   ELIF (<SRC.DIR> = 7)
+      move -1 -1 
+   ELIF (<SRC.DIR> = 5)
+      move -1 1
+   ELIF (<SRC.DIR> = 1)
+      move 1 -1 
+   ENDIF
+   IF (<MORE1> == <SRC.UID>)
+      DORAND 9
+        link.SAY <SRC.NAME> walking with the ball!
+        link.SAY
+        link.SAY It's Incredible!
+        link.SAY
+        link.SAY Nice play!
+        link.SAY
+        link.SAY Unbeliveble!
+        link.SAY
+        link.SAY Oh Man!
+      ENDDO
+   ELSE
+      DORAND 2
+         link.SAY <link.tag.NAME> lost the ball to <SRC.NAME>!!!
+         link.SAY <SRC.NAME> gets the ball!!! 
+      ENDDO
+      MORE1 = <SRC.UID>
+      link.tag.name = <SRC.NAME>
+   ENDIF
+ELSE
+  SRC.move 0 0 4
+  link.SAY Out of Bounds (<link.tag.name>)
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (STRCMPI("<REGION.NAME>","Soccer Field"))
+   SRC.MESSAGE You only can throw the ball to other player.
+ELSE   
+   link = <SRC.TARG.UID>
+ENDIF   
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.UID> == <SRC.TARG.UID>)
+   SRC.MESSAGE You can't throw the ball to your self!
+ELSE   
+   IF (<SRC.TARG.DISTANCE> > 4)
+      SRC.SYSMESSAGE Too far from you!
+   ELSE
+      p = <SRC.TARGP>
+      update
+   ENDIF
+ENDIF
+return 1
+
+ON=@TARGON_GROUND
+IF (STRCMPI("<REGION.NAME>","Soccer Field"))
+   SRC.MESSAGE You only can throw the ball to other player.
+ELSE
+   SRC.MESSAGE You can't link the ball with the ground!   
+ENDIF   
+return 1
+
+[ITEMDEF i_soccer_score]
+DEFNAME=i_soccer_score
+ID=i_gravestone_17
+TYPE=t_script
+NAME=Score Board
+
+ON=@CREATE
+ATTR = 08010
+TAG.BLUE = 0
+TAG.RED = 0
+TAG.NAME = 0
+
+ON=@CLICK
+say Blue <eval(<tag.blue>)> X <eval(<tag.red>)> Red
+return 1
+
+ON=@DCLICK
+IF (<LINK>=04fffffff)
+  SRC.SYSMESSAGE Select the Center!!!
+  TARGET
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+link = <SRC.TARG.UID>
+RETURN 1
+
+[ITEMDEF i_soccer_shoes]
+DEFNAME=i_soccer_shoes
+ID=i_shoes_plain
+name= Soccer Shoes
+
+on=@EQUIP
+   SRC.NEWITEM i_stam_raiser
+   link=<SRC.ACT.UID>   
+   SRC.ACT.TIMER = 5
+   SRC.ACT.LINK = <SRC.UID>
+   SRC.ACT.EQUIP
+
+on=@UNEQUIP
+   link.remove
+
+[ITEMDEF i_soccer_goal_r]
+DEFNAME=i_soccer_goal_r
+ID=i_floor_marble
+NAME= Soccer Goal Red Team
+TYPE=t_script
+
+ON=@CREATE
+COLOR = 026
+TIMER = 1
+
+ON=@TIMER
+  IF (<link.p.x> == <p.x>) && (<link.p.y> == <p.y>)
+     link.link.say GOOOOAAAALLLL!!! Blue Team Scores!!!
+     link.link.color = 02
+     link.p = <link.link.link.p>
+     link.update
+     link.link.tag.blue = <eval(<link.link.tag.blue>)> + 1
+     link.link.say Blue <eval(<link.link.tag.blue>)> X <eval(<link.link.tag.red>)> Red
+     link.link.link.link=<link.more>
+     DORAND 5 
+        link.link.link.link.NEWITEM=i_fx_bless_effect 
+        link.link.link.link.NEWITEM=i_fx_sparkle_2 
+        link.link.link.link.NEWITEM=i_fx_sparkle 
+        link.link.link.link.NEWITEM=i_fx_curse 
+        link.link.link.link.NEWITEM=i_fx_heal_effect 
+     ENDDO 
+     link.link.link.link.act.p=<link.link.link.p> 
+     link.link.link.link.ACT.NAME=a fireworks display 
+     link.link.link.link.SOUND=011f 
+     link.link.link.link.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+     link.link.link.link.ACT.ATTR=attr_decay|attr_static 
+     link.link.link.link.ACT.TIMER={7 5} 
+     link.link.link.link.ACT.NUDGEUP={15 30 35 25}
+     DORAND 4 
+        link.link.link.link.ACT.MOVE=-1,2 
+        link.link.link.link.ACT.MOVE=-2,1 
+        link.link.link.link.ACT.MOVE=-3,3 
+        link.link.link.link.ACT.MOVE=-3,1 
+     ENDDO 
+     DORAND 5 
+        link.link.link.link.NEWITEM=i_fx_bless_effect 
+        link.link.link.link.NEWITEM=i_fx_sparkle_2 
+        link.link.link.link.NEWITEM=i_fx_sparkle 
+        link.link.link.link.NEWITEM=i_fx_curse 
+        link.link.link.link.NEWITEM=i_fx_heal_effect 
+     ENDDO 
+     link.link.link.link.act.p=<link.link.link.p> 
+     link.link.link.link.ACT.NAME=a fireworks display 
+     link.link.link.link.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+     link.link.link.link.ACT.ATTR=attr_decay|attr_static 
+     link.link.link.link.ACT.TIMER={7 5} 
+     link.link.link.link.ACT.NUDGEUP={15 30 35 25}
+     DORAND 4 
+        link.link.link.link.ACT.MOVE=-1,-4 
+        link.link.link.link.ACT.MOVE=-2,-1 
+        link.link.link.link.ACT.MOVE=-3,-2 
+        link.link.link.link.ACT.MOVE=-4,-1 
+     ENDDO 
+     DORAND 5 
+        link.link.link.link.NEWITEM=i_fx_bless_effect 
+        link.link.link.link.NEWITEM=i_fx_sparkle_2 
+        link.link.link.link.NEWITEM=i_fx_sparkle 
+        link.link.link.link.NEWITEM=i_fx_curse 
+        link.link.link.link.NEWITEM=i_fx_heal_effect 
+     ENDDO 
+     link.link.link.link.act.p=<link.link.link.p> 
+     link.link.link.link.ACT.NAME=a fireworks display 
+     link.link.link.link.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+     link.link.link.link.ACT.ATTR=attr_decay|attr_static 
+     link.link.link.link.ACT.TIMER={7 5} 
+     link.link.link.link.ACT.NUDGEUP={15 30 35 25}
+     DORAND 4 
+        link.link.link.link.ACT.MOVE=-1,6 
+        link.link.link.link.ACT.MOVE=-2,5 
+        link.link.link.link.ACT.MOVE=2,-5 
+        link.link.link.link.ACT.MOVE=-3,-1 
+     ENDDO 
+  ENDIF
+  TIMER=1
+  RETURN 1
+
+ON=@DCLICK
+IF (<LINK>=04fffffff)
+  TARGET Select the Ball!!!
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+link = <SRC.TARG.UID>
+RETURN 1
+
+[ITEMDEF i_soccer_goal_b]
+DEFNAME=i_soccer_goal_B
+ID=i_floor_marble
+NAME= Soccer Goal Blue Team
+TYPE=t_script
+
+ON=@CREATE
+COLOR = 02
+TIMER = 1
+
+ON=@TIMER
+  IF (<link.p.x> == <p.x>) && (<link.p.y> == <p.y>)
+     link.link.say GOOOOAAAALLLL!!! Red Team Scores!!!
+     link.link.color = 026
+     link.p = <link.link.link.p>
+     link.update
+     link.link.tag.red = <eval(<link.link.tag.red>)> + 1
+     link.link.say Blue <eval(<link.link.tag.blue>)> X <eval(<link.link.tag.red>)> Red
+     link.link.link.link=<link.more>
+     DORAND 5 
+        link.link.link.link.NEWITEM=i_fx_bless_effect 
+        link.link.link.link.NEWITEM=i_fx_sparkle_2 
+        link.link.link.link.NEWITEM=i_fx_sparkle 
+        link.link.link.link.NEWITEM=i_fx_curse 
+        link.link.link.link.NEWITEM=i_fx_heal_effect 
+     ENDDO 
+     link.link.link.link.act.p=<link.link.link.p> 
+     link.link.link.link.ACT.NAME=a fireworks display 
+     link.link.link.link.SOUND=011f 
+     link.link.link.link.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+     link.link.link.link.ACT.ATTR=attr_decay|attr_static 
+     link.link.link.link.ACT.TIMER={7 5} 
+     link.link.link.link.ACT.NUDGEUP={15 30 35 25}
+     DORAND 4 
+        link.link.link.link.ACT.MOVE=-1,2 
+        link.link.link.link.ACT.MOVE=2,1 
+        link.link.link.link.ACT.MOVE=3,3 
+        link.link.link.link.ACT.MOVE=-3,1 
+     ENDDO 
+     DORAND 5 
+        link.link.link.link.NEWITEM=i_fx_bless_effect 
+        link.link.link.link.NEWITEM=i_fx_sparkle_2 
+        link.link.link.link.NEWITEM=i_fx_sparkle 
+        link.link.link.link.NEWITEM=i_fx_curse 
+        link.link.link.link.NEWITEM=i_fx_heal_effect 
+     ENDDO 
+     link.link.link.link.act.p=<link.link.link.p> 
+     link.link.link.link.ACT.NAME=a fireworks display 
+     link.link.link.link.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+     link.link.link.link.ACT.ATTR=attr_decay|attr_static 
+     link.link.link.link.ACT.TIMER={7 5} 
+     link.link.link.link.ACT.NUDGEUP={15 30 35 25}
+     DORAND 4 
+        link.link.link.link.ACT.MOVE=-1,-4 
+        link.link.link.link.ACT.MOVE=2,-1 
+        link.link.link.link.ACT.MOVE=-3,-2 
+        link.link.link.link.ACT.MOVE=4,-1 
+     ENDDO 
+     DORAND 5 
+        link.link.link.link.NEWITEM=i_fx_bless_effect 
+        link.link.link.link.NEWITEM=i_fx_sparkle_2 
+        link.link.link.link.NEWITEM=i_fx_sparkle 
+        link.link.link.link.NEWITEM=i_fx_curse 
+        link.link.link.link.NEWITEM=i_fx_heal_effect 
+     ENDDO 
+     link.link.link.link.act.p=<link.link.link.p> 
+     link.link.link.link.ACT.NAME=a fireworks display 
+     link.link.link.link.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+     link.link.link.link.ACT.ATTR=attr_decay|attr_static 
+     link.link.link.link.ACT.TIMER={7 5} 
+     link.link.link.link.ACT.NUDGEUP={15 30 35 25}
+     DORAND 4 
+        link.link.link.link.ACT.MOVE=1,6 
+        link.link.link.link.ACT.MOVE=-2,5 
+        link.link.link.link.ACT.MOVE=2,-5 
+        link.link.link.link.ACT.MOVE=-3,-1 
+     ENDDO 
+  ENDIF
+  TIMER=1
+  RETURN 1
+
+ON=@DCLICK
+IF (<LINK>=04fffffff)
+  TARGET Select the Ball!!!
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+link = <SRC.TARG.UID>
+RETURN 1
+
+[ITEMDEF i_stam_raiser]
+DEFNAME=i_stam_raiser
+id=i_gold
+weight = 0
+layer=98
+TYPE=t_eq_script
+
+ON=@TIMER
+link.stam = 100
+link.update
+timer = 5
+return 1
+
+[ITEMDEF i_soccer_head]
+DEFNAME= i_soccer_head
+ID=i_flesh_head
+NAME=Soccer Head
+WEIGHT=1
+TYPE=t_script
+
+ON=@CREATE
+timer = -1
+
+ON=@STEP
+IF (<SRC.DIR> = 2)
+   move 1
+ELIF (<SRC.DIR> = 6)
+   move -1 
+ELIF (<SRC.DIR> = 4)
+   move 0 1 
+ELIF (<SRC.DIR> = 0)
+   move 0 -1 
+ELIF (<SRC.DIR> = 3)
+   move 1 1 
+ELIF (<SRC.DIR> = 7)
+   move -1 -1 
+ELIF (<SRC.DIR> = 5)
+   move -1 1
+ELIF (<SRC.DIR> = 1)
+   move 1 -1 
+ENDIF
+
+ON=@timer
+timer = -1
+return 1
+
+[ITEMDEF i_reset_score]
+NAME=pointer
+id=i_memory 
+type=t_eq_script 
+WEIGHT=0
+ 
+ON=@CREATE
+ATTR=attr_invis
+ 
+ON=@EQUIP
+TARGET Target the Score Board
+RETURN 1
+ 
+ON=@TARGON_ITEM
+SRC.TARG.TAG.BLUE = 0
+SRC.TARG.TAG.RED = 0
+SRC.TARG.TAG.NAME = 0
+SRC.TARG.COLOR = 0
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SAY That's not the Score Board
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SAY That's not the Score Board
+REMOVE
+RETURN 1
+
+[FUNCTION RESETSCORE]
+SRC.NEWITEM i_reset_score
+SRC.ACT.EQUIP
+RETURN 1
+      
+[EOF]

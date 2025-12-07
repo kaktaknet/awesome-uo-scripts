@@ -1,0 +1,254 @@
+//prefix_local.scp compiled by PySphere Release 17 from prefix_local.py.
+//#prefix-local
+//
+//#This uses the prefix-local notation (see the above comment - that indicates that it's what this file is using).
+//#It's pretty easy to see what prefix-local is from looking at this file and comparing it to prefix_sphere.py, which
+//#uses prefix-sphere notation instead.
+//
+//#The #self is char lines indicate to the compiler what to call tryp on if compiling to 55i.
+//
+//#testing spaces around equals signs in assignment commands, and also dynamic linking
+//def testspaces():		#self is char
+[function testspaces]
+//	local.tempida=findlayer(21).uid
+ARG(tempida,<?findlayer(21).uid?>)
+//	local.tempidb = 0fca
+ARG(tempidb,0fca)
+//	local.tempidc =0fca
+ARG(tempidc,0fca)
+//	local.tempidd= uid
+ARG(tempidd,<?uid?>)
+//	say("Your backpack's name is "+local.tempida.name)
+say(Your backpack's name is <?finduid(<?ARG(tempida)?>).name?>)
+//	local.tdef=local.tempidd.region.uid
+ARG(tdef,<?finduid(<?ARG(tempidd)?>).region.uid?>)
+//	local.tdef.show('more2')
+finduid(<?ARG(tdef)?>).show(more2)
+//	#enable-replace
+//	finduid(0fca).show('name')
+finduid(0fca).show('name')
+//	#disable-replace
+//#This tests parameter passing in 55i.
+//def testParamPassing():		#self is char
+[function testParamPassing]
+//	testarr(  5 , 9 , 73 , 99   )
+testarr(5,9,73,99)
+//
+//#This tests arrays
+//def testarr(i, a):		#self is char
+[function testarr]
+ARG(i,<?argv[0]?>)
+ARG(a,<?argv[1]?>)
+//	tag.array[local.i]=5
+tag.array[<?ARG(i)?>]=5
+//	sysmessage("array["+local.i+"]="+tag.array[local.i])
+sysmessage(array[<?ARG(i)?>]=<?tag.array[<?ARG(i)?>]?>)
+//	sysmessage("array["+local.i+"]="+tag.array[local.i]+".")
+sysmessage(array[<?ARG(i)?>]=<?tag.array[<?ARG(i)?>]?>.)
+//
+//#This tests if, elif, and else.
+//def testif():		#self is char
+[function testif]
+//	local.color=083ea
+ARG(color,083ea)
+//	if color==local.color:
+IF <?color?>==<?ARG(color)?>
+//		say("Yep, you're the standard color")
+say("Yep, you're the standard color")
+//		if oskin==color:
+IF <?oskin?>==<?color?>
+//			say("Your old skin is the same color, too.")
+say("Your old skin is the same color, too.")
+//		else:
+ELSE
+//			say("Your old skin is a different color!")
+say(Your old skin is a different color!)
+//	elif oskin==local.color:
+ENDIF
+ELIF <?oskin?>==<?ARG(color)?>
+//		say("Your old skin is the standard color")
+say(Your old skin is the standard color)
+//	elif color>local.color:
+ELIF <?color?>><?ARG(color)?>
+//		say("You're above the standard color!")
+say(You're above the standard color!)
+//	elif color<local.color:
+ELIF <?color?><<?ARG(color)?>
+//		say("You're below the standard color!")
+say(You're below the standard color!)
+//	else:
+ELSE
+//		say("You're the wrong color.")
+say(You're the wrong color.)
+//
+//#This tests the while loop.
+//def testwhile():	#self is char
+ENDIF
+[function testwhile]
+//	local.i=0
+ARG(i,0)
+//	while (local.i<5):
+WHILE (<?ARG(i)?><5)
+//		say(local.i)
+say(<?ARG(i)?>)
+//		local.i+=1
+ARG(i,#+1)
+//
+//#This and testfor() tests for loops.
+//def testfor2():		#self is char
+ENDWHILE
+[function testfor2]
+//	for local.i in range(0,10):
+ARG(i,0)
+WHILE (<?ARG(i)?><10)
+//		sysmessage("i "+local.i)
+sysmessage(i <?ARG(i)?>)
+//		tag.array[local.i]=local.i*local.i
+tag.array[<?ARG(i)?>]=<?ARG(i)?>*<?ARG(i)?>
+//	for local.ib in range(5,8):
+ARG(i,#+1)
+ENDWHILE
+ARG(ib,5)
+WHILE (<?ARG(ib)?><8)
+//		sysmessage("ib "+local.ib)
+sysmessage(ib <?ARG(ib)?>)
+//	for local.u in tag.array:
+ARG(ib,#+1)
+ENDWHILE
+ARG(u__val,0)
+ARG(u,<?tag.array[<?ARG(u__val)?>]?>)
+WHILE (strlen(<?ARG(u)?>))
+//		sysmessage("u "+local.u)
+sysmessage(u <?ARG(u)?>)
+//def testfor():		#self is char
+ARG(u__val,#+1)
+ARG(u,<?tag.array[<?ARG(u__val)?>]?>)
+ENDWHILE
+[function testfor]
+//	for local.i in range(0,10):
+ARG(i,0)
+WHILE (<?ARG(i)?><10)
+//		sysmessage("i "+local.i)
+sysmessage(i <?ARG(i)?>)
+//		tag.array[local.i]=local.i * local.i
+tag.array[<?ARG(i)?>]=<?ARG(i)?> * <?ARG(i)?>
+//		
+//	for local.ib in range(5,8):
+ARG(i,#+1)
+ENDWHILE
+ARG(ib,5)
+WHILE (<?ARG(ib)?><8)
+//		sysmessage("ib "+local.ib)
+sysmessage(ib <?ARG(ib)?>)
+//		
+//	for local.u in tag.array:
+ARG(ib,#+1)
+ENDWHILE
+ARG(u__val,0)
+ARG(u,<?tag.array[<?ARG(u__val)?>]?>)
+WHILE (strlen(<?ARG(u)?>))
+//		sysmessage("u "+local.u)
+sysmessage(u <?ARG(u)?>)
+//		
+//	for local.iia in range(7,73,5):
+ARG(u__val,#+1)
+ARG(u,<?tag.array[<?ARG(u__val)?>]?>)
+ENDWHILE
+ARG(iia,7)
+WHILE (<?ARG(iia)?><73)
+//		sysmessage("iia "+local.iia)
+sysmessage(iia <?ARG(iia)?>)
+//		
+//	for local.iib in range(8,3,-1):
+ARG(iia,#+5)
+ENDWHILE
+ARG(iib,8)
+WHILE (<?ARG(iib)?>>3)
+//		sysmessage("iib "+local.iib)
+sysmessage(iib <?ARG(iib)?>)
+//
+//#This one uses eval. 
+//def testeval():		#self is char
+ARG(iib,#-1)
+ENDWHILE
+[function testeval]
+//	for local.i in range(0,10):
+ARG(i,0)
+WHILE (<?ARG(i)?><10)
+//		tag.array[local.i]=eval(local.i*local.i)
+tag.array[<?ARG(i)?>]=<?eval(<?ARG(i)?>*<?ARG(i)?>)?>
+//
+//#The eval statement doesn't come out right in this one, because of the space between it and the (.
+//#This is important. You can't have spaces between function names and their (.
+//def badeval():		#self is char
+ARG(i,#+1)
+ENDWHILE
+[function badeval]
+//	for local.i in range(0,10):
+ARG(i,0)
+WHILE (<?ARG(i)?><10)
+//		tag.array[local.i]=eval (local.i*local.i)
+tag.array[<?ARG(i)?>]=<?eval?> (<?ARG(i)?>*<?ARG(i)?>)
+//	
+//#try .lgimmeitem(i_reag_garlic)
+//
+//#This creates the item the user specifies, and bounces it to their pack. Note that in the function argument, the "local."
+//#is not needed.
+//def lgimmeitem(itemID='i_reag_ginseng'):		#self is char
+ARG(i,#+1)
+ENDWHILE
+[function lgimmeitem]
+ARG(itemID,<?argv[0]?>)
+if (!(strlen(<?ARG(itemID)?>)))
+ARG(itemID,i_reag_ginseng)
+endif
+//	newitem(local.itemID)
+newitem(<?ARG(itemID)?>)
+//	act.bounce()
+act.bounce
+//
+//#This creates the item and bounces it, and uses the custom-linking code to do it. In 99u, the bounce uses finduid, and
+//#local.item holds a UID. In 55i, this will use act or link, depending on whether the caller is an item or char.
+//def lgimmeitem2(local.itemID='i_reag_garlic'):		#self is char
+[function lgimmeitem2]
+ARG(itemID,<?argv[0]?>)
+if (!(strlen(<?ARG(itemID)?>)))
+ARG(itemID,i_reag_garlic)
+endif
+//	local.item=newitem(local.itemID)
+ARG(item,<?newitem(<?ARG(itemID)?>)?>)
+//	local.item.color=021
+finduid(<?ARG(item)?>).color=021
+//	local.item.bounce()
+finduid(<?ARG(item)?>).bounce
+//	
+//#This tests some simple strings. Note the last line. Any string with commas in it will be compiled with actual qutoes
+//#around it in the outputted spherescript. Lines without commas won't, since the quotes interfere with things like you
+//#see in the 5th through 9th sysmessages in this function.
+//def lteststrings(local.num, local.text):		#self is char
+[function lteststrings]
+ARG(num,<?argv[0]?>)
+ARG(text,<?argv[1]?>)
+//	test=5
+test=5
+//	sysmessage("Forsooth!")
+sysmessage(Forsooth!)
+//	sysmessage('Forsay!eth')
+sysmessage(Forsay!eth)
+//	sysmessage('Testingeth')
+sysmessage(Testingeth)
+//	sysmessage("Aaaasdfdff")
+sysmessage(Aaaasdfdff)
+//	sysmessage("Your name is '"+name+"'")
+sysmessage(Your name is '<?name?>')
+//	sysmessage('adding '+"'"+" '"+local.text+"'")
+sysmessage(adding ' '<?ARG(text)?>')
+//	sysmessage("single quote in double quote ' "+"'"+local.text+"'")
+sysmessage(single quote in double quote ' '<?ARG(text)?>')
+//	sysmessage("no quotes "+local.text)
+sysmessage(no quotes <?ARG(text)?>)
+//	sysmessage('using backslashes \' \''+local.text+'\'')
+sysmessage(using backslashes ' '<?ARG(text)?>')
+//	sysmessage('This here line has some, well, commas in it.')
+sysmessage("This here line has some, well, commas in it.")
+//	

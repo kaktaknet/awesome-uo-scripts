@@ -1,0 +1,114 @@
+[FUNCTION own]
+NEWITEM=i_item_owner
+ACT.LINK=<UID>
+ACT.TIMER=20
+ACT.CONT=<UID>
+ACT.USE
+
+[ITEMDEF i_item_owner]
+ID=i_memory
+NAME=A owning timer
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_DECAY
+
+ON=@DCLICK
+TARGET What do you wish to mark as owned?
+RETURN 1
+
+On=@TARGON_ITEM 
+IF !(<LINK.TARG.TOPOBJ.UID> == <LINK.UID>)
+	LINK.SYSMESSAGE You need to have the item on you!
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (0<LINK.TARG.TAG.OWNER>)
+	IF (0<LINK.TARG.TAG.OWNER> == <LINK.UID>) || (<LINK.ISGM>)
+		LINK.TARG.NAME=<LINK.TARG.TAG.REALNAME>
+		LINK.TARG.TAG.OWNER=
+		LINK.TARG.TAG.REALNAME=
+		LINK.SYSMESSAGE You remove the mark from the item.
+		REMOVE
+		RETURN 1
+	ELSE
+		LINK.SYSMESSAGE That item is already owned by somebody else!
+		REMOVE
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<LINK.TARG.AMOUNT> != 1)
+	LINK.SYSMESSAGE You cannot mark that.
+	REMOVE
+	RETURN 1
+ENDIF
+
+LINK.TARG.TAG.OWNER=<LINK.UID> 
+LINK.TARG.TAG.REALNAME=<LINK.TARG.NAME>
+LINK.TARG.MESSAGE *You mark <LINK.TARG.NAME> as yours*
+LINK.TARG.NAME=<LINK.TARG.NAME> owned by <LINK.NAME>
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+LINK.SYSMESSAGE You cannot own that!
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+LINK.SYSMESSAGE You cannot own that!
+REMOVE
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[EVENTS e_own_equip]
+ON=@ItemEquipTest
+IF !(0<ACT.TAG.OWNER>)
+	RETURN 0
+ENDIF
+IF !(<ACT.TAG.OWNER> == <SRC.UID>)
+	SYSMESSAGE That belongs to somebody else!
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_return_box]
+NAME=return box
+ID=i_box_brass
+TYPE=T_CONTAINER
+TDATA2=04b
+//TDATA2=043	// no lock?
+FLIP=1
+WEIGHT=5
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Brass Box  (N)
+DUPELIST=0e80
+SKILLMAKE=TINKERING 40.0,t_tinker_tools
+RESOURCES=5 i_ingot_iron, 5 i_log
+RESOURCES2=3 i_ingot_iron,1 i_nails,2 i_hinge
+
+ON=@CLICK
+FORCONT <UID> 0
+	f_send_owned
+END
+
+
+ON=@DCLICK
+FORCONT <UID> 0
+	f_send_owned
+END
+IF !(<SRC.ISGM>
+	RETURN 1
+ENDIF
+
+[FUNCTION f_send_owned]
+IF !(0<TAG.OWNER>)
+	RETURN 1
+ENDIF
+CONT=<UID.<TAG.OWNER>.FINDLAYER(29).UID>
+UPDATEX

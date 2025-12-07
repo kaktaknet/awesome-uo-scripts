@@ -1,0 +1,643 @@
+//****************************************************************************
+//sphere by : menasoft ©1997-2000
+//www.sphereserver.com
+// all sphere script files and formats are copyright menasoft & partners.
+// this file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// menasoft & partners.  all donations and contributions
+// become the property of menasoft & partners.
+//****************************************************************************
+// file last updated: friday, april 28, 2000
+//
+version=0.54
+
+[CHARDEF c_dracula]
+ID=c_man
+NAME=dracula
+SOUND=snd_monster_ghost1
+ICON=i_pet_lich
+CAN=mt_run|mt_equip|mt_walk|mt_run|mt_usehands
+att=3
+ARMOR=30
+RESOURCES=9 i_reag_bone
+FOODTYPE=15 t_meat_raw
+//shelter==r_caves,R_dungeon
+DESIRES=c_dracula,e_undead
+TEVENTS=e_undead
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+NPC=brain_undead
+COLOR=038a
+
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={60.0 85.0}
+magery={70.0 95.0}
+magicresistance={50.0 90.0}
+tactics={75.0 90.0}
+swordsmanship={60.0 85.0}
+
+FAME={2000 4000}
+KARMA=-9000
+
+//alignment=evil
+//spellcircle=4,7
+
+itemnewbie=i_hair_short
+COLOR=01
+ITEM=i_cape
+COLOR=01
+ITEM=i_shirt_fancy
+COLOR=0
+ITEM=i_pants_long
+COLOR=01
+ITEM=i_boots_calf
+COLOR=01
+ITEM=i_sash
+COLOR=20
+ITEM=i_scroll_mana_drain
+ITEM=i_scroll_mana_drain
+ITEM=i_gold,{1 20}
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=dracula
+
+[CHARDEF c_vampire_f]
+ID=c_woman
+NAME=vampire
+CAN=mt_run|mt_equip|mt_walk|mt_run|mt_usehands
+SOUND=snd_monster_ghost1
+ICON=i_pet_lich
+att=3
+ARMOR=30
+RESOURCES=9 i_reag_bone
+FOODTYPE=15 t_meat_raw, 15 t_blood
+//shelter==r_caves,R_dungeon
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+NPC=brain_monster
+COLOR=038a
+
+FAME={2000 4000}
+KARMA=-9000
+
+//alignment=evil
+//spellcircle=4,6
+
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={60.0 85.0}
+magery={70.0 95.0}
+magicresistance={30.0 75.0}
+tactics={75.0 90.0}
+swordsmanship={60.0 85.0}
+
+itemnewbie=i_hair_long
+COLOR=01
+
+ITEM=i_cape
+COLOR=066d
+ITEM=i_shirt_plain
+ITEM=i_robe
+COLOR=066d
+ITEM=i_staff_black
+NAME=staff of blood
+ITEM=i_gold,{1 20}
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=vampire female
+
+//familairs
+//familiars are animals bound by magic to a certain magic user. they share an external symbiotic link with thier master that allows the magic user to pull from thier life force or see using the animals eyes. magic users incur damage or loose mental capabilities when thier familiar is killed. example is a black cat to a witch.
+//this is the real use of familiars. in uo they are simply pets..... for now
+
+[CHARDEF c_familiar_cat]
+//cat familiar
+NAME=cat familiar
+ID=c_cat
+CAN=mt_run|mt_equip|mt_walk|mt_run
+SOUND=snd_animals_cat1
+FOODTYPE=5 t_meat_raw, 5 t_fish
+//shelter==r_house,e_human_greet
+DESIRES=e_human_greet,t_window
+att=4
+ARMOR=10
+RESOURCES=2 i_ribs_raw
+DESCRIPTION=cat familiar
+SUBSECTION=familiars
+CATEGORY=animals
+
+ON=@CREATE
+NPC=brain_animal
+COLOR=1
+
+FAME=1000
+KARMA={-1 -99}
+
+STR=25
+DEX=55
+INT=25
+
+parrying=3.0
+magicresistance=20.0
+tactics=25.0
+magery=65.0
+wrestling=25.0
+taming=30.0
+
+//alignment=neutral
+//spellcircle=1,2
+
+[CHARDEF c_familiar_snake]
+//snake familiar
+NAME=snake familiar
+SOUND=snd_animals_snake1
+ID=c_snake
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=
+//shelter==r_caves,R_dungeon,R_desert
+DESIRES=i_gold
+att=2,8
+ARMOR=16
+RESOURCES=1 i_ribs_raw, 8 i_reag_serpent_scale
+DESCRIPTION=snake familiar
+SUBSECTION=familiars
+CATEGORY=animals
+
+ON=@CREATE
+NPC=brain_animal
+COLOR=colors_snake
+
+STR={30 40}
+DEX={20 25}
+INT=45
+
+parrying=5.0
+magicresistance=30.0
+tactics=34.0
+wrestling=34.0
+taming=70.0
+magery=60.0
+
+FAME=1500
+KARMA={-99 -199}
+
+//alignment=evil
+//spellcircle=3,4
+
+[CHARDEF c_familiar_crow]
+
+NAME=crow familiar
+SOUND=snd_animals_frstbrd1
+ID=c_bird
+att=4
+ARMOR=10
+RESOURCES=2 i_ribs_raw, 25 i_feather
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+FOODTYPE=3 t_crops, 6 t_fruit, 3 t_grain
+DESIRES=r_forests,c_bird
+//shelter==r_foliage,R_plains
+AVERSIONS=r_water,e_human_greet
+DESCRIPTION=bird familiar
+SUBSECTION=familiars
+CATEGORY=animals
+
+ON=@CREATE
+NPC=brain_animal
+COLOR=1
+
+STR={15 25}
+DEX=30
+INT=50
+
+parrying=5.0
+magicresistance=45.0
+tactics=25.0
+wrestling=25.0
+taming=30.0
+magery=55.0
+
+FAME=1000
+KARMA={-1 -99}
+
+//spellcircle=1,3
+
+[CHARDEF c_familiar_toad]
+NAME=toad familiar
+SOUND=snd_monster_bullfrog1
+ID=c_bullfrog
+att=2,4
+ARMOR=12
+RESOURCES=2 i_ribs_raw,4 i_hide, 2 i_reag_eye_of_newt
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=5 t_meat_raw
+//shelter==r_swamp,R_water,R_caves
+AVERSIONS=r_civilization
+DESCRIPTION=toad familiar
+SUBSECTION=familiars
+CATEGORY=animals
+
+ON=@CREATE
+NPC=brain_animal
+COLOR=colors_snake
+
+STR={46 70}
+DEX=20
+INT=25
+
+parrying={38.0 72.0}
+magicresistance=40.0
+tactics={40.0 60.0}
+wrestling={40.0 60.0}
+taming=45.0
+magery=60.0
+
+FAME=150
+KARMA=-1
+
+//spellcircle=1,2
+
+[CHARDEF c_familiar_rat]
+NAME=rat familiar
+SOUND=snd_animals_rat1
+ID=c_rat
+att=2,4
+ARMOR=12
+RESOURCES=2 i_ribs_raw
+CAN=mt_run|mt_equip|mt_walk|mt_run
+FOODTYPE=5 t_food,t_garbage
+//shelter==r_docks,R_civilization,t_garbage
+DESIRES=c_rat,c_rat_giant,R_darkness
+AVERSIONS=r_light,e_human_greet,e_carnivores
+
+DESCRIPTION=rat familiar
+SUBSECTION=familiars
+CATEGORY=animals
+
+ON=@CREATE
+NPC=brain_animal
+COLOR=colors_brown
+
+STR=30
+DEX=45
+INT=30
+
+parrying=15.0
+magicresistance=15.0
+tactics=15.0
+wrestling=15.0
+taming=25.0
+magery=55.0
+
+FAME=500
+KARMA={-1 -99}
+
+//alignment=neutral
+//spellcircle=1,2
+
+[CHARDEF c_liche_summon]
+// liche can summon daemon
+//daemon summoner
+
+//by skylancer
+NAME=a daemonic summoner
+ID=c_liche
+SOUND=snd_monster_liche1
+att=2
+ARMOR=20
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=
+//shelter==r_dungeon,R_caves
+DESIRES=i_gold,e_undead
+TEVENTS=e_undead
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+NPC=brain_undead
+
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+parrying={55.0 65.0}
+magery={100.0 180.0}
+magicresistance={170.0 190.0}
+tactics={70.0 90.0}
+
+FAME={600 5000}
+KARMA={-4000 -4999}
+
+//alignment=evil
+//spellcircle=2,4
+
+ITEM=i_staff_gnarled
+container=i_backpack
+ITEM=i_reag_blood_moss,{ 40 50 }
+ITEM=i_reag_mandrake_root,{ 40 50 }
+ITEM=i_reag_sulfur_ash,{ 40 50 }
+ITEM=i_reag_spider_silk,{ 40 50 }
+ITEM=i_spellbook
+addspell=s_fireball
+addspell=s_summon_daemon
+ITEM=rich_undead_backpack
+ITEM={ random_gold_pile 2 0 1 }
+ITEM={ random_gold_pile 2 0 1 }
+ITEM=ttm_lvl1,R99 //tattered treasure map level 1
+ITEM=i_reag_daemon_bone
+
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=daemon summoner
+
+[CHARDEF c_blood_lizard]
+NAME=a blood lizard
+ID=c_alligator
+SOUND=snd_monster_lavalizard1
+CAN=mt_run|mt_equip|mt_walk|mt_fire_immune
+att=1
+ARMOR=10
+RESOURCES=6 i_ribs_raw,12 i_hide
+FOODTYPE=5 t_meat_raw
+//shelter==r_caves
+AVERSIONS=r_civilization
+DESCRIPTION=blood lizard
+SUBSECTION=giant insects and reptiles
+CATEGORY=Monsters
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+NPC=brain_animal
+COLOR=colors_lava
+
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+parrying={48.0 82.0}
+magicresistance={55.0 70.0}
+tactics={60.0 80.0}
+wrestling={60.0 80.0}
+taming=90.0
+
+FAME=50
+KARMA=0
+//alignment=evil
+
+[CHARDEF c_h_pk]
+NAME=#names_humanfemale the pk
+ID=c_woman
+CATEGORY=
+SUBSECTION=rogues
+DESCRIPTION=pk female (axe)
+
+tspeech=jobfighter
+
+ON=@CREATE
+NPC=brain_monster
+
+STR={85 95}
+DEX={95 105}
+INT={61 75}
+KARMA={-8000 -9000}
+camping={45.0 68.0}
+fencing={45.0 68.0}
+hiding={65.0 78.0}
+macefighting={25.0 48.0}
+magicresistance={85.0 88.0}
+parrying={85.0 88.0}
+poisoning={35.0 58.0}
+snooping={35.0 58.0}
+stealing={45.0 68.0}
+swordsmanship={85.0 88.0}
+tactics={85.0 88.0}
+
+itemnewbie=random_female_hair
+ITEM=i_shirt_plain
+ITEM=random_shoes
+ITEM=random_coin_purse
+ITEM=i_bone_arms
+ITEM=i_bone_chest
+ITEM=i_bone_gloves
+ITEM=i_bone_helmet
+ITEM=i_bone_leggings
+ITEM=random_chest_armor,R45
+ITEM=random_helmet,R27
+ITEM=random_shield,R15
+ITEM=i_deed_ship,R2000
+ITEM=random_axe
+
+[CHARDEF c_h_pk_2]
+NAME=#names_humanfemale the pk
+ID=c_woman
+
+tspeech=jobfighter
+
+CATEGORY=
+SUBSECTION=rogues
+DESCRIPTION=pk female (bow)
+
+ON=@CREATE
+NPC=brain_monster
+
+STR={85 95}
+DEX={95 105}
+INT={61 75}
+
+KARMA={-8000 -9000}
+
+archery={75.0 85.0}
+camping={45.0 68.0}
+fencing={45.0 68.0}
+hiding={65.0 78.0}
+macefighting={25.0 48.0}
+magicresistance={85.0 88.0}
+parrying={85.0 88.0}
+poisoning={35.0 58.0}
+snooping={35.0 58.0}
+stealing={45.0 68.0}
+swordsmanship={35.0 38.0}
+tactics={85.0 88.0}
+
+itemnewbie=random_female_hair
+ITEM=i_shirt_plain
+ITEM=random_shoes
+ITEM=random_coin_purse,{1 3}
+ITEM=i_bone_arms
+ITEM=i_bone_chest
+ITEM=i_bone_gloves
+ITEM=i_bone_helmet
+ITEM=i_bone_leggings
+ITEM=i_crossbow_heavy
+ITEM=i_xbolt,{65 86}
+
+[CHARDEF c_h_pk_3]
+NAME=#names_humanfemale the pk
+ID=c_woman
+tspeech=jobfighter
+DESCRIPTION=pk female (sword)
+SUBSECTION=rogues
+CATEGORY=
+
+ON=@CREATE
+NPC=brain_monster
+
+STR={85 95}
+DEX={95 105}
+INT={61 75}
+KARMA={-8000 -9000}
+camping={45.0 68.0}
+fencing={45.0 68.0}
+hiding={65.0 78.0}
+macefighting={25.0 48.0}
+magicresistance={85.0 88.0}
+parrying={85.0 88.0}
+poisoning={35.0 58.0}
+snooping={35.0 58.0}
+stealing={45.0 68.0}
+swordsmanship={85.0 88.0}
+tactics={85.0 88.0}
+
+
+itemnewbie=random_female_hair
+ITEM=i_shirt_plain
+ITEM=random_shoes
+ITEM=random_coin_purse
+ITEM=i_bone_arms
+ITEM=i_bone_chest
+ITEM=i_bone_gloves
+ITEM=i_bone_helmet
+ITEM=i_bone_leggings
+ITEM=random_edged_weapons
+ITEM=random_shields
+
+// ------------
+// i am told this is currently broken so procede with caution
+//
+// travel agents
+// the SRC.go will work if used without periods
+//
+
+[speech spk_mage_portal]
+//portal mage
+// default=thou dost speak in a foreign language...
+on=hail*
+	say=greetings, dear friend. where wouldst thou wish to travel?
+on=help*
+	say=i can gate thee to different towns. britain, vesper, trinsic, yew, wind, minoc, moonglow.
+on=*britain*
+	SRC.go=1430 1688 0
+
+[speech spk_mage_portal_2]
+//portal mage
+//default=thou dost speak in a foreign language...
+
+on=hail*
+	say=greetings, dear friend. where wouldst thou wish to travel?
+on=help*
+	say=i can gate thee to different towns. britain, vesper, trinsic, yew, wind, minoc, moonglow.
+on=*britain*
+	SRC.NEWITEM=i_moongate_blue
+	SRC.ACT.TYPE=t_telepad
+	SRC.ACT.morep=1430 1688 0
+	SRC.ACT.timer=10 // 10 secs to decay
+
+[speech spk_mage_portal_3]
+
+//portal mage
+// default=thou dost speak in a foreign language...
+on=hail*
+	say=greetings, dear friend. where wouldst thou wish to travel?
+on=help*
+	say=i can gate thee to different towns. britain, vesper, trinsic, yew, wind, minoc, moonglow.
+
+on=*britain*
+	SRC.goplace=britain
+
+on=*vesper*
+	SRC.goplace=vesper
+
+on=*trinsic*
+	SRC.goplace=trinsic
+
+on=*yew*
+	SRC.goplace=yew
+
+on=*wind*
+	SRC.goplace=wind
+
+on=*minoc*
+	SRC.goplace=minoc
+
+on=*moonglow*
+	SRC.goplace=moonglow
+
+
+[CHARDEF c_air_slime]
+DEFNAME=c_air_slime
+NAME=air elemental
+ID=c_slime
+TEVENTS=e_exp_noclick
+
+ON=@CREATE
+	COLOR=colors_black
+
+ON=@NPCRESTOCK
+ITEM=loot_elem_air
+
+
+[CHARDEF c_water_slime]
+DEFNAME=c_water_slime
+NAME=water elemental
+ID=c_slime
+TEVENTS=e_exp_noclick
+
+ON=@CREATE
+	COLOR=colors_blue
+
+ON=@NPCRESTOCK
+ITEM=loot_elem_water
+
+
+[CHARDEF c_poison_slime]
+DEFNAME=c_poison_slime
+NAME=poison elemental
+ID=c_slime
+TEVENTS=e_exp_noclick
+
+ON=@CREATE
+	COLOR=colors_green
+
+ON=@NPCRESTOCK
+ITEM=loot_elem_poison
+
+
+[CHARDEF c_fire_slime]
+DEFNAME=c_fire_slime
+NAME=fire elemental
+ID=c_slime
+TEVENTS=e_exp_noclick
+
+ON=@CREATE
+	COLOR=colors_red
+
+ON=@NPCRESTOCK
+ITEM=loot_elem_fire
+
+
+[eof]

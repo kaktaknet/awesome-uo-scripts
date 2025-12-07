@@ -1,0 +1,81 @@
+
+//****************************************************************************
+// add "map" to PLEVEL 1 in your spheretable.scp.
+// this will give you the "choose your starting location" map, along
+// with a small dot that shows your current position on the map.
+//****************************************************************************
+//Script by Senser  (thanks!)
+//Iz stuff-
+//Added map that triggers the gump
+//Slightly modified gump to use X for where you are.  (blue hard to see)
+
+[ITEMDEF i_navigation_map]
+ID=i_map
+NAME="Navigation Map"
+TYPE=0
+VALUE=3000
+RESOURCES=i_map_blank
+SKILLMAKE=CARTOGRAPHY 100.0
+
+ON=@DCLICK
+IF <SRC.RESTEST 1 i_sextant>
+   //Check for int
+   VAR.CHANCE=RAND(<SRC.INT>)
+   //If they are "smart" just let them do it every time
+   IF <SRC.INT>>85
+      VAR.CHANCE=100
+   ENDIF
+   //If they are smart enuf or they passed the RAND then show the map
+   IF <VAR.CHANCE> > 50
+      SRC.SYSMESSAGE="Using the map and your sextant you find where you are."
+      SRC.DIALOG MapDlg
+   ELSE
+      SRC.SYSMESSAGE="You just can't figure it out...."
+   ENDIF
+//You need a i_sextant to use the map
+ELSE
+   SRC.SYSMESSAGE="You need a sextant to properly use the map."
+ENDIF
+
+//Map decay code
+IF RAND(10)>=5
+   MORE2=<MORE2>+1
+ENDIF
+//Tell them how old it is if its getting ripped up
+IF ((<MORE2>>=25) && (<MORE2><50))
+   SRC.SYSMESSAGE="This map has been used."
+ELIF ((<MORE2>>=50) && (<MORE2><75))
+   SRC.SYSMESSAGE="This map is getting old."
+ELIF ((<MORE2>>=75) && (<MORE2><95))
+   SRC.SYSMESSAGE="This map is falling apart."
+ELIF ((<MORE2>>=95) && (<MORE2><100))
+   SRC.SYSMESSAGE="You practically have to tape the map together to use it."
+ELIF (<MORE2>>100)
+   SRC.SYSMESSAGE="Your map falls apart and the pieces scatter in the breeze."
+   REMOVE
+ENDIF
+RETURN 1
+
+CATEGORY=Maps
+SUBSECTION=General Maps
+DESCRIPTION='Where Am I' Map
+
+[FUNCTION map]
+SRC.DIALOG MapDlg
+
+[DIALOG MapDlg]
+90,90
+resizepic 0 0 5120 403 434
+gumppic 10 10 5528
+//gumppic <EVAL (10+((<P.X>*100)/1337))> <EVAL (10+((<P.Y>*100)/1067))> 2362
+gumppic <EVAL (10+((<P.X>*100)/1337))> <EVAL (10+((<P.Y>*100)/1067))> 03
+text 20 400 455 0
+
+[DIALOG MapDlg TEXT]
+You are in <REGION.NAME>.
+
+[DIALOG MapDlg BUTTON]
+
+//****************************************************************************
+
+[EOF]

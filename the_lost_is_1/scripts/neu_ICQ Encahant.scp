@@ -1,0 +1,105 @@
+//------------------------------------ 
+//  ICQ - Exchanger 1.0 
+// (w) Pia-Veliah - 19.07.2002 
+//------------------------------------ 
+[PLEVEL 1] 
+ICQ 
+
+[FUNCTION ICQ] 
+   DIALOG d_ICQ 
+
+[FUNCTION ICQ_ask] 
+   SYSMESSAGE <UID.<args>.NAME> asks for your ICQ number! 
+   SYSMESSAGE Type ".icq" to define and/or share your number. 
+//   TAG.ICQ_ASKER=<args> 
+//   DIALOG d_ICQ_ask 
+   TRYP 0 UID.<args>.SYSMESSAGE ICQ request has been sent to <NAME>. 
+   RETURN 1 
+
+[FUNCTION ICQ_tell] 
+   SYSMESSAGE <UID.<args>.NAME> gives you  <UID.<args>.SEX his/her> ICQ number: "<Eval 0<UID.<args>.TAG.ICQ_NUMMER>>". 
+//   TAG.ICQ_TELLER=<args> 
+//   DIALOG d_ICQ_ask 
+   TRYP 0 UID.<args>.SYSMESSAGE ICQ has been given to <NAME>. 
+   RETURN 1 
+
+[DIALOG d_ICQ] 
+15, 15 
+page 0 
+   resizepic 0 0 2620 170 135 
+   text 10  10 2124 0 
+page 1 
+   button 30 35 2445 2445 0 2 // Definieren 
+   text   48 37 100 1 
+   button 30 65 2445 2445 1 0 1  // Weitergeben 
+   text   40 67 100 2 
+   button 30 95 2445 2445 1 0 2  // Erfragen 
+   text   52 97 100 3 
+page 2 
+   gumppic 14 35 2501 
+   textentry 25 35 117 20 2124 1 4 
+   button 15 97 2074 2075 1 0 3   // Okay 
+   button 75 97 2071 2072 0 1  // Cancel 
+
+[DIALOG d_ICQ TEXT] 
+ICQ #<Eval <TAG.ICQ_NUMMER>> 
+define 
+share with 
+ask someone 
+<Eval 0<TAG.ICQ_NUMMER>> 
+
+[DIALOG d_ICQ BUTTON] 
+   ONBUTTON=0 
+      RETURN 1 
+   ONBUTTON=1  // Weitergeben 
+      xICQ_tell <UID> 
+   ONBUTTON=2  // Erfragen 
+      xICQ_ask <UID> 
+   ONBUTTON=3  // Definieren OKAY 
+      TAG.ICQ_NUMMER=<Eval <argtxt[1]>> 
+      DIALOG d_ICQ 
+
+// 
+//[DIALOG d_ICQ_ask] 
+//15, 15 
+//page 0 
+//   resizepic 0 0 2620 250 110 
+//   text 10  10 2124 0 
+//   text 10  30 2124 1 
+//   text 10  50 2124 2 
+//   button 15 77 2074 2075 1 0 2   // Okay 
+//   button 75 77 2071 2072 1 0 1  // Cancel 
+// 
+//[DIALOG d_ICQ_ask TEXT] 
+//ICQ 
+//Request from <UID.<TAG.ICQ_ASKER>.NAME> 
+//Do you want to send your ICQ number to <UID.<TAG.ICQ_ASKER>.SEX him/her>? 
+// 
+//[DIALOG d_ICQ_ask BUTTON] 
+//ONBUTTON=0 
+//   TRYP 0 UID.<TAG.ICQ_ASKER>.SYSMESSAGE <NAME> has broken down the ICQ dialog. 
+//ONBUTTON=1 
+//   TRYP 0 UID.<TAG.ICQ_ASKER>.SYSMESSAGE <NAME> doesn't want to share ICQ. 
+//ONBUTTON=2 // Okay 
+//   TRYP 0 UID.<TAG.ICQ_ASKER>.ICQ_tell <UID> 
+// 
+// 
+//[DIALOG d_ICQ_tell] 
+//15, 15 
+//page 0 
+//   resizepic 0 0 2620 250 80 
+//   text 10  10 2124 0 
+//   text 10  30 2124 1 
+//   text 10  50 2124 2 
+// 
+//[DIALOG d_ICQ_tell TEXT] 
+//ICQ 
+//<UID.<TAG.ICQ_TELLER>.NAME> 
+//#<Eval <UID.<TAG.ICQ_TELLER>.TAG.ICQ_NUMMER>> 
+// 
+//[DIALOG d_ICQ_tell BUTTON] 
+//ONBUTTON=0 
+//   RETURN 1 
+// 
+
+[EOF] 

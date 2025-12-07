@@ -1,0 +1,376 @@
+//#################################################### 
+//#############Tracker's COLOR GUMP################### 
+//#################################################### 
+//By Tracker of Shattered Alliance 
+//http://gray-cat.com/alliance 
+//This is tested on version 55i
+// 
+//Use at your own risk, yada yada... 
+// 
+// 
+//INSTRUCTIONS!! 
+// 
+//This script is terribly easy to use. Put it in your Sphere folder in a .scp file 
+//that is in your spheretables under [RESOURCES], or make a new one and put it there. 
+// 
+
+
+
+//**********************************************************
+//**************controlling defnames************************
+//**********************************************************
+//This is the range that people can choose from in the menu, start to finish
+//Going too far out will allow them to choose bad, client crashing colors
+//This range works well, but you could limit them further if you wished, even to just the basic OSI color.
+//We have about 200 custom hues, so we need a lot of space
+
+[DEFNAME game_variables] 
+colors_menu_start     0
+colors_menu_end          5000
+
+
+//**********************************************************
+//************************New dye set***********************
+//**********************************************************
+//This is the item that players can use to easily acces the dialog.
+//Making it craftable would be easy.
+
+[itemdef i_new_dyes] 
+id=i_testtube_rack_full 
+name=set of complex dyes 
+type=t_normal 
+ 
+CATEGORY=Misc 
+SUBSECTION=Misc. items 
+DESCRIPTION=New Dyes 
+ 
+on=@dclick 
+src.dialog d_new_colors 
+return 1 
+
+
+//**********************************************************
+//**************gump used for showing all colors************
+//**********************************************************
+//This it the massive, bloated dialog that is the color-picking menu itself
+//Edit it with caution...I was on crack when I made it
+
+[dialog d_new_colors]
+0,0
+page 0
+resizepic 0 0 5054 340 480 //background lower
+resizepic 8 8 3000 322 462 //background upper
+
+button 270 10 4502 4502 1 0 1150 //next button
+button 20 10 4506 4506 1 0 1151 //previous button
+
+resizepic 128 20 3000 50 20 //number entry's background
+textentry 128 20 50 20 1152 1 0 //number entry part. Click here, enter a number, and hit X to jump to that color
+button 112 24 3 4 1 0 1153 //number entry's "x"  Hit this to choose a color instantly.
+
+button 120 50 2444 2444 1 0 1101 //color#1
+button 120 70 2444 2444 1 0 1102 //color#2
+button 120 90 2444 2444 1 0 1103 //color#3
+button 120 110 2444 2444 1 0 1104 //color#4
+button 120 130 2444 2444 1 0 1105 //color#5
+button 120 150 2444 2444 1 0 1106 //color#6
+button 120 170 2444 2444 1 0 1107 //color#7
+button 120 190 2444 2444 1 0 1108 //color#8
+button 120 210 2444 2444 1 0 1109 //color#9
+button 120 230 2444 2444 1 0 1110 //color#10
+button 120 250 2444 2444 1 0 1111 //color#11
+button 120 270 2444 2444 1 0 1112 //color#12
+button 120 290 2444 2444 1 0 1113 //color#13
+button 120 310 2444 2444 1 0 1114 //color#14
+button 120 330 2444 2444 1 0 1115 //color#15
+button 120 350 2444 2444 1 0 1116 //color#16
+button 120 370 2444 2444 1 0 1117 //color#17
+button 120 390 2444 2444 1 0 1118 //color#18
+button 120 410 2444 2444 1 0 1119 //color#19
+button 120 430 2444 2444 1 0 1120 //color#20
+
+text 30 50 <eval colors_menu_start + 0<tag.colorsmenu>+-1> 1
+text 30 70 <eval colors_menu_start + 0<tag.colorsmenu>> 2
+text 30 90 <eval colors_menu_start + 0<tag.colorsmenu>+1> 3
+text 30 110 <eval colors_menu_start + 0<tag.colorsmenu>+2> 4
+text 30 130 <eval colors_menu_start + 0<tag.colorsmenu>+3> 5
+text 30 150 <eval colors_menu_start + 0<tag.colorsmenu>+4> 6
+text 30 170 <eval colors_menu_start + 0<tag.colorsmenu>+5> 7
+text 30 190 <eval colors_menu_start + 0<tag.colorsmenu>+6> 8
+text 30 210 <eval colors_menu_start + 0<tag.colorsmenu>+7> 9
+text 30 230 <eval colors_menu_start + 0<tag.colorsmenu>+8> 10
+text 30 250 <eval colors_menu_start + 0<tag.colorsmenu>+9> 11
+text 30 270 <eval colors_menu_start + 0<tag.colorsmenu>+10> 12
+text 30 290 <eval colors_menu_start + 0<tag.colorsmenu>+11> 13
+text 30 310 <eval colors_menu_start + 0<tag.colorsmenu>+12> 14
+text 30 330 <eval colors_menu_start + 0<tag.colorsmenu>+13> 15
+text 30 350 <eval colors_menu_start + 0<tag.colorsmenu>+14> 16
+text 30 370 <eval colors_menu_start + 0<tag.colorsmenu>+15> 17
+text 30 390 <eval colors_menu_start + 0<tag.colorsmenu>+16> 18
+text 30 410 <eval colors_menu_start + 0<tag.colorsmenu>+17> 19
+text 30 430 <eval colors_menu_start + 0<tag.colorsmenu>+18> 20
+
+text 130 50 <eval colors_menu_start + 0<tag.colorsmenu>+19> 21
+text 130 70 <eval colors_menu_start + 0<tag.colorsmenu>+20> 22
+text 130 90 <eval colors_menu_start + 0<tag.colorsmenu>+21> 23
+text 130 110 <eval colors_menu_start + 0<tag.colorsmenu>+22> 24
+text 130 130 <eval colors_menu_start + 0<tag.colorsmenu>+23> 25
+text 130 150 <eval colors_menu_start + 0<tag.colorsmenu>+24> 26
+text 130 170 <eval colors_menu_start + 0<tag.colorsmenu>+25> 27
+text 130 190 <eval colors_menu_start + 0<tag.colorsmenu>+26> 28
+text 130 210 <eval colors_menu_start + 0<tag.colorsmenu>+27> 29
+text 130 230 <eval colors_menu_start + 0<tag.colorsmenu>+28> 30
+text 130 250 <eval colors_menu_start + 0<tag.colorsmenu>+29> 31
+text 130 270 <eval colors_menu_start + 0<tag.colorsmenu>+30> 32
+text 130 290 <eval colors_menu_start + 0<tag.colorsmenu>+31> 33
+text 130 310 <eval colors_menu_start + 0<tag.colorsmenu>+32> 34
+text 130 330 <eval colors_menu_start + 0<tag.colorsmenu>+33> 35
+text 130 350 <eval colors_menu_start + 0<tag.colorsmenu>+34> 36
+text 130 370 <eval colors_menu_start + 0<tag.colorsmenu>+35> 37
+text 130 390 <eval colors_menu_start + 0<tag.colorsmenu>+36> 38
+text 130 410 <eval colors_menu_start + 0<tag.colorsmenu>+37> 39
+text 130 430 <eval colors_menu_start + 0<tag.colorsmenu>+38> 40
+
+text 230 50 <eval colors_menu_start + 0<tag.colorsmenu>+39> 41
+text 230 70 <eval colors_menu_start + 0<tag.colorsmenu>+40> 42
+text 230 90 <eval colors_menu_start + 0<tag.colorsmenu>+41> 43
+text 230 110 <eval colors_menu_start + 0<tag.colorsmenu>+42> 44
+text 230 130 <eval colors_menu_start + 0<tag.colorsmenu>+43> 45
+text 230 150 <eval colors_menu_start + 0<tag.colorsmenu>+44> 46
+text 230 170 <eval colors_menu_start + 0<tag.colorsmenu>+45> 47
+text 230 190 <eval colors_menu_start + 0<tag.colorsmenu>+46> 48
+text 230 210 <eval colors_menu_start + 0<tag.colorsmenu>+47> 49
+text 230 230 <eval colors_menu_start + 0<tag.colorsmenu>+48> 50
+text 230 250 <eval colors_menu_start + 0<tag.colorsmenu>+49> 51
+text 230 270 <eval colors_menu_start + 0<tag.colorsmenu>+50> 52
+text 230 290 <eval colors_menu_start + 0<tag.colorsmenu>+51> 53
+text 230 310 <eval colors_menu_start + 0<tag.colorsmenu>+52> 54
+text 230 330 <eval colors_menu_start + 0<tag.colorsmenu>+53> 55
+text 230 350 <eval colors_menu_start + 0<tag.colorsmenu>+54> 56
+text 230 370 <eval colors_menu_start + 0<tag.colorsmenu>+55> 57
+text 230 390 <eval colors_menu_start + 0<tag.colorsmenu>+56> 58
+text 230 410 <eval colors_menu_start + 0<tag.colorsmenu>+57> 59
+text 230 430 <eval colors_menu_start + 0<tag.colorsmenu>+58> 60
+
+
+
+//07b1
+//81d
+
+[dialog d_new_colors TEXT]
+0
+<eval colors_menu_start + 0<tag.colorsmenu>+-1>
+<eval colors_menu_start + 0<tag.colorsmenu>>
+<eval colors_menu_start + 0<tag.colorsmenu>+1>
+<eval colors_menu_start + 0<tag.colorsmenu>+2>
+<eval colors_menu_start + 0<tag.colorsmenu>+3>
+<eval colors_menu_start + 0<tag.colorsmenu>+4>
+<eval colors_menu_start + 0<tag.colorsmenu>+5>
+<eval colors_menu_start + 0<tag.colorsmenu>+6>
+<eval colors_menu_start + 0<tag.colorsmenu>+7>
+<eval colors_menu_start + 0<tag.colorsmenu>+8>
+<eval colors_menu_start + 0<tag.colorsmenu>+9>
+<eval colors_menu_start + 0<tag.colorsmenu>+10>
+<eval colors_menu_start + 0<tag.colorsmenu>+11>
+<eval colors_menu_start + 0<tag.colorsmenu>+12>
+<eval colors_menu_start + 0<tag.colorsmenu>+13>
+<eval colors_menu_start + 0<tag.colorsmenu>+14>
+<eval colors_menu_start + 0<tag.colorsmenu>+15>
+<eval colors_menu_start + 0<tag.colorsmenu>+16>
+<eval colors_menu_start + 0<tag.colorsmenu>+17>
+<eval colors_menu_start + 0<tag.colorsmenu>+18>
+<eval colors_menu_start + 0<tag.colorsmenu>+19>
+<eval colors_menu_start + 0<tag.colorsmenu>+20>
+<eval colors_menu_start + 0<tag.colorsmenu>+21>
+<eval colors_menu_start + 0<tag.colorsmenu>+22>
+<eval colors_menu_start + 0<tag.colorsmenu>+23>
+<eval colors_menu_start + 0<tag.colorsmenu>+24>
+<eval colors_menu_start + 0<tag.colorsmenu>+25>
+<eval colors_menu_start + 0<tag.colorsmenu>+26>
+<eval colors_menu_start + 0<tag.colorsmenu>+27>
+<eval colors_menu_start + 0<tag.colorsmenu>+28>
+<eval colors_menu_start + 0<tag.colorsmenu>+29>
+<eval colors_menu_start + 0<tag.colorsmenu>+30>
+<eval colors_menu_start + 0<tag.colorsmenu>+31>
+<eval colors_menu_start + 0<tag.colorsmenu>+32>
+<eval colors_menu_start + 0<tag.colorsmenu>+33>
+<eval colors_menu_start + 0<tag.colorsmenu>+34>
+<eval colors_menu_start + 0<tag.colorsmenu>+35>
+<eval colors_menu_start + 0<tag.colorsmenu>+36>
+<eval colors_menu_start + 0<tag.colorsmenu>+37>
+<eval colors_menu_start + 0<tag.colorsmenu>+38>
+<eval colors_menu_start + 0<tag.colorsmenu>+39>
+<eval colors_menu_start + 0<tag.colorsmenu>+40>
+<eval colors_menu_start + 0<tag.colorsmenu>+41>
+<eval colors_menu_start + 0<tag.colorsmenu>+42>
+<eval colors_menu_start + 0<tag.colorsmenu>+43>
+<eval colors_menu_start + 0<tag.colorsmenu>+44>
+<eval colors_menu_start + 0<tag.colorsmenu>+45>
+<eval colors_menu_start + 0<tag.colorsmenu>+46>
+<eval colors_menu_start + 0<tag.colorsmenu>+47>
+<eval colors_menu_start + 0<tag.colorsmenu>+48>
+<eval colors_menu_start + 0<tag.colorsmenu>+49>
+<eval colors_menu_start + 0<tag.colorsmenu>+50>
+<eval colors_menu_start + 0<tag.colorsmenu>+51>
+<eval colors_menu_start + 0<tag.colorsmenu>+52>
+<eval colors_menu_start + 0<tag.colorsmenu>+53>
+<eval colors_menu_start + 0<tag.colorsmenu>+54>
+<eval colors_menu_start + 0<tag.colorsmenu>+55>
+<eval colors_menu_start + 0<tag.colorsmenu>+56>
+<eval colors_menu_start + 0<tag.colorsmenu>+57>
+<eval colors_menu_start + 0<tag.colorsmenu>+58>
+
+[dialog d_new_colors BUTTON]
+
+//new_color_timer is the function that calls up a targetter, and set's 
+//the color of what you choose to what is supplied as args
+//It is farther down in this file
+ONBUTTON=1101
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+20>
+
+ONBUTTON=1102
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+210>
+
+ONBUTTON=1103
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+22>
+
+ONBUTTON=1104
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+23>
+
+ONBUTTON=1105
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+24>
+
+ONBUTTON=1106
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+25>
+
+ONBUTTON=1107
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+26>
+
+ONBUTTON=1108
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+27>
+
+ONBUTTON=1109
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+28>
+
+ONBUTTON=1110
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+29>
+
+ONBUTTON=1111
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+30>
+
+ONBUTTON=1112
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+31>
+
+ONBUTTON=1113
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+32>
+
+ONBUTTON=1114
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+33>
+
+ONBUTTON=1115
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+34>
+
+ONBUTTON=1116
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+35>
+
+ONBUTTON=1117
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+36>
+
+ONBUTTON=1118
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+37>
+
+ONBUTTON=1119
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+38>
+
+ONBUTTON=1120
+new_color_timer <eval colors_menu_start + 0<tag.colorsmenu>+39>
+
+
+ONBUTTON=1150
+if (<eval 0<tag.colorsmenu>+20>>=0)&&(<eval 0<tag.colorsmenu>+20><2500)
+	tag.colorsmenu=<eval 0<tag.colorsmenu>+20>
+	dialog d_new_colors
+else
+	tag.colorsmenu=2460
+	dialog d_new_colors
+endif
+
+
+ONBUTTON=1151
+if (<eval 0<tag.colorsmenu>+(-20)>>=0)&&(<eval 0<tag.colorsmenu>+(-20)><2500)
+	tag.colorsmenu=<eval 0<tag.colorsmenu>+(-20)>
+	dialog d_new_colors
+else
+	tag.colorsmenu=-20
+	dialog d_new_colors
+endif
+
+ONBUTTON=1153
+if (<eval <ARGTXT[1]>+(-19)>>=0)&&(<eval <ARGTXT[1]>+(-19)><=2500)
+	tag.colorsmenu=<eval <ARGTXT[1]>+(-19)>
+	dialog d_new_colors
+else
+	tag.colorsmenu=0
+	dialog d_new_colors
+endif
+
+
+
+
+
+
+
+//*****************************************************
+//******************new_color_timer********************
+//**gives you a targetter and sets the color to argn***
+//*****************************************************
+
+
+[function new_color_timer]
+newitem i_new_color_timer
+act.cont=<uid>
+act.morex=<argn>
+act.dclick
+
+
+[ITEMDEF i_new_color_timer]
+ID=i_memory
+Type=t_eq_script
+NAME="new color timer"
+
+on=@create
+timer=30
+attr=04002
+
+ON=@Dclick
+TARGET What would you like to color?
+return 1
+
+on=@targon_item
+
+if (<SRC.ISGM>) //If you are a GM, you can use this to color anything
+	src.targ.color=<morex>
+	src.sysmessage The hex value for that color is: <src.targ.color>
+elif (<src.targ.dye>) //If players can normally dye this
+	src.targ.color=<morex> //color it
+else //If you aren't a GM, and the target isn't dyable
+	src.sysmessage You cannot dye that. //dont dye it
+endif
+remove
+return 1
+
+on=@timer
+remove
+return 1
+
+on=@targon_char
+if (<SRC.ISGM>) //Only GMs can dye players
+	src.targ.color=<morex>
+	src.sysmessage The hex value for that color is: <src.targ.color>
+	remove
+	return 1
+else
+	src.sysmessage You are not privileged enough to do this.
+	remove
+	return 1
+endif

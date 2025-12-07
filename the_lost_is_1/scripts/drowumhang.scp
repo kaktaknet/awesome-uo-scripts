@@ -1,0 +1,102 @@
+
+[ITEMDEF i_piwafwi]
+// Rassenitem Drow 
+
+ID=i_cape
+NAME=Piwafwi
+CATEGORY=Neue Objekte
+SUBSECTION=Verschiedenes
+DESCRIPTION=Piwafwi
+TYPE=t_armor
+Layer=20
+WEIGHT=3
+ARMOR=25
+
+ON=@Create
+ATTR=0004
+Color=0455
+Hitpoints=100
+
+ON=@DClick
+
+IF (<SRC.RESTEST 1 i_mem_lastuse>) 
+	SRC.MESSAGE Du kannst die Faehigkeit des Umhang nicht schon wieder nutzen !
+	RETURN 1
+ELSE
+	SRC.Emote verbirgt sich im Schatten.
+	SRC.Invis 1
+	SRC.EVENTS +(e_piwafwi)
+	SRC.FINDLAYER(1).UNEQUIP
+	SRC.FINDLAYER(2).UNEQUIP
+	SRC.NEWITEM i_mem_lastuse
+	SRC.ACT.TIMER=1200
+	SRC.ACT.EQUIP
+	SRC.NEWITEM i_mem_piwafwi
+	SRC.ACT.TIMER=30
+	SRC.ACT.EQUIP
+	Return 1
+ENDIF
+
+ON=@EQUIP
+
+IF ! (<SRC.OSKIN>==0455)
+	SRC.MESSAGE Du bist kein Drow !
+	UnEquip
+	Return 1
+ELSE
+	SRC.FLAGS=<SRC.FLAGS>|statf_nightsight
+	SRC.Resync
+ENDIF
+
+On=@UnEquip
+IF ! (<SRC.OSKIN>==0455)
+	Return 1
+ELSE	
+	SRC.FLAGS=<SRC.FLAGS>&~statf_nightsight
+	SRC.Resync
+ENDIF
+
+[ITEMDEF i_mem_piwafwi]
+// Memory Item zu Festlegung der Dauer des Invis
+ID=i_memory
+TYPE=t_eq_script
+NAME=Piwafwi Dauer
+
+CATEGORY=Tiralf
+SUBSECTION=Mem-Items
+DESCRIPTION=Piwafwi Dauer
+
+ON=@EQUIP
+ATTR=attr_decay
+ON=@TIMER
+CONT.Invis 0
+CONT.EVENTS -(e_piwafwi)
+CONT.EMOTE tritt aus dem Schatten heraus
+REMOVE
+RETURN 1
+
+
+[EVENTS e_piwafwi]
+
+ON=@HITTRY
+FINDID.i_mem_piwafwi.TIMER=0
+
+ON=@SPELLCAST
+FINDID.i_mem_piwafwi.TIMER=0
+
+[ITEMDEF i_mem_lastuse]
+// Memory Item zu Festlegung des letzen Nutzens
+ID=i_memory
+TYPE=t_eq_script
+NAME=Last Use
+
+CATEGORY=Tiralf
+SUBSECTION=Mem-Items
+DESCRIPTION=Last Use
+
+ON=@EQUIP
+ATTR=attr_decay
+
+ON=@TIMER
+REMOVE
+[EOF]

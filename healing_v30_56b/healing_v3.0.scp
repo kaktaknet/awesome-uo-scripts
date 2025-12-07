@@ -1,0 +1,306 @@
+// Healing System v3.0 (Sphere 56b)
+// Scripted by Fusion (a.k.a. Jdog)
+// Please do not remove this header.
+
+
+// FEATURES AND TWEAKS:
+
+// - The amount of hitpoints received is now based on a mathematical equation.
+// - Changed all VAR options to DEFNAMEs.
+// - Added CHECKBEFORETARG to allow a character to 'ready' another bandage.
+// - Added DEFNAME for message colors.
+// - Removed unused VARs, such as VAR.HEALERUID.
+// - Removed excessive/repetitive lines using a much more simpler method.
+// - Bloody bandages will now return to the healer on failure.
+// - Modified skill gain so that is about 20% slower.
+// - Fixed various (though minor) bugs I noticed.
+
+// Please note that this is NOT compatible with Sphere 55i. I recommend this
+// script is only used with Sphere 56b.
+
+// If you find ANY bugs with this script, please submit them to me.
+// You can contact me via e-mail at red_fusion_x@hotmail.com.
+
+
+[ITEMDEF 0e21]
+DEFNAME=i_bandage
+RESOURCES=i_cloth
+TYPE=T_eq_script
+WEIGHT=.1
+VALUE=2
+DUPELIST=0ee9
+
+CATEGORY=Items by Professions
+SUBSECTION=Healer
+DESCRIPTION=Clean Bandages
+
+ON=@DClick
+
+IF (<DEF0.CHECKBEFORETARG>==1) && (0<SRC.FINDID.i_memory_healer>)
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> You're already using your Healing skill.
+RETURN 1
+ENDIF
+IF (<TOPOBJ.UID> != <SRC.UID>)
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> You may only use these if they are on your person.
+RETURN 1
+ELSE
+TARGET @<DEF0.MSG_COLOR> Please target someone to use these on.
+RETURN 1
+ENDIF
+
+ON=@Targon_Char
+IF (<DEF0.CHECKBEFORETARG>==0) && (0<SRC.FINDID.i_memory_healer>)
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> You're already using your Healing skill.
+RETURN 1
+ENDIF
+IF (<SRC.TARG.DISTANCE> >= 5)
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> The target is too far away.
+RETURN 1
+ENDIF
+IF (<DEF0.CUREPOISON>==1)
+IF (<SRC.TARG.FLAGS> & statf_poisoned)
+SERV.NEWITEM=i_memory_healer
+NEW.CONT=<SRC.UID>
+NEW.LINK=<SRC.TARG.UID>
+NEW.MORE=1
+NEW.TIMER=4
+SRC.EVENTS +e_death_mem_fix
+IF (<DEF0.HEALINTERRUPT>==1)
+SRC.EVENTS +e_healing_interrupt
+ENDIF
+RETURN 1
+ENDIF
+ENDIF
+IF (<DEF0.CANRESURRECT>==0) && (<SRC.TARG.FLAGS> & statf_dead)
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> You cannot resurrect do this.
+RETURN 1
+ENDIF
+IF (<SRC.TARG.FLAGS> & statf_dead)
+IF (<SRC.HEALING> >= 1000) && (<SRC.ANATOMY> >= 1000)
+SRC.HITS=<SRC.HITS> +- 50
+SRC.TARG.RESURRECT
+SRC.CONSUME 2 i_bandage
+SRC.TARG.CONSUME 1 i_deathshroud
+IF (<DEF0.SKILLCANCEL>==1)
+SRC.ACTION -1
+ENDIF
+RETURN 1
+ELSE
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> You are lacking the required skill to do this.
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.TARG.HITS>==<SRC.TARG.STR>)
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> The target seems to be healthy.
+RETURN 1
+ELSE
+IF (<SRC.TARG.UID>==<SRC.UID>)
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> You apply a bandage to yourself.
+SRC.CONSUME 1 i_bandage
+IF (<DEF0.SKILLCANCEL>==1)
+SRC.ACTION -1
+ENDIF
+SERV.NEWITEM=i_memory_healer
+NEW.CONT=<SRC.UID>
+NEW.LINK=<SRC.TARG.UID>
+NEW.TIMER=4
+SRC.EVENTS +e_death_mem_fix
+IF (<DEF0.HEALINTERRUPT>==1)
+SRC.EVENTS +e_healing_interrupt
+ENDIF
+RETURN 1
+ELSE
+SRC.TARG.SYSMESSAGE @<DEF0.MSG_COLOR> <SRC.NAME> has applied a bandage to you.
+SRC.SYSMESSAGE @<DEF0.MSG_COLOR> You apply a bandage to <SRC.TARG.NAME>.
+SRC.CONSUME 1 i_bandage
+IF (<DEF0.SKILLCANCEL>==1)
+SRC.ACTION -1
+ENDIF
+SERV.NEWITEM=i_memory_healer
+NEW.CONT=<SRC.UID>
+NEW.LINK=<SRC.TARG.UID>
+NEW.TIMER=4
+SRC.EVENTS +e_death_mem_fix
+IF (<DEF0.HEALINTERRUPT>==1)
+SRC.EVENTS +e_healing_interrupt
+ENDIF
+RETURN 1
+ENDIF
+ENDIF
+
+
+[ITEMDEF i_memory_healer]
+ID=i_memory
+NAME=Healer
+WEIGHT=0
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_newbie|attr_invis|attr_decay
+
+ON=@Timer
+IF (<MORE>==1)
+f_cure_poison
+RETURN 1
+ENDIF
+IF (<LINK.FLAGS> & statf_dead) // Is the target now dead?
+REMOVE
+RETURN 1
+ENDIF
+f_crim_action
+f_healing_gain
+f_healing_fail
+LOCAL.HEAL_VAL=<EVAL (<CONT.HEALING> @ 2) / (RAND(20000,30000))>
+LINK.HITS += <EVAL <LOCAL.HEAL_VAL>>
+IF (<LINK.HITS> > <LINK.STR>)
+LINK.HITS=<LINK.STR>
+CONT.UPDATE
+ENDIF
+CONT.EVENTS -e_healing_interrupt
+CONT.EVENTS -e_death_mem_fix
+REMOVE
+RETURN 1
+
+
+[FUNCTION f_healing_fail]
+VAR.FAILCHANCE=<EVAL RAND(1,1001)>
+IF (<DEF0.CANFAIL>==0)
+RETURN 0
+ENDIF
+IF (<VAR0.FAILCHANCE> < <CONT.HEALING>)
+IF (<LINK.UID>==<CONT.UID>)
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You have succeeded in healing yourself.
+RETURN 1
+ELSE
+LINK.SYSMESSAGE @<DEF0.MSG_COLOR> <CONT.NAME> has succeeded in healing you.
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You have succeeded in healing <LINK.NAME>.
+RETURN 1
+ENDIF
+ELIF (<VAR0.FAILCHANCE> > <CONT.HEALING>)
+IF (<LINK.UID>==<CONT.UID>)
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You have failed to heal yourself.
+CONT.EVENTS -e_healing_interrupt
+CONT.EVENTS -e_death_mem_fix
+SERV.NEWITEM=i_bandage_bloody
+NEW.CONT=<CONT.UID>
+CONT.FINDID(i_memory_healer).REMOVE
+RETURN 1
+ELSE
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You have failed to heal <LINK.NAME>.
+LINK.SYSMESSAGE @<DEF0.MSG_COLOR> <CONT.NAME> has failed to heal you.
+SERV.NEWITEM=i_bandage_bloody
+NEW.CONT=<CONT.UID>
+CONT.EVENTS -e_healing_interrupt
+CONT.EVENTS -e_death_mem_fix
+CONT.FINDID(i_memory_healer).REMOVE
+RETURN 1
+ENDIF
+ENDIF
+
+
+[FUNCTION f_healing_gain]
+IF (<CONT.HEALING> >= 1000)
+TAG.GAINCHANCE=0
+RETURN 1
+ELSE
+TAG0.GAINCHANCE += 70
+IF (<TAG0.GAINCHANCE> > <CONT.HEALING>)
+CONT.HEALING += 0.1
+TAG.GAINCHANCE=0
+RETURN 0
+ENDIF
+ENDIF
+
+
+[FUNCTION f_cure_poison]
+IF (<DEF0.CUREPOISON>==0)
+RETURN 1
+ELSE
+f_crim_action
+f_healing_gain
+f_fail_poison
+LINK.FINDID(i_rune_poison).REMOVE
+CONT.UPDATE
+ENDIF
+CONT.EVENTS -e_healing_interrupt
+CONT.EVENTS -e_death_mem_fix
+REMOVE
+RETURN 1
+
+
+[FUNCTION f_fail_poison]
+VAR.FAILCHANCE=<EVAL RAND(1,1001)>
+IF (<DEF0.CANFAIL>==0)
+RETURN 0
+ENDIF
+IF (<VAR0.FAILCHANCE> < <CONT.HEALING>)
+IF (<LINK.UID>==<CONT.UID>)
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You have succeeded in curing yourself.
+RETURN 1
+ELSE
+LINK.SYSMESSAGE @<DEF0.MSG_COLOR> <CONT.NAME> has succeeded in curing you.
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You have succeeded in curing <LINK.NAME>.
+RETURN 1
+ENDIF
+ELIF (<VAR0.FAILCHANCE> > <CONT.HEALING>)
+IF (<LINK.UID>==<CONT.UID>)
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You have failed to cure yourself.
+CONT.EVENTS -e_healing_interrupt
+CONT.EVENTS -e_death_mem_fix
+SERV.NEWITEM=i_bandage_bloody
+NEW.CONT=<CONT.UID>
+CONT.FINDID(i_memory_healer).REMOVE
+RETURN 1
+ELSE
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You have failed to cure <LINK.NAME>.
+LINK.SYSMESSAGE @<DEF0.MSG_COLOR> <CONT.NAME> has failed to cure you.
+CONT.EVENTS -e_healing_interrupt
+CONT.EVENTS -e_death_mem_fix
+SERV.NEWITEM=i_bandage_bloody
+NEW.CONT=<CONT.UID>
+CONT.FINDID(i_memory_healer).REMOVE
+RETURN 1
+ENDIF
+ENDIF
+
+
+[FUNCTION f_crim_action]
+IF (<DEF0.HEALCRIMINAL>==0)
+RETURN 1
+ELSE
+IF (<LINK.KILLS> >= <SERV.MURDERMINCOUNT>) || (<LINK.FLAGS> & statf_criminal)
+CONT.SYSMESSAGE @<DEF0.MSG_COLOR> You are now a criminal for your actions.
+CONT.CRIMINAL=1
+ENDIF
+ENDIF
+
+
+[EVENTS e_healing_interrupt]
+ON=@GetHit
+SYSMESSAGE @<DEF0.MSG_COLOR> You were interrupted.
+FINDID(i_memory_healer).REMOVE
+EVENTS -e_healing_interrupt
+RETURN 0
+
+
+[EVENTS e_death_mem_fix]
+ON=@Death
+FINDID(i_memory_healer).REMOVE
+EVENTS -e_death_mem_fix
+RETURN 0
+
+
+[DEFNAME def_healing_msgs]
+msg_color 1153 // White
+
+
+[DEFNAME def_healing_options]
+// Enable is 1.
+// Disable is 0.
+CHECKBEFORETARG 1 // Allow them to 'ready' another bandage?
+HEALINTERRUPT 0 // Interrupt when hit?
+CANRESURRECT 1 // Allow resurrection with bandages?
+HEALCRIMINAL 1 // Bandaging Criminals will make the healing character criminal as well?
+SKILLCANCEL 1 // Cancel current skill when a bandage is applied?
+CUREPOISON 1 // Allow curing of poison?
+CANFAIL  1 // Allow failing for healing and curing of poison?

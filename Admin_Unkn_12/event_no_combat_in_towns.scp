@@ -1,0 +1,59 @@
+//Scripted by admin soulless
+//add the 2 lines that follow to you sphere_skills.scp
+//on=@login
+//events=+e_no_combat_in_towns
+//players in town or outside the town limits may not attack those inside the town.
+//this includes their pets
+//guild wars will continue to function normally though even when inside towns.
+//plz pass any bugs on to Soulless15@hotmail.com
+
+[EVENTS e_no_combat_in_towns]
+
+on=@HITTRY
+IF (!<GM>)
+IF (<ACT.REGION.FLAGS>&region_flag_guarded) || (<REGION.FLAGS>&region_flag_guarded)
+IF (<NOTOGETFLAG <ACT.UID>,0>==5) || (<NOTOGETFLAG <ACT.memoryfindtype.memory_IPET.LINK.UID>,0>==5) || (<ACT.BRAIN>==Brain_monster) 
+RETURN 0
+ELSE
+FLAGS=<FLAGS>&~statf_war
+ACTION=-1
+SYSMESSAGE You cannot attack them here.
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+
+ON=@SPELLCAST
+IF (!<SRC.GM>)
+IF (<ACT.REGION.FLAGS>&region_flag_guarded) || (<SRC.REGION.FLAGS>&region_flag_guarded) 
+IF (<SERV.SPELL.<ARGN>.FLAGS>&SPELLFLAG_HARM) || (<ARGN>==24) || (<ARGN>==34) || (<ARGN>==60) || (<ARGN>==61) || (<ARGN>==62) || (<ARGN>==63) || (<ARGN>==64)
+IF (<NOTOGETFLAG <ACT.UID>,0>==5) || (<NOTOGETFLAG <ACT.memoryfindtype.memory_IPET.LINK.UID>,0>==5) || (<ACT.BRAIN>==Brain_monster) 
+RETURN 0
+ELSE
+SRC.FLAGS=<SRC.FLAGS>&~statf_war
+SRC.SYSMESSAGE You cannot cast that here.
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+ENDIF
+
+on=@itemdclick
+IF (<REGION.FLAGS>&region_flag_guarded)
+IF (<ACT.MORE1>==s_explosion) 
+Src.sysmessage You cannot use that here.
+return 1
+endif
+
+on=@gethit
+IF (<NOTOGETFLAG <SRC.UID>,0>==5) || (<NOTOGETFLAG <SRC.memoryfindtype.memory_IPET.LINK.UID>,0>==5) || (<SRC.BRAIN>==Brain_monster) || (<SRC.GM>)
+RETURN 0
+ELSE
+SRC.FLAGS=<SRC.FLAGS>&~statf_war
+RETURN 1
+ENDIF
+
+
+
+
+

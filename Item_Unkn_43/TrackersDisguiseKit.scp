@@ -1,0 +1,393 @@
+//#################################################### 
+//#############Tracker's Disguise Kit################# 
+//#################################################### 
+//By Tracker of Shattered Alliance 
+//http://gray-cat.com/alliance 
+//This is tested on version 55i
+// 
+//Use at your own risk, yada yada... 
+// 
+// 
+//INSTRUCTIONS!! 
+// 
+//This script is terribly easy to use. Put it in your Sphere folder in a .scp file 
+//that is in your spheretables under [RESOURCES], or make a new one and put it there. 
+// 
+//
+//With this, a player just needs to use the disguise kit, and he suddenly is
+//and entirely different person! This should only be given to trusted players, of course.
+//Since we have a trustworthy playerbase, we have ours craftable.
+//
+// 
+//While disguised, if the person is hit *by anything* the disguise will be removed.
+//If someone steps on the player, they will get a sysmessage saying that the person is 
+//"wearing make-up and a fake nose"
+//
+//The player's original attributes are stored on them in tags:
+//TAG.NAMEDISGUISED 0 = not disguised, 1 = disguised 
+//TAG.REALNAME = your real name 
+//TAG.REALTITLE = your real title 
+
+
+
+//*********************************************
+//***********Disguise Kit Item*****************
+//*********************************************
+//This is the actual item that player will use to disguise themselves
+//It isn't necessary to use an item, you can actually just use "dialog d_disguise_gump"
+//anywhere and it will let them use these features.
+//
+[ITEMDEF i_disguise_kit2] 
+ID=0e46 
+NAME="Disguise Kit" 
+
+ON=@Create 
+COLOR=07D6 
+ATTR=4 
+
+ON=@Dclick 
+IF !(<SRC.FLAGS> & 0800000) 
+	SRC.MESSAGE "You can only use this while hidden." 
+ELSE 
+	SRC.DIALOG d_disguise_gump 
+ENDIF 
+return 1
+
+//If you want players to be able to use disguise by just typing .disguise
+//if they have tag.thief set to 1
+//Then uncomment this section :
+
+//from here>>>
+//[function disguise]
+//if (<eval 0<tag.thief>>)
+//	dialog d_disguise_gump
+//else
+//	sysmessage You are not a thief
+//endif
+//[plevel 1]
+//disguise
+
+//TO HERE>>>>
+
+//*********************************************
+//*************Disguise Gump*******************
+//*********************************************
+//These are the various parts of the disguise kit gumps...hair selection, etc...
+
+[DIALOG d_disguise_name] 
+50,50 
+page 0 
+resizepic 0 0 5100 640 170 
+resizepic 15 155 5100 175 40 
+button 100 161 <eval g_btn_gray_apply> <eval g_btn_gray_apply_press> 1 0 901 
+button 20 161 5200 5201 1 0 900 
+text 10 10 1152 1 
+resizepic 5 30 2620 600 35 
+textentry 15 36 600 20 1152 1 0 
+text 10 59 1152 2 
+resizepic 5 84 2620 600 35 
+textentry 15 90 600 20 1152 3 0 
+
+[DIALOG d_disguise_name TEXT] 
+<VAR.BLANKLINE> 
+Disguise Kit - Name 
+Title 
+
+[DIALOG d_disguise_name BUTTON] 
+ONBUTTON=901 // The apply button 
+SRC.EVENTS +e_namedisguised 
+SRC.SFX 302 
+SRC.SYSMESSAGE "Your name has been changed to <ARGTXT[1]> " 
+SRC.SYSMESSAGE "Your title has been changed to <ARGTXT[3]> " 
+
+SRC.TAG.REALNAME=<SRC.NAME> 
+SRC.TAG.REALTITLE=<SRC.TITLE> 
+SRC.TAG.NAMEDISGUISED=1 
+SRC.NAME="<ARGTXT[1]> " 
+SRC.TITLE="<ARGTXT[3]> " 
+SRC.DIALOG d_disguise_gump 
+RETURN 0 
+
+
+
+
+//-=-=-=-=-= 
+
+[DIALOG d_disguise_hair] 
+20,20 
+page 0 
+resizepic 0 0 83 370 430 
+page 1 
+text 10 10 2101 1 
+
+button 10 395 242 241 1 0 1206 //cancel 
+button 190 200 4502 4502 1 0 1218 //move on 
+
+button 25 40 2472 2473 1 0 1217 //hair types 
+button 25 70 2472 2473 1 0 1207 
+button 25 100 2472 2473 1 0 1208 
+button 25 130 2472 2473 1 0 1209 
+button 25 160 2472 2473 1 0 1210 
+button 25 190 2472 2473 1 0 1211 
+button 25 220 2472 2473 1 0 1212 
+button 25 250 2472 2473 1 0 1213 
+button 25 280 2472 2473 1 0 1214 
+button 25 310 2472 2473 1 0 1215 
+button 25 340 2472 2473 1 0 1216 
+
+text 55 73 2101 2 
+text 55 103 2101 3 
+text 55 133 2101 4 
+text 55 163 2101 5 
+text 55 193 2101 6 
+text 55 223 2101 7 
+text 55 253 2101 8 
+text 55 283 2101 9 
+text 55 313 2101 10 
+text 55 343 2101 11 
+text 55 43 2101 12 
+
+
+[DIALOG d_disguise_hair TEXT] 
+<VAR.BLANKLINE> 
+Disguise Kit - Choose a hair style. 
+Short Hair 
+Long Hair 
+Pony Tail 
+Mohawk 
+Pageboy 
+2 Buns 
+Afro 
+Receeding 
+Pig Tails 
+Topknot 
+Bald 
+
+
+[DIALOG d_disguise_hair BUTTON] 
+ONBUTTON=1207 
+SRC.NEWITEM 0203b 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1208 
+SRC.NEWITEM 0203c 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1209 
+SRC.NEWITEM 0203d 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1210 
+SRC.NEWITEM 02044 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1211 
+SRC.NEWITEM 02045 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1212 
+SRC.NEWITEM 02046 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1213 
+SRC.NEWITEM 02047 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1214 
+SRC.NEWITEM 02048 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1215 
+SRC.NEWITEM 02049 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1216 
+SRC.NEWITEM 0204a 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1217 
+SRC.FINDLAYER(11).REMOVE 
+SRC.DIALOG d_disguise_beard 
+ONBUTTON=1218 
+SRC.DIALOG d_disguise_beard 
+
+
+//-------------------------------------------- 
+[DIALOG d_disguise_beard] 
+16,16 
+page 0 
+resizepic 0 0 83 370 430 
+page 1 
+text 10 10 2101 1 
+
+button 10 395 242 241 1 0 1206 //cancel 
+button 190 200 4502 4502 1 0 1218 //move on 
+
+button 25 40 2472 2473 1 0 1212 //beard types 
+button 25 70 2472 2473 1 0 1207 
+button 25 100 2472 2473 1 0 1208 
+button 25 130 2472 2473 1 0 1209 
+button 25 160 2472 2473 1 0 1210 
+button 25 190 2472 2473 1 0 1211 
+button 25 220 2472 2473 1 0 1213 
+button 25 250 2472 2473 1 0 1214 
+
+
+text 55 43 2101 2 
+text 55 73 2101 3 
+text 55 103 2101 4 
+text 55 133 2101 5 
+text 55 163 2101 6 
+text 55 193 2101 7 
+text 55 223 2101 8 
+text 55 253 2101 9 
+
+
+[DIALOG d_disguise_beard TEXT] 
+<VAR.BLANKLINE> 
+Disguise Kit - Choose a beard style. 
+No Facial Hair 
+Long Beard w/o Mustache 
+Short Beard w/o Mustache 
+Goatee 
+Mustache 
+Short Beard 
+Long Beard 
+Vandyke 
+
+
+[DIALOG d_disguise_beard BUTTON] 
+ONBUTTON=1207 
+SRC.NEWITEM 0203e 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_gump 
+ONBUTTON=1208 
+SRC.NEWITEM 0203f 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_gump 
+ONBUTTON=1209 
+SRC.NEWITEM 02040 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_gump 
+ONBUTTON=1210 
+SRC.NEWITEM 02041 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_gump 
+ONBUTTON=1211 
+SRC.NEWITEM 0204b 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_gump 
+ONBUTTON=1212 
+SRC.FINDLAYER(16).REMOVE 
+SRC.DIALOG d_disguise_gump 
+ONBUTTON=1213 
+SRC.NEWITEM 0204c 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_gump 
+ONBUTTON=1214 
+SRC.NEWITEM 0204d 
+SRC.ACT.EQUIP 
+SRC.DIALOG d_disguise_gump 
+
+ONBUTTON=1218 
+SRC.DIALOG d_disguise_gump 
+
+
+//---------------------------------- 
+[DIALOG d_disguise_gump] 
+10,50 
+page 0 
+resizepic 0 0 83 300 450 
+page 1 
+text 10 10 2101 1 
+button 20 70 2247 2247 1 0 1203 
+text 70 80 2101 2 
+button 20 150 2242 2242 1 0 1204 
+
+text 70 160 2101 3 
+button 10 415 242 241 1 0 1205 
+
+text 70 240 2101 4 
+button 20 230 2249 2249 1 0 1206 
+text 70 320 2101 5 
+button 20 310 2274 2274 1 0 1207 
+
+
+[DIALOG d_disguise_gump TEXT] 
+<VAR.BLANKLINE> 
+Disguise Kit 
+Change Name and Title 
+Change Beard and Hair 
+Quick Dye Hair and Beard 
+Revert To Normal 
+
+[DIALOG d_disguise_gump BUTTON] 
+ONBUTTON=1203 
+IF !<SRC.TAG.NAMEDISGUISED> 
+SRC.DIALOG d_disguise_name 
+
+ELSE 
+SYSMESSAGE "You are already disguised. Remove your current disguise before trying again." 
+SRC.DIALOG d_disguise_gump 
+ENDIF 
+
+endif 
+
+
+ONBUTTON=1204 
+IF !<eval <findlayer(16).ID>>0> 
+SRC.TAG.REALBEARD=<findlayer(16).ID> 
+ELSE 
+SRC.TAG.REALBEARD= 
+ENDIF 
+IF !<eval <findlayer(11).ID>>0> 
+SRC.TAG.REALHAIR=<findlayer(11).ID> 
+ELSE 
+SRC.TAG.REALHAIR= 
+ENDIF 
+SRC.TAG.REALHAIRCOLOR=<findlayer(11).COLOR> 
+SRC.TAG.REALBEARDCOLOR=<findlayer(16).COLOR> 
+SRC.TAG.HAIRDISGUISED=1 
+SRC.DIALOG d_disguise_hair 
+
+
+
+ONBUTTON=1206 
+SRC.FINDLAYER(16).COLOR=colors_hair 
+SRC.FINDLAYER(11).COLOR=<SRC.FINDLAYER(16).COLOR> 
+SRC.SFX 306 
+SRC.SYSMESSAGE "You dye your hair." 
+SRC.DIALOG d_disguise_gump 
+
+ONBUTTON=1207 
+IF <SRC.TAG.NAMEDISGUISED> 
+SRC.NAME="<SRC.TAG.REALNAME>" 
+SRC.TITLE="<SRC.TAG.REALTITLE>" 
+SRC.TAG.REALNAME= 
+SRC.TAG.REALTITLE= 
+SRC.TAG.NAMEDISGUISED= 
+SYSMESSAGE "You remove the disguise." 
+SRC.EVENTS -e_namedisguised 
+SFX 302 
+SRC.DIALOG d_disguise_gump 
+ELSE 
+
+//--------------------------- 
+[EVENTS e_namedisguised] 
+
+ON=@PersonalSpace 
+IF <TAG.NAMEDISGUISED> 
+SRC.SYSMESSAGE "You notice that <NAME> is wearing make-up and a fake nose..." 
+ENDIF 
+
+ON=@GetHit 
+IF <TAG.NAMEDISGUISED> 
+NAME="<TAG.REALNAME>" 
+TITLE="<TAG.REALTITLE>" 
+TAG.REALNAME= 
+TAG.REALTITLE= 
+TAG.NAMEDISGUISED= 
+SAY "*<NAME>'s disguise is knocked off!*" 
+EVENTS -e_namedisguised 
+SFX 302 
+END IF

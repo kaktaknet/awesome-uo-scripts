@@ -1,0 +1,81 @@
+
+******************Created by Abaddon*************
+*********http://acheron.dsdv.com/main/index.php*******
+*******ownerabbadon@gmail.com*************
+
+[ITEMDEF i_tile_cth_trap]
+DEFNAME=i_tile_cth_trap
+NAME=CTH Trap Tile
+ID=i_floor_slate_grey
+TYPE=t_trap
+WEIGHT=9000 //this is incase a player were to actually see one
+
+ON=@CREATE
+ATTR=090 //this makes it invisible and not moveable
+
+ON=@STEP
+DORAND (10)
+BEGIN
+	SRC.SPELLEFFECT=s_hallucination 150.0
+	SRC.SOUND=snd_spell_curse
+	SRC.SYSMESSAGE You've set off a trap and suddenly you begin to hallucinate.
+END
+
+BEGIN
+	SRC.SPELLEFFECT=s_flamestrike 150.0
+	SRC.SOUND=snd_spell_flamestrike
+	SRC.EFFECT=3,i_fire_column,15,15,1
+	SRC.SYSMESSAGE You've set off a trap and feel a tower of fire rush through your body.
+END
+
+BEGIN
+	SRC.SPELLEFFECT=s_bless 150.0
+	SRC.SOUND=snd_spell_bless
+	SRC.SYSMESSAGE You've set off a trap and feel strengthened.
+END
+
+BEGIN
+	SRC.SPELLEFFECT=s_greater_heal 150.0
+	SRC.SOUND=snd_spell_heal
+	SRC.SYSMESSAGE You've set off a trap and feel your wounds have been healed.
+END
+
+BEGIN
+	SRC.SPELLEFFECT=s_poison 150.0
+	SRC.SOUND=snd_spell_poison
+	SRC.SYSMESSAGE You've set off a trap and suddenly you feel sick.
+END
+
+BEGIN
+	SRC.SPELLEFFECT=s_mass_curse 150.0
+	SRC.SOUND=snd_spell_curse
+	SRC.SYSMESSAGE You've set off a trap and feel you've been cursed.
+END
+
+BEGIN
+	SRC.SPELLEFFECT=s_paralyze 150.0
+	SRC.SOUND=snd_spell_paralyze
+	SRC.SYSMESSAGE You've set off a trap and you suddenly cannot move.
+END
+
+BEGIN
+	SRC.HITS=<SRC.OSTR>
+	SRC.SOUND=snd_spell_bless
+	SRC.SYSMESSAGE You've set off a trap and your hitpoints have been replenished.
+END
+
+BEGIN
+	SRC.MANA=<SRC.OINT>
+	SRC.SOUND=snd_spell_bless
+	SRC.SYSMESSAGE You've set off a trap and your mana has been replenished.
+END
+
+BEGIN
+	SRC.KILL
+	SRC.SOUND=snd_spell_lightning
+	SRC.EFFECT=3,i_lightning,15,15,1
+	SRC.SYSMESSAGE You've set off a trap and feel your body go numb and cold before seeing your corpse laying at your ghostly feet.
+END
+ENDDO
+
+[EOF]

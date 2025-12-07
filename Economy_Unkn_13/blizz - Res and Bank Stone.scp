@@ -1,0 +1,61 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//Res and Bank Stone v1.0
+
+//Info:
+//Res and bank stone, what else is there more to explain?
+
+[ITEMDEF i_res_stone]
+DEFNAME=i_res_stone
+NAME="Resurrection Stone"
+ID=i_grave_stone
+FLIP=0
+
+ON=@CREATE
+COLOR=00008
+
+ON=@DCLICK
+IF (<DISTANCE> >= 3)
+	SRC.SYSMESSAGE=You can't reach that.
+	RETURN 1
+ENDIF
+IF ( <SRC.FLAGS> & 00000002 )
+	SRC.RESURRECT
+	SRC.NEWITEM=i_invul_delay
+	SRC.ACT.EQUIP
+	RETURN 1
+ENDIF
+RETURN 1
+
+CATEGORY=Custom
+SUBSECTION=Stones
+DESCRIPTION=Res Stone
+
+[ITEMDEF i_bank_stone]
+DEFNAME=i_bank_stone
+NAME="Bank Stone"
+ID=i_gravestone_17
+FLIP=0
+
+ON=@CREATE
+COLOR=0003e
+ATTR=08000
+
+ON=@DCLICK
+IF (<DISTANCE> >= 3)
+	SRC.SYSMESSAGE=You can't reach that.
+	RETURN 1
+ENDIF
+IF ( <SRC.FLAGS> & 00000002 )
+	RETURN 1
+ENDIF
+SRC.BANKSELF
+RETURN 1
+
+CATEGORY=Custom
+SUBSECTION=Stones
+DESCRIPTION=Bank Stone
+
+[EOF]

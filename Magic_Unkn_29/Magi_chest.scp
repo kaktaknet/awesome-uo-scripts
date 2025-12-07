@@ -1,0 +1,32 @@
+[xxxx] 
+//Written by Theol AKA Admin Dark 
+NAME=Magi Chest 
+ID=09ab 
+
+
+ONTRIGGER=SPELL 
+IF <LINK>==04fffffff 
+MOREZ=<SRC.ACTARG1> 
+LINK=<SRC.SERIAL> 
+NAME=<SRC.NAME>'s Magic Chest 
+SRC.SYSMESSAGE That is now the only spell that will open this. 
+SRC.MESSAGE You claim the <NAME> with a spell. 
+RETURN 1 
+ENDIF 
+IF (<SRC.ACTARG1>==<MOREZ>)) 
+DCLICK 
+RETURN 1 
+
+
+ONTRIGGER=DCLICK 
+IF !(<SRC.SERIAL>==<LINK>) 
+SRC.SYSMESSAGE That is not yours! 
+RETURN 1 
+ENDIF 
+IF (<SRC.ACTION>==25 && (<SRC.ACTARG1>==<MOREZ>)) 
+SRC.NEWITEM=0373a 
+SRC.ACT.p=<P> 
+SRC.ACT.TIMER=4 
+RETURN 0 
+ELSE 
+RETURN 1

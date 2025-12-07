@@ -1,0 +1,516 @@
+//- Known Issues -
+//~Damage still being done in Invul/Safe Areas
+//~The Legs "Dismounting Effect" for some reason isnt working
+//Other than that the system works fine
+
+//TO INSTALL
+//Add Events +e_pvp_system on ALL of your players via spheretables.scp
+
+//TO USE
+//type: .examine then target the player you wish to check
+//when at "high" body damage, type: .rest to slowly rest up.
+//:)
+
+//ENJOY!!
+
+
+
+///////////////////////////////////
+//Strategic - Tactical PvP System//
+//BY: Majesty			 //
+//Please Do Not Remove This Header/
+///////////////////////////////////
+
+[events e_pvp_system] //The #'s are what bodypart is being attacked
+on=@hit
+if (<eval <tag.focuson>> = 1 ) //Right Hand
+src.f_body_damage 1
+return 0
+elseif (<eval <tag.focuson>> = 2 ) //Left Hand
+src.f_body_damage 2
+return 0
+elseif (<eval <tag.focuson>> = 3 ) //Head
+src.f_body_damage 3
+return 0
+elseif (<eval <tag.focuson>> = 4 ) //Legs
+src.f_body_damage 4
+return 0
+elseif (<eval <tag.focuson>> = 5 ) //Chest
+src.f_body_damage 5
+return 0
+elseif (<eval <tag.focuson>> = 0 ) //Damage random areas/NPC Damages at Random
+src.f_body_damage <eval {1 5}>
+return 0
+endif
+
+on=@gethit
+if (<eval <tag.rightarm>> < 1 )
+if (<findlayer.layer_hand1.uid>)
+var.enemy=<act.uid>
+act=<findlayer.layer_hand1.uid>
+act.drop
+act.cont=<findlayer.21.uid>
+act=<var.enemy>
+var.enemy=
+bark=4
+sayu=*right arm destroyed*
+endif
+endif
+
+
+if (<eval <tag.leftarm>> < 1 )
+if (<findlayer.layer_hand2.uid>)
+var.enemy=<act.uid>
+act=<findlayer.layer_hand2.uid>
+act.drop
+act.cont=<findlayer.21.uid>
+act=<var.enemy>
+var.enemy=
+bark=4
+sayu=*left arm destroyed*
+endif
+endif
+if (<eval <tag.head>> < 20 )
+mana=<eval <mana>+-{1 5}>
+endif
+if (<eval <mana>> < 1 )
+mana=0
+endif
+if (<eval <tag.legs>> < 20 )
+stamina=<eval <stamina>+-{1 5}>
+endif
+//if (<eval <tag.legs>> < 1 )&&(<eval <act.findlayer.25>> = 1 )
+//message=Your legs are severely damaged, you are unable to stay mounted on your <act.findlayer.25.name>.
+//tryp 0 uid.<act.uid>.dclick
+//anim=21
+//endif
+if (<eval <stamina>> < 1 )
+stamina = 0
+endif
+if (<eval <tag.chest>> < 20 )
+hits=<eval <hits>+-{1 5}>
+endif
+if (<eval <tag.chest>> < 1 )
+f_unequip_armor
+endif
+if (<eval <hits>> < 1 )
+hits=0
+endif
+
+on=@itemequip
+if (<eval <tag.rightarm>> < 1 )&&(<eval <act.layer>> = 1 )
+act.unequip
+message=Your Right Arm is severely damaged, you are unable to use the <act.name>.
+endif
+if (<eval <tag.leftarm>> < 1 )&&(<eval <act.layer>> = 2 )
+act.unequip
+message=Your Left Arm is severely damaged, you are unable to use the <act.name>.
+endif
+if (<eval <tag.chest>> < 1 )&&(<act.type> = t_armor )
+act.unequip
+message=Your chest is severly damaged, your heart cant handle the weight of the <act.name>.
+endif
+
+on=@spellcast
+if (<eval <tag.head>> < 1 )
+message=Your head is severely damaged, you cannot concentrate for the spell.
+return 1
+endif
+
+on=@itemdclick
+if (<eval <tag.leftarm>> < 1 )&&(<act.type> = t_potion )
+message=Your Left Arm is severely damaged, you are not able to use this potion.
+return 1
+endif
+
+if (<eval <tag.rightarm>> < 1 )&&(<act.baseid> = i_bandage )
+message=Your Right Arm is severely damaged, you are not able to use these bandages.
+return 1
+endif
+ 
+
+
+on=@death
+tag.pvppoints=<eval <tag.pvppoints>>+-10
+act.tag.pvppoints=<eval <act.tag.pvppoints>>+<eval <tag.pvppoints>/4>+1
+f_pvp_points_fix
+act.f_pvp_points_fix
+return 0
+
+[function f_pvp_points_fix]
+if (<eval <tag.pvppoints>> > 99 )
+tag.pvppoints=100
+endif
+if (<eval <tag.pvppoints>> < 1 )
+tag.pvppoints=0
+endif
+
+[function f_body_damage] //Body Damage Subtracting
+if (<eval <args>> = 1 )
+tag.rightarm=<eval <tag.rightarm>>+-{0 3}
+if (<eval <tag.rightarm>> < 1 )
+tag.rightarm=0
+endif
+return 0
+elseif (<eval <args>> = 2 )
+tag.leftarm=<eval <tag.leftarm>>+-{0 3}
+if (<eval <tag.leftarm>> < 1 )
+tag.leftarm=0
+endif
+return 0
+elseif (<eval <args>> = 3 )
+tag.head=<eval <tag.head>>+-{0 3}
+if (<eval <tag.head>> < 1 )
+tag.head=0
+endif
+return 0
+elseif (<eval <args>> = 4 )
+tag.legs=<eval <tag.legs>>+-{0 3}
+if (<eval <tag.legs>> < 1 )
+tag.legs=0
+endif
+return 0
+elseif (<eval <args>> = 5 )
+tag.chest=<eval <tag.chest>>+-{0 3}
+if (<eval <tag.chest>> < 1 )
+tag.chest=0
+endif
+return 0
+endif
+
+[function f_unequip_armor] //Equips All Armor (but not shield)
+if (<findlayer.4.uid>)
+findlayer.4.cont=<findlayer.21.uid>
+update
+endif
+if (<findlayer.13.uid>)
+findlayer.13.cont=<findlayer.21.uid>
+update
+endif
+if (<findlayer.10.uid>)
+findlayer.10.cont=<findlayer.21.uid>)
+update
+endif
+if (<findlayer.6.uid>)
+findlayer.6.cont=<findlayer.21.uid>
+update
+endif
+if (<findlayer.19.uid>)
+findlayer.19.cont=<findlayer.21.uid>)
+update
+endif
+if (<findlayer.7.uid>)
+findlayer.7.cont=<findlayer.21.uid>)
+update
+endif
+
+
+[function examine]
+newitem=i_maj_focus
+act.equip
+act.timer=15
+sysmessage=Target the Player you wish to Examine.
+return 1
+
+[itemdef i_maj_focus]
+id=i_memory
+type=t_eq_script
+name=Focus memory
+
+on=@create
+attr=attr_decay
+
+on=@equip
+target
+timer=15
+
+on=@targon_char
+if (<src.targ.brain> > 0 )||(<src.targ.isgm> = 1 )
+src.sysmessage=You cannot use this on NPCs or Staff Members.
+remove
+return 1
+else
+src.dialog d_pvp_system
+src.sfx=258
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[itemdef i_rest_memory]
+id=i_memory
+name=Rest memory(dont remove)
+type=t_eq_script
+
+on=@create
+attr=attr_newbie
+
+on=@equip
+src.events=+e_resting_mode
+return 0
+
+on=@unequip
+src.events=-e_resting_mode
+return 0
+
+on=@timer
+f_restcheck
+return 1
+
+[function rest]
+if (<flags> & statf_dead )
+sysmessage=You cannot do this while dead....
+return 1
+endif
+
+if (<eval <tag.rightarm>+<tag.leftarm>+<tag.head>+<tag.chest>+<tag.legs>> > 499 )
+sysmessage=You are already completely rested...
+return 1
+endif
+
+if (<restest 1 i_rest_memory>)
+sysmessage=You have finished resting..
+findid.i_rest_memory.remove
+return 1
+else
+sysmessage=You start to rest...
+newitem=i_rest_memory
+act.equip
+act.timer=1
+return 1
+endif
+
+[events e_resting_mode]
+on=@hit
+findid.i_rest_memory.remove
+sayu=*finished resting*
+return 0
+
+on=@gethit
+findid.i_rest_memory.remove
+sayu=*finished resting*
+return 0
+
+on=@spellcast
+findid.i_rest_memory.remove
+sayu=*finished resting*
+return 0
+
+[function f_restcheck]
+cont.f_rest_heal
+timer=3
+cont.sysmessage=*resting*
+return 1
+
+[function f_rest_heal]
+if (<eval <tag.rightarm>+<tag.leftarm>+<tag.head>+<tag.chest>+<tag.legs>> > 499 )
+sayu=*completely rested*
+findid.i_rest_memory.remove
+return 1
+endif
+
+dorand=5
+tag.rightarm=<eval <tag.rightarm>+{5 10}>
+tag.leftarm=<eval <tag.leftarm>+{5 10}>
+tag.head=<eval <tag.head>+{5 10}>
+tag.chest=<eval <tag.chest>+{5 10}>
+tag.legs=<eval <tag.legs>+{5 10}>
+enddo
+if (<eval <tag.rightarm>> > 99 )
+tag.rightarm=100
+endif
+if (<eval <tag.leftarm>> > 99 )
+tag.leftarm=100
+endif
+if (<eval <tag.head>> > 99 )
+tag.head=100
+endif
+if (<eval <tag.chest>> > 99 )
+tag.chest=100
+endif
+if (<eval <tag.legs>> > 99 )
+tag.legs=100
+endif
+
+//////////////////////////////////////////////////
+//DIALOGS DIALOGS DIALOGS DIALOGS DIALOGS DIALOGS/
+//////////////////////////////////////////////////
+
+[DIALOG d_pvp_system]
+0, 0
+PAGE 0
+resizepic 63 27 5054 420 300
+resizepic 228 35 5120 240 280
+text 72 33 1345 0
+text 72 51 1313 1
+text 73 70 1153 2
+text 72 87 995 3
+text 72 105 1101 4
+text 72 123 0 5
+text 72 135 32 6
+text 72 150 0 7
+text 72 162 152 8
+text 72 180 152 9
+text 72 198 32 10
+text 72 216 1250 11
+text 72 234 1250 12
+text 72 252 1250 13
+text 72 267 0 14
+text 72 279 162 15
+text 71 303 1153 16
+text 297 36 1152 17
+text 369 324 32 18
+button 293 135 2117 2118 1 0 1 //Right Arm
+button 398 135 2117 2118 1 0 2 //Left Arm
+button 344 72 2117 2118 1 0 3 //Head
+button 320 170 2117 2118 1 0 4 //Chest
+button 380 220 2117 2118 1 0 5 //Legs
+button 243 279 2472 2473 1 0 6
+button 156 282 2117 2118 1 0 7
+button 171 306 2117 2118 1 0 8
+gumppic 260 45 <eval 12>
+text 72 6 102 19
+text 274 285 1345 20
+text 310 134 <eval colors_white> 21 //Right Arm Pointer
+text 379 135 <eval colors_white> 21 //Left Arm Pointer
+text 350 85 <eval colors_white> 22 //Head
+text 337 168 <eval colors_white> 21 //Chest Pointer (-)
+text 352 158 <eval colors_white> 22 //Chest Pointer (-)
+text 352 145 <eval colors_white> 22 //Chest Pointer (|) #2
+text 335 220 <eval colors_white> 23 //Legs Pointer (-)
+text 335 211 <eval colors_white> 22 //Legs Pointer (|) #2
+text 362 211 <eval colors_white> 22 //Legs Pointer (|) #3
+
+[DIALOG d_pvp_system TEXT]
+Right Arm: <eval <src.targ.tag.rightarm>>%
+Left Arm: <eval <src.targ.tag.leftarm>>%
+Head: <eval <src.targ.tag.head>>%
+Chest: <eval <src.targ.tag.chest>>%
+Legs: <eval <src.targ.tag.legs>>%
+----------
+PvP Pts: <eval <src.targ.tag.pvppoints>> / 100
+----------
+Karma: <eval <src.targ.karma>>
+Fame: <eval <src.targ.fame>>
+Kills: <eval <src.targ.kills>>
+Hitpoints: <eval <src.targ.hits>> / <eval <src.targ.str>>
+Mana: <eval <src.targ.mana>> / <eval <src.targ.int>>
+Stamina: <eval <src.targ.stamina>> / <eval <src.targ.dex>>
+----------
+Specials -
+Information -
+Area Of Focus
+v1.0 Majesty
+Anatomy Of: <src.targ.name>
+Focus On All Areas
+--
+|
+-----
+
+[DIALOG d_pvp_system BUTTON]
+on=1
+Src.tag.focuson=1
+Src.sysmessage=You will now focus on the Right Arm of your victims.
+src.sfx=252
+src.sfx=011c
+src.sfx=0222
+on=2
+Src.tag.focuson=2
+Src.sysmessage=You will now focus on the Left Arm of your victims.
+src.sfx=252
+src.sfx=011c
+src.sfx=0222
+on=3
+Src.tag.focuson=3
+Src.sysmessage=You will now focus on the Head of your victims.
+src.sfx=252
+src.sfx=011c
+src.sfx=0222
+on=4
+Src.tag.focuson=5
+Src.sysmessage=You will now focus on the Chest of your victims.
+src.sfx=252
+src.sfx=011c
+src.sfx=0222
+on=5
+Src.tag.focuson=4
+Src.sysmessage=You will now focus on the Legs of your victims.
+src.sfx=252
+src.sfx=011c
+src.sfx=0222
+on=6
+Src.tag.focuson=0
+Src.sysmessage=You will now focus on Random Areas of your victims.
+src.sfx=252
+src.sfx=011c
+src.sfx=0222
+on=7
+Sysmessage=This feature is unavailable at this time.
+on=8
+Scroll scroll_pvp_information
+
+[scroll scroll_pvp_information]
+Strategic - Tactical PvP Information
+Damage Effects:
+Head - At Low levels you will start to Lose Mana each time you are hit. If your head is completely destroyed (0%), then you will not be able to cast spells at all!
+Right Arm - When your Right Arm is completely destroyed (0%), then you will not be able to equip/use Right Hand Only Weapons/Items, but you will still be able to use/equip Left Handed Weapons/Shields. You will also not be able to use bandages to heal.
+Left Arm - When your Left Arm is completely destroyed (0%), then you will not be able to use/equip Left Hand, Or 2 Handed Weapons/Shields, but you will still be able to use/equip Right Handed Weapons/Items. You will also not be able to use any kind of potions.
+Note on Arms: If BOTH of your Arms are destroyed (0%), then you will not be able use/equip Weapons or Shields at all!!
+Chest - At Low levels you will start to take Extra Damage each time you are hit. If your chest is completely destroyed (0%), then you will not be able to equip Body Armor at all!
+Legs - At Low levels you will start to Lose Stamina each time you are hit. If your legs are completely Destroyed (0%), then you will not be able to stay Mounted while dueling.
+__________
+Focusing & Resting:
+Focusing - You can Focus on a specific area of you victim, type: .examine ,then target your opponent and select the area that you wish to Focus on while dueling. Or you can focus on Random Areas of your victim, simply press the "Focus on All Areas" button.
+Resting - Every now and then you will need to take a Rest, or else you will be so crippled in a duel that you wont be much of a challenge to your opponent. Resting will allow you to Regain Health in your bodyparts so you will be more effective in your duels and be able move, equip items, cast spells, etc... To Rest type: .rest , type it again to stop resting.
+Note on Resting: While resting, if you attack someone, or you are attacked by someone, it will end your resting session.
+__________
+PvP Points & Specials:
+*No Information At This Time*
+
+
+[plevel 0]
+examine
+rest
+
+
+
+
+//---------------------
+
+[function f_clear_sysmessage]
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+
+[eof]

@@ -1,0 +1,500 @@
+//-OSI-Clone moongate system-
+//Scripted by: Admin Hyral - For 'Realm of Souls' Shard
+//How to setup Tram/T2a Moongates:
+//Place a i_moongate_tram at every trammel moongate area
+//Place a i_moongate_t2a_2 at the two T2a moongate spots i chose
+//after all the moongates are placed Make a square of i_floor_gate around
+//each moongate DO NOT place a i_floor_gate under the moongate itself
+// (Note: i_floor_gate is invisible to Regular players)
+//----------
+//How to setup Tram/fel Moongates:
+//Place a i_moongate_facet_tram at every trammel moongate area
+//Place a i_moongate_facet_fel at every felucca moongate area
+//after all the moongates are placed Make a circle of i_floor_gate around
+//each moongate DO NOT place a i_floor_gate under the moongate itself 
+//(Note: i_floor_gate is invisible to Regular players)
+
+//Has a distance check to keep players from using the moongate menu buttons
+//if they are not near the moongate.
+
+//Please Don't Remove Header
+
+///////////////////////////////////////////////////////////////////////
+//////////            Trammel  and T2A Moongates           ////////////
+///////////////////////////////////////////////////////////////////////
+
+[itemdef i_moongate_tram]
+NAME=moongate
+ID=i_moongate_blue
+TYPE=0
+
+ON=@dclick
+DIALOG d_moongate_tram_2
+SFX=snd_spell_gate_travel
+return 1
+
+ON=@step
+IF 0<src.restest i_mem_moongate>
+return 1
+else
+use
+src.newitem i_mem_moongate
+src.act.equip
+return 1
+
+[DIALOG d_moongate_tram_2]
+80, 80
+PAGE 0
+resizepic 0 0 5054 385 270
+text 9 1 0 0
+text 29 28 162 1
+text 30 49 0 2
+text 230 29 0 3
+text 230 51 0 4
+text 230 73 0 5
+text 230 95 0 6
+text 230 119 0 7
+text 230 142 0 8
+text 230 165 0 9
+text 230 187 0 10
+text 230 209 0 11
+button 29 224 243 241 1 0 0
+button 9 33 2117 2118 1 0 1
+button 9 54 2117 2118 1 0 2
+radio 205 31 210 211 0 20
+radio 205 53 210 211 0 21
+radio 205 75 210 211 0 22
+radio 205 97 210 211 0 23
+radio 205 120 210 211 0 24
+radio 205 144 210 211 0 25
+radio 205 167 210 211 0 26
+radio 205 189 210 211 0 27
+radio 205 211 210 211 0 28
+button 28 199 249 248 1 0 3
+
+[DIALOG d_moongate_tram_2 TEXT]
+Pick your destination
+Trammel
+Lost Land
+Moonglow
+Britain
+Jhelom
+Yew
+Minoc
+Trinsic
+Skara Brae
+Magincia
+Haven
+
+
+[DIALOG d_moongate_tram_2 BUTTON]
+on=1
+DIALOG d_moongate_tram_2
+on=2
+DIALOG d_moongate_t2a_2
+on=3
+IF (<argchk[20]> == 1)
+SRC.TAG.DEST=4467,1283,5
+SRC.MGDEST
+
+
+ELIF (<argchk[21]> == 1)
+SRC.TAG.DEST=1336,1997,5
+SRC.MGDEST
+
+
+ELIF (<argchk[22]> == 1) 
+SRC.TAG.DEST=1499,3771,5
+SRC.MGDEST
+
+
+ELIF (<argchk[23]> == 1) 
+SRC.TAG.DEST=771,752,5
+SRC.MGDEST
+
+
+ELIF (<argchk[24]> == 1)
+SRC.TAG.DEST=2701,692,5
+SRC.MGDEST
+
+
+ELIF (<argchk[25]> == 1) 
+SRC.TAG.DEST=1828,2948,-20 
+SRC.MGDEST
+
+
+ELIF (<argchk[26]> == 1) 
+SRC.TAG.DEST=643,2067,5
+SRC.MGDEST
+
+
+ELIF (<argchk[27]> == 1) 
+SRC.TAG.DEST=3564,2140,34
+SRC.MGDEST
+
+ELIF (<argchk[28]> == 1) 
+SRC.TAG.DEST=3716,2718,24
+src.mgdest
+
+
+[DIALOG d_moongate_t2a_2]
+80, 80
+PAGE 0
+resizepic 0 0 5054 385 270
+text 9 1 0 0
+text 29 28 0 1
+text 30 49 162 2
+text 230 29 0 3
+text 230 51 0 4
+button 29 224 243 241 1 0 0
+button 9 33 2117 2118 1 0 1
+button 9 54 2117 2118 1 0 2
+radio 205 31 210 211 0 20
+radio 205 53 210 211 0 21
+button 28 199 249 248 1 0 3
+
+[DIALOG d_moongate_t2a_2 TEXT]
+Pick your destination
+Trammel
+Lost Land
+Delucia
+Papua
+
+
+[DIALOG d_moongate_t2a_2 BUTTON]
+on=1
+DIALOG d_moongate_tram_2
+on=2
+DIALOG d_moongate_t2a_2
+on=3
+IF (<argchk[20]> == 1)
+SRC.TAG.DEST=5352,4031,43
+SRC.MGDEST
+
+ELIF (<argchk[21]> == 1)
+SRC.TAG.dest=5571,3190,4
+SRC.MGDEST
+
+[function mgdest]
+IF 0<src.targ.distance>>1
+src.sysmessage You are to far away from the moongate.
+return 1
+Else
+SRC.TRAVEL <src.tag.dest>
+SRC.ADDFLAG=000000008
+SRC.SFX 01fc
+return 1 
+
+
+[itemdef i_moongate_t2a_2]
+NAME=moongate
+ID=i_moongate_blue
+TYPE=0
+
+ON=@dclick
+DIALOG d_moongate_t2a_2
+SFX=snd_spell_gate_travel
+return 1
+
+ON=@step
+IF 0<src.restest i_mem_moongate>
+return 1
+else
+USE
+src.newitem i_mem_moongate
+src.act.equip
+return 1
+
+
+
+///////////////////////////////////////////////////////////////////////
+///////               Felucca / Trammel Facet Moongates        ////////
+///////////////////////////////////////////////////////////////////////
+
+
+[itemdef i_moongate_facet_tram]
+NAME=moongate
+ID=i_moongate_blue
+TYPE=0
+
+ON=@dclick
+DIALOG d_moongate_facet_tram
+SFX=snd_spell_gate_travel
+return 1
+
+ON=@step
+IF 0<src.restest i_mem_moongate>
+return 1
+else
+use
+src.newitem i_mem_moongate
+src.act.equip
+return 1
+
+[itemdef i_moongate_facet_fel]
+NAME=moongate
+ID=i_moongate_blue
+TYPE=0
+
+ON=@dclick
+DIALOG d_moongate_facet_fel
+SFX=snd_spell_gate_travel
+return 1
+
+ON=@step
+IF 0<src.restest i_mem_moongate>
+return 1
+else
+use
+src.newitem i_mem_moongate
+src.act.equip
+return 1
+
+[DIALOG d_moongate_facet_fel]
+80, 80
+PAGE 0
+resizepic 0 0 5054 385 270
+text 9 1 0 0
+text 29 28 0 1
+text 30 49 162 2
+text 230 29 0 3
+text 230 51 0 4
+text 230 73 0 5
+text 230 95 0 6
+text 230 119 0 7
+text 230 142 0 8
+text 230 165 0 9
+text 230 187 0 10
+text 232 234 0 11
+button 29 224 243 241 1 0 0
+button 9 33 2117 2118 1 0 1
+button 9 54 2117 2118 1 0 2
+radio 205 31 210 211 0 20
+radio 205 53 210 211 0 21
+radio 205 75 210 211 0 22
+radio 205 97 210 211 0 23
+radio 205 120 210 211 0 24
+radio 205 144 210 211 0 25
+radio 205 167 210 211 0 26
+radio 205 189 210 211 0 27
+radio 205 211 210 211 0 28
+button 28 199 249 248 1 0 3
+text 232 211 0 12
+radio 205 234 210 211 0 29
+
+[DIALOG d_moongate_facet_fel TEXT]
+Pick your destination
+Trammel
+Felucca
+Moonglow
+Britain
+Jhelom
+Yew
+Minoc
+Trinsic
+Skara Brae
+Magincia
+Buc's Den
+Occlo
+
+
+[DIALOG d_moongate_facet_fel BUTTON]
+on=1
+DIALOG d_moongate_facet_tram
+on=2
+DIALOG d_moongate_facet_fel
+on=3
+IF (<argchk[20]> == 1)
+SRC.TAG.DEST=4467,1283,5,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+return 1 
+
+ELIF (<argchk[21]> == 1)
+SRC.TAG.DEST=1336,1997,5,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+ELIF (<argchk[22]> == 1) 
+SRC.TAG.DEST=1499,3771,5,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+ELIF (<argchk[23]> == 1) 
+SRC.TAG.DEST=771,752,5,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+ELIF (<argchk[24]> == 1)
+SRC.TAG.DEST=2701,692,5,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+ELIF (<argchk[25]> == 1) 
+SRC.TAG.DEST=1828,2948,-20 ,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+ELIF (<argchk[26]> == 1) 
+SRC.TAG.DEST=643,2067,5,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+ELIF (<argchk[27]> == 1) 
+SRC.TAG.DEST=3564,2140,34,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+ELIF (<argchk[28]> == 1) 
+SRC.TAG.DEST=3715,2717,25,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+ELIF (<argchk[29]> == 1) 
+SRC.TAG.DEST=2712,2234,0,1
+SRC.MGDEST
+SRC.GOTOPLANE=1
+
+[DIALOG d_moongate_facet_tram]
+80, 80
+PAGE 0
+resizepic 0 0 5054 385 270
+text 9 1 0 0
+text 29 28 162 1
+text 30 49 0 2
+text 230 29 0 3
+text 230 51 0 4
+text 230 73 0 5
+text 230 95 0 6
+text 230 119 0 7
+text 230 142 0 8
+text 230 165 0 9
+text 230 187 0 10
+text 230 209 0 11
+button 29 224 243 241 1 0 0
+button 9 33 2117 2118 1 0 1
+button 9 54 2117 2118 1 0 2
+radio 205 31 210 211 0 20
+radio 205 53 210 211 0 21
+radio 205 75 210 211 0 22
+radio 205 97 210 211 0 23
+radio 205 120 210 211 0 24
+radio 205 144 210 211 0 25
+radio 205 167 210 211 0 26
+radio 205 189 210 211 0 27
+radio 205 211 210 211 0 28
+button 28 199 249 248 1 0 3
+
+[DIALOG d_moongate_facet_tram TEXT]
+Pick your destination
+Trammel
+Felucca
+Moonglow
+Britain
+Jhelom
+Yew
+Minoc
+Trinsic
+Skara Brae
+Magincia
+Haven
+
+
+[DIALOG d_moongate_facet_tram BUTTON]
+on=1
+DIALOG d_moongate_facet_tram
+on=2
+DIALOG d_moongate_facet_fel
+on=3
+IF (<argchk[20]> == 1)
+SRC.TAG.DEST=4467,1283,5
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+ELIF (<argchk[21]> == 1)
+SRC.TAG.DEST=1336,1997,5
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+ELIF (<argchk[22]> == 1) 
+SRC.TAG.DEST=1499,3771,5
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+ELIF (<argchk[23]> == 1) 
+SRC.TAG.DEST=771,752,5
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+ELIF (<argchk[24]> == 1)
+SRC.TAG.DEST=2701,692,5
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+ELIF (<argchk[25]> == 1) 
+SRC.TAG.DEST=1828,2948,-20 
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+ELIF (<argchk[26]> == 1) 
+SRC.TAG.DEST=643,2067,5
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+ELIF (<argchk[27]> == 1) 
+SRC.TAG.DEST=3564,2140,34
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+ELIF (<argchk[28]> == 1) 
+SRC.TAG.DEST=3715,2717,25
+SRC.MGDEST
+SRC.GOTOPLANE=0
+
+
+[ITEMDEF i_mem_moongate]
+ID=i_handr_1
+NAME=moongate memory
+TYPE=t_EQ_script
+LAYER=layer_special
+
+ON=@CREATE
+	ATTR=attr_decay
+
+[itemdef i_floor_gate]
+ID=i_floor_marble
+NAME=memory remove tile
+TYPE=0
+
+ON=@create
+ATTR=00082
+
+ON=@step
+IF 0<src.restest i_mem_moongate>
+src.consume=i_mem_moongate
+else
+return 0
+	
+[function travel]
+P=<ARGS>
+UPDATE
+
+
+
+///////////////////////////////////////////////////////////////////////
+/////////////////           Functions from UOonline      //////////////
+///////////////////////////////////////////////////////////////////////
+
+[Function addflag]
+//Direct add an flag TO WHOEVER USED IT
+//In script use method: Addflag 0100  (in Binary)
+//In Game Use Method: xaddflag 0100
+	FLAGS=<FLAGS>|<args>
+	Fix
+	Update	
+
+
+[Function GotoPlane]
+	Mapplane <Args>
+        move 80,80,0
+	move -80,-80,0

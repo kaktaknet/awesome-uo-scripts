@@ -1,0 +1,377 @@
+<html><head><title>Changes</title></head><body>
+<h1>PySphere Changes - PySphere Release 17</h1>
+<h3>Release 17 (June 22, 2003)</h3>
+<p>This release fixes several bugs.
+<p><ul>
+<li>Several things were broken in R16, and possibly earlier versions. They've all been fixed. 
+	No new features have been added.
+</ul>
+
+<h3>Release 16 (May 30, 2003)</h3>
+<p>This release adds support for contextmenu, menu, and <b>menudialog</b>. I strongly encourage looking at dialogs.py to see what Menudialog is, as it is a VERY useful tool.
+<p><ul>
+<li>The proper date wasn't listed for when Release 15 came out.
+<li>PySphere has support for 'contextmenu' (see dialogs.py). Keep in mind you can only have contextmenu items 
+	which are in the cliloc muls.
+<li>PySphere has support for 'menu' (see dialogs.py). It is recommended that you use menudialog instead, 
+	as it works in all clients, and automatically handles multiple pages when necessary, whereas menu does not.
+<li>PySphere has support for 'menudialog', but only type 2 menudialogs (see dialogs.py). The type 2 menudialog
+	 code in dialogs.py has been uncommented now that it is supported. Type 1 menudialogs are unsupported and 
+	 thus still commented out. I haven't decided whether to support them or scrap them yet.
+<li>GetCount is broken in 99z, so PySphere uses the (really) old method (while (strlen(%v))) for 99z and 99y 
+	(because it's easier to include 99y than not to ATM).
+</ul>
+
+<h3>Release 15 (May 1, 2003)</h3>
+<p>This release has a number of interesting improvements.
+<p><ul>
+<li>PySphere now supports 99z and 99y. Unless you specify otherwise in your scripts (with #sphere-99x or whatever version
+	you are using), it will compile for 99z by default.
+<li>All versions have a flag indicating whether or not they support function parameters a la 99u+.
+<li>All versions have a flag indicating whether or not &lt??&gts should be used instead of &lt&gts.
+<li>&lt??&gts are used when compiling for 99y and 99z; They work in all cases that &lt&gts do, and some cases 
+	where &lt&gts do not work.
+<li>It is legal to have 'else :' now.
+<li>If resyncing, PySphere will end the resync even if the compliation of the scripts fails.
+<li>Cleaned up PySphere's code a bit.
+<li>I had the year wrong for the last 6 releases of PySphere. It's really not 2002 anymore!
+<li>Tabs no longer cause errors on lines with nothing but comments or whitespace.
+<li>The patterns have been moved into a new file (Patterns.py).
+<li>PySphere now works when there is a replacement WSOCK32.DLL in the Sphere folder (It did not in previous releases).
+<li>PySphere correctly handles lines which have spaces or tabs at the end.
+<li>PySphere has support for 'dialog' and 'dialogbutton' (see dialogs.py). It it recommended that you only try to 
+	do programmatic/imperative/dynamic dialogs (i.e. the ones you can do in 99z and up) in PySphere.
+<li>The 99w patterns now use GetCount, since it appears to have been supported in 99w. The 99v patterns have been
+	replaced with a copy of the 99u patterns, since the 99u patterns worked better for 99v than the 99v patterns did.
+<li>The copyright notice you see when PySphere starts has been updated to say 2002-2003 instead of just 2002.
+</ul>
+
+<h3>Release 14b (March 8, 2003)</h3>
+<p>Release 14b fixes a rather bad bug in PySphere.
+<p><ul>
+<li>PySphere was dying horribly when it attempted to compile a file which had never before been compiled. It was trying
+	to find out how old a nonexistant file was.
+<li>I also fixed a number of mispelt words, mistakes, etc, in this file, and added the date of every release.
+</ul>
+
+<h3>Release 14a (March 8, 2003)</h3>
+<p>Release 14a catches a script error which can cause PySphere to crash, and displays a proper error message.
+<p><ul>
+<li>If you omitted the (baseclass) in an itemdef or chardef definition, PySphere would crash and leave the user with
+	no idea why it did so. Now it displays a message indicating you forgot the base-class, 
+	and halts compilation, instead of crashing.
+<li>A bug in Release 14 caused PySphere to stop finding defnames in .py files. This has been corrected.
+</ul>
+
+<h3>Release 14 (March 8, 2003)</h3>
+<p>Release 14 greatly speeds up and improves PySphere, by caching defnames that're defined SCP files, 
+	and by only compiling files that've been modified since the last compilation.
+<p><ul>
+<li>PySphere no longer recompiles scripts that have not been changed since the last compilation. This greatly speeds up
+	compilation, as if you've only changed two files out of 50, only those 2 are recompiled.
+<li>If you want PySphere to recompile EVERY .py file, not just ones that've changed since the last compilation, you
+	can change enableTimeChecking to 0. That's near the top of pysphere.py.
+<li>Rather than saying 'precompiling,' PySphere now says what it's actually doing, which is parsing .py scripts for 
+	function definitions. It does this for every .py file, even ones it will not be compiling, because functions in one
+	may be called by another. Luckily, this stage is extremely fast.
+<li>PySphere no longer parses .scp files for defnames every time it runs. Instead, the first time you run Release 14
+	(or newer), it will look through them and write a list of defnames to defs.ini. After that, it will load that
+	list, rather than parsing the .scp files. This greatly improves PySphere's speed.
+<li>In addition, several new options have been added to PySphere, for which you would have to change a variable at
+	the beginning of the program. To make PySphere NOT use the preceding feature, change useScpDefNameList to 0.
+<li>If you do that, it will still not parse .scp files for defnames every time, unless you also change
+	enableScpDefNameChecking to 1.
+<li>Defname checking is done so that things like this work: src.act.flags=(src.act.flags|statf_conjured)|statf_pet
+	<p>Without it, you would have to write src.act.flags=(src.act.flags|'statf_conjured')|'statf_pet'
+<li>If you want to disable defname checking entirely, you can, by setting enableDefNameChecking to 1.
+<li>Fixed a bug where PySphere was not closing every file it opened after it was done with it. 
+	This doesn't seem to have caused errors, but probably Python or the 
+	OS was fixing the situation behind my back.
+</ul>
+
+<h3>Release 13 (March 3, 2003)</h3>
+<p>Release 13 has a number of improvements, it can automatically resync Sphere at the proper time, it can handle
+	for...range statements with steps (either positive or negative), it supports +=, -=, *=, /=, %=, and will use #
+	in 99x for local variables (But not var or tag, at this time).
+<p><ul>
+<li>PySphere no longer clears all output .scp files prior to writing any of them.
+<li>PySphere now writes to a temporary file while compiling a script file, and then renames it to '.scp' when it is done.
+<li>The preceding two changes mean that Sphere doesn't need to spend as much time resync-paused while waiting for
+	PySphere to finish compiling.
+<li>PySphere now has the ability to resync Sphere when it compiles scripts. The first time it is run, it will write
+	a pysphere.ini file, which contains ip=, port=, account=, and password=. If you want to use this feature, and
+	are using a version of Sphere which asks for an account name on telnet connections, fill in account. 
+	Fill in password on all versions of Sphere. For 55i, you can use either the 'administrator' account password,
+	or the 'remoteadmin' account password. IP and port are set to the default for local test servers (127.0.0.1 means
+	'this computer'. 2593 is the default port). If the password is not blank, after PySphere finishes loading information, 
+	right before it starts actually compiling, it will connect to Sphere, enter the account (if you specified it),
+	and the password, and put it into a resync pause. After it finishes, it will tell Sphere to resync resume, 
+	and then it will disconnect from Sphere.
+<li>PySphere now handles for...range statements with steps (Either positive or negative). The steps are required to be
+	integers, and NOT variables.
+<li>PySphere now supports +=, -=, *=, /=, and %=. With local variables in 99x, they will use # (ARG(X,#+1)). In earlier
+	versions, # will not be used (It was introduced in 99w4). This feature was partially implemented earlier, but only
+	for +=, and it did not use #.
+<li>PySphere also uses # in for loops for 99x.
+<li>PySphere crashed if it attempted to generate a finduid call for a script that was compiled with #produce-readable-code. 
+	This has been fixed.
+</ul>
+
+<h3>Release 12 (February 25, 2003)</h3>
+<p>Release 12 improves support for using &lt&gts for additional evaluation, and fixes a couple bugs.
+<p><ul>
+<li>Code like <b>link.&lttag.onsuccess&gt(tag.args)</b> compiles properly now.
+<li>Safe. is converted to 0 for 99x, since safe. does not work well (At least in 99x5).
+<li>Variables with numbers in their name compile properly now. more1 was compiling as more>1 or <more>1, same with more2.
+	They now are compiled to &ltmore1&gt or &ltmore2&gt as they should be.
+</ul>
+
+<h3>Release 11 (January 14, 2003)</h3>
+<p>Release 11 supports 99x.
+<p><ul>
+<li>PySphere now supports 99x.
+<li>99x scripts use .GetCount to determine the length of an array that you're stepping through with for.
+<li>PySphere supports doswitch and dorand now. See the sample script dosamples.py.
+<li>Fixed a bug which could cause the omission of endif/enddo/etc due to reaching the end of the source file.
+	You can see this bug in action if you add dosamples.py to an older release of PySphere and compile it.
+<li>I've made a (decently) proper PySphere Manual, plus a HTML file for installing PySphere (It's really simple, but
+	anyways.).
+<li>PySphere correctly converts all of the following for 55i.
+<br>ON=@UserStats		--> on=@stats, but may not exist in 55i.
+<br>ON=@UserClick		--> on=@click.
+<br>ON=@UserDClick		--> on=@dclick.
+<br>ON=@UserProfile		--> on=@profile, but may not exist in 55i.
+<br>ON=@UserSkills		--> on=@skills, but may not exist in 55i.
+<br>ON=@itemUserClick	--> on=@click
+<br>ON=@itemUserDClick	--> on=@dclick
+<br>The ones which would be converted to on=@click or on=@dclick were already working, but the other three were added
+	just in case on=@stats, on=@profile, or on=@skills, existed in 55i or any Sphere versions between 55i and 99L.
+</ul>
+
+<h3>Release 10 (December 25, 2002)</h3>
+<p>Release 10 allows you to use defnames as arrays.
+<p><ul>
+<li>Defnames can be used as arrays. See def_array.py for an example.
+</ul>
+
+<h3>Release 9b (December 25, 2002)</h3>
+<p>Release 9b allows you to add plevel blocks to specify what plevel commands are for.
+<p><ul>
+<li>Code like this is now supported:
+	<p>plevel(1):
+	<br>[tab]somecommand
+	<br>[tab]someothercommand
+<li>Fixed an odd bug involving local variables and if statements.
+</ul>
+
+<h3>Release 9a (December 24, 2002)</h3>
+<p>Release 9a makes produce-readable code work again (and for all sphere versions).
+<p><ul>
+<li>The pattern-parsers were made to check the produce-readable-code flag, and now use alternate 
+patterns specified for each sphere version, if they exist, to produce readable code. The alternate patterns are named
+'99wreadable' instead of '99w', etc.
+<li>Alternate patterns were defined for local and localset for every sphere version, and also for forrange and forarray
+for 99w.
+<li>In all sphere versions, #produce-readable-code now transforms local.foo into var.foo.
+<li>In short, #produce-readable-code now works again. (In Release 9, #produce-readable-code was unsupported, because
+	it had to be re-coded. Why? Here's a little history of local variables and #produce-readable-code.)
+	<ul>
+	<li>Release 1: PySphere's first release. And local variables existed, and were handled by renaming them from
+		'local.foo' to 'var.py__moduleName__functionName__foo'.
+	<li>Release 2: The pattern parser is coded, and the basic patterns for compiling to 99u and 55i are completed.
+	<li>Releases 3-7: Much work on making everything functional and stable. I would call release 7 the first 'stable'
+		release. Stable, in this case, means it works most of the time. 
+		I.E. Releases 1-6 didn't really work all that great, particularly with 55i.
+	<li>Release 8: #produce-readable-code is added. In releases 1-7, a function is called to return the 'header',
+		which is 'var.py__'+self.moduleName+'__'+self.functionName+'__'. In release 7, this function will return 'var.'
+		instead if the compiler has been directed to 'produce readable code'.
+	<li>Release 9: Sphere 99w comes out, with local variable support via a function named ARG. The local-header function
+		is insufficient to support 99w hardcoded local variables, and so patterns are written for retrieving and setting
+		local variables, for sphere 55i, 99u, 99v, and 99w. The 99w patterns require the introduction of new pattern 
+		metacommands. In addition, the local var support necessitates changing the 99w forarray and forrange patterns to make
+		use of it. The local-header function is no longer used, replaced by functions named generateLocalGet and 
+		generateLocalSet, which use the pattern parser to generate code.
+		However, the produce-readable-code feature was only a part of the local-header function, and impossible to code
+		in the same manner in the generateLocalGet/Set functions. So, produce-readable-code is not supported in Release 9.
+	<li>Release 9a: produce-readable-code again works, as new patterns (optional, unlike all the others) were added 
+		which are used instead of the ordinary patterns whenever PySphere has been directed to produce readable code.
+		Where the patterns for p-r-c aren't defined, PySphere simply uses the ordinary ones, assuming that p-r-c needs
+		no alternate patterns there. These alternate patterns are coded for every local/localset pattern, and for
+		99w's forarray and forrange patterns. No other patterns need them.
+	</ul>
+</ul>
+
+<h3>Release 9 (December 23, 2002)</h3>
+<p>Release 9 adds support for 99w.
+<p><ul>
+<li>Two new pattern metacodes have been added to the patterns used to generate code for various sphere versions, %(
+	and %). %( removes the next character, whatever it is, and %) removes the previous one if it is a ). The 99w patterns
+	use %), and none of them use %(, which should probably be changed to only remove (s.
+<li>99w does NOT use the 99v arrayLEN patterns. It uses the 99u string length checks instead, since arrayLEN only works
+	when array is ARGV.
+<li>Release 9 compiles local variable access with the ARG( keyword when compiling to 99w. When compiling to other
+	Sphere versions, local variables come out the same as from previous PySphere versions.
+<li>#produce-readable-code will disable the ARG support for 99w.
+<li>Omitting the #sphere-ver comment will now make PySphere compile to the latest sphere version (I have to update
+	this every time, but it's a constant and defined right next to the PySphere version constant), rather than 99u.
+<li>I have NOT tested the ARG() features (for local variables) in 99w yet.
+	If they don't work or don't work the way you want, 
+	then just go back to compiling for 99u. It works in 99w, it just uses PySphere's
+	emulation of local variables instead of ARG() for true local variables.
+<li>PySphere R9 is intended to sit in the PySphere folder inside the Sphere folder now. You run the PySphere.bat
+file (which should wind up in your regular Sphere folder if you extract this to the Sphere folder like the instructions
+say) to run it, or run test.bat in the PySphere folder to test PySphere on the included test scripts.
+</ul>
+
+<h3>Release 8 (December 19, 2002)</h3>
+<p>Release 8 adds support for 99v (as a moniker which works with either 99v2 or 99v3), and removes the need for
+#src is char in most 55i dynamic references.
+<p><ul>
+<li>A new pattern metacode has been added to the patterns used to generate code for various sphere versions, %-. 
+	This removes 'var.'	if it follows the %-. This is used in the 55i finduid pattern like so: 
+	<br>self.patterns['55i']['finduid']['start']='uid.%&lt%-%v%&gt.%c'
+<li>The preceding change has the following effect. In Release 7, var.xyz.say("HI!") compiled to <b>uid.&ltvar.xyz&gt.say Hi!</b>
+	<br>It now compiles to <b>uid.xyz.say Hi!</b>
+	<br>And before you ask, yes, that works in 55i. I just never knew about it before. :P
+	<br>Note that at this time, this does not affect code where you actually write <b>finduid(somevariable).x</b>. That is still
+	compiled to <b>tryp 0 uid.&ltsomevariable&gt.x</b>. This is because that's done by the replacer, whereas <b>somevariable.x</b> is
+	handled by the pattern parser (which is much more flexible than the replacer).
+	This is not something that is easily changed, so my recommendation for now is to prefer
+	<b>somevariable.x</b> as opposed to <b>finduid(somevariable).x</b>. Since the first looks nicer anyways, I don't
+	see this as being too much of a problem.
+<li>99v support consists mostly of changing 'for i in array:' statements from using strlen to test the end of an array
+	to using arrayLEN. This adds support for ARGVLEN, but breaks the preceding statement for any other kind of array,
+	UNLESS you explicitly set arrayLEN in your scripts. If you don't want this behavior, compile your scripts as 99u.
+<li>Release 8 fixes a mistake in what code is generated for xyz=newitem(asdf) for 55i. It should now work.
+<li>Fixed a bug which could cause PySphere to freeze when compiling to 55i.
+<li>Fixed a bug where #s inside strings were treated as comments (They shouldn't have been).
+<li>Lastly, Release 8 adds #produce-readable-code. This makes PySphere compile all local variables as global ones instead,
+so rather than var.py__prefix_sphere__sgimmeitem__itemID, you get var.itemID. This is mainly useful if you want to output
+example code you can post somewhere or show someone who doesn't use PySphere.
+</ul>
+
+<h3>Release 7 (December 7, 2002)</h3>
+<p>Release 7 adds support for 'pass', makes 'safe.' work in 55i, and fixes a number of bugs.
+<p><ul>
+<li>Adds support for the 'pass' command, which basically means 'do-nothing'. It is simply omitted from
+	what winds up in the compiled SCP.
+<li>'&ltsafe.' is translated to '0&lt' for 55i now.
+<li>Fixed another case where TRYP could be generated before an IF statement in 55i.
+<li>Fixed another case where ENDIF was being placed incorrectly.
+<li>PySphere now complains if you're missing a colon at the end of an if, elif, for, or while loop, rather than
+	continuing (In previous releases, it cut the last character off the line and continued without saying anything).
+<li>PySphere now correctly memorizes defnames defined in .py scripts. It wasn't doing so properly in earlier releases.
+<li>PySphere will not omit &lt&gts around defnames in IF/ELIF/WHILE/FOR conditions (Without them, greater than or less than
+	comparisons fail (tested in 99u)).
+<li>PySphere now correctly handles lines such as the following: <b>return(f_internal_pos(2,p))</b>
+	<br>In previous releases, PySphere did not understand that the comma wasn't for the top-most group of ()s.
+<li>Removed the 'You can ONLY make functions' line from PySphere.htm. This should've been taken out in Release 6,
+	but I somehow missed it.
+</ul>
+
+<h3>Release 6b (December 6, 2002)</h3>
+<p>Release 6b fixes a bug in Release 6a.
+<p><ul>
+<li>Fixed a bug in the code which generated ENDIFs and the like. They were being placed after the start of 
+	itemdef/typedef/event/defname, and not being placed before the elifs that they were needed in. 
+	(what should have been IF,IF,ENDIF,ELIF,ENDIF was coming out IF,IF,ELIF,ENDIF,ENDIF)
+<li>The sample scripts are now in scripts/optional rather than scripts/custom. If you want to try them, copy them
+	to custom.
+	
+</ul>
+
+<h3>Release 6a (December 7, 2002)</h3>
+<p>Release 6a fixes a bug in Release 6.
+<p><ul>
+<li>Fixed a bug in the defname code which was causing it to memorize things which weren't defnames at all.
+	That was left over from when I tested having it memorize typedefs, etc.
+</ul>
+
+<h3>Release 6 (December 6, 2002)</h3>
+<p>Release 6 adds support for itemdefs, chardefs, events, and typedefs. See defs.py for examples.
+<p><ul>
+<li>itemdef, chardef, typedef, event(s), defname(s) are supported. (See defs.py.)
+<li>#include-original-code and #omit-original-code keywords have been added. Omit will make the compiler not include
+	the comments before every line which show the original code. This is used in defs.py.
+<li>()s now work all the time. In Release 5, when I fixed a(b).c(d), I broke a(b(c)). Oooops. I had to code a new
+	'find' function which takes into account strings and the positions of other ()s.
+<li>PySphere no longer puts <>s around things defined in defnames. It does this by looking through your sphere scripts 
+	and .py scripts, and memorizing the names of all the things defined in [defname/defnames] blocks, so that it knows
+	those are constants and not variables.
+	(To disable this, change the line in pysphere.py (line 8) which reads <b>enableDefNameChecking=1</b> 
+	to <b>enableDefNameChecking=0</b>)
+<li>The replacer is on by default now, and also changes triggers such as on=@userdclick to on=@dclick for 55i, etc.
+<li>One last TRYP bug has been fixed. It will no longer appear in front of IF statements that don't have parentheses or ==s. 
+	(Such as IF !<safe.tag.lightstr>)
+<p>(I also experimented with having it read all definitions for itemdefs, chardefs, typedefs, etc, and, although it mostly worked,
+	it took far too long to compile to be of any use. It's just as easy to quote itemdef, typedef, chardef, etc, names,
+	and much faster.)
+</ul>
+
+<h3>Release 5 (December 5, 2002)</h3>
+<p>Release 5 improves the replacer, fixes a couple bugs, and improves the parser. This is more of a maintenance release.
+	I'm about to start working on support for itemdefs and the like.
+<p><ul>
+<li>The code for the parser has been improved, and made easier to work on, too. Instead of changing eight places in
+	the code to add something like local.item.bounce() support, I now only have to change 1 place in the code.
+<li>The finduid(x).something(y) bug has been fixed. It is now compiled correctly.
+<li>The 'replacer' introduced in Release 4 has been improved. Most notably, it actually works now. (Oops!)
+	It's intended only to turn certain 99u function calls to their 55i equivalents. For instance, 'finduid' 
+	is transformed into 'uid.' - The replacer will not be made to work the other way (It doesn't work that great turning it
+	the other way).
+	Note that I slightly changed the commands needed to enable/disable it. They're now <i>#enable-replace</i> and
+	<i>#disable-replace</i>. It was 'replacer' instead of 'replace' before, but I think this seems more logical to the user.
+	(This conclusion was reached by virtue of my actually typing in #enable-replace, and wondering why it wasn't working,
+	since I'd forgotten the syntax myself. Oops.)
+<p>Note: It actually checks for 'finduid ', which is generated from 'finduid(' or 'finduid (', etc, before the check is run,
+	when compiling to 55i. This means that unless you were unlucky enough to name something 'local.somethingfinduid' and have
+	a space after it, it won't be ruined by the compiler. I'm still leaving the replacer disabled by default, for now, however.
+</ul>
+
+<h3>Release 4 (December 4, 2002)</h3>
+<p>Release 4 mostly improves the parser, but also adds default values for function arguments.
+<p><ul>
+<li>UID/finduid for dynamic links will be generated for reading and setting values now. In Release 3, it was generated
+	only for function calls.
+<li>TRYP will be placed for 55i in more cases now. In Release 3, it wasn't be placed everywhere it was needed.
+<li>If you have spaces around ='s now, in lines like <b>local.tempuid = 08040</b> it will still compile properly. (It didn't
+	in Release 3)
+<li>A 'replacer' has been coded which will transform calls to thinks like finduid to uid for 55i, and vice versa.
+	It is disabled by default because it will do nasty things like changing var.tempuid to var.tempfinduid.
+	If you wish to enable it, place <i>#enable-replacer</i> in your script before the line it's used on, 
+	and <i>#disable-replacer</i> after it. You can enable it for the multiple lines, or the entire script, etc. It's
+	turned on when #enable-replacer is read, and turned off when #disable-replacer is read.
+<li>You can now set default values for parameters. For example:
+<br><b>def lgimmeitem(itemID='i_reag_ginseng'):</b>
+<li><b>local.tempida=findlayer(21).uid</b> now compiles properly.
+</ul>
+
+<h3>Release 3 (December 4, 2002)</h3>
+<p>The major change in Release 3 is better support for compiling to 55i scripts, including a precompiler which
+	memorizes all your function names and arguments so as to allow parameter passing for 55i, and a new metacommand,
+	<i>#x is char</i>. x is a reference to an object which is a character, such as self, src, link, or act.
+	That's only needed in 55i, but won't interfere with compiling to 99u.
+<p><ul>
+<li>A <i>#x is char</i> metacommand has been added, which lets the user specify what TRYP 0 should run on (in 55i).
+<li>TRYP 0 is added wherever it is needed when compiling to 55i, and is done when a line is actually written, as opposed
+	to when it is constructed.
+<li>When compiling to 55i, def bob(col) reads var.col to see what the local variable col should be.
+<li>Global vars used for parameter passing (such as var.col in the preceding example) are
+	cleared by the functions after being read.
+<li>Function calls compiled for 55i are automagically translated to the required form. For example, src.testarr(5) is 
+	translated to <b>var.i=5</b>, followed by <b>src.testarr</b>. Unexpected arguments are passed to the function anyways,
+	so calling functions which have no declared parameters but check &ltargs&gt or &ltargn&gt will work fine.
+<li>A number of internal changes were made so that things like function calls will be outputted correctly for 55i by
+	the compiler. These were mostly done by using if statements which check the sphere version the script is compiling to,
+	so they can NOT be easily extended to other sphere versions with a syntax similar to 55i at this time.
+</ul>
+<h3>Release 2 (December 1, 2002)</h3>
+<p>This added basic support for compiling to 55i.
+<p><ul>
+<li>Compiling to different sphere versions is supported.
+<li>The patterns for compiling to 99u and 55i are 100% complete, although the patterns are not the only things used.
+<li>Added a means to write to the end of the file rather than the current position. This is by writing to a cache which
+	is dumped to the file after parsing is complete.
+</ul>
+
+</body></html>

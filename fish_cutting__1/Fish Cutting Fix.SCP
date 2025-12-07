@@ -1,0 +1,100 @@
+////This bug happens when a player cuts a fish with amount bigger than 15000, as sphere can't create
+////more than 65337 itens at once, the fish steak comes as a random value between 1 and 65337.
+///This is the fix for this bug :P///
+//Just add the events E_FISH_CUT_FIX to your players and it's done.//
+
+///Now you can use it ANYWHERE, to fix the amount creation problem.
+
+//Usage:
+
+//[obj].additem ID,AMOUNT,CONT (cont = optional)
+
+//Ex.: 
+
+//additem i_gold,900000
+
+////By ClouD///
+
+[function additem]
+IF (0<ARGV[1]>)
+LOCAL.AMOUNT=<ARGV[1]>
+ELSE ///No amount set? Make it 1
+LOCAL.AMOUNT=1
+ENDIF
+WHILE (<LOCAL.AMOUNT>)
+SERV.NEWITEM=<ARGV[0]>
+IF (<SERV.ITEMDEF.<ARGV[0]>.CAN>&CAN_I_PILE)
+IF (<LOCAL.AMOUNT> > 64999)
+NEW.AMOUNT=65000
+LOCAL.AMOUNT -= 65000
+ELSE
+NEW.AMOUNT=<LOCAL.AMOUNT>
+LOCAL.AMOUNT=0
+ENDIF
+ELSE
+LOCAL.AMOUNT -= 1
+ENDIF
+IF (0<ARGV[2]>)
+NEW.CONT=<ARGV[2]>
+ELSE
+BOUNCE <NEW>
+ENDIF
+ENDWHILE
+UPDATE
+
+[EVENTS e_fish_cut_fix] 
+ON=@ItemTargon_Item
+IF (<act.type>==T_WEAPON_FENCE) || (<act.type>==t_weapon_sword) || (<act.type>==12)
+IF (strmatch("*fish*","<src.targ.name>")) && (<src.targ.amount> > 10000)
+src.additem i_fish_cut_raw,<eval <src.targ.amount>*4>
+src.targ.remove
+return 1
+ENDIF
+ENDIF
+
+///And for the scissors:
+
+///Change your current scissor itemdef for this one:
+
+[ITEMDEF 0f9e]
+//Scissors
+DEFNAME=i_scissors
+RESOURCES=4 i_ingot_iron
+TYPE=T_NORMAL
+WEIGHT=1
+CATEGORY=Items by Professions
+SUBSECTION=Tailor
+DESCRIPTION=Scissors
+SKILLMAKE=SKILL_TINKERING 14.5,t_tinker_tools
+DUPELIST=0f9f
+
+ON=@DCLICK
+target Escolha seu alvo
+return 1
+
+ON=@TARGON_ITEM
+IF (<src.targ.type>==t_cloth_bolt) && !(<src.targ.attr>&attr_move_never) && !(<src.targ.attr>&attr_static)
+src.additem i_cloth,<eval <src.targ.amount>*50>
+src.targ.remove
+return 1
+ENDIF
+IF !(<src.targ.attr>&attr_move_never) && !(<src.targ.attr>&attr_static) && (<src.targ.type>==t_clothing) || (<src.targ.type>==t_cloth)
+src.additem i_bandage,<eval <src.targ.amount>*7>
+src.targ.remove
+return 1
+ENDIF
+
+ON=@TARGON_CHAR
+IF !(<src.targ.uid>==<src.uid>)
+src.sysmessage Voce nao pode cortar o cabelo de outra criatura.
+RETURN 1
+ENDIF
+IF (<src.targ.findlayer.layer_hair>)
+src.targ.findlayer.layer_hair.remove
+ENDIF
+IF (<Src.targ.findlayer.layer_beard>)
+src.targ.findlayer.layer_beard.remove
+ENDIF
+return 1
+
+[EOF]

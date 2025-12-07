@@ -1,0 +1,609 @@
+[ITEMDEF i_e_mensch]
+DEFNAME=i_e_mensch
+ID=i_hole
+NAME=Mensch-Remover
+
+ON=@STEP
+	SRC.EVENTS -e_race_mensch
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=MENSCH
+
+[ITEMDEF i_e_warrior]
+DEFNAME=i_e_warrior
+ID=i_hole
+NAME=Warrior-Remover
+
+ON=@STEP
+	SRC.EVENTS -e_class_warrior
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=WARRIOR
+
+[ITEMDEF i_e_tot]
+DEFNAME=i_e_tot
+ID=i_hole
+NAME=Event-TOT-Remover
+
+ON=@STEP
+	SRC.EVENTS -e_tot
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=TOD
+
+[ITEMDEF i_e_remove]
+DEFNAME=i_e_remove
+ID=i_hole
+NAME=Event-Remover
+
+ON=@STEP
+	SRC.EVENTS -Class_undeclared
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=REMOVER
+
+//*******************************************
+[TYPEDEF T_GM_Staff]
+DEFNAME=T_GM_Staff
+
+ON=@Dclick
+
+TARGET Waehle den Char den du inspiezieren willst !
+
+ON=@TARGON_CHAR
+
+SRC.DIALOG d_gminfo
+RETURN 1
+
+[ITEMDEF i_GM_Staff]
+DEFNAME=i_GM_Staff
+ID=i_staff_gnarled
+NAME=GM-Stab
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=GM-Stab
+
+ON=@CREATE
+TIMER=-1 
+ATTR=00004
+COLOR=08a9
+
+ON=@Dclick
+
+TARGET Waehle den Char den du inspiezieren willst !
+
+ON=@TARGON_CHAR
+
+SRC.DIALOG d_gminfo
+RETURN 1
+
+[DIALOG d_gminfo]
+
+100,100
+resizepic 0 0 3600 300 450 
+noclose
+PAGE 0
+button 250 410 4021 4022 1 0 0 //Exit
+button 100 410 4015 4016 1 0 1 //Back
+button 150 410 4006 4007 1 0 2 //Next
+text 15 410 990 0 
+text 35 15 1400 1
+text 20 47 2212 2
+text 20 67 2212 3
+text 20 87 2212 4
+text 20 107 2212 5
+text 20 127 2212 6
+text 20 147 2212 7
+text 20 167 2212 8
+text 20 187 2212 9
+text 20 207 2212 10
+text 20 227 2212 11
+text 20 247 2212 12
+text 20 267 412 13
+
+[DIALOG d_gminfo TEXT]
+by Dante
+Account Info ueber <src.targ.name>
+Accountname: <src.targ.account.account>
+Status: <src.targ.account.status>
+Plevel: <src.targ.account.plevel>
+Charname: <src.targ.name>
+Skillpunkte insgesammt: <src.targ.skilltotal>
+Sprache: <src.targ.account.lang>
+Name im Chat: <src.targ.account.chatname>
+Zuletzt eingeloggt am: 
+<src.targ.account.lastconnectdate>
+Gesammte Spielzeit: <src.targ.account.lastconnecttime> Minuten
+Events des Chars <src.targ.name> : 
+<SRC.Targ.Events>
+
+[DIALOG d_gminfo BUTTON]
+
+ONBUTTON=1
+SRC.DIALOG d_gmskills4  //Back
+ONBUTTON=2
+SRC.DIALOG d_gmstats  //Next
+
+
+[DIALOG d_gmstats]
+
+100,100
+resizepic 0 0 3600 300 450 
+noclose
+PAGE 0
+button 250 410 4021 4022 1 0 0 //Exit
+button 100 410 4015 4016 1 0 1 //Back
+button 150 410 4006 4007 1 0 2 //Next
+text 15 410 990 0 
+text 35 17 2212 1
+gumppic 100 45 2444 //str
+text 20 47 1209 2
+text 110 47 1318 3
+gumppic 100 70 2444 //int
+text 20 72 1209 4
+text 110 72 1318 5
+gumppic 100 95 2444 //dex
+text 20 97 1209 6
+text 110 97 1318 7
+gumppic 100 120 2444 //mana
+text 20 122 1209 8
+text 110 122 1318 9
+gumppic 100 145 2444 //stamina
+text 20 147 1209 10
+text 110 147 1318 11
+gumppic 100 170 2444 //Hitpoints
+text 20 172 1209 12
+text 110 172 1318 13
+gumppic 100 195 2444 //Food
+text 20 197 1209 14
+text 110 197 1318 15
+gumppic 100 220 2444 //karma
+text 20 222 1209 16
+text 110 222 1318 17
+gumppic 100 245 2444 //fame
+text 20 247 1209 18
+text 110 247 1318 19
+gumppic 100 270 2444 //Kills
+text 20 272 1209 20
+text 110 272 1318 21
+gumppic 100 295 2445 //Titel
+text 20 297 1209 22
+text 110 297 1318 23
+gumppic 100 320 2446 //Name
+text 20 322 1209 24
+text 110 322 1318 25
+gumppic 100 345 2446 //account
+text 20 347 1209 26
+text 110 347 1318 27
+
+[DIALOG d_gmstats TEXT]
+by Dante
+Stats von <src.targ.name>
+Staerke
+<SRC.TARG.STR>
+Intelligenz
+<SRC.TARG.INT>
+Gewandheit
+<SRC.TARG.DEX>
+Mana
+<SRC.TARG.MANA>
+Ausdauer
+<SRC.TARG.STAMINA>
+Hitpoints
+<SRC.TARG.HITPOINTS>
+Nahrung
+<SRC.TARG.FOOD>
+Karma
+<SRC.TARG.KARMA>
+Ruhm
+<SRC.TARG.FAME>
+Kills
+<SRC.TARG.KILLS>
+Position
+<SRC.TARG.P>
+Name
+<SRC.TARG.NAME>
+Account
+<SRC.TARG.ACCOUNT>
+
+
+[DIALOG d_gmstats BUTTON]
+
+ONBUTTON=1
+SRC.DIALOG d_gminfo  //Back
+ONBUTTON=2
+SRC.DIALOG d_gmskills1  //Next
+
+
+[DIALOG d_gmskills1]
+
+100,100
+resizepic 0 0 3600 300 450 
+noclose
+PAGE 0
+button 250 410 4021 4022 1 0 0 //Exit
+button 100 410 4015 4016 1 0 1 //Back
+button 150 410 4006 4007 1 0 2 //Next
+text 15 410 990 0 
+text 35 17 2212 1
+
+gumppic 140 45 2444 //Alchemy
+text 20 47 1209 2
+text 150 47 1318 3
+gumppic 140 70 2444 //Anatomy
+text 20 72 1209 4
+text 150 72 1318 5
+gumppic 140 95 2444 //AnimalLore
+text 20 97 1209 6
+text 150 97 1318 7
+gumppic 140 120 2444 //ItemID
+text 20 122 1209 8
+text 150 122 1318 9
+gumppic 140 145 2444 //ArmsLore
+text 20 147 1209 10
+text 150 147 1318 11
+gumppic 140 170 2444 //Parrying
+text 20 172 1209 12
+text 150 172 1318 13
+gumppic 140 195 2444 //Begging
+text 20 197 1209 14
+text 150 197 1318 15
+gumppic 140 220 2444 //Blacksmithing
+text 20 222 1209 16
+text 150 222 1318 17
+gumppic 140 245 2444 //Bowcraft
+text 20 247 1209 18
+text 150 247 1318 19
+gumppic 140 270 2444 //Peacemaking
+text 20 272 1209 20
+text 150 272 1318 21
+gumppic 140 295 2444 //Camping
+text 20 297 1209 22
+text 150 297 1318 23
+gumppic 140 320 2444 //Carpentry
+text 20 322 1209 24
+text 150 322 1318 25
+gumppic 140 345 2444 //Cartography
+text 20 347 1209 26
+text 150 347 1318 27
+gumppic 140 370 2444 //cooking
+text 20 372 1209 28
+text 150 372 1318 29
+
+[DIALOG d_gmskills1 TEXT]
+by Dante
+Skillwerte von <src.targ.name>
+Alchemy
+<SRC.targ.Alchemy>
+Anatomy
+<SRC.targ.Anatomy>
+AnimalLore
+<SRC.targ.AnimalLore>
+ItemID
+<SRC.targ.ItemID>
+ArmsLore
+<SRC.targ.ArmsLore>
+Parrying
+<SRC.targ.Parrying>
+Begging
+<SRC.targ.Begging>
+Blacksmithing
+<SRC.targ.Blacksmithing>
+Bowcraft
+<SRC.targ.Bowcraft>
+Peacemaking
+<SRC.targ.Peacemaking>
+Camping
+<SRC.targ.Camping>
+Carpentry
+<SRC.targ.Carpentry>
+Cartography
+<SRC.targ.Cartography>
+Cooking
+<SRC.targ.Cooking>
+
+[DIALOG d_gmskills1 BUTTON]
+
+ONBUTTON=1
+SRC.DIALOG d_gmstats  //Back
+ONBUTTON=2
+SRC.DIALOG d_gmskills2  //Next
+
+
+[DIALOG d_gmskills2]
+
+100,100
+resizepic 0 0 3600 300 450 
+noclose
+PAGE 0
+button 250 410 4021 4022 1 0 0 //Exit
+button 100 410 4015 4016 1 0 1 //Back
+button 150 410 4006 4007 1 0 2 //Next
+text 15 410 990 0 
+text 35 17 2212 1
+
+gumppic 140 45 2444 //DetectingHidden
+text 20 47 1209 2
+text 150 47 1318 3
+
+gumppic 140 70 2444 //Enticement
+text 20 72 1209 4
+text 150 72 1318 5
+
+gumppic 140 95 2444 //EvaluatingIntel
+text 20 97 1209 6
+text 150 97 1318 7
+
+gumppic 140 120 2444 //Healing
+text 20 122 1209 8
+text 150 122 1318 9
+
+gumppic 140 145 2444 //Fishing
+text 20 147 1209 10
+text 150 147 1318 11
+
+gumppic 140 170 2444 //Forensics
+text 20 172 1209 12
+text 150 172 1318 13
+
+gumppic 140 195 2444 //Herding
+text 20 197 1209 14
+text 150 197 1318 15
+
+gumppic 140 220 2444 //Hiding
+text 20 222 1209 16
+text 150 222 1318 17
+
+gumppic 140 245 2444 //Provocation
+text 20 247 1209 18
+text 150 247 1318 19
+
+gumppic 140 270 2444 //Inscription
+text 20 272 1209 20
+text 150 272 1318 21
+
+gumppic 140 295 2444 //LockPicking
+text 20 297 1209 22
+text 150 297 1318 23
+
+gumppic 140 320 2444 //Magery
+text 20 322 1209 24
+text 150 322 1318 25
+
+gumppic 140 345 2444 //MagicResistance
+text 20 347 1209 26
+text 150 347 1318 27
+
+gumppic 140 370 2444 //Tactics
+text 20 372 1209 28
+text 150 372 1318 29
+
+[DIALOG d_gmskills2 TEXT]
+by Dante
+Skillwerte von <src.targ.name>
+DetectingHidden
+<SRC.targ.DetectingHidden>
+Enticement
+<SRC.targ.Enticement>
+EvaluatingIntel
+<SRC.targ.EvaluatingIntel>
+Healing
+<SRC.targ.Healing>
+Fishing
+<SRC.targ.Fishing>
+Forensics
+<SRC.targ.Forensics>
+Herding
+<SRC.targ.Herding>
+Hiding
+<SRC.targ.Hiding>
+Provocation
+<SRC.targ.Provocation>
+Inscription
+<SRC.targ.Inscription>
+LockPicking
+<SRC.targ.LockPicking>
+Magery
+<SRC.targ.Magery>
+MagicResistance
+<SRC.targ.MagicResistance>
+Tactics
+<SRC.targ.Tactics>
+
+[DIALOG d_gmskills2 BUTTON]
+
+ONBUTTON=1
+SRC.DIALOG d_gmskills1  //Back
+ONBUTTON=2
+SRC.DIALOG d_gmskills3  //Next
+
+
+[DIALOG d_gmskills3]
+
+100,100
+resizepic 0 0 3600 300 450 
+noclose
+PAGE 0
+button 250 410 4021 4022 1 0 0 //Exit
+button 100 410 4015 4016 1 0 1 //Back
+button 150 410 4006 4007 1 0 2 //Next
+text 15 410 990 0 
+text 35 17 2212 1
+
+gumppic 140 45 2444 //Snooping
+text 20 47 1209 2
+text 150 47 1318 3
+
+gumppic 140 70 2444 //Musicianship
+text 20 72 1209 4
+text 150 72 1318 5
+
+gumppic 140 95 2444 //Poisoning
+text 20 97 1209 6
+text 150 97 1318 7
+
+gumppic 140 120 2444 //Archery
+text 20 122 1209 8
+text 150 122 1318 9
+
+gumppic 140 145 2444 //SpiritSpeak
+text 20 147 1209 10
+text 150 147 1318 11
+
+gumppic 140 170 2444 //Stealing
+text 20 172 1209 12
+text 150 172 1318 13
+
+gumppic 140 195 2444 //Tailoring
+text 20 197 1209 14
+text 150 197 1318 15
+
+gumppic 140 220 2444 //Taming
+text 20 222 1209 16
+text 150 222 1318 17
+
+gumppic 140 245 2444 //TasteID
+text 20 247 1209 18
+text 150 247 1318 19
+
+gumppic 140 270 2444 //Tinkering
+text 20 272 1209 20
+text 150 272 1318 21
+
+gumppic 140 295 2444 //Tracking
+text 20 297 1209 22
+text 150 297 1318 23
+
+gumppic 140 320 2444 //Veterinary
+text 20 322 1209 24
+text 150 322 1318 25
+
+gumppic 140 345 2444 //Swordsmanship
+text 20 347 1209 26
+text 150 347 1318 27
+
+gumppic 140 370 2444 //Macefighting
+text 20 372 1209 28
+text 150 372 1318 29
+
+[DIALOG d_gmskills3 TEXT]
+by Dante
+Skillwerte von <src.targ.name>
+Snooping
+<SRC.targ.Snooping>
+Musicianship
+<SRC.targ.Musicianship>
+Poisoning
+<SRC.targ.Poisoning>
+Archery
+<SRC.targ.Archery>
+SpiritSpeak
+<SRC.targ.SpiritSpeak>
+Stealing
+<SRC.targ.Stealing>
+Tailoring
+<SRC.targ.Tailoring>
+Taming
+<SRC.targ.Taming>
+TasteID
+<SRC.targ.TasteID>
+Tinkering
+<SRC.targ.Tinkering>
+Tracking
+<SRC.targ.Tracking>
+Veterinary
+<SRC.targ.Veterinary>
+Swordsmanship
+<SRC.targ.Swordsmanship>
+Macefighting
+<SRC.targ.Macefighting>
+
+[DIALOG d_gmskills3 BUTTON]
+
+
+ONBUTTON=1
+SRC.DIALOG d_gmskills2  //Back
+ONBUTTON=2
+SRC.DIALOG d_gmskills4  //Next
+
+
+[DIALOG d_gmskills4]
+
+100,100
+resizepic 0 0 3600 300 450 
+noclose
+PAGE 0
+button 250 410 4021 4022 1 0 0 //Exit
+button 100 410 4015 4016 1 0 1 //Back
+button 150 410 4006 4007 1 0 2 //Next
+text 15 410 990 0 
+text 35 17 2212 1
+
+gumppic 140 45 2444 //Fencing
+text 20 47 1209 2
+text 150 47 1318 3
+
+gumppic 140 70 2444 //Wrestling
+text 20 72 1209 4
+text 150 72 1318 5
+
+gumppic 140 95 2444 //Lumberjacking
+text 20 97 1209 6
+text 150 97 1318 7
+
+gumppic 140 120 2444 //Mining
+text 20 122 1209 8
+text 150 122 1318 9
+
+gumppic 140 145 2444 //Meditation
+text 20 147 1209 10
+text 150 147 1318 11
+
+gumppic 140 170 2444 //Stealth
+text 20 172 1209 12
+text 150 172 1318 13
+
+gumppic 140 195 2444 //RemoveTrap
+text 20 197 1209 14
+text 150 197 1318 15
+
+gumppic 140 220 2444 //Necromancy
+text 20 222 1209 16
+text 150 222 1318 17
+
+[DIALOG d_gmskills4 TEXT]
+by Dante
+Skillwerte von <src.targ.name>
+Fencing
+<SRC.targ.Fencing>
+Wrestling
+<SRC.targ.Wrestling>
+Lumberjacking
+<SRC.targ.Lumberjacking>
+Mining
+<SRC.targ.Mining>
+Meditation
+<SRC.targ.Meditation>
+Stealth
+<SRC.targ.Stealth>
+RemoveTrap
+<SRC.targ.RemoveTrap>
+Necromancy
+<SRC.targ.Necromancy>
+
+[DIALOG d_gmskills4 BUTTON]
+
+ONBUTTON=1
+SRC.DIALOG d_gmskills3  //Back
+ONBUTTON=2
+SRC.DIALOG d_gminfo //Next
+
+[EOF]TTON=2
+SRC.DIALOG d_gminfo //Next
+
+[EOF]

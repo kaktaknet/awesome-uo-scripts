@@ -1,0 +1,412 @@
+//-------------------------- /////
+////Race System - by ClouD BR /////
+//--------------------------
+////E-mail: alexbastos@ism.com.br ////
+//--------------------------
+////ICQ: 133411911 ////
+//--------------------------
+////Note: Edit only the defs if you're a begginer ////
+//--------------------------
+////You can edit FUNCTIONs at the end of file
+//--------------------------
+////Please, do not take this header out :D plz? ////
+//-------------------------- /////
+
+----------------
+----------------
+||     /\     ||
+||    /  \    ||
+||   /    \   ||
+||  /      \  ||
+|| /  ____  \ ||   Brazil!
+||/  |    |  \||
+||\  |    |  /||
+|| \ |____| / ||
+||  \      /  ||
+||   \    /   ||
+||    \  /    ||
+||     \/     ||
+----------------
+----------------
+
+[DEFNAME race_sys_msgs]
+youalready_have_a_race "@07ad You already have a race"
+cantchoosearacehere "@07ad You can't choose a race here"
+race_confirm_gump "Confirm"
+race_back_gump "Back"
+youdonthavearace "@07ad You don't have a race"
+youcantresetyourracehere "@07ad You can't reset your race here."
+
+human_explanation "Humans are a pacific race, but they don't have many allies, because they're always trying to dominate other species. The only race that are their allies are the High Elves, because humans consider them messangers of God. Good at parrying and avoiding to get hit they get the habilitie "Dodge".
+elf_explanation "Elves are agile and wise. Their habilities in archery are amazing. They don't have much allies, but for sure their greatest allies are the High Elves, because, as some say, the High Elves were born from the wedding of elves and angels. Thei can see far and in dark places, so they receive the "NightVision" habilitie and they become invul to the "Frost Arrow"."
+vampire_explanation "Vampires are misterious and cruels. Almost nothing is known about them, but Vampire Hunters says that they live in Serpent's Hold, but almost no hunter came back alive to tell the history. They can drink blood to heal their hitpoints, so they receive the "Blood Suck" habilitie."
+dwarf_explanation "Dwarves costume to be in the city of Minoc, there is where the bigger amount of metals in the world of Britannia is concentrated in. For being very aggressive they receive the ability "Power Blow", wich increases its damage and leave them with reactive armor per twenty seconds."
+drow_explanation "Drows is treacherous and they do not have a fixture local to live, although to prefer places dark as the Dungeon of Britannia. For being very treacherous and sly, they develop the ability "Frost Arrow" that paralizes its enemies for a time in accordance with its ability with the bow."
+sprite_explanation "Sprites are very smart and sly. They live in forests and like hiding and analyzing their enemies before facing them. They train the secrets of the magic resistance since small, developing the ability "Magic Armor", that makes them immune to any malignant magic during 25 seconds."
+highelf_explanation "The human beings consider the High Elves messangers of God. They like to live next mountains, or to the sea, where the freedom sensation is bigger and next to them, as well as the proximity with the sky. They admire the abilities of the cure, receiving the ability "Magic Heal"."
+
+[DEFNAME race_sys_settings]
+bloodsuck_chance 26 /// 1 in 26
+dodge_chance 40 ///1 in 40
+magicheal_chance 35 ///1 in 35
+nightvision_chance 3 ///1 in 3
+powerblow_chance 40 ///1 in 40
+frostarrow_chance 35 ///1 in 35
+magicarmor_chance 40 ///1 in 40
+
+magicamor_timer 25 //time in seconds the player will be immune to magic
+
+resetrace_allowed 1 ///players can reset their races? (1=YES, 0=NO)
+daytoresetrace 25 ///wich day of the month players can reset their races
+
+[plevel 1]
+race
+
+[FUNCTION race]
+IF (<tag0.race.id>)
+sysmessage <def.youalready_have_a_race>
+return 1
+ENDIF
+IF (<tag0.event.id>) || (<findid.i_pvp_time>)
+sysmessage <def.cantchoosearacehere>
+return 1
+ENDIF
+sdialog d_select_race
+
+[DIALOG d_select_race]
+300,100
+PAGE 0
+resizepic 20 20 2620 300 250
+checkertrans 20 20 300 250
+dtext 120 30 2010 Race System
+
+PAGE 1
+tilepic 200 90 9742
+dtext 60 70 88 Human (Dodge)
+button 40 75 093A 0939 0 2 1
+dtext 60 90 88 Elf (Nightvision)
+button 40 95 093A 0939 0 3 2
+dtext 60 110 88 Vampire (Blood Suck)
+button 40 115 093A 0939 0 4 3
+dtext 60 130 88 Dwarf (Power Blow)
+button 40 135 093A 0939 0 5 4
+dtext 60 150 88 Drow (Frost Arrow)
+button 40 155 093A 0939 0 6 5
+dtext 60 170 88 Sprite (Magic Armor)
+button 40 175 093A 0939 0 7 6
+dtext 60 190 88 High Elf (Magic Heal)
+button 40 195 093A 0939 0 8 7
+dtext 130 220 36 by ClouD BR
+
+PAGE 2
+dtext 140 60 39 Human
+dhtmlgump 45 85 250 130 1 1 <def.human_explanation>
+button 260 225 4005 4006 1 0 8
+dtext 250 245 0ad <def.race_confirm_gump>
+button 50 225 4016 4015 0 1 9
+dtext 45 245 0ad <def.race_back_gump>
+
+PAGE 3
+dtext 140 60 39 Elf
+dhtmlgump 45 85 250 130 1 1 <def.elf_explanation>
+button 260 225 4005 4006 1 0 10
+dtext 250 245 0ad <def.race_confirm_gump>
+button 50 225 4016 4015 0 1 9
+dtext 45 245 0ad <def.race_back_gump>
+
+PAGE 4
+dtext 140 60 39 Vampire
+dhtmlgump 45 85 250 130 1 1 <def.vampire_explanation>
+button 260 225 4005 4006 1 0 11
+dtext 250 245 0ad <def.race_confirm_gump>
+button 50 225 4016 4015 0 1 9
+dtext 45 245 0ad <def.race_back_gump>
+
+PAGE 5
+dtext 140 60 39 Dwarf
+dhtmlgump 45 85 250 130 1 1 <def.dwarf_explanation>
+button 260 225 4005 4006 1 0 12
+dtext 250 245 0ad <def.race_confirm_gump>
+button 50 225 4016 4015 0 1 9
+dtext 45 245 0ad <def.race_back_gump>
+
+PAGE 6
+dtext 140 60 39 Drow
+dhtmlgump 45 85 250 130 1 1 <def.drow_explanation>
+button 260 225 4005 4006 1 0 13
+dtext 250 245 0ad <def.race_confirm_gump>
+button 50 225 4016 4015 0 1 9
+dtext 45 245 0ad <def.race_back_gump>
+
+PAGE 7
+dtext 140 60 39 Sprite
+dhtmlgump 45 85 250 130 1 1 <def.sprite_explanation>
+button 260 225 4005 4006 1 0 14
+dtext 250 245 0ad <def.race_confirm_gump>
+button 50 225 4016 4015 0 1 9
+dtext 45 245 0ad <def.race_back_gump>
+
+PAGE 8
+dtext 140 60 39 High Elf
+dhtmlgump 45 85 250 130 1 1 <def.highelf_explanation>
+button 260 225 4005 4006 1 0 15
+dtext 250 245 0ad <def.race_confirm_gump>
+button 50 225 4016 4015 0 1 9
+dtext 45 245 0ad <def.race_back_gump>
+
+[DIALOG d_select_race BUTTON]
+ON=8
+IF (<tag0.event.id>) || (<findid.i_pvp_time>)
+sysmessage <def.cantchoosearacehere>
+return 1
+ENDIF
+tag.race.id=1
+title The human
+local.color=<def.colors_skin>
+color=<local.color>
+oskin=<local.color>
+events +e_race
+update
+effect 3,i_fx_bless_effect,20,20
+
+ON=10
+IF (<tag0.event.id>) || (<findid.i_pvp_time>)
+sysmessage <def.cantchoosearacehere>
+return 1
+ENDIF
+tag.race.id=2
+title The elf
+local.color=059e
+color=<local.color>
+oskin=<local.color>
+events +e_race
+update
+effect 3,i_fx_bless_effect,20,20
+
+ON=11
+IF (<tag0.event.id>) || (<findid.i_pvp_time>)
+sysmessage <def.cantchoosearacehere>
+return 1
+ENDIF
+tag.race.id=3
+title The vampire
+local.color=802
+color=<local.color>
+oskin=<local.color>
+events +e_race
+update
+effect 3,i_fx_bless_effect,20,20
+
+ON=12
+IF (<tag0.event.id>) || (<findid.i_pvp_time>)
+sysmessage <def.cantchoosearacehere>
+return 1
+ENDIF
+tag.race.id=4
+title The dwarf
+local.color=08224
+color=<local.color>
+oskin=<local.color>
+events +e_race
+update
+effect 3,i_fx_bless_effect,20,20
+
+ON=13
+IF (<tag0.event.id>) || (<findid.i_pvp_time>)
+sysmessage <def.cantchoosearacehere>
+return 1
+ENDIF
+tag.race.id=5
+title The drow
+local.color=08382
+color=<local.color>
+oskin=<local.color>
+events +e_race
+update
+effect 3,i_fx_bless_effect,20,20
+
+ON=14
+IF (<tag0.event.id>) || (<findid.i_pvp_time>)
+sysmessage <def.cantchoosearacehere>
+return 1
+ENDIF
+tag.race.id=6
+title The sprite
+local.color=045e
+color=<local.color>
+oskin=<local.color>
+events +e_race
+update
+effect 3,i_fx_bless_effect,20,20
+
+ON=15
+IF (<tag0.event.id>) || (<findid.i_pvp_time>)
+sysmessage <def.cantchoosearacehere>
+return 1
+ENDIF
+tag.race.id=7
+title The high elf
+local.color=08006
+color=<local.color>
+oskin=<local.color>
+events +e_race
+update
+effect 3,i_fx_bless_effect,20,20
+
+////////Event & T_BLOOD////
+
+[TYPEDEF t_blood]
+ON=@Dclick
+IF (<src.tag0.race.id>==3) && !(<src.tag0.event.id> > 0) && !(<attr>&attr_static)
+IF (<src.hits> < <src.str>) && (<eval RAND(0,<def.bloodsuck_chance>)>==1)
+src.sysmessage You drink the blood.
+src.hits += <eval {8 20}>
+src.anim 9
+remove
+IF (<src.hits> > <src.str>)
+src.hits=<src.str>
+ENDIF
+return 1
+ENDIF
+ENDIF
+
+[EVENTS e_race]
+ON=@GETHIT
+IF (<tag0.race.id>==1) && !(<tag0.event.id> > 0)
+IF (<Eval RAND(0,<def.dodge_chance>)>==1)
+say dodge!
+RETURN 1
+ENDIF
+ELSEIF (<tag0.race.id>==7) && !(<tag0.event.id> > 0)
+IF (<eval RAND(0,<def.magicheal_chance>)>==1)
+say magic heal!
+spelleffect s_heal,500.0
+ENDIF
+ENDIF
+
+ON=@EnvironChange
+IF (<tag0.race.id>==2) && !(<tag0.event.id> > 0)
+IF (<sector.isdark>) && (<eval RAND(0,<def.nightvision_chance>)>==1) && !(<flags>&statf_nightsight)
+say nightvision!
+spelleffect s_night_sight,1000
+ENDIF
+ENDIF
+
+ON=@HIT
+IF (<tag0.race.id>==4) && !(<tag0.event.id> > 0)
+IF (<eval RAND(0,<def.powerblow_chance>)>==1)
+act.damage 30 0002 <uid>
+say powerblow!
+act.effect 3,i_fx_explode,16,20
+spelleffect s_reactive_armor,50.0
+ENDIF
+ELSEIF (<tag0.race.id>==5) && !(<tag0.event.id> > 0) && !(<act.tag0.race.id>==2)
+IF (<eval RAND(0,<def.frostarrow_chance>)>==1)
+act.damage 10 0002 <uid>
+say frost arrow!
+act.effect 3,i_fx_bless_effect
+act.spelleffect s_paralyze,<magery>
+ENDIF
+ENDIF
+
+ON=@SpellEffect
+IF (<tag0.race.id>==6) && !(<tag0.event.id> > 0)
+IF (<serv.spell.<argn1>.flags>&SPELLFLAG_HARM) && (<findid.i_magic_armor>)
+say magic armor!
+return 1
+ENDIF
+IF (<eval RAND(0,<def.magicarmor_chance>)>==1) && (<serv.spell.<argn1>.flags>&SPELLFLAG_HARM)
+say magic armor!
+serv.newitem=i_magic_armor
+new.equip
+return 1
+ENDIF
+ENDIF
+
+//////////////////////////
+
+[itemdef i_magic_armor]
+NAME=magic armor
+ID=i_memory
+type=t_eq_script
+layer=layer_special
+
+ON=@Create
+attr=attr_invis|attr_decay
+
+ON=@equip
+timer=<def.magicamor_timer>
+
+ON=@timer
+remove
+return 1
+
+////////////Reset Race////////////
+
+[plevel 1]
+resetrace
+
+[function resetrace]
+IF (<def.resetrace_allowed>==1)
+IF !(<tag0.race.id>)
+sysmessage <def.youdonthavearace>
+return 1
+ENDIF
+IF !(<rtime.day>==<def.daytoresetrace>) && !(<isgm>)
+sysmessage @07ad You can only change your race at day <def.daytoresetrace>. (Today: <rtime.day>/<rtime.month>/<rtime.year>)
+return 1
+ENDIF
+IF (<tag0.event.id> > 0) && !(<isgm>)
+sysmessage <def.youcantresetyourracehere>
+return 1
+ENDIF
+IF (<findid.i_pvp_time>) && !(<isgm>)
+sysmessage <def.youcantresetyourracehere>
+return 1
+ENDIF
+sdialog d_resetrace
+ENDIF
+
+[DIALOG d_resetrace]
+200,100
+PAGE 0
+resizepic 20 20 2620 200 150
+checkertrans 20 20 200 150
+dtext 40 40 2010 Are you sure that you
+dtext 30 60 2010 want to reset your race?
+button 185 105 093A 0939 1 0 0
+dtext 180 120 36 No
+button 45 105 093A 0939 1 0 1
+dtext 40 120 0ad Yes
+
+[DIALOG d_resetrace BUTTON]
+ON=1
+IF (<rtime.day>==<def.daytoresetrace>) || (<ISGM>)
+events -e_race
+tag.race.id=
+title=
+color=
+local.color=<def.colors_skin>
+color=<local.color>
+oskin=<local.color>
+sysmessage @07a1 Race reseted.
+sysmessage @07a1 Type .race to select another race.
+update
+effect 3,i_fx_bless_effect,20,20
+ENDIF
+
+/////////////////////
+
+[FUNCTION rtime.year]
+return <strsub 0 4 <serv.rtime>>
+
+[FUNCTION rtime.month]
+return <strsub 5 2 <serv.rtime>>
+
+[FUNCTION rtime.day]
+return <strsub 8 2 <serv.rtime>>
+
+[FUNCTION rtime.hour]
+return <strsub 10 3 <serv.rtime>>
+
+[EOF]

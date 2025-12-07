@@ -1,0 +1,140 @@
+[Comment on this script]
+I made this script on january, 2003. My language is spanish so the traduction could be pretty buggy.
+This merchants buys and sells iron ingots in amounts of 50, taking a litle of gold by itself.
+A gm can take money from this vendor by saying take, it will withdraw 5Ks of him.
+
+[CHARDEF C_merc_iron] 
+DEFNAME=C_merc_iron
+NAME=#names_human_male the Iron Merchant
+ID=C_MAN 
+TEVENTS=e_Human_Environ
+TSPEECH=spk_iron
+CAN=MT_WALK
+DAM=8,20
+ARMOR=20
+
+
+ON=@Create 
+FLAGS=000000005 
+NPC=brain_monster
+STR=300
+DEX=100
+INT=50
+COLOR=040d
+
+FAME={500 1000}
+KARMA={500 699}
+
+WRESTLING={20.0 30.0} 
+TACTICS={80.0 100.0} 
+
+TAG.DIFERENCIA 0
+TAG.CANTIDAD 100
+TAG.PRECIOVENTA 595
+TAG.PRECIOCOMPRA 530
+TAG.GOLD 5000
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+
+ON=@NPCRestock 
+ITEM=RANDOM_LIGHT
+ITEM=i_shirt_fancy
+COLOR=colors_all
+ITEM=i_pants_long
+COLOR=colors_all
+ITEM=i_SASH
+COLOR=colors_all
+ITEM=random_boots
+
+On=@NPCSeeNewPlayer 
+Say Don't you want some iron?
+
+on=@hit 
+FLAGS=000000005 
+return 1 
+
+on=@gethit 
+FLAGS=000000005 
+return 1 
+
+on=@damage 
+FLAGS=000000005 
+return 1 
+
+[SPEECH spk_iron] 
+on=*hola* 
+on=*saludos* 
+on=*hi*
+ON=*nas* 
+ON=Wenas
+ON=Buenas
+ON=Hello
+Say Hi, would you want to trade?
+
+ON=*job*
+
+say I sell and buy iron, in amounts of 50. Say "price" to get info.
+
+ON=*price*
+
+say The sell price for 50 iron ingots is <eval <TAG.PRECIOVENTA>>
+say The buy price for 50 iron ingots is <eval <TAG.PRECIOCOMPRA>>
+
+ON=*money*
+say I got <eval <tag.gold>> coins left.
+
+ON=*sell* 
+IF (<TAG.GOLD> > 600)
+IF (0<TAG.PRECIOVENTA> > 20)
+IF (0<TAG.PRECIOCOMPRA> > 10)
+IF (<SRC.RESTEST i_ingot_iron 50>) 
+SAY Take <eval (<TAG.PRECIOCOMPRA>)> gold coins. 
+src.newitem i_gold
+SRC.ACT.Amount 0<TAG.PRECIOCOMPRA>
+SRC.ACT.BOUNCE
+SRC.consume i_ingot_iron 50
+TAG.CANTIDAD = <eval (0<TAG.CANTIDAD> + 50)>
+TAG.GOLD = <eval (0<tag.GOLD> - 0<TAG.PRECIOcompra>)>
+TAG.PRECIOVENTA = <eval (0<TAG.PRECIOVENTA> - 5)>
+TAG.PRECIOCOMPRA = <eval (0<TAG.PRECIOCOMPRA> - 5)>
+endif
+ELSE
+say Im sorry im not buying right now
+endif
+ELSE
+say Im sorry im not buying right now
+endif
+else
+say Im sorry im not buying right now
+endif
+
+ON=*buy* 
+IF (0<TAG.CANTIDAD> > 0)
+IF (<SRC.RESTEST i_gold <TAG.PRECIOventa>>) 
+SAY It is <eval (<TAG.PRECIOVENTA>)> gold coins.
+src.newitem i_ingot_iron
+SRC.ACT.Amount 50
+SRC.ACT.BOUNCE
+SRC.consume i_gold 0<TAG.PRECIOVENTA>
+TAG.CANTIDAD = <eval (0<TAG.CANTIDAD> - 50)>
+TAG.GOLD =  <eval (0<tag.GOLD> + 0<TAG.PRECIOventa>)>
+TAG.PRECIOVENTA = <eval (0<TAG.PRECIOVENTA> + 5)>
+TAG.PRECIOCOMPRA = <eval (0<TAG.PRECIOCOMPRA> + 5)>
+endif
+ELSE
+say Im sorry im not selling right now
+endif
+
+ON=*take*
+IF (<SRC.ISGM>)
+IF (0<TAg.GOLD> > 5000)
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT <eval (0<TAG.GOLD> - 5000)>
+SRC.ACT.BOUNCE
+MESSAGE Toma <eval (<TAG.GOLD> - 5000)>
+TAG.GOLD 5000
+ELSE
+MESSAGE I cant give you more, i got <eval (<TAG.GOLD>)> gold coins
+ENDIF
+ENDIF

@@ -1,0 +1,1343 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://www.scriptsharing.cjb.net/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//The original idea for this script has been taken from Tanagar's weather script.
+//I didn't like the way he had coded it so I made my own, which became much bigger.
+
+//To use this script, put this file inside your Script folder, and then, run your server.
+//Once that this is done, use .add i_control_time  and place this object somewhere that your
+//players will never get.. Star Chamber as an example :)
+//Third step, is to retrieve the UID of the object by using .xshow uid.
+//Then, put the UID of the object inside the Worldsettings as time_control_uid
+//Next step, is to go back in-game (once that you saved the change)  and to dclick the
+//crystal.  You can now set the Hour and the Date as you wish.
+//All players can know the time by using .time
+//In this script, there is a temperature consideration.. If you don't like it, you can
+//disable it by setting the temperature_activated   value to 0.
+
+//The next step is to install some other scripts in other files...
+
+// ON=@LOGIN
+//*************************************************
+//**This part is used to activate the Temperature**
+//*************************************************
+// IF !(<SRC.RESTEST 1 i_temperature>)
+// SRC.NEWITEM=i_temperature
+// SRC.ACT.EQUIP
+// ENDIF
+//**************************************************************
+//**This part is used to have the Lighting And Weather effects**
+//**************************************************************
+// SRC.EVENTS -e_weather
+// SRC.EVENTS +e_weather
+//******************************************
+//**This part will activate the Age System**
+//******************************************
+//VAR.AGEACTIVATED=<EVAL (age_activated)>
+//IF (<VAR.AGEACTIVATED>==1)
+//IF !(<SRC.TAG.AGE>)
+//SRC.TAG.AGE=<EVAL {16 25}>
+//SRC.TAG.BIRTHDAY=<UID.time_control_uid.MOREZ>
+//SRC.TAG.BIRTHMONTH=<UID.time_control_uid.MORE1>
+//SRC.TAG.BIRTHYEAR=<UID.time_control_uid.MORE2>
+//ENDIF
+//*********************************************************
+//**This part will activate the Hair/Beard growing system**
+//*********************************************************
+//IF !(<SRC.RESTEST 1 i_hair_grow>)
+//SRC.NEWITEM=i_hair_grow
+//SRC.ACT.EQUIP
+//ENDIF
+
+//This Trigger: @LOGIN can be added under the CHARDEFS of your players (Male:0190 and Female:0191),
+//under a general skillclass, or under an event that all of your players have set on them.
+//Remove the comment // so the scripts can work properly :)  I advise to leave the comments saying
+//what is doing each part to be able to remove one or another more easily if you ever wish to do so.
+
+
+//*****Version 1.1!*****
+
+//Temperature system has been improved.
+//And there is a new age system!
+//If you wish to use this system, just leave the variable age_activated set to 1, if you don't wish to
+//have it, set it to 0.
+//At the moment, the age allows you to know your age (basically says for how long your char exists) and
+//at each end of month, your hair will grow :)
+//Having the age allows you to build, depending on your Race system, some modifications to the characters
+//depending on their race/age :)
+//Always more complex!
+
+
+//*****Version 1.2!*****
+
+//The Hair Growing system has been modified to be more realist.  Now, beard will grow also
+//and the script is now a lot more detailed.
+
+
+//*****Version 1.3!*****
+
+//Now, when it rains, water will be left on the ground!  And when it snows, snow will be left
+//on the ground!  And this snow can even be throwed at other people ;)  No new modifications
+//are needed to activate this!  Only having the script is enough ;)
+
+//Please do not remove this header..
+
+//Enjoy!
+
+//*****Version 1.3s1*****
+//The version number 1.3s1 indicates that Shadowlord (that's me) has modified the 1.3 script - and this is version 1 of
+//Shadowlord's modifications. 1.3s2 would be version 2 of Shadowlord's modifications.
+//Temperature system has been improved; Now it takes into account your position on the world; i.e. it's colder in the
+//north and south, and warmer in the center of the map. I also changed the snow item pic to be based on blood. I liked
+//that better than the shrunken slime pic that it was before. I also made the duration of snow & rain piles/puddles
+//somewhat random, so they don't start vanishing as another appears (that just looks weird.)
+//I also changed the first 8 month names to the Latin month names. September-December I changed to the french month
+//names. At least, I think they're french month names, I can't remember now. If not, they look like it, and look
+//better than just plain "September" etc, which (September (latin, then english) rather than Septembre (french)) 
+//is what they were in latin from what I can tell.
+//Also, a suggestion: You can install this script in one step. That is, add an item into the world where no players can
+//get to it. Use a chair or something. Now, see what the UID of that item is, and stick it in the script under the 
+//worldsettings as time_control_uid. Then, drop the script in, and go to that chair, and type .set id i_control_time
+//and click it. Now just dclick it and set the time etc. If the year is screwed up, .set more2 0 will reset it.
+//The other time stuff can be changed through dclicking the object.
+
+//Also, players now get messages telling them they're hot/cold/etc. I tweaked the damage up, also, so that people don't
+//recover it all before taking more. Now, you can go to the north pole, take off all your clothes, and freeze to death
+//in a minute or three, depending on your starting HP.
+
+//The chance of rain or snow is affected by your location, as well. In the equator, it rarely rains, but at the poles,
+//it'll be snowing nearly nonstop (if anyone goes there).
+
+//*****Version 1.3s2*****
+//I removed the snow & rain from the script, and modified the time settings. Also changed the e_weather event to use a 
+//global variable instead of adding a removing events from all players... It seemed to be crashing before, and isn't anymore.
+//The snow piles & rain puddles, btw, were causing strange errors due to it exceeding the max # of NPCs, that's why I
+//removed them.
+//Also made a few more changes I don't recall... Heh.
+
+//Version 1.3s3
+//Light levels changed to be brighter overall, and to have a smooth transition.
+
+//temperature_activated: 0=off entirely, 1=cold only, 2=heat only, 3=cold and heat (completely on).
+
+[DEFNAME Worldsettings]
+
+time_control_uid 0400062ba
+
+temperature_activated 1
+age_activated 1
+
+seconds_per_minute 80
+minutes_per_hour 60
+hours_per_day 24
+days_per_month 30
+months_per_year 12
+
+light_midnight 19
+light_night 17
+light_dawn 12
+light_dawn_2 15
+light_dusk 12
+light_dusk_2 15
+light_noon 0
+light_dungeon 28
+
+light_effect_moon (-2)
+light_effect_rain 3
+light_effect_snow (-2)
+
+weather_rain_spring 40
+weather_rain_summer 20
+weather_rain_fall 30
+
+weather_snow_winter 40
+weather_snow_spring 50
+weather_snow_fall 50
+
+temperature_midnight {-10 0}
+temperature_dawn_2 {-7 3}
+temperature_dawn {-3 7}
+temperature_noon {0 10}
+temperature_dusk_2 {-2 8}
+temperature_dusk {-5 5}
+temperature_night {-7 3}
+
+[function hour]
+uid.time_control_uid.timer 0
+time
+
+[ITEMDEF i_control_time]
+DEFNAME=i_control_time
+ID=i_crystal_green
+
+ON=@CREATE
+MOREX=0
+MOREY=0
+MOREZ=0
+
+ON=@DCLICK
+SRC.DIALOG d_weather
+RETURN 1
+
+ON=@TIMER
+MOREX=<MOREX>+1
+
+IF (<MOREX>>=minutes_per_hour + 1)
+MOREX=1
+MOREY=<MOREY>+1
+ENDIF
+IF (<MOREY>>=hours_per_day + 1)
+MOREY=1
+MOREZ=<MOREZ>+1
+ENDIF
+IF (<MOREZ>>=days_per_month + 1)
+MOREZ=1
+MORE1=<MORE>+1
+ENDIF
+IF (<MORE1>>=months_per_year + 1)
+MORE1=1
+MORE2=<MORE2>+1
+ENDIF
+if (<morex>==1) || (<morex>==31)
+//sserv.allclients say newweathercheck
+newWeatherCheck
+endif
+TIMER=seconds_per_minute
+//serv.allclients time
+
+RETURN 1
+
+[PLEVEL 1]
+age
+
+[FUNCTION time]
+if 0<UID.time_control_uid.uid>==00
+return
+endif
+VAR.MINUTES=<UID.time_control_uid.MOREX>
+VAR.HOURS=<UID.time_control_uid.MOREY>
+VAR.DAYS=<UID.time_control_uid.MOREZ>
+VAR.MONTH=<UID.time_control_uid.MORE1>
+VAR.YEAR=<UID.time_control_uid.MORE2>
+
+IF (<VAR.MINUTES><30)
+VAR.WHEN=1
+ELSEIF (<VAR.MINUTES>==60)
+VAR.WHEN=3
+ELSE
+VAR.WHEN=2
+ENDIF
+IF (<VAR.HOURS>==24)
+VAR.WHEN2=1
+ELSE
+VAR.WHEN2=0
+ENDIF
+
+IF (<VAR.MONTH>==1)
+VAR.MONTHNAME=Januarius
+ELSEIF (<VAR.MONTH>==2)
+VAR.MONTHNAME=Februarius
+ELSEIF (<VAR.MONTH>==3)
+VAR.MONTHNAME=Martius
+ELSEIF (<VAR.MONTH>==4)
+VAR.MONTHNAME=Aprilis
+ELSEIF (<VAR.MONTH>==5)
+VAR.MONTHNAME=Maius
+ELSEIF (<VAR.MONTH>==6)
+VAR.MONTHNAME=Junius
+ELSEIF (<VAR.MONTH>==7)
+VAR.MONTHNAME=Julius
+ELSEIF (<VAR.MONTH>==8)
+VAR.MONTHNAME=Augustus
+ELSEIF (<VAR.MONTH>==9)
+VAR.MONTHNAME=Septembre
+ELSEIF (<VAR.MONTH>==10)
+VAR.MONTHNAME=Octobre
+ELSEIF (<VAR.MONTH>==11)
+VAR.MONTHNAME=Novembre
+ELSE
+VAR.MONTHNAME=Decembre
+ENDIF
+
+IF (<VAR.WHEN2>==0)
+IF (<VAR.WHEN>==1)
+if <eval <var.hours>>==12
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past <EVAL <VAR.HOURS>> noon,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+elseif <eval <var.hours>><13
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past <EVAL <VAR.HOURS>>o'clock in the morning,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+elseif <eval <var.hours>><20
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past <EVAL (<VAR.HOURS>-12)>o'clock in the afternoon,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+else
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past <EVAL (<VAR.HOURS>-12)>o'clock at night,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+endif
+ELSEIF (<VAR.WHEN>==2)
+if <eval <var.hours>>==11
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>+1> noon,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+elseif <eval <var.hours>><13
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>+1>o'clock in the morning,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+elseif <eval <var.hours>><20
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>-11>o'clock in the afternoon,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+else
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>-11>o'clock at night,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+endif
+ELSEIF (<VAR.WHEN>==3)
+if <eval <var.hours>>==11
+	SYSMESSAGE "It is <EVAL <VAR.HOURS>+1> noon,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+elseif <eval <var.hours>><13
+	SYSMESSAGE "It is <EVAL <VAR.HOURS>+1>o'clock in the morning,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+elseif <eval <var.hours>><20
+	SYSMESSAGE "It is <EVAL <VAR.HOURS>-11>o'clock in the afternoon,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+else
+	SYSMESSAGE "It is <EVAL <VAR.HOURS>-11>o'clock at night,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+endif
+ENDIF
+ELSE
+IF (<VAR.WHEN>==1)
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past midnight,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+ELSEIF (<VAR.WHEN>==2)
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before 1 o'clock,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+ELSEIF (<VAR.WHEN>==3)
+	SYSMESSAGE "It is 1 o'clock,"
+	SYSMESSAGE "<VAR.MONTHNAME> <EVAL <VAR.DAYS>> of the year <EVAL (<VAR.YEAR>)>."
+ENDIF
+ENDIF
+
+[FUNCTION time2]
+if 0<UID.time_control_uid.uid>==00
+return
+endif
+VAR.MINUTES=<UID.time_control_uid.MOREX>
+VAR.HOURS=<UID.time_control_uid.MOREY>
+
+IF (<VAR.MINUTES><30)
+VAR.WHEN=1
+ELSEIF (<VAR.MINUTES>==60)
+VAR.WHEN=3
+ELSE
+VAR.WHEN=2
+ENDIF
+IF (<VAR.HOURS>==24)
+VAR.WHEN2=1
+ELSE
+VAR.WHEN2=0
+ENDIF
+
+
+IF (<VAR.WHEN2>==0)
+IF (<VAR.WHEN>==1)
+if <eval <var.hours>>==12
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past <EVAL <VAR.HOURS>> noon."
+elseif <eval <var.hours>><13
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past <EVAL <VAR.HOURS>>o'clock in the morning."
+elseif <eval <var.hours>><20
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past <EVAL (<VAR.HOURS>-12)>o'clock in the afternoon."
+else
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past <EVAL (<VAR.HOURS>-12)>o'clock at night."
+endif
+ELSEIF (<VAR.WHEN>==2)
+if <eval <var.hours>>==11
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>+1> noon."
+elseif <eval <var.hours>><13
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>+1>o'clock in the morning."
+elseif <eval <var.hours>><20
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>-11>o'clock in the afternoon."
+else
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before <EVAL <VAR.HOURS>-11>o'clock at night."
+endif
+ELSEIF (<VAR.WHEN>==3)
+if <eval <var.hours>>==11
+	SYSMESSAGE "It is <EVAL <VAR.HOURS>+1> noon."
+elseif <eval <var.hours>><13
+	SYSMESSAGE "It is <EVAL <VAR.HOURS>+1>o'clock in the morning."
+elseif <eval <var.hours>><20
+	SYSMESSAGE "It is <EVAL <VAR.HOURS>-11>o'clock in the afternoon."
+else
+	SYSMESSAGE "It is <EVAL <VAR.HOURS>-11>o'clock at night."
+endif
+ENDIF
+ELSE
+IF (<VAR.WHEN>==1)
+	SYSMESSAGE "It is <EVAL <VAR.MINUTES>> minutes past midnight."
+ELSEIF (<VAR.WHEN>==2)
+	SYSMESSAGE "It is <EVAL 60-<VAR.MINUTES>> minutes before 1 o'clock."
+ELSEIF (<VAR.WHEN>==3)
+	SYSMESSAGE "It is 1 o'clock."
+ENDIF
+ENDIF
+
+[events e_weather]
+[events e_weather_unused]
+ON=@ENVIRONCHANGE
+if <src.npc>==0
+if 0<UID.time_control_uid.uid>==00
+return
+endif
+if 0<var.inweather>==00
+var.inweather=1
+IF (<SRC.P.X><5206)
+SRC.Weathercheck
+ELSE
+SRC.SECTOR.LIGHT=light_dungeon
+SRC.SECTOR.DRY
+ENDIF
+var.inweather=0
+endif
+endif
+
+[function weatherCheck]
+
+[function f_weatherCheck]
+if <p.x>>5200
+	return
+endif
+tag.WeatherCHANCE=<EVAL {1 100}>
+//4096 bottom of map, 2048 center.
+//2048 center
+tag.weatherY = <p.y>
+tag.weathery=<eval (<tag.weathery>-2048)>
+//now -1024 to 1024
+if <tag.weathery>>0
+	tag.weathery=<eval (<tag.weathery>)>
+endif
+//now -1024 to 0 to -1024
+tag.weathery=<eval (<tag.weathery>/8)+95> 
+//now -33 to 95 to -33 //it ALMOST NEVER snows or rains at the equator.
+tag.weatherzy=<tag.weathery>
+tag.weatherchance=<eval (<tag.weatherchance>+<tag.weathery>)>
+if (<UID.time_control_uid.more1>>11)
+	IF (<tag.WeatherCHANCE><<EVAL (weather_snow_winter)>)
+		SECTOR.SNOW
+	ELSE
+		SECTOR.DRY
+	ENDIF
+elseif (<UID.time_control_uid.more1>>8)
+	IF (<tag.WeatherCHANCE><<EVAL (weather_rain_fall>)
+		SECTOR.RAIN
+	ELSEIF (<tag.WeatherCHANCE><<EVAL (weather_snow_fall)>)
+		SECTOR.SNOW
+	ELSE
+		SECTOR.DRY
+	ENDIF	
+elseif (<UID.time_control_uid.more1>>5)
+	IF (<tag.WeatherCHANCE><<EVAL (weather_rain_summer)>)
+		SECTOR.RAIN
+	ELSE
+		SECTOR.DRY
+	ENDIF
+elseif (<UID.time_control_uid.more1>>2)
+	IF (<tag.WeatherCHANCE><<EVAL (weather_rain_spring)>)
+		SECTOR.RAIN
+	ELSEIF (<tag.WeatherCHANCE><<EVAL (weather_snow_spring)>)
+		SECTOR.SNOW
+	ELSE
+		SECTOR.DRY
+	ENDIF
+else
+	IF (<tag.WeatherCHANCE><<EVAL (weather_snow_winter)>)
+		SECTOR.SNOW
+	ELSE
+		SECTOR.DRY
+	ENDIF
+endif
+
+
+[FUNCTION newWeathercheck]
+p=10 10 0
+if (<more1>>11)
+	region.sectors season=3
+elseif (<more1>>8)
+	region.sectors season=2
+elseif (<more1>>5)
+	region.sectors season=1
+elseif (<more1>>2)
+	region.sectors season=0
+else
+	region.sectors season=3
+endif
+var.hours=<MOREY>
+var.mins=<MOREX>
+IF (<var.hours>>=12)
+	var.light=<eval (<eval (<var.hours>-12)>*2)>
+	if (<var.mins>>30)
+		var.light=<eval (<var.light>+1)>
+	endif
+else
+	var.light=<eval (<eval (12-<var.hours>)>*2)>
+	if (<var.mins>>30)
+		var.light=<eval (<var.light>-1)>
+	endif
+endif
+if <var.light>>14
+	var.light=<eval (<eval (<eval (<var.light>-14)>/2)>+14)>
+endif
+region.sectors light <var.light>
+p=5968 640 0
+region.sectors light 28
+
+src.allclients f_weatherCheck
+
+endif
+
+
+[ITEMDEF i_temperature]
+ID=i_memory
+TYPE=t_eq_script
+NAME="Temperature"
+
+ON=@EQUIP
+TIMER=1
+
+ON=@TIMER
+if (<topobj.tag.login>==1) && (<topobj.body>!=c_ghost_man) && (<topobj.body>!=c_ghost_woman)
+//no temperature effects or spawning for GMs or in dungeons.
+if (<topobj.p.x><=5168) && (<topobj.gm>==0)
+	if (<topobj.p.x>>=224) && (<topobj.p.y>>=1052) && (<topobj.p.x><=468) && (<topobj.p.y><=1326) && (<topobj.mapplane>==0)
+		//no temperature effects in england.
+	else
+		if (<topobj.body>==c_man) || (<topobj.body>==c_woman)
+			topobj.temperaturecheck
+		endif
+		f_locationcheck_spawn
+	endif
+endif
+else
+//say fail
+endif
+TIMER=30
+RETURN 1
+
+[function f_locationcheck_spawn]
+//say f_locationcheck_spawn
+var.temprand=<eval ({1 5})>
+if <var.temprand>!=01
+return
+endif
+//say spawning
+//spawn something
+if (<topobj.p.x>>5168)
+	//underground
+	//don't spawn
+elseif (<topobj.z>==-2)
+	//on a boat
+	f_location_spawn 10
+	
+elseif (<topobj.mapplane>==11)
+	//undead lands
+	f_location_spawn 1
+else
+	//forest/jungle/other
+	//f_location_spawn 5
+endif
+return
+
+[function f_location_spawn]
+//argn
+if (<argn>==1) || (<argn>==11)
+	//undead lands
+	var.spawnwhat = <eval ({c_m_mummy_greater 1 c_m_liche_lord_greater 1 c_m_skeleton_mage_greater 1 c_m_skeleton_knight_greater 1 c_m_ghoul_greater 1 c_m_wraith_greater 1 c_m_ghost_greater 1 c_zombie_greater 1 c_liche_greater 1 c_spectre_greater 1 c_skeleton_greater 1 c_skeleton_w_axe_greater 1 c_skeleton_w_sword_greater 1 c_m_skeletonarcher_greater 1})>
+elseif (<argn>==10) || (<argn>==20)
+	//sea
+	var.spawnwhat = <eval ({c_sea_serpent 3 c_sea_monster 1 c_dolphin 4})>
+else
+	return
+	//var.spawnwhat = <eval ({c_m_mummy_greater 1 c_m_liche_lord_greater 1 c_m_skeleton_mage_greater 1 c_m_skeleton_knight_greater 1 c_m_ghoul_greater 1 c_m_wraith_greater 1 c_m_ghost_greater 1 c_zombie_greater 1 c_liche_greater 1 c_spectre_greater 1 c_skeleton_greater 1 c_skeleton_w_axe_greater 1 c_skeleton_w_sword_greater 1 c_m_skeletonarcher_greater 1})>
+endif
+//say var.spawnwhat <var.spawnwhat>
+topobj.tag.templocact=<topobj.act.uid>
+topobj.newnpc <var.spawnwhat>
+if <topobj.act.baseid>!=<var.spawnwhat>
+//say bad act, deleted.
+topobj.act=<topobj.tag.templocact>
+return 1
+endif
+topobj.act.p=<topobj.p> 
+//topobj.act.p.x=<eval (<topobj.act.p.x>+<eval ({-30 30})>)>
+//topobj.act.p.y=<eval (<topobj.act.p.y>+<eval ({-30 30})>)>
+if <argn>>6
+	topobj.act.move n <var.moven>
+	topobj.act.move w <var.movew>
+	topobj.act.move n <eval ({-2 2})>
+	topobj.act.move w <eval ({-2 2})>
+else
+	var.moven=<eval ({-30 30})>
+	var.movew=<eval ({-30 30})>
+	topobj.act.move n <var.moven>
+	topobj.act.move w <var.movew>
+endif
+topobj.act.fix
+if (<topobj.act.z>!=<topobj.z>) && ((<topobj.act.z>!=-5) || (<topobj.z>!=-2))
+//say z off, deleted.
+topobj.act.remove
+topobj.act=<topobj.tag.templocact>
+return 1
+endif
+
+topobj.act.newitem i_location_spawn_mem
+topobj.act.act.z 30
+topobj.act.act.cont <topobj.act.uid>
+topobj.act.events +e_location_spawn
+//topobj.sysmessage act.uid=<topobj.act.uid>				
+topobj.act.updatex
+topobj.act=<topobj.tag.templocact>
+if <argn><11
+	dorand 3
+	topobj.sysmessage You hear noises.
+	topobj.sysmessage You think you heard something.
+	topobj.sysmessage There's something out there...
+	enddo
+endif
+if <eval ({1 2})>==1 
+	//spawn another
+	//say spawning another
+	if <argn>>10
+		f_location_spawn <eval (<argn>)>
+	else
+		f_location_spawn <eval (<argn>+10)>
+	endif
+endif
+return
+
+[itemdef i_location_spawn_mem]
+ID=i_memory
+TYPE=t_eq_script
+on=@create
+color 08000
+timer 1000
+on=@timer
+if <topobj.findtype(T_EQ_MEMORY_OBJ)>
+timer 1000
+return 1
+endif
+topobj.remove
+return 0
+
+[typedef t_location_spawn_mem]
+
+[events e_location_spawn]
+on=@npcseenewplayer
+if <findid.i_location_spawn_mem>
+	findid.i_location_spawn_mem.timer=1800
+endif
+return 0
+
+[FUNCTION temperaturecheck]
+if 0<UID.time_control_uid.uid>==00
+	return
+endif
+if (<flags>&statf_invul)
+	return
+endif
+VAR.ACTIVATED=<EVAL (temperature_activated)>
+
+IF (<VAR.ACTIVATED>==0)
+	return
+endif
+
+var.light=<eval (<eval (24-<sector.light>)>-12)>
+
+IF (<UID.time_control_uid.MORE1>==1)
+VAR.TEMP=<EVAL (<var.light>-20)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==2)
+VAR.TEMP=<EVAL (<var.light>-12)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==3)
+VAR.TEMP=<EVAL (<var.light>-4)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==4)
+VAR.TEMP=<EVAL (<var.light>+4)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==5)
+VAR.TEMP=<EVAL (<var.light>+12)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==6)
+VAR.TEMP=<EVAL (<var.light>+20)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==7)
+VAR.TEMP=<EVAL (<var.light>+20)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==8)
+VAR.TEMP=<EVAL (<var.light>+12)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==9)
+VAR.TEMP=<EVAL (<var.light>+4)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==10)
+VAR.TEMP=<EVAL (<var.light>-4)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==11)
+VAR.TEMP=<EVAL (<var.light>-12)>
+ENDIF
+IF (<UID.time_control_uid.MORE1>==12)
+VAR.TEMP=<EVAL (<var.light>-20)>
+ENDIF
+
+VAR.CLOTHING=0
+IF (<FINDLAYER(22)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(17)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(5)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(23)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(4)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(3)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(6)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(20)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+IF (<FINDLAYER(7)>)
+VAR.CLOTHING=<EVAL <VAR.CLOTHING>+1>
+ENDIF
+
+//4096 bottom of map, 2048 center.
+//2048 center
+VAR.Y = <p.y>
+var.y=<eval (<var.y>-2048)>
+//now -1024 to 1024
+if <var.y>>0
+	var.y=<eval (<var.y>)>
+endif
+//now -1024 to 0 to -1024
+var.y=<eval (<var.y>/40)+10> 
+//now -15 to 10 to -15
+var.temp=<eval (<var.temp>+<var.y>)>
+//say var.temp=<valstr <var.temp>>
+if (0<var.activated>==2) || (0<var.activated>==3)
+	if (0<tag.resistheat>==0) && (<eval ({1 100})>>0<tag.fireresistpercent>)
+		IF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==0)
+		ELSEIF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==1)
+		ELSEIF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==2)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+		ELSEIF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==3)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+			message "I feel hot"
+		ELSEIF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==4)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-2)
+			damage 2 081 <uid>
+			message "I feel very hot"
+		ELSEIF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==5)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-4)
+			damage 4 081 <uid>
+			message "I feel extremely hot"
+		ELSEIF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==6)
+			message "I feel extremely hot"
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-8)
+			damage 8 081 <uid>
+		ELSEIF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==7)
+			message "I feel extremely hot"
+			if <stam>>=3
+				STAM=<STAM>+(-3)
+			endif
+			damage 12 081 <uid>
+			//HITS=<HITS>+(-12)
+		ELSEIF (<VAR.TEMP>>40) && (<VAR.CLOTHING>==8)
+			message "I feel extremely hot"
+			if <stam>>=6
+				STAM=<STAM>+(-6)
+			endif
+			//HITS=<HITS>+(-24)
+			damage 24 081 <uid>
+		endif
+	ENDIF
+
+	if (0<tag.resistheat>==0) && (<eval ({1 100})>>0<tag.fireresistpercent>)
+		IF (<VAR.TEMP>>25) && (<VAR.TEMP><41) (<VAR.CLOTHING>==0)
+		ELSEIF (<VAR.TEMP>>25) && (<VAR.TEMP><41) && (<VAR.CLOTHING>==1)
+		ELSEIF (<VAR.TEMP>>25) && (<VAR.TEMP><41) && (<VAR.CLOTHING>==2)
+		ELSEIF (<VAR.TEMP>>25) && (<VAR.TEMP><41) && (<VAR.CLOTHING>==3)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+		ELSEIF (<VAR.TEMP>>25) && (<VAR.TEMP><41) && (<VAR.CLOTHING>==4)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+			message "I feel  hot"
+		ELSEIF (<VAR.TEMP>>25) && (<VAR.TEMP><41) && (<VAR.CLOTHING>==5)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-2)
+			damage 2 081 <uid>
+			message "I feel very hot"
+		ELSEIF (<VAR.TEMP>>25) && (<VAR.TEMP><41) && (<VAR.CLOTHING>==6)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-4)
+			damage 4 081 <uid>
+			message "I feel extremely hot"
+		ELSEIF (<VAR.TEMP>>25) && (<VAR.TEMP><41) && (<VAR.CLOTHING>==7)
+			message "I feel extremely hot"
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-8)
+			damage 8 081 <uid>
+		ELSEIF (<VAR.TEMP>>25) && (<VAR.TEMP><41) && (<VAR.CLOTHING>==8)
+			message "I feel extremely hot"
+			if <stam>>=3
+				STAM=<STAM>+(-3)
+			endif
+			//HITS=<HITS>+(-12)
+			damage 12 081 <uid>
+		endif
+	endif
+	
+	if (0<tag.resistheat>==0) && (<eval ({1 100})>>0<tag.fireresistpercent>)
+		IF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==0)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+		ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==1)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+		ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==2)
+		ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==3)
+		ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==4)
+		ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==5)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+			ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==6)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+			message "I feel hot!"
+		ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==7)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-2)
+			damage 2 081 <uid>
+			message "I feel very hot!"
+		ELSEIF (<VAR.TEMP>>10) && (<VAR.TEMP><26) && (<VAR.CLOTHING>==8)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-4)
+			damage 4 081 <uid>
+			
+			message "I feel extremely hot!"
+		ENDIF
+	endif
+endif
+
+if (0<var.activated>==3)
+	IF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==0)
+		if (0<tag.resistcold>==0) && (<eval ({1 100})>>0<tag.coldresistpercent>)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			//HITS=<HITS>+(-2)
+			damage 2 081 <uid>
+			message "I feel cold!"
+		endif
+	ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==1)
+		if (0<tag.resistcold>==0) && (<eval ({1 100})>>0<tag.coldresistpercent>)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+			message "I feel cold!"
+		endif
+	ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==2)
+		if (0<tag.resistcold>==0) && (<eval ({1 100})>>0<tag.coldresistpercent>)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+		endif
+	ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==3)
+	ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==4)
+	ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==5)
+	ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==6)
+		if <stam>>=1
+			STAM=<STAM>+(-1)
+		endif
+	ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==7)
+		if (0<tag.resistheat>==0) && (<eval ({1 100})>>0<tag.fireresistpercent>)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+			message "I feel hot!"
+		endif
+	ELSEIF (<VAR.TEMP>>0) && (<VAR.TEMP><11) && (<VAR.CLOTHING>==8)
+		if (0<tag.resistheat>==0) && (<eval ({1 100})>>0<tag.fireresistpercent>)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			damage 2 081 <uid>
+			//HITS=<HITS>+(-2)
+			message "I feel hot!"
+		endif
+	ENDIF
+endif
+
+if (0<var.activated>==1) || (0<var.activated>==3)
+	if (0<tag.resistcold>==0) && (<eval ({1 100})>>0<tag.coldresistpercent>)
+		IF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==0)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			damage 4 081 <uid>
+			//HITS=<HITS>+(-4)
+			message "I feel extremely cold!"
+		ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==1)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			damage 2 081 <uid>
+			//HITS=<HITS>+(-2)
+			message "I feel very cold!"
+		ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==2)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+			message "I feel cold!"
+		ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==3)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+		ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==4)
+		ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==5)
+		ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==6)
+		ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==7)
+		ELSEIF (<VAR.TEMP>>-10) && (<VAR.TEMP><1) && (<VAR.CLOTHING>==8)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+		ENDIF
+	endif
+
+	if (0<tag.resistcold>==0) && (<eval ({1 100})>>0<tag.coldresistpercent>)
+		IF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==0)
+			if <stam>>=3
+				STAM=<STAM>+(-3)
+			endif
+		damage 12 081 <uid>
+		//HITS=<HITS>+(-12)
+		message "I feel extremely cold!"
+	ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==1)
+		if <stam>>=2
+			STAM=<STAM>+(-2)
+		endif
+		damage 8 081 <uid>
+		//HITS=<HITS>+(-8)
+		message "I feel very cold!"
+	ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==2)
+		if <stam>>=2
+			STAM=<STAM>+(-2)
+		endif
+		damage 4 081 <uid>
+		//HITS=<HITS>+(-4)
+		message "I feel very cold!"
+	ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==3)
+		if <stam>>=2
+			STAM=<STAM>+(-2)
+		endif
+		damage 2 081 <uid>
+		//HITS=<HITS>+(-2)
+		message "I feel cold!"
+	ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==4)
+		if <stam>>=1
+			STAM=<STAM>+(-1)
+		endif
+		message "I feel cold!"
+	ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==5)
+		if <stam>>=1
+			STAM=<STAM>+(-1)
+		endif
+	ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==6)
+	ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==7)
+	ELSEIF (<VAR.TEMP>>-20) && (<VAR.TEMP><-9) && (<VAR.CLOTHING>==8)
+		if <stam>>=1
+			STAM=<STAM>+(-1)
+		endif
+	ENDIF
+	endif
+	
+	if (0<tag.resistcold>==0) && (<eval ({1 100})>>0<tag.coldresistpercent>)
+		IF (<VAR.TEMP>>-30) && (<VAR.TEMP><-19) && (<VAR.CLOTHING><=2)
+			message "I feel extremely cold!"
+			if <stam>>=3
+				STAM=<STAM>+(-3)
+			endif
+			damage 16 081 <uid>
+			//HITS=<HITS>+(-16)
+		ELSEIF (<VAR.TEMP>>-30) && (<VAR.TEMP><-19) && (<VAR.CLOTHING>==3)
+			message "I feel extremely cold!"
+			if <stam>>=3
+				STAM=<STAM>+(-3)
+			endif
+			damage 12 081 <uid>
+			//HITS=<HITS>+(-12)
+		ELSEIF (<VAR.TEMP>>-30) && (<VAR.TEMP><-19) && (<VAR.CLOTHING>==4)
+			message "I feel very cold!"
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			damage 8 081 <uid>
+			//HITS=<HITS>+(-8)
+		ELSEIF (<VAR.TEMP>>-30) && (<VAR.TEMP><-19) && (<VAR.CLOTHING>==5)
+			message "I feel very cold!"
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			damage 4 081 <uid>
+			//HITS=<HITS>+(-4)
+		ELSEIF (<VAR.TEMP>>-30) && (<VAR.TEMP><-19) && (<VAR.CLOTHING>==6)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			damage 2 081 <uid>
+			//HITS=<HITS>+(-2)
+			message "I feel cold!"
+		ELSEIF (<VAR.TEMP>>-30) && (<VAR.TEMP><-19) && (<VAR.CLOTHING>==7)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+			message "I feel cold!"
+		ELSEIF (<VAR.TEMP>>-30) && (<VAR.TEMP><-19) && (<VAR.CLOTHING>==8)
+			if <stam>>=1
+				STAM=<STAM>+(-1)
+			endif
+		ENDIF
+	endif
+	
+	if (0<tag.resistcold>==0) && (<eval ({1 100})>>0<tag.coldresistpercent>)
+		IF (<VAR.TEMP><-29) && (<VAR.CLOTHING><=4)
+			message "I feel deathly cold!"
+			if <stam>>=7
+				STAM=<STAM>+(-7)
+			endif
+			damage 32 081 <uid>
+			//HITS=<HITS>+(-32)
+		ELSEIF (<VAR.TEMP><-29) && (<VAR.CLOTHING>==5)
+			message "I feel extremely cold!"
+			if <stam>>=4
+				STAM=<STAM>+(-4)
+			endif
+			damage 16 081 <uid>
+			//HITS=<HITS>+(-16)
+		ELSEIF (<VAR.TEMP><-29) && (<VAR.CLOTHING>==6)
+			message "I feel extremely cold!"
+			if <stam>>=3
+				STAM=<STAM>+(-3)
+			endif
+			damage 12 081 <uid>
+			//HITS=<HITS>+(-12)
+		ELSEIF (<VAR.TEMP><-29) && (<VAR.CLOTHING>==7)
+			message "I feel very cold!"
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			damage 8 081 <uid>
+			//HITS=<HITS>+(-8)
+		ELSEIF (<VAR.TEMP><-29) && (<VAR.CLOTHING>==8)
+			if <stam>>=2
+				STAM=<STAM>+(-2)
+			endif
+			damage 4 081 <uid>
+			//HITS=<HITS>+(-4)
+			message "I feel cold!"
+		endif
+	endif
+EndIf
+
+[FUNCTION age]
+VAR.AGEACTIVATED=<EVAL (age_activated)>
+IF (<VAR.AGEACTIVATED>==1)
+VAR.SHOWAGE=<EVAL (<UID.time_control_uid.MORE2>-<SRC.TAG.BIRTHYEAR>)+<SRC.TAG.AGE>>
+SRC.SYSMESSAGE "You are <EVAL <VAR.SHOWAGE>> years old!"
+ENDIF
+
+[DIALOG d_weather]
+
+250, 125	
+resizepic 0 0 3600 250 210
+
+resizepic 20 20 3000 50 22
+textentry 20 20 50 25 0 1 0
+text 75 20 026 1
+
+resizepic 20 50 3000 50 22
+textentry 20 50 50 25 0 2 2
+text 75 50 026 3
+
+resizepic 20 80 3000 50 22
+textentry 20 80 50 25 0 3 4
+text 75 80 026 5
+
+resizepic 20 110 3000 50 22
+textentry 20 110 50 25 0 4 6
+text 75 110 026 7
+
+resizepic 20 140 3000 50 22
+textentry 20 140 50 25 0 5 8
+text 75 140 026 9
+
+button 170 18 239 238 1 0 1
+button 170 48 239 238 1 0 2
+button 170 78 239 238 1 0 3
+button 170 108 239 238 1 0 4
+button 170 138 239 238 1 0 5
+button 100 168 248 247 1 0 6
+
+[DIALOG d_weather TEXT]
+<EVAL <UID.time_control_uid.MOREX>>
+Minutes
+<EVAL <UID.time_control_uid.MOREY>>
+Hours
+<EVAL <UID.time_control_uid.MOREZ>>
+Days
+<EVAL <UID.time_control_uid.MORE1>>
+Month
+<EVAL <UID.time_control_uid.MORE2>>
+Year
+
+[DIALOG d_weather BUTTON]
+
+ONBUTTON=0
+SYSMESSAGE "Time is unchanged."
+
+ONBUTTON=1
+IF (<ARGTXT[1]>>0) && (<ARGTXT[1]><<EVAL (minutes_per_hour)+1>)
+UID.time_control_uid.MOREX <ARGTXT[1]>
+SYSMESSAGE "Minutes have been modified."
+ELSE
+SYSMESSAGE "Minutes must be between 1 and <EVAL (minutes_per_hour)>."
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=2
+IF (<ARGTXT[2]>>0) && (<ARGTXT[2]><<EVAL (hours_per_day)+1>)
+UID.time_control_uid.MOREY <ARGTXT[2]>
+SYSMESSAGE "Hours have been modified."
+ELSE
+SYSMESSAGE "Hours must be between 1 and <EVAL (hours_per_day)>."
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=3
+IF (<ARGTXT[3]>>0) && (<ARGTXT[3]><<EVAL (days_per_month)+1>)
+UID.time_control_uid.MOREZ <ARGTXT[3]>
+SYSMESSAGE "Days have been modified."
+ELSE
+SYSMESSAGE "Days must be between 1 and <EVAL (days_per_month)>."
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=4
+IF (<ARGTXT[4]>>0) && (<ARGTXT[4]><<EVAL (months_per_year)+1>)
+UID.time_control_uid.MORE1 <ARGTXT[4]>
+SYSMESSAGE "Months have been modified."
+ELSE
+SYSMESSAGE "Months must be between 1 and <EVAL (months_per_year)>."
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=5
+IF (<ARGTXT[5]>>0)
+UID.time_control_uid.MORE2 <ARGTXT[5]>
+SYSMESSAGE "Years have been modified."
+ELSE
+SYSMESSAGE "Years can't be negative."
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+ONBUTTON=6
+IF (<ARGTXT[1]>>0) && (<ARGTXT[1]><<EVAL (minutes_per_hour)+1>)
+UID.time_control_uid.MOREX <ARGTXT[1]>
+SYSMESSAGE "Minutes have been modified."
+ELSE
+SYSMESSAGE "Minutes must be between 1 and <EVAL (minutes_per_hour)>."
+ENDIF
+IF (<ARGTXT[2]>>0) && (<ARGTXT[2]><<EVAL (hours_per_day)+1>)
+UID.time_control_uid.MOREY <ARGTXT[2]>
+SYSMESSAGE "Hours have been modified."
+ELSE
+SYSMESSAGE "Hours must be between 1 and <EVAL (hours_per_day)>."
+ENDIF
+IF (<ARGTXT[3]>>0) && (<ARGTXT[3]><<EVAL (days_per_month)+1>)
+UID.time_control_uid.MOREZ <ARGTXT[3]>
+SYSMESSAGE "Days have been modified."
+ELSE
+SYSMESSAGE "Days must be between 1 and <EVAL (days_per_month)>."
+ENDIF
+IF (<ARGTXT[4]>>0) && (<ARGTXT[4]><<EVAL (months_per_year)+1>)
+UID.time_control_uid.MORE1 <ARGTXT[4]>
+SYSMESSAGE "Months have been modified."
+ELSE
+SYSMESSAGE "Months must be between 1 and <EVAL (months_per_year)>."
+ENDIF
+IF (<ARGTXT[5]>>0)
+UID.time_control_uid.MORE2 <ARGTXT[5]>
+SYSMESSAGE "Years have been modified."
+ELSE
+SYSMESSAGE "Years can't be negative."
+ENDIF
+UID.time_control_uid.TIMER seconds_per_minute
+
+[ITEMDEF i_weather]
+ID=i_memory
+TYPE=t_eq_script
+NAME="Weather"
+
+ON=@CREATE
+TIMER=30
+
+ON=@TIMER
+if <cont.npc>==0
+if 0<UID.time_control_uid.uid>==00
+return
+endif
+if 0<var.inweather>==00
+var.inweather=1
+IF (<cont.P.X><5206)
+cont.Weathercheck
+ELSE
+cont.SECTOR.LIGHT=light_dungeon
+cont.SECTOR.DRY
+ENDIF
+var.inweather=0
+endif
+endif
+TIMER=30
+RETURN 1
+
+
+[ITEMDEF i_hair_grow]
+ID=i_memory
+TYPE=t_eq_script
+NAME="Hair Grow"
+
+//ON=@CREATE
+//TIMER=24*3600
+
+ON=@TIMER
+//HAIRGROW
+//TIMER=24*3600
+//RETURN 1
+remove
+RETURN 1
+
+[FUNCTION HAIRGROW]
+RETURN 1
+
+IF (<cont.FINDLAYER(11).BASEID>==i_hair_pageboy)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_long
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(11).BASEID>==i_hair_krisna)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_short
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(11).BASEID>==i_hair_afro)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_long
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(11).BASEID>==i_hair_mohawk)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_short
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(11).BASEID>==i_hair_2_pigtails)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_long
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(11).BASEID>==i_hair_buns)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_long
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(11).BASEID>==i_hair_receding)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_short
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(11).BASEID>==i_hair_short)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_long
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(11).BASEID>==i_hair_long)
+cont.FINDLAYER(11).REMOVE
+cont.NEWITEM=i_hair_long
+cont.ACT.EQUIP
+ELSE
+cont.NEWITEM=i_hair_short
+cont.ACT.EQUIP
+ENDIF
+IF (<cont.BODY>==c_man)
+IF (<cont.FINDLAYER(16).BASEID>==i_beard_short)
+cont.FINDLAYER(16).REMOVE
+cont.NEWITEM=i_beard_long_med
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(16).BASEID>==i_beard_long)
+cont.FINDLAYER(16).REMOVE
+cont.NEWITEM=i_beard_long_med
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(16).BASEID>==i_beard_short_med)
+cont.FINDLAYER(16).REMOVE
+cont.NEWITEM=i_beard_long_med
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(16).BASEID>==i_beard_long_med)
+cont.FINDLAYER(16).REMOVE
+cont.NEWITEM=i_beard_long_med
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(16).BASEID>==i_beard_goatee)
+cont.FINDLAYER(16).REMOVE
+cont.NEWITEM=i_beard_vandyke
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(16).BASEID>==i_beard_vandyke)
+cont.FINDLAYER(16).REMOVE
+cont.NEWITEM=i_beard_short_med
+cont.ACT.EQUIP
+ELSEIF (<cont.FINDLAYER(16).BASEID>==i_beard_mustache)
+cont.FINDLAYER(16).REMOVE
+cont.NEWITEM=i_beard_vandyke
+cont.ACT.EQUIP
+ELSE
+cont.NEWITEM=i_beard_goatee
+cont.ACT.EQUIP
+ENDIF
+ENDIF
+
+
+[EOF]

@@ -1,0 +1,893 @@
+// ############################################################ 
+// RW's Special Abilities: Sphere-based UO Emu Servers 
+// Designed By: Dubious Advocate and DigiAnimus
+// You are free to use this, repost it, chop it up, spindle, 
+// and mutilate to your heart's content. If you use it without 
+// any change then don't claim it as your own. If you do try 
+// to claim full credit for this script then the boogey man will 
+// get you. Or eventually you'll grow up and feel really silly 
+// about what a dumb kid you used to be. I expect I will sleep 
+// well at night no matter what. 
+// 
+// ------------------------------------------------------------ 
+// Installing this script - 
+// Installing it is the easy part. Just copy it into your 
+// scripts directory. 
+// 
+// FILE LAST UPDATED: July 26, 2001 
+// 
+Version=0.54 
+
+[ITEMDEF i_stone_Race] 
+DEFNAME=i_stone_Race 
+ID=0edc 
+NAME=Monument of the Races 
+WEIGHT=0 
+
+CATEGORY=Unique Items 
+SUBSECTION=GM Tools 
+DESCRIPTION=Race Monument 
+
+ON=@Create 
+COLOR=06cf 
+ATTR=014 
+
+ON=@DCLICK 
+SRC.SFX 555 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_List] 
+0,0 
+resizepic 0 0 2600 500 400 
+gumppic 180 120 1418 
+page 0 
+text 55 17 1157 0 
+text 145 37 904 1 
+text 145 57 904 2 
+text 145 77 904 3 
+text 145 107 32 4 
+text 145 127 904 5 
+text 145 147 904 6 
+text 55 37 1152 7 
+text 55 57 1152 8 
+text 55 77 1152 9 
+text 55 97 1152 10 
+text 55 117 1152 11 
+text 55 137 1152 12 
+text 55 157 1152 13 
+text 55 177 1152 14 
+text 55 197 1152 15 
+text 55 217 1152 16 
+text 55 237 1152 17 
+text 55 257 1152 18 
+button 35 40 1209 1210 1 0 1 
+button 35 60 1209 1210 1 0 2 
+button 35 80 1209 1210 1 0 3 
+button 35 100 1209 1210 1 0 4 
+button 35 120 1209 1210 1 0 5 
+button 35 140 1209 1210 1 0 6 
+button 35 160 1209 1210 1 0 7 
+button 35 180 1209 1210 1 0 8 
+button 35 200 1209 1210 1 0 9 
+button 35 220 1209 1210 1 0 10 
+button 35 240 1209 1210 1 0 11 
+button 35 260 1209 1210 1 0 12 
+
+[DIALOG d_Race_List TEXT] 
+Races of the Land 
+Here shall ye select the Race of whom ye 
+call Your People in this world. On these 
+pages of stone willst thee learn and choose. 
+Thine oath is thine bond! 
+Once borne ye canst not 
+revoke thy kinship. 
+Barbarian 
+Drow 
+Duergar 
+Dwarf 
+Elf 
+Halfelf 
+Halforc 
+Human 
+Shapeshifter 
+Vampire 
+Warlock 
+Werven 
+
+[DIALOG d_Race_List BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+ONBUTTON=1 
+DIALOG d_race_Barbarian 
+ONBUTTON=2 
+DIALOG d_race_Drow 
+ONBUTTON=3 
+DIALOG d_race_Duergar 
+ONBUTTON=4 
+DIALOG d_race_Dwarf 
+ONBUTTON=5 
+DIALOG d_race_Elf 
+ONBUTTON=6 
+DIALOG d_race_Halfelf 
+ONBUTTON=7 
+DIALOG d_race_Halforc 
+ONBUTTON=8 
+DIALOG d_race_Human 
+ONBUTTON=9 
+DIALOG d_race_Shapeshifter 
+ONBUTTON=10 
+DIALOG d_race_Vampire 
+ONBUTTON=11 
+DIALOG d_race_Warlock 
+ONBUTTON=12 
+DIALOG d_race_Werven 
+
+
+[DIALOG d_Race_Barbarian] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 50 81 1 
+text 25 70 81 2 
+text 25 90 81 3 
+text 25 110 81 4 
+text 25 130 81 5 
+text 25 150 81 6 
+text 25 170 81 7 
+text 25 190 81 8 
+text 25 210 81 9 
+text 25 230 81 10 
+text 25 250 81 11 
+text 25 270 81 12 
+text 25 290 81 13 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 14 
+button 455 500 2076 2075 1 0 2 
+text 340 505 81 15 
+
+[DIALOG d_Race_Barbarian TEXT] 
+-=* The Barbarian *=- 
+Barbarians are natives of the desert. They are primarily miners, 
+jewelers & leather tailorers, while making for very excellent 
+melee fighters, archers, and scouts. They have no strong arcane 
+arts beyond a few specialty alchemy potions their race has 
+developed. They have been known to enter into fanatical Beserker 
+rages when in melee, and have developed the ability to use 
+archery at point blank range. 
+-=*=- 
+Though a hardy race these barbarians suffer reduced stamina in 
+cold weather or when deep underground. They have developed 
+specialty heavy and light armors which are harvested from 
+Desert Sources. Only Barbarians can work Ankheg chitin into 
+high quality armor and weapons. 
+"I wish to be a Barbarian!" 
+Return to List 
+
+[DIALOG d_Race_Barbarian BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Barbarian 
+SRC.SYSMESSAGE=*POOF* Yer a Barbarian 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Drow] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 50 81 1 
+text 25 70 81 2 
+text 25 90 81 3 
+text 25 110 81 4 
+text 25 130 81 5 
+text 25 150 81 6 
+text 25 170 81 7 
+text 25 190 81 8 
+text 25 210 81 9 
+text 25 230 81 10 
+text 25 250 81 11 
+text 25 270 81 12 
+text 25 290 81 13 
+text 25 310 81 14 
+text 25 330 81 15 
+text 25 350 81 16 
+text 25 370 81 17 
+text 25 390 81 18 
+text 25 410 81 19 
+text 25 430 81 20 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 21 
+button 455 500 2076 2075 1 0 2 
+text 340 505 81 22 
+
+[DIALOG d_Race_Drow TEXT] 
+-=* The Drow *=- 
+Incorrectly referred to as "Dark Elves", Drow are a corrupted 
+species brought into being by a series of unfortunate events early 
+in the world's history. Drow epitomize Pure Chaos and are often 
+wrongly accused of being evil, not that they care what others think 
+about them anyway. Drow believe that only warfare and murder lead 
+to a strong people so petty or tedious "evil" only inspires their 
+contempt. To Drow there exists no greater pleasure than killing 
+Elfkind, preferably slowly and painfully. 
+-=*=- 
+Drow make for some of the best fighters and battle mages found in 
+the lands. Their evolution in the dark warrens and tunnels under 
+ground mean Drow tend to be disdainful of poleArms since such 
+weapons are unsuitable in these areas. But in all the other battle 
+arts few races compete as strongly as Drow. 
+-=*=- 
+Their sole focus on superiority through battle makes the Drow poor 
+candidates for anything not involving conflict. But since their 
+belief is that weak races do not deserve comfort a good Drow 
+usually knows where to find what she needs. Only Drow can work 
+Blackrock metal into high quality armor and weapons. 
+"I wish to be a Drow!" 
+Return to List 
+
+[DIALOG d_Race_Drow BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Drow 
+SRC.SYSMESSAGE=*POOF* Yer a Drow 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Duergar] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 50 81 1 
+text 25 70 81 2 
+text 25 90 81 3 
+text 25 110 81 4 
+text 25 130 81 5 
+text 25 150 81 6 
+text 25 170 81 7 
+text 25 190 81 8 
+text 25 210 81 9 
+text 25 230 81 10 
+text 25 250 81 11 
+text 25 270 81 12 
+text 25 290 81 13 
+text 25 310 81 14 
+text 25 330 81 15 
+text 25 350 81 16 
+text 25 370 81 17 
+text 25 390 81 18 
+text 25 410 81 19 
+text 25 430 81 20 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 21 
+button 455 500 2076 2075 1 0 2 
+text 340 505 81 22 
+
+[DIALOG d_Race_Duergar TEXT] 
+-=* The Duergar *=- 
+The Duergar have a relationship with the Dwarves which is very 
+similiar to that of the Drow to the Elves. They were once normal 
+dwarves who turned to the worship of evil gods, and so were 
+driven out of the Dwarven Kingdoms. They hold great hatred for 
+dwarves and also most of the good races, but as the dwarves 
+outnumber them Duergar are forced to seek out places of refuge 
+hidden deep within the caverns in order to escape the dwarves 
+reach. 
+-=*=- 
+Due to this Duergar have lessened skills regarding things of nature 
+for they rarely if ever see the light of die. They have become so 
+accustomed to the darkness that the mere presence of light causes 
+their eyes great pain. They have however, developed the ability to 
+see quite well even in the darkest of places, as well as having 
+become effecient at hiding, detecting hidden things within the 
+depths of these caverns along with their already enhanced melee 
+abilities, and great crafting skills. Duergar and Drow have been 
+known to ally together to more efficiently fight the forces of good. 
+Only Duergar can work Valorite metal into high quality armor 
+and weapons. 
+"I wish to be a Duergar!" 
+Return to List 
+
+[DIALOG d_Race_Duergar BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Duergar 
+SRC.SYSMESSAGE=*POOF* Yer a Duergar 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Dwarf] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+text 25 300 81 14 
+text 25 320 81 15 
+text 25 340 81 16 
+text 25 360 81 17 
+text 25 380 81 18 
+text 25 400 81 19 
+text 25 420 81 20 
+text 25 440 81 21 
+text 25 460 81 22 
+text 25 480 81 23 
+button 40 510 92 52 1 0 1 
+text 90 510 1152 24 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 25 
+
+[DIALOG d_Race_Dwarf TEXT] 
+-=* The Dwarf *=- 
+Dwarves are as laidback and yet conservative as the very stones of 
+which they evolved. These are a long-lived people and it is hard to 
+find a race as stout and hardy as they. The Dwarf tends to respect 
+all things Good, but their sense of fairness means they are Lawful 
+only when Good itself is served. That said they are no great lovers 
+of Chaos either as it violates their conservative sense of peaceful 
+stability and order. 
+-=*=- 
+At the same time few other races delight in battles of principle as 
+much as Dwarves. Their incredible strength and appreciable wisdom 
+makes them formidable fighters, especially when wielding their 
+beloved hammers or axes. Dwarves are perhaps the ultimate crafters, 
+and even their least craftskill matches the best of the other races. 
+Their strong senses of perception combined with their conservative 
+nature and love for quality work makes them impressive traders 
+and merchants. 
+-=*=- 
+Dwarves, perhaps because of their rocklike wisdom and conservative 
+nature, tend to be highly mistrustful of magic. That said while 
+they lack any real love for the arcane they have no fear of it 
+either, and Dwarven clerics and mages have left their mark in the 
+history of the lands. Only Dwarves can work Mytheril metal into 
+high quality armor and weapons. 
+"I wish to be a Dwarf!" 
+Return to List 
+
+[DIALOG d_Race_Dwarf BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Dwarf 
+SRC.SYSMESSAGE=*POOF* Yer a Dwarf 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Elf] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+text 25 300 81 14 
+text 25 320 81 15 
+text 25 340 81 16 
+text 25 360 81 17 
+text 25 360 81 18 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 19 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 20 
+
+[DIALOG d_Race_Elf TEXT] 
+-=* The Elf *=- 
+Elves epitomize Good and Lawfulness. They are graceful and 
+extremely dextrous. Though neither would admit to it Elves are the 
+parent people to the Drow and so one can define an Elf by saying 
+they are everything a Drow is not. Most of the other races respect 
+Elves tremendously, but they are perceived as haughty and perhaps 
+a little too proud. 
+-=*=- 
+Elves have a tremendous affinity for nature, and given that they 
+are basically plants themselves it is no great surprise that few 
+races make better artisans than an Elf. Their impressive dexterity 
+and keen senses of perception make them natural archers. Despite 
+their lack of genuine empathy towards other beings Elves in fact 
+tend to be fiercely protective of the all things green and fuzzy. 
+-=*=- 
+Combine all these attributes with a fine intelligence and one 
+understands why Elves often make for superior workers of most 
+arcane arts. Only Elves can work Verite metal into high quality 
+armor and weapons. 
+"I wish to be an Elf!" 
+Return to List 
+
+[DIALOG d_Race_Elf BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Elf 
+SRC.SYSMESSAGE=*POOF* Yer an Elf 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Halfelf] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 14 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 15 
+
+[DIALOG d_Race_Halfelf TEXT] 
+-=* The Halfelf *=- 
+Halfelves are the decendants of both human and elven parents. 
+Having been born with many of the qualities and features of both, 
+Halfelves tend to enjoy the company of both civilizations though 
+they often form towns of their own, enjoying the company of those 
+like themselves the most. 
+-=*=- 
+Halfelves are also known to be great adventurers and to keep a 
+wide variation of company, though usually preferring the company 
+of neutral or good aligned companions. Halfelves are truly blessed 
+having many of both races better qualities, from the humans well 
+rounded abilities to some of the elven races abilities such as keen 
+eyesight, ability with bow and affinity for nature. Only Halfelves 
+can work Rust metal into high quality armor and weapons. 
+"I wish to be a Halfelf!" 
+Return to List 
+
+[DIALOG d_Race_Halfelf BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Halfelf 
+SRC.SYSMESSAGE=*POOF* Yer a Halfelf 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Halforc] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+text 25 300 81 14 
+text 25 320 81 15 
+text 25 340 81 16 
+text 25 360 81 17 
+text 25 380 81 18 
+text 25 400 81 19 
+text 25 420 81 20 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 21 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 22 
+
+[DIALOG d_Race_Halforc TEXT] 
+-=* The Halforc *=- 
+Halforcs are a corrupted species, brought into being by a series 
+of unfortunate events early in the world's history. Their orcish 
+nature makes them wildly impetuous and unpredictable, yet their 
+human side makes them rakish and fun to be with. If you like 
+wild parties where all the crockery gets broken and everyone 
+drinks too much! 
+-=*=- 
+These are an incredibly strong and fast people. This makes 
+Halforcs the ultimate wielders of pole Arms and in fact their 
+culture has "evolved" to where only these types of weapons are 
+respected. Halforcs also have the impressive ability to get under 
+any race's skin, even the most laidback Treant, and are often 
+found in raucous barfights started just because of something they 
+said or the drum they beat too late into the night. 
+-=*=- 
+Halforcs excel at common thievery and are always good to have at 
+your back in a fight or in a barroom brawl for that matter. On the 
+other hand they lack any real talent for the arcane but can get 
+by in some areas. Only Halforcs can work Dull Copper metal into 
+high quality armor and weapons. 
+"I wish to be a Halforc!" 
+Return to List 
+
+[DIALOG d_Race_Halforc BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Halforc 
+SRC.SYSMESSAGE=*POOF* Yer a Halforc 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Human] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+text 25 300 81 14 
+text 25 320 81 15 
+text 25 340 81 16 
+text 25 360 81 17 
+text 25 380 81 18 
+text 25 400 81 19 
+text 25 420 81 20 
+text 25 440 81 21 
+text 25 460 81 22 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 23 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 24 
+
+[DIALOG d_Race_Human TEXT] 
+-=* The Human *=- 
+Latecomers to an ancient world Humans are a race that are 
+tolerated and even looked upon fondly by the older peoples who 
+preceded them. Their main strengths are incredible flexibility 
+and an impressive amount of what can only be described as plain 
+dumb luck. Even their enemies agree that the phrase "someone 
+up there just likes me" was invented for this short-lived if 
+sometimes short-sighted race. 
+-=*=- 
+Humans don't live long enough to hone their skills and their stats 
+as highly as the more long-lived other races. Not even the most 
+accomplished Human compares to a specialist of another race. 
+But on the other hand Humans can master any skill to a maximum 
+of Master within the limits of the overall skill cap, and they 
+learn skills much much faster. 
+-=*=- 
+These traits, combined with their breathtaking bursts of Dumb 
+Luck in otherwise suicidal situations, make Humans the ultimate 
+jacks of all trades that others disrespect at their peril. However 
+due to their inability to master any skill completely they are 
+often at odds to work in any one area alone instead preferring 
+to generalize. Only Humans can work Iron metal into high quality 
+armor and weapons. 
+"I wish to be a Human!" 
+Return to List 
+
+[DIALOG d_Race_Human BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Human 
+SRC.SYSMESSAGE=*POOF* Yer a Human 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Shapeshifter] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+text 25 300 81 14 
+text 25 320 81 15 
+text 25 340 81 16 
+text 25 360 81 17 
+text 25 380 81 18 
+text 25 400 81 19 
+text 25 420 81 20 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 21 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 22 
+
+[DIALOG d_Race_Shapeshifter TEXT] 
+-=* The Shapeshifter *=- 
+Shapeshifters are a chameleon species that evolved a wide range of 
+ways to hide from their enemies. Intelligence, mimicry and stealth, 
+and an impressive affinity with the arcane were the abilities that 
+evolution forced them to adopt in an often cruel and violent world. 
+Shapeshifters have learned the hard way the value of striking that 
+first lethal blow against an unforgiving enemy. 
+-=*=- 
+For brief periods Shapeshifters can assume the form of other 
+creatures, and while in that form they assume most of the skills 
+and abilities of that other being. However the Shapeshifter retains 
+his own physically frail characteristics even while in this other 
+form. The shapes they assume depend on their level of experience. 
+-=*=- 
+Shapeshifters are incredibly intelligent beings, more so than any 
+other race, but lack strength and are easily tired. Their incredible 
+abilities of perception make them excellent traders but 
+unfortunately their sole evolutionary focus on survival skills 
+combined with their lack of grace and strength makes them poor 
+artisans. Only Shapeshifters can work Shadow metal into high 
+quality armor and weapons. 
+"I wish to be a Shapeshifter!" 
+Return to List 
+
+[DIALOG d_Race_Shapeshifter BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Shapeshifter 
+SRC.SYSMESSAGE=*POOF* Yer a Shapeshifter 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Vampire] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+text 25 300 81 14 
+text 25 320 81 15 
+text 25 340 81 16 
+text 25 360 81 17 
+text 25 380 81 18 
+text 25 400 81 19 
+text 25 400 81 20 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 21 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 22 
+
+[DIALOG d_Race_Vampire TEXT] 
+-=* The Vampire *=- 
+The Vampir are both a corrupted and evil people, brought into 
+being by a series of unfortunate events early in the world's 
+history. Vampires epitomize Pure Evil and view the other races as 
+cattle to be at best harvested like wheat before the Vampire scythe. 
+-=*=- 
+They have the ability to summon other corrupted and evil dire 
+creatures to do the dirty work of brute attack. Vampires are an 
+incredibly strong and powerful people, and few of the other races 
+can stand up to even a younger Vampire in an encounter in the 
+dark. But when faced with the bright light of the day a Vampire's 
+true nature is revealed and it becomes critically weakened. 
+-=*=- 
+Vampires have a supernatural ability to influence people and 
+animals. Their bodies are incredibly tough and resistant to magical 
+and mundane attack. Because of their devotion to dark places there 
+are few other races that can remain unseen to them. Those same 
+powers of perception and their bottomless love for wealth and fine 
+culture make Vampires tough traders and tailors of great renown. 
+Only Vampires can work Bloodrock metal into high quality armor 
+and weapons. 
+"I wish to be a Vampire!" 
+Return to List 
+
+[DIALOG d_Race_Vampire BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Vampire 
+SRC.SYSMESSAGE=*POOF* Yer a Vampire 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Warlock] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 14 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 15 
+
+[DIALOG d_Race_Warlock TEXT] 
+-=* The Warlock *=- 
+Warlocks are the descendants of both human and daemon parents 
+and because of which draw upon the skills and abilities of both. 
+They have a natural ability with magic drawing from their daemon 
+heritage, along with a love for chaos, destruction and evil. 
+Unlike many they have the ability to simultaneously wear armor, 
+wield weapons, and use magic. However, due to their demonic 
+heritage their magic is limited to offensive spells and they 
+have limited healing ability. 
+-=*=- 
+The Warlock is often found where ever there is a cause which 
+may strengthen evil, bring it glory, or in any way impede, destroy 
+or bring strife to the forces of good and order. Only Warlocks can 
+work Steel metal into high quality armor and weapons. 
+"I wish to be a Warlock!" 
+Return to List 
+
+[DIALOG d_Race_Warlock BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Warlock 
+SRC.SYSMESSAGE=*POOF* Yer a Warlock 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[DIALOG d_Race_Werven] 
+0,0 
+resizepic 0 0 3600 525 560 
+text 25 20 1152 0 
+text 25 40 81 1 
+text 25 60 81 2 
+text 25 80 81 3 
+text 25 100 81 4 
+text 25 120 81 5 
+text 25 140 81 6 
+text 25 160 81 7 
+text 25 180 81 8 
+text 25 200 81 9 
+text 25 220 81 10 
+text 25 240 81 11 
+text 25 260 81 12 
+text 25 280 81 13 
+text 25 300 81 14 
+text 25 320 81 15 
+text 25 340 81 16 
+text 25 360 81 17 
+text 25 380 81 18 
+button 40 490 92 52 1 0 1 
+text 90 490 1152 19 
+button 455 520 2076 2075 1 0 2 
+text 340 525 81 20 
+
+// xxxxxxxxxxxxxxxx text bar length xxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+[DIALOG d_Race_Werven TEXT] 
+-=* The Werven *=- 
+Incorrectly referred to as "Werewolves", the Werven are both a 
+corrupted and a unholy people, brought into being by a series of 
+unfortunate events early in the world's history. Werven are a 
+chaotic evil bunch who view the other races as meat animals, 
+fun to stalk and meant to eat. 
+-=*=- 
+Werven have the ability to assume the shape of other corrupted 
+were-creatures, and in fact it is this ability that has lead to 
+the unfortunate name of "Werewolf" though in fact wolves are 
+simply a preferred were-form. Their unnatural hardiness and 
+strength resist all attacks both magical and mundane. In combat 
+Werven have very few weaknesses. 
+-=*=- 
+The Werven's finely honed perception makes them the ultimate 
+"cat burglar" and in fact the only thing they love more than 
+stalking a tender Human is breaking into a guarded area and 
+robbing precious loot from locked safes. Only Werven can work 
+Bronze metal into high quality armor and weapons. 
+"I wish to be a Werven!" 
+Return to List 
+
+[DIALOG d_Race_Werven BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=Go then, and return when ready 
+RETURN 1 
+ONBUTTON=1 
+SRC.f_RACE_INITIALIZE_Werven 
+SRC.SYSMESSAGE=*POOF* Yer a Werven 
+RETURN 1 
+ONBUTTON=2 
+DIALOG d_Race_List 
+RETURN 1 
+
+
+[EOF]

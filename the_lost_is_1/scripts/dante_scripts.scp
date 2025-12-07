@@ -1,0 +1,378 @@
+[itemdef= i_Muelltruhe] 
+
+ID=09ab 
+NAME=Muelltruhe 
+CATEGORY=Dante 
+SUBSECTION=Items
+DESCRIPTION=Muelltruhe 
+WEIGHT=1000 
+
+on=@create 
+ATTR=08010 
+Color=09d2 
+
+Name=MuellTruhe 
+
+ON=@Dclick 
+EMPTY 
+SRC.SFX 0235 
+say Muelltruhe gelehrt 
+RETURN 1 
+
+[ITEMDEF I_WASSER_KLAR]
+
+NAME=water
+ID=01cd9
+
+ON=@CREATE
+
+COLOR=05
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=Wasser
+
+[ITEMDEF i_e_mensch200]
+DEFNAME=i_e_mensch200
+ID=i_hole
+NAME=Mensch-Remover
+
+//ON=@STEP
+//	SRC.PRIVSET 00
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=MENSCH
+
+
+[ITEMDEF i_Gildenfarbtopf] 
+DEFNAME=i_Gildenfarbtopf
+ID=0fab
+NAME=Gildenfarbtopf 
+
+TYPE=t_normal 
+
+ON=@CLICK
+COLOR=<LINK.COLOR>
+NAME=Gildenfarbtopf der <SRC.MEMORYFINDTYPE.0400.LINK.NAME>
+
+ON=@DCLICK
+
+TARGET Was wollt ihr faerben?
+return 1 
+
+ON=@TARGON_CHAR
+ SRC.MESSAGE Ihr koennt keine Lebewesen faerben!
+
+ON=@TARGON_ITEM
+
+ IF (<SRC.TARG.CONT.LAYER>==21)
+ IF (<SRC.TARG.COLOR>==<COLOR>)
+	SRC.MESSAGE Du entfaerbst den Gildengegenstand.
+	SRC.TARG.NAME= 
+	SRC.TARG.COLOR= 
+	SRC.TARG.DYE=1
+	RETURN 1
+ ENDIF  
+ IF (<SRC.TARG.TYPE>==t_armor) || (<SRC.TARG.TYPE>==t_clothing) || (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_fence) || (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_bow) || (<SRC.TARG.TYPE>==t_weapon_mace_staff) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_armor_leather) || (<SRC.TARG.TYPE>==t_armor) || (<SRC.TARG.TYPE>==t_shield)
+	SRC.EMOTE <SRC.TARG.NAME> wird gefaerbt
+	SRC.TARG.NAME=[<SRC.MEMORYFINDTYPE.0400.LINK.ABBREV>] <SRC.TARG.NAME>
+	SRC.TARG.COLOR=<color>
+	SRC.TARG.UPDATE
+	//SRC.TARG.DYE=0
+	SRC.TARG.EFFECT=2,i_fx_bless_effect,6,15,1
+	SRC.SOUND=snd_SPELL_BLESS
+	RETURN 0
+ ELSE
+	SRC.SYSMESSAGE Du kannst das nicht faerben!
+	RETURN 1
+ ENDIF
+ELSE
+ SRC.MESSAGE Du musst den Gegenstand bei dir tragen !
+ENDIF
+
+CATEGORY=Dante
+SUBSECTION=Rassen & Gilden
+DESCRIPTION=Gildenfarbtopf
+
+[ITEMDEF i_Drachenschuppe]
+
+ID=0f8e
+NAME=Dragon's Scales
+WEIGHT=5
+VALUE=15
+
+ON=@CREATE 
+TYPE=T_NORMAL
+COLOR=color_magic_invulnerability
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=Drachenschuppe
+
+[ITEMDEF i_Drachenleder]
+
+ID=01078
+NAME=Drachenleder
+WEIGHT=5
+VALUE=15
+
+ON=@CREATE 
+TYPE=T_HIDE
+COLOR=00455
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=Drachenleder
+
+
+[ITEMDEF I_ENTFADER]
+
+Name=Runen Entfader
+ID=i_gravestone_18
+WEIGHT=50
+
+ON=@Create
+Type=t_normal
+COLOR=08a5
+
+ON=@DCLICK
+
+TARGET Choose your faded rune !
+
+ON=@TARGON_ITEM
+
+IF ! <SRC.TARG.BASEID>==i_rune_marker
+	SRC.MESSAGE This is no Recall Rune...
+	Return 0
+
+ELSEIF <SRC.TARG.BASEID>==i_rune_marker
+	SRC.TARG.MORE 01
+	SRC.MESSAGE You have repaired your <SRC.TARG.NAME>
+        Return 0
+
+ELSE
+	SRC.MESSAGE This is no Recall Rune...
+	Return 1
+ENDIF
+
+ON=@TARGON_CHAR
+	SRC.MESSAGE You can't do this with <SRC.TARG.SEX Lord/Lady> <SRC.TARG.NAME> !
+	RETURN 1
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=Entfader
+
+
+[ITEMDEF I_NECROROBE]
+
+Name=Necromancer Robe
+ID=i_deathshroud
+WEIGHT=5
+
+ON=@Create
+HITPOINTS=200
+ATTR=00004
+COLOR=00455
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=Necrorobe
+
+
+[ITEMDEF I_VAMPIRROBE]
+
+Name=Vampirrobe
+ID=i_deathshroud
+WEIGHT=5
+
+ON=@Create
+HITPOINTS=200
+TYPE=T_SCRIPT
+COLOR=00455
+
+ON=@DClick
+IF ! ((<SRC.OSKIN>==003d5) && ((<SRC.OBODY>==c_man)||(<SRC.OBODY>==c_woman)))
+	SRC.MESSAGE You are no Vampire !
+	UNEQUIP
+        SRC.CONSUME i_vampirrobe
+        Return 1
+ELSE
+	EQUIP
+        SRC.EMOTE uses the robe to be secured from the sun
+	Return 1
+ENDIF
+
+ON=@UNEQUIP
+   SRC.TYPE=T_ROCK
+   RETURN 1
+
+CATEGORY=Dante
+SUBSECTION=Rassen & Gilden
+DESCRIPTION=Vampirrobe
+
+
+[ITEMDEF I_Gildentele]
+
+Name=Guild Gate
+ID=i_rune_alchem_6
+WEIGHT=0
+
+ON=@Create
+
+TYPE=t_normal
+COLOR=00455
+MORE2=1
+
+ON=@CLICK
+COLOR=<LINK.COLOR>
+
+ON=@STEP
+	IF (<SRC.MEMORYFINDTYPE.0400.LINK> == <LINK>)
+		SRC.MESSAGE Greetings <src.name>
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE You are no member of <LINK.NAME>
+	ENDIF
+	RETURN 1
+
+CATEGORY=Dante
+SUBSECTION=Rassen & Gilden
+DESCRIPTION=Gildenteleporter
+
+[ITEMDEF I_Stadttele]
+
+Name=Town Gate
+ID=i_rune_alchem_6
+WEIGHT=0
+
+ON=@Create
+
+TYPE=t_normal
+COLOR=00455
+MORE2=1
+
+ON=@CLICK
+COLOR=<LINK.COLOR>
+
+ON=@STEP
+	IF (<SRC.MEMORYFINDTYPE.0800.LINK> == <LINK>)
+		SRC.MESSAGE Greetings <src.name>
+		SRC.GO <MOREP>
+	ELSE
+		SRC.MESSAGE You are no member of <LINK.NAME>
+	ENDIF
+	RETURN 1
+
+CATEGORY=Dante
+SUBSECTION=Rassen & Gilden
+DESCRIPTION=Stadtteleporter
+
+[ITEMDEF I_GMROBE]
+
+Name=Robe
+ID=i_robe_gm
+WEIGHT=0
+
+ON=@CREATE   
+   COLOR=0541
+   HITPOINTS=100
+   NAME=Robe
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=Robe
+
+
+[ITEMDEF i_piwafwi]
+
+ID=i_cape
+NAME=Piwafwi
+Layer=20
+WEIGHT=3
+ARMOR=25
+
+ON=@Create
+ATTR=0004
+Color=0966
+Hitpoints=100
+
+ON=@DClick
+
+IF (<SRC.RESTEST 1 i_mem_lastuse>) 
+	SRC.MESSAGE Du kannst die Faehigkeit des Umhang nicht schon wieder nutzen !
+	RETURN 1
+ELSE
+	SRC.Emote verbirgt sich im Schatten.
+	SRC.Invis 1
+	SRC.EVENTS +(e_piwafwi)
+	SRC.FINDLAYER(1).UNEQUIP
+	SRC.FINDLAYER(2).UNEQUIP
+	SRC.NEWITEM i_mem_lastuse
+	SRC.ACT.TIMER=1200
+	SRC.ACT.EQUIP
+	SRC.NEWITEM i_mem_piwafwi
+	SRC.ACT.TIMER=30
+	SRC.ACT.EQUIP
+	Return 1
+ENDIF
+
+ON=@EQUIP
+
+IF ! (<SRC.OSKIN>==0455)
+	SRC.MESSAGE Du bist kein Drow !
+	UnEquip
+	Return 1
+ELSE
+	SRC.FLAGS=<SRC.FLAGS>|statf_nightsight
+	SRC.Resync
+ENDIF
+
+On=@UnEquip
+IF ! (<SRC.OSKIN>==0455)
+	Return 1
+ELSE	
+	SRC.FLAGS=<SRC.FLAGS>&~statf_nightsight
+	SRC.Resync
+ENDIF
+
+CATEGORY=Dante
+SUBSECTION=Items
+DESCRIPTION=Piwafwi
+
+[ITEMDEF i_mem_piwafwi]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Piwafwi Dauer
+
+ON=@EQUIP
+ATTR=attr_decay
+ON=@TIMER
+CONT.Invis 0
+CONT.EVENTS -(e_piwafwi)
+CONT.EMOTE tritt aus dem Schatten heraus
+REMOVE
+RETURN 1
+
+
+[EVENTS e_piwafwi]
+
+ON=@HITTRY
+FINDID.i_mem_piwafwi.TIMER=0
+
+ON=@SPELLCAST
+FINDID.i_mem_piwafwi.TIMER=0
+
+[ITEMDEF i_mem_lastuse]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Last Use
+
+ON=@EQUIP
+ATTR=attr_decay
+
+ON=@TIMER
+REMOVE
+
+[EOF]

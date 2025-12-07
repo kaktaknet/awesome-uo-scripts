@@ -1,0 +1,82 @@
+[comment on this script...]
+made for Sphere.55R4.0.2 by Moe
+These are examples for traps, wich use my traps script.
+
+/////////////////////////////////////////////////////////////////////////
+
+
+[itemdef i_trap_explosion]
+id=i_rune_magic_trap
+weight=10
+resources=5 i_ingot_iron, 5 i_log, 1 i_potion_explosion
+skillmake=Tinkering 75.3, t_tinker_tools
+type=t_trap_inactive
+name=explosion trap
+
+on=@create
+events +t_script_trap
+tag.effectType=effect_scripted
+tag.effectScript=f_trap_explosion
+tag.flags=<eval (trap_selfdestruct|trap_reusable)>
+
+
+[function f_trap_explosion]
+serv.newitem i_fx_explosion_2
+new.p=<p>
+new.attr=012
+new.timer=2
+f_areadamage <eval {50 70}>,<eval 092>,3,<link.uid>
+sfx snd_spell_explosion
+
+
+/////////////////////////////////////////////////////////////////////////
+
+
+[itemdef i_trap_bolt]
+id=i_rune_magic_trap
+weight=10
+resources=5 i_ingot_iron, 5 i_log, 1 i_xbolt
+skillmake=Tinkering 78.7, t_tinker_tools
+type=t_trap_inactive
+name=bolt trap
+
+on=@create
+events +t_script_trap
+tag.effectType=effect_scripted
+tag.effectScript=f_trap_bolt
+tag.ammo=i_xbolt
+tag.charges=1
+tag.flags=<eval trap_persistent|trap_reusable>
+
+
+[function f_trap_bolt]
+sfx 564
+src.f_areadamage <eval {20 30}>,0800,3,<link.uid>
+
+
+/////////////////////////////////////////////////////////////////////////
+
+
+[itemdef i_trap_spell_lightning]
+id=i_rune_magic_trap
+weight=10
+resources=5 i_ingot_iron, 5 i_log, 1 i_scroll_lightning
+skillmake=Tinkering 89.5, t_tinker_tools
+type=t_trap_inactive
+name=lightning trap
+
+on=@create
+events +t_script_trap
+tag.effectType=effect_spell
+tag.spell=s_lightning
+tag.effect=500
+tag.ammo=i_scroll_lightning
+tag.charges=1
+tag.flags=<eval trap_persistent|trap_reusable>
+
+
+/////////////////////////////////////////////////////////////////////////
+
+
+
+[eof]

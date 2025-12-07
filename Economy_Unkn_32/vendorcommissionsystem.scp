@@ -1,0 +1,121 @@
+//Vendor Commission system
+//v1.4
+//by Rudenid
+//Sphere version: 55i.
+//Difficulty of Installation: 3/10.
+//Dependencies: None.
+
+//This enables the speech commands "payment", "wage", and "commission"
+//You must add the line: TSPEECH=playervendor to c_h_vendor and c_h_vendor_f right below their other TSPEECH entries
+
+[SPEECH playervendor]
+ON=*payment*
+IF !(<ISMYPET>)
+RETURN 0
+ENDIF
+
+IF (<FINDID.i_vendor_timer>)
+SAY I am working on a <EVAL 100 + -(<FINDID.i_vendor_timer.MORE2>)> percent commission.
+ELSE
+SAY I am working on a 50 gold per day wage.
+ENDIF
+RETURN 1
+
+ON=*wage*
+IF !(<ISMYPET>)
+RETURN 0
+ENDIF
+
+IF (<FINDID.i_vendor_timer>)
+FINDID.i_vendor_timer.REMOVE
+SAY I shall now work for a daily wage of 50 gold coins.
+ELSE
+SAY I am already working for a daily wage.
+ENDIF
+RETURN 1
+
+ON=*commission*
+IF !(<ISMYPET>)
+RETURN 0
+ENDIF
+
+IF (<FINDID.i_vendor_timer>)
+SAY I am already working on commission.
+ELSE
+NEWITEM i_vendor_timer
+ACT.CONT=<UID>
+SAY I am now working on a <EVAL 100 + -(<ACT.MORE2>)> percent commission.
+ENDIF
+
+[ITEMDEF i_vendor_timer]
+ID=i_memory
+NAME=Commission Based Vendor Timer
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_move_never|attr_invis
+MORE2=85
+TIMER=1
+
+ON=@Timer
+IF !(<CONT.MEMORYFINDTYPE.memory_ipet>)
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<EVAL <TAG.OLDGOLD>>)
+TAG.OLDGOLD=0
+ENDIF
+
+IF (<MORE1> = 0) //GM didn't set it explicitly.
+	VAR.OLDACT=<CONT.ACT.UID>
+	CONT.ACT=<CONT.REGION.UID>
+	IF (<CONT.ACT.ISITEM>)
+		IF (<CONT.ACT.TYPE> = t_multi)
+			IF (<MORE2> != 93)
+				MORE2=93
+				CONT.SAY I will now work for a 7% commission.
+			ENDIF
+		ELSEIF (<CONT.ACT.TYPE> = t_ship)
+			IF (<MORE2> != 91)
+				MORE2=91
+				CONT.SAY I will now work for a 9% commission.
+			ENDIF
+		ENDIF
+	ELSE
+		IF (<MORE2> != 85)
+			MORE2=85
+			CONT.SAY I will now work for a 15% commission.
+		ENDIF
+	ENDIF
+
+	CONT.ACT=<VAR.OLDACT>
+	VAR.OLDACT=
+ENDIF
+
+
+IF (<CONT.FINDLAYER.layer_bankbox.MORE1> < 51)
+	CONT.FINDLAYER.layer_bankbox.MORE1=<EVAL <CONT.FINDLAYER.layer_bankbox.MORE1>+1>
+	TAG.OLDGOLD=<CONT.FINDLAYER.layer_bankbox.MORE1>
+ELSE
+	IF (<EVAL <TAG.OLDGOLD>> < <CONT.FINDLAYER.layer_bankbox.MORE1>)
+		//If more gold now than before, divide out the commission.
+		VAR.GOLDCHANGE=<EVAL <CONT.FINDLAYER.layer_bankbox.MORE1> + <EVAL -1 * <TAG.OLDGOLD>>>
+		VAR.GOLDCHANGE=<EVAL <VAR.GOLDCHANGE> / 100>
+		VAR.GOLDCHANGE=<EVAL <VAR.GOLDCHANGE> * <EVAL <MORE2>>>
+		IF !(<EVAL <TAG.OLDGOLD> + <VAR.GOLDCHANGE>> > <CONT.FINDLAYER.layer_bankbox.MORE1>)
+			//But don't give them extra gold.
+			CONT.FINDLAYER.layer_bankbox.MORE1=<EVAL <TAG.OLDGOLD> + <VAR.GOLDCHANGE>>
+		ENDIF
+		VAR.GOLDCHANGE=
+		TAG.OLDGOLD=<CONT.FINDLAYER.layer_bankbox.MORE1>
+	ELSEIF (<EVAL <TAG.OLDGOLD>+51> > <CONT.FINDLAYER.layer_bankbox.MORE1>)
+		//If the change is more than 50, set the old amount to the amount held.
+		TAG.OLDGOLD=<EVAL <CONT.FINDLAYER.layer_bankbox.MORE1>>
+	ELSE
+		//Otherwise, set the gold held to the old amount instead.
+		CONT.FINDLAYER.layer_bankbox.MORE1=<EVAL <TAG.OLDGOLD>>
+	ENDIF
+ENDIF
+TIMER=60
+RETURN 1

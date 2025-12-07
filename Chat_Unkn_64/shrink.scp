@@ -1,0 +1,41 @@
+[ITEMDEF i_potion_shrink] 
+ID=i_bottle_white
+NAME=Shrink 
+TYPE=t_potion_empty 
+TDATA1=t_potion_empty 
+RESOURCES=i_reag_batwing 2, i_bottle_empty 
+SKILLMAKE=ALCHEMY 90.0 
+
+CATEGORY=Maul 
+SUBSECTION=Potions 
+DESCRIPTION=Shrink 
+
+ON=@Create 
+MORE1=s_shrink 
+MORE2=100.0 
+COLOR=0007
+
+ON=@UserDClick 
+SRC.SYSMESSAGE What do you want to shrink? 
+TARGET 
+RETURN 1 
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) 
+  SRC.SYSMESSAGE You can not shrink a human! 
+  RETURN 1 
+ELSEIF <src.targ.flags>&statf_conjured 
+  src.sysmessage You cannot shrink summoned pets! 
+  return 1 
+ELSEIF ( src.targ.isMyPet )
+  SRC.TARG.SHRINK 
+  SRC.BOUNCE <SRC.TARG.ACTARG1>&~080000000 
+  SRC.NEWITEM i_bottle_empty 
+  SRC.ACT.BOUNCE 
+  REMOVE 
+  RETURN 1 
+ELSE 
+   src.sysmessage That is not your pet! 
+   return 1 
+ENDIF
+
+[EOF]

@@ -1,0 +1,339 @@
+//Book Copying script
+//V2.0
+//By Rudenid.
+//Use Pen and Ink to copy a blank book.
+//Use paper seals to seal a not-so-blank book.
+//I put the seals on scribe NPCs myself, but feel free to distribute them however you'd like
+
+[DIALOG d_sealbook]
+0,0
+page 0
+gumppic 150 130 2202
+gumppic 0 0 2204
+text 205 175 0 1
+text 215 270 0 2
+text 355 180 0 3
+text 390 210 0 4
+text 390 235 0 5
+text 405 305 0 6
+button 355 205 2474 2473 1 0 1
+button 355 230 2474 2473 1 0 2
+
+[DIALOG d_sealbook TEXT]
+Nothing
+<NAME>
+<AUTHOR>
+Seal this book?
+Yes
+No
+<PAGES> Pages
+
+[DIALOG d_sealbook BUTTON]
+
+ONBUTTON=1
+
+IF !(<TYPE> == t_book)
+SRC.SYSMESSAGE This is not a book.
+RETURN 1
+ENDIF
+
+IF (<MORE1> & 080000000)
+SRC.SYSMESSAGE This book is already sealed.
+RETURN 1
+ENDIF
+
+IF (<ATTR> & attr_move_never)
+SRC.SYSMESSAGE You cannot seal this.
+RETURN 1
+ENDIF
+
+IF (<SRC.UID> != <TOPOBJ.UID>)
+SRC.SYSMESSAGE The book must be in your pack for you to seal it.
+RETURN 1
+ENDIF
+
+IF (<SRC.RESCOUNT i_seal_paper> < <PAGES>)
+SRC.SYSMESSAGE This book is <PAGES> pages, and yet you only have <SRC.RESCOUNT i_seal_paper> seals. You need one per page.
+RETURN 1
+ENDIF
+
+VAR.REQINSCRIPTION=<eval <PAGES> * 10.0>
+IF (<eval <VAR.REQINSCRIPTION>> > 100.0)
+VAR.REQINSCRIPTION=100.0
+ENDIF
+VAR.ALWAYSSCRIBE=<eval <VAR.REQINSCRIPTION> * 4>
+VAR.ALWAYSSCRIPT=<eval <VAR.ALWAYSSCRIBE> / <SRC.INSCRIPTION>>
+VAR.CHANCESCRIBE=rand(<eval <VAR.ALWAYSSCRIBE>>)
+
+IF (<eval <VAR.REQINSCRIPTION>> > <SRC.INSCRIPTION>)
+SRC.SYSMESSAGE You are not a good enough scribe to seal a <PAGES> page book.
+RETURN 1
+ENDIF
+
+IF (<eval <VAR.CHANCESCRIBE>> > <SRC.INSCRIPTION>)
+SRC.SYSMESSAGE You fail to seal the book.
+ELSE
+SRC.SFX 79
+SRC.CONSUME <PAGES> i_seal_paper
+SRC.SYSMESSAGE You seal the book.
+MORE1=080000000
+ENDIF
+
+VAR.CHANCESCRIBE=
+VAR.ALWAYSSCRIBE=
+VAR.REQINSCRIPTION=
+
+[ITEMDEF 0fbf]
+//pen and ink
+DEFNAME=i_pen_and_ink
+RESOURCES=1 i_FEATHER, 1 i_INK_POT
+WEIGHT=2
+CATEGORY=Items by Professions
+SUBSECTION=Artists
+DESCRIPTION=Pen & Ink (W)
+DUPELIST=0fc0
+
+ON=@DCLICK
+TARGET Choose the book to copy from
+RETURN 1
+
+ON=@TARGON_ITEM
+IF <LINK.SERIAL>==0
+IF !(<SRC.TARG.TYPE>==t_book)
+SRC.SYSMESSAGE This is not a book
+RETURN 1
+ENDIF
+//IF (<SRC.TARG.ATTR>&010)
+//SRC.SYSMESSAGE You cannot copy a locked down book
+//RETURN 1
+//ENDIF
+LINK=<SRC.TARG.SERIAL>
+TARGET Choose the book to copy to
+RETURN 1
+ELSE
+IF !(<SRC.TARG.TYPE>==t_book)
+SRC.SYSMESSAGE This is not a book
+LINK=0
+RETURN 1
+ENDIF
+IF (<SRC.TARG.ATTR>&010)
+SRC.SYSMESSAGE You cannot move this
+LINK=0
+RETURN 1
+ENDIF
+IF (<SRC.TARG.MORE1>&080000000)
+SRC.SYSMESSAGE This book is sealed and cannot be written in
+LINK=0
+RETURN 1
+ENDIF
+IF !(<SRC.TARG.CONT>==<SRC.FINDLAYER(21).SERIAL>)
+SRC.SYSMESSAGE This book must be in your pack
+LINK=0
+RETURN 1
+ENDIF
+IF (<SRC.TARG.PAGES> > 0)
+SRC.SYSMESSAGE This book was already written in.
+LINK=0
+RETURN 1
+ENDIF
+
+IF (rand(110.0) < <SRC.INSCRIPTION>)
+SRC.NEWITEM <SRC.TARG.ID>
+SRC.ACT.ATTR=0
+SRC.ACT.MORE1=0
+SRC.ACT.NAME=<LINK.NAME>
+SRC.ACT.AUTHOR=<LINK.AUTHOR>
+SRC.ACT.LINK=<LINK.UID>
+SRC.ACT.MOREX=0
+SRC.COPYBOOK
+SRC.ACT.LINK=
+SRC.ACT.DISPID=<SRC.TARG.DISPID>
+SRC.ACT.COLOR=<SRC.TARG.COLOR>
+SRC.SFX 0247
+SRC.SYSMESSAGE You successfully copy the book
+SRC.ACT.BOUNCE
+SRC.TARG.REMOVE
+LINK=0
+ELSE
+SRC.SYSMESSAGE You fail to copy the book
+LINK=0
+ENDIF
+
+IF (<SRC.INSCRIPTION> < 100.0)
+
+IF (<SRC.INSCRIPTION> < 30.0)
+IF (rand(3)=1)
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+{ 1 20 2 5 3 2 4 1 }
+ENDIF
+ELSEIF (<SRC.INSCRIPTION> < 50.0)
+IF (rand(75)=1)
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+{ 1 20 2 5 3 2 4 1 }
+ENDIF
+ELSEIF (<SRC.INSCRIPTION> < 80.0)
+IF (rand(100)=1)
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+{ 1 20 2 5 3 2 4 1 }
+ENDIF
+ELSE
+IF (rand(200)=1)
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+{ 1 20 2 5 3 2 4 1 }
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<SRC.INSCRIPTION> > 100.0)
+SRC.INSCRIPTION=100.0
+ENDIF
+
+RETURN 1
+
+[FUNCTION copybook]
+IF <ACT.MOREX> > <ACT.LINK.PAGES>
+ACT.MOREX=0
+RETURN 1
+ENDIF
+TRYP 0 ACT.BODY<ACT.MOREX>=<ACT.LINK.BODY<ACT.MOREX>>
+ACT.MOREX=<ACT.MOREX>+1
+COPYBOOK
+
+[ITEMDEF 0fc0]
+//pen and ink
+DUPEITEM=0fbf
+CATEGORY=Items by Professions
+SUBSECTION=Artists
+DESCRIPTION=Pen & Ink (N)
+
+ON=@DCLICK
+TARGET Choose the book to copy from
+RETURN 1
+
+ON=@TARGON_ITEM
+IF <LINK.SERIAL>==0
+IF !(<SRC.TARG.TYPE>==t_book)
+SRC.SYSMESSAGE This is not a book
+RETURN 1
+ENDIF
+//IF (<SRC.TARG.ATTR>&010)
+//SRC.SYSMESSAGE You cannot copy a locked down book
+//RETURN 1
+//ENDIF
+LINK=<SRC.TARG.SERIAL>
+TARGET Choose the book to copy to
+RETURN 1
+ELSE
+IF !(<SRC.TARG.TYPE>==t_book)
+SRC.SYSMESSAGE This is not a book
+LINK=0
+RETURN 1
+ENDIF
+IF (<SRC.TARG.ATTR>&010)
+SRC.SYSMESSAGE You cannot move this
+LINK=0
+RETURN 1
+ENDIF
+IF (<SRC.TARG.MORE1>&080000000)
+SRC.SYSMESSAGE This book is sealed and cannot be written in
+LINK=0
+RETURN 1
+ENDIF
+IF !(<SRC.TARG.CONT>==<SRC.FINDLAYER(21).SERIAL>)
+SRC.SYSMESSAGE This book must be in your pack
+LINK=0
+RETURN 1
+ENDIF
+IF (<SRC.TARG.PAGES> > 0)
+SRC.SYSMESSAGE This book was already written in.
+LINK=0
+RETURN 1
+ENDIF
+
+IF (rand(110.0) < <SRC.INSCRIPTION>)
+SRC.NEWITEM <SRC.TARG.ID>
+SRC.ACT.ATTR=0
+SRC.ACT.MORE1=0
+SRC.ACT.NAME=<LINK.NAME>
+SRC.ACT.AUTHOR=<LINK.AUTHOR>
+SRC.ACT.LINK=<LINK.UID>
+SRC.ACT.MOREX=0
+SRC.COPYBOOK
+SRC.ACT.LINK=
+SRC.ACT.DISPID=<SRC.TARG.DISPID>
+SRC.ACT.COLOR=<SRC.TARG.COLOR>
+SRC.SFX 0247
+SRC.SYSMESSAGE You successfully copy the book
+SRC.ACT.BOUNCE
+SRC.TARG.REMOVE
+LINK=0
+ELSE
+SRC.SYSMESSAGE You fail to copy the book
+LINK=0
+ENDIF
+
+IF (<SRC.INSCRIPTION> < 100.0)
+
+IF (<SRC.INSCRIPTION> < 30.0)
+IF (rand(3)=1)
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+{ 1 20 2 5 3 2 4 1 }
+ENDIF
+ELSEIF (<SRC.INSCRIPTION> < 50.0)
+IF (rand(75)=1)
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+{ 1 20 2 5 3 2 4 1 }
+ENDIF
+ELSEIF (<SRC.INSCRIPTION> < 80.0)
+IF (rand(100)=1)
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+{ 1 20 2 5 3 2 4 1 }
+ENDIF
+ELSE
+IF (rand(200)=1)
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+{ 1 20 2 5 3 2 4 1 }
+ENDIF
+ENDIF
+
+ENDIF
+
+IF (<SRC.INSCRIPTION> > 100.0)
+SRC.INSCRIPTION=100.0
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_seal_paper]
+ID=i_bedroll_open
+TYPE=t_normal
+NAME=paper seal
+RESOURCES=2 i_hides_cut
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+
+ON=@DClick
+TARGET Choose the book you wish to seal
+RETURN 1
+
+ON=@Targon_Item
+IF !(<SRC.TARG.TYPE> == t_book)
+SRC.SYSMESSAGE This is not a book.
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.MORE1> & 080000000)
+SRC.SYSMESSAGE This book is already sealed.
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.ATTR> & attr_move_never)
+SRC.SYSMESSAGE You cannot seal this.
+RETURN 1
+ENDIF
+
+IF (<SRC.UID> != <SRC.TARG.TOPOBJ.UID>)
+SRC.SYSMESSAGE The book must be in your pack for you to seal it.
+RETURN 1
+ENDIF
+
+IF (<SRC.RESCOUNT i_seal_paper> < <SRC.TARG.PAGES>)
+SRC.SYSMESSAGE This book is <SRC.TARG.PAGES> pages, and yet you only have <SRC.RESCOUNT i_seal_paper> seals. You need one per page.
+RETURN 1
+ENDIF
+
+SRC.TARG.DIALOG d_sealbook
+
+RETURN 1

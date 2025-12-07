@@ -1,0 +1,1671 @@
+// Scripted By ByTcH
+// If you alter the script please give me credit still
+// Questions, Comments, Complaints?  bytch@charter.net
+
+
+[ITEMDEF i_deed_holder]
+ID=i_deed
+NAME=set holder deed
+TYPE=t_script
+
+ON=@CREATE
+ATTR=04
+COLOR=0774
+TAG.USED=0
+
+ON=@CLICK
+IF (<EVAL <TAG.USED>>==0)
+ MESSAGE a <NAME>
+ RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==6) && (<EVAL <TAG.PLATE>>==1)
+ MESSAGE <NAME> [full]
+ RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==3) && (<EVAL <TAG.CHAIN>>==1)
+ MESSAGE <NAME> [full]
+ RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==4) && (<EVAL <TAG.RING>>==1)
+ MESSAGE <NAME> [full]
+ RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==5) && (<EVAL <TAG.LEATHER>>==1)
+ MESSAGE <NAME> [full]
+ RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==5) && (<EVAL <TAG.STUDDED>>==1)
+ MESSAGE <NAME> [full]
+ RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==5) && (<EVAL <TAG.BONE>>==1)
+ MESSAGE <NAME> [full]
+ RETURN 1
+ELSE
+ MESSAGE <NAME> [<EVAL <TAG.FINISHED>> items]
+ RETURN 1
+ENDIF
+
+ON=@DCLICK
+IF !<SRC.RESTEST 1 i_deed_holder>
+ SRC.SYSMESSAGE You must have this in your pack to use it.
+ RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==6) && (<EVAL <TAG.PLATE>>==1)
+SRC.NEWITEM <TAG.CHEST>
+SRC.ACT.NAME a <TAG.NAME1>
+SRC.ACT.COLOR <TAG.COLOR1>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.LEGGINGS>
+SRC.ACT.NAME a <TAG.NAME2>
+SRC.ACT.COLOR <TAG.COLOR2>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.GLOVES>
+SRC.ACT.NAME a <TAG.NAME3>
+SRC.ACT.COLOR <TAG.COLOR3>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.GORGET>
+SRC.ACT.NAME a <TAG.NAME4>
+SRC.ACT.COLOR <TAG.COLOR4>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.HELMET>
+SRC.ACT.NAME a <TAG.NAME5>
+SRC.ACT.COLOR <TAG.COLOR5>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.ARMS>
+SRC.ACT.NAME a <TAG.NAME6>
+SRC.ACT.COLOR <TAG.COLOR6>
+SRC.ACT.BOUNCE
+SRC.FINDID.i_deed_holder.REMOVE
+RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==3) && (<EVAL <TAG.CHAIN>>==1)
+SRC.NEWITEM <TAG.CHEST>
+SRC.ACT.NAME a <TAG.NAME1>
+SRC.ACT.COLOR <TAG.COLOR1>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.LEGGINGS>
+SRC.ACT.NAME a <TAG.NAME2>
+SRC.ACT.COLOR <TAG.COLOR2>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.COIF>
+SRC.ACT.NAME a <TAG.NAME3>
+SRC.ACT.COLOR <TAG.COLOR3>
+SRC.ACT.BOUNCE
+SRC.FINDID.i_deed_holder.REMOVE
+RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==4) && (<EVAL <TAG.RING>>==1)
+SRC.NEWITEM <TAG.CHEST>
+SRC.ACT.NAME a <TAG.NAME1>
+SRC.ACT.COLOR <TAG.COLOR1>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.LEGGINGS>
+SRC.ACT.NAME a <TAG.NAME2>
+SRC.ACT.COLOR <TAG.COLOR2>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.GLOVES>
+SRC.ACT.NAME a <TAG.NAME3>
+SRC.ACT.COLOR <TAG.COLOR3>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.ARMS>
+SRC.ACT.NAME a <TAG.NAME4>
+SRC.ACT.COLOR <TAG.COLOR4>
+SRC.ACT.BOUNCE
+SRC.FINDID.i_deed_holder.REMOVE
+RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==5) && (<EVAL <TAG.LEATHER>>==1)
+SRC.NEWITEM <TAG.CHEST>
+SRC.ACT.NAME a <TAG.NAME1>
+SRC.ACT.COLOR <TAG.COLOR1>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.LEGGINGS>
+SRC.ACT.NAME a <TAG.NAME2>
+SRC.ACT.COLOR <TAG.COLOR2>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.GLOVES>
+SRC.ACT.NAME a <TAG.NAME3>
+SRC.ACT.COLOR <TAG.COLOR3>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.GORGET>
+SRC.ACT.NAME a <TAG.NAME4>
+SRC.ACT.COLOR <TAG.COLOR4>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.ARMS>
+SRC.ACT.NAME a <TAG.NAME5>
+SRC.ACT.COLOR <TAG.COLOR5>
+SRC.ACT.BOUNCE
+SRC.FINDID.i_deed_holder.REMOVE
+RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==5) && (<EVAL <TAG.STUDDED>>==1)
+SRC.NEWITEM <TAG.CHEST>
+SRC.ACT.NAME a <TAG.NAME1>
+SRC.ACT.COLOR <TAG.COLOR1>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.LEGGINGS>
+SRC.ACT.NAME a <TAG.NAME2>
+SRC.ACT.COLOR <TAG.COLOR2>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.GLOVES>
+SRC.ACT.NAME a <TAG.NAME3>
+SRC.ACT.COLOR <TAG.COLOR3>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.GORGET>
+SRC.ACT.NAME a <TAG.NAME4>
+SRC.ACT.COLOR <TAG.COLOR4>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.ARMS>
+SRC.ACT.NAME a <TAG.NAME5>
+SRC.ACT.COLOR <TAG.COLOR5>
+SRC.ACT.BOUNCE
+SRC.FINDID.i_deed_holder.REMOVE
+RETURN 1
+ELSEIF (<EVAL <TAG.FINISHED>>==5) && (<EVAL <TAG.BONE>>==1)
+SRC.NEWITEM <TAG.CHEST>
+SRC.ACT.NAME a <TAG.NAME1>
+SRC.ACT.COLOR <TAG.COLOR1>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.LEGGINGS>
+SRC.ACT.NAME a <TAG.NAME2>
+SRC.ACT.COLOR <TAG.COLOR2>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.GLOVES>
+SRC.ACT.NAME a <TAG.NAME3>
+SRC.ACT.COLOR <TAG.COLOR3>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.HELMET>
+SRC.ACT.NAME a <TAG.NAME4>
+SRC.ACT.COLOR <TAG.COLOR4>
+SRC.ACT.BOUNCE
+SRC.NEWITEM <TAG.ARMS>
+SRC.ACT.NAME a <TAG.NAME5>
+SRC.ACT.COLOR <TAG.COLOR5>
+SRC.ACT.BOUNCE
+SRC.FINDID.i_deed_holder.REMOVE
+RETURN 1
+ENDIF
+IF <EVAL <TAG.USED>>==1
+ IF (<EVAL <TAG.PLATE>>==1)
+  DIALOG d_plate
+  RETURN 1
+ ELSEIF (<EVAL <TAG.RING>>==1)
+  DIALOG d_ring
+  RETURN 1  
+ ELSEIF (<EVAL <TAG.CHAIN>>==1)
+  DIALOG d_chain
+  RETURN 1 
+ ELSEIF (<EVAL <TAG.LEATHER>>==1)
+  DIALOG d_leather
+  RETURN 1 
+ ELSEIF (<EVAL <TAG.STUDDED>>==1)
+  DIALOG d_studded
+  RETURN 1 
+ ELSEIF (<EVAL <TAG.BONE>>==1)
+  DIALOG d_bone
+  RETURN 1 
+ ENDIF
+ELSE
+DIALOG d_opening
+VAR.ONAME <NAME>
+RETURN 1
+ENDIF
+
+
+[DIALOG d_opening]
+240,250
+resizepic 0 0 5054 290 150 
+resizepic 10 10 3000 270 130  
+text 107 10 431 0
+button 20 54 2224 2223 1 0 1 // Platemail
+text 50 50 491 1
+button 170 54 2224 2223 1 0 2 // Chainmail
+text 200 50 491 2
+button 20 79 2224 2223 1 0 3 // Ringmail
+text 50 75 491 3
+button 170 79 2224 2223 1 0 4 // Leather
+text 200 75 491 4
+button 20 104 2224 2223 1 0 5 // Studded
+text 50 100 491 5
+button 170 104 2224 2223 1 0 6 // Bone
+text 200 100 491 6
+
+[DIALOG d_opening TEXT]
+Set Holder
+Platemail
+Chainmail
+Ringmail
+Leather
+Studded
+Bone
+
+[DIALOG d_opening BUTTON]
+ON=0
+SRC.SYSMESSAGE You decide not to make it hold a certain type of armor right now.
+ON=1
+TAG.USED=1
+TAG.PLATE=1
+NAME=a platemail <name>
+DIALOG d_plate
+SRC.SYSMESSAGE You have changed a <VAR.ONAME> into <NAME>.
+ON=2
+TAG.USED=1
+TAG.CHAIN=1
+NAME=a chainmail <name>
+DIALOG d_chain
+SRC.SYSMESSAGE You have changed a <VAR.ONAME> into <NAME>.
+ON=3
+TAG.USED=1
+TAG.RING=1
+NAME=a ringmail <name>
+DIALOG d_ring
+SRC.SYSMESSAGE You have changed a <VAR.ONAME> into <NAME>.
+ON=4
+TAG.USED=1
+TAG.LEATHER=1
+NAME=a leather <name>
+DIALOG d_leather
+SRC.SYSMESSAGE You have changed a <VAR.ONAME> into <NAME>.
+ON=5
+TAG.USED=1
+TAG.STUDDED=1
+NAME=a studded leather <name>
+DIALOG d_studded
+SRC.SYSMESSAGE You have changed a <VAR.ONAME> into <NAME>.
+ON=6
+TAG.USED=1
+TAG.BONE=1
+NAME=a bone <name>
+DIALOG d_bone
+SRC.SYSMESSAGE You have changed a <VAR.ONAME> into <NAME>.
+
+
+[DIALOG d_plate]
+240,250
+resizepic 0 0 5054 290 150 
+resizepic 10 10 3000 270 130  
+text 75 10 431 0
+button 20 54 2224 2223 1 0 1 // Chest
+text 50 50 491 1
+button 170 54 2224 2223 1 0 2 // Leggings
+text 200 50 491 2
+button 20 79 2224 2223 1 0 3 // Gloves
+text 50 75 491 3
+button 170 79 2224 2223 1 0 4 // Gorget
+text 200 75 491 4
+button 20 104 2224 2223 1 0 5 // Helmet
+text 50 100 491 5
+button 170 104 2224 2223 1 0 6 // Arms
+text 200 100 491 6
+
+[DIALOG d_plate TEXT]
+Platemail Set Holder
+Chest
+Leggings
+Gloves
+Gorget
+Helmet
+Arms
+
+[DIALOG d_plate BUTTON]
+ON=0
+RETURN 1
+ON=1
+IF !<TAG.CHEST>
+ SRC.NEWITEM i_targ_chest_p
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a chest here.
+ RETURN 1
+ENDIF
+ON=2
+IF !<TAG.LEGGINGS>
+ SRC.NEWITEM i_targ_legs_p
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have leggings here.
+ RETURN 1
+ENDIF
+ON=3
+IF !<TAG.GLOVES>
+ SRC.NEWITEM i_targ_gloves_p
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have gloves here.
+ RETURN 1
+ENDIF
+ON=4
+IF !<TAG.GORGET>
+ SRC.NEWITEM i_targ_gorget_p
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a gorget here.
+ RETURN 1
+ENDIF
+ON=5
+IF !<TAG.HELMET>
+ SRC.NEWITEM i_targ_helmet_p
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a helmet here.
+ RETURN 1
+ENDIF
+ON=6
+IF !<TAG.ARMS>
+ SRC.NEWITEM i_targ_arms_p
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have arms here.
+ RETURN 1
+ENDIF
+
+[DIALOG d_chain]
+240,250
+resizepic 0 0 5054 290 120 
+resizepic 10 10 3000 270 100  
+text 75 10 431 0
+button 20 54 2224 2223 1 0 1 // Chest
+text 50 50 491 1
+button 170 54 2224 2223 1 0 2 // Leggings
+text 200 50 491 2
+button 20 79 2224 2223 1 0 3 // Coif
+text 50 75 491 3
+
+[DIALOG d_chain TEXT]
+Chainmail Set Holder
+Chest
+Leggings
+Coif
+
+[DIALOG d_chain BUTTON]
+ON=0
+RETURN 1
+ON=1
+IF !<TAG.CHEST>
+ SRC.NEWITEM i_targ_chest_c
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a chest here.
+ RETURN 1
+ENDIF
+ON=2
+IF !<TAG.LEGGINGS>
+ SRC.NEWITEM i_targ_legs_c
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have leggings here.
+ RETURN 1
+ENDIF
+ON=3
+IF !<TAG.COIF>
+ SRC.NEWITEM i_targ_coif_c
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a coif here.
+ RETURN 1
+ENDIF
+
+
+
+[DIALOG d_ring]
+240,250
+resizepic 0 0 5054 290 120 
+resizepic 10 10 3000 270 100  
+text 75 10 431 0
+button 20 54 2224 2223 1 0 1 // Chest
+text 50 50 491 1
+button 170 54 2224 2223 1 0 2 // Leggings
+text 200 50 491 2
+button 20 79 2224 2223 1 0 3 // Gloves
+text 50 75 491 3
+button 170 79 2224 2223 1 0 4 // Arms
+text 200 75 491 4
+
+[DIALOG d_ring TEXT]
+Ringmail Set Holder
+Chest
+Leggings
+Gloves
+Arms
+
+[DIALOG d_ring BUTTON]
+ON=0
+RETURN 1
+ON=1
+IF !<TAG.CHEST>
+ SRC.NEWITEM i_targ_chest_r
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a chest here.
+ RETURN 1
+ENDIF
+ON=2
+IF !<TAG.LEGGINGS>
+ SRC.NEWITEM i_targ_legs_r
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have leggings here.
+ RETURN 1
+ENDIF
+ON=3
+IF !<TAG.GLOVES>
+ SRC.NEWITEM i_targ_gloves_r
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have gloves here.
+ RETURN 1
+ENDIF
+ON=4
+IF !<TAG.ARMS>
+ SRC.NEWITEM i_targ_arms_r
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have arms here.
+ RETURN 1
+ENDIF
+
+
+[DIALOG d_leather]
+240,250
+resizepic 0 0 5054 290 150 
+resizepic 10 10 3000 270 130  
+text 80 10 431 0
+button 20 54 2224 2223 1 0 1 // Chest
+text 50 50 491 1
+button 170 54 2224 2223 1 0 2 // Leggings
+text 200 50 491 2
+button 20 79 2224 2223 1 0 3 // Gloves
+text 50 75 491 3
+button 170 79 2224 2223 1 0 4 // Gorget
+text 200 75 491 4
+button 20 104 2224 2223 1 0 5 // Arms
+text 50 100 491 5
+
+[DIALOG d_leather TEXT]
+Leather Set Holder
+Chest
+Leggings
+Gloves
+Gorget
+Arms
+
+[DIALOG d_leather BUTTON]
+ON=0
+RETURN 1
+ON=1
+IF !<TAG.CHEST>
+ SRC.NEWITEM i_targ_chest_l
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a chest here.
+ RETURN 1
+ENDIF
+ON=2
+IF !<TAG.LEGGINGS>
+ SRC.NEWITEM i_targ_legs_l
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have leggings here.
+ RETURN 1
+ENDIF
+ON=3
+IF !<TAG.GLOVES>
+ SRC.NEWITEM i_targ_gloves_l
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have gloves here.
+ RETURN 1
+ENDIF
+ON=4
+IF !<TAG.GORGET>
+ SRC.NEWITEM i_targ_gorget_l
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a gorget here.
+ RETURN 1
+ENDIF
+ON=5
+IF !<TAG.ARMS>
+ SRC.NEWITEM i_targ_arms_l
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have arms here.
+ RETURN 1
+ENDIF
+
+
+[DIALOG d_studded]
+240,250
+resizepic 0 0 5054 290 150 
+resizepic 10 10 3000 270 130  
+text 75 10 431 0
+button 20 54 2224 2223 1 0 1 // Chest
+text 50 50 491 1
+button 170 54 2224 2223 1 0 2 // Leggings
+text 200 50 491 2
+button 20 79 2224 2223 1 0 3 // Gloves
+text 50 75 491 3
+button 170 79 2224 2223 1 0 4 // Gorget
+text 200 75 491 4
+button 20 104 2224 2223 1 0 5 // Arms
+text 50 100 491 5
+
+[DIALOG d_studded TEXT]
+Studded Set Holder
+Chest
+Leggings
+Gloves
+Gorget
+Arms
+
+[DIALOG d_studded BUTTON]
+ON=0
+RETURN 1
+ON=1
+IF !<TAG.CHEST>
+ SRC.NEWITEM i_targ_chest_s
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a chest here.
+ RETURN 1
+ENDIF
+ON=2
+IF !<TAG.LEGGINGS>
+ SRC.NEWITEM i_targ_legs_s
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have leggings here.
+ RETURN 1
+ENDIF
+ON=3
+IF !<TAG.GLOVES>
+ SRC.NEWITEM i_targ_gloves_s
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have gloves here.
+ RETURN 1
+ENDIF
+ON=4
+IF !<TAG.GORGET>
+ SRC.NEWITEM i_targ_gorget_s
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a gorget here.
+ RETURN 1
+ENDIF
+ON=5
+IF !<TAG.ARMS>
+ SRC.NEWITEM i_targ_arms_s
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have arms here.
+ RETURN 1
+ENDIF
+
+
+[DIALOG d_bone]
+240,250
+resizepic 0 0 5054 290 150 
+resizepic 10 10 3000 270 130  
+text 85 10 431 0
+button 20 54 2224 2223 1 0 1 // Chest
+text 50 50 491 1
+button 170 54 2224 2223 1 0 2 // Leggings
+text 200 50 491 2
+button 20 79 2224 2223 1 0 3 // Gloves
+text 50 75 491 3
+button 170 79 2224 2223 1 0 4 // Gorget
+text 200 75 491 4
+button 20 104 2224 2223 1 0 5 // Arms
+text 50 100 491 5
+
+[DIALOG d_bone TEXT]
+Bone Set Holder
+Chest
+Leggings
+Gloves
+Helmet
+Arms
+
+[DIALOG d_bone BUTTON]
+ON=0
+RETURN 1
+ON=1
+IF !<TAG.CHEST>
+ SRC.NEWITEM i_targ_chest_b
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a chest here.
+ RETURN 1
+ENDIF
+ON=2
+IF !<TAG.LEGGINGS>
+ SRC.NEWITEM i_targ_legs_b
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have leggings here.
+ RETURN 1
+ENDIF
+ON=3
+IF !<TAG.GLOVES>
+ SRC.NEWITEM i_targ_gloves_b
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have gloves here.
+ RETURN 1
+ENDIF
+ON=4
+IF !<TAG.HELMET>
+ SRC.NEWITEM i_targ_helmet_b
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have a helmet here.
+ RETURN 1
+ENDIF
+ON=5
+IF !<TAG.ARMS>
+ SRC.NEWITEM i_targ_arms_b
+ SRC.ACT.EQUIP
+ RETURN 1
+ELSE
+ SRC.SYSMESSAGE You already have arms here.
+ RETURN 1
+ENDIF
+
+
+[ITEMDEF i_targ_chest_p]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the chest you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01415)
+  SRC.FINDID.i_deed_holder.TAG.CHEST=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME1=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR1=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_plate
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That is not a platemail chest.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_chest_c]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the chest you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013bf)
+  SRC.FINDID.i_deed_holder.TAG.CHEST=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME1=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR1=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_chain
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That is not a chainmail chest.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_chest_r]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the chest you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013ec)
+  SRC.FINDID.i_deed_holder.TAG.CHEST=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME1=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR1=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_ring
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That is not a ringmail chest.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_chest_l]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the chest you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013cc)
+  SRC.FINDID.i_deed_holder.TAG.CHEST=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME1=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR1=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_leather
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That is not a leather chest.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_chest_s]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the chest you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013db)
+  SRC.FINDID.i_deed_holder.TAG.CHEST=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME1=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR1=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_studded
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That is not a studded leather chest.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_chest_b]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the chest you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==0144f)
+  SRC.FINDID.i_deed_holder.TAG.CHEST=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME1=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR1=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_bone
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That is not a bone chest.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_legs_p]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the leggings you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01411)
+  SRC.FINDID.i_deed_holder.TAG.LEGGINGS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME2=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR2=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_plate
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't platemail leggings.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_legs_c]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the leggings you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013be)
+  SRC.FINDID.i_deed_holder.TAG.LEGGINGS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME2=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR2=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_chain
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't chainmail leggings.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_legs_r]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the leggings you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013f0)
+  SRC.FINDID.i_deed_holder.TAG.LEGGINGS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME2=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR2=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_ring
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't ringmail leggings.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_legs_l]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the leggings you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013cb)
+  SRC.FINDID.i_deed_holder.TAG.LEGGINGS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME2=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR2=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_leather
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't leather leggings.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_legs_s]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the leggings you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013da)
+  SRC.FINDID.i_deed_holder.TAG.LEGGINGS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME2=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR2=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_studded
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't studded leather leggings.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_legs_b]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the leggings you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01452)
+  SRC.FINDID.i_deed_holder.TAG.LEGGINGS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME2=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR2=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_bone
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't bone leggings.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_coif_c]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the coif you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013bb)
+  SRC.FINDID.i_deed_holder.TAG.COIF=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME3=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR3=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_chain
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That isnt a chainmail coif.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_gloves_p]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the gloves you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01414)
+  SRC.FINDID.i_deed_holder.TAG.GLOVES=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME3=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR3=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_plate
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't platemail gloves.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_gloves_r]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the gloves you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013eb)
+  SRC.FINDID.i_deed_holder.TAG.GLOVES=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME3=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR3=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_ring
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't ringmail gloves.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_gloves_l]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the gloves you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013c6)
+  SRC.FINDID.i_deed_holder.TAG.GLOVES=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME3=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR3=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_leather
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't leather gloves.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_gloves_s]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the gloves you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013d5)
+  SRC.FINDID.i_deed_holder.TAG.GLOVES=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME3=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR3=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_studded
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't studded leather gloves.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_gloves_b]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the gloves you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01450)
+  SRC.FINDID.i_deed_holder.TAG.GLOVES=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME3=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR3=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_bone
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't bone gloves.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_gorget_p]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the gorget you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01413)
+  SRC.FINDID.i_deed_holder.TAG.GORGET=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME4=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR4=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_plate
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That isnt a platemail gorget.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_gorget_l]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the gorget you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013c7)
+  SRC.FINDID.i_deed_holder.TAG.GORGET=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME4=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR4=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_leather
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That isnt a leather gorget.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_gorget_s]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the gorget you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013d6)
+  SRC.FINDID.i_deed_holder.TAG.GORGET=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME4=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR4=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_studded
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That isnt a studded leather gorget.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_helmet_p]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the helmet you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01412)
+  SRC.FINDID.i_deed_holder.TAG.HELMET=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME5=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR5=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_plate
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That isnt a platemail helmet.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_helmet_b]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the helmet you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01451)
+  SRC.FINDID.i_deed_holder.TAG.HELMET=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME4=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR4=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_bone
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE That isnt a bone helmet.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_arms_p]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the arms you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==01410)
+  SRC.FINDID.i_deed_holder.TAG.ARMS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME6=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR6=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_plate
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't platemail arms.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_arms_r]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the arms you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013ee)
+  SRC.FINDID.i_deed_holder.TAG.ARMS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME4=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR4=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_ring
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't ringmail arms.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_arms_l]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the arms you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013c5)
+  SRC.FINDID.i_deed_holder.TAG.ARMS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME5=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR5=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_leather
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't leather arms.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_arms_s]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the arms you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==013d4)
+  SRC.FINDID.i_deed_holder.TAG.ARMS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME5=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR5=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_studded
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't studded leather arms.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1
+
+[ITEMDEF i_targ_arms_b]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS
+
+ON=@EQUIP
+TARGET Target the arms you want to use.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>=<SRC.UID>) 
+ IF (<EVAL <SRC.TARG.ID>>==0144e)
+  SRC.FINDID.i_deed_holder.TAG.ARMS=<SRC.TARG.ID>
+  SRC.FINDID.i_deed_holder.TAG.NAME5=<SRC.TARG.NAME>
+  SRC.FINDID.i_deed_holder.TAG.COLOR5=<SRC.TARG.COLOR>
+  SRC.FINDID.i_deed_holder.TAG.FINISHED=<EVAL <SRC.FINDID.i_deed_holder.TAG.FINISHED>>+1
+  SRC.TARG.REMOVE
+  DIALOG d_bone
+  RETURN 1
+ ELSE
+  SRC.SYSMESSAGE Those aren't bone arms.
+  RETURN 1
+ ENDIF
+ELSE
+ SRC.SYSMESSAGE The item needs to be in you backpack.
+ RETURN 1
+ENDIF
+
+ON=@TARGON_GROUND
+RETURN 1
+
+ON=@TARGON_CHAR
+RETURN 1

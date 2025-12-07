@@ -1,0 +1,175 @@
+//################################################################
+//##		kAMIKAZE npc Made by Freezor			##
+//##	   This script is simple but is funny useful for	##
+//##		Some kind of quests. ENJOY!			##
+//################################################################
+
+[chardef c_kamikaze]
+name=#NAMES_HUMANMALE
+id=c_man
+ICON=i_barrel
+CAN=MT_WALK|MT_FLY|MT_RUN
+armor=40
+
+on=@create
+NPC=brain_monster
+title=The Suicide
+tag.tnombre=<name>
+name=<name> the Kamikaze
+karma=-11000
+color=083ea
+str=180
+dex=1000
+int=10
+tactics=100.0
+wrestling=100.0
+magicresistance=100.0
+itemnewbie=i_bandana
+color=38
+itemnewbie=i_pants_short
+color={1 1 0481 1}
+
+on=@npcrestock
+ITEM=i_powder_keg,R15
+ITEM=i_fuse,R10
+ITEM=i_reag_sulfur_ash,25
+
+on=@npcseenewplayer
+message KAMIKAZEEEEEE!!
+
+on=@hit
+if (<src.hits> < (<src.str>/3))
+src.EFFECT=0,0,10,15,1
+sound=011d
+newitem=i_taliban_blood2
+act.timer=40
+act.name=<tag.tnombre>'s blood
+act.p=<p>
+newitem=i_taliban_blood1
+act.name=<tag.tnombre>'s blood
+act.timer=40
+act.p=<p>
+act.move nw
+newitem=i_taliban_brain
+act.name=<tag.tnombre>'s brain
+act.timer=40
+act.p=<p>
+act.move n
+newitem=i_taliban_legs
+act.timer=40
+act.name=<tag.tnombre>'s legs
+act.p=<p>
+act.move se
+newitem=i_taliban_torso
+act.timer=40
+act.name=<tag.tnombre>'s torso
+act.p=<p>
+act.move w
+if (<src.npc><>0)
+body=c_man_invisible
+suicide
+remove
+else
+remove
+endif
+src.suicide
+return 0
+else
+src.EFFECT=0,0,8,10,1
+sound=011d
+newitem=i_taliban_blood2
+act.timer=40
+act.name=<tag.tnombre>'s blood
+act.p=<p>
+newitem=i_taliban_blood1
+act.name=<tag.tnombre>'s blood
+act.timer=40
+act.p=<p>
+act.move nw
+newitem=i_taliban_brain
+act.name=<tag.tnombre>'s brain
+act.timer=40
+act.p=<p>
+act.move n
+newitem=i_taliban_legs
+act.timer=40
+act.name=<tag.tnombre>'s legs
+act.p=<p>
+act.move se
+newitem=i_taliban_torso
+act.timer=40
+act.name=<tag.tnombre>'s torso
+act.p=<p>
+act.move w
+if (<src.npc><>0)
+body=c_man_invisible
+suicide
+remove
+else
+remove
+endif
+src.hits=<src.hits>+(-(<src.str>/3))
+return 0
+endif
+
+
+
+[itemdef i_taliban_torso]
+name=Torso of Musulman
+id=i_flesh_torso_3
+type=t_normal
+
+on=@create
+attr=0012
+
+on=@timer
+remove
+sector.update
+
+[itemdef i_taliban_brain]
+name=Brain of Musulman
+id=i_flesh_brain
+type=t_normal
+
+on=@create
+attr=0012
+
+on=@timer
+remove
+sector.update
+
+[itemdef i_taliban_legs]
+name=Legs of Musulman
+id=i_flesh_legs_5
+type=t_normal
+
+on=@create
+attr=0012
+
+on=@timer
+remove
+sector.update
+
+[itemdef i_taliban_blood1]
+name=blood
+id=0122d
+type=t_normal
+
+on=@create
+attr=0012
+
+on=@timer
+remove
+sector.update
+
+[itemdef i_taliban_blood2]
+name=blood
+id=i_blood_pool_large
+type=t_normal
+
+on=@create
+attr=0012
+
+on=@timer
+remove
+sector.update

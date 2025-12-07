@@ -1,0 +1,671 @@
+/////////////////////////////////////////////////////////////
+//Scripted by Exercisto
+//Insta-Heal potions were pissing me off, so I rescripted em.
+//Leave the banner pls.
+/
+
+[PLEVEL 0]
+POTION
+
+[FUNCTION POTION]
+IF !(STRCMPI(<ARGS>,?)
+SRC.SYSMESSAGE @0a5a  Explanation:
+SRC.SYSMESSAGE @07ad  Type .potion [potion name] to use this.
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE @0a5a  Example:
+SRC.SYSMESSAGE @07ad  .potion Bargain Restore Health
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Bargain Restore Health)
+FINDID.P_RESTORE_HEALTH_B.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Cheap Restore Health)
+FINDID.P_RESTORE_HEALTH_C.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Standard Restore Health)
+FINDID.P_RESTORE_HEALTH_S.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Quality Restore Health)
+FINDID.P_RESTORE_HEALTH_Q.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Exclusive Restore Health)
+FINDID.P_RESTORE_HEALTH_E.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Bargain Restore Mana)
+FINDID.P_RESTORE_MANA_B.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Cheap Restore Mana)
+FINDID.P_RESTORE_MANA_C.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Standard Restore Mana)
+FINDID.P_RESTORE_MANA_S.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Quality Restore Mana)
+FINDID.P_RESTORE_MANA_Q.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Exclusive Restore Mana)
+FINDID.P_RESTORE_MANA_E.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Bargain Restore Stamina)
+FINDID.P_RESTORE_STAMINA_B.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Cheap Restore Stamina)
+FINDID.P_RESTORE_STAMINA_C.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Standard Restore Stamina)
+FINDID.P_RESTORE_STAMINA_S.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Quality Restore Stamina)
+FINDID.P_RESTORE_STAMINA_Q.DCLICK
+RETURN 1
+
+ELIF !(STRCMPI(<ARGS>,Exclusive Restore Stamina)
+FINDID.P_RESTORE_STAMINA_E.DCLICK
+RETURN 1
+
+[ITEMDEF e_heal]
+id=i_memory
+name=Heal Effect
+type=t_eq_script
+
+ON=@CREATE
+TAG.REMOVE=0
+
+ON=@EQUIP
+TIMER=2
+
+ON=@UNEQUIP
+TIMER=-1
+
+ON=@TIMER
+IF <TAG.REMOVE>==5
+remove
+endif
+
+IF <CONT.HITS><<CONT.STR>
+CONT.HITS=<CONT.HITS>+<MORE>
+TAG.REMOVE=<TAG.REMOVE>+1
+TIMER=2
+RETURN 1
+
+ELSE
+TAG.REMOVE=<TAG.REMOVE>+1
+TIMER=2
+RETURN 1
+ENDIF
+
+[ITEMDEF e_mana]
+id=i_memory
+name=Mana Effect
+type=t_eq_script
+
+ON=@CREATE
+TAG.REMOVE=0
+
+ON=@EQUIP
+TIMER=2
+
+ON=@UNEQUIP
+TIMER=-1
+
+ON=@TIMER
+IF <TAG.REMOVE>==5
+remove
+endif
+
+IF <CONT.MANA><<CONT.INT>
+CONT.MANA=<CONT.MANA>+<MORE>
+TAG.REMOVE=<TAG.REMOVE>+1
+TIMER=2
+RETURN 1
+
+ELSE
+TAG.REMOVE=<TAG.REMOVE>+1
+TIMER=2
+RETURN 1
+ENDIF
+
+[ITEMDEF e_stamina]
+id=i_memory
+name=Stamina Effect
+type=t_eq_script
+
+ON=@CREATE
+TAG.REMOVE=0
+
+ON=@EQUIP
+TIMER=2
+
+ON=@UNEQUIP
+TIMER=-1
+
+ON=@TIMER
+IF <TAG.REMOVE>==5
+remove
+endif
+
+IF <CONT.STAM><<CONT.DEX>
+CONT.STAM=<CONT.STAM>+<MORE>
+TAG.REMOVE=<TAG.REMOVE>+1
+TIMER=2
+RETURN 1
+
+ELSE
+TAG.REMOVE=<TAG.REMOVE>+1
+TIMER=2
+RETURN 1
+ENDIF
+
+[ITEMDEF e_timer]
+id=i_memory
+name=Potion Timer
+type=t_eq_script
+
+on=@create
+timer=10
+
+on=@timer
+remove
+return 0
+
+//Health Restore Potion
+
+[ITEMDEF p_restore_health_b]
+NAME=Bargain Restore Health
+ID=0f0e
+RESOURCES=i_reag_ginseng 1, i_bottle_empty
+SKILLMAKE=ALCHEMY 10.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00037
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion that fast.
+return 1
+endif
+
+src.consume 1 p_restore_health_b
+src.newitem=e_heal
+src.act.more={1 4}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_health_c]
+NAME=Cheap Restore Health
+ID=0f0e
+RESOURCES=i_reag_ginseng 2, i_bottle_empty
+SKILLMAKE=ALCHEMY 25.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00037
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion that fast.
+return 1
+endif
+
+src.consume 1 p_restore_health_c
+src.newitem=e_heal
+src.act.more={3 6}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_health_s]
+NAME=Standard Restore Health
+ID=0f0e
+RESOURCES=i_reag_ginseng 3, i_bottle_empty
+SKILLMAKE=ALCHEMY 50.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00037
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_health_s
+src.newitem=e_heal
+src.act.more={5 8}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_health_q]
+NAME=Quality Restore Health
+ID=0f0e
+RESOURCES=i_reag_ginseng 4, i_bottle_empty
+SKILLMAKE=ALCHEMY 75.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00037
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_health_q
+src.newitem=e_heal
+src.act.more={7 10}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_health_e]
+NAME=Exclusive Restore Health
+ID=0f0e
+RESOURCES=i_reag_ginseng 5, i_bottle_empty
+SKILLMAKE=ALCHEMY 100.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00037
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_health_e
+src.newitem=e_heal
+src.act.more={9 12}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+
+// Mana Restore Potions
+
+[ITEMDEF p_restore_mana_b]
+NAME=Bargain Restore Mana
+ID=0f0e
+RESOURCES=i_reag_eye_of_newt 1, i_bottle_empty
+SKILLMAKE=ALCHEMY 10.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00004
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion that fast.
+return 1
+endif
+
+src.consume 1 p_restore_mana_b
+src.newitem=e_heal
+src.act.more={1 4}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_mana_c]
+NAME=Cheap Restore Mana
+ID=0f0e
+RESOURCES=i_reag_eye_of_newt 2, i_bottle_empty
+SKILLMAKE=ALCHEMY 25.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00004
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion that fast.
+return 1
+endif
+
+src.consume 1 p_restore_mana_c
+src.newitem=e_heal
+src.act.more={3 6}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_mana_s]
+NAME=Standard Restore Mana
+ID=0f0e
+RESOURCES=i_reag_eye_of_newt 3, i_bottle_empty
+SKILLMAKE=ALCHEMY 50.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00004
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_mana_s
+src.newitem=e_heal
+src.act.more={5 8}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_mana_q]
+NAME=Quality Restore Mana
+ID=0f0e
+RESOURCES=i_reag_eye_of_newt 4, i_bottle_empty
+SKILLMAKE=ALCHEMY 75.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00004
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_mana_q
+src.newitem=e_heal
+src.act.more={7 10}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_mana_e]
+NAME=Exclusive Restore Mana
+ID=0f0e
+RESOURCES=i_reag_eye_of_newt 5, i_bottle_empty
+SKILLMAKE=ALCHEMY 100.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00004
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_mana_e
+src.newitem=e_heal
+src.act.more={9 12}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+//Stamine Restore Potions
+
+[ITEMDEF p_restore_stamina_b]
+NAME=Bargain Restore Stamina
+ID=0f0e
+RESOURCES=i_reag_black_pearl 1, i_bottle_empty
+SKILLMAKE=ALCHEMY 10.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00021
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion that fast.
+return 1
+endif
+
+src.consume 1 p_restore_stamina_b
+src.newitem=e_heal
+src.act.more={1 4}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_stamina_c]
+NAME=Cheap Restore Stamina
+ID=0f0e
+RESOURCES=i_reag_black_pearl 2, i_bottle_empty
+SKILLMAKE=ALCHEMY 25.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00021
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion that fast.
+return 1
+endif
+
+src.consume 1 p_restore_stamina_c
+src.newitem=e_heal
+src.act.more={3 6}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_stamina_s]
+NAME=Standard Restore Stamina
+ID=0f0e
+RESOURCES=i_reag_black_pearl 3, i_bottle_empty
+SKILLMAKE=ALCHEMY 50.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00021
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_stamina_s
+src.newitem=e_heal
+src.act.more={5 8}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_stamina_q]
+NAME=Quality Restore Stamina
+ID=0f0e
+RESOURCES=i_reag_black_pearl 4, i_bottle_empty
+SKILLMAKE=ALCHEMY 75.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00021
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_stamina_q
+src.newitem=e_heal
+src.act.more={7 10}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[ITEMDEF p_restore_stamina_e]
+NAME=Exclusive Restore Stamina
+ID=0f0e
+RESOURCES=i_reag_black_pearl 5, i_bottle_empty
+SKILLMAKE=ALCHEMY 100.0
+TYPE=T_POTION
+
+ON=@Create
+COLOR=00021
+
+on=@dclick
+if <cont.uid>!=<src.findlayer(21).uid> 
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You must have this on you to use.
+return 1
+endif
+
+if <src.findid.e_timer>
+src.sysmessage @0a5a  Error:
+src.sysmessage @07ad  You cannot use another potion this fast.
+return 1
+endif
+
+src.consume 1 p_restore_stamina_e
+src.newitem=e_heal
+src.act.more={9 12}
+src.act.equip
+src.newitem=e_timer
+src.act.equip
+src.newitem=0f0e
+src.act.bounce
+
+[EOF]

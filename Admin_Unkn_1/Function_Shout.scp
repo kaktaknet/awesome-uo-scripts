@@ -1,0 +1,25 @@
+//Scripted By Admin Remedy
+//Shout System
+//Install Notes: none
+
+[PLEVEL 0]
+shout
+
+[FUNCTION shout]
+IF (<ACCOUNT.JAIL>)
+	SRC.SYSMESSAGE You cannot use this command here
+	RETURN 1
+ENDIF
+VAR.SHOUTER <SRC.NAME>
+IF (<ISGM>) || (0<TAG.SEER>==1) //set '.set tag.seer 1' on Seers to talk in green
+	VAR.SHOUTCOLOR 0ad //shout green ? check your hues.mul
+	SRC.SHOUTUA <ARGS>
+ELSE
+	VAR.SHOUTCOLOR 0790 //shout white ? check your hues.mul
+	SRC.SHOUTUA <ARGS>
+ENDIF
+
+[FUNCTION shoutua]
+SRC.SAYUA <VAR.SHOUTCOLOR> 0FF 0 1 <ARGS>
+SRC.SAYUA <VAR.SHOUTCOLOR> 0 0 1 <ARGS>
+[EOF]

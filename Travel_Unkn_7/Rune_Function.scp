@@ -1,0 +1,116 @@
+//////////////////////////
+//// Runic Tele Stone ////
+//////////////////////////
+
+//Created by Warpe– Dragon
+//http://warped.ods.org
+//warped_dragon@hotmail.com
+
+//Please don't remove this header//
+
+//For use with Amlaruils Rune Chamber system.
+
+//INSTALLATION: Just drop this in your script directory, resync server.
+//USEAGE: Use .rune to create a crystal, after a set number of seconds it becomes active, and you can click it to go to the rune chamber. After another set number of seconds, it dissapperes.
+
+//Change the options at the top to suit your needs.
+
+//**IMPORTENT!! Remember to change the .go command on line 84 to the coordinates of your rune chamber**//
+
+//If you have problems, suggestions or questions about this script,
+//please don't hesitate to email me.
+
+//Have fun!
+
+[DEFNAME Shapeshifter_Book_Options]
+//0 = off, 1 = on
+RCF_opt_Time_Active=100		//Time before crystal activates.
+RCF_opt_Time_Remove=10		//Time after activation before crystal is removed.
+RCF_opt_Require_Gold=1		//Sets whether or not you need to pay to use it.
+RCF_opt_Gold_Amount=500		//Amount of gold needed to use it. Only used if Require_Gold is on.
+
+
+[PLEVEL 1]
+//Let players use this function
+rune
+
+[FUNCTION rune]
+//Checks to see if the tag exists on the player
+//Just prevents Undefinded Symbol errors on console
+IF (0<SRC.TAG.RCUsed> == 0)
+	SRC.TAG.RCUsed=0
+ENDIF
+
+//Checks to see if player already has an existing crystal
+IF (<SRC.TAG.RCUsed> == 0)
+	SRC.NEWITEM i_rune_crystal
+	SRC.ACT.BOUNCE
+	SRC.ACT.DROP
+	SRC.ACT.LINK=<SRC.UID>	//Links the player to the crystal. Very Importent for SRC.TAG.RCUsed tag.
+	SRC.ACT.SAY Crystal will be active in <EVAL RCF_opt_Time_Active> seconds
+	SRC.TAG.RCUsed=1
+	RETURN 1
+ELSEIF (<SRC.TAG.RCUsed> == 1)
+	SRC.SYSMESSAGE You may only place one at a time!
+ELSE
+	SRC.SYSMESSAGE You may only place one at a time!
+ENDIF
+RETURN 1
+
+[ITEMDEF i_rune_crystal]
+ID=i_crystal_green_big
+NAME=Crystal of Runic Travel
+TYPE=t_script
+
+ON=@CREATE
+TAG.Useable=0				//Tag for if crystal is active. 1 = On, 0 = Off
+TAG.Engage=<EVAL RCF_opt_Time_Active>	//Tag for seconds before crystal is activated.
+ATTR=attr_move_never
+TIMER=1
+
+ON=@DCLICK
+IF (<TAG.Useable> == 1)
+	IF (<EVAL RCF_opt_Require_Gold> == 1)
+		IF (<SRC.FINDLAYER(layer_pack).RESCOUNT i_gold> < <EVAL RCF_opt_Gold_Amount>)
+			SRC.SYSMESSAGE You lack the required gold!
+		ELSE
+			SRC.CONSUME <EVAL RCF_opt_Gold_Amount> i_gold
+		ENDIF
+	ENDIF
+
+	SRC.SYSMESSAGE The crystal flares at your touch and you are teleported away
+	
+	//**THIS IS WHAT YOU NEED TO CHANGE!**//
+	SRC.GO 5290,1807,1	//Change coordanates to wherever the rune chamber is on your shard
+	//**THIS IS WHAT YOU NEED TO CHANGE!**//
+
+	RETURN 0
+	ENDIF
+ELSE
+	SRC.SYSMESSAGE The crystal is unresponsive to your touch
+	RETURN 0
+ENDIF
+
+ON=@TIMER
+
+//Counts down and displays seconds left
+SAY <EVAL(<TAG.Engage>)>
+TAG.Engage=<TAG.Engage>-1
+
+IF ((<TAG.Engage> == 0) && (<TAG.Useable> == 0))
+	//Activates the crystal. Sets time to removal
+	TAG.Useable=1
+	SAY Crystal is active! <EVAL RCF_opt_Time_Remove> Seconds before deactivation!
+	TAG.Engage=<EVAL RCF_opt_Time_Remove>	//Time before crystal dissaperes
+
+ELSEIF ((<TAG.Engage> == 0) && (<TAG.Useable> == 1))
+	//Removes crystal. ALlows player to place another one.
+	LINK.TAG.RCUsed=0
+	LINK.SYSMESSAGE You can now place another rune crystal
+	REMOVE
+ENDIF
+//Restarts Timer
+TIMER=1
+RETURN 1
+
+[EOF]

@@ -1,0 +1,29 @@
+// Scripted by Exercisto
+
+// Simple script, but a must for all the geeks UO seems to have gathered.
+
+[EVENTS E_NOHIT]
+
+ON=@HIT
+SRC.EMOTE was poked by <NAME>
+RETURN 1
+
+ON=@DAMAGE
+SRC.EMOTE was poked by <NAME>
+RETURN 1
+
+[ITEMDEF I_POKE_STICK]
+ID=I_CLUB
+NAME=Poking Stick
+WEIGHT=10 // Speed, 1 = Super Fast, 100 = Super Slow. I put it to 10 coz I don't want the poke msg spammed.
+VALUE=1
+
+ON=@CREATE
+COLOR=0793
+HITPOINTS=200
+
+ON=@EQUIP
+SRC.EVENTS +E_NOHIT
+
+ON=@UNEQUIP
+SRC.EVENTS -E_NOHIT

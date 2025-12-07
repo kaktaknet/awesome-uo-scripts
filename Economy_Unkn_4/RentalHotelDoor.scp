@@ -1,0 +1,90 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+[DEFNAME Rental_hotel_door_Settings] 
+payment_delay 604800 
+payment_cost 500 
+
+[ITEMDEF i_door_hotel]
+id=06e5
+name=Hotel Door
+type=t_script
+
+ON=@DCLICK 
+IF (<LINK>==04FFFFFFF) 
+SRC.TAG.CHEST=<UID> 
+SRC.DIALOG d_rent_hotel 
+ELSEIF (<SRC.UID>==<LINK>) 
+VAR.TIME=<EVAL (<TIMER>/86400)> 
+SRC.SYSMESSAGE You have <EVAL <VAR.TIME>> days left before paying for your room. 
+if (<dispid>==i_door_wood_3)
+dispid=06e6
+move -1,1
+else
+dispid=06e5
+move 1,-1
+endif
+ELSE 
+SRC.SYSMESSAGE This room is already rented. 
+ENDIF 
+RETURN 1 
+
+on=@timer
+VAR.TOTALGOLD=<LINK.FINDLAYER(layer_bankbox).RESCOUNT i_gold>+<LINK.FINDLAYER(layer_pack).RESCOUNT i_gold> 
+IF (<VAR.TOTALGOLD><<EVAL (payment_cost)>) 
+LINK=04FFFFFFF 
+NAME=Hotel Door 
+ELSE 
+LINK.ACT=<LINK.FINDLAYER(layer_bankbox).UID> 
+LINK.ACT.LAYER=layer_pack 
+LINK.ACT.TYPE=t_container 
+LINK.ACT.EQUIP 
+LINK.CONSUME <EVAL (payment_cost)> i_gold 
+LINK.ACT.LAYER=layer_bankbox 
+LINK.ACT.TYPE=t_eq_bank_box 
+LINK.ACT.EQUIP 
+TIMER=<EVAL (payment_delay)> 
+ENDIF 
+RETURN 1 
+
+[ITEMDEF i_door_hotel_unrent]
+id=i_crystal_green
+NAME=Unrent your hotel door
+
+on=@dclick
+LINK.LINK=04FFFFFFF 
+LINK.NAME=Hotel Door 
+REMOVE
+RETURN 1
+
+[DIALOG d_rent_hotel] 
+300,150 
+page 0 
+resizepic 0 0 2620 375 150 
+text 40 20 1000 0 
+text 150 100 1000 1 
+text 200 100 1000 2 
+button 135 105 2104 2103 1 0 1 
+button 225 105 2104 2103 1 0 0 
+
+[DIALOG d_rent_hotel TEXT] 
+Do you really wish to rent this room? 
+Yes 
+No 
+
+[DIALOG d_rent_hotel BUTTON] 
+ONBUTTON=1 
+VAR.TOTALGOLD=<SRC.FINDLAYER(layer_bankbox).RESCOUNT i_gold>+<SRC.FINDLAYER(layer_pack).RESCOUNT i_gold> 
+IF (<VAR.TOTALGOLD><<EVAL (payment_cost)>) 
+SRC.MESSAGE You do not have enough gold to rent a room. 
+RETURN 1 
+ELSE 
+SRC.CONSUMEBANK <EVAL (payment_cost)> i_gold 
+TRY UID.<SRC.TAG.CHEST>.LINK=<SRC.UID> 
+TRY UID.<SRC.TAG.CHEST>.TIMER=<EVAL (payment_delay)> 
+TRY UID.<SRC.TAG.CHEST>.NAME=<SRC.NAME>'s Hotel Room 
+NEWITEM=i_door_hotel_unrent
+ACT.LINK=<SRC.TAG.CHEST>
+ACT.BOUNCE
+ENDIF

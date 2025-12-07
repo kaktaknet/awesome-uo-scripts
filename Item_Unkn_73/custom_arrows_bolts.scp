@@ -1,0 +1,258 @@
+[comment on this script]
+made for Sphere.55R4.0.2 by Moe
+v0.2
+This is another script about custom arrows and bolts. 
+The difference is, that it is easy to extend (no need to script dozens of bows, no further events needed).
+Special effects of arrows/bolts are scripted directly into the arrows/bolts.
+It works with all bows/crossbows that use standard ammunition. It doesn't interfere with other weapons.
+Arrows/bolts that appear on ground or in backpack after a shot are standard ammunition.
+
+Usage:
+Custom arrows must have type T_ARROW_CUSTOM.
+Custom crossbow bolts must have type T_XBOLT_CUSTOM.
+Special effects are added under @SPECIAL_EFFECT_HIT and @SPECIAL_EFFECT_HITMISS.
+In both triggers SRC is the char that is hit. LINK is the char that does the hitting.
+Examples on custom arrows/bolts can be found at the end.
+
+
+
+[defname arrow_sysmessages]
+use_arrow=You now use
+standard_arrow=You now use normal arrows
+use_xbolt=You now use
+standard_xbolt=You now use normal bolts
+layer_custom_arrow=54 //an unused layer
+
+
+[typedef t_arrow_custom]
+on=@dclick
+src.tag.custom_arrow=<baseid>
+src.events +e_arrow_custom
+src.message <var.use_arrow> <name>
+src.action=-1
+return 1
+
+
+[events e_arrow_custom]
+on=@itemdclick
+if (<act.baseid>==i_arrow)
+	events -e_arrow_custom
+	tag.custom_arrow=
+	message <var.standard_arrow>
+	findlayer.layer_custom_arrow.remove
+	return 1
+endif
+
+on=@itemunequip
+if (<act.baseid>==i_arrow)&&(<action>==skill_archery)
+	f_set_arrow
+elseif (<act.typedef.type>==t_weapon_bow)&&(<act.tdata3>==i_arrow)
+	events -e_arrow_custom
+	tag.custom_arrow=
+	message <var.standard_arrow>
+	findlayer.layer_custom_arrow.remove
+endif
+
+on=@skillstart
+if (<action>==skill_archery)&&((<findlayer.2.typedef.type>==t_weapon_bow)||(<findlayer.2.typedef.type>==15))&&(<findlayer.2.tdata3>==i_arrow)
+			if !(<findlayer.layer_custom_arrow.baseid>==i_arrow)
+				if !<f_set_arrow>
+					events -e_arrow_custom
+					tag.custom_arrow=
+					message <var.standard_arrow>
+					action=-1
+					return 1
+				endif
+			endif
+		endif
+	endif
+endif
+
+on=@hit
+if (<action>==skill_archery)&&((<findlayer.2.typedef.type>==t_weapon_bow)||(<findlayer.2.typedef.type>==15))&&(<findlayer.2.tdata3>==i_arrow)
+	if <f_consume_arrow>
+		f_sac_trigger_arrow @special_effect_hit
+	else
+		return 1
+	endif
+endif
+
+on=@hitmiss
+if (<action>==skill_archery)&&((<findlayer.2.typedef.type>==t_weapon_bow)||(<findlayer.2.typedef.type>==15))&&(<findlayer.2.tdata3>==i_arrow)
+	if <f_consume_arrow>
+		f_sac_trigger_arrow @special_effect_hitmiss
+	else
+		return 1
+	endif
+endif
+
+
+[function f_set_arrow]
+if (!<restest <tag.custom_arrow>>)
+	return 0
+endif
+serv.newitem i_memory
+serv.lastnewitem.cont=<uid>
+serv.lastnewitem.layer=layer_custom_arrow
+serv.lastnewitem.id=i_arrow
+serv.lastnewitem.attr=02
+serv.lastnewitem.timer=5
+return 1
+
+
+[function f_consume_arrow]
+if (!<restest <tag.custom_arrow>>)
+	action=-1
+	return 0
+else
+	consume <tag.custom_arrow>
+	return 1
+endif
+
+
+[function f_sac_trigger_arrow]
+serv.newitem i_memory
+serv.lastnewitem.cont=<src.uid>
+serv.lastnewitem.layer=layer_custom_arrow
+serv.lastnewitem.id=<tag.custom_arrow>
+serv.lastnewitem.link=<uid>
+serv.lastnewitem.trigger <args>
+serv.lastnewitem.remove
+var.act=
+
+
+[typedef t_xbolt_custom]
+on=@dclick
+src.tag.custom_xbolt=<baseid>
+src.events +e_xbolt_custom
+src.message <var.use_xbolt> <name>
+src.action=-1
+return 1
+
+
+[events e_xbolt_custom]
+on=@itemdclick
+if (<act.baseid>==i_xbolt)
+	events -e_xbolt_custom
+	tag.custom_xbolt=
+	message <var.standard_xbolt>
+	findlayer.layer_custom_arrow.remove
+	return 1
+endif
+
+on=@itemunequip
+if (<act.baseid>==i_xbolt)&&(<action>==skill_archery)
+	f_set_xbolt
+elseif (<act.typedef.type>==t_weapon_bow)&&(<act.tdata3>==i_xbolt)
+	events -e_xbolt_custom
+	tag.custom_xbolt=
+	message <var.standard_xbolt>
+	findlayer.layer_custom_arrow.remove
+endif
+
+on=@skillstart
+if (<action>==skill_archery)&&((<findlayer.2.typedef.type>==t_weapon_bow)||(<findlayer.2.typedef.type>==15))&&(<findlayer.2.tdata3>==i_xbolt)
+	if !(<findlayer.layer_custom_arrow.baseid>==i_xbolt)
+		if !<f_set_xbolt>
+			events -e_xbolt_custom
+			tag.custom_xbolt=
+			message <var.standard_xbolt>
+			action=-1
+			return 1
+		endif
+	endif
+endif
+
+on=@hit
+if (<action>==skill_archery)&&((<findlayer.2.typedef.type>==t_weapon_bow)||(<findlayer.2.typedef.type>==15))&&(<findlayer.2.tdata3>==i_xbolt)
+	if <f_consume_xbolt>
+		f_sac_trigger_xbolt @special_effect_hit
+	else
+		return 1
+	endif
+endif
+
+on=@hitmiss
+if (<action>==skill_archery)&&(<findlayer.2.typedef.type>==t_weapon_bow)&&(<findlayer.2.tdata3>==i_xbolt)
+	if <f_consume_xbolt>
+		f_sac_trigger_xbolt @special_effect_hitmiss
+	else
+		return 1
+	endif
+endif
+
+
+[function f_set_xbolt]
+if (!<restest <tag.custom_xbolt>>)
+	return 0
+endif
+serv.newitem i_memory
+serv.lastnewitem.cont=<uid>
+serv.lastnewitem.layer=layer_custom_arrow
+serv.lastnewitem.id=i_xbolt
+serv.lastnewitem.attr=02
+serv.lastnewitem.timer=5
+return 1
+
+
+[function f_consume_xbolt]
+if (!<restest <tag.custom_xbolt>>)
+	action=-1
+	return 0
+else
+	consume <tag.custom_xbolt>
+	return 1
+endif
+
+
+[function f_sac_trigger_xbolt]
+serv.newitem i_memory
+serv.lastnewitem.cont=<src.uid>
+serv.lastnewitem.layer=layer_custom_arrow
+serv.lastnewitem.id=<tag.custom_xbolt>
+serv.lastnewitem.link=<uid>
+serv.lastnewitem.trigger <args>
+serv.lastnewitem.remove
+var.act=
+
+
+[itemdef i_arrow_example]
+id=i_arrow
+type=t_arrow_custom
+name=example for custom arrows
+
+on=@special_effect_hit
+src.say You hit me
+on=@special_effect_hitmiss
+src.say You missed me
+
+
+[itemdef i_arrow_poison]
+id=i_arrow
+type=t_arrow_custom
+name=poison arrow%s
+
+on=@special_effect_hit
+src.poison 50.0
+
+
+[itemdef i_xbolt_example]
+id=i_xbolt
+type=t_xbolt_custom
+name=example for custom bolts
+
+on=@special_effect_hit
+src.say You hit me
+on=@special_effect_hitmiss
+src.say You missed me
+
+
+[itemdef i_xbolt_poison]
+id=i_xbolt
+type=t_xbolt_custom
+name=poison bolt%s
+
+on=@special_effect_hit
+src.poison 50.0
+
+[eof]

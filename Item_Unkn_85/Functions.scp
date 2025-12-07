@@ -1,0 +1,1271 @@
+//This is a collection of useful functions. Each one comes with an explanation above it.
+//All functions made by AdminofDiamondRealm (SephDragoon)
+
+//List of FUNCTIONS right here:
+//ISINBANK
+//COMMA
+//UPDATEDIALOG
+//TEXTENTRYB
+//DTEXTENTRYB
+//RANDVAL
+//SWITCHVAL
+//AREAOBJS
+//AREAITEMS
+//AREACHARS
+//OPENPROFILE
+//STRCOUNT
+//ARGC (new version)
+//LETTEREAT
+//LETTERARG
+//STRREPLACE
+//STRREMOVE
+//STRLENGTH
+//MATCHSTR
+//ALLITEMS
+//CONTITEMS
+//FINDALLID
+//FINDCONTID
+//FINDALLTYPE
+//FINDCONTTYPE
+//FINDALLLAYER
+//FINDCONTLAYER
+//MEMORYFINDALLTYPE
+//MEMORYFINDCONTTYPE
+//ARGSTR
+//STRVAL
+//GRAPHIC
+//PRIVFUDGE
+//DCLICKFUDGE
+//EQUIPFUDGE
+//FUDGE
+//ROLL
+//PVAL
+//DVAL
+//RVAL
+//STARVAL
+//IFVAL
+//REVEAL
+//ITEMVAR
+//CHARVAR
+//DIRECTION
+//FACEDIR
+//DELAY
+//PLAYANIMATION
+//SMITE
+//XDISTANCE
+//YDISTANCE
+//ZDISTANCE
+//ISHUMAN
+//ARMORHI
+//ARMORLO
+//DAMHI
+//DAMLO
+//ARMORRATING
+//ARMORPOINT
+//ISALIVE
+//OSEX
+//WEAPONSPEED (currently doesn't respect ranged weapons)
+//MOVEBACKWARDS
+//MOVETOWARDS
+//MOVEFORWARDS
+
+[FUNCTION ISINBANK]
+LOCAL.UID=<TOPOBJ.FINDLAYER(layer_bankbox).UID>
+LOCAL.TOPOBJ=<TOPOBJ.UID>
+TOPOBJ.FINDLAYER(layer_bankbox).P=1,1
+IF	(<TOPOBJ.UID>==<LOCAL.UID>)
+		LOCAL.RETURN=1
+ELSE
+ENDIF
+TRY UID.<LOCAL.UID>.CONT=<LOCAL.TOPOBJ>
+RETURN <eval <LOCAL.RETURN>>
+
+//This turns numbers into their millions,thousands,hundreds form, so that long numbers are easier to read for someone. Below, the length needed is set to higher than 4, but can be changed to higher than 3 if you wish. I prefer 4 because it leaves 4 digit numbers alone.
+[FUNCTION COMMA]
+IF	(<STRLENGTH <ARGN>><=4)
+		RETURN <ARGN>
+ELSE
+ENDIF
+LOCAL.RETURN=<LETTERARG -3 <ARGN>>Ð
+LOCAL.ARGN=<LETTEREAT -3 <ARGN>>
+WHILE (<STRLENGTH <eval <LOCAL.ARGN>>> > 3)
+LOCAL.RETURN=<LETTERARG -3 <eval <LOCAL.ARGN>>>,<LOCAL.RETURN>
+LOCAL.ARGN=<LETTEREAT -3 <eval <LOCAL.ARGN>>>
+ENDWHILE
+RETURN <LETTEREAT -1 <eval <LOCAL.ARGN>>,<LOCAL.RETURN>>
+
+//UPDATEDIALOG d_whatever
+[FUNCTION UPDATEDIALOG]
+DIALOGCLOSE <STRARG <ARGS>>
+DIALOG <ARGS>
+
+//TEXTENTRYB X Y Background W H color id textid
+[FUNCTION TEXTENTRYB]
+RESIZEPIC <eval <STRARG <ARGS>>+-2> <eval <STRARG <STREAT <ARGS>>>+-2> <ARGSTR 2 <ARGS>> <eval <ARGSTR 3 <ARGS>>+4> <eval <ARGSTR 4 <ARGS>>+4>
+TEXTENTRY <STRARG <ARGS>> <STRARG <STREAT <ARGS>>> <STREAT <STREAT <STREAT <ARGS>>>>
+
+//DTEXTENTRYB X Y Background W H color id text
+[FUNCTION DTEXTENTRYB]
+RESIZEPIC <eval <STRARG <ARGS>>+-2> <eval <STRARG <STREAT <ARGS>>>+-2> <ARGSTR 2 <ARGS>> <eval <ARGSTR 3 <ARGS>>+4> <eval <ARGSTR 4 <ARGS>>+4>
+DTEXTENTRY <STRARG <ARGS>> <STRARG <STREAT <ARGS>>> <STREAT <STREAT <STREAT <ARGS>>>>
+
+//One line DORAND
+[FUNCTION RANDVAL]
+RETURN <ARGC <eval {0 <eval <STRARG <ARGS>>+-1>}> <STREAT <ARGS>>>
+
+//One line DOSWITCH
+[FUNCTION SWITCHVAL]
+RETURN <ARGC <eval <STRARG <ARGS>>> <STREAT <ARGS>>>
+
+//One line FOROBJS command: AREAOBJS ## ACTION=variable
+[FUNCTION AREAOBJS]
+FOROBJS <STRARG <ARGS>>
+TRY	<STREAT <ARGS>>
+ENDFOR
+
+//One line FORITEMS command: AREAITEMS ## ACTION=variable
+[FUNCTION AREAITEMS]
+FORITEMS <STRARG <ARGS>>
+TRY	<STREAT <ARGS>>
+ENDFOR
+
+//One line FORCHARS command: AREACHARS ## ACTION=variable
+[FUNCTION AREACHARS]
+FORCHARS <STRARG <ARGS>>
+TRY	<STREAT <ARGS>>
+ENDFOR
+
+[FUNCTION OPENPROFILE]
+SRC.SYSMESSAGE=This will not yet show the actual text of the profile, but it can be used to update it.
+SRC.SYSFIX
+SRC.SENDPACKET 0b8 W<hval 9+<STRLENGTH <NAME>>+<STRLENGTH <PROFILE>>> D<UID> <ASC <NAME>> 00 <ASC <PROFILE>> 00
+
+//STRCOUNT counts the amount of a single letter or ascii character in a string. <STRCOUNT <LETTER>,<STRING>> Example: <STRCOUNT e,Where> would return 2.
+[FUNCTION STRCOUNT]
+LOCAL.LETTER=<asc <STRARG <ARGS>>>
+LOCAL.ARGS=<STREAT <ARGS>>
+WHILE	!(<eval <STRPOS 0 <LOCAL.LETTER> <LOCAL.ARGS>>+1>==0)
+		LOCAL.ARGS=<STRSUB <eval <STRPOS 0 <LOCAL.LETTER> <LOCAL.ARGS>>+1> <eval <STRLENGTH <LOCAL.ARGS>>+1+(-<STRPOS 0 <LOCAL.LETTER> <LOCAL.ARGS>>)> <LOCAL.ARGS>>
+		LOCAL.COUNT=<eval <LOCAL.COUNT>+1>
+ENDWHILE
+RETURN <eval <LOCAL.COUNT>>
+
+//A way to get the ARGV of a specific string that isn't necessarily the ARGS. <ARGC # <STRING>>
+[FUNCTION ARGC]
+LOCAL.COUNT=<STRARG <ARGS>>
+CALL ARGV_AUX <STREAT <ARGS>>
+IF	(<ISEMPTY <VAR.STRING>>)
+		RETURN
+ELSE
+		LOCAL.STRING=<VAR.STRING>
+		VAR.STRING=
+	RETURN <LOCAL.STRING>
+ENDIF
+
+[FUNCTION ARGV_AUX]
+VAR.STRING=<ARGV[<eval <LOCAL.COUNT>>]>
+
+//LETTEREAT is a function to eat a certain amount of letters off the begining or end of a string. Syntax: <LETTEREAT # <SRTING>> # is how many to eat, if a negative, it eats that many from the end of the string.
+[FUNCTIOn LETTEREAT]
+LOCAL.NUM=<STRARG <ARGS>>
+IF	(<eval <LOCAL.NUM>> < 0)
+		RETURN <STRSUB 0 <eval <STRLENGTH <STREAT <ARGS>>>+<eval <LOCAL.NUM>>> <STREAT <ARGS>>>
+ELSE
+		RETURN <STRSUB <eval <LOCAL.NUM>> <eval <STRLENGTH <STREAT <ARGS>>>+-<eval <LOCAL.NUM>>> <STREAT <ARGS>>>
+ENDIF
+
+//LETTERARG is very similar to LETTEREAT, in fact, it returns the exact oposite of LETTEREAT... its the same as STREAT to STRARG. Syntax <LETTERARG # <STRING>> # is the amount of letters to keep.
+[FUNCTION LETTERARG]
+LOCAL.NUM=<STRARG <ARGS>>
+IF	(<eval <LOCAL.NUM>> < 0)
+		RETURN <STRSUB <eval <STRLENGTH <STREAT <ARGS>>>+<eval <LOCAL.NUM>>> <eval <STRLENGTH <STREAT <ARGS>>>+-<eval <STRLENGTH <STREAT <ARGS>>>+<eval <LOCAL.NUM>>>> <STREAT <ARGS>>>
+ELSE
+		RETURN <STRSUB 0 <eval <LOCAL.NUM>> <STREAT <ARGS>>>
+ENDIF
+
+//STRREPLACE simply replaces string a with string b inside of stirng c. Syntax: <STRREPLACE <stringA>,<stringB>,<stringC>>. Syntax is important, remember, use a comma between each string, and no spaces after the comma.
+[FUNCTION STRREPLACE]
+LOCAL.STRINGA=<ARGV[0]>
+LOCAL.STRINGB=<ARGV[1]>
+LOCAL.STRINGC=<STRSUB <eval <STRLENGTH <LOCAL.STRINGA>0<LOCAL.STRINGB>00>> <eval <eval <STRLENGTH <ARGS>>>+(-<eval <STRLENGTH <LOCAL.STRINGA>0<LOCAL.STRINGB>0>>)> <ARGS>>
+IF	!(<MATCHSTR *<LOCAL.STRINGA>*,<LOCAL.STRINGC>>)
+		RETURN <LOCAL.STRINGC>
+ELSE
+		WHILE	!(<MATCHSTR <VAR.SPACES><LOCAL.STRINGA>*,<LOCAL.STRINGC>>)
+				VAR.SPACES=<VAR.SPACES>?
+		ENDWHILE
+		IF	!(<ISEMPTY <VAR.SPACES>>)
+				LOCAL.STRINGC=<STRSUB 0 <eval <STRLENGTH <VAR.SPACES>>> <LOCAL.STRINGC>><LOCAL.STRINGB><STRSUB <eval <STRLENGTH <VAR.SPACES><LOCAL.STRINGA>>> <eval <eval <STRLENGTH <LOCAL.STRINGC>>>+(-<eval <STRLENGTH <VAR.SPACES><LOCAL.STRINGA>>>)> <LOCAL.STRINGC>>
+		ELSE
+				LOCAL.STRINGC=<LOCAL.STRINGB><STRSUB <eval <STRLENGTH <VAR.SPACES><LOCAL.STRINGA>>> <eval <eval <STRLENGTH <LOCAL.STRINGC>>>+(-<eval <STRLENGTH <VAR.SPACES><LOCAL.STRINGA>>>)> <LOCAL.STRINGC>>
+		ENDIF
+		VAR.SPACES=
+	RETURN <LOCAL.STRINGC>
+ENDIF
+
+//STRREMOVE is used to remove string A from string B. Syntax: <STRREMOVE <stringA>,<stringB>>. Syntax is important, remember, use a comma between each string, and no spaces after the comma.
+[FUNCTION STRREMOVE]
+LOCAL.STRINGA=<ARGV[0]>
+LOCAL.STRINGB=<STRSUB <eval <STRLENGTH <LOCAL.STRINGA>0>> <eval <eval <STRLENGTH <ARGS>>>+(-<eval <STRLENGTH <LOCAL.STRINGA>>>)> <ARGS>>
+IF	!(<MATCHSTR *<LOCAL.STRINGA>*,<LOCAL.STRINGB>>)
+		RETURN <LOCAL.STRINGB>
+ELSE
+		WHILE	!(<MATCHSTR <VAR.SPACES><LOCAL.STRINGA>*,<LOCAL.STRINGB>>)
+				VAR.SPACES=<VAR.SPACES>?
+		ENDWHILE
+		IF	!(<ISEMPTY <VAR.SPACES>>)
+				LOCAL.STRINGB=<STRSUB 0 <eval <STRLENGTH <VAR.SPACES>>> <LOCAL.STRINGB>><STRSUB <eval <STRLENGTH <VAR.SPACES><LOCAL.STRINGA>>> <eval <eval <STRLENGTH <LOCAL.STRINGB>>>+(-<eval <STRLENGTH <VAR.SPACES><LOCAL.STRINGA>>>)> <LOCAL.STRINGB>>
+		ELSE
+				LOCAL.STRINGB=<STRSUB <eval <STRLENGTH <VAR.SPACES><LOCAL.STRINGA>>> <eval <eval <STRLENGTH <LOCAL.STRINGB>>>+(-<eval <STRLENGTH <VAR.SPACES><LOCAL.STRINGA>>>)> <LOCAL.STRINGB>>
+		ENDIF
+		VAR.SPACES=
+	RETURN <LOCAL.STRINGB>
+ENDIF
+
+//STRLENGTH is used as a replacement for <eval STRLEN(<STRING>)> for the time being, as STRLEN can't seem to handle commas
+[FUNCTION STRLENGTH]
+RETURN <eval <STRPOS 0 ® <ARGS>®>>
+
+//MATCHSTR is used to find a string inside of another, but this works a little different, because it doesn't matter if the second string has a comma in it like STRMATCH, and it uses <>
+[FUNCTION MATCHSTR]
+LOCAL.COUNT=<eval <LOCAL.COUNT>+1>
+WHILE	!(<ISEMPTY <ARGV[<eval <LOCAL.COUNT>>]>>)
+		IF	(STRMATCH("<ARGV[0]>","<ARGV[<eval <LOCAL.COUNT>>]>"))
+				RETURN 1
+		ELSE
+		ENDIF
+		LOCAL.COUNT=<eval <LOCAL.COUNT>+1>
+ENDWHILE
+RETURN 0
+
+//This is so that you can store a variable type in a TAG, for retreiving later. Example: TAG.EXAMPLE=Hello ^SRC.SEX sir/ma'am^. Then when you wish to use the variable, like say in a dialog, you use: <STRVAL <TAG.EXAMPLE>>
+[FUNCTION STRVAL]
+RETURN <DEFVAL <ARGS>>
+//This function has been replaced because of problems with ^ recently... get the following function to replace it.
+//http://www.projectcorp.de/55r/forums/viewtopic.php?t=713&highlight=defval
+//Made by Ben, as you can see upon checking it out.
+
+//This works pretty simply, just use <ARGSTR # <STRING>> and it will return STRING like <ARGV[#]> would. First word is 0, second is 1, just like ARGV.
+[FUNCTION ARGSTR]
+LOCAL.COUNT=<STRARG <ARGS>>
+LOCAL.STRING=<STREAT <ARGS>>
+IF	(<eval 0<LOCAL.COUNT>>==0)
+		RETURN <STRARG <LOCAL.STRING>>
+ELSE
+		FOR <eval 0<LOCAL.COUNT>>
+		IF	!(<ISEMPTY <STREAT <LOCAL.STRING>>>)
+				LOCAL.STRING=<STREAT <LOCAL.STRING>>
+		ELSE
+				RETURN <LOCAL.STRING>
+		ENDIF
+		ENDFOR
+		RETURN <STRARG <LOCAL.STRING>>
+ENDIF
+
+//MEMORYFINDALLTYPE is used on a container or character like so: SRC.MEMORYFINDTYPE=MEMORY_FIGHT,SAY=Hi
+//Pretty simple.
+[FUNCTION MEMORYFINDALLTYPE]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.BASEID>==i_memory) && (<FINDCONT.<eval 0<LOCAL.COUNT>>.COLOR>&<ARGV[0]>)
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGV[1]>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container) || (<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container_locked)
+	TRY	FINDCONT.<eval 0<LOCAL.COUNT>>.FINDALLID=<ARGS>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//Same thing as MEMORYFINDALLTYPE, except this only calls itself o nthe items directly in the container, not those inside of other items.
+[FUNCTION MEMORYFINDCONTTYPE]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.BASEID>==i_memory) && (<FINDCONT.<eval 0<LOCAL.COUNT>>.COLOR>&<ARGV[0]>)
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGV[1]>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//FINDALLLAYER is used on a container or character like so: SRC.FINDALLLAYER=layer_memory,SAY=Hi
+//Pretty simple.
+[FUNCTION FINDALLLAYER]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.LAYER>==<ARGV[0]>)
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGV[1]>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container) || (<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container_locked)
+	TRY	FINDCONT.<eval 0<LOCAL.COUNT>>.FINDALLID=<ARGS>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//Same thing as FINDALLLAYER, except this only calls itself o nthe items directly in the container, not those inside of other items.
+[FUNCTION FINDCONTLAYER]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.LAYER>==<ARGV[0]>)
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGV[1]>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//FINDALLTYPE is used on a container or character like so: SRC.FINDALLTYPE=t_weapon_arrow,SAY=Hi
+//Pretty simple.
+[FUNCTION FINDALLTYPE]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==<ARGV[0]>)
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGV[1]>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container) || (<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container_locked)
+	TRY	FINDCONT.<eval 0<LOCAL.COUNT>>.FINDALLID=<ARGS>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//Same thing as FINDALLTYPE, except this only calls itself o nthe items directly in the container, not those inside of other items.
+[FUNCTION FINDCONTTYPE]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==<ARGV[0]>)
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGV[1]>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//FINDALLID is used on a container or character like so: SRC.FINDALLID=i_gold,SAY=Hi
+//Pretty simple.
+[FUNCTION FINDALLID]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.BASEID>==<ARGV[0]>)
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGV[1]>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container) || (<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container_locked)
+	TRY	FINDCONT.<eval 0<LOCAL.COUNT>>.FINDALLID=<ARGS>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//Same thing as FINDALLID, except this only calls itself o nthe items directly in the container, not those inside of other items.
+[FUNCTION FINDCONTID]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.BASEID>==<ARGV[0]>)
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGV[1]>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//ALLITEMS is used on a container or character like so: SRC.ALLITEMS=f_myfunction=1
+//Pretty simple.
+[FUNCTION ALLITEMS]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGS>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container) || (<FINDCONT.<eval 0<LOCAL.COUNT>>.TYPE>==t_container_locked)
+	TRY	FINDCONT.<eval 0<LOCAL.COUNT>>.ALLITEMS=<ARGS>
+ELSE
+ENDIF
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//Same thing as ALLITEMS, except this only calls itself o nthe items directly in the container, not thos einside of other items.
+[FUNCTION CONTITEMS]
+WHILE (<FINDCONT.<eval 0<LOCAL.COUNT>>>)
+LOCAL.UID=<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>
+TRY FINDCONT.<eval 0<LOCAL.COUNT>>.<ARGS>
+IF	(<FINDCONT.<eval 0<LOCAL.COUNT>>.UID>==<LOCAL.UID>)
+		LOCAL.COUNT=<eval 0<LOCAL.COUNT>+1>
+ELSE
+ENDIF
+ENDWHILE
+
+//These are commands for use in HTMLGUMP. I use them, and add them as I need.
+[DEFNAME HTMLGUMP_COMMANDS]
+/r	<P>//<DEF./r>
+/n	<P><P>//<DEF./n>
+/begin	<//<DEF./begin>
+/end	>//<DEF./end>
+
+//GRAPHIC <MODE1>,<ANIMID>,<SPEED>,<FRAMES>,<EXPLODE>,<COLOR>,<RENDER>,<MODE2>,<TARG.UID> or <TARG.X>,<TARG.Y>,<TARG.Z>
+//MODE2= 0 "From SRC.UID to UID" 1 "From UID to <ARGSTR 8 <ARGS>>" 2 "From SRC.UID to P" 3 "From UID to P"
+[FUNCTIOn GRAPHIC]
+DOSWITCH <ARGSTR 7 <ARGS>>
+LOCAL.UID=0<UID>
+LOCAL.UID=0<ARGSTR 8 <ARGS>>
+LOCAL.UID=0
+LOCAL.UID=0
+ENDDO
+DOSWITCH <ARGSTR 7 <ARGS>>
+LOCAL.SRC.UID=0<SRC.UID>
+LOCAL.SRC.UID=0<UID>
+LOCAL.SRC.UID=0<SRC.UID>
+LOCAL.SRC.UID=0<UID>
+ENDDO
+DOSWITCH <ARGSTR 7 <ARGS>>
+LOCAL.SRC.P.X=<SRC.P.X>
+LOCAL.SRC.P.X=<P.X>
+LOCAL.SRC.P.X=<SRC.P.X>
+LOCAL.SRC.P.X=<P.X>
+ENDDO
+DOSWITCH <ARGV[7]>
+LOCAL.SRC.P.Y=<SRC.P.Y>
+LOCAL.SRC.P.Y=<P.Y>
+LOCAL.SRC.P.Y=<SRC.P.Y>
+LOCAL.SRC.P.Y=<P.Y>
+ENDDO
+DOSWITCH <ARGSTR 7 <ARGS>>
+LOCAL.SRC.P.Z=<SRC.Z>
+LOCAL.SRC.P.Z=<Z>
+LOCAL.SRC.P.Z=<SRC.Z>
+LOCAL.SRC.P.Z=<Z>
+ENDDO
+DOSWITCH <ARGSTR 7 <ARGS>>
+LOCAL.P.X=<P.X>
+LOCAL.P.X=<UID.<LOCAL.UID>.P.X>
+LOCAL.P.X=<ARGSTR 8 <ARGS>>
+LOCAL.P.X=<ARGSTR 8 <ARGS>>
+ENDDO
+DOSWITCH <ARGSTR 7 <ARGS>>
+LOCAL.P.Y=<P.Y>
+LOCAL.P.Y=<UID.<LOCAL.UID>.P.Y>
+LOCAL.P.Y=<ARGSTR 9 <ARGS>>
+LOCAL.P.Y=<ARGSTR 9 <ARGS>>
+ENDDO
+DOSWITCH <ARGSTR 7 <ARGS>>
+LOCAL.P.Z=<Z>
+LOCAL.P.Z=<UID.<LOCAL.UID>.Z>
+LOCAL.P.Z=<ARGSTR 10 <ARGS>>
+LOCAL.P.Z=<ARGSTR 10 <ARGS>>
+ENDDO
+SERV.ALLCLIENTS SENDPACKET 0c0 <hval <ARGSTR 0 <ARGS>>> D<LOCAL.SRC.UID> D<LOCAL.UID> W<ARGSTR 1 <ARGS>> W<LOCAL.SRC.P.X> W<LOCAL.SRC.P.Y> <hval <LOCAL.SRC.P.Z>> W<LOCAL.P.X> W<LOCAL.P.Y> <hval <LOCAL.P.Z>> <hval <ARGSTR 2 <ARGS>>> <hval <ARGSTR 3 <ARGS>>> 00 00 00 <hval <ARGSTR 4 <ARGS>>> D<ARGSTR 5 <ARGS>> D<ARGSTR 6 <ARGS>>
+
+//This is used for when you are trying to do soemthing soemone at a certain plevel can't normally do. Usage: PRIVFUDGE=<COMMAND>
+[FUNCTION PRIVFUDGE]
+IF	(<ISCHAR>)
+IF	!(<NPC>==0)
+		FUDGE=<ARGS>
+ELSE
+		SERV.NEWNPC=c_man
+		LOCAL.UID=<NEW.UID>
+		NEW.FUDGE=<ARGS>,<UID>
+	TRY	UID.<LOCAL.UID>.REMOVE
+ENDIF
+ELSE
+		SERV.NEWNPC=c_man
+		LOCAL.UID=<NEW.UID>
+		NEW.FUDGE=<ARGS>,<UID>
+	TRY	UID.<LOCAL.UID>.REMOVE
+ENDIF
+
+//Use like <roll # #> for dice rolls EG, <roll 2 6> is like 2d6
+//now it can also be used as <roll 2D6> instead of replacing the D with a space
+[FUNCTION ROLL]
+IF	!(STRMATCH("*d*","<ARGS>"))
+FOR <ARGN1>
+LOCAL.RETURN=<eval 0<LOCAL.RETURN>+<eval {1 <ARGN2>}>>
+ENDFOR
+RETURN <eval 0<LOCAL.RETURN>>
+ELSE
+LOCAL.DICE=<eval <ARGS>>
+LOCAL.ROLL=<STRSUB -<eval <eval STRLEN(<ARGS>)>+(-<STRPOS 0 D <STRTOUPPER(<ARGS>)>>)+(-1)> <eval <eval STRLEN(<ARGS>)>+(-<STRPOS 0 D <STRTOUPPER(<ARGS>)>>)+(-1)> <ARGS>>
+FOR <eval <LOCAL.DICE>>
+LOCAL.RETURN=<eval 0<LOCAL.RETURN>+<eval {1 <eval <LOCAL.ROLL>>}>>
+ENDFOR
+RETURN <eval 0<LOCAL.RETURN>>
+ENDIF
+
+//This is for both items and chars... pretty simple script, just do OBJ.REVEAL and vuala
+[FUNCTION REVEAL]
+IF	(<ISITEM>)
+ATTR=<ATTR>&~attr_invis
+ELSE
+FLAGS=<FLAGS>&~statf_invisible
+ENDIF
+UPDATE
+
+//This is very useful with SERV.ITEMDEF on the fritz. Simply say <ITEMVAR i_whatever,VARIABLE> EG, <ITEMVAR i_memory,DISPID>
+[FUNCTION ITEMVAR]
+IF	(<ISEMPTY <ARGV[0]>>)
+		RETURN 0
+ELSE
+		SERV.NEWITEM=<ARGV[0]>
+		IF	(<ISEMPTY <ARGV[1]>>)
+				IF	(<NEW.BASEID>==<ARGV[0]>)
+						NEW.REMOVE
+					RETURN 1
+				ELSE
+						NEW.REMOVE
+					RETURN 0
+				ENDIF
+		ELSE
+				LOCAL.RETURN=<NEW.<ARGV[1]>>
+				NEW.REMOVE
+			RETURN <LOCAL.RETURN>
+		ENDIF
+ENDIF
+
+//Same as itemvar
+[FUNCTION CHARVAR]
+IF	(<ISEMPTY <ARGV[0]>>)
+		RETURN 0
+ELSE
+		SERV.NEWNPC=<ARGV[0]>
+		IF	(<ISEMPTY <ARGV[1]>>)
+				IF	(<NEW.ID>==<ARGV[0]>)
+						NEW.REMOVE
+					RETURN 1
+				ELSE
+						NEW.REMOVE
+					RETURN 0
+				ENDIF
+		ELSE
+				LOCAL.RETURN=<NEW.<ARGV[1]>>
+				NEW.REMOVE
+			RETURN <LOCAL.RETURN>
+		ENDIF
+ENDIF
+
+//This is for when you have a function using SRC in it, but you are using it from a timer, or for opening a dialog on soemone else easily etc. Well, just use this like so:
+//FUDGE=DIALOG d_whatever,<SRC.TARG.UID>
+[FUNCTION FUDGE]
+SERV.NEWITEM=i_fudge
+IF	!(<ISEMPTY <ARGV[1]>>)
+NEW.LINK=<ARGV[1]>
+ELSE
+ENDIF
+NEW.TAG.DO=<ARGV[0]>
+NEW.CONT=<UID>
+NEW.REMOVE
+
+[ITEMDEF i_fudge]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@UNEQUIP
+IF	(<LINK>==04fffffff)
+	TRY	SRC.<TAG.DO>
+ELSE
+	TRY	LINK.<TAG.DO>
+ENDIF
+
+//This function tells you the direction of an object or character in relation to where you are... meaning if you were to face them, what would be your DIR? 0-7 work the same, and 8 is if they are on top of you.
+//Usage: <DIRECTION <SRC.TARG.UID>>
+[FUNCTION DIRECTION]
+IF	(<ISEMPTY <ARGS>>)
+		RETURN <SRC.DIRECTION <UID>>
+ELSE
+		LOCAL.OBJ=<OBJ.UID>
+		OBJ=<ARGS>
+ENDIF
+IF	(<OBJ.P.Y> < <P.Y>)
+IF	(<OBJ.P.Y> < <eval <P.Y>+(-<eval <DISTANCE <OBJ.UID>>/2>)>)
+		IF	(<OBJ.P.X> < <eval <P.X>+(-<eval <DISTANCE <OBJ.UID>>/2>)>)
+				OBJ=<LOCAL.OBJ>
+				RETURN 7
+		ELSEIF	(<OBJ.P.X> > <eval <P.X>+(<eval <DISTANCE <OBJ.UID>>/2>)>)
+				OBJ=<LOCAL.OBJ>
+				RETURN 1
+		ELSE
+				OBJ=<LOCAL.OBJ>
+				RETURN 0
+		ENDIF
+ELSEIF	(<OBJ.P.X> < <P.X>)
+		OBJ=<LOCAL.OBJ>
+		RETURN 6
+ELSEIF	(<OBJ.P.X> > <P.X>)
+		OBJ=<LOCAL.OBJ>
+		RETURN 2
+ELSE
+		OBJ=<LOCAL.OBJ>
+		RETURN 0
+ENDIF
+ELSEIF	(<OBJ.P.Y> > <P.Y>)
+IF	(<OBJ.P.Y> > <eval <P.Y>+(<eval <DISTANCE <OBJ.UID>>/2>)>)
+		IF	(<OBJ.P.X> < <eval <P.X>+(-<eval <DISTANCE <OBJ.UID>>/2>)>)
+				OBJ=<LOCAL.OBJ>
+				RETURN 5
+		ELSEIF	(<OBJ.P.X> > <eval <P.X>+(<eval <DISTANCE <OBJ.UID>>/2>)>)
+				OBJ=<LOCAL.OBJ>
+				RETURN 3
+		ELSE
+				OBJ=<LOCAL.OBJ>
+				RETURN 4
+		ENDIF
+ELSEIF	(<OBJ.P.X> < <P.X>)
+		OBJ=<LOCAL.OBJ>
+		RETURN 6
+ELSEIF	(<OBJ.P.X> > <P.X>)
+		OBJ=<LOCAL.OBJ>
+		RETURN 2
+ELSE
+		OBJ=<LOCAL.OBJ>
+		RETURN 4
+ENDIF
+ELSEIF	(<OBJ.P.X> < <P.X>)
+		OBJ=<LOCAL.OBJ>
+		RETURN 6
+ELSEIF	(<OBJ.P.X> > <P.X>)
+		OBJ=<LOCAL.OBJ>
+		RETURN 2
+ELSE
+		OBJ=<LOCAL.OBJ>
+		RETURN 8
+ENDIF
+
+[FUNCTION FACEDIR]
+IF	(<ISEMPTY <ARGS>>)
+		RETURN <SRC.FACEDIR <UID>>
+ELSE
+		LOCAL.OBJ=<OBJ.UID>
+		OBJ=<ARGS>
+ENDIF
+LOCAL.DIR=<eval <OBJ.DIRECTION <UID>>+-<OBJ.DIR>+3>
+OBJ=<LOCAL.OBJ>
+RETURN <eval <LOCAL.DIR>>
+
+//this si similiar to roll, in that when used, it returns a number based on two other numbers. so simply use: <pval 10 100> and it will return 10... in other words, pval stands for percentage value
+[FUNCTION PVAL]
+IF	(<ISEMPTY <STREAT <STREAT <ARGS>>>>)
+IF	(<eval <ARGN1>>==<eval <ARGN2>>)
+RETURN 100
+ELSE
+LOCAL.PERCENT=<eval 100000000/<ARGN2>>
+RETURN <eval <eval <eval <LOCAL.PERCENT>>*<ARGN1>>/1000000>
+ENDIF
+ELSE
+IF	(<eval <ARGN1>>==<eval <ARGN2>>)
+RETURN <eval <ARGN3>>
+ELSE
+LOCAL.PERCENT=<eval <eval <ARGN3>*1000000>/<ARGN2>>
+RETURN <eval <eval <eval <LOCAL.PERCENT>>*<ARGN1>>/1000000>
+ENDIF
+ENDIF
+
+//A little function i made to make equiping item easier. Pretty much just use OBJ.EQUIPFUDGE=<SRC.UID> and it will equip flawlessly, no remembering which way it goes.
+[FUNCTION EQUIPFUDGE]
+IF	(<ISEMPTY <ARGS>>)
+		EQUIP
+ELSE
+	TRY	UID.<ARGS>.EQUIP <UID>
+ENDIF
+
+//Same as EQUIPFUDGE
+[FUNCTION DCLICKFUDGE]
+VAR.DEFAULT=01
+IF	(<ISEMPTY <ARGS>>)
+		DCLICK
+ELSE
+	TRY	UID.<ARGS>.DCLICK <UID>
+ENDIF
+VAR.DEFAULT=
+
+//This is the function you can find elsewhere in my library. It is similiar to QVAL, but has no limit on how many IF's you can use (using && and ||), and can return many different values. Usage: <IFVAL (<IFSTATEMENT>),<ACTION1>,<ACTION2>>, also, if a @ is put in front of it, it will tell how many IF's to try, example: <IFVAL @2 (<IFSTATEMENT>),<ACTION>,(<IFSTATEMENT>),<ACTION>,<ELSEACTION>>
+[FUNCTION IFVAL]
+IF	!(STRMATCH("@","<LETTERARG 1 <ARGV[0]>>"))
+IF	(<ISEMPTY <ARGV[1]>>) && (<ISEMPTY <ARGV[2]>>)
+IF	(<ARGV[0]>)
+	RETURN 1
+ELSE 
+	RETURN 0
+ENDIF
+ELSE
+IF	(<ARGV[0]>)
+	RETURN <ARGV[1]>
+ELSE 
+	RETURN <ARGV[2]>
+ENDIF
+ENDIF
+ELSE
+LOCAL.FOR=<LETTEREAT 1 <STRARG <ARGS>>>
+LOCAL.STRING=<STREAT <ARGS>>
+FOR <eval <LOCAL.FOR>>
+IF	(<ARGC <eval <LOCAL.COUNT>> <LOCAL.STRING>>)
+	RETURN <ARGC <eval <LOCAL.COUNT>+1> <LOCAL.STRING>>
+ELSE
+ENDIF
+LOCAL.COUNT=<eval <LOCAL.COUNT>+2>
+ENDFOR
+	RETURN <ARGC <eval <LOCAL.COUNT>> <LOCAL.STRING>>
+ENDIF
+
+//This follows roll and pval in that it returns a certain number of * for the number you use. Usage: <starval #> and it returns as many stars as the number you put... very nice for proficiency points.
+[FUNCTION starval]
+LOCAL.STAR=Ð
+FOR <eval <ARGN1>+1>
+IF	(0<LOCAL.STARCOUNT>==0)
+		LOCAL.STARCOUNT=01
+ELSE
+		LOCAL.STAR=<LOCAL.STAR>*
+ENDIF
+ENDFOR
+RETURN <LOCAL.STAR>
+
+//The following functions are meant to be able to split the DAM and ARMOR values o nitems up easier. It also takes into account the HP of the item and how that effect s the ARMOR of the item.
+[FUNCTION ARMORHI]
+RETURN <pval <MORE1L> <MORE1H> <eval <ARMOR>>>
+
+[FUNCTION ARMORLO]
+RETURN <eval <ARMOR>>
+
+[FUNCTION DAMHI]
+RETURN <pval <MORE1L> <MORE1H> <STREAT <DAM>>>
+
+[FUNCTION DAMLO]
+RETURN <pval <MORE1L> <MORE1H> <STRARG <DAM>>>
+
+//This returns the amount of armor you would gain if you were to equip it.
+[FUNCTION ARMORRATING]
+RETURN <eval <pval <MORE1L> <MORE1H> <ARMORPOINT>>>
+
+//This returns the value of amror for that piece of armor (based on layer).
+[FUNCTION ARMORPOINT]
+DOSWITCH <LAYER>
+RETURN 0
+RETURN 0
+LOCAL.PERCENT=10
+LOCAL.PERCENT=200
+LOCAL.PERCENT=50
+LOCAL.PERCENT=25
+LOCAL.PERCENT=100
+LOCAL.PERCENT=100
+RETURN 0
+RETURN 0
+LOCAL.PERCENT=200
+RETURN 0
+LOCAL.PERCENT=25
+LOCAL.PERCENT=25
+RETURN 0
+RETURN 0
+RETURN 0
+LOCAL.PERCENT=25
+RETURN 0
+LOCAL.PERCENT=100
+LOCAL.PERCENT=100
+RETURN 0
+LOCAL.PERCENT=25
+LOCAL.PERCENT=50
+LOCAL.PERCENT=50
+ENDDO
+RETURN <eval <eval <eval <ARMOR>>*10>/<eval <LOCAL.PERCENT>>>
+
+//This is a similiar function to fval, except that this one can return as many decimal places as you specify. Usage: <dval <power of 10> <NUMBER>> EG <dval 100 9999> will return 99.99
+[FUNCTION DVAL]
+LOCAL.DEC=<eval <ARGN2>/<ARGN1>>
+LOCAL.DEC=<eval <LOCAL.DEC>*<ARGN1>>
+LOCAL.DEC=<eval <ARGN2>+(-<LOCAL.DEC>)>
+IF	(<eval STRLEN(<eval <LOCAL.DEC>>)> < <eval <eval STRLEN(<ARGN1>)>+(-1)>)
+		RETURN <eval <ARGN2>/<ARGN1>><DECPLACES <ARGN1>><eval <LOCAL.DEC>>
+ELSE
+		RETURN <eval <ARGN2>/<ARGN1>>.<eval <LOCAL.DEC>>
+ENDIF
+
+[FUNCTION DECPLACES]
+LOCAL.DECPLACES=<eval STRLEN(<ARGN1>)>
+LOCAL.CURDECIMALS=.
+LOCAL.CURDECPLACES=0
+CALL MAKEDECPLACES
+RETURN <LOCAL.CURDECIMALS>
+
+[FUNCTION MAKEDECPLACES]
+IF	(<eval <LOCAL.CURDECPLACES>+2> < <eval <LOCAL.DECPLACES>>)
+		LOCAL.CURDECPLACES=<eval <LOCAL.CURDECPLACES>+1>
+		LOCAL.CURDECIMALS=<LOCAL.CURDECIMALS>0
+		CALL MAKEDECPLACES
+ENDIF
+
+//rval is like pval and roll and starval etc, it uses two numbers... Pretty much, rval stands for rounding value, so it is used liek so: <rval 10 99> now... the thing is, it always rounds down, but <rval 10 99> will return 99 to the nearest 10's, but won't go up... so it returns 90. Other numbers could be used, like 5 to return 95 etc.
+[FUNCTION RVAL]
+RETURN <eval <eval <ARGN2>/<ARGN1>>*<ARGN1>>
+
+//This is a LOCALLIGHT function to set the light for one eprson. Problem is, local light is a modifying value, so setting it to 30, will make you blind, but if the light level changes from say 0 to 5, suddenly it shows up as 35 instead... and that shows up as 5 actually, so this is a tricky function
+[FUNCTION LOCALLIGHT]
+RETURN <eval <SECTOR.LIGHT>>
+
+//FUnny little function for admins, use it on someone who is invul, and invul they are no more, nor are they living. But do use .xsmite, this function works like damage.
+[FUNCTION SMITE]
+IF	(<FLAGS>&statf_invul)
+		FLAGS=<FLAGS>&~statf_invul
+ELSE
+ENDIF
+KILL
+
+//This function allows soemone to play an aniamtion over and over again for a certain period of time. Usage is: PLAYANIMTION=X,Y,Z. X being the time between animations, Y being the animation itself, and Z being the seconds for it to play for.
+[FUNCTION PLAYANIMATION]
+NEWITEM=i_anim_player
+ACT.MOREP=<ARGS>
+//IF	(<ACT.MOREX>==0) || (<ACT.MOREY>==0) || (<ACT.MOREZ>==0)
+//		SRC.SYSMESSAGE=You did not set the variables correctly
+//ELSE
+ACT.EQUIP
+ACT.TIMERD=1
+//ENDIF
+
+[ITEMDEF i_anim_player]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Animation Player
+
+ON=@TIMER
+CONT.ANIM=<hval <MOREY>>
+MOREZ=<MOREZ>+(-<MOREX>)
+IF	(<MOREZ><=0)
+		REMOVE
+ELSE
+ENDIF
+TIMER=<MOREX>
+RETURN 1
+
+//This is a new delay function. The first one could onyl work for characters, and only for 1/10 of a second, hwoever, the new delay is much better. it can be used on both characters and items, and can have the time set. Usage: DELAY=ACTION=blah,TIME, TIME is in tenths of a second btw.
+[FUNCTION DELAY]
+IF	(<ISCHAR>)
+//IF	!(STRMATCH("<FINDID(i_delay_function).TAG.DELAY>","<ARGV[0]>"))
+SERV.NEWITEM=i_delay_function
+NEW.CONT=<UID>
+NEW.TIMERD=<eval <ARGV[1]>>
+IF	(<NEW.TIMER>==-1)
+		NEW.TIMERD=1
+ELSE
+ENDIF
+NEW.TAG.DELAY=<ARGV[0]>
+//ELSE
+//ENDIF
+ELSE
+SERV.NEWITEM=i_delay_function
+NEW.CONT=<SRC.UID>
+NEW.TIMERD=<eval <ARGV[1]>>
+IF	(<NEW.TIMER>==-1)
+		NEW.TIMERD=1
+ELSE
+ENDIF
+NEW.TAG.DELAY=<ARGV[0]>
+NEW.TAG.ITEMDELAY=01
+NEW.LINK=<UID>
+ENDIF
+
+[ITEMDEF i_delay_function]
+NAME=Delay Function
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@UNEQUIP
+IF	(0<TAG.ITEMDELAY>==0)
+		TRY SRC.<TAG.DELAY>
+ELSE
+		TRY LINK.<TAG.DELAY>
+ENDIF
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[FUNCTIOn XDISTANCE]
+IF	(<ISEMPTY <ARGS>>)
+		IF	(<SRC.P.X> < <P.X>)
+				RETURN <eval <P.X>+(-<SRC.P.X>)>
+		ELSE
+				RETURN <eval <SRC.P.X>+(-<P.X>)>
+		ENDIF
+ELSE
+		IF	(<UID.<ARGS>.P.X> < <P.X>)
+				RETURN <eval <P.X>+(-<UID.<ARGS>.P.X>)>
+		ELSE
+				RETURN <eval <UID.<ARGS>.P.X>+(-<P.X>)>
+		ENDIF
+ENDIF
+
+[FUNCTIOn YDISTANCE]
+IF	(<ISEMPTY <ARGS>>)
+		IF	(<SRC.P.Y> < <P.Y>)
+				RETURN <eval <P.Y>+(-<SRC.P.Y>)>
+		ELSE
+				RETURN <eval <SRC.P.Y>+(-<P.Y>)>
+		ENDIF
+ELSE
+		IF	(<UID.<ARGS>.P.Y> < <P.Y>)
+				RETURN <eval <P.Y>+(-<UID.<ARGS>.P.Y>)>
+		ELSE
+				RETURN <eval <UID.<ARGS>.P.Y>+(-<P.Y>)>
+		ENDIF
+ENDIF
+
+[FUNCTIOn ZDISTANCE]
+IF	(<ISEMPTY <ARGS>>)
+		IF	(<SRC.Z> < <Z>)
+				RETURN <eval <Z>+(-<SRC.Z>)>
+		ELSE
+				RETURN <eval <SRC.Z>+(-<Z>)>
+		ENDIF
+ELSE
+		IF	(<UID.<ARGS>.Z> < <Z>)
+				RETURN <eval <Z>+(-<UID.<ARGS>.Z>)>
+		ELSE
+				RETURN <eval <UID.<ARGS>.Z>+(-<Z>)>
+		ENDIF
+ENDIF
+
+//This is really a simple little function, but I include it because many of my scripts require it. You will probably need to change it to your liking.
+[FUNCTION ISHUMAN]
+IF	(<BODY>==c_man) || (<BODY>==c_woman) || (<BODY>==c_humanoid)
+		RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+//Just another little IS function
+[FUNCTION ISALIVE]
+IF	(<FLAGS>&statf_dead)
+		RETURN 0
+ELSE
+		RETURN 1
+ENDIF
+
+//works just like SEX, except it looks at your OBODY instead.
+[FUNCTION OSEX]
+RETURN <CHARVAR <OBODY>,SEX <ARGS>>
+
+//WEAPONSPEED this is used to calculate the DELAY of a hit based on 100 dex.
+[FUNCTION WEAPONSPEED]
+IF	(<SPEED>==0)
+		RETURN <eval ((<eval <WEIGHT>/<AMOUNT>>*25)/100)+5>
+ELSE
+		RETURN <eval <SERV.SPEEDSCALEFACTOR>/(20*<SPEED>)>
+ENDIF
+
+//The following three functions are old and outdated, and have much better alternatives I have discovered, but here they are still.
+[FUNCTION MOVEBACKWARDS]
+IF	(<DIR>==6)
+		IF	(<P.X>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		
+ELSEIF	(<DIR>==4)
+		IF	(<P.Y>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==2)
+		IF	(<P.X>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==0)
+		IF	(<P.Y>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==5)
+		IF	(<P.X>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<P.Y>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==3)
+		IF	(<P.X>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<P.Y>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==1)
+		IF	(<P.X>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<P.Y>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==7)
+		IF	(<P.X>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<P.Y>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSE
+		SRC.SYSMESSAGE=This function can only be used on characters.
+ENDIF
+
+[FUNCTION MOVETOWARDS]
+IF	(<SRC.DIRECTION <UID>>==6)
+		IF	(<P.X>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		
+ELSEIF	(<SRC.DIRECTION <UID>>==4)
+		IF	(<P.Y>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<SRC.DIRECTION <UID>>==2)
+		IF	(<P.X>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<SRC.DIRECTION <UID>>==0)
+		IF	(<P.Y>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<SRC.DIRECTION <UID>>==5)
+		IF	(<P.X>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<P.Y>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<SRC.DIRECTION <UID>>==3)
+		IF	(<P.X>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<P.Y>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<SRC.DIRECTION <UID>>==1)
+		IF	(<P.X>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<P.Y>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<SRC.DIRECTION <UID>>==7)
+		IF	(<P.X>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<P.Y>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSE
+ENDIF
+
+[FUNCTION MOVEFORWARDS]
+IF	(<DIR>==2)
+		IF	(<eval <P.X>>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		
+ELSEIF	(<DIR>==0)
+		IF	(<eval <P.Y>>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==6)
+		IF	(<eval <P.X>>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==4)
+		IF	(<eval <P.Y>>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==1)
+		IF	(<eval <P.X>>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<eval <P.Y>>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==7)
+		IF	(<eval <P.X>>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<eval <P.Y>>==1)
+				P=<P.X>,4096,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+(-1)>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==5)
+		IF	(<eval <P.X>>==1)
+				P=5119,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+(-1)>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<eval <P.Y>>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSEIF	(<DIR>==3)
+		IF	(<eval <P.X>>==5119)
+				P=1,<P.Y>,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<eval <P.X>+1>,<P.Y>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+		IF	(<eval <P.Y>>==4096)
+				P=<P.X>,1,<Z>,<MAPPLANE>
+
+		ELSE
+		P=<P.X>,<eval <P.Y>+1>,<Z>,<MAPPLANE>
+		UPDATE
+		ENDIF
+ELSE
+		SRC.SYSMESSAGE=This function can only be used on characters.
+ENDIF
+
+//The following is only so osme of my functions don't cause errors
+[FUNCTION SYSFIX]

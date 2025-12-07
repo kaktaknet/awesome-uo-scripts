@@ -1,0 +1,95 @@
+// Antipage
+
+// Scripted by Fusion.
+
+// A.K.A Jdog
+
+// Please do not remove this header.
+
+
+// ** Installing instruction **
+// Open spheremenu.scp or spheredialog.scp (can't really remember) and 
+// locate the default help menu, or if you have one, your custom help 
+// menu. Once found, locate the SRC.GMPAGE section of the help menu. 
+// Remove that one and insert the new one. 
+
+// GM Page
+ONBUTTON=1
+IF (0<SRC.TAG.ANTIPAGE>==1)
+SRC.SYSMESSAGE Currently disabled for you. Please speak to a staff member.
+RETURN 1
+ELSE
+SRC.GMPAGE
+RETURN 1
+ENDIF
+
+
+// ** Usage **
+// Typing .antipage in-game will bring up a target. Clicking on a player 
+// will then stop them from paging. Typing .release and clicking on the
+// same player will allow them to page once again.
+
+
+[PLEVEL 4]
+antipage
+release
+
+[FUNCTION Antipage]
+VAR.HOLDACT=<ACT>
+NEWITEM=i_ban_pages
+ACT.EQUIP
+ACT=<VAR.HOLDACT>
+VAR.HOLDACT=
+
+[ITEMDEF i_ban_pages]
+ID=i_memory
+NAME=Page Memory
+WEIGHT=0
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_invis
+
+ON=@Equip
+TARGET Target a character for a banning of paging privs.
+RETURN 1
+
+ON=@Targon_Char
+SRC.TARG.TAG.ANTIPAGE=1
+// SERV.B <SRC.TARG.NAME> has been been banned from paging by <SRC.NAME>.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has take away your paging ability.
+REMOVE
+RETURN 1
+
+
+
+[FUNCTION Release]
+VAR.PAGEACT=<ACT>
+NEWITEM=i_release_page
+ACT.EQUIP
+ACT=<VAR.PAGEACT>
+VAR.PAGEACT=
+
+
+[ITEMDEF i_release_page]
+ID=i_memory
+NAME=Unban Paging
+WEIGHT=0
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_invis
+
+ON=@Equip
+TARGET Target a character for an unbanning of their paging privs.
+RETURN 1
+
+ON=@Targon_Char
+SRC.TARG.TAG.ANTIPAGE=
+// SERV.B <SRC.TARG.NAME> has been been unbanned from paging by <SRC.NAME>.
+SRC.TARG.SYSMESSAGE <SRC.NAME> has given back your paging ability.
+REMOVE
+RETURN 1
+
+
+[EOF]

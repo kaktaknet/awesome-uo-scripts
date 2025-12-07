@@ -1,0 +1,90 @@
+[ITEMDEF i_assisain_kryss]
+ID=i_kryss
+NAME= Assisains Kryss
+RESOURCES=i_ingot_shadow,50
+
+ON=@Create
+COLOR=00990
+HITPOINTS={99 100}
+ATTR=00004
+ATTR=attr_magic
+MOREY=100.0
+
+
+ON=@Equip
+IF (<SRC.TAG.Assasain>=1)
+	SRC.SYSMESSAGE You feel the power of darkness flowing to your veins
+	SRC.Fencing=(<SRC.FENCING> +100)
+	SRC.HIDING=(<SRC.HIDING> + 100)
+Return 0
+ELSE
+SRC.SYSMessage YOU ARE NOT A ASSISAIN!
+SRC.ACT.UNEQUIP
+Return 1
+ENDIF
+
+ON=@UNequip
+	SRC.SYSMESSAGE You feel the power of darkness going away!
+	SRC.Fencing=(<SRC.FENCING> -100)
+	SRC.HIDING=(<SRC.HIDING> - 100)
+Return 0
+ENDIF
+
+ON=@Dclick
+IF (<SRC.TAG.ASSASAIN>==1)
+Target Target Your Victim
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+ON=@Targon_Item
+SRC.SYSMESSAGE COME ON!
+
+ON=@TARGON_CHAR
+	IF (<SRC.UID>==<SRC.TARG.UID>)
+		SRC.SYSMESSAGE You cant assasain urself!
+		RETURN 1
+	ELSEIF ( <SRC.TARG.DISTANCE> > 1 ) 
+		SRC.SYSMESSAGE You will need to get closer...
+		Return 1
+
+	ELSE
+		IF ((<SRC.FLAGS> & 000800000) || (<SRC.FLAGS>==00800000)) 
+			IF (<SRC.FINDID.i_assisain_powers.morey>==150)
+				SRC.TARG.HITS=(<SRC.TAG.HITS>-(<SRC.FINDID.i_assisain_powers.morey>+40))
+			ELSE
+			IF (RAND(<SRC.FINDID.i_assisain_powers.morez>)==0)
+				IF (<SRC.FINDID.i_assisain_powers.morey>>59)
+					IF (<SRC.TARG.BRAIN> != 0)
+						SRC.TARG.HITS=(<SRC.TAG.HITS>-(<SRC.FINDID.i_assisain_powers.morey>+40))
+						SRC.SYSMESSAGE That hurted him!
+						RETURN 1
+						ELSE
+						SRC.TARG.HITS=(<SRC.TARG.HITS>-99)
+						SRC.SYSMESSAGE That hurted him!
+						RETURN 1
+					ENDIF
+				ELSE
+					SRC.SYSMESSAGE That hurted him!
+					SRC.TARG.HITS=(<SRC.TAG.HITS>-(<SRC.FINDID.i_assisain_powers.morey>+40))
+					RETURN 1
+				ENDIF
+					ELSE		
+					SRC.SYSMESSAGE You Faild! They noticed you in last moment!
+					SRC.SAY Damn, They noticed!
+					SRC.FLAGS = <src.flags>|002000000
+					RETURN 1
+				ENDIF
+			ENDIF
+		ELSE
+			SRC.SYSMessage You are not hidden!
+			RETURN 1
+		ENDIF
+	ENDIF
+
+
+[EOF]
+			
+		
+

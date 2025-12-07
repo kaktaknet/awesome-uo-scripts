@@ -1,0 +1,88 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Mordaunt's Anti PK Script v1.3
+//There is NO escaping this (to my knowledge) 
+//If you want to prevent players from PK'ing on your server, simply add the 
+// event e_pk_detect to all player on login (or add it to an event already on all players)
+//credit goes to Wpn -z- as parts of this script are derived from his Profanity Detect script
+//
+//1.3 revision -  Minor addition for lag reduction
+//                Isolated early release function to PLEVEL4 to prevent misuse
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[PLEVEL 4]
+PK_RELEASE
+
+
+[EVENTS e_pk_detect]
+ON=@ENVIRONCHANGE
+IF !(RAND(5)) 
+IF <KILLS>>3 //change for kill limitations
+NEWITEM i_pk_jail
+SRC.ACT.EQUIP
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+ENDIF
+
+[ITEMDEF i_pk_jail] 
+NAME=PK TIMER 
+id=i_memory 
+type=t_eq_script 
+WEIGHT=0 
+
+ON=@Equip
+IF (!<EVAL STRMATCH(?*,<SRC.TAG.PKP>)>)
+SRC.TAG.PKP=<SRC.P>
+ENDIF
+SRC.EVENTS=+e_pk_jail
+SRC.JAIL
+SERV.ALLCLIENTS SYSMESSAGE SERVER MESSAGE: <SRC.NAME> has been jailed on PK charges.
+TIMER=12*60*60 //sentence time (12 hours)
+RETURN 0
+
+ON=@UnEquip 
+SRC.FORGIVE
+SRC.EVENTS=-e_pk_jail
+SRC.KILLS=1
+SRC.GO=<SRC.TAG.PKP>
+SRC.TAG.PKP=
+SRC.SYSMESSAGE You have served your time, but we will be watching...
+RETURN 1
+
+ON=@Timer
+REMOVE
+RETURN 1
+
+[FUNCTION PK_RELEASE]
+NEWITEM=i_pk_targeter
+ACT.P=<P>
+ACT.TARGET Select the person you wish to forgive
+
+[ITEMDEF i_pk_targeter]
+ID=i_memory
+NAME=PK Unjail Targeter
+TYPE=t_script
+
+ON=@Create
+ATTR=0090
+TIMER=120 
+ON=@TargOn_Char
+	IF (<SRC.TARG.RESTEST 1 i_pk_jail>)
+		SRC.TARG.CONSUME=1 i_pk_jail
+		SRC.SYSMESSAGE=You forgive <SRC.TARG.NAME> for PK offenses.
+		SRC.TARG.SYSMESSAGE=You have been forgiven.
+				
+ENDIF	
+
+
+[EVENTS e_pk_jail]
+ON=@Click
+TAG.JHOURS=<EVAL (<FINDID.i_pk_jail.TIMER>/3600)>
+TAG.JMINS=<EVAL ((<FINDID.i_pk_jail.TIMER>/60)+(-<TAG.JHOURS>*60))>
+TAG.JSECS=<EVAL ((<FINDID.i_pk_jail.TIMER>+(-(<TAG.JHOURS>*3600)))+(-(<TAG.JMINS>*60)))>
+MESSAGE [Jailed for excessive PK; <EVAL <TAG.JHOURS>> hours, <EVAL <TAG.JMINS>> minutes, and <EVAL <TAG.JSECS>> seconds left of jail time]
+MESSAGE
+TAG.JHOURS=
+TAG.JMINS=
+TAG.JSECS=

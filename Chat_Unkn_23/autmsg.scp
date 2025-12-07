@@ -1,0 +1,67 @@
+////////////////////////////////////////////////////////////////////////////////////////
+//Name : AutoMSG System
+//Author : Marox
+//Contact : marox_gm@hotmail.com
+//Installation : First, you go in-game and add i_autmsg_sys item on a place where players can't get to.. like Green Acres.
+//Then, you must tell all your gm's not to remove it, or dupe it, or do anything with it if they dont know what they're doing. Then, double click the item, it should say "Auto-Message turned ON", a text should be appearing in the next 15 minutes.. But you don't want to wait, so now we go editing this file to suit your shard since you dont want something like "Default Message Number 1". Find the first line saying "TAG.MSGTIM" and change the number its set to , to whatever you wish the delay between messages to be.. Example, 15 - fifteen minutes.
+//Then, find the line saying "DORAND 10" and set the "10" to how many random messages you wish it to cycle through, example 5. Once you do this, everything between DORAND 10 and ENDDO has to be changed to what you wish the messages to be.. like "Please remember to vote on Top200 each day", etc..
+//If you put DORAND 5 (5 random messages) then you would need to put 5 lines between DORAND 5 and ENDDO, not 10 like it is default (because default it is DORAND 10 - ten random messages)
+//
+//Notes : Ok, all that done, now every X minutes (x being the TAG.MSGTIM) a random message will appear on every players screen as a 'Sysmessage' (random message of the ones you specified)
+////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_autmsg_sys]
+DEFNAME=i_autmsg_sys
+ID=0ed6
+NAME=Auto-Message System
+TYPE=t_script
+
+ON=@CREATE
+ATTR=090
+TAG.MSGTIM=2 //this is the default time between messages - IN MINUTES, NOT SECONDS!
+
+ON=@CLICK
+IF (<TAG.AUTMSG> == 1)
+MESSAGE [System is ACTIVE]
+
+ELSEIF (<TAG.AUTMSG> == 0)
+MESSAGE [System is NOT ACTIVE]
+
+ELSE
+MESSAGE [Error in script]
+
+ON=@DCLICK
+
+IF (<TAG.AUTMSG> == 1)
+SRC.SYSMESSAGE Auto-Message turned OFF.
+TAG.AUTMSG=0
+TIMER=-1
+RETURN 1
+
+ELSEIF (<TAG.AUTMSG> != 1)
+SRC.SYSMESSAGE Auto-Message turned ON.
+TAG.AUTMSG=1
+TIMER=<TAG.MSGTIM> * 10
+RETURN 1
+
+ELSE
+SRC.SYSMESSAGE Error in Auto-Message script.
+RETURN 1
+ENDIF
+
+ON=@TIMER
+DORAND 10
+TAG.MSGTXT=Default Message Number 1
+TAG.MSGTXT=Default Message Number 2
+TAG.MSGTXT=Default Message Number 3
+TAG.MSGTXT=Default Message Number 4
+TAG.MSGTXT=Default Message Number 5
+TAG.MSGTXT=Default Message Number 6
+TAG.MSGTXT=Default Message Number 7
+TAG.MSGTXT=Default Message Number 8
+TAG.MSGTXT=Default Message Number 9
+TAG.MSGTXT=Default Message Number 10
+ENDDO
+SERV.ALLCLIENTS SYSMESSAGE <TAG.MSGTXT>
+TIMER=<TAG.MSGTIM> * 10
+RETURN 1

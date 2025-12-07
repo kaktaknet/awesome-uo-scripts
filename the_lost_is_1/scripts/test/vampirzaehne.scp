@@ -1,0 +1,124 @@
+[ITEMDEF i_Vampirzaehne]
+// Rassenitem Vampire 
+// die IF-Abfrage muss an den Shard angepasst werden.
+ID=01ae4
+NAME=Vampirzaehne
+CATEGORY=Neue Objekte
+SUBSECTION=Verschiedenes
+DESCRIPTION=Vampirzaehne
+TYPE=t_normal
+WEIGHT=1
+
+ON=@Create
+ATTR=0004
+
+ON=@DClick
+IF ! ((<SRC.TAG.RACE>==Vampir) && ((<SRC.OBODY>==c_man)||(<SRC.OBODY>==c_woman)))
+	SRC.MESSAGE Du bist kein Vampir !
+	Return 1
+ELSEIF (<SRC.RESTEST 1 i_mem_lastuse>) 
+	SRC.MESSAGE Du hast vor einer Weile schon jemanden gebissen !
+	RETURN 1
+ELSE
+	Target Wen wollt ihr beissen ?
+	Return 1
+ENDIF
+
+ON=@TARGON_Item
+SRC.SYSMESSAGE Wollt ihr euch die Zaehne abbrechen ?
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.UID>==<SRC.TARG.UID>)
+		SRC.Message Du kannst dich nicht selbst beissen !
+		Return 1
+
+ELSEIF	(<SRC.TARG.DISTANCE> >= 2) || (<src.targ.canseelos>==0)
+		SRC.Message Du bist zu weit entfernt !
+		Return 1
+		
+ELSEIF ((<SRC.TARG.OSKIN>==00) && ((<SRC.TARG.OBODY>==c_man) || (<SRC.TARG.OBODY>==c_woman)))
+		SRC.Message Du kannst keinen Vampir beissen !
+		Return 1
+
+ELSEIF (<SRC.Hits> >= <SRC.STR>)
+	IF <SRC.RESTEST 1 i_bottle_empty> 
+		SRC.MESSAGE Du fuellst etwas Blut in eine leere Flasche.
+		SRC.SOUND=0240
+		SRC.CONSUME=i_bottle_empty 
+		SRC.NEWITEM=i_bottle_blood2
+		SRC.ACT.NAME=Flasche Blut  <SRC.TARG.NAME>
+		SRC.ACT.BOUNCE
+		SRC.TARG.HITS=<SRC.TARG.HITS>+(-(<SRC.TARG.HITS>/10))
+		SRC.FOOD=15
+		SRC.emote Schlaegt seine Zaehne in den Hals von <SRC.TARG.NAME>
+		SRC.NEWITEM i_mem_lastuse
+		SRC.ACT.TIMER=1200
+		SRC.ACT.EQUIP
+		RETURN 1
+	ELSE
+		SRC.MESSAGE Du hast keine leere Flasche.
+		RETURN 1
+	ENDIF
+ELSE
+	SRC.SOUND=30
+	SRC.SOUND=31
+	SRC.HITS=<SRC.HITS> + { 10 1 15 5 20 1 }
+	SRC.FOOD=15
+	SRC.emote Schlaegt seine Zaehne in den Hals von <SRC.TARG.NAME>
+	SRC.SYSMESSAGE Das Blut erfrischt dich.
+	SRC.Stamina=0
+	SRC.Message Durch den Biss bist du erschoepft.
+	SRC.NEWITEM i_mem_lastuse
+	SRC.ACT.TIMER=1200
+	SRC.ACT.EQUIP
+	Return 1
+ENDIF
+
+[ITEMDEF i_mem_lastuse]
+// Memory Item zu Festlegung des letzen Nutzens
+ID=i_memory
+TYPE=t_eq_script
+NAME=Last Use
+
+CATEGORY=Misc
+SUBSECTION=Mem-Items
+DESCRIPTION=Last Use
+
+ON=@EQUIP
+ATTR=attr_decay
+
+ON=@TIMER
+REMOVE
+
+[ITEMDEF i_bottle_blood2]
+Name=Flasche mit Blut
+ID=i_bottle_black
+WEIGHT=1
+
+ON=@Create
+	COLOR=020
+
+ON=@DCLICK
+	IF ! (<SRC.TAG.RACE>==Vampir) // this line checks 
+		SRC.MESSAGE Nur Vampire koennten dieses Blut drinken.
+		RETURN 1
+	ELSEIF <SRC.HITS> >= <SRC.STR>
+		SRC.MESSAGE Ihr seid schon genesen.
+		RETURN 1
+	ELSE
+		SRC.SOUND=30
+		SRC.SOUND=31
+		SRC.HITS=<SRC.HITS> + { 10 1 15 5 20 1 } // This line will heal a player between 10 and 20 hits.
+		REMOVE
+		SRC.NEWITEM=i_bottle_empty
+		SRC.ACT.BOUNCE
+		SRC.MESSAGE Das Blut erfrischt euch.
+		RETURN 1
+	ENDIF
+
+CATEGORY=Aveltarius
+SUBSECTION=Rassen Items
+DESCRIPTION=Flasche Blut
+
+[EOF]

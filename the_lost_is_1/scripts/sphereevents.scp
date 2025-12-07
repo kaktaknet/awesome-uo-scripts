@@ -1,0 +1,198 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+VERSION=0.54
+
+[EVENTS e_Undead]
+ON=@EnvironChange
+	// i like the dark
+	if <sector.isdark> || (<flags>&(statf_nightsight|statf_indoors))
+		if ! <tag.lightstr>
+			return 0
+		endif
+		anim 011
+		bark 4
+		str=<tag.lightstr>	// restore me.
+		hits=<str>
+		tag.lightstr=0
+		karma=<tag.lightkarma>
+		tag.lightkarma=//just dispose of this.
+		fame=<tag.lightfame>
+		tag.lightfame=
+		flags=<flags>&~statf_conjured	// no loot if killed.
+		return 0
+	endif
+	// i can't live in light areas. weaken me ? or destroy me ?
+	anim 014
+	bark 4
+	if <tag.lightstr>
+		return 0
+	endif
+	if ( <flags>&statf_conjured	) 
+		remove
+		return 1
+	endif
+	flags=<flags>|statf_conjured	// no loot if killed.
+	tag.lightstr=<str>
+	str=1
+	hits=1	// very weak.
+	tag.lightkarma=<karma>	// killing it means nothing now.
+	karma=-2
+	tag.lightfame=<fame>
+	fame=10
+	return 0
+
+[EVENTS e_Carnivores]
+// weak carnivores.
+
+[EVENTS e_Carnivores2]
+// normal carnivores.
+
+[EVENTS e_Carnivores3]
+// strong carnivores.
+
+[EVENTS e_Terathan]
+
+[EVENTS e_Ophidian]
+
+[EVENTS e_Horses]
+
+[EVENTS e_Notoriety]
+
+[EVENTS e_Ostards]
+
+[EVENTS e_Human_Environ]
+
+ON=@EnvironChange
+	if <flags>&statf_war 
+		return 0
+	endif
+	if !<sector.isdark> || (<flags>&statf_nightsight)
+		if <findlayer(layer_hand2)>
+			if <findlayer(layer_hand2).type> == t_light_lit
+				findlayer(layer_hand2).bounce
+			endif
+		endif
+		return 0
+	endif
+	// already have a lit light ?
+	if <findlayer(layer_hand2)>
+		if <findlayer(layer_hand2).type> == t_light_lit
+			return 0
+		endif
+	endif
+	// try to use a torch or light source if i have one. (and it's dark)
+	if <findtype.t_light_out>
+		findtype.t_light_out.equip
+		findtype.t_light_out.use
+	endif
+	return 0
+
+[EVENTS e_Human_Greet]
+
+ON=@NPCHearGreeting
+	// They just spoke to me for the first time.
+	if ( <DISTANCE> > 3 )	// too far away ?
+	return 1	// do nothing for now
+	ENDIF
+				DORAND 4
+					SAY Wie kann ich euch helfen?
+					SAY Ja?
+					SAY Wie kann ich euch behilflich sein?
+					SAY Was braucht ihr, <SRC.SEX Herr/Dame>?
+				ENDDO
+[EVENTS e_Human_HearUnk]
+ON=@NPCHearUnknown
+// Sorry I don't understand.
+	if ( <DISTANCE> > 3 )	// too far away ?
+		return 1	// do nothing for now
+	ENDIF
+				DORAND 2
+					SAY Verzeiht, ich verstehe nicht.
+					SAY Wie bitte?.
+				ENDDO
+//SAY=Uhhh, sorry I have not a clue what you mean.
+
+[EVENTS e_Human_ConvInit]
+
+ON=@NPCSeeNewPlayer
+	// When a new person comes into range do something (attack them?)
+	if ( <DISTANCE> > 3 )	// too far away ?
+		return 1	// do nothing for now
+	ENDIF
+	FACE
+				DORAND 3
+					SAY Seid gegruesst !
+					SAY Ihr habt meine Aufmerksamkeit.
+					SAY Ich hoere ihnen zu.
+				ENDDO
+				SALUTE
+
+	RETURN 0	// don't come here again.
+
+[EVENTS e_Human_Space]
+
+ON=@PersonalSpace
+	// Someone is standing on me.
+	if ( <flags>& statf_war )	// I'm in war mode.
+		return 1
+	endif
+				DORAND 4
+					SAY Runter von mir!
+					SAY Bitte, tretet zurueck.
+					SAY Trampelt mich nicht an.
+					SAY Macht mir bitte Platz.
+				ENDDO
+[EVENTS e_Human_Needs]
+// Notes:  This is called whenever an item is given to an NPC
+
+ON=@NPCAcceptItem
+	// I was given an item i want
+	SAY Thou art giving me <ACT.NAME>?
+			DORAND 3
+				SAY Ich danke euch.
+				SAY Das ist sehr nett von euch.
+				SAY Ich danke euch vielmals!
+			ENDDO
+
+ON=@NPCHearNeed
+	if ( <DISTANCE> > 3 )	// too far away ?
+		return 1// do nothing for now
+	ENDIF
+				DORAND 2
+					SAY Falls ihr mir <needname> geben wuerdet, waere ich sehr dankbar sein!
+					SAY Nicht das ich es verlangen wuerde, aber ich brauch wirklich hilfe um <needname> zu bekommen.
+				ENDDO
+[EVENTS e_Human_Scavenge]
+
+ON=@npcSeeWantItem
+			DORAND 6
+				SAY Na was haben wir den da?
+				SAY Ah, das wird sicher sehr nuetzlich sein.
+				SAY Exzelent. Das ist endlich meins.
+				SAY Das wird helfen.
+				SAY Das kommt gerade recht.
+				SAY Huh! Schaut was ich gefunden habe!
+			ENDDO
+	return 1
+
+[EVENTS e_Human_Refuse]
+
+ON=@NPCRefuseItem
+	// I got something I don't want.
+	SAY Thou art giving me <argo.name>?
+			DORAND 3
+				SAY Das ist nett von euch, aber ich brauch das nicht.
+				SAY Nein danke.
+				SAY Danke euch, <SRC.SEX Herr/Dame>, aber ich benoetige es nicht.
+			ENDDO
+	return 1
+
+[EOF]
+

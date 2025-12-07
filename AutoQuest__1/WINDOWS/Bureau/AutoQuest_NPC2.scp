@@ -1,0 +1,285 @@
+// AutoQuest NPC by AdminJamie (electricgod@hotmail.com) 
+
+// Tested on sphere 55i. 
+
+// Simply place this file in your scripts directory, customize the the 
+
+// reward that the player recieves. Place the letter seeker somewhere 
+
+// that players are likely to find it. Then set a spawn up of the 
+
+// letter owner and you're ready to go. 
+
+
+
+[itemdef i_quest_letter] 
+
+ID=i_book_of_truth 
+
+Name=The last letter 
+
+TYPE=00 
+
+
+
+On=@create 
+
+Color=079c 
+
+
+
+On=@DClick 
+
+SRC.SAY The cover reads that this letter is to be delivered to a man living in a large house just south of the Dryllia bank. 
+
+Return 1 
+
+
+
+[chardef c_letter_seeker] 
+
+ID=c_man 
+
+NAME=#NAMES_HUMANMALE the Citizen 
+
+TSPEECH=spk_letter_quest1 
+
+
+
+CATEGORY=Custom 
+
+SUBSECTION=Quest NPCs 
+
+DESCRIPTION=Letter Seeker 
+
+
+
+On=@Create 
+
+FLAGS=statf_invul|statf_freeze 
+
+STR={100 200} 
+
+DEX={100 200} 
+
+INT={100 200} 
+
+COLOR=colors_skin 
+
+
+
+ITEMNEWBIE=random_male_hair 
+
+COLOR=colors_hair 
+
+ITEMNEWBIE=random_facial_hair 
+
+COLOR=match_hair 
+
+
+
+ITEMNEWBIE=i_shirt_plain 
+
+COLOR=colors_all 
+
+ITEMNEWBIE=random_pants 
+
+COLOR=colors_all 
+
+ITEMNEWBIE=random_shoes 
+
+COLOR=colors_neutral 
+
+
+
+[chardef c_letter_owner] 
+
+ID=c_man 
+
+NAME=#NAMES_HUMANMALE the Citizen 
+
+TSPEECH=spk_letter_quest2 
+
+
+
+CATEGORY=Custom 
+
+SUBSECTION=Quest NPCs 
+
+DESCRIPTION=Letter Owner 
+
+
+
+On=@Create 
+
+STR={100 200} 
+
+DEX={100 200} 
+
+INT={100 200} 
+
+COLOR=colors_skin 
+
+
+
+ITEMNEWBIE=random_male_hair 
+
+COLOR=colors_hair 
+
+ITEMNEWBIE=random_facial_hair 
+
+COLOR=match_hair 
+
+
+
+ITEMNEWBIE=i_shirt_plain 
+
+COLOR=colors_all 
+
+ITEMNEWBIE=random_pants 
+
+COLOR=colors_all 
+
+ITEMNEWBIE=random_shoes 
+
+COLOR=colors_neutral 
+
+
+
+[speech spk_letter_quest1] 
+
+On=*hail* 
+
+On=*greeting* 
+
+On=*hello* 
+
+On=*sup* 
+
+Say Hello. I do not have the time to waste with idle chatter for I am expecting an important 'letter' 
+
+Return 1 
+
+
+
+On=*letter* 
+
+Say A friend of mine is making his way here with a very important letter from the Temoral Monestary. 
+
+Say The monestary is located far to the southeast of here across the Long Walk Bridge. 
+
+Say If you would 'join' this quest and see to it that the letter arrives safely I shall reward you. 
+
+Return 1 
+
+
+
+On=*join* 
+
+IF <SRC.TAG.LETTERQUEST>==01 
+
+Say What is keeping you? You have already accepted the mission yet you stand here yapping with me. 
+
+Return 1 
+
+ELSE 
+
+Say Very well but make haste for the letter is of the most importance to me. 
+
+Say When you find my friend tell him 'letter' and he shall know what to do. 
+
+Say Or tell me 'resign' to admit your failure to complete this assignment. 
+
+SRC.TAG.LETTERQUEST=01 
+
+Return 1 
+
+ENDIF 
+
+
+
+On=*resign* 
+
+IF <SRC.TAG.LETTERQUEST>==01 
+
+SAY You disappoint me but I shall release you of your promise. Do not trouble me again in the near future for I have no time for failures. 
+
+SRC.TAG.LETTERQUEST=00 
+
+ELSE 
+
+SAY You are not on a quest from me, therefore I can not release you from it. 
+
+ENDIF 
+
+Return 1 
+
+
+
+On=*complete* 
+
+IF <SRC.TAG.LETTERQUEST>==01 
+
+IF <SRC.RESTEST 1 i_quest_letter> 
+
+SRC.TAG.LETTERQUEST=00 
+
+SRC.FAME=<SRC.FAME> +300 
+
+SRC.KARMA=<SRC.KARMA> +500 
+
+SRC.CONSUME 1 i_quest_letter 
+
+SAY I thank you for delivering the letter. Here is your reward. 
+
+SRC.NEWITEM={i_stat_airellie 1 i_stat_cow 1 i_stat_demon 1 i_stat_earth 1 i_stat_ettin 1 i_stat_fireellie 1 i_stat_garg 1 i_stat_lich 1 i_stat_lizman 1 i_stat_llama 1 i_stat_ogre 1 i_stat_ophid 1 i_stat_orc 1 i_stat_ratman 1 i_stat_skell 1 i_stat_tqueen 1 i_stat_zombie 1 i_statue_dragon 1 i_statue_holy_steed 1 i_statue_orc 1 i_statue_unholy_steed 1 i_statue_water 1} 
+
+SRC.ACT.BOUNCE 
+
+ELSE 
+
+SAY You have not retrieved the letter I seek. Return when you have. 
+
+ELSE 
+
+SAY You are not on a quest from me. Seek your rewards elsewhere. 
+
+ENDIF 
+
+ENDIF 
+
+Return 1 
+
+
+
+[speech spk_letter_quest2] 
+
+On=*letter* 
+
+IF <SRC.TAG.LETTERQUEST>==01 
+
+Say I see that you have been asked to deliver my letter. Very well, here it is. 
+
+Say Return this letter to my friend in Dryllia and say 'complete' to him. 
+
+SRC.NEWITEM=i_quest_letter 
+
+SRC.ACT.BOUNCE 
+
+Say Farewell and good luck. 
+
+REMOVE 
+
+Return 1 
+
+ELSE 
+
+Say I am sorry but I can only give the letter to someone entrusted to deliver it. 
+
+Return 1 
+
+ENDIF 
+
+
+
+[EOF]

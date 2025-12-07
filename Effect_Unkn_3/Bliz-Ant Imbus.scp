@@ -1,0 +1,983 @@
+//**********************************************
+//**      Blizzard-(www.marchadium.com)       **
+//**      Big_boy_uk89-(www.crazypk.com)      **
+//**********************************************
+//**********************************************
+//**       30 Imbues by Blizzard              **
+//**                and                       **
+//**     30 Imbues By Big_boy_uk89            **
+//**********************************************
+//*************Installation*********************
+//-Add this first section to the bottom of    **
+//      [SKILLCLASS 0] in spheretables.scp    **
+//					      **
+//	 ON=@LOGIN			      **
+//       IF !(<SRC.ISEVENT.e_imbue2>)	      **
+//	 SRC.EVENTS +e_imbue2		      **
+//       ENDIF                        	      **
+//**********************************************
+
+[EVENTS e_imbue2]
+ON=@HIT
+VAR.OLD_ACT=<ACT>
+IF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==1) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==1)
+	SRC.EFFECT=3,i_fx_explode,15,15,1 0b81
+	SRC.SOUND=snd_spell_fire_field
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==2) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==2)
+	SRC.EFFECT=3,i_fire_column,15,15,1
+	SRC.SOUND=snd_spell_flamestrike
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==3) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==3)
+	SRC.EFFECT=3,i_fX_explode,15,15,1
+	SRC.SOUND=snd_spell_explosion
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==4) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==4)
+	SRC.EFFECT=3,i_fire_column,15,15,1 0b7c
+	SRC.SOUND=snd_spell_flamestrike
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==5) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==5)
+	SRC.EFFECT=3,i_fx_glow_spike,15,15,1 0b77
+	SRC.SOUND=snd_spell_dispel
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==6) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==6)
+	SRC.EFFECT=3,i_fX_sparkle,15,15,1 0b3b
+	SRC.SOUND=snd_spell_mana_vampire
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==7) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==7)
+	SRC.EFFECT=3,i_fx_curse,15,15,1 0b8c
+	IF (RAND(2)==1)
+		SRC.SOUND=snd_spell_poison
+		VAR.OLD_UID=<UID>
+		SRC.f_poison 5.0
+		VAR.OLD_UID=
+	ENDIF
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==8) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==8)
+	SRC.EFFECT=3,i_fire_column,15,15,1 0b9a
+	SRC.SOUND=snd_spell_flamestrike
+	IF (RAND(3)==1)
+		SRC.SOUND=snd_spell_poison
+		VAR.OLD_UID=<UID>
+		SRC.f_poison 30.0
+		VAR.OLD_UID=
+	ENDIF
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==9) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==9)
+	SRC.EFFECT=3,i_fx_bless_effect,15,15,1 0b94
+	SRC.SOUND=snd_spell_dispel
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==10) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==10)
+	SRC.EFFECT=3,i_fx_explode,15,15,1 0b7f
+	SRC.EFFECT=3,i_fire_column,15,15,1 0b7f
+	SRC.SOUND=snd_spell_explosion
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==11) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==11)
+	SRC.EFFECT=3,i_fx_smoke,15,15,1 0b92
+	SRC.SOUND=snd_spell_curse
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==12) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==12)
+	SRC.EFFECT=3,i_fx_smoke,15,15,1 0b62
+	SRC.SOUND=snd_spell_curse
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==13) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==13)
+	SRC.EFFECT=3,i_fx_heal_effect,15,15,1 0b70
+	SRC.SOUND=snd_spell_bless
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==14) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==14)
+	SRC.EFFECT=3,i_fx_bless_effect,15,15,1 0b71
+	SRC.SOUND=snd_spell_bless
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==15) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==15)
+	SRC.EFFECT=1,1
+	SRC.SOUND=snd_spell_lightning
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==16) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==16)
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.SOUND=snd_spell_lightning
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==17) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==17)
+	SRC.EFFECT=3,i_fire_column,15,15,1 0bb6
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.SOUND=snd_spell_lightning
+	SRC.SOUND=snd_spell_flamestrike
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==18) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==18)
+	SRC.EFFECT=3,i_fx_sparkle_2,15,15,1 0bb1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.SOUND=snd_spell_lightning
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==19) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==19)
+	SRC.EFFECT=3,i_fire_column,15,15,1 0bb0
+	SRC.BARK=4
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==20) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==20)
+	SRC.EFFECT=3,i_fire_column,15,15,1 0b73
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	VAR.OLD_ACT=<ACT>
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.COLOR=0b74
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,1 0b73
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.COLOR=0b74
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=ne
+	SRC.ACT.MOVE=ne
+	SRC.ACT.MOVE=ne
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,1 0b73
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.COLOR=0b74
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,1 0b73
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.COLOR=0b74
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=se
+	SRC.ACT.MOVE=se
+	SRC.ACT.MOVE=se
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,1 0b73
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.COLOR=0b74
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,1 0b73
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.COLOR=0b74
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=sw
+	SRC.ACT.MOVE=sw
+	SRC.ACT.MOVE=sw
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,1 0b73
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.COLOR=0b74
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,1 0b73
+	SRC.NEWITEM=i_fire_column
+	SRC.ACT.COLOR=0b74
+	SRC.ACT.TYPE=t_normal
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=nw
+	SRC.ACT.MOVE=nw
+	SRC.ACT.MOVE=nw
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,1 0b73
+	ACT=<VAR.OLD_ACT>
+	SRC.SOUND=snd_spell_explosion
+	SRC.SOUND=snd_spell_lightning
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==21) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==21)
+	SRC.EFFECT=3,i_fx_smoke,15,15,1 0b9d
+	SRC.SOUND=snd_spell_curse
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==22) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==22)
+	SRC.EFFECT=3,i_fx_curse,15,15,1 0afb
+	SRC.SOUND=snd_spell_curse
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==23) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==23)
+	IF (RAND(25)==1)
+		VAR.OLD_ACT=<ACT>
+		SRC.NEWITEM=i_memory_sliced
+		SRC.EQUIP=<SRC.ACT>
+		ACT=<VAR.OLD_ACT>
+	ENDIF
+	SRC.SOUND=186
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==24) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==24)
+	IF (RAND(25)==1)
+		VAR.OLD_ACT=<ACT>
+		SRC.NEWNPC=c_panther
+		SRC.ACT.P=<P>
+		SRC.ACT.UPDATE
+		SRC.ACT.ATTACK=<SRC.UID>
+		VAR.OLD_UID=<SRC.ACT.UID>
+		SRC.NEWITEM=i_memory
+		SRC.ACT.COLOR=02
+		SRC.ACT.ATTR=attr_move_never|attr_invis
+		SRC.ACT.LINK=<UID>
+		SRC.ACT.CONT=<VAR.OLD_UID>
+		VAR.OLD_UID=
+		ACT=<VAR.OLD_ACT>
+	ENDIF
+	SRC.SOUND=186
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==25) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==25)
+	SRC.EFFECT=3,i_fire_column,15,15,1 0afa
+	SRC.SOUND=186
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==26) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==26)
+	SRC.EFFECT=3,i_fire_column,15,15,1 0afe
+	SRC.SOUND=186
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==27) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==27)
+	SRC.EFFECT=3,i_fire_column,15,15,1 0b0d
+	SRC.EFFECT=1,1
+	SRC.EFFECT=1,1
+	SRC.SOUND=snd_spell_flamestrike
+	SRC.SOUND=snd_spell_lightning
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==28) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==28)
+	SRC.EFFECT=3,i_fx_explode,15,15,1 0b35
+	SRC.SOUND=snd_spell_explosion
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==29) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==29)
+	VAR.X=<EVAL {1 10}>
+	IF (<EVAL <VAR.X>>==1)
+		IF (0<SRC.FINDLAYER.(25).UID>)
+			SRC.DCLICK
+		ENDIF
+	ENDIF
+	VAR.X=
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==30) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==30)
+	SRC.EFFECT=3,i_fx_curse,15,15,1 0ba3
+	VAR.OLD_ACT=<ACT>
+	SRC.NEWITEM=01d0f
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.NEWITEM=01d05
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01cf2
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01d10
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.NEWITEM=01d06
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01cf3
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01d08
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.NEWITEM=01d07
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=W
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01cf4
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01cf7
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.NEWITEM=01cf6
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01d0e
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=e
+	SRC.NEWITEM=01d04
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=i_blood_2
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=s
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01d02
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.NEWITEM=01d03
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=s
+	SRC.NEWITEM=01d12
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01d0d
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=e
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01d01
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01d0b
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01d0c
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=e
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01d00
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=e
+	SRC.ACT.MOVE=e
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01cfd
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01cfe
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=e
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01d11
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01d09
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01cf8
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01d0a
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01cfa
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01cf9
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01cfc
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	SRC.NEWITEM=01cf9
+	SRC.ACT.COLOR=0ba4
+	SRC.ACT.ATTR=attr_move_never|attr_decay
+	SRC.ACT.TIMER=2
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=n
+	SRC.ACT.MOVE=w
+	SRC.ACT.MOVE=w
+	SRC.ACT.EFFECT=0,i_fire_column,1,1,0 0ba3
+	ACT=<VAR.OLD_ACT>
+	VAR.OLD_ACT=
+	SRC.SOUND=snd_spell_curse
+	SRC.SOUND=snd_spell_dispel
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==31) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==31
+ACT.EFFECT 1,1
+ACT.DAMAGE 5
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==32) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==32
+ACT.EFFECT 1,1
+ACT.DAMAGE 6 
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==33) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==33
+ACT.EFFECT 1,1
+ACT.DAMAGE 7
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==34) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==34
+ACT.EFFECT 1,1
+ACT.DAMAGE 8
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==35) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==35
+ACT.EFFECT 1,1
+ACT.DAMAGE 9
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==36) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==36
+ACT.EFFECT 1,1
+ACT.DAMAGE 10
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==37) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==37
+ACT.EFFECT 1,1
+ACT.DAMAGE 11
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==38) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==38
+ACT.EFFECT 1,1
+ACT.DAMAGE 12
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==39) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==39
+ACT.EFFECT 1,1
+ACT.DAMAGE 13
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==40) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==40
+ACT.EFFECT 1,1
+ACT.DAMAGE 14
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==41) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==41
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 9
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==42) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==42
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 10
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==43) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==43
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 11
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==44) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==44
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 12
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==45) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==45
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 13
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==46) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==46
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 14
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==47) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==47
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 15
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==48) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==48
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 16
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==49) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==49
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 17
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==50) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==50
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 18
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==51) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==51
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 11
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==52) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==52
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 12
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==53) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==53
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 13
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==54) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==54
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 14
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==55) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==55
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 15
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==56) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==56
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 16
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==57) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==57
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 17
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==58) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==58
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 18
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==59) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==59
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 19
+ELSEIF (<EVAL 0<FINDLAYER.(1).TAG.IMBUE>>==60) || (<EVAL 0<FINDLAYER.(2).TAG.IMBUE>>==60
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 20
+ENDIF
+
+[ITEMDEF i_imbue]
+DEFNAME=i_imbue
+NAME=Imbue
+ID=i_scroll_reactive_armor
+TYPE=t_eq_script
+
+ON=@CREATE
+COLOR=0b8c
+MORE1={1 60}
+
+ON=@CLICK
+IF (<EVAL <MORE1>>==1)
+	MESSAGE=<NAME> (Brimstone)
+ELSEIF (<EVAL <MORE1>>==2)
+	MESSAGE=<NAME> (Flamestrike)
+ELSEIF (<EVAL <MORE1>>==3)
+	MESSAGE=<NAME> (Explosion)
+ELSEIF (<EVAL <MORE1>>==4)
+	MESSAGE=<NAME> (Icestrike)
+ELSEIF (<EVAL <MORE1>>==5)
+	MESSAGE=<NAME> (Shadow Gale)
+ELSEIF (<EVAL <MORE1>>==6)
+	MESSAGE=<NAME> (Goul Reaper)
+ELSEIF (<EVAL <MORE1>>==7)
+	MESSAGE=<NAME> (Toxicantation)
+ELSEIF (<EVAL <MORE1>>==8)
+	MESSAGE=<NAME> (Poison Flames)
+ELSEIF (<EVAL <MORE1>>==9)
+	MESSAGE=<NAME> (Spirit Stalker)
+ELSEIF (<EVAL <MORE1>>==10)
+	MESSAGE=<NAME> (Flame Crown)
+ELSEIF (<EVAL <MORE1>>==11)
+	MESSAGE=<NAME> (Exile)
+ELSEIF (<EVAL <MORE1>>==12)
+	MESSAGE=<NAME> (Death Cycle)
+ELSEIF (<EVAL <MORE1>>==13)
+	MESSAGE=<NAME> (Heaven's Blow)
+ELSEIF (<EVAL <MORE1>>==14)
+	MESSAGE=<NAME> (Holy Beconning)
+ELSEIF (<EVAL <MORE1>>==15)
+	MESSAGE=<NAME> (Lightning)
+ELSEIF (<EVAL <MORE1>>==16)
+	MESSAGE=<NAME> (Lightning Tornado)
+ELSEIF (<EVAL <MORE1>>==17)
+	MESSAGE=<NAME> (Electric Fury)
+ELSEIF (<EVAL <MORE1>>==18)
+	MESSAGE=<NAME> (Tribal Dance)
+ELSEIF (<EVAL <MORE1>>==19)
+	MESSAGE=<NAME> (Karmageddon)
+ELSEIF (<EVAL <MORE1>>==20)
+	MESSAGE=<NAME> (Electric Flame Cycle)
+ELSEIF (<EVAL <MORE1>>==21)
+	MESSAGE=<NAME> (Death Bringer)
+ELSEIF (<EVAL <MORE1>>==22)
+	MESSAGE=<NAME> (Sorceress's Chant)
+ELSEIF (<EVAL <MORE1>>==23)
+	MESSAGE=<NAME> (Tiger Claw)
+ELSEIF (<EVAL <MORE1>>==24)
+	MESSAGE=<NAME> (Panther's Tooth)
+ELSEIF (<EVAL <MORE1>>==25)
+	MESSAGE=<NAME> (Flame Claw)
+ELSEIF (<EVAL <MORE1>>==26)
+	MESSAGE=<NAME> (Ice Claw)
+ELSEIF (<EVAL <MORE1>>==27)
+	MESSAGE=<NAME> (Electric Ice Flame)
+ELSEIF (<EVAL <MORE1>>==28)
+	MESSAGE=<NAME> (Fire Flash)
+ELSEIF (<EVAL <MORE1>>==29)
+	MESSAGE=<NAME> (Joust)
+ELSEIF (<EVAL <MORE1>>==30)
+	MESSAGE=<NAME> (Robin's Curse)
+ELSEIF (<EVAL <MORE1>>==31)
+	MESSAGE=<NAME> (Lightning +1)
+ELSEIF (<EVAL <MORE1>>==32)
+	MESSAGE=<NAME> (Lightning +2)
+ELSEIF (<EVAL <MORE1>>==33)
+	MESSAGE=<NAME> (Lightning +3)
+ELSEIF (<EVAL <MORE1>>==34)
+	MESSAGE=<NAME> (Lightning +4)
+ELSEIF (<EVAL <MORE1>>==35)
+	MESSAGE=<NAME> (Lightning +5)
+ELSEIF (<EVAL <MORE1>>==36)
+	MESSAGE=<NAME> (Lightning +6)
+ELSEIF (<EVAL <MORE1>>==37)
+	MESSAGE=<NAME> (Lightning +7)
+ELSEIF (<EVAL <MORE1>>==38)
+	MESSAGE=<NAME> (Lightning +8)
+ELSEIF (<EVAL <MORE1>>==39)
+	MESSAGE=<NAME> (Lightning +9)
+ELSEIF (<EVAL <MORE1>>==40)
+	MESSAGE=<NAME> (Lightning +10)
+ELSEIF (<EVAL <MORE1>>==41)
+	MESSAGE=<NAME> (Explosion +1)
+ELSEIF (<EVAL <MORE1>>==42)
+	MESSAGE=<NAME> (Explosion +2)
+ELSEIF (<EVAL <MORE1>>==43)
+	MESSAGE=<NAME> (Explosion +3)
+ELSEIF (<EVAL <MORE1>>==44)
+	MESSAGE=<NAME> (Explosion +4)
+ELSEIF (<EVAL <MORE1>>==45)
+	MESSAGE=<NAME> (Explosion +5)
+ELSEIF (<EVAL <MORE1>>==46)
+	MESSAGE=<NAME> (Explosion +6)
+ELSEIF (<EVAL <MORE1>>==47)
+	MESSAGE=<NAME> (Explosion +7)
+ELSEIF (<EVAL <MORE1>>==48)
+	MESSAGE=<NAME> (Explosion +8)
+ELSEIF (<EVAL <MORE1>>==49)
+	MESSAGE=<NAME> (Explosion +9)
+ELSEIF (<EVAL <MORE1>>==50)
+	MESSAGE=<NAME> (Explosion +10)
+ELSEIF (<EVAL <MORE1>>==51)
+	MESSAGE=<NAME> (Flamestrike +1)
+ELSEIF (<EVAL <MORE1>>==52)
+	MESSAGE=<NAME> (Flamestrike +2)
+ELSEIF (<EVAL <MORE1>>==53)
+	MESSAGE=<NAME> (Flamestrike +3)
+ELSEIF (<EVAL <MORE1>>==54)
+	MESSAGE=<NAME> (Flamestrike +4)
+ELSEIF (<EVAL <MORE1>>==55)
+	MESSAGE=<NAME> (Flamestrike +5)
+ELSEIF (<EVAL <MORE1>>==56)
+	MESSAGE=<NAME> (Flamestrike +6)
+ELSEIF (<EVAL <MORE1>>==57)
+	MESSAGE=<NAME> (Flamestrike +7)
+ELSEIF (<EVAL <MORE1>>==58)
+	MESSAGE=<NAME> (Flamestrike +8)
+ELSEIF (<EVAL <MORE1>>==59)
+	MESSAGE=<NAME> (Flamestrike +9)
+ELSEIF (<EVAL <MORE1>>==60)
+	MESSAGE=<NAME> (Flamestrike +10)
+ENDIF
+RETURN 1
+
+ON=@DCLICK
+IF (<ATTR> & attr_move_never) || (<ATTR> & attr_static)
+	SRC.SYSMESSAGE=You can not use this in its current state.
+ELSE
+	TARGET=Which item do you wish to imbue?
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_weapon_sword) || (<SRC.TARG.TYPE>==t_weapon_axe) || (<SRC.TARG.TYPE>==t_weapon_bow) || (<SRC.TARG.TYPE>==t_weapon_xbow) || (<SRC.TARG.TYPE>==t_weapon_mace_sharp) || (<SRC.TARG.TYPE>==t_weapon_mace_smith) || (<SRC.TARG.TYPE>==t_weapon_mace_pick) || (<SRC.TARG.TYPE>==t_weapon_mace_staff) || (<SRC.TARG.TYPE>==t_weapon_mace_crook) || (<SRC.TARG.TYPE>==t_weapon_fence)
+	f_imbue
+ELSE
+	SRC.SYSMESSAGE=You can only imbue wearable items, such as clothes, armor, and weapons.
+ENDIF
+RETURN 1
+
+[FUNCTION f_imbue]
+IF !(<SRC.TARG.CONT.ISCHAR>)
+	IF (<SRC.TARG.TOPOBJ.UID>==<SRC.UID>)
+		IF !(0<SRC.TARG.TAG.IMBUE>)
+			IF (<SRC.TARG.ATTR> & attr_magic)
+				SRC.MESSAGE=You imbue <SRC.TARG.NAME>.
+				SRC.EFFECT=3,i_fx_sparkle,15,15,1
+				SRC.SOUND=snd_spell_create_food
+				IF (<EVAL <MORE1>>==1)
+					SRC.TARG.COLOR=0b81
+				ELSEIF (<EVAL <MORE1>>==2)
+					SRC.TARG.COLOR=0b7e
+				ELSEIF (<EVAL <MORE1>>==3)
+					SRC.TARG.COLOR=0b7e
+				ELSEIF (<EVAL <MORE1>>==4)
+					SRC.TARG.COLOR=0b7d
+				ELSEIF (<EVAL <MORE1>>==5)
+					SRC.TARG.COLOR=0b78
+				ELSEIF (<EVAL <MORE1>>==6)
+					SRC.TARG.COLOR=0b3c
+				ELSEIF (<EVAL <MORE1>>==7)
+					SRC.TARG.COLOR=0b8d
+				ELSEIF (<EVAL <MORE1>>==8)
+					SRC.TARG.COLOR=0b9b
+				ELSEIF (<EVAL <MORE1>>==9)
+					SRC.TARG.COLOR=0b95
+				ELSEIF (<EVAL <MORE1>>==10)
+					SRC.TARG.COLOR=0b80
+				ELSEIF (<EVAL <MORE1>>==11)
+					SRC.TARG.COLOR=0b93
+				ELSEIF (<EVAL <MORE1>>==12)
+					SRC.TARG.COLOR=0b63
+				ELSEIF (<EVAL <MORE1>>==13)
+					SRC.TARG.COLOR=0b71
+				ELSEIF (<EVAL <MORE1>>==14)
+					SRC.TARG.COLOR=0b72
+				ELSEIF (<EVAL <MORE1>>==15)
+					SRC.TARG.COLOR=0b61
+				ELSEIF (<EVAL <MORE1>>==16)
+					SRC.TARG.COLOR=0b61
+				ELSEIF (<EVAL <MORE1>>==17)
+					SRC.TARG.COLOR=0bb7
+				ELSEIF (<EVAL <MORE1>>==18)
+					SRC.TARG.COLOR=0bb2
+				ELSEIF (<EVAL <MORE1>>==19)
+					SRC.TARG.COLOR=0bb1
+				ELSEIF (<EVAL <MORE1>>==20)
+					SRC.TARG.COLOR=0b74
+				ELSEIF (<EVAL <MORE1>>==21)
+					SRC.TARG.COLOR=0b9e
+				ELSEIF (<EVAL <MORE1>>==22)
+					SRC.TARG.COLOR=0afc
+				ELSEIF (<EVAL <MORE1>>==23)
+					SRC.TARG.COLOR=0af7
+				ELSEIF (<EVAL <MORE1>>==24)
+					SRC.TARG.COLOR=0b03
+				ELSEIF (<EVAL <MORE1>>==25)
+					SRC.TARG.COLOR=0afb
+				ELSEIF (<EVAL <MORE1>>==26)
+					SRC.TARG.COLOR=0aff
+				ELSEIF (<EVAL <MORE1>>==27)
+					SRC.TARG.COLOR=0b0e
+				ELSEIF (<EVAL <MORE1>>==28)
+					SRC.TARG.COLOR=0b36
+				ELSEIF (<EVAL <MORE1>>==29)
+					SRC.TARG.COLOR=0ba8
+				ELSEIF (<MORE1> <= 60)
+				SRC.TARG.COLOR={0ba8 0b86}
+				ENDIF
+				ENDIF
+				IF (<EVAL <MORE1>>==1) 
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Brimstone)
+				ELSEIF (<EVAL <MORE1>>==2)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike)
+				ELSEIF (<EVAL <MORE1>>==3)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion)
+				ELSEIF (<EVAL <MORE1>>==4)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Icestrike)
+				ELSEIF (<EVAL <MORE1>>==5)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Shadow Gale)
+				ELSEIF (<EVAL <MORE1>>==6)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Ghoul Reaper)
+				ELSEIF (<EVAL <MORE1>>==7)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Toxicantation)
+				ELSEIF (<EVAL <MORE1>>==8)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Poison Flames)
+				ELSEIF (<EVAL <MORE1>>==9)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Spirit Stalker)
+				ELSEIF (<EVAL <MORE1>>==10)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Flame Crown)
+				ELSEIF (<EVAL <MORE1>>==11)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Exile)
+				ELSEIF (<EVAL <MORE1>>==12)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Death Cycle)
+				ELSEIF (<EVAL <MORE1>>==13)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Heaven's Blow)
+				ELSEIF (<EVAL <MORE1>>==14)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Holy Beconning)
+				ELSEIF (<EVAL <MORE1>>==15)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning)
+				ELSEIF (<EVAL <MORE1>>==16)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning Tornado)
+				ELSEIF (<EVAL <MORE1>>==17)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Electric Fury)
+				ELSEIF (<EVAL <MORE1>>==18)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Tribal Dance)
+				ELSEIF (<EVAL <MORE1>>==19)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Karmageddon)
+				ELSEIF (<EVAL <MORE1>>==20)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Electric Flame Cycle)
+				ELSEIF (<EVAL <MORE1>>==21)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Death Bringer)
+				ELSEIF (<EVAL <MORE1>>==22)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Sorceress's Chant)
+				ELSEIF (<EVAL <MORE1>>==23)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Tiger Claw)
+				ELSEIF (<EVAL <MORE1>>==24)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Panther's Tooth)
+				ELSEIF (<EVAL <MORE1>>==25)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Flame Claw)
+				ELSEIF (<EVAL <MORE1>>==26)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Ice Claw)
+				ELSEIF (<EVAL <MORE1>>==27)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Electric Ice Flame)
+				ELSEIF (<EVAL <MORE1>>==28)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Fire Flash)
+				ELSEIF (<EVAL <MORE1>>==29)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Joust)
+				ELSEIF (<EVAL <MORE1>>==30)
+					SRC.TARG.NAME=<SRC.TARG.NAME> (Robin's Curse)
+ELSEIF (<EVAL <MORE1>>==31)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +1)
+ELSEIF (<EVAL <MORE1>>==32)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +2)
+ELSEIF (<EVAL <MORE1>>==33)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +3)
+ELSEIF (<EVAL <MORE1>>==34)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +4)
+ELSEIF (<EVAL <MORE1>>==35)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +5)
+ELSEIF (<EVAL <MORE1>>==36)
+	SRC.TARG.NAME=<SRC.TARG.NAME>> (Lightning +6)
+ELSEIF (<EVAL <MORE1>>==37)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +7)
+ELSEIF (<EVAL <MORE1>>==38)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +8)
+ELSEIF (<EVAL <MORE1>>==39)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +9)
+ELSEIF (<EVAL <MORE1>>==40)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Lightning +10)
+ELSEIF (<EVAL <MORE1>>==41)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +1)
+ELSEIF (<EVAL <MORE1>>==42)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +2)
+ELSEIF (<EVAL <MORE1>>==43)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +3)
+ELSEIF (<EVAL <MORE1>>==44)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +4)
+ELSEIF (<EVAL <MORE1>>==45)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +5)
+ELSEIF (<EVAL <MORE1>>==46)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +6)
+ELSEIF (<EVAL <MORE1>>==47)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +7)
+ELSEIF (<EVAL <MORE1>>==48)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +8)
+ELSEIF (<EVAL <MORE1>>==49)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +9)
+ELSEIF (<EVAL <MORE1>>==50)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Explosion +10)
+ELSEIF (<EVAL <MORE1>>==51)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +1)
+ELSEIF (<EVAL <MORE1>>==52)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +2)
+ELSEIF (<EVAL <MORE1>>==53)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +3)
+ELSEIF (<EVAL <MORE1>>==54)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +4)
+ELSEIF (<EVAL <MORE1>>==55)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +5)
+ELSEIF (<EVAL <MORE1>>==56)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +6)
+ELSEIF (<EVAL <MORE1>>==57)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +7)
+ELSEIF (<EVAL <MORE1>>==58)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +8)
+ELSEIF (<EVAL <MORE1>>==59)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +9)
+ELSEIF (<EVAL <MORE1>>==57)
+	SRC.TARG.NAME=<SRC.TARG.NAME> (Flamestrike +10)
+				ENDIF
+				SRC.TARG.TAG.IMBUE=<MORE1>
+				SRC.TARG.UPDATE
+				REMOVE
+			ELSE
+				SRC.SYSMESSAGE=You can only imbue a magical weapon, such as Vanquishing and Force.
+			ENDIF
+		ELSE
+			SRC.SYSMESSAGE=This item is already imbued.
+		ENDIF
+	ELSE
+		SRC.SYSMESSAGE=This item does not belong to you.
+		SRC.SYSMESSAGE=The item must be in your pack to imbue.
+	ENDIF
+ELSE
+	SRC.SYSMESSAGE=The item must not be equipped to imbue.
+ENDIF
+
+[TEMPLATE tm_imbue]
+DEFNAME=tm_imbue
+CONTAINER=i_bag
+COLOR=03a
+ITEM=i_imbue
+
+[EOF]

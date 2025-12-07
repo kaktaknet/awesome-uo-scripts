@@ -1,0 +1,269 @@
+//----------------------------------------------------------
+//Static Party System V1 (Final Release)
+//By Sven
+//Created for Flinthills 2
+//---------------------------------------------------------
+
+//-----------Installation Instructions--------------
+//Put this script into your scripts folder and give permission for players to use .party.
+//Also note : Once a party has been formed, there will be a bag in GA at 5555,1111.
+//DO NOT DELETE THIS BAG
+//--------------------------------------------------------
+
+//-----------Functions-------------------------------
+//Party setup
+//Party list
+//Party fix
+//Party <message>
+//-------------------------------------------------------
+
+//----------Notes------------------------------------
+//This system creates a static party that will not remove when the leader logs off.
+//This party in NO WAY affects kills or criminal tags.
+//This party is exclusivly for chat, and can aid in arranging such things as party killing sprees.
+//The system has a heirarchical leader system, if the leader removes himself from the party, the first person added will become leader.
+//------------------------------------------------------
+
+[FUNCTION Party]
+IF STRMATCH(<ARGS>,setup)
+IF (0<SRC.TAG.PUID>=0)
+	MENU M_PARTY_NEW
+ELSEIF (<SRC.UID.<SRC.TAG.PUID>.FINDCONT.<EVAL <SRC.UID.<SRC.TAG.PUID>.RESCOUNT>+-1>.LINK>==<SRC.UID>)
+	MENU M_PARTY_LEADER
+ELSE
+	MENU M_PARTY_MEMBER
+ENDIF
+RETURN 1
+ELSEIF STRMATCH(<ARGS>,list)
+	listparty
+	return 1
+ELSEIF STRMATCH(<ARGS>,fix)
+	SRC.TAG.PUID=
+	RETURN 1
+ELSE
+IF !(0<SRC.TAG.PUID>=0)
+	SERV.ALLCLIENTS party_r <SRC.NAME> [Party]:<ARGS>
+ELSE
+	SRC.SYSMESSAGE You are not in a party. Use ".party setup" to start or configure your party.
+ENDIF
+ENDIF
+RETURN 1
+
+[MENU M_PARTY_NEW]
+Make a new party?
+ON=0 Yes
+	SRC.NEWITEM i_bag
+	SRC.ACT.ATTR=080
+	SRC.ACT.P=5555,1111
+	SRC.ACT.NAME=<SRC.NAME>'s Party Bag
+	SRC.TAG.PUID=<SRC.ACT.UID>
+	SRC.NEWITEM i_mushroom
+	SRC.ACT.NAME=<SRC.NAME>
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.CONT=0<SRC.TAG.PUID>
+	SRC.SYSMESSAGE You have made a new party.
+	RETURN 1
+	
+ON=0 Cancel
+	RETURN 1
+	
+[MENU M_PARTY_MEMBER]
+Party Menu
+ON=0 Leave Party
+partyremove
+RETURN 1
+
+ON=0 Cancel
+RETURN 1
+
+[MENU M_PARTY_LEADER]
+Party Leader Menu
+
+ON=0 Add Member
+SRC.ACT=<SRC.TAG.PUID>
+IF (<SRC.ACT.RESCOUNT> >= 15)
+	SRC.SYSMESSAGE You cannot have more than 15 members in your party.
+	RETURN 1
+ELSE
+	SRC.NEWITEM i_party_target_add
+	SRC.ACT.EQUIP
+	SRC.ACT.TIMER=60
+	RETURN 1
+ENDIF
+
+ON=0 Kick Member
+SRC.NEWITEM i_party_target_kick
+SRC.ACT.EQUIP
+SRC.ACT.TIMER=60
+RETURN 1
+
+ON=0 Disband Party
+SRC.ACT=<SRC.TAG.PUID>
+partydisband
+RETURN 1
+
+ON=0 Leave Party
+partyremove
+RETURN 1
+
+[FUNCTION partyremove]
+SRC.ACT=<SRC.TAG.PUID>
+partyremove_r <SRC.ACT.RESCOUNT>+-1
+IF (<SRC.ACT.RESCOUNT> == 1)
+partydisband
+ELSEIF (<SRC.ACT.RESCOUNT>) == 0
+	SRC.TRY SRC.ACT.REMOVE
+	RETURN 1
+ENDIF
+SRC.serv.allclients party_r <SRC.NAME> has left the party.
+SRC.serv.allclients party_r <SRC.ACT.FINDCONT.<EVAL <SRC.ACT.RESCOUNT>+-1>.NAME> is the leader of the party.
+SYSMESSAGE You have left the party.
+RETURN 1
+
+[FUNCTION partyremove_r]
+IF <SRC.ACT.FINDCONT.<ARGN>.LINK>==<SRC.UID>
+	SRC.TRY SRC.ACT.FINDCONT.<ARGN>.LINK.TAG.PUID=
+	SRC.TRY SRC.ACT.FINDCONT.<ARGN>.REMOVE
+	RETURN 1
+ELSEIF <ARGN> >= 1
+	partyremove_r <ARGN>+-1
+	RETURN 1
+ELSE
+	RETURN 1
+ENDIF
+
+
+[FUNCTION partydisband]
+SRC.ACT=<SRC.TAG.PUID>
+IF (<EVAL <SRC.ACT.RESCOUNT>> > 0)
+	partydisband_r <EVAL <SRC.ACT.RESCOUNT>+-1>
+	RETURN 0
+ENDIF
+RETURN 1
+
+[FUNCTION partydisband_r]
+SRC.TRY SRC.UID.<SRC.ACT.FINDCONT.<ARGN>.LINK>.SYSMESSAGE Your party has disbanded.
+SRC.TRY SRC.UID.<SRC.ACT.FINDCONT.<ARGN>.LINK>.TAG.PUID=
+
+IF <ARGN> > 0
+	partydisband_r <EVAL <ARGN>+-1>
+ELSE
+	SRC.ACT.REMOVE
+	RETURN 1
+ENDIF
+
+[FUNCTION party_r]
+IF !(0<TAG.PUID>=0)
+IF <TAG.PUID> == <SRC.TAG.PUID> 
+SYSMESSAGE <ARGS> 
+ENDIF
+ENDIF
+RETURN 1
+
+[ITEMDEF i_party_target_add]
+ID=i_memory
+NAME=Party Add Target
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@EQUIP
+TARGET Who do you wish to add?
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE This cannot be added to a party.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (0<SRC.TARG.TAG.PUID>=0) && (<SRC.TARG.NPC> == 0)
+	SRC.SERV.ALLCLIENTS party_r <SRC.TARG.NAME> been added to your party.
+	SRC.TARG.SYSMESSAGE You have been added to <SRC.NAME>'s party.
+	SRC.TARG.TAG.PUID=<SRC.TAG.PUID>
+	SRC.TARG.NEWITEM i_mushroom
+	SRC.TARG.ACT.NAME=<SRC.TARG.NAME>
+	SRC.TARG.ACT.LINK=<SRC.TARG.UID>
+	SRC.TARG.ACT.CONT=0<SRC.TAG.PUID>
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE This person either cannot join your party, or is a member of another party.
+	SRC.TARG.SYSMESSAGE <SRC.NAME> has invited you to join their party, but you are already a member in another one.
+	RETURN 1
+ENDIF
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[ITEMDEF i_party_target_kick]
+ID=i_memory
+NAME=Party Add Target
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@EQUIP
+TARGET Who do you wish to kick from the party?
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE This cannot be kicked from a party,
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(0<SRC.TARG.TAG.PUID>=0)
+IF <SRC.TARG.TAG.PUID> == <SRC.TAG.PUID> 
+	partykick
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE This person is not in your party!
+	RETURN 1
+ENDIF
+ELSE
+	SRC.SYSMESSAGE This person is not in a party!
+	RETURN 1
+ENDIF
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[FUNCTION partykick]
+SRC.ACT=<SRC.TAG.PUID>
+partykick_r <SRC.ACT.RESCOUNT>+-1
+IF (<SRC.ACT.RESCOUNT> == 1)
+partydisband
+ELSEIF (<SRC.ACT.RESCOUNT>) == 0
+	SRC.TRY SRC.ACT.REMOVE
+	RETURN 1
+ENDIF
+serv.allclients party_r <SRC.TARG.NAME> has been kicked from the party.
+SRC.TARG.SYSMESSAGE You have been kicked from the party.
+RETURN 1
+
+[FUNCTION partykick_r]
+IF <SRC.ACT.FINDCONT.<ARGN>.LINK>==<SRC.TARG.UID>
+	SRC.TRY SRC.ACT.FINDCONT.<ARGN>.LINK.TAG.PUID=
+	SRC.TRY SRC.ACT.FINDCONT.<ARGN>.REMOVE
+	RETURN 1
+ELSEIF <ARGN> >= 1
+	partykick_r <ARGN>+-1
+	RETURN 1
+ELSE
+	RETURN 1
+ENDIF
+
+[FUNCTION listparty]
+IF !(0<SRC.TAG.PUID>=0)
+serv.allclients listparty_r
+ELSE
+SRC.SYSMESSAGE You are not in a party.
+endif
+RETURN 1
+
+[FUNCTION listparty_r] 
+IF <TAG.PUID> == <SRC.TAG.PUID> 
+SRC.SYSMESSAGE <NAME> [Party]
+ENDIF
+RETURN 1

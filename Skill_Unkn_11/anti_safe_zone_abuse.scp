@@ -1,0 +1,42 @@
+////////////////////////////////////////////////////////////////////////////////////////
+//Anti Safe Zone Abuse  [Please leave header intact]
+//Scripted By Mordaunt
+//
+//Prevents use of combat skills inside a safe zone, which allow for skill gain with no
+//risk to the player or the target.
+//add this event in spheretables under:         ON=@LOGIN
+//                                              SRC.EVENTS e_safeabuse
+//
+//PLEASE NOTE:This script requires Taran's SYSMESSAGEUA script, if you do not have it
+//or do not want to use it remove the lines
+//
+//VAR.SUA_COLOR=800
+//SYSMESSAGEUA You may not engage a target inside a safe zone!
+///////////////////////////////////////////////////////////////////////////////////////
+
+
+[EVENTS e_safeabuse]
+ON=@SKILLSTART
+IF (<SRC.REGION.FLAGS>&region_flag_safe) || (<SRC.TARG.REGION.FLAGS>&region_flag_safe)
+IF (<SRC.FIXACTION>==SKILL_Archery) || (<SRC.FIXACTION>==SKILL_Swordsmanship) || (<SRC.FIXACTION>==SKILL_Macefighting) || (<SRC.FIXACTION>==SKILL_Fencing) || (<SRC.FIXACTION>==SKILL_Wrestling)
+SRC.ACTION= -1
+VAR.SUA_COLOR=800
+SYSMESSAGEUA You may not engage a target inside a safe zone!
+SRC.FLAGS=<SRC.FLAGS>&~020
+SRC.FIX
+ENDIF
+ENDIF
+RETURN 1
+
+
+ON=@SPELLCAST
+IF (<SRC.REGION.FLAGS>&region_flag_safe) || (<SRC.TARG.REGION.FLAGS>&region_flag_safe)
+IF (<ARGN>==1)||(<ARGN>==3)||(<ARGN>==5)||(<ARGN>==8)||(<ARGN>==12)||(<ARGN>==18)||(<ARGN>==20)||(<ARGN>==27)||(<ARGN>==28)||(<ARGN>==30)||(<ARGN>==31)||(<ARGN>==37)||(<ARGN>==38)||(<ARGN>==39)||(<ARGN>==42)||(<ARGN>==43)||(<ARGN>==46)||(<ARGN>==47)||(<ARGN>==49)||(<ARGN>==51)||(<ARGN>==53)||(<ARGN>==55)||(<ARGN>==57)||(<ARGN>==69)||(<ARGN>==70)
+SRC.ACTION= -1
+VAR.SUA_COLOR=800
+SYSMESSAGEUA You may not cast a hostile spell inside a safe zone!
+SRC.FLAGS=<SRC.FLAGS>&~020
+SRC.FIX
+ENDIF
+ENDIF
+RETURN 1

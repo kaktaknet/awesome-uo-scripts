@@ -1,0 +1,56 @@
+[ITEMDEF i_flash_shroud]
+DEFNAME=i_flash_shroud
+NAME=Flash Shroud
+ID=i_deathshroud
+REQSTR=100 
+
+Value=500000
+WEIGHT=5 
+ARMOR=0
+
+CATEGORY=L.B.R
+SUBSECTION=Clothing
+DESCRIPTION=Flash Shroud
+
+ON=@Create 
+Color=035
+HITPOINTS=5000
+
+ON=@EQUIP
+LINK=<SRC.UID> 
+TIMER=1
+RETURN 0
+
+ON=@TIMER
+TIMER=1       //The time in sec to the color change
+DORAND 13
+COLOR=078e	//(can be edited no problem)
+COLOR=077a	//just pick your color number desired and place after COLOR=[#color desired]
+COLOR=07e3	//
+COLOR=07e9	//
+COLOR=07e4	//
+COLOR=07e7	//
+COLOR=07e8	//
+COLOR=07a1	//
+COLOR=07a3	//
+COLOR=07a5	//
+COLOR=07a9	//
+COLOR=07c1	//
+COLOR=07b1	//
+COLOR=07b2	//
+COLOR=07b3	//
+COLOR=07b4	//
+COLOR=07b5	//
+COLOR=07b6	//
+COLOR=07b7	//
+COLOR=07b8	//
+COLOR=07b9	//
+COLOR=07b0	//
+EndDO
+RETURN 1
+
+ON=@Unequip
+COLOR=035
+LINK=04FFFFFFFF 
+TIMER=-1
+RETURN 0

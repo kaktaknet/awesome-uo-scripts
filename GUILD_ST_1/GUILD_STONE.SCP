@@ -1,0 +1,190 @@
+//[ITEMDEF 04230]
+//DEFNAME=i_deed_GUILDSTONE
+//NAME=Fiefdom Stone Deed
+//ID=i_deed
+//RESOURCES=i_deed,i_guildstone
+//value=5
+
+//CATEGORY=Provisions - Deeds
+//SUBSECTION=Guild and Town Stones
+//DESCRIPTION=Fiefdom Stone Deed
+
+//ON=@Create
+//MORE=i_guildstone
+
+//ON=@Dclick
+//IF !(<SRC.RESTEST i_nobal_penence>)
+//SRC.MESSAGE You can only place a guildstone if your are a Nobal!
+//RETURN 1
+//ENDIF
+//IF (<EVAL <SRC.REGION.NAME>>==<EVAL <SRC.UID>>)|| (<SRC.ISGM>) 
+//RETURN 0
+//SRC.MESSAGE You can only place a guildstone in a house you own!
+//RETURN 1
+//ENDIF
+
+////////////////////////////////////////////////////////////////////////////////////
+
+//[ITEMDEF 04520]
+//// Guild Stone
+//DEFNAME=i_guild_stone
+//ID=i_guildstone
+//NAME=Fiefdom Stone
+//TYPE=T_STONE_GUILD
+
+//CATEGORY=Provisions - Deeds
+//SUBSECTION=Guild and Town Stones
+//DESCRIPTION=Fiefdom Stone
+
+///////////////////////////////////////////////////////////////////////////////////
+
+// This is the guildmaster initial selection screen for guildstones
+[MENU MENU_GUILD_MASTER]
+<Name> (<MasterTitle> <Master>)
+ON=0 Recruit someone into the guild
+RECRUIT
+ON=0 View the current roster.
+VIEWROSTER
+ON=0 View the guild's charter.
+VIEWCHARTER
+ON=0 Declare your fealty. You are currently loyal to <LoyalTo>.
+DECLAREFEALTY
+ON=0 Toggle showing the guild's abbreviation in your name to unguilded people. Currently <AbbreviationToggle>.
+TOGGLEABBREVIATION
+ON=0 Resign from the guild.
+RESIGN
+ON=0 View list of candidates who have been sponsored to the guild.
+VIEWCANDIDATES
+ON=0 View list of guilds that <Name> has declared war on.
+VIEWENEMYS
+ON=0 View list of guilds that have declared war on <Name>.
+VIEWTHREATS
+ON=0 Access Guild <MasterGenderTitle> functions.
+MASTERMENU
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+// This is the NON-guildmaster initial selection screen for guildstones
+[MENU MENU_GUILD_MEMBER]
+<Name> (<MasterTitle> <Master>)
+ON=0 Recruit someone into the guild
+RECRUIT
+ON=0 View the current roster.
+VIEWROSTER
+ON=0 View the guild's charter.
+VIEWCHARTER
+ON=0 Declare your fealty. You are currently loyal to <LoyalTo>.
+DECLAREFEALTY
+ON=0 Toggle showing the guild's abbreviation in your name to unguilded people. Currently <AbbreviationToggle>.
+TOGGLEABBREVIATION
+ON=0 Resign from the guild.
+RESIGN
+ON=0 View list of candidates who have been sponsored to the guild.
+VIEWCANDIDATES
+ON=0 View list of guilds that <Name> has declared war on.
+VIEWENEMYS
+ON=0 View list of guilds that have declared war on <Name>.
+VIEWTHREATS
+ON=0 Issue a Guild Shield
+If <SRC.Targ.More>==1
+	SRC.NewItem=01bc5
+	SRC.Act.Bounce
+ElseIf <SRC.Targ.More>==2
+	SRC.NewItem=01bc3
+	SRC.Act.Bounce
+Else
+	Say Being Neutral, your Guild does not have access to a shield.
+EndIf
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// Guild master functions.
+[MENU MENU_GUILD_MASTERFUNC]
+<Name>, Guild <MasterGenderTitle> functions
+ON=0 Set the guild name.
+SETNAME
+ON=0 Set the guilds abbreviation.
+SETABBREVIATION
+ON=0 Change the alignment of guild. (currently a <AlignType> guild.)
+CHANGEALIGN
+ON=0 Set the guild's charter.
+SETCHARTER
+ON=0 Dismiss a member.
+DISMISSMEMBER
+ON=0 Declare war.
+DECLAREWAR
+ON=0 Declare peace.
+DECLAREPEACE
+ON=0 Accept a candidate seeking membership.
+ACCEPTCANDIDATE
+ON=0 Refuse a candidate seeking membership.
+REFUSECANDIDATE
+ON=0 Set the guildmaster's title.
+SETGMTITLE
+ON=0 Grant a title to another member.
+GRANTTITLE
+ON=0 Issue a Guild Shield
+If <SRC.Targ.More>==1
+	SRC.NewItem=01bc5
+	SRC.Act.Bounce
+ElseIf <SRC.Targ.More>==2
+	SRC.NewItem=01bc3
+	SRC.Act.Bounce
+Else
+	Say Being Neutral, your Guild does not have access to a shield.
+EndIf
+ON=0 Redeed the Guild Stone 
+MENU m_sureguild 
+ON=0 Move Guildstone 
+MENU m_moveguild
+ON=0 Return to main menu.
+RETURNMAINMENU
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+// Non-member view.
+[MENU MENU_GUILD_NON]
+<Name> (<MasterTitle> <Master>)
+ON=0 View the guild's charter.
+VIEWCHARTER
+ON=0 View list of guilds that <Name> has declared war on.
+VIEWENEMYS
+ON=0 View list of guilds that have declared war on <Name>.
+VIEWTHREATS
+
+[MENU MENU_GUILD_ALIGN]
+Change the alignment of guild. (currently a <AlignType> guild.)
+ON=0 Chaos
+CHANGEALIGN 2
+ON=0 Neutral
+CHANGEALIGN 0
+ON=0 Order
+CHANGEALIGN 1
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+[MENU m_sureguild] 
+Are you sure you wish to redeed your stone? 
+ON=0 Yes, redeed it, disbanding remainders of my guild. 
+//SRC.FINDID(i_alignorder).REMOVE // ALIGNMENT CHECK CLEAN UP 
+//SRC.FINDID(i_alignchaos).REMOVE // ALIGNMENT CHECK CLEAN UP 
+CHANGEALIGN 0
+REMOVE 
+SRC.NEWITEM=04230 
+SRC.ACT.BOUNCE 
+SRC.SYSMESSAGE The deed has been placed in your backpack. 
+ON=0 No, I wish to keep my guild as it is. 
+RETURNMAINMENU 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+[MENU m_moveguild] 
+Are you sure you wish to move your stone? 
+ON=0 Yes, move it. 
+CHANGEALIGN 0
+BOUNCE 
+SRC.SYSMESSAGE The stone has been placed in your backpack. 
+ON=0 No, I wish to keep my guild as it is. 
+RETURNMAINMENU 
+
+[EOF]

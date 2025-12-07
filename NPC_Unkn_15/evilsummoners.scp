@@ -1,0 +1,485 @@
+//This script contains one of the most difficult to defeat NPCs
+//I've ever created: The Evil Summoner.
+//Not only does it have high stats, but it is also able to summon,
+//cast fields, and counterattack, and I've given it quite an AI.
+//Explosion potions on my shard cause a chain reaction if hit by fire damage.
+//Therefore, these NPCs will also try to cast a fire spell if you have one (a little cheap how they know what you're carrying, I know).
+
+//Two of the spells that they cast require items from my modified version of Taran's necromancy spellbook.
+//Those two spells are included and marked as such.
+
+//Field casting will also work better if you have i_scroll_haste, from my time magic script.
+
+//To install, just download into your script folder and resync.
+
+[FUNCTION REVERSEFIXACTION]
+return (<HVAL <ACTION>> &~ 0d2000000) 
+
+[EVENTS e_evilsummoner]
+ON=@SkillStart
+IF (<EVAL <REVERSEFIXACTION>>=25)
+
+	DORAND 6
+		ACTARG1=20
+		ACTARG1=30
+		ACTARG1=38
+		ACTARG1=47
+		ACTARG1=58
+		ACTARG1=57
+	ENDDO
+
+	IF ((<ACT.FLAGS> & statf_poisoned)&&(<ACTARG1> = 20))
+		DORAND 3
+			ACTARG1=47
+			ACTARG1=42
+			ACTARG1=58
+		ENDDO
+	ENDIF
+
+	IF (<ACT.FLAGS> & statf_freeze)
+		IF ((<ACT.MAGERY> > 40.0)&&(<ACT.MANA> > 30))
+			ACTARG1=53
+		ELSE
+			ACTARG1=51
+		ENDIF
+
+		IF (<ACT.FINDID.i_rune_paralyze_field>)
+			IF !(<ACT.FLAGS> & statf_poisoned)
+				ACTARG1=20
+			ELSE
+				IF ((<ACT.MAGERY> > 40.0)&&(<ACT.MANA> > 30))
+					ACTARG1=53
+				ELSE
+					DORAND 2
+					ACTARG1=28
+					ACTARG1=51
+					ENDDO
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ((<ACTARG1> = 47)||(<ACTARG1>=28))
+		TARGP=<ACT.P>
+		NEWITEM i_scroll_haste
+		ACT.ATTR=attr_invis|attr_magic|attr_move_never
+		ACT.P=1,1
+		ACT.MORE1=4
+		ACT.LINK=<UID>
+		ACT.TIMERd=1
+		ACT=0
+	ENDIF
+ENDIF
+
+ON=@NPCSEENEWPLAYER
+ATTACK
+SAY Kal Xen
+ANIM 17
+SRC.NEWNPC { c_zombie 2 c_skeleton 2 c_m_ghost 2 c_m_ghoul 2 c_liche 2 c_m_skeletonarcher 2 c_bear_polar 5 c_bear_grizzly 2 c_wisp 1 c_elem_earth 2 c_elem_fire 2 c_elem_air 2 c_elem_water 2 c_daemon 1}
+SRC.ACT.FLAGS=<SRC.ACT.FLAGS>|statf_conjured
+SRC.ACT.EVENTS=+e_dispelpoof
+SRC.ACT.EVENTS=+e_attackonsight
+SRC.ACT.EVENTS=+e_hitpet
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ANIM 5
+SRC.ACT.SFX 533
+SRC.ACT.SUMMONEDPET <UID>
+SRC.ACT.ATTACK
+
+IF ((<SRC.RESTEST i_potion_lava>)||(<SRC.RESTEST i_potion_explosionless>)||(<SRC.RESTEST i_potion_explosion>)||(<SRC.RESTEST i_potion_explosiongreat>))
+SAY In Por Ylem
+ANIM 16
+SRC.SFX 485
+SRC.EFFECT 0, i_fx_fireball_small, 1,1,1
+SRC.DAMAGE 01 090
+ENDIF
+
+RETURN 1
+
+ON=@SpellEffect
+
+IF (<SRC.UID> = <UID>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.ID> == c_h_evilhealer)
+RETURN 0
+ELSEIF (<SRC.ID> == c_h_evilhealer_f)
+RETURN 0
+ENDIF
+
+if (<SRC.NPC> == 11)
+SAY An Ort
+SRC.SPELLEFFECT 41, 100.0
+RETURN 1
+endif
+
+if (<SRC.MEMORYFINDTYPE.memory_ipet.LINK.UID>=<UID>)
+SRC.FLAGS=<SRC.FLAGS> &~ statf_war
+IF (<SRC.MEMORYFINDTYPE.memory_war_targ.LINK.UID>=<UID>)
+SRC.MEMORYFINDTYPE.memory_war_targ.COLOR=0102
+ENDIF
+
+IF <MEMORYFINDTYPE.memory_war_targ>
+SRC.NEWITEM=ispell_17_attacker 
+SRC.ACT.LINK=<SRC.UID> 
+SRC.ACT.CONT=<MEMORYFINDTYPE.memory_war_targ.LINK.UID> 
+ENDIF
+
+IF !(<SRC.MEMORYFINDTYPE.memory_ipet>)
+SRC.SUMMONEDPET <UID>
+ENDIF
+
+RETURN 1
+endif
+
+if (<SRC.FLAGS>&statf_conjured)
+ANIM 17
+if (<SRC.NPC> == 11)
+SAY An Ort
+SRC.SPELLEFFECT 41, 100.0
+else
+SAY Rel Ort Xen
+SRC.FLAGS=<SRC.FLAGS> &~ statf_war
+
+SRC.MEMORYFINDTYPE.memory_war_targ.REMOVE
+
+IF (<MEMORYFINDTYPE.memory_war_targ>)
+SRC.NEWITEM=ispell_17_attacker 
+SRC.ACT.LINK=<SRC.UID> 
+SRC.ACT.CONT=<MEMORYFINDTYPE.memory_war_targ.LINK.UID> 
+ENDIF
+
+SRC.MEMORYFINDTYPE.memory_ipet.LINK.SYSMESSAGE You feel that <SRC.NAME> has deserted you.
+SRC.MEMORYFINDTYPE.memory_ipet.REMOVE
+
+SRC.SUMMONEDPET <UID>
+
+endif
+
+RETURN 1
+
+endif
+
+IF (rand(2) == 1)
+SAY Kal Xen
+ANIM 17
+SRC.NEWNPC { c_zombie 2 c_skeleton 2 c_m_ghost 2 c_m_ghoul 2 c_liche 2 c_m_skeletonarcher 2 c_bear_polar 5 c_bear_grizzly 2 c_wisp 1 c_elem_earth 2 c_elem_fire 2 c_elem_air 2 c_elem_water 2 c_daemon 1}
+SRC.ACT.FLAGS=<SRC.ACT.FLAGS>|statf_conjured
+SRC.ACT.EVENTS=+e_dispelpoof
+SRC.ACT.EVENTS=+e_attackonsight
+SRC.ACT.EVENTS=+e_hitpet
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ANIM 5
+SRC.ACT.SFX 533
+SRC.ACT.SUMMONEDPET <UID>
+SRC.ACT.ATTACK
+ENDIF
+
+IF (<SRC.NPC>)
+	RETURN 1
+ENDIF
+
+ON=@GetHit
+
+if (<SRC.NPC> == 11)
+SAY An Ort
+SRC.SPELLEFFECT 41, 100.0
+RETURN 1
+endif
+
+IF (<SRC.NPC> != 0)
+	IF (<SRC.MEMORYFINDTYPE.memory_ipet>)
+		SAY Kal Xen
+		ANIM 17
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.NEWNPC { c_m_ghost 2 c_m_ghoul 2 c_liche 2 c_m_skeletonarcher 2 c_bear_polar 5 c_bear_grizzly 2 c_wisp 1 c_elem_earth 2 c_elem_fire 2 c_elem_air 2 c_elem_water 2 c_daemon 1}
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.FLAGS=<SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.FLAGS>|statf_conjured
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.EVENTS=+e_dispelpoof
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.EVENTS=+e_attackonsight
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.EVENTS=+e_hitpet
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.P=<SRC.MEMORYFINDTYPE.memory_ipet.LINK.P>
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.ANIM 5
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.SFX 533
+		SRC.MEMORYFINDTYPE.memory_ipet.LINK.ACT.SUMMONEDPET <UID>
+		IF (RAND(3)=1)
+		RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+
+if (<SRC.MEMORYFINDTYPE.memory_ipet.LINK.UID>=<UID>)
+SRC.FLAGS=<SRC.FLAGS> &~ statf_war
+IF (<SRC.MEMORYFINDTYPE.memory_war_targ.LINK.UID>=<UID>)
+SRC.MEMORYFINDTYPE.memory_war_targ.COLOR=0102
+ENDIF
+
+IF <MEMORYFINDTYPE.memory_war_targ>
+SRC.NEWITEM=ispell_17_attacker 
+SRC.ACT.LINK=<SRC.UID> 
+SRC.ACT.CONT=<MEMORYFINDTYPE.memory_war_targ.LINK.UID> 
+ENDIF
+
+IF !(<SRC.MEMORYFINDTYPE.memory_ipet>)
+SRC.SUMMONEDPET <UID>
+ENDIF
+
+RETURN 1
+endif
+
+if (<SRC.FLAGS>&statf_conjured)
+ANIM 17
+if (<SRC.NPC> == 11)
+SAY An Ort
+SRC.SPELLEFFECT 41, 100.0
+else
+SAY Rel Ort Xen
+SRC.FLAGS=<SRC.FLAGS> &~ statf_war
+
+SRC.MEMORYFINDTYPE.memory_war_targ.REMOVE
+
+IF (<MEMORYFINDTYPE.memory_war_targ>)
+SRC.NEWITEM=ispell_17_attacker 
+SRC.ACT.LINK=<SRC.UID> 
+SRC.ACT.CONT=<MEMORYFINDTYPE.memory_war_targ.LINK.UID> 
+ENDIF
+
+SRC.MEMORYFINDTYPE.memory_ipet.LINK.SYSMESSAGE You feel that <SRC.NAME> has deserted you.
+SRC.MEMORYFINDTYPE.memory_ipet.REMOVE
+
+SRC.SUMMONEDPET <UID>
+
+endif
+
+RETURN 1
+
+endif
+
+IF (rand(2) == 1)
+IF ((<SRC.RESTEST i_potion_lava>)||(<SRC.RESTEST i_potion_explosionless>)||(<SRC.RESTEST i_potion_explosion>)||(<SRC.RESTEST i_potion_explosiongreat>))
+SAY In Por Ylem
+ANIM 16
+SRC.SFX 485
+SRC.EFFECT 0, i_fx_fireball_small, 1,1,1
+SRC.DAMAGE 01 090
+ENDIF
+ENDIF
+
+IF (rand(2) == 1)
+SAY Kal Xen
+ANIM 17
+SRC.NEWNPC { c_zombie 2 c_skeleton 2 c_m_ghost 2 c_m_ghoul 2 c_liche 2 c_m_skeletonarcher 2 c_bear_polar 5 c_bear_grizzly 2 c_wisp 1 c_elem_earth 2 c_elem_fire 2 c_elem_air 2 c_elem_water 2 c_daemon 1}
+SRC.ACT.FLAGS=<SRC.ACT.FLAGS>|statf_conjured
+SRC.ACT.EVENTS=+e_dispelpoof
+SRC.ACT.EVENTS=+e_attackonsight
+SRC.ACT.EVENTS=+e_hitpet
+SRC.ACT.P=<SRC.P>
+SRC.ACT.ANIM 5
+SRC.ACT.SFX 533
+SRC.ACT.SUMMONEDPET <UID>
+SRC.ACT.ATTACK
+ENDIF
+
+IF (<SRC.NPC>)
+RETURN 1
+ENDIF
+
+[CHARDEF c_h_evilsummoner]
+DEFNAME=c_h_evilsummoner
+NAME=#NAMES_HUMANMALE the Evil Summoner
+ID=C_MAN
+CAN=02344
+DESIRES=i_gold,t_wand,t_reagent,t_bone
+AVERSIONS=t_TRAP,t_lavabomb,i_fx_field_fire,i_fx_field_fire_ns,i_fx_poison_field,i_fx_field_paralyze,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_human_default
+
+TEVENTS=e_evilsummoner
+
+ON=@Create
+COLOR=colors_skin
+STR={1400 1585}
+DEX={281 495}
+INT={1196 1910}
+EVENTS=+e_nopoison
+
+//ALIGNMENT=EVIL
+//SPELLCIRCLESS=5-8
+
+EVALUATINGINTEL={55.0 78.0}
+INSCRIPTION={76.0 90.0}
+MAGERY={200.0 300.0}
+NECROMANCY={96.0 100.0}
+WRESTLING=100.0
+MAGICRESISTANCE={125.0 150.0}
+MEDITATION={75.0 100.0}
+TACTICS={65.0 88.0}
+
+NPC=brain_human
+KARMA={-8000 -9999}
+FAME=8000
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRestock
+//ITEMNEWBIE=i_npcnecro
+//NAME=Summoner's Memory
+ITEM=i_staff_summoner
+ITEM=RANDOM_LIGHT
+ITEM=i_robe
+COLOR=colors_all
+ITEM=i_sandals
+
+ITEM=i_gold, { 1400 2000 }
+ITEM=ttm_lvl5,R99
+ITEM={ random_rich_magic_loot 1 random_filthy_rich_magic_loot 1 }, R4
+ITEM={ random_upper_scroll 8 random_necro_scroll 3 }
+ITEM={ random_upper_scroll 3 random_necro_scroll 3 }
+
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_poison
+ADDSPELL=s_lightning
+ADDSPELL=s_paralyze
+ADDSPELL=s_energy_vortex
+ADDSPELL=s_earthquake
+
+[CHARDEF c_h_evilsummoner_f]
+DEFNAME=c_h_evilsummoner_f
+NAME=#NAMES_HUMANFEMALE the Evil Summoner
+ID=C_WOMAN
+CAN=02b44
+DESIRES=i_gold,t_wand,t_reagent,t_bone
+AVERSIONS=t_TRAP,t_lavabomb,i_fx_field_fire,i_fx_field_fire_ns,i_fx_poison_field,i_fx_field_paralyze,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_human_default
+
+TEVENTS=e_evilsummoner
+
+ON=@Create
+COLOR=colors_skin
+STR={1400 1585}
+DEX={281 495}
+INT={1196 1910}
+EVENTS=+e_nopoison
+
+//ALIGNMENT=EVIL
+//SPELLCIRCLESS=5-8
+
+EVALUATINGINTEL={55.0 78.0}
+INSCRIPTION={76.0 90.0}
+MAGERY={200.0 300.0}
+NECROMANCY={96.0 100.0}
+WRESTLING=100.0
+MAGICRESISTANCE={125.0 150.0}
+MEDITATION={75.0 100.0}
+TACTICS={65.0 88.0}
+
+NPC=brain_human
+KARMA={-8000 -9999}
+FAME=8000
+
+ITEMNEWBIE=random_female_hair
+COLOR=colors_hair
+
+ON=@NPCRestock
+//ITEMNEWBIE=i_npcnecro
+//NAME=Summoner's Memory
+ITEM=i_staff_summoner
+ITEM=RANDOM_LIGHT
+ITEM=i_robe
+COLOR=colors_all
+ITEM=i_sandals
+
+ITEM=i_gold, { 1400 2000 }
+ITEM=ttm_lvl5,R99
+ITEM={ random_rich_magic_loot 1 random_filthy_rich_magic_loot 1 },R10
+ITEM={ random_upper_scroll 8 random_necro_scroll 3 }
+ITEM={ random_upper_scroll 3 random_necro_scroll 3 }
+
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_poison
+ADDSPELL=s_lightning
+ADDSPELL=s_paralyze
+ADDSPELL=s_paralyzation_field
+ADDSPELL=s_energy_vortex
+ADDSPELL=s_earthquake
+
+[FUNCTION SUMMONEDPET]
+FLAGS=<FLAGS>|statf_pet
+FLAGS=<FLAGS>|statf_conjured
+NEWITEM i_memory
+ACT.CONT=<UID>
+ACT.LINK=<ARGS>
+ACT.COLOR=0102
+ACT.MORE2=<ARGS>
+ACT.TIMER=-1
+NEWITEM ispell_48_mem
+ACT.CONT=<UID>
+
+[EVENTS e_attackonsight]
+ON=@NPCSEENEWPLAYER
+IF !(<SRC.ISGM>)
+ATTACK
+ENDIF
+
+[EVENTS e_hitpet]
+ON=@HitTry
+IF (<SRC.UID> = <MEMORYFINDTYPE.memory_ipet.LINK.UID>)
+IF (<MEMORYFINDTYPE.memory_war_targ.LINK.UID> = <MEMORYFINDTYPE.memory_ipet.LINK.UID>)
+MEMORYFINDTYPE.memory_war_targ.COLOR=<MEMORYFINDTYPE.memory_war_targ.COLOR> &~ memory_war_targ
+ENDIF
+RETURN 1
+ENDIF
+
+ON=@GetHit
+IF (<SRC.UID> = <MEMORYFINDTYPE.memory_ipet.LINK.UID>)
+RETURN 1
+ENDIF
+
+ON=@SpellEffect
+IF (<SRC.UID> = <MEMORYFINDTYPE.memory_ipet.LINK.UID>)
+RETURN 1
+ENDIF
+
+[EVENTS e_dispelpoof]
+ON=@SpellEffect
+IF ((<ARGN>=41)||(<ARGN>=54))
+REMOVE
+ENDIF
+
+//Everything below is from my modified version of Taran's necromancy book.
+[ITEMDEF ispell_17_attacker] 
+ID=i_memory 
+TYPE=t_eq_script 
+NAME=Spell 17 Attacker 
+
+ON=@Create 
+TIMER=1 
+
+ON=@Equip 
+LINK.ATTACK 
+RETURN 1 
+
+ON=@Timer 
+LINK.ATTACK 
+REMOVE
+RETURN 1 
+
+[ITEMDEF ispell_48_mem] 
+ID=i_memory 
+TYPE=t_eq_script 
+NAME=Spell 48 Undo'er 
+
+ON=@Create 
+TIMER={ 450 800 }
+ATTR=attr_decay 
+
+ON=@Timer 
+CONT.FLAGS=statf_conjured
+CONT.REMOVE
+RETURN 1 

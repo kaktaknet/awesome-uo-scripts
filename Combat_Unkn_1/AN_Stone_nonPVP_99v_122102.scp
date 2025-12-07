@@ -1,0 +1,138 @@
+// AN NOX SCRIPTS
+// BY RAVON OF ANNOX
+// ANNOX.NO-IP.COM
+
+//PVP & NonPVP Stone 99v version 122102
+
+//NOTE:  Once you change to PVP you may not change again.
+
+[ITEMDEF I_STONE_NON_PVP]
+DEFNAME=I_STONE_PVP
+ID=I_GUILDSTONE
+NAME=non-PvP Stone
+TYPE=T_NORMAL
+
+CATEGORY=An Nox Item
+SUBSECTION=Stone
+DESCRIPTION=Non-PvP Stone
+
+ON=@CREATE 
+COLOR=0845
+ATTR 010
+
+ON=@UserDclick
+//SRC.SYSMESSAGE Your PvP setting is <SRC.TAG.PVP>	//Diagnostic line please ignore
+
+//DIALOG D_NON_PVP	//add this line back if you want to switch between PvP and nonPvP
+			//and remove from here..
+IF (0<SRC.TAG.PVP>=1)
+	SRC.SYSMESSAGE You have already choosen PvP.
+	RETURN 1
+ENDIF
+
+DIALOG D_NON_PVP
+			//to here.
+[EVENTS e_nonPVP]
+
+ON=@SPELLCAST
+//SRC.SYSMESSAGE Your a PVP is set to <src.tag.pvp>	//Diagnostic line please ignore
+IF (<ACTARG1>==59)&&(0<ACT.BASEID>==I_CORPSE)&&(0<ACT.LINK>==04FFFFFFF) 
+//IF <ARGN>!=04|29|11 //<<You may add additional spells if you wish - taken from Admin Underdog ICQ at 153757992 underdog_1983@yahoo.com
+SRC.MESSAGE You cannot cast that on this body.
+RETURN 1 
+ENDIF 
+
+ON=@HIT 
+IF (0<SRC.NPC>==0) 
+RETURN 1 
+ENDIF 
+
+ON=@GETHIT 
+SRC.SYSMESSAGE HIT!
+IF (0<SRC.NPC>==0) 
+SRC.MESSAGE You cannot attack non-PvPs! 
+SRC.NEWITEM I_PARALYIZED 
+SRC.ACT.LINK=<SRC.UID> 
+SRC.ACT.TIMER=1 
+SRC.ACT.EQUIP 
+RETURN 1 
+ENDIF 
+//Broken - Save your pets.
+//IF !(0<SRC.MEMORYFINDTYPE.02.LINK>==0) 
+//SRC.NEWITEM I_PARALYIZED 
+//SRC.ACT.LINK=<SRC.UID> 
+//SRC.ACT.TIMER=1 
+//SRC.ACT.EQUIP 
+//VAR.X=(<SRC.MEMORYFINDTYPE.02.LINK>)
+//TRY UID.<VAR.X>.SAYU Pet attacking a non-PvP! 
+//TRY UID.<VAR.X>.SPELLEFFECT S_PARALYZE 1000 
+//RETURN 1 
+//ENDIF 
+
+ON=@UserCLICK
+SAYUA 20,0,0,0,<NAME> [non-PvP] 
+
+[EVENTS e_PvP] 
+ON=@UserCLICK
+SAYUA 20,0,0,0,<NAME> [PVP] 
+
+[DIALOG D_NON_PVP] 
+0,0
+resizepic 0 0 3600 350 300 
+gumppic 200 0 990
+TEXT 100 17 35 0
+TEXT 40 47 52 1 
+TEXT 40 67 1152 2 
+TEXT 40 87 1152 3
+TEXT 40 117 52 4
+TEXT 40 137 1152 5
+TEXT 40 157 1152 6
+BUTTON 40 250 2026 2025 1 1 1
+BUTTON 120 250 2023 2022 1 1 2
+BUTTON 260 250 242 243 241 1 3
+
+[DIALOG D_NON_PVP TEXT]
+Player vs. Player Stone
+PvP:
+Choose WAR if you wish
+to battle other players.
+non-PvP:
+Choose PEACE if you wish
+not to battle others.
+
+[DIALOG D_NON_PVP BUTTON] 
+ONBUTTON=1
+//SRC.EVENTS -e_nonPvP	//add this line back if you want to switch between PvP and nonPvP
+SRC.EVENTS +e_PVP
+SRC.TAG.PVP=1
+SRC.MESSAGE You are now a PvP player.
+RETURN 1 
+
+ONBUTTON=2
+SRC.EVENTS +e_nonPvP
+//SRC.EVENTS -e_PVP	//add this line back if you want to switch between PvP and nonPvP
+SRC.TAG.PVP=2
+SRC.MESSAGE You are now a non-PvP.
+RETURN 1 
+
+ONBUTTON=3
+SRC.MESSAGE You decided not to change.
+RETURN 1 
+
+[ITEMDEF I_PARALYIZED] 
+ID=I_BOTTLE_EMPTY 
+TYPE=T_EQ_SCRIPT 
+NAME=PARALYSER 
+LAYER=30 
+
+ON=@CREATE 
+ATTR 090
+SRC.MESSAGE You have been paralyized for attacking a non-PvP.
+
+ON=@TIMER 
+LINK.SPELLEFFECT 38 1000 
+REMOVE 
+
+RETURN 1 
+
+[EOF]

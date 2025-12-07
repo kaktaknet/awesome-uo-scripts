@@ -1,0 +1,90 @@
+[ITEMDEF I_HEART_SCALE]
+ID=01851
+TYPE=92
+NAME=Heaven or Hell Scale
+RESOURCES=3 i_ingot_bronze
+WEIGHT=3
+FLIP=1
+DUPELIST=01852
+ON=@DCLICK
+IF (<DISTANCE> > 3) 
+SRC.SYSMESSAGE You're too far away! 
+RETURN 1
+ELSE
+IF (<SRC.KARMA> <-1)
+	SAY Thine Heart is Heavy, Seek redemption or Hell shalt be thine fate.
+
+  ELSE
+
+IF (<SRC.KARMA> <5001)
+	SAY Thine Heart is light and Heaven couldst be thy Final resting place.
+	
+	  ELSE
+
+IF (<SRC.KARMA> >5000)
+	SAY Thine Heart is good and Heaven hast thine place reserved.
+  
+  ENDIF
+RETURN 1
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=Heart_Scale
+
+
+
+[ITEMDEF I_HorH_book]
+DEFNAME=I_HorH_book
+
+ID=0fbd   //0fbd faces north  ,0fbe faces west.
+NAME=Weight of the Heart
+TYPE=T_BOOK
+RESOURCES=1 i_book_lg
+WEIGHT=5
+VALUE=500
+FLIP=1
+DUPELIST=0fbe
+ON=@Create
+MORE1=b_HorH
+COLOR=099c
+
+CATEGORY=Custom Items
+SUBSECTION=Books
+DESCRIPTION=Weight of the Heart
+
+
+
+
+////// install in spherebook.scp /////////////
+
+[BOOK b_HorH]
+PAGES=3
+TITLE=Weight or the Heart
+AUTHOR=Lord Necro 
+
+[BOOK b_HorH 1]
+It is told that many
+Fort nights ago in 
+the days of Old 
+Whence a person
+wouldst die the
+heart wouldst be
+Removed and be
+
+[BOOK b_HorH 2]
+weighed against a 
+sest weight of 
+feathers, Shouldst
+the heart weigh more
+than the feathers
+twas said the Soul
+Woulds go to Hell.
+Sholdst the Heart
+
+[BOOK b_HorH 3]
+Weigh less then the
+Soul Wouldst go to
+Heaven. Here in the 
+thee can find out 
+which with out 
+Dieing.

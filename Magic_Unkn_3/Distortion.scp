@@ -1,0 +1,96 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//To use this script, all you need to do is to place this file inside your script folder
+//and then, type .distortion  in-game.  You will be teleported to Green Acres 2.  There,
+//you have 5 seconds to walk around, and then, you will be teleported back to the "normal world".
+//For every step you have made inside the green acres, they will be 10 in the "normal world".
+
+//Please, do not remove this header..
+
+//Enjoy!
+
+[FUNCTION Distortion]
+SRC.NEWITEM=i_spell_distortion_of_movement
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+
+[ITEMDEF i_spell_distortion_of_movement]
+DEFNAME=i_spell_distortion_of_movement
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=attr_invis
+
+ON=@DCLICK
+IF (<P.X>>4095) || (<P.Y>>4095)
+SRC.SYSMESSAGE You can't use that spell here
+REMOVE
+RETURN 1
+ENDIF
+SRC.NEWITEM=i_spell_distortion_of_movement_rune
+SRC.ACT.TIMER=5
+SRC.TAG.MOREX=<SRC.P.X>
+SRC.TAG.MOREY=<SRC.P.Y>
+SRC.TAG.MOREZ=<SRC.P.Z>
+SRC.ACT.EQUIP
+SRC.GO GREEN ACRES 2
+REMOVE
+RETURN 1
+
+[ITEMDEF i_spell_distortion_of_movement_rune]
+ID=i_memory
+NAME=Distortion of Movement Rune
+TYPE=t_eq_script
+
+ON=@TIMER
+VAR.OX=<EVAL <CONT.P.X>-5250>
+VAR.OY=<EVAL <CONT.P.Y>-392>
+VAR.X=<EVAL <VAR.OX>*10>
+VAR.Y=<EVAL <VAR.OY>*10>
+VAR.X=<EVAL <CONT.TAG.MOREX>+<VAR.X>>
+VAR.Y=<EVAL <CONT.TAG.MOREY>+<VAR.Y>>
+IF (<VAR.X>>4095)
+VAR.X=4095
+ENDIF
+IF (<VAR.Y>>4095)
+VAR.Y=4095
+ENDIF
+CONT.NEWITEM=i_test_magicfield
+CONT.ACT.P=<EVAL <VAR.X>>,<EVAL <VAR.Y>>,<EVAL <CONT.TAG.MOREZ>>
+IF !(<CONT.ACT.REGION.FLAGS>&01)
+IF !(<CONT.ACT.REGION.FLAGS>&02)
+IF !(<CONT.ACT.REGION.FLAGS>&04)
+IF !(<CONT.ACT.REGION.FLAGS>&08)
+IF !(<CONT.ACT.REGION.FLAGS>&010)
+CONT.GO <EVAL <VAR.X>>,<EVAL <VAR.Y>>,<EVAL <CONT.TAG.MOREZ>>
+ELSE
+CONT.GO <EVAL <CONT.TAG.MOREX>>,<EVAL <CONT.TAG.MOREY>>,<EVAL <CONT.TAG.MOREZ>>
+ENDIF
+ELSE
+CONT.GO <EVAL <CONT.TAG.MOREX>>,<EVAL <CONT.TAG.MOREY>>,<EVAL <CONT.TAG.MOREZ>>
+ENDIF
+ELSE
+CONT.GO <EVAL <CONT.TAG.MOREX>>,<EVAL <CONT.TAG.MOREY>>,<EVAL <CONT.TAG.MOREZ>>
+ENDIF
+ELSE
+CONT.GO <EVAL <CONT.TAG.MOREX>>,<EVAL <CONT.TAG.MOREY>>,<EVAL <CONT.TAG.MOREZ>>
+ENDIF
+ELSE
+CONT.GO <EVAL <CONT.TAG.MOREX>>,<EVAL <CONT.TAG.MOREY>>,<EVAL <CONT.TAG.MOREZ>>
+ENDIF
+CONT.ACT.REMOVE
+CONT.FIX
+CONT.TAG.MOREX=
+CONT.TAG.MOREY=
+CONT.TAG.MOREZ=
+REMOVE
+RETURN 1
+
+[ITEMDEF i_test_magicfield]
+DEFNAME=i_test_magicfield
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=attr_invis

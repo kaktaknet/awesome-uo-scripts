@@ -1,0 +1,746 @@
+//NPC Quests
+//Version 3.0
+//Now allows you to choose how much info the guard tells you
+//Allows sextant or coordinate positioning as well now.
+//Configuration is done on line 58 of this file.
+
+//Thanks to GM Kelrinio for the idea and code to use
+//sextant coordinates.
+
+//Scripted by Rudenid
+//This is how I want this to work:
+//You are free to use this script...
+//So long as you leave the header intact
+//NPC ideas for each difficulty bracket are welcome.
+//Email me at metasquares@metasquares.com if you have a comment/etc.
+//Together we can make this script even better!
+
+[SPEECH guardquest]
+
+ON=*tasks*
+SPEECHCOLOR=0481
+IF (<FINDID.i_memory_quest>)
+SAYU <FINDID.i_memory_quest.LINK.NAME> is currently dealing with a <TAG.NPCNAME> for me <TAG.PLACENAME>.
+ELSE
+SAYU No one is performing any tasks for me at the moment...
+ENDIF
+
+ON=*help*
+SPEECHCOLOR=0481
+SAYU If ye wish to perform a task for me, say "I wish to perform a task for thee"
+SAYU If ye wish to accept a task ye have heard me describe, say "I shall undertake this task"
+SAYU If ye wish to resign from a task ye have already begun, say "I resign from performing thine task"
+SAYU Say "tasks" to me if ye wish to know who is doing what for me...
+
+ON=*quest*
+ON=task
+SPEECHCOLOR=0481
+SAY If ye wish to perform a task for me, please say "I wish to perform a task for thee"
+
+ON=I wish to perform a task for thee
+
+///////////////////////////////////////////
+//Here's where you do to configure it!   //
+//					 //
+//Values for VAR.NPCINFORMATION:	 //
+//					 //
+// 0 - Show no information. Confusing.	 //
+// 1 - Show region name.		 //
+// 2 - Show relativity to another region.//
+// 4 - Show sextant coordinates.	 //
+// 8 - Show position coordinates	 //
+//					 //
+// Combinations can be made by logical OR//
+// Very much like flags.		 //
+///////////////////////////////////////////
+
+//By default, it will show region, relativity, and sextant coords.
+VAR.NPCINFORMATION=7
+
+IF (<FLAGS>&statf_conjured)
+SPEECHCOLOR=0481
+SAYU I am too busy to leave my matters in the hands of others.
+RETURN 1
+ENDIF
+
+IF (<FINDID.i_memory_quest>)
+IF (<FINDID.i_memory_quest.LINK> != <SRC.UID>)
+SPEECHCOLOR=0fd
+DORAND 3
+SAYU I am sorry, <SRC.NAME>, but <FINDID.i_memory_quest.LINK.NAME> is already performing a task for me.
+SAYU I apologize, <SRC.SEX milord/milady>, but <FINDID.i_memory_quest.LINK.NAME> is aiding me with my problems right now.
+SAYU Forgive me, <SRC.SEX milord/milady>, but <FINDID.i_memory_quest.LINK.NAME> is giving me all the aid I require at the moment.
+SPEECHCOLOR=0481
+ENDDO
+RETURN 1
+ELSE
+SPEECHCOLOR=01eb
+SAYU Ah, <SRC.NAME>, thou hast returned... if ye wish to resign from performing thine current task, just say "I resign from performing thine task"
+SPEECHCOLOR=0481
+RETURN 1
+ENDIF
+ELSE
+
+TAG.QUESTDIFFICULTY=<eval <SRC.STR> + <SRC.DEX> + <SRC.INT>>
+TAG.QUESTDIFFICULTY=<eval <TAG.QUESTDIFFICULTY> / 3>
+TAG.QUESTDIFFICULTY=<eval <TAG.QUESTDIFFICULTY> + <eval <SRC.SKILLTOTAL> / 60>>
+
+TAG.OLDPLACENAME=<TAG.PLACENAME>
+TAG.OLDPLACEP=<TAG.PLACEP>
+TAG.OLDNPCNAME=<TAG.NPCNAME>
+TAG.OLDNPCID=<TAG.NPCID>
+
+VAR.OLDACT=<SRC.ACT.UID>
+SRC.NEWNPC c_man_invisible
+SRC.ACT.NAME=" "
+SRC.ACT.npcrandvalidlocation
+TAG.PLACEP=<SRC.ACT.P>
+
+IF (<eval <VAR.NPCINFORMATION>> & 8)
+
+TAG.PLACECOORDS=It has last been seen near <TAG.PLACEP>.
+
+ENDIF
+
+IF (<eval <VAR.NPCINFORMATION>> & 4)
+
+TAG.PLACEPXSEXTANT=<SRC.ACT.P.X>
+TAG.PLACEPYSEXTANT=<SRC.ACT.P.Y>
+
+IF (0<TAG.PLACEPXSEXTANT>>=1323)&&(0<TAG.PLACEPYSEXTANT=<SRC.ACT.P.X>>>=1624) 
+VAR.POSy=<eval(<TAG.PLACEPYSEXTANT>-(1624))>*(87882) 
+VAR.POSx=<eval(<TAG.PLACEPXSEXTANT>-(1323))>*(70310) 
+TAG.PLACESEXTANT=<EVAL(<VAR.POSy>/1000000)>o'S , <EVAL(<VAR.POSx>/1000000)>o<EVAL rand(60)>'E
+ENDIF
+//////////////////////////////////////////////////////////////////////////////////// 
+IF (0<TAG.PLACEPXSEXTANT>>=1323)&&(0<TAG.PLACEPYSEXTANT><1624) 
+VAR.POSy=<eval((1624)-<TAG.PLACEPYSEXTANT>)>*(87882) 
+VAR.POSx=<eval(<TAG.PLACEPXSEXTANT>-(1323))>*(70310)
+TAG.PLACESEXTANT=<EVAL(<VAR.POSy>/1000000)>o'N , <EVAL(<VAR.POSx>/1000000)>o<EVAL rand(60)>'E
+ENDIF
+///////////////////////////////////////////////////////////////////////////////// 
+IF (0<TAG.PLACEPXSEXTANT><1323)&&(0<TAG.PLACEPYSEXTANT>>=1624) 
+VAR.POSy=<eval(<TAG.PLACEPYSEXTANT>-(1624))>*(87882) 
+VAR.POSx=<eval((1323)-<TAG.PLACEPXSEXTANT>)>*(70310)
+TAG.PLACESEXTANT=<EVAL(<VAR.POSy>/1000000)>o'S , <EVAL(<VAR.POSx>/1000000)>o<EVAL rand(60)>'W
+ENDIF
+////////////////////////////////////////////////////////////////////////////////// 
+IF (<TAG.PLACEPXSEXTANT><1323)&&(<TAG.PLACEPYSEXTANT><1624) 
+VAR.POSy=<eval((1624)-<TAG.PLACEPYSEXTANT>)>*(87882) 
+VAR.POSx=<eval((1323)-<TAG.PLACEPXSEXTANT>)>*(70310) 
+TAG.PLACESEXTANT=<EVAL(<VAR.POSy>/1000000)>o'N , <EVAL(<VAR.POSx>/1000000)>o<EVAL rand(60)>'W
+ENDIF
+
+TAG.PLACEPXSEXTANT=
+TAG.PLACEPYSEXTANT=
+
+TAG.PLACESEXTANT=It was last seen at <TAG.PLACESEXTANT>.
+
+ENDIF
+
+IF (<eval <VAR.NPCINFORMATION>> & 2)
+
+SRC.ACT.nearestregion
+TAG.PLACEREGIONNEAR=<SRC.ACT.TAG.PLACENAME>.
+
+ENDIF
+
+IF (<eval <VAR.NPCINFORMATION>> & 1)
+
+TAG.PLACEREGIONNAME=in <SRC.ACT.REGION.NAME>.
+
+ENDIF
+
+TAG.PLACENAME=<TAG.PLACEREGIONNAME> <TAG.PLACEREGIONNEAR> <TAG.PLACESEXTANT> <TAG.PLACECOORDS>
+
+TAG.PLACEREGIONNAME=
+TAG.PLACEREGIONNEAR=
+TAG.PLACESEXTANT=
+TAG.PLACECOORDS=
+
+SRC.ACT.REMOVE
+
+SRC.ACT=<eval <VAR.OLDACT>>
+VAR.OLDACT=
+
+IF (<eval <TAG.QUESTDIFFICULTY>> < 100)
+DORAND 10
+BEGIN
+	TAG.NPCNAME=Troll
+	TAG.NPCID=c_troll
+END
+BEGIN
+	TAG.NPCNAME=Ettin
+	TAG.NPCID=c_ettin
+END
+BEGIN
+	TAG.NPCNAME=Orc Captain
+	TAG.NPCID=c_m_orc_captain
+END
+BEGIN
+	TAG.NPCNAME=Ratman
+	TAG.NPCID=c_ratman
+END
+BEGIN
+	TAG.NPCNAME=Liche
+	TAG.NPCID=c_liche
+END
+BEGIN
+	TAG.NPCNAME=Evil Mage
+	TAG.NPCID=c_h_evilmage
+END
+BEGIN
+	TAG.NPCNAME=Earth Elemental
+	TAG.NPCID=c_elem_earth
+END
+BEGIN
+	TAG.NPCNAME=Frost Elf Archer
+	TAG.NPCID=c_h_frostelf_archer
+END
+BEGIN
+	TAG.NPCNAME=Ghost
+	TAG.NPCID=c_m_ghost
+END
+BEGIN
+	TAG.NPCNAME=Gazer
+	TAG.NPCID=c_gazer
+END
+ENDDO
+ELSEIF (<eval <TAG.QUESTDIFFICULTY>> < 200)
+DORAND 10
+BEGIN
+	TAG.NPCNAME=Wisp
+	TAG.NPCID=c_wisp_brown
+END
+BEGIN
+	TAG.NPCNAME=Dread Lord
+	TAG.NPCID=c_h_dreadlord
+END
+BEGIN
+	TAG.NPCNAME=Wisp
+	TAG.NPCID=c_wisp_gray
+END
+BEGIN
+	TAG.NPCNAME=Snow Elemental
+	TAG.NPCID=c_m_elem_snow
+END
+BEGIN
+	TAG.NPCNAME=Liche Lord
+	TAG.NPCID=c_m_liche_lord
+END
+BEGIN
+	TAG.NPCNAME=Mummy
+	TAG.NPCID=c_m_mummy
+END
+BEGIN
+	TAG.NPCNAME=Evil Ranger
+	TAG.NPCID=c_h_ranger_evil
+END
+BEGIN
+	TAG.NPCNAME=Frost Elf Chieftain
+	TAG.NPCID=c_h_frostelf_chief
+END
+BEGIN
+	TAG.NPCNAME=Daemon
+	TAG.NPCID=c_daemon
+END
+BEGIN
+	TAG.NPCNAME=Skeleton Knight
+	TAG.NPCID=c_m_skeleton_knight
+END
+ENDDO
+ELSEIF (<eval <TAG.QUESTDIFFICULTY>> < 325)
+DORAND 10
+BEGIN
+	TAG.NPCNAME=Cyclops
+	TAG.NPCID=c_cyclops
+END
+BEGIN
+	TAG.NPCNAME=Ogre Lord
+	TAG.NPCID=c_m_ogre_lord
+END
+BEGIN
+	TAG.NPCNAME=Dread Lord Captain
+	TAG.NPCID=c_h_dreadlord_captain
+END
+BEGIN
+	TAG.NPCNAME=Blood Elemental
+	TAG.NPCID=c_m_elem_blood
+END
+BEGIN
+	TAG.NPCNAME=Daemon Knight
+	TAG.NPCID=c_daemon_w_sword
+END
+BEGIN
+	TAG.NPCNAME=Poison Elemental
+	TAG.NPCID=c_m_elem_poison
+END
+BEGIN
+	TAG.NPCNAME=Red Drake
+	TAG.NPCID=c_dragon_small_red
+END
+BEGIN
+	TAG.NPCNAME=Kraken
+	TAG.NPCID=c_m_kraken
+END
+BEGIN
+	TAG.NPCNAME=Nightmare
+	TAG.NPCID=c_m_nightmare
+END
+BEGIN
+	TAG.NPCNAME=Wyvern
+	TAG.NPCID=c_m_wyvern
+END
+ENDDO
+ELSE
+DORAND 10
+BEGIN
+	TAG.NPCNAME=Titan
+	TAG.NPCID=c_titan
+END
+BEGIN
+	TAG.NPCNAME=Ogre Lord
+	TAG.NPCID=c_m_ogre_lord
+END
+BEGIN
+	TAG.NPCNAME=Necromancer
+	TAG.NPCID=c_h_necromancer_f
+END
+BEGIN
+	TAG.NPCNAME=Wisp
+	TAG.NPCID=c_wisp_dark
+END
+BEGIN
+	TAG.NPCNAME=Balron
+	TAG.NPCID=c_m_balron
+END
+BEGIN
+	TAG.NPCNAME=Shadow Dragon
+	TAG.NPCID=c_m_dragon_crystal
+END
+BEGIN
+	TAG.NPCNAME=Red Dragon
+	TAG.NPCID=c_dragon_red
+END
+BEGIN
+	TAG.NPCNAME=Kraken
+	TAG.NPCID=c_m_kraken
+END
+BEGIN
+	TAG.NPCNAME=Wyrm
+	TAG.NPCID=c_m_dragon_wyrm
+END
+BEGIN
+	TAG.NPCNAME=Phoenix
+	TAG.NPCID=c_m_phoenix
+END
+ENDDO
+ENDIF
+
+IF (<eval <TAG.PLAYERASKING>>==<SRC.UID>)
+TAG.NPCNAME=<TAG.OLDNPCNAME>
+TAG.NPCID=<TAG.OLDNPCID>
+TAG.PLACENAME=<TAG.OLDPLACENAME>
+TAG.PLACEP=<TAG.OLDPLACEP>
+ENDIF
+
+TAG.PLAYERASKING=<SRC.UID>
+
+SPEECHCOLOR=01d4
+
+DORAND 3
+SAYU I am having a bit of trouble with a <TAG.NPCNAME> <TAG.PLACENAME>. Canst thou get rid of it for me? Reply "I shall undertake this task" if ye wish to accept this task.
+SAYU A <TAG.NPCNAME> has been causing trouble <TAG.PLACENAME>. Do ye wish to undertake the task of slaying it? Reply "I shall undertake this task" if thou'rt interested.
+SAYU There have been reports of a <TAG.NPCNAME> causing problems <TAG.PLACENAME>. Canst thou take care of it for me? Reply "I shall undertake this task" if ye shall.
+ENDDO
+SPEECHCOLOR=0481
+TAG.SPOKENTO=1
+
+ON=I shall undertake this task
+ON=I accept this task
+
+IF (<eval <TAG.SPOKENTO>> == 0)
+SPEECHCOLOR=026
+SAYU I do not believe I have discussed any tasks with thee...
+SPEECHCOLOR=0481
+RETURN 1
+ENDIF
+
+TAG.PLAYERASKING=
+TAG.SPOKENTO=
+TAG.OLDNPCNAME=
+TAG.OLDNPCID=
+TAG.OLDPLACENAME=
+TAG.OLDPLACEP=
+
+SPEECHCOLOR=0481
+SAYU Very well. If ye can slay this beast and bring its head to me within an hour and a half, I shall reward thee. If it becomes too much for thee, return to me and say "I resign from performing thine task".
+SPEECHCOLOR=0481
+
+VAR.OLDACT=<SRC.ACT>
+SRC.NEWNPC <eval <TAG.NPCID>>
+SRC.ACT.P=<TAG.PLACEP>
+VAR.NPCUID=<SRC.ACT.UID>
+VAR.NPCSNAME=<SRC.ACT.NAME>
+SRC.ACT.HOME=<SRC.ACT.P>
+SRC.ACT.HOMEDIST=1
+SRC.ACT.FIX //Fix the ZLEVEL of the thing.
+SRC.ACT.HOME=<SRC.ACT.P>
+SRC.NEWITEM i_flesh_head
+SRC.ACT.CONT=<eval <VAR.NPCUID>>
+SRC.ACT.NAME=Head of <VAR.NPCSNAME>
+VAR.HEADUID=<SRC.ACT.UID>
+VAR.NPCSNAME=
+
+SRC.NEWITEM i_memory_quest
+SRC.ACT.CONT=<UID>
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.MORE1=<eval <VAR.NPCUID>>
+SRC.ACT.MORE2=<eval <VAR.HEADUID>>
+SRC.ACT.MOREX=<eval <TAG.QUESTDIFFICULTY>>
+VAR.NPCUID=
+VAR.HEADUID=
+TAG.QUESTDIFFICULTY=
+TAG.PLACEP=
+TAG.NPCID=
+SRC.ACT.TIMER=90*60
+
+ON=I resign from performing thine task
+
+IF (<FINDID.i_memory_quest.LINK> != <SRC.UID>)
+SPEECHCOLOR=026
+SAYU I do not believe ye are performing a task for me...
+SPEECHCOLOR=0481
+RETURN 1
+ELSE
+SPEECHCOLOR=01d4
+SAYU Ah, truly? I shall have to find someone else to perform this task then...
+SPEECHCOLOR=0481
+VAR.OLDACT=<SRC.ACT>
+SRC.ACT=<eval <FINDID.i_memory_quest.MORE1>>
+SRC.ACT.REMOVE
+SRC.ACT=<eval <FINDID.i_memory_quest.MORE2>>
+SRC.ACT.REMOVE
+SRC.ACT=<eval <VAR.OLDACT>>
+VAR.OLDACT=
+FINDID.i_memory_quest.REMOVE
+RETURN 1
+ENDIF
+
+[ITEMDEF i_memory_quest]
+DEFNAME=i_memory_quest
+ID=i_memory
+TYPE=t_eq_script
+LAYER=30
+NAME=Quest memory item
+
+ON=@Create
+ATTR=attr_invis|attr_move_never
+
+ON=@Timer
+LINK.SYSMESSAGE It has taken you too long to fulfill your appointed task.
+LINK.FAME=<LINK.FAME> + {-40 -10}
+
+IF (<LINK.FAME> < 1)
+LINK.FAME=0
+ENDIF
+
+LINK.SYSMESSAGE You have lost a small amount of fame.
+
+VAR.OLDACT=<LINK.ACT>
+LINK.ACT=<eval <MORE1>>
+LINK.ACT.REMOVE
+LINK.ACT=<eval <MORE2>>
+LINK.ACT.REMOVE
+LINK.ACT=<eval <VAR.OLDACT>>
+REMOVE
+RETURN 1
+
+[EVENTS e_accepthead]
+
+ON=@NPCAcceptItem
+IF (<SRC.TARG.UID> == <FINDID.i_memory_quest.MORE2>)
+SAY Ah, this is the <SRC.TARG.NAME>. I thank thee...
+
+VAR.RANDITEM=rand(50)
+
+IF (<FINDID.i_memory_quest.MOREX> < 100)
+
+IF (<eval <VAR.RANDITEM>> == 10)
+SAY Here is thine reward.
+SRC.NEWITEM=random_quest_reward_1
+SRC.ACT.BOUNCE
+ELSEIF (<eval <VAR.RANDITEM>> < 10)
+SAY I am sorry I have nothing to give thee... but I shall spread word of thy kindness.
+SRC.FAME=<SRC.FAME> + {25 75}
+SRC.SYSMESSAGE You have gained some fame.
+ELSE
+SAY I thank thee... please take mine gold.
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT={200 400}
+SRC.ACT.BOUNCE
+ENDIF
+
+ELSEIF (<FINDID.i_memory_quest.MOREX> < 200)
+
+IF (<eval <VAR.RANDITEM>> == 10)
+SAY Here is thine reward.
+SRC.NEWITEM=random_quest_reward_2
+SRC.ACT.BOUNCE
+ELSEIF (<eval <VAR.RANDITEM>> < 10)
+SAY I am sorry I have nothing to give thee... but I shall spread word of thy kindness.
+SRC.FAME=<SRC.FAME> +  {150 275}
+SRC.SYSMESSAGE You have gained some fame.
+ELSE
+SAY I thank thee... please take mine gold.
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT={350 500}
+SRC.ACT.BOUNCE
+ENDIF
+ELSEIF (<FINDID.i_memory_quest.MOREX> < 325)
+
+IF (<eval <VAR.RANDITEM>> == 10)
+SAY Here is thine reward.
+SRC.NEWITEM=random_quest_reward_3
+SRC.ACT.BOUNCE
+ELSEIF (<eval <VAR.RANDITEM>> < 10)
+SAY I am sorry I have nothing to give thee... but I shall spread word of thy kindness.
+SRC.FAME=<SRC.FAME> +  {250 400}
+SRC.SYSMESSAGE You have gained large amounts of fame.
+ELSE
+SAY I thank thee... please take mine gold.
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT={450 600}
+SRC.ACT.BOUNCE
+ENDIF
+
+ELSE
+
+IF (<eval <VAR.RANDITEM>> == 10)
+SAY Here is thine reward.
+SRC.NEWITEM=random_quest_reward_4
+SRC.ACT.BOUNCE
+ELSEIF (<eval <VAR.RANDITEM>> < 10)
+SAY I am sorry I have nothing to give thee... but I shall spread word of thy kindness.
+SRC.FAME=<SRC.FAME> +  {300 575}
+SRC.SYSMESSAGE You have gained huge amounts of fame.
+ELSE
+SAY I thank thee... please take mine gold.
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT={500 750}
+SRC.ACT.BOUNCE
+ENDIF
+ENDIF
+
+FINDID.i_memory_quest.REMOVE
+SRC.TARG.REMOVE
+
+ENDIF
+
+RETURN 1
+
+[TEMPLATE random_quest_reward_1]
+ITEM={ random_weapon_ruin 5 random_shield_defense 5 random_platemail_defense 5 random_ringmail_defense 5 random_chainmail_defense 5 random_leather_defense 5 random_weapon_might 1 random_shield_guarding 1 random_platemail_guarding 1 random_chainmail_guarding 1 random_ringmail_guarding 1 random_leather_guarding 1 }
+
+[TEMPLATE random_quest_reward_2]
+ITEM={ random_weapon_ruin 1 random_shield_defense 1 random_platemail_defense 1 random_ringmail_defense 1 random_chainmail_defense 1 random_leather_defense 1 random_weapon_might 5 random_shield_guarding 5 random_platemail_guarding 5 random_chainmail_guarding 5 random_ringmail_guarding 5 random_leather_guarding 5 random_weapon_force 2 random_shield_hardening 2 random_platemail_hardening 2 random_chainmail_hardening 2 random_ringmail_hardening 2 random_leather_hardening 2 }
+
+[TEMPLATE random_quest_reward_3]
+ITEM={ random_weapon_ruin 1 random_shield_defense 1 random_platemail_defense 1 random_ringmail_defense 1 random_chainmail_defense 1 random_leather_defense 1 random_weapon_might 1 random_shield_guarding 1 random_platemail_guarding 1 random_chainmail_guarding 1 random_ringmail_guarding 1 random_leather_guarding 1 random_weapon_force 5 random_shield_hardening 5 random_platemail_hardening 5 random_chainmail_hardening 5 random_ringmail_hardening 5 random_leather_hardening 5 random_weapon_power 2 random_shield_fortification 2 random_platemail_fortification 2 random_chainmail_fortification 2 random_ringmail_fortification 2 random_leather_fortification 2 }
+
+[TEMPLATE random_quest_reward_4]
+ITEM={ random_weapon_ruin 1 random_shield_defense 1 random_platemail_defense 1 random_ringmail_defense 1 random_chainmail_defense 1 random_leather_defense 1 random_weapon_might 1 random_shield_guarding 1 random_platemail_guarding 1 random_chainmail_guarding 1 random_ringmail_guarding 1 random_leather_guarding 1 random_weapon_force 1 random_shield_hardening 1 random_platemail_hardening 1 random_chainmail_hardening 1 random_ringmail_hardening 1 random_leather_hardening 1 random_weapon_power 5 random_shield_fortification 5 random_platemail_fortification 5 random_chainmail_fortification 5 random_ringmail_fortification 5 random_leather_fortification 5 random_weapon_vanq 2 random_shield_invulnerability 2 random_platemail_invulnerability 2 random_chainmail_invulnerability 2 random_ringmail_invulnerability 2 random_leather_invulnerability 2 }
+
+[FUNCTION npcrandvalidlocation]
+
+IF (<ARGN> != 1)
+VAR.RANDX=rand(6142)
+VAR.RANDY=rand(4093)
+
+IF (<eval <VAR.RANDX>> > 5120)
+IF (<eval <VAR.RANDY>> < 2000)
+//Speedup... this is almost all dungeon or Green Acres, neither of which we want.
+npcrandvalidlocation
+ENDIF
+ENDIF
+
+ELSE
+VAR.RANDX=<eval rand(1022) + 5120>
+VAR.RANDY=rand(1998)
+ENDIF
+
+P=<eval <VAR.RANDX>>,<eval <VAR.RANDY>>,1
+
+VAR.RANDX=
+VAR.RANDY=
+
+FIX
+
+isnpcstuck
+
+IF (<eval <TAG.STUCKCOUNTER>> != 0)
+npcrandvalidlocation
+ENDIF
+
+IF (<REGION.GUARDED> != 0) || (<REGION.SAFE> != 0)
+npcrandvalidlocation
+ENDIF
+
+IF (<ARGN> != 1)
+IF (<REGION.UNDERGROUND> != 0)
+npcrandvalidlocation
+ENDIF
+ELSE
+
+IF (<REGION.UNDERGROUND> == 0)
+npcrandvalidlocation 1
+ENDIF
+
+IF !(STRCMPI(<REGION.NAME>,Dungeon))
+npcrandvalidlocation 1
+ENDIF
+
+IF !(STRCMPI(<REGION.NAME>,Dungeons))
+npcrandvalidlocation 1
+ENDIF
+
+ENDIF
+
+IF !(STRCMPI(<REGION.NAME>,Star Chamber))
+//Let me know if there are any more regions that aren't player accessible.
+npcrandvalidlocation
+ENDIF
+
+IF !(STRCMPI(<REGION.NAME>,<SERV.NAME>))
+//The server's default region is too large and too vague.
+npcrandvalidlocation
+ENDIF
+
+[FUNCTION isnpcstuck]
+TAG.HOMEX=<P.X>
+TAG.HOMEY=<P.Y>
+TAG.HOMEZ=<Z>
+TAG.STUCKCOUNTER=1
+
+STUCKCHECK n
+STUCKCHECK ne
+STUCKCHECK nw
+STUCKCHECK s
+STUCKCHECK se
+STUCKCHECK sw
+STUCKCHECK e
+STUCKCHECK w
+
+P=<eval <TAG.HOMEX>>,<eval <TAG.HOMEY>>,<eval <TAG.HOMEZ>>
+
+[FUNCTION STUCKCHECK]
+//We only check if we have yet to find a valid position to move to
+//This saves on wasted time and is a slight performance boost.
+
+IF (<eval <TAG.STUCKCOUNTER>> != 0)
+P=<eval <TAG.HOMEX>>,<eval <TAG.HOMEY>>,<eval <TAG.HOMEZ>>
+RUN <ARGS>
+IF (<eval <TAG.HOMEX>> != <P.X>) || (<eval <TAG.HOMEY>> != <P.Y>)
+TAG.STUCKCOUNTER=0
+ENDIF
+ENDIF
+
+[FUNCTION nearestregion]
+
+VAR.LOWESTDIR=40
+VAR.CURRENTREGIONUID=<REGION.UID>
+
+//Called OLDACT2 because I call it in another script using OLDACT...
+VAR.OLDACT2=<ACT.UID>
+
+NEWNPC c_man_invisible
+ACT.NAME=" "
+ACT.P=<P>
+ACT.UNTILREGIONCHANGE N
+ACT.REMOVE
+
+NEWNPC c_man_invisible
+ACT.NAME=" "
+ACT.P=<P>
+ACT.UNTILREGIONCHANGE S
+ACT.REMOVE
+
+NEWNPC c_man_invisible
+ACT.NAME=" "
+ACT.P=<P>
+ACT.UNTILREGIONCHANGE E
+ACT.REMOVE
+
+NEWNPC c_man_invisible
+ACT.NAME=" "
+ACT.P=<P>
+ACT.UNTILREGIONCHANGE W
+ACT.REMOVE
+
+NEWNPC c_man_invisible
+ACT.NAME=" "
+ACT.P=<P>
+ACT.UNTILREGIONCHANGE NW
+ACT.REMOVE
+
+NEWNPC c_man_invisible
+ACT.NAME=" "
+ACT.P=<P>
+ACT.UNTILREGIONCHANGE NE
+ACT.REMOVE
+
+NEWNPC c_man_invisible
+ACT.NAME=" "
+ACT.P=<P>
+ACT.UNTILREGIONCHANGE SW
+ACT.REMOVE
+
+NEWNPC c_man_invisible
+ACT.NAME=" "
+ACT.P=<P>
+ACT.UNTILREGIONCHANGE SE
+ACT.REMOVE
+
+IF (<eval <VAR.LOWESTDIR>> < 40)
+TAG.PLACENAME=<VAR.LOWESTDIRECTION>
+ENDIF
+
+VAR.LOWESTDIRECTION=
+VAR.LOWESTDIR=
+
+ACT=<eval <VAR.OLDACT2>>
+VAR.OLDACT2=
+
+[FUNCTION UNTILREGIONCHANGE]
+MOVE <ARGS> 10
+
+IF (0<eval <TAG.NORUNAWAYLOOPS>> == 0)
+TAG.NORUNAWAYLOOPS=1
+ELSE
+TAG.NORUNAWAYLOOPS = <eval <TAG.NORUNAWAYLOOPS> + 1>
+ENDIF
+
+IF (<eval <REGION.UID>> == <eval <VAR.CURRENTREGIONUID>>)
+IF (<eval <TAG.NORUNAWAYLOOPS>> < 40)
+UNTILREGIONCHANGE <ARGS>
+ENDIF
+ENDIF
+
+IF (<eval <TAG.NORUNAWAYLOOPS>> < <eval <VAR.LOWESTDIR>>)
+IF (<eval <TAG.NORUNAWAYlOOPS>> > 0)
+VAR.LOWESTDIR=<TAG.NORUNAWAYLOOPS>
+
+IF (<eval <VAR.LOWESTDIR>> < 10)
+VAR.LOWESTDIRECTION=<REGION.NAME> is very near to the <ARGS>
+ELSEIF (<eval <VAR.LOWESTDIR>> < 20)
+VAR.LOWESTDIRECTION=<REGION.NAME> is somewhat near to the <ARGS>
+ELSEIF (<eval <VAR.LOWESTDIR>> < 30)
+VAR.LOWESTDIRECTION=<REGION.NAME> is somewhat far to the <ARGS>
+ELSEIF (<eval <VAR.LOWESTDIR>> < 40)
+VAR.LOWESTDIRECTION=<REGION.NAME> is very far to the <ARGS>
+ELSE
+VAR.LOWESTDIRECTION=It is nowhere near anywhere else
+ENDIF
+
+ENDIF
+ENDIF

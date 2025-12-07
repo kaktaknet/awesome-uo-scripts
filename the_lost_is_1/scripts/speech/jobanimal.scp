@@ -1,0 +1,140 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Friday, April 28, 2000
+// COPYRIGHT NOTICE: All files and content are copyright 1997-1999 Menasoft & Partners. All
+// donations and contributions become the property of Menasoft.
+
+// Purpose: Britannia Animal Trainer Script
+// Notes:  This is used for general information pertaining to all Britannian
+//	Animal Trainer's
+// Current Keyword List:
+//	job, what*do*do, trainer, train, animal, saddle, whip, dog, cat, horse
+//	=============================================================================
+[SPEECH jobAnimal]
+
+ON=*job*
+ON=*work*
+ON=*what*do*do*
+ON=*profession*
+ON=*occupation*
+ON=*trainer*
+ON=*arbeit*
+	IF ( <SRC.KARMA.WICKED> || <SRC.KARMA.BELLIGERANT> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			
+				SAY Ich trainiere Tiere
+				
+		ELSE
+			
+				SAY Ich trainiere Tiere, <SRC.SEX milord/milady>.
+				
+		ENDIF
+	ELIF ( <SRC.KARMA.NEUTRAL> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+				SAY Ich trainiere Tiere.
+				
+		ELSE
+			
+				SAY Ich trainiere Tiere, <SRC.SEX milord/milady>.
+				
+		ENDIF
+	ELSE
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			
+				SAY Ich trainiere Pferde, Hunde und Katzen.
+				
+		ELSE
+				SAY Ich zaehme Katzen und Hunde.
+				
+		ENDIF
+	ENDIF
+
+ON=*Retrieve*
+	IF <NPC>==BRAIN_ANIMAL_TRAINER
+		PETRETRIEVE
+	ENDIF
+
+ON=*Stable*
+	IF <NPC>==BRAIN_ANIMAL_TRAINER
+		PETSTABLE
+	ENDIF
+
+ON=*train*
+ON=*animal*
+ON=*tier*
+	IF ( <SRC.KARMA.WICKED> || <SRC.KARMA.BELLIGERANT> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY Ich trainiere Tiere darauf dem Menschen zu gehorchen
+				SAY Ich stelle sicher das Tiere wissen wer der Boss ist!
+				
+			ENDDO
+		ELSE
+			DORAND 2
+				SAY Ich trainiere Tiere darauf dem Menschen zu gehorchen
+				SAY Ich stelle sicher das Tiere wissen wer der Boss ist!
+				
+			ENDDO
+		ENDIF
+	ELIF ( <SRC.KARMA.NEUTRAL> )
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY Ich trainiere Tiere darauf dem Menschen zu gehorchen
+				SAY Ich stelle sicher das Tiere wissen wer der Boss ist!
+				
+			ENDDO
+		ELSE
+			DORAND 2
+				SAY Ich trainiere Tiere darauf dem Menschen zu gehorchen
+				SAY Ich stelle sicher das Tiere wissen wer der Boss ist!
+				
+			ENDDO
+		ENDIF
+	ELSE
+		IF ( <COMPLEXITY.HIGH> || <COMPLEXITY.MEDIUM> )
+			DORAND 2
+				SAY Ich trainiere Tiere darauf dem Menschen zu gehorchen
+				SAY Ich stelle sicher das Tiere wissen wer der Boss ist!
+				
+			ENDDO
+		ELSE
+			DORAND 2
+				SAY Ich trainiere Tiere darauf dem Menschen zu gehorchen
+				SAY Ich stelle sicher das Tiere wissen wer der Boss ist!
+				
+			ENDDO
+		ENDIF
+	ENDIF
+
+
+
+[COMMENT SPEECH jobAnimal]
+//ANIMAL TRAINER
+DEFAULT=Thou art making no sense!
+ON=kaufen
+	BUY
+ON=verkaufen
+	SELL
+ON=Hi
+ON=Hail
+ON=Hello
+ON=Greet
+ON=Gruesse
+	SAY=Gruesse! Habt ihr eines meiner Tiere gesehen?
+ON=job
+	SAY=Ich bin befreundet mit den Tieren der Natur
+ON=goodbye
+ON=farewell
+ON=bye
+ON=Auf Bald
+	SAY=Auf bald! Und seid brav zu den Tieren
+	return 1
+
+[EOF]

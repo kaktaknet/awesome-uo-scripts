@@ -1,0 +1,57 @@
+//////////////////////////////////////////////////////
+///Lightning fun//////////////////////////////////////
+//////////////////////////////////////////////////////
+///////By Negafen/////////////////////////////////////
+//////////////////////////////////////////////////////
+////This script is a toy I made for a friend to show//
+////how to make linked items loop. More an////////////
+////experiment then anything else/////////////////////
+//////////////////////////////////////////////////////
+//Please do not redistribute, remove this tag, or/////
+//claim this script as your own.//////////////////////
+//////////////////////////////////////////////////////
+//Negafen@Pbreview.com////////////////////////////////
+//////////////////////////////////////////////////////
+
+
+
+[function lit]
+src.tag.lit=1
+src.message Lightning effect activated.
+src.newitem i_mem_littimer
+src.act.link=<src.uid>
+src.act.p=<src.p>
+return 1 
+
+
+[function litoff]
+src.tag.lit=
+src.message Lightning effect de-activated.
+
+
+[ITEMDEF i_mem_littimer] 
+ID=i_gem_diamond
+TYPE=t_script 
+NAME=Lit Timer
+
+
+on=@create
+TIMERD=1
+ATTR=04080
+
+
+ON=@timer
+if <eval 0<link.tag.lit>>==01
+link.effect 1,1,1,1
+link.effect 1,1,1,1
+link.effect 1,1,1,1
+link.effect 1,1,1,1
+link.effect 1,1,1,1
+link.effect 1,1,1,1
+link.effect 1,1,1,1
+link.effect 1,1,1,1
+link.sfx 01dc
+timerD=1
+return 1
+else
+return 0

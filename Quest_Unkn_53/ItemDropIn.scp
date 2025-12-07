@@ -1,0 +1,80 @@
+[comment on this script]
+This script is about new itemtriggers. In Sphere.55i there is no trigger for dropping items into a container. This script is an attempt to fix that.
+
+@DropIn_Pack
+Itemtrigger (delayed*). Triggered when this item is dropped into a container. 
+
+@ItemDropIn
+Itemtrigger (containers only, delayed*). Triggered when an item is dropped into this container.
+
+@ItemPickFrom
+Itemtrigger (containers only). Triggered when an item is picked up from this container.
+
+In all triggers SRC is the char who dropped/picked the item.
+SRC.ACT is the item in question.
+SRC.ACT.CONT is the container.
+To use these triggers all playerchars need to have the event e_dropin_pack.
+
+delayed*) the trigger is fired up to one second later then the actual drop.
+
+
+[itemdef i_cont_example]
+id=i_bag
+
+on=@ItemPickFrom
+say @ItemPickFrom (<src.name> picked <src.act.name> from <name>)
+on=@ItemDropIn
+say @ItemDropIn (<src.name> dropped <src.act.name> in <name>)
+
+
+[events e_dropin_pack]
+on=@ItemPickUp_Ground
+f_ItemDropIn_Pack
+on=@ItemPickUp_Pack
+f_ItemDropIn_Pack
+
+
+[function f_ItemDropIn_Pack]
+src.act.cont.trigger @ItemPickFrom
+if 0<src.tag.ItemPicked>
+	findid.i_mem_PickControl.remove
+	src.tag.ItemPicked=
+endif
+src.tag.ItemPicked=<src.act.uid>
+src.f_initiate_PickControl
+
+
+[function f_initiate_PickControl]
+var.PickControl.act=<act.uid>
+newitem i_mem_PickControl
+equip <act.uid>
+act.timer=1
+act=<var.PickControl.act>
+var.PickControl.act=
+
+
+[itemdef i_mem_PickControl]
+id=i_handr_1
+name=Memoryitem for new Trigger
+Layer=30
+type=t_eq_Script
+
+on=@timer
+if <cont.findlayer.31>
+	timer=1
+	return 1
+endif
+remove
+return 1
+
+on=@unequip
+var.ItemDropIn_Pack.act=<src.act.uid>
+src.act=<src.tag.ItemPicked>
+src.act.cont.trigger @ItemDropIn
+if <src.act.cont>
+	src.act.trigger @DropIn_Pack
+endif
+src.act=<var.ItemDropIn_Pack.act>
+var.ItemDropIn_Pack.act=
+
+[EOF]

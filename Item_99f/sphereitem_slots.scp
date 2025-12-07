@@ -1,0 +1,366 @@
+// ****************************************************************************
+// SPHERE by : Menasoft ©1997-2000
+// www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+// ****************************************************************************
+// FILE LAST UPDATED: Sunday, May 20, 2001
+// Camelot Slot Machine System version 1.0a created by Dustin
+// Ripped to shreads so it doesn't stink by Tyler and Iz of www.oblivion2.com
+
+VERSION=0.99f
+
+[FUNCTION f_slot_dclick]
+//Dispid to 01513
+IF <DISTANCE>>3
+   SRC.SYSMESSAGE="You are too far away to use that."
+   RETURN 1
+ENDIF
+IF <MORE2>=1
+   SRC.SYSMESSAGE="You can't use it until it resets."
+   RETURN 1
+ELSE
+   //Check for a token first
+   IF !(<SRC.RESTEST 1 i_slot_token>)
+      SRC.SYSMESSAGE="You need a token to play the slots!"
+      RETURN 1
+   ELSE
+
+   //Add to the counter of usages
+   MORE=<MORE>+1
+   NAME="Slot Machine (Used <MORE> times)"
+   //Has a token now take it and spin
+   SRC.EMOTE pull the leaver....
+   SRC.CONSUME=1 i_slot_token
+   //Sound
+   SOUND 75
+   //Put the roll here, they have a graduated chance at winning
+   //different things.  Harder to win really good stuff of course....
+   //When you lose use sound 412
+   //When you win use sound 54
+   //Then set more and the timer and exit
+   MORE2=1
+   LINK=<SRC.UID>
+   TIMER=5
+   //Set the ID and force the update to the client
+   IF <ARGN>=1
+      DISPID=01509
+   ELIF <ARGN>=2
+      DISPID=0151d
+   ELIF <ARGN>=3
+      DISPID=0151b
+   ELIF <ARGN>=4
+      DISPID=01513
+   ENDIF
+
+   FIX
+   RETURN 1
+ENDIF
+
+[FUNCTION f_slot_machine]
+   VAR.WIN=<EVAL {1 30}>
+   //They won (1 in 30 chance to win SOMETHING)
+   IF <VAR.WIN>=1
+      VAR.X=<EVAL {1 32}>
+
+      //First we need to see IF they won, then there
+      //are 20 different things they can get
+
+      IF ((<VAR.X>>0) & (<VAR.X><10))
+         //Create the new item
+         LINK.NEWITEM=i_slot_token
+         //Put it in our pack the ghetto way because SPHERE can't
+         //bounce from a LINK object
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE win a lame prize....
+         SOUND 54
+
+      ELIF ((<VAR.X>>10) & (<VAR.X><15))
+         LINK.NEWITEM=t_ale_box
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE win a somewhat good prize....
+         SOUND 54
+
+      ELIF ((<VAR.X>>15) & (<VAR.X><20))
+         LINK.NEWITEM=t_reag_bag
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE win a somewhat good prize....
+         SOUND 54
+
+      ELIF ((<VAR.X>>20) & (<VAR.X><25))
+         LINK.NEWITEM=t_pag_bag
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE win a somewhat good prize....
+         SOUND 54
+
+      ELIF ((<VAR.X>>25) & (<VAR.X><28))
+         LINK.NEWITEM=i_5k_decor
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE win a pretty good prize!
+         SOUND 54
+
+
+      ELIF <VAR.X>=29
+         LINK.NEWITEM=i_10k_decor
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE won a really good prize!
+         SOUND 54
+
+
+      ELIF <VAR.X>=30
+         LINK.NEWITEM=t_gem_bag
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE won a really good prize!
+         SOUND 54
+
+
+      ELIF <VAR.X>=31
+         LINK.NEWITEM=random_weapon_power
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE won a really good prize!
+         SOUND 54
+
+      ELIF <VAR.X>=32
+         LINK.NEWITEM=random_chainmail_fortification
+         LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+         LINK.EMOTE won a really good prize!
+         SOUND 54
+      ENDIF
+
+    //They lost
+    ELSE
+       LINK.EMOTE did not win.
+       SOUND 412
+    ENDIF
+    //This has to happen to reset the machine
+    MORE2=0
+    LINK=0
+
+   IF <ARGN>=1
+      DISPID=01508
+   ELIF <ARGN>=2
+      DISPID=0151c
+   ELIF <ARGN>=3
+      DISPID=0151a
+   ELIF <ARGN>=4
+      DISPID=01512
+   ENDIF
+    TIMER=-1
+    //Force the update to the clients who can see this
+    FIX
+RETURN 1
+
+[ITEMDEF i_slot_token]
+NAME="Slot token"
+ID=i_virtstone_1
+
+ON=@CREATE
+COLOR=021 // Change to the color you desire
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION=Token
+
+
+[ITEMDEF i_slot_machine_1]
+NAME="Slot Machine"
+ID=01508
+
+ON=@CREATE
+COLOR=021  // Change to the color you desire
+ATTR=0010
+
+ON=@DCLICK
+   f_slot_dclick 1
+   RETURN 1
+
+ON=@TIMER
+   f_slot_machine 1
+   RETURN 1
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION= Slot Machine 1
+
+[ITEMDEF i_slot_machine_2]
+NAME="Slot Machine"
+ID=0151c
+
+ON=@CREATE
+COLOR=0f8  // Change to the color you desire
+ATTR=0010
+
+ON=@DCLICK
+   f_slot_dclick 2
+   RETURN 1
+
+ON=@TIMER
+   f_slot_machine 2
+   RETURN 1
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION= Slot Machine 2
+
+[ITEMDEF i_slot_machine_3]
+NAME="Slot Machine"
+ID=0151a
+
+ON=@CREATE
+COLOR=01d9  // Change to the color you desire
+ATTR=0010
+
+ON=@DCLICK
+   f_slot_dclick 3
+   RETURN 1
+
+ON=@TIMER
+   f_slot_machine 3
+   RETURN 1
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION= Slot Machine 3
+
+[ITEMDEF i_slot_machine_4]
+NAME="Slot Machine"
+ID=01512
+
+ON=@CREATE
+COLOR=0152  // Change to the color you desire
+ATTR=0010
+
+ON=@DCLICK
+   f_slot_dclick 4
+   RETURN 1
+
+ON=@TIMER
+   f_slot_machine 4
+   RETURN 1
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION= Slot Machine 4
+
+//Somewhat Prize 10-15
+[TEMPLATE t_ale_box
+CONTAINER=i_box_brass
+ITEM=i_ale_amber,5
+ITEM=i_ale_brown,5
+ITEM=i_ale_honey,5
+ITEM=i_ale_oktoberfest,5
+ITEM=i_ale_smoked,5
+ITEM=i_ale_spiced,5
+ITEM=i_ale_stout,5
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION=Somewhat 10-15 Prize
+
+ //Somewhat Prize 15-20
+[TEMPLATE t_reag_bag]
+CONTAINER=i_bag
+ITEM=i_reag_black_pearl,50
+ITEM=i_reag_blood_moss,50
+ITEM=i_reag_garlic,50
+ITEM=i_reag_ginseng,50
+ITEM=i_reag_mandrake_root,50
+ITEM=i_reag_nightshade,50
+ITEM=i_reag_sulfur_ash,50
+ITEM=i_reag_spider_silk,50
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION=Somewhat 15-20 Prize
+
+//Somewhat Prize 20-25
+[TEMPLATE t_pag_bag
+CONTAINER=i_bag
+ITEM=i_reag_worm_heart,50
+ITEM=i_reag_volcanic_ash,50
+ITEM=i_reag_dead_wood,50
+ITEM=i_reag_serpent_scale,50
+ITEM=i_reag_pig_iron,50
+ITEM=i_reag_pumice,50
+ITEM=i_reag_eye_of_newt,50
+ITEM=i_reag_executioners_cap,50
+ITEM=i_reag_dragon_blood,50
+ITEM=i_reag_fertile_dirt,50
+ITEM=i_reag_blackmoor,50
+ITEM=i_reag_batwing,50
+ITEM=i_reag_bone,50
+ITEM=i_reag_blood_vial,50
+ITEM=i_reag_blood_spawn,50
+ITEM=i_reag_daemon_bone,50
+ITEM=i_reag_brimstone,50
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION=Somewhat 20-25 Prize
+
+//Pretty Good Prize 25-28
+
+[ITEMDEF i_5k_decor]
+NAME="Ticket for 5,000 in house decor."
+ID=i_deed
+
+ON=@CREATE
+COLOR=0120 // Change to the color you desire
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION=Pretty Good Prize 25-28
+
+[ITEMDEF i_10k_decor]
+NAME="Ticket for 10,000 in house decor."
+ID=i_deed
+
+ON=@CREATE
+COLOR=039 // Change to the color you desire
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION=Really Good Prize 29
+
+[TEMPLATE t_gem_bag]
+CONTAINER=i_bag
+ITEM=i_gem_tourmaline,20
+ITEM=i_gem_star_sapphire,20
+ITEM=i_gem_diamond,100
+ITEM=i_gem_emerald,20
+ITEM=i_gem_citrine,20
+ITEM=i_gem_amber,20
+ITEM=i_gem_amethyst,20
+ITEM=i_gem_ruby,20
+ITEM=i_gem_sapphire,20
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION=Really Good Prize 30
+
+[ITEMDEF i_slot_token_machine]
+NAME="Token Machine"
+ID=i_scarecrow
+
+ON=@CREATE
+COLOR=0481  // Change to the color you desire
+ATTR=0010
+
+ON=@DCLICK
+   IF !(<SRC.RESTEST 250 i_gold>)
+     SRC.MESSAGE="You need 250 gold to buy a token."
+   ELSE
+     SRC.MESSAGE="You buy a token for 250 gold."
+     SRC.NEWITEM i_slot_token
+     SRC.ACT.BOUNCE
+     SRC.CONSUME=250 i_gold
+   ENDIF
+RETURN 1
+
+CATEGORY=Oblivion Casino
+SUBSECTION=Slots
+DESCRIPTION= Token Machine
+
+[EOF]

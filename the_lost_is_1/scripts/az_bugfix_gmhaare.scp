@@ -1,0 +1,25 @@
+[ITEMDEF i_gm_robe_fixed] 
+DEFNAME=i_gm_robe 
+ID=0204f 
+TYPE=t_clothing 
+ON=@create 
+NAME=GM Robe 
+HITPOINTS=-1 
+
+ON=@equip 
+IF (0<SRC.FINDLAYER(11)> 
+SRC.TAG.HaarID=<SRC.FINDLAYER(11).ID> 
+SRC.TAG.HaarFarbe=<SRC.FINDLAYER(11).color> 
+SRC.FINDLAYER(11).REMOVE 
+ELSE 
+SRC.TAG.HaarID=0 
+ENDIF 
+
+ON=@unequip 
+IF !(<SRC.TAG.HaarID> == 0) 
+SRC.NEWITEM=<src.tag.haarid> 
+SRC.ACT.EQUIP 
+SRC.FINDLAYER(11).color=<src.tag.HaarFarbe> 
+ENDIF 
+
+[EOF]

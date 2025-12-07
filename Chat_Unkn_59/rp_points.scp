@@ -1,0 +1,99 @@
+//////////////////////////////////////////////////////
+///Rpgive/Rptake//////////////////////////////////////
+//////////////////////////////////////////////////////
+///////By Negafen/////////////////////////////////////
+//////////////////////////////////////////////////////
+////Type .rpgive to give a rp point///////////////////
+////Type .rptake to take one away, they can have//////
+////negative points too. Requested like most of///////
+////my scripts////////////////////////////////////////
+//////////////////////////////////////////////////////
+//Please do not redistribute, remove this tag, or/////
+//claim this script as your own.//////////////////////
+//////////////////////////////////////////////////////
+//Negafen@Pbreview.com////////////////////////////////
+//////////////////////////////////////////////////////
+
+
+[FUNCTION rpgive] 
+NEWITEM=i_rpgive
+SRC.ACT.EQUIP 
+
+
+[ITEMDEF i_rpgive] 
+NAME=Givin a point
+ID=i_memory 
+TYPE=t_eq_script 
+WEIGHT=0 
+
+
+ON=@CREATE 
+ATTR=attr_invis 
+
+
+ON=@EQUIP 
+TARGETG
+SRC.SYSMESSAGE Who deserves an RP point?
+RETURN 1 
+
+
+ON=@TARGON_CHAR 
+src.targ.tag.rp=<eval <src.targ.tag.rp>> +1
+SRC.MESSAGE You give <src.targ.name> an RP point
+SRC.TARG.MESSAGE You recieve an RP point
+REMOVE 
+RETURN 1 
+
+
+ON=@TARGON_ITEM 
+src.message No can do!
+REMOVE 
+RETURN 1 
+
+
+ON=@TARGON_GROUND 
+src.message No can do!
+REMOVE 
+RETURN 1 
+
+
+[FUNCTION rptake] 
+NEWITEM=i_rptake
+SRC.ACT.EQUIP 
+
+
+[ITEMDEF i_rptake] 
+NAME=Takin a point
+ID=i_memory 
+TYPE=t_eq_script 
+WEIGHT=0 
+
+
+ON=@CREATE 
+ATTR=attr_invis 
+
+
+ON=@EQUIP 
+TARGETG
+SRC.SYSMESSAGE Who loses an RP point?
+RETURN 1 
+
+
+ON=@TARGON_CHAR 
+src.targ.tag.rp=<eval <src.targ.tag.rp>> +-1
+SRC.MESSAGE You take <src.targ.name>'s RP point
+SRC.TARG.MESSAGE You lose an rp point
+REMOVE 
+RETURN 1 
+
+
+ON=@TARGON_ITEM 
+src.message No can do!
+REMOVE 
+RETURN 1 
+
+
+ON=@TARGON_GROUND 
+src.message No can do!
+REMOVE 
+RETURN 1

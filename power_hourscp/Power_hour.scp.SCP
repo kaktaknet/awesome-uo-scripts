@@ -1,0 +1,120 @@
+//Power hour script: if you have any problems with this script please
+//Private Message "Dark" @scriptsharing or E-mail me at theoldark5@hotmail.com
+//Scripted by Theol,Admin Dark
+
+[COMMENT Power_Hour]
+Place the Powerhour stone somewhere players cannot get to(even though they can't see it)
+and Double click it to start the timer.  
+
+N_0 thru N_49 should be set to what you have as ADV_RATE's in your sphere_skills.scp
+N_0 being alchemy and N_49 being necromancy.
+
+(P_ADVRATE	1.5,25.0,75.0) should be set to what you believe are good rates during 
+the powerhour. (Default is set really low!)
+
+[DEFNAME  power_hour]
+PH_TIMER	1  	       //How long powerhour lasts in hour's
+P_ADVRATE	1.5,25.0,75.0  //ADV_RATE during power hour for all skills!
+PH_MESSAGE_CLR	020	       //Red sysmessage, beginning and end of PH
+PH_MESSAGE	1	       //allow message? (1=yes) (0=No)
+POWERHOUR_INCR	12	       //How often to have powerhour. Default(12 hours)
+
+N_0		10.0,200.0,800.0	//alchemy
+N_1		2.5,50.0,200.0	    	//anatomy
+N_2		2.5,50.0,200.0		//animallore
+N_3		2.5,50.0,200.0		//itemid
+N_4		2.5,50.0,200.0		//armslore
+N_5		50.0,300.0,600.0	//parrying
+N_6		2.5,50.0,200.0		//begging
+N_7		2.5,50.0,200.0		//blacksmithing
+N_8		10.0,200.0,800.0	//bowyer	
+N_9		2.5,50.0,200.0		//peacemaking
+N_10		2.5,50.0,200.0		//camping
+N_11		2.5,50.0,200.0		//carpentry
+N_12		2.5,50.0,200.0		//cartography
+N_13		2.5,50.0,200.0		//cooking
+N_14		2.5,50.0,200.0		//detecting hidden
+N_15		2.5,50.0,200.0		//enticement
+N_16		2.5,50.0,200.0		//evalint
+N_17		10.0,100.0,250.0	//healing
+N_18		2.5,50.0,200.0		//fishing
+N_19		2.5,50.0,200.0		//forensics
+N_20		2.5,50.0,200.0		//herding
+N_21		2.5,50.0,200.0		//hiding
+N_22		2.5,50.0,200.0		//provocation
+N_23		10.0,200.0,800.0	//inscription
+N_24		2.5,50.0,200.0		//lockpicking
+N_25		10.0,200.0,800.0	//magery
+N_26		10.0,200.0,800.0	//MagicResistance
+N_27		10.0,150.0,600.0	//Tactics
+N_28		2.5,50.0,200.0		//Snooping
+N_29		2.5,50.0,200.0		//Musicianship
+N_30		2.5,50.0,200.0		//Poisoning
+N_31		10.0,200.0,800.0	//Archery
+N_32		2.5,50.0,200.0		//SpiritSpeak
+N_33		10.0,200.0,800.0	//Stealing
+N_34		2.5,50.0,200.0		//Tailoring
+N_35		10.0,200.0,800.0	//Taming
+N_36		2.5,50.0,200.0		//TasteID
+N_37		2.5,50.0,200.0		//Tinkering
+N_38		2.5,50.0,200.0		//Tracking
+N_39		10.0,200.0,800.0	//Veterinary
+N_40		10.0,150.0,600.0	//Swordsmanship
+N_41		10.0,150.0,600.0	//Macefighting
+N_42		5.0,155.0,600.0		//Fencing
+N_43		8.5,120.0,680.0		//Wrestling
+N_44		2.5,50.0,200.0		//Lumberjack
+N_45		2.5,50.0,200.0		//Mining
+N_46		10.0,200.0,800.0	//Meditation
+N_47		10.0,200.0,800.0	//Stealth
+N_48		2.5,50.0,200.0		//RemoveTrap
+N_49		10.0,200.0,800.0	//Necromancy
+
+
+
+[ITEMDEF i_power_hour]
+ID=01172
+NAME=Power Hour Stone [don't remove]
+TYPE=t_script
+
+ON=@CREATE
+MOREZ=<DEF.POWERHOUR_INCR>
+ATTR=attr_move_never|attr_invis
+
+ON=@DCLICK
+FOR 0 49
+TRYP 0 SERV.SKILL.<EVAL <LOCAL._FOR>>.ADV_RATE=<DEF.N_<EVAL <LOCAL._FOR>>>
+END
+MOREZ=<DEF.POWERHOUR_INCR>
+TIMER=<EVAL 1*60*60>
+SRC.SYSMESSAGE @<DEF.PH_MESSAGE_CLR> You reset the powerhour system.
+RETURN 1
+ENDIF
+
+ON=@TIMER
+IF <MOREZ>>1
+MOREZ -= 1
+TIMER=<EVAL 1*60*60>
+RETURN 1
+ELSEIF <MOREZ>==1
+FOR 0 49
+TRYP 0 SERV.SKILL.<EVAL <LOCAL._FOR>>.ADV_RATE=<DEF.P_ADVRATE>
+END
+MOREZ=0
+TIMER=<EVAL <DEF.PH_TIMER>*60*60>
+IF (<EVAL <DEF.PH_MESSAGE>>==1)
+SERV.ALLCLIENTS SYSMESSAGE @<DEF.PH_MESSAGE_CLR> Power hour has started!
+RETURN 1
+ENDIF
+RETURN 1
+ELSE
+FOR 0 49
+TRYP 0 SERV.SKILL.<EVAL <LOCAL._FOR>>.ADV_RATE=<DEF.N_<EVAL <LOCAL._FOR>>>
+END
+MOREZ=<DEF.POWERHOUR_INCR>
+TIMER=<EVAL 1*60*60>
+IF (<EVAL <DEF.PH_MESSAGE>>==1)
+SERV.ALLCLIENTS SYSMESSAGE @<DEF.PH_MESSAGE_CLR> Power hour has ended!
+RETURN 1
+ENDIF
+RETURN 1

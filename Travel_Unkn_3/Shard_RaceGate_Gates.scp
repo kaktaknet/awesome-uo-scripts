@@ -1,0 +1,112 @@
+//--------------------------------------------------------------------------------------------
+//RaceGate Template												
+//By Sven and Tested/debugged by Ironclaw										
+//Created under the guiding whip of Bamboo Bunny for Revelstone	
+//--------------------------------------------------------------------------------------------
+
+//-----------------------Setup Instructions--------------------------------------------
+//All dynamic Variables are stored in {}
+//Replace all {} with given values
+//
+//racename = Full name of the Race
+//racecolor = Color the race makes people
+//raceshift = If the race can shapeshift, put the body ID here (in # form). Otherwise put 0 here.
+//raceuid = Unique Race ID : Each race gets its own ID#
+//-------------------------------------------------------------------------------------------
+
+//---------------------Script Details----------------------------------------------------
+//All Race Data is stored in the i_racetoken in layer_special
+//Name = Name of the race.
+//Color = Color of the race.
+//TAG.SHIFTID = raceshift
+//MOREY = raceuid
+//-------------------------------------------------------------------------------------------
+
+//---------------------Additional Functions------------------------------------------
+//IsShifted = Returns 1 if shifted.
+//Racename ARGS = Checks to see if the racename matches the ARGS. Returns 1 if true.
+//RaceUID ARGN = Checks to see if the RaceUID matches the ARGN. Returns 1 if true.
+//RaceShiftID = What ID the player becomes when shifted - Returned in VAR.ShiftID - Returns 0 as value for no shift.
+//------------------------------------------------------------------------------------------
+
+//-------------------START OF : Race Gates Template------------------------
+//[ITEMDEF i_racegate_{racename}]
+//NAME={racename}
+//ID=i_moongate_blue
+//TYPE=t_script
+
+//ON=@STEP
+//	IF <SRC.HASRACE>
+//		IF !(<TIMER> == -1)
+//			RETURN 1
+//		ENDIF
+//		if !((<src.body> == c_man) || (<src.body> == c_woman))
+//			src.sysmessage You must be in human form to use this gate!
+//			return 1
+//		endif
+//		TIMER=2
+//		SRC.TAG.TACT=<SRC.ACT>
+//		SRC.ACT=<SRC.FINDID.i_racetoken.UID>
+//		SRC.ACT.NAME=NAME
+//		SRC.ACT.COLOR={racecolor}
+//		SRC.ACT.MOREX={raceshift}
+//		SRC.ACT.MOREY={raceUID}
+//		SRC.ACT=<SRC.TAG.TACT>
+//		SRC.TAG.TACT=
+//		SRC.RACECHANGE
+//	ENDIF
+//	RETURN 1
+
+//ON=@TIMER
+//	TIMER=-1
+//	RETURN 1
+
+//ON=@DCLICK
+//	SRC.TRIGGER @STEP
+//	RETURN 1
+
+//ON=@CLICK
+//	SRC.MESSAGE This gate will turn you into a <NAME>.
+//	RETURN 1
+//-------------------END OF: Race Gates Template---------------------------
+
+//-------------------START OF : Race Gates--------------------------------------
+[ITEMDEF i_racegate_samplerace]
+NAME=SampleRace
+ID=i_moongate_blue
+TYPE=t_script
+
+ON=@STEP
+	IF <SRC.HASRACE>
+		IF !(<TIMER> == -1)
+			RETURN 1
+		ENDIF
+		if !((<src.body> == c_man) || (<src.body> == c_woman))
+			src.sysmessage You must be in human form to use this gate!
+			return 1
+		endif
+		TIMER=2
+		SRC.TAG.TACT=<SRC.ACT>
+		SRC.ACT=<SRC.FINDID.i_racetoken.UID>
+		SRC.ACT.NAME=NAME
+		SRC.ACT.COLOR=
+		SRC.ACT.TAG.ShiftID=c_mongbat
+		SRC.ACT.MOREY=2
+		SRC.ACT=<SRC.TAG.TACT>
+		SRC.TAG.TACT=
+		SRC.RACECHANGE
+	ENDIF
+	RETURN 1
+
+ON=@TIMER
+	TIMER=-1
+	RETURN 1
+
+ON=@DCLICK
+	SRC.TRIGGER @STEP
+	RETURN 1
+
+ON=@CLICK
+	SRC.MESSAGE This gate will turn you into a <NAME>.
+	RETURN 1
+//----------------------END OF: Race Gates-----------------------------------------

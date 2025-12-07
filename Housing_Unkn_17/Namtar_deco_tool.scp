@@ -1,0 +1,122 @@
+//This is the house deco tool I scripted for players to use to decorate their house.
+//If you are a GM you can affect any item with it, otherwise you must be in your own
+//house to use it, and the target must be in your own house.  I am using Vacticus' House
+//Menu system (version 7.0), I have not tested it with other house menu systems.
+
+[ITEMDEF i_DecoTool]
+Type=i_palette
+ID=i_palette
+WEIGHT=5
+VALUE=1500
+NAME=DecoTool
+
+on=@Dclick
+if ((<SRC.UID> == <SRC.UID.<SRC.REGION.UID>.MORE1>) && (<SRC.UID.<SRC.REGION.UID>.TYPE> == t_multi)) || <SRC.GM> == 1
+src.sysmessage Select which object you wish to move.
+target
+return 1
+ELSE
+src.sysmessage You are not in your house.
+return 1
+ENDIF
+
+on=@targon_item 
+if (<SRC.TARG.REGION.TAG.NAME> == <SRC.UID.<SRC.REGION.UID>.MORE1>) || <src.gm> == 1
+dialog d_decotool
+return 1
+else
+src.sysmessage Target must be in your house.
+return 1
+endif
+return 1
+
+[dialog d_decotool]
+200,200
+resizepic 0 0 3600 130 235
+page 0
+text 25 20 1152 9
+button 15 45 2103 2104 1 0 1
+text 25 40 1152 0
+button 15 65 2103 2104 1 0 2
+text 25 60 1152 1
+button 15 85 2103 2104 1 0 3
+text 25 80 1152 2
+button 15 105 2103 2104 1 0 4
+text 25 100 1152 3
+button 15 125 2103 2104 1 0 5
+text 25 120 1152 4
+button 15 145 2103 2104 1 0 6
+text 25 140 1152 5
+button 15 165 2103 2104 1 0 7
+text 25 160 1152 6
+textentry 62 180 19 25 32 0 8
+text 25 200 2331 7
+
+[dialog d_decotool text]
+Flip
+Nudge Up
+Nudge Down
+Move North
+Move South
+Move East
+Move West
+By Namtar
+1
+<SRC.TARG.NAME>
+
+[dialog d_decotool button]
+if <argtxt[0]> < 0 || <argtxt[0] > 10
+src.sysmessage Must be between 0 and 10
+return 1
+endif
+on=1
+src.targ.flip <EVAL <argtxt[0]>>
+return 1
+
+on=2
+if <argtxt[0]> < 0 || <argtxt[0] > 50
+src.sysmessage Must be between 0 and 50
+return 1
+endif
+src.targ.nudgeup <EVAL <argtxt[0]>>
+return 1
+
+on=3
+if <argtxt[0]> < 0 || <argtxt[0] > 50
+src.sysmessage Must be between 0 and 50
+return 1
+endif
+src.targ.nudgedown <EVAL <argtxt[0]>>
+return 1
+
+on=4
+if <argtxt[0]> < 0 || <argtxt[0] > 10
+src.sysmessage Must be between 0 and 10
+return 1
+endif
+src.targ.move 0 -<argtxt[0]>) 0
+return 1
+
+on=5
+if <argtxt[0]> < 0 || <argtxt[0] > 10
+src.sysmessage Must be between 0 and 10
+return 1
+endif
+src.targ.move 0 <argtxt[0]> 0
+return 1
+
+on=6
+if <argtxt[0]> < 0 || <argtxt[0] > 10
+src.sysmessage Must be between 0 and 10
+return 1
+endif
+src.targ.move <argtxt[0]> 0 0
+return 1
+
+on=7
+if <argtxt[0]> < 0 || <argtxt[0] > 10
+src.sysmessage Must be between 0 and 10
+return 1
+endif
+src.targ.move -<argtxt[0]> 0 0
+return 1

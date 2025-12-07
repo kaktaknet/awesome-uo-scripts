@@ -1,0 +1,1174 @@
+/////////////////////////////////////////////////////////////////////////////// 
+//                      BLACKSMITH SELECTION MENU v1.0 
+//                      BY Phoenix aka Richard Cypher
+//                Scripted for use on Legends :: The Awakening 
+//                         http://www.uolegends2.com
+//  Questions, Comments? phoenix@uolegends2.com
+/////////////////////////////////////////////////////////////////////////////// 
+// 
+//                      Orginal Smelting Command by lancelot
+//                Orginal Gump Design by Admin Khaybel & Dev Vaticus
+//                      Orginal Smelting Command by lancelot 
+//              Special thanks to Shadow (lucas_axtman@hotmail.com)
+//         for Equations for Success Rates and Execeptional Sucesses Rates
+//
+//			Skill gain and repair feature added by Admin Imperius
+//
+/////////////////////////////////////////////////////////////////////////////// 
+
+[FUNCTION SMITHGAINCHECK] 
+IF (<BLACKSMITHING><=150) && ((RAND(2)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>150) && (<BLACKSMITHING><=225) && (rand(3)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>225) && (<BLACKSMITHING><=325) && (rand(4)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>325) && (<BLACKSMITHING><=425) && (rand(5)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>425) && (<BLACKSMITHING><=525) && (rand(6)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>525) && (<BLACKSMITHING><=625) && (rand(7)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>625) && (<BLACKSMITHING><=725) && (rand(8)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>725) && (<BLACKSMITHING><=825) && (rand(10)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>825) && (<BLACKSMITHING><=925) && (rand(12)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>925) && (<BLACKSMITHING><998) && (rand(15)==1) 
+SMITHGAIN
+RETURN 1
+ELSEIF (<BLACKSMITHING>>999) 
+BLACKSMITHING=1000
+RETURN 1
+ENDIF
+
+[FUNCTION SMITHGAIN]
+BLACKSMITHING = <BLACKSMITHING>+0.1 
+SMITHSTRGAIN
+
+[FUNCTION SMITHSTRGAIN]
+IF !(<STR>>=100)
+		VAR.SMITHSTRGAIN <eval Rand(100)>
+		IF (<VAR.SMITHSTRGAIN> > 75) //2.5% chance to gain Dex
+			STR <eval <STR> + 1>
+		ENDIF
+ELSE
+RETURN 1
+ENDIF
+
+
+
+[DIALOG d_Blacksmith]
+50,50
+page 0 
+resizepic 25 0 2600 500 380 
+resizepic 45 60 5100 450 25 
+resizepic 45 280 5100 450 25 
+button 100 310 3 4 1 0 2 
+button 340 310 3 4 1 0 3 
+button 220 310 3 4 1 0 4 
+button 340 338 242 241 1 0 0 
+button 410 338 247 248 1 0 1 
+button 130 63 5209 5003 0 1 0 
+button 240 63 5209 5003 0 2 0 
+button 350 63 5209 5003 0 3 0 
+button 460 63 5209 5003 0 4 0 
+button 115 283 5208 5003 0 5 0 
+button 200 283 5208 5003 0 6 0 
+button 270 283 5208 5003 0 7 0 
+button 365 283 5208 5003 0 8 0 
+button 460 283 5208 5003 0 9 0 
+text 180 25 995 0 
+text 125 307 995 1 
+text 365 307 995 2 
+text 245 307 995 3 
+text 100 340 995 4 
+text 60 60 0 5 
+text 163 60 0 6 
+text 275 60 0 7 
+text 390 60 0 8 
+text 60 283 0 9 
+text 150 283 0 10 
+text 230 283 0 11 
+text 300 283 0 12 
+text 400 283 0 13 
+page 1 // Ring Mail
+tilepic 100 140 5099 
+radio 150 140 210 211 0 5099 
+text 100 120 995 14 
+tilepic 300 140 5103 
+radio 350 140 210 211 0 5103 
+text 300 120 995 15 
+tilepic 100 220 5104 
+radio 150 220 210 211 0 5104 
+text 100 200 995 16 
+tilepic 300 220 5100 
+radio 350 220 210 211 0 5100 
+text 300 200 995 17 
+page 2 
+tilepic 100 140 5051 
+radio 150 140 210 211 0 5051 
+text 100 120 995 18 
+tilepic 300 140 5054 
+radio 350 140 210 211 0 5054 
+text 300 120 995 19 
+tilepic 100 220 5055 
+radio 150 220 210 211 0 5055 
+text 100 200 995 20 
+page 3 
+tilepic 100 140 5139 
+radio 150 140 210 211 0 5139
+text 100 120 995 21 
+tilepic 250 140 5140 
+radio 300 140 210 211 0 5140
+text 250 120 995 22 
+tilepic 400 140 5136 
+radio 450 140 210 211 0 5136
+text 400 120 995 23 
+tilepic 100 220 5137 
+radio 150 220 210 211 0 5137
+text 100 200 995 24 
+tilepic 250 220 5141 
+radio 300 220 210 211 0 5141
+text 250 200 995 25 
+tilepic 400 220 7172 
+radio 450 220 210 211 0 7172 
+text 400 200 995 26 
+page 4 
+tilepic 100 140 5130 
+radio 150 140 210 211 0 5130 
+text 100 120 995 27 
+tilepic 200 140 5132 
+radio 250 140 210 211 0 5132 
+text 200 120 995 28 
+tilepic 300 140 5134 
+radio 350 140 210 211 0 5134 
+text 300 120 995 29 
+tilepic 400 140 5128 
+radio 450 140 210 211 0 5128 
+text 400 120 995 30 
+tilepic 100 220 5138 
+radio 150 220 210 211 0 5138
+text 100 200 995 31 
+page 5 
+tilepic 100 140 7027 
+radio 150 140 210 211 0 7027 
+text 100 120 995 32 
+tilepic 200 140 7026 
+radio 250 140 210 211 0 7026 
+text 200 120 995 33 
+tilepic 300 140 7035 
+radio 350 140 210 211 0 7035 
+text 300 120 995 34 
+tilepic 400 140 7032 
+radio 450 140 210 211 0 7032 
+text 400 120 995 35 
+tilepic 100 220 7028 
+radio 150 220 210 211 0 7028 
+text 100 200 995 36 
+tilepic 200 220 7030 
+radio 250 220 210 211 0 7030 
+text 200 200 995 37 
+page 6 
+tilepic 100 140 3921 
+radio 150 140 210 211 0 3921 
+text 100 120 995 38 
+tilepic 200 140 5185 
+radio 250 140 210 211 0 5185 
+text 200 120 995 39 
+tilepic 300 140 5119 
+radio 350 140 210 211 0 5119 
+text 300 120 995 40 
+tilepic 400 140 5121 
+radio 450 140 210 211 0 5121 
+text 400 120 995 41 
+tilepic 100 220 5046 
+radio 150 220 210 211 0 5046 
+text 100 200 995 42 
+tilepic 200 220 3934 
+radio 250 220 210 211 0 3934 
+text 200 200 995 43 
+tilepic 282 220 3937 
+radio 350 220 210 211 0 3937 
+text 300 200 995 44 
+tilepic 400 220 5049 
+radio 450 220 210 211 0 5049 
+text 400 200 995 45 
+page 7 
+tilepic 100 140 3911 
+radio 150 140 210 211 0 3911 
+text 100 120 995 46 
+tilepic 200 220 3913 
+radio 250 220 210 211 0 3913 
+text 200 200 995 47 
+tilepic 232 140 3909 
+radio 300 140 210 211 0 3909 
+text 250 120 995 48 
+tilepic 400 140 5187 
+radio 450 140 210 211 0 5187 
+text 400 120 995 49 
+tilepic 100 220 3915 
+radio 150 220 210 211 0 3915 
+text 100 200 995 50 
+tilepic 400 220 5115 
+radio 450 220 210 211 0 5115 
+text 400 200 995 51 
+tilepic 300 220 5040 
+radio 350 220 210 211 0 5040 
+text 300 200 995 52 
+page 8 
+tilepic 82 140 5123 
+radio 150 140 210 211 0 5123 
+text 100 120 995 53 
+tilepic 142 140 3938 
+radio 250 140 210 211 0 3938 
+text 200 120 995 54 
+tilepic 300 140 5125 
+radio 350 140 210 211 0 5125 
+text 300 120 995 55 
+tilepic 360 140 3917 
+radio 450 140 210 211 0 3917 
+text 400 120 995 56 
+tilepic 50 220 5183 
+radio 150 220 210 211 0 5183 
+text 100 200 995 57 
+page 9 
+tilepic 100 140 3932 
+radio 150 140 210 211 0 3932 
+text 100 120 995 58 
+tilepic 200 140 5179 
+radio 250 140 210 211 0 5179 
+text 200 120 995 59 
+tilepic 300 140 5127 
+radio 350 140 210 211 0 5127 
+text 300 120 995 60 
+tilepic 400 140 5177 
+radio 450 140 210 211 0 5177 
+text 400 120 995 61 
+tilepic 100 220 5181 
+radio 150 220 210 211 0 5181 
+text 100 200 995 62 
+
+[DIALOG d_Blacksmith TEXT]
+What do you wish to craft?
+Make Last
+Repair Item
+Smelt Item
+Blacksmithing: <SRC.BLACKSMITHING>
+Ringmail
+Chainmail
+Platemail
+Helmets
+Shields
+Bladed
+Axes
+Polearms
+Bashing
+ringmail gloves
+ringmail sleeves
+ringmail leggings
+ringmail tunic
+chainmail  coif
+chainmail leggings
+chainmail tunic
+platemail gorget
+platemail gloves
+platemail arms
+platemail legs
+platemail
+plate armor
+helmet
+bascinet
+nose helm
+close helmet
+plate helm
+buckler 
+bronze shield
+metal shield
+kite shield
+kite shield
+heater shield
+dagger
+cutlass
+katana
+kryss
+scimitar
+broadsword
+longsword
+viking sword
+battle axe
+axe
+executioner's axe
+two handed axe
+double axe
+large battle axe
+war axe
+short spear
+spear
+war fork
+bardiche
+halberd
+mace
+maul
+war mace
+war hammer
+hammer pick
+
+[DIALOG d_Blacksmith BUTTON]
+ONBUTTON=1
+IF (<ARGCHK[5099]>==1)
+SRC.TAG.BLACKSMITHMAKE=5099 // Ring Gloves
+SRC.TAG.BSINGOTSNEEDED=10
+SRC.TAG.BSMINSKILL=12
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5103]>==1)
+SRC.TAG.BLACKSMITHMAKE=5103 //Ring Sleeves
+SRC.TAG.BSINGOTSNEEDED=14
+SRC.TAG.BSMINSKILL=17
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5104]>==1)
+SRC.TAG.BLACKSMITHMAKE=5104 //Ring Leggings
+SRC.TAG.BSINGOTSNEEDED=16
+SRC.TAG.BSMINSKILL=19
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5100]>==1) // Ring Tunic
+SRC.TAG.BLACKSMITHMAKE=5100
+SRC.TAG.BSINGOTSNEEDED=18
+SRC.TAG.BSMINSKILL=22
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5051]>==1) // Chain Coff
+SRC.TAG.BLACKSMITHMAKE=5051
+SRC.TAG.BSINGOTSNEEDED=10
+SRC.TAG.BSMINSKILL=15
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5054]>==1)
+SRC.TAG.BLACKSMITHMAKE=5054 // Chain Leggings
+SRC.TAG.BSINGOTSNEEDED=18
+SRC.TAG.BSMINSKILL=37
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5055]>==1) // Chain Tunic
+SRC.TAG.BLACKSMITHMAKE=5055
+SRC.TAG.BSINGOTSNEEDED=20
+SRC.TAG.BSMINSKILL=39
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5139]>==1)
+SRC.TAG.BLACKSMITHMAKE=5139 // Plate Gorget
+SRC.TAG.BSINGOTSNEEDED=10
+SRC.TAG.BSMINSKILL=56
+SRC.TAG.BSDIF=40
+ELSEIF (<ARGCHK[5140]>==1) // Plate Gloves
+SRC.TAG.BLACKSMITHMAKE=5140
+SRC.TAG.BSINGOTSNEEDED=12
+SRC.TAG.BSMINSKILL=59
+SRC.TAG.BSDIF=40
+ELSEIF (<ARGCHK[5136]>==1) // Plate Arms
+SRC.TAG.BLACKSMITHMAKE=5136
+SRC.TAG.BSINGOTSNEEDED=18
+SRC.TAG.BSMINSKILL=66
+SRC.TAG.BSDIF=40
+ELSEIF (<ARGCHK[5137]>==1) // Plate Leggings
+SRC.TAG.BLACKSMITHMAKE=5137
+SRC.TAG.BSINGOTSNEEDED=20
+SRC.TAG.BSMINSKILL=69
+SRC.TAG.BSDIF=40
+ELSEIF (<ARGCHK[5141]>==1) // PLatemail Chest
+SRC.TAG.BLACKSMITHMAKE=5141
+SRC.TAG.BSINGOTSNEEDED=25
+SRC.TAG.BSMINSKILL=75
+SRC.TAG.BSDIF=40
+ELSEIF (<ARGCHK[7172]>==1) // Female Plate
+SRC.TAG.BLACKSMITHMAKE=7172
+SRC.TAG.BSINGOTSNEEDED=20
+SRC.TAG.BSMINSKILL=44
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5130]>==1) // Helmet
+SRC.TAG.BLACKSMITHMAKE=5130
+SRC.TAG.BSINGOTSNEEDED=15
+SRC.TAG.BSMINSKILL=40
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5132]>==1) // Bacinet
+SRC.TAG.BLACKSMITHMAKE=5132
+SRC.TAG.BSINGOTSNEEDED=15
+SRC.TAG.BSMINSKILL=9
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5134]>==1) //Nose Helm
+SRC.TAG.BLACKSMITHMAKE=5134
+SRC.TAG.BSINGOTSNEEDED=15
+SRC.TAG.BSMINSKILL=38
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5128]>==1) //Close Helm
+SRC.TAG.BLACKSMITHMAKE=5128
+SRC.TAG.BSINGOTSNEEDED=15
+SRC.TAG.BSMINSKILL=40
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5138]>==1) //Plate Helm
+SRC.TAG.BLACKSMITHMAKE=5138
+SRC.TAG.BSINGOTSNEEDED=15
+SRC.TAG.BSMINSKILL=63
+SRC.TAG.BSDIF=40
+ELSEIF (<ARGCHK[7027]>==1) // Buckler
+SRC.TAG.BLACKSMITHMAKE=7027
+SRC.TAG.BSINGOTSNEEDED=10
+SRC.TAG.BSMINSKILL=0
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[7026]>==1) // Bronze Shield
+SRC.TAG.BLACKSMITHMAKE=7026
+SRC.TAG.BSINGOTSNEEDED=12
+SRC.TAG.BSMINSKILL=0
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[7035]>==1) //Metal Shield
+SRC.TAG.BLACKSMITHMAKE=7035
+SRC.TAG.BSINGOTSNEEDED=14
+SRC.TAG.BSMINSKILL=0
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[7032]>==1) //Kite Shield
+SRC.TAG.BLACKSMITHMAKE=7032
+SRC.TAG.BSINGOTSNEEDED=12
+SRC.TAG.BSMINSKILL=0
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[7028]>==1) // Kite Shield
+SRC.TAG.BLACKSMITHMAKE=7028
+SRC.TAG.BSINGOTSNEEDED=16
+SRC.TAG.BSMINSKILL=5
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[7030]>==1) // Heater
+SRC.TAG.BLACKSMITHMAKE=7030
+SRC.TAG.BSINGOTSNEEDED=18
+SRC.TAG.BSMINSKILL=25
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3921]>==1) //Dagger
+SRC.TAG.BLACKSMITHMAKE=3921
+SRC.TAG.BSINGOTSNEEDED=3
+SRC.TAG.BSMINSKILL=0
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5185]>==1) //Cutlass
+SRC.TAG.BLACKSMITHMAKE=5185
+SRC.TAG.BSINGOTSNEEDED=8
+SRC.TAG.BSMINSKILL=25
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5119]>==1) //Katana
+SRC.TAG.BLACKSMITHMAKE=5119
+SRC.TAG.BSINGOTSNEEDED=8
+SRC.TAG.BSMINSKILL=44
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5121]>==1) //Kryss
+SRC.TAG.BLACKSMITHMAKE=5121
+SRC.TAG.BSINGOTSNEEDED=8
+SRC.TAG.BSMINSKILL=37
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5046]>==1) // Skimitar
+SRC.TAG.BLACKSMITHMAKE=5046
+SRC.TAG.BSINGOTSNEEDED=10
+SRC.TAG.BSMINSKILL=32
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3934]>==1) // Board Sword
+SRC.TAG.BLACKSMITHMAKE=3934
+SRC.TAG.BSINGOTSNEEDED=10
+SRC.TAG.BSMINSKILL=35
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3937]>==1) // Longsword
+SRC.TAG.BLACKSMITHMAKE=3937
+SRC.TAG.BSINGOTSNEEDED=12
+SRC.TAG.BSMINSKILL=28
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5049]>==1) // Viking
+SRC.TAG.BLACKSMITHMAKE=5049
+SRC.TAG.BSINGOTSNEEDED=14
+SRC.TAG.BSMINSKILL=25
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3911]>==1) //Battle Axe
+SRC.TAG.BLACKSMITHMAKE=3911
+SRC.TAG.BSINGOTSNEEDED=14
+SRC.TAG.BSMINSKILL=30
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3913]>==1) //Axe
+SRC.TAG.BLACKSMITHMAKE=3913
+SRC.TAG.BSINGOTSNEEDED=14
+SRC.TAG.BSMINSKILL=34
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3909]>==1) // Exe Axe
+SRC.TAG.BLACKSMITHMAKE=3909
+SRC.TAG.BSINGOTSNEEDED=14
+SRC.TAG.BSMINSKILL=40
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5187]>==1) // Two handed axe
+SRC.TAG.BLACKSMITHMAKE=5187
+SRC.TAG.BSINGOTSNEEDED=16
+SRC.TAG.BSMINSKILL=33
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3915]>==1) // Double Axe
+SRC.TAG.BLACKSMITHMAKE=3915
+SRC.TAG.BSINGOTSNEEDED=12
+SRC.TAG.BSMINSKILL=29
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5115]>==1) //Large Battle Axe
+SRC.TAG.BLACKSMITHMAKE=5115
+SRC.TAG.BSINGOTSNEEDED=12
+SRC.TAG.BSMINSKILL=28
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5040]>==1) // War Axe
+SRC.TAG.BLACKSMITHMAKE=5040
+SRC.TAG.BSINGOTSNEEDED=16
+SRC.TAG.BSMINSKILL=39
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5123]>==1) // Short Spear
+SRC.TAG.BLACKSMITHMAKE=5123
+SRC.TAG.BSINGOTSNEEDED=6
+SRC.TAG.BSMINSKILL=45
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3938]>==1) // Spear
+SRC.TAG.BLACKSMITHMAKE=3938
+SRC.TAG.BSINGOTSNEEDED=12
+SRC.TAG.BSMINSKILL=49
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5125]>==1) //War Fork
+SRC.TAG.BLACKSMITHMAKE=5125
+SRC.TAG.BSINGOTSNEEDED=12
+SRC.TAG.BSMINSKILL=43
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3917]>==1) // Bardice
+SRC.TAG.BLACKSMITHMAKE=3917
+SRC.TAG.BSINGOTSNEEDED=18
+SRC.TAG.BSMINSKILL=32
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5183]>==1) //Hally
+SRC.TAG.BLACKSMITHMAKE=5183
+SRC.TAG.BSINGOTSNEEDED=20
+SRC.TAG.BSMINSKILL=39
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[3932]>==1) //Mace
+SRC.TAG.BLACKSMITHMAKE=3932
+SRC.TAG.BSINGOTSNEEDED=6
+SRC.TAG.BSMINSKILL=15
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5179]>==1) //Maul
+SRC.TAG.BLACKSMITHMAKE=5179
+SRC.TAG.BSINGOTSNEEDED=10
+SRC.TAG.BSMINSKILL=20
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5127]>==1) //War mace
+SRC.TAG.BLACKSMITHMAKE=5127
+SRC.TAG.BSINGOTSNEEDED=6
+SRC.TAG.BSMINSKILL=28
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5177]>==1) //War Hammer
+SRC.TAG.BLACKSMITHMAKE=5177
+SRC.TAG.BSINGOTSNEEDED=16
+SRC.TAG.BSMINSKILL=34
+SRC.TAG.BSDIF=60
+ELSEIF (<ARGCHK[5181]>==1) //Hammer Pick
+SRC.TAG.BLACKSMITHMAKE=5181
+SRC.TAG.BSINGOTSNEEDED=18
+SRC.TAG.BSMINSKILL=34
+SRC.TAG.BSDIF=60
+ELSE
+DIALOG d_blacksmith
+RETURN 1
+ENDIF
+
+IF ((<SRC.7>)>(<EVAL <SRC.TAG.BSMINSKILL>>))
+SRC.f_smith_Choose
+ELSE
+SRC.SYSMESSAGE You lack the skill to make this item.
+ENDIF
+
+ONBUTTON=2
+IF ((<SRC.7>)>(<EVAL <SRC.TAG.BSMINSKILL>>))
+SRC.f_smith_Choose
+ELSE
+SRC.SYSMESSAGE You lack the skill to make this item.
+ENDIF
+
+ONBUTTON=3
+// Repair src.targ.more1h=<src.targ.more1l>
+//SRC.SYSMESSAGE Repair has not been added yet.
+SRC.NEWITEM i_smith_repair
+SRC.ACT.TIMER=-1 
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.CONT=<SRC.UID> 
+SRC.ACT.USE 
+
+
+ONBUTTON=4
+SRC.f_smelting_Choose 
+
+[FUNCTION f_smith_Choose] 
+SRC.NEWITEM i_smith_targ
+//SRC.ACT.TIMER 30 
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.CONT=<SRC.UID> 
+SRC.ACT.USE 
+
+
+[ITEMDEF i_smith_targ] 
+ID=i_memory 
+TYPE=t_eq_script 
+LAYER=30 
+
+ON=@DCLICK 
+  TARGET What ingots do you wish to use? 
+  RETURN 1 
+
+
+ON=@TARGON_ITEM 
+If (<SRC.TARG.CONT>==<SRC.FINDLAYER(21).UID>)
+IF (<SRC.TARG.TYPE>==t_ingot)
+SRC.TAG.BSINGOT=<SRC.TARG.BASEID>
+SRC.TAG.BSCOLOR=<SRC.TARG.COLOR>
+SRC.SOUND 002a
+SRC.ANIM 0b
+TIMER=2
+MORE1=3
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must target an ingot.
+REMOVE
+RETURN 1
+ENDIF
+
+ELSE
+SRC.SYSMESSAGE You may only work with ingots in your backpack.
+REMOVE
+RETURN 1
+ENDIF
+
+RETURN 1
+
+
+
+ON=@TIMER
+IF <MORE1>>1
+LINK.SOUND 002a
+LINK.ANIM 0b
+MORE1=<MORE1>+(-1)
+TIMER=2
+RETURN 1
+ELSE
+LINK.CRAFTITEM
+REMOVE
+RETURN 1
+ENDIF
+
+
+
+
+
+[ITEMDEF i_smith_repair] 
+ID=i_memory 
+TYPE=t_eq_script 
+LAYER=30 
+
+ON=@DCLICK 
+REPAIRFIX
+
+on=@timer
+REMOVE
+
+
+[FUNCTION CRAFTITEM]
+IF (<RESTEST <EVAL <LINK.TAG.BSINGOTSNEEDED>> <LINK.TAG.BSINGOT>>)
+VAR.SUCCESS1=(<EVAL (100)> - <EVAL  <TAG.BSMINSKILL>>)
+VAR.SUCCESS=(<EVAL <VAR.SUCCESS1>>)*2
+VAR.EXEPTIONAL=(<EVAL <VAR.SUCCESS>> - <EVAL <TAG.BSDIF>>)
+//VAR.GIVEEXP=(<EVAL  <TAG.BSMINSKILL>>)/2
+VAR.YOUR=RAND(100) +(-<FOOD>)
+
+IF (<BLACKSMITHING>>999) &&  ((RAND(2)==1)
+SOUND 002a
+ANIM 0b
+NEWITEM=<TAG.BLACKSMITHMAKE>
+ACT.ATTR=04008
+ACT.NAME=exceptional <ACT.NAME> crafted by <NAME>
+ACT.COLOR=<TAG.BSCOLOR>
+act.cont=<findlayer.21.uid>
+sound 87
+SYSMESSAGE You create the item with exceptional skill.
+SMITHGAINCHECK
+ELSEIF (<EVAL <VAR.YOUR>>)<(<EVAL <VAR.SUCCESS>>)
+SOUND 002a
+ANIM 0b
+NEWITEM=<TAG.BLACKSMITHMAKE>
+ACT.ATTR=04008
+ACT.COLOR=<TAG.BSCOLOR>
+act.cont=<findlayer.21.uid>
+sound 87
+SYSMESSAGE You create the item.
+SMITHGAINCHECK
+ELSE
+SYSMESSAGE You fail to create the item.
+ENDIF
+CONSUME <EVAL <TAG.BSINGOTSNEEDED>> <TAG.BSINGOT>
+
+ELSE
+SYSMESSAGE You do not have enough materials to craft this item.
+ENDIF
+
+
+
+
+
+[FUNCTION f_smelting_Choose] 
+SRC.NEWITEM i_Refonte_targ 
+SRC.ACT.TIMER 30 
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.CONT=<SRC.UID> 
+SRC.ACT.USE 
+
+
+[ITEMDEF i_Refonte_targ] 
+ID=i_memory 
+TYPE=t_eq_script 
+LAYER=30 
+
+ON=@DCLICK 
+  TARGET Which item do you want to smelt ? 
+  RETURN 1 
+
+ON=@TARGON_ITEM 
+If (<SRC.TARG.CONT>==<SRC.FINDLAYER(21).UID>)
+IF (<SRC.TARG.ATTR>==04008)
+IF (<SRC.TARG.TYPE>!=t_shield) && (<SRC.TARG.TYPE>!=t_armor) 
+   SRC.SYSMESSAGE You may only smelt armor!. 
+ REMOVE
+ RETURN 1
+ELSE    
+   LINK <SRC.TARG>
+   SRC.SOUND 002a
+   SRC.ANIM 0b
+ MORE1=5
+   TIMER=1
+ RETURN 1
+
+ENDIF 
+ELSE
+SRC.SYSMESSAGE You may only smelt crafted items.
+REMOVE
+RETURN 1
+ENDIF
+ELSE
+SRC.SYSMESSAGE You may only smelt items in your bag.
+REMOVE
+RETURN 1
+ENDIF
+
+ON=@TIMER
+IF <MORE1>>1
+CONT.SOUND 002a
+CONT.ANIM 0b
+MORE1=<MORE1>+(-1)
+TIMER=3
+RETURN 1
+ELSE
+f_Smelting_Argu <LINK.BASEID>
+REMOVE
+RETURN 1
+ENDIF
+
+
+[FUNCTION f_Smelting_Argu] 
+VAR.ISOK=0 
+// --------------------------- 
+// On detruit l'objet    
+// --------------------------- 
+CONT.CONSUME <ARGS> 
+
+// --------------------------- 
+// On regarde quel objet en cible 
+// --------------------------- 
+IF (<ARGS>==i_ringmail_gloves) || (<ARGS>==i_chainmail_coif) || (<ARGS>==i_platemail_gorget) || (<ARGS>==i_shield_round_bronze) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_iron 
+  VAR.LINGOTAMOUNT=6 
+ELSEIF (<ARGS>==i_platemail_gloves) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_iron 
+  VAR.LINGOTAMOUNT=8 
+ELSEIF (<ARGS>==i_ringmail_sleeves) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_iron 
+  VAR.LINGOTAMOUNT=9 
+ELSEIF (<ARGS>==i_helm_nose) || (<ARGS>==i_bascinet) || (<ARGS>==i_helm_open) || (<ARGS>==i_platemail_helm) || (<ARGS>==i_shield_round_metal) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_iron 
+  VAR.LINGOTAMOUNT=10 
+ELSEIF (<ARGS>==i_ringmail_leggings) || (<ARGS>==i_shield_kite_metal) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_iron 
+  VAR.LINGOTAMOUNT=11 
+ELSEIF (<ARGS>==i_ringmail_tunic) || (<ARGS>==i_chainmail_leggings) || (<ARGS>==i_shield_heater) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_iron 
+  VAR.LINGOTAMOUNT=12 
+ELSEIF (<ARGS>==i_chainmail_tunic) || (<ARGS>==i_platemail_leggings) || (<ARGS>==i_armor_female_plate) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_iron 
+  VAR.LINGOTAMOUNT=13 
+ELSEIF (<ARGS>==i_platemail_arms) || (<ARGS>==i_platemail_chest) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_iron 
+  VAR.LINGOTAMOUNT=16 
+ENDIF 
+
+IF (STRMATCH(i_BLACKROCK_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_blackrock 
+ELSEIF (STRMATCH(i_GOLDEN_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_gold 
+ELSEIF (STRMATCH(i_Copper_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_copper 
+ELSEIF (STRMATCH(i_SILVER_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_silver 
+ELSEIF (STRMATCH(i_BLOODROCK_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_bloodrock 
+ELSEIF (STRMATCH(i_MYTHERIL_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_mytheril 
+ELSEIF (STRMATCH(i_ROSE_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_rose 
+ELSEIF (STRMATCH(i_SHADOW_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_shadow 
+ELSEIF (STRMATCH(i_VERITE_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_verite 
+ELSEIF (STRMATCH(i_AGAPITE_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_agapite 
+ELSEIF (STRMATCH(i_RUSTY_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_rusty 
+ELSEIF (STRMATCH(i_OLD_COPPER_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_old_copper 
+ELSEIF (STRMATCH(i_VALORITE_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_valorite 
+ELSEIF (STRMATCH(i_DULL_COPPER_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_dull_copper 
+ELSEIF (STRMATCH(i_BRONZE_*,<ARGS>)) 
+  VAR.ISOK=1 
+  VAR.LINGOTODO=i_ingot_bronze 
+ENDIF 
+
+IF (STRMATCH(*_PLATEMAIL_ARMS,<ARGS>)) || (STRMATCH(*_PLATEMAIL,<ARGS>)) 
+  VAR.LINGOTAMOUNT=16 
+ELSEIF (STRMATCH(*_RINGMAIL_GLOVES,<ARGS>)) || (STRMATCH(*_CHAINMAIL_COIF,<ARGS>)) || (STRMATCH(*_PLATEMAIL_GORGET,<ARGS>)) || (STRMATCH(*_BUCKLER_shield,<ARGS>)) 
+  VAR.LINGOTAMOUNT=6 
+ELSEIF (STRMATCH(*_PLATEMAIL_GAUNTLETS,<ARGS>)) 
+  VAR.LINGOTAMOUNT=8 
+ELSEIF (STRMATCH(*_RINGMAIL_SLEEVES,<ARGS>)) 
+  VAR.LINGOTAMOUNT=9 
+ELSEIF (STRMATCH(*_NOSE_HELM,<ARGS>)) || (STRMATCH(*_HELMET,<ARGS>)) || (STRMATCH(*_CLOSED_HELM,<ARGS>)) || (STRMATCH(*_BASCINET,<ARGS>)) || (STRMATCH(*_PLATE_HELM,<ARGS>)) || (STRMATCH(*_METAL_SHIELD,<ARGS>)) 
+  VAR.LINGOTAMOUNT=10 
+ELSEIF (STRMATCH(*_RINGMAIL_LEGGINGS,<ARGS>)) 
+  VAR.LINGOTAMOUNT=11 
+ELSEIF (STRMATCH(*_RINGMAIL_TUNIC,<ARGS>)) || (STRMATCH(*_CHAINMAIL_LEGGINGS,<ARGS>)) || (STRMATCH(*_HEATER_SHIELD,<ARGS>)) 
+  VAR.LINGOTAMOUNT=12 
+ELSEIF (STRMATCH(*_PLATEMAIL_leggings,<ARGS>)) || (STRMATCH(*_CHAINMAIL_TUNIC,<ARGS>)) || (STRMATCH(*_FEMALE_PLATEMAIL,<ARGS>)) 
+  VAR.LINGOTAMOUNT=13 
+ELSEIF (STRMATCH(*_PLATEMAIL_ARMS,<ARGS>)) || (STRMATCH(*_PLATEMAIL,<ARGS>)) 
+  VAR.LINGOTAMOUNT=16 
+ENDIF 
+
+// --------------------------- 
+// On place dans le sac 
+// --------------------------- 
+IF (0<VAR.ISOK>==01) 
+  CONT.NEWITEM=<VAR.LINGOTODO> 
+  CONT.ACT.AMOUNT=<EVAL <VAR.LINGOTAMOUNT>> 
+  CONT.ACT.BOUNCE 
+  CONT.SYSMESSAGE You smelt the item into ingots. 
+ELSE 
+  CONT.SYSMESSAGE Smelting have failed, you have lost your item. 
+ENDIF 
+
+[ITEMDEF 0fbb]
+//Tongs
+DEFNAME=i_tongs
+RESOURCES=2 i_ingot_iron
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+WEIGHT=2
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Tongs
+DUPELIST=0fbc
+
+
+on=@DCLICK
+IF (<LINK>=04fffffff)
+SRC.SYSMESSAGE Which forge are you going to use?
+TARGET
+RETURN 1
+ELSE
+IF <LINK.DISTANCE>>3
+SRC.SYSMESSAGE You must be closer to a forge and anvil.
+RETURN 1
+ELSE
+DIALOG D_BLACKSMITH
+TIMER=300
+RETURN 1
+ENDIF
+ENDIF
+
+on=@TIMER
+LINK=04fffffff
+TIMER=-1
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID>==i_forge)
+LINK=<SRC.TARG.UID>
+TIMER=300
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must target a forge.
+RETURN 1
+ENDIF
+
+[ITEMDEF 0fb4]
+//Sledge Hammer
+DEFNAME=i_hammer_sledge
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+RESOURCES=4 i_ingot_iron
+SKILLMAKE=TINKERING 54.1,t_tinker_tools
+WEIGHT=9
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Sledge Hammer
+DUPELIST=0fb5
+
+
+on=@DCLICK
+IF (<LINK>=04fffffff)
+SRC.SYSMESSAGE Which forge are you going to use?
+TARGET
+RETURN 1
+ELSE
+IF <LINK.DISTANCE>>3
+SRC.SYSMESSAGE You must be closer to a forge and anvil.
+RETURN 1
+ELSE
+DIALOG D_BLACKSMITH
+TIMER=300
+RETURN 1
+ENDIF
+ENDIF
+
+on=@TIMER
+LINK=04fffffff
+TIMER=-1
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID>==i_forge)
+LINK=<SRC.TARG.UID>
+TIMER=300
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must target a forge.
+RETURN 1
+ENDIF
+
+[ITEMDEF 013e3]
+DEFNAME=i_hammer_smith
+WEIGHT=4
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+RESOURCES=6 i_ingot_iron
+RESOURCES2=3 i_ingot_iron,1 i_log
+SKILLMAKE=BLACKSMITHING 10.0
+DAM=4,16
+//SPEED=60
+SKILL=Mace Fighting
+REQSTR=30
+TWOHANDS=N
+CATEGORY=Provisions - Weapons
+SUBSECTION=Maces & Hammers
+DESCRIPTION=Smith's Hammer
+DUPELIST=013e4
+
+ON=@Create
+HITPOINTS={31 60}
+
+
+on=@DCLICK
+IF (<LINK>=04fffffff)
+SRC.SYSMESSAGE Which forge are you going to use?
+TARGET
+RETURN 1
+ELSE
+IF <LINK.DISTANCE>>3
+SRC.SYSMESSAGE You must be closer to a forge and anvil.
+RETURN 1
+ELSE
+DIALOG D_BLACKSMITH
+TIMER=300
+RETURN 1
+ENDIF
+ENDIF
+
+on=@TIMER
+LINK=04fffffff
+TIMER=-1
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID>==i_forge)
+LINK=<SRC.TARG.UID>
+TIMER=300
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You must target a forge.
+RETURN 1
+ENDIF
+
+[Function REPAIRFIX]
+SRC.NEWITEM i_f_repair
+SRC.ACT.EQUIP
+
+[itemdef i_f_repair]
+name=repair fix
+ID=i_worldgem_bit 
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0
+LAYER=layer_special 
+
+on=@create 
+COLOR=021 
+ATTR=attr_invis|attr_decay 
+
+ON=@EQUIP
+TARGET What item do you want to repair?
+TIMER 60
+RETURN 1
+
+on=@timer
+IF (0<VAR.REPAIRING> == 1)
+	CONT.SYSMESSAGE You repair the item.
+	REMOVE
+ELSEIF (0<VAR.REPAIRING> == 2)
+	CONT.SYSMESSAGE You fail to repair the item.
+	CONT.SFX 43
+	REMOVE
+ELSEIF (0<VAR.REPAIRING> == 3)
+	CONT.SFX 43
+	CONT.SYSMESSAGE You destroyed the item.
+	REMOVE
+ELSE
+	REMOVE
+	VAR.REPAIRING //Time out
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+//make sure in pack
+IF !(<CONT.RESTEST 3 i_ingot_iron>)
+	SRC.SYSMESSAGE You dont have enough ingots.
+	RETURN 1
+ENDIF
+
+IF (<CONT.TARG.TOPOBJ.DISTANCE>>=2) || (<SRC.TARG.CanSeeLos>!=1)
+	CONT.SYSMESSAGE That is too far away.
+	RETURN 1
+ENDIF
+
+//make sure item is armor/swords etc
+IF !(<CONT.TARG.TYPE>==t_weapon_mace_smith) && !(<CONT.TARG.TYPE>==t_weapon_sword) && !(<CONT.TARG.TYPE>==t_weapon_fence) && !(<CONT.TARG.TYPE>==t_armor) && !(<CONT.TARG.TYPE>==t_weapon_axe) && !(<CONT.TARG.TYPE> == t_weapon_mace_pick) && !(<CONT.TARG.TYPE> == t_weapon_mace_sharp) 
+	CONT.SYSMESSAGE The item is not repairable.
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (0<CONT.TARG.MORE1h>)
+	IF (<CONT.TARG.MORE1h> == <CONT.TARG.HITPOINTS>)
+		SRC.SYSMESSAGE The item is already in full repair.	
+		REMOVE
+		RETURN 1
+	ENDIF
+ENDIF
+
+// Get Percentage Factors
+IF (<CONT.BLACKSMITHING> < 51.5)
+	VAR.Rpercent <eval (rand(10)) + 15>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 80 - 90%
+	var.RWeaken 4
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 51.5)
+	VAR.Rpercent <eval (rand(10)) + 10>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 80 - 90%
+	var.RWeaken 3
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 61.5)
+	VAR.Rpercent <eval (rand(3)) + 7>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 90 - 93% 
+	var.RWeaken 3
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 71.5)
+	VAR.Rpercent <eval (rand(3)) + 4>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 93 - 96% 
+	var.RWeaken 2
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 81.5)
+	VAR.Rpercent <eval (rand(2)) + 2>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 96 - 98% 
+	var.RWeaken 1
+ENDIF
+
+IF (<CONT.BLACKSMITHING> > 91.5)
+	VAR.Rpercent <eval (rand(1)) + 1>
+	VAR.RSuccess <eval 100 - <var.RAdjust>>  // 98 - 99% 
+	var.RWeaken 1
+ENDIF
+
+IF (<CONT.BLACKSMITHING> == 100.0)
+	VAR.RSuccess 99
+	var.RWeaken 1
+ENDIF
+
+
+IF ((rand(100)) < <VAR.RSuccess>) //Success
+	CONT.TARG.HITPOINTS <eval <CONT.TARG.MORE1h> - 1> //fill up hitpoints 
+	VAR.REPAIRING 1
+ELSE //Failed - do percent chance, later, on breaking item completely?
+
+	IF ((<eval <CONT.TARG.HITPOINTS> - <VAR.RWEAKEN>>) < 1)
+		CONT.TARG.REMOVE
+		VAR.REPAIRING 3
+		CONT.CONSUME 3 i_ingot_iron
+	ELSE
+		VAR.BakMore1h <CONT.TARG.MORE1h> //back up max hp
+		CONT.TARG.HITPOINTS <eval <CONT.TARG.HITPOINTS>> - <VAR.RWEAKEN>>//Weaken Hitpoints
+		CONT.TARG.MORE1h <eval <VAR.BakMore1h> - <VAR.RWEAKEN>>  //restore more1h and Weaken Max Hitpoints
+		VAR.REPAIRING 2
+		CONT.CONSUME 1 i_ingot_iron
+	ENDIF
+ENDIF
+
+CONT.ANIM 11
+CONT.SFX 42
+TIMER = 2
+RETURN 1
+
+[EOF]

@@ -1,0 +1,166 @@
+// Help Menu
+
+// Scripted by Fusion
+
+// A.K.A Jdog
+
+//Please do not remove this header.
+
+
+// ** Instructions **
+// Open up spheremenu.scp and find the following text:
+
+// MENU_PAGEGM -------------------------------------
+// [FUNCTION HelpPage]
+// blah...
+// blah...
+//		else
+//			cont.GOPLACE <morep>	
+//		endif
+//	endif
+//	// normal timer fall through is to delete the item
+//	remove
+//	return 1
+
+// Remove EVERYTHING between in those lines.
+
+// Now add this where all that other crap used to be:
+
+// MENU_PAGEGM -------------------------------------
+// [FUNCTION HelpPage]
+// DIALOG d_help_system
+// RETURN 1
+
+// Without the comment lines (//) of course.
+
+// Now drop this script in and you're ready to go. :)
+
+
+// ** Usage **
+// Click the help button on the paper doll. 
+
+
+// This help menu is fully equipped to handle to the Antipage script.
+
+
+
+[DIALOG d_help_system]
+0,0
+resizepic 0 0 1228 450 420
+text 125 33 32 0
+text 53 73 1152 1
+text 53 103 1152 2
+text 53 133 1152 3
+text 53 163 1152 4
+text 53 193 1152 5
+text 160 2 498 6
+button 23 69 2474 2474 1 0 1
+button 23 99 2474 2474 1 0 2
+button 23 129 2474 2474 1 0 3
+button 23 159 2474 2474 1 0 4
+button 23 189 2474 2474 1 0 5
+
+[DIALOG d_help_system TEXT]
+In need of assistance?
+Page a staff member
+Status
+Website
+Stuck
+Change Password
+<SERV.NAME>
+
+[DIALOG d_help_system BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Fine. Don't ask for help.
+
+ONBUTTON=1
+IF (0<SRC.TAG.ANTIPAGE>==1)
+SRC.SYSMESSAGE Currently disabled for you. Please speak to a staff member.
+RETURN 1
+ELSE
+SRC.GMPAGE
+RETURN 1
+ENDIF
+
+ONBUTTON=2
+SRC.INFORMATION
+
+ONBUTTON=3
+SRC.WEBLINK=www. // Website here. Leave out the http://
+
+ONBUTTON=4
+SRC.NEWITEM=i_stuck_timer
+SRC.ACT.EQUIP
+SRC.ACT.MOREP=5459,1092,0  // Location. Change if need be.
+SRC.ACT.TIMER=1
+RETURN 1
+
+ONBUTTON=5
+SRC.SYSMESSAGE What would you like to change you're password to?
+SRC.DIALOG d_password_new
+
+
+[DIALOG d_password_new]
+0,0
+resizepic 190 175 2600 335 150
+resizepic 220 235 3000 270 22 
+text 215 215 995 0 
+text 255 275 0000 1 
+text 435 275 0000 2 
+textentry 225 237 253 25 0 0 3 
+button 420 280 2104 2103 1 0 0
+button 240 280 2104 2103 1 0 1  
+
+[DIALOG d_password_new TEXT]
+New Password?
+Continue
+Cancel
+<SRC.PASSWORD>
+
+[DIALOG d_password_new BUTTON]
+ONBUTTON=0
+SRC.SYSMESSAGE Don't change it. See if I care.
+RETURN 1
+
+ONBUTTON=1
+IF STRMATCH(*/*,<ARGTXT[0]>) || STRMATCH(*\*,<ARGTXT[0]>) || STRMATCH(*EOF*,<ARGTXT[0]>)
+SRC.SYSMESSAGE You're password can only contain letters or numeric values.
+ELSE
+SRC.PASSWORD <ARGTXT[0]>
+SRC.SYSMESSAGE You have changed you're password to <ARGTXT[0]>.
+RETURN 1
+ENDIF
+
+[ITEMDEF i_stuck_timer]
+NAME=Stuck Timer
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@Create
+ATTR=attr_invis|attr_decay
+MORE1=120
+	
+ON=@Equip
+TIMER=1
+CONT.SYSMESSAGE You will be teleported to the Waiting Area in <EVAL(<MORE1>)> seconds.
+	
+ON=@Timer
+IF (<MORE1>==30)
+CONT.SYSMESSAGE You will be teleported to the Waiting Area in <EVAL(<MORE1>)> seconds.
+ENDIF
+IF (<CONT>)
+IF (<MORE1>)
+MORE1=<MORE1>-1
+TIMER=1
+RETURN 1
+ELSE
+CONT.GOPLACE <MOREP>	
+ENDIF
+ENDIF
+REMOVE
+RETURN 1
+
+
+[EOF]

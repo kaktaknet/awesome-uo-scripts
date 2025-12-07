@@ -1,0 +1,363 @@
+//**************************************************************************** 
+//SPHERE by : Menasoft ©1997-2000 
+//www.sphereserver.com 
+// All SPHERE script files and formats are copyright Menasoft & Partners. 
+// All donations and contributions become the property of Menasoft 
+// & Partners. 
+// 
+// This file was create by Developer Horza and Admin Lazerus for Private and 
+// shared use on The Arilum Shard and Script Sharing Network. All Code and Copyright 
+// is the property of Menasoft & Partners. 
+// 
+// -------Uses Snippets of Kells No-PVP Script. Thanks Kell! 
+// -------Many thanks also to Tarataros, Bringer of death, Amlaruil and Rosethorn.
+// 
+// Please do not edit this header to give Credit to its writers and Creators.
+//****************************************************************************
+//Version 2.0
+//****************************************************************************
+//                                  In This Update 2.0.08
+//---------------------------------------------------------------------------- 
+// 
+//   -Jail Timers in Minutes and Seconds ( Thanks Bringer of death!! ).
+//   -Jail Time Storage fixed ( not a player bug. more of code bug :/ )
+//
+//   ----------Previous update----------
+//
+//   -Unlimited Jail Crystals Bug.
+//   -Using other peoples jail crystals bug.
+//   -More Jailing Options. 
+// 
+//**************************************************************************** 
+//                                   Installation 
+//---------------------------------------------------------------------------- 
+//       
+//   00-Check you have taken guards off of insta kill
+//   00-Go into the spherechar_human.scp file and search for guards.
+//   00-Edit the male and female guards both to hold i_halberd_jail instead of i_halberd 
+//   00-Also in the guard NPC files remove the 'TEVENTS=e_Human_Environ' so that in dark they 
+//       dont unequip the jail bardy to equip a torch in the dark.
+//   00-Go to jail rooms 1 to 8 and add i_jailstart_1 
+//   00-If you use some sort of travel menu or runebook system available to players in any area 
+//       you may wish to add IF <SRC.TAG.JAILTIME> > 0 infront of the open dialog and ENDIF at end :)
+// 
+//            **Your jail system should now be installed** 
+// 
+//**************************************************************************** 
+// FILE LAST UPDATED: Saturday, September 28th, 2002
+
+//testing start
+
+//Updated for version 2.0 now ;)
+
+//testing stop
+
+
+[ITEMDEF jail_crook] 
+DEFNAME=jail_crook 
+ID=0df0 
+WEIGHT=1000 
+TYPE=t_weapon_mace_staff 
+FLIP=1 
+REQSTR=1000 
+TWOHANDS=Y 
+CATEGORY=Provisions - Staff Items 
+SUBSECTION=Jail System (Horza) 
+DESCRIPTION=GameMasters' Jail Crook 
+DUPELIST=013f5 
+LAYER=2 
+
+ON=@DCLICK    
+   TARGET Who would you like to punish? 
+   RETURN 1 
+
+ON=@TARGON_CHAR 
+   DIALOG d_horza_jaildialog 
+
+[DIALOG d_horza_jaildialog] 
+20,20 
+nomove 
+resizepic 190 175 5054 385 270 
+resizepic 200 185 3000 365 250 
+button 485 403 243 241 1 0 0 
+text 210 200 995 0 
+page 1 
+button 210 230 2362 2361 1 0 1 
+text 230 225 995 1 
+button 210 260 2362 2361 1 0 2 
+text 230 255 995 2 
+button 210 290 2362 2361 1 0 3 
+text 230 285 995 3 
+button 210 320 2362 2361 1 0 4 
+text 230 315 995 4 
+button 210 350 2362 2361 1 0 5 
+text 230 345 995 5 
+button 210 380 2362 2361 1 0 5 
+text 230 375 995 5 
+
+[DIALOG d_horza_jaildialog TEXT] 
+<SERV.NAME> Jail Menu, Jailing <SRC.TARG.NAME> 
+Tournament Offenders 
+AFK Macroers 
+Harrasment Offenders 
+GM Abuse 
+Other [1 hour 30 minutes]
+Other [3 hours] 
+
+[DIALOG d_horza_jaildialog BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE Jailing Canceled! 
+ONBUTTON=1 
+SRC.TARG.GO Jail8 
+SRC.TARG.EVENTS +e_jailed 
+SRC.TARG.TAG.JAILTIME=59
+SRC.TARG.TAG.OLDNAME_JAIL=<SRC.TARG.NAME> 
+SRC.TARG.NAME=<SRC.TARG.NAME> [Jailed,Tourney] 
+ONBUTTON=2 
+SRC.TARG.KILL 
+SRC.TARG.GO Jail8 
+SRC.TARG.EVENTS +e_jailed 
+SRC.TARG.TAG.JAILTIME=59 
+SRC.TARG.TAG.OLDNAME_JAIL=<SRC.TARG.NAME> 
+SRC.TARG.NAME=<SRC.TARG.NAME> [Jailed,AFKMacro] 
+SRC.TARG.RESURRECT 
+ONBUTTON=3 
+SRC.TARG.GO Jail7 
+SRC.TARG.EVENTS +e_jailed 
+SRC.TARG.TAG.JAILTIME=119 
+SRC.TARG.TAG.OLDNAME_JAIL=<SRC.TARG.NAME> 
+SRC.TARG.NAME=<SRC.TARG.NAME> [Jailed,Harrasment] 
+ONBUTTON=4 
+SRC.TARG.GO Jail7 
+SRC.TARG.EVENTS +e_jailed 
+SRC.TARG.TAG.JAILTIME=119 
+SRC.TARG.TAG.OLDNAME_JAIL=<SRC.TARG.NAME> 
+SRC.TARG.NAME=<SRC.TARG.NAME> [Jailed,Abuse] 
+ONBUTTON=5 
+SRC.TARG.GO Jail6 
+SRC.TARG.EVENTS +e_jailed 
+SRC.TARG.TAG.JAILTIME=89
+SRC.TARG.TAG.OLDNAME_JAIL=<SRC.TARG.NAME> 
+SRC.TARG.NAME=<SRC.TARG.NAME> [Jailed,Other] 
+ONBUTTON=6 
+SRC.TARG.GO Jail5 
+SRC.TARG.EVENTS +e_jailed 
+SRC.TARG.TAG.JAILTIME=179
+SRC.TARG.TAG.OLDNAME_JAIL=<SRC.TARG.NAME> 
+SRC.TARG.NAME=<SRC.TARG.NAME> [Jailed,Other] 
+
+[ITEMDEF i_halberd_jail] 
+DEFNAME=i_halberd_jail 
+ID=i_halberd 
+WEIGHT=10 
+TYPE=T_WEAPON_SWORD 
+FLIP=1 
+SKILL=Swordsmanship 
+REQSTR=45 
+TWOHANDS=Y 
+CATEGORY=Provisions - Staff Items 
+SUBSECTION=Jail System (Horza) 
+DESCRIPTION=Guard's Jail Halberd 
+DUPELIST=0143f 
+
+ON=@Create 
+HITPOINTS={31 80} 
+
+ON=@DAMAGE 
+   SRC.JAILX 
+   SRC.TAG.JAILTIME=9 //10 minutes ;)
+   SRC.TAG.OLDNAME_JAIL=<SRC.NAME> 
+   SRC.NAME=<SRC.NAME> [jailed] 
+
+[ITEMDEF i_jailstart_1] 
+ID=i_gravestone_18 
+TYPE=t_script 
+NAME=Jail Stone 
+
+ON=@CREATE 
+   COLOR=03e 
+   ATTR=attr_move_never|attr_static 
+
+ON=@DCLICK 
+   IF <SRC.TAG.TIMER_TICKING>==0 
+      SRC.TAG.TIMER_TICKING=1 
+      SRC.NEWITEM = i_jailtimer_1 
+      SRC.ACT.P = <SRC.P> 
+      SRC.ACT.TYPE T_EQ_SCRIPT 
+      SRC.ACT.ATTR=attr_move_never|attr_can_decay|attr_static 
+      SRC.ACT.TAG.MINUTES=<SRC.TAG.JAILTIME>
+      SRC.TAG.TIMER_TICKING_UID_OF_TIMER=<SRC.ACT.UID> 
+      RETURN 1 
+   ELSE 
+      MESSAGE You have already got a timer. 
+      MESSAGE If there are any problems, Please page for a member of staff 
+   ENDIF 
+
+[ITEMDEF i_jailtimer_1]
+ID=i_crystal_green_big 
+TYPE=t_script 
+NAME=Jail Timer 
+
+ON=@CREATE 
+TIMER=60
+ATTR=attr_move_never
+TAG.MINUTES=59 //1 hour
+
+ON=@TIMER
+TAG.MINUTES=<TAG.MINUTES>+-1
+IF <TAG.MINUTES>==-1
+MESSAGE You may leave!
+TIMER=-1
+RETURN 1
+ENDIF
+TIMER=60
+
+ON=@DCLICK
+ IF <SRC.TAG.TIMER_TICKING_UID_OF_TIMER>==<UID> 
+	IF <TAG.MINUTES>==-1
+        	SRC.EVENTS -e_jailed 
+     		SRC.TAG.JAILTIME=0 
+     		SRC.TAG.TIMER_TICKING=0 
+     		SRC.TAG.TIMER_TICKING_UID_OF_TIMER=0 
+      		SRC.NAME=<SRC.TAG.OLDNAME_JAIL> 
+      		TIMER=1 
+     		REMOVE 
+     		SRC.MENU menu_releaseto
+	ELSE
+		MESSAGE <EVAL <TAG.MINUTES>> Minutes <TIMER> Seconds.
+		RETURN 1
+	ENDIF
+   ELSE 
+      MESSAGE This is not your jail crystal. 
+ ENDIF 
+
+[MENU menu_releaseto]
+Where would you like to be release to?
+ON=0 Minoc [pk]
+SRC.GO Minoc
+ON=0 Buxx [pk]
+SRC.GO Buccaneer's Den
+ON=0 Britain [Safe]
+SRC.GO Britain
+ON=0 Vesper [Safe]
+SRC.GO Vesper
+
+[FUNCTION JAILX] 
+DORAND 2 
+   GO Jail1 
+   GO Jail2 
+   GO Jail3 
+   GO Jail4 
+   GO Jail5 
+   GO Jail6 
+ENDDO 
+EVENTS +e_jailed 
+
+[EVENTS E_jailed] 
+ON = @click 
+   if !(STRMATCH("<SRC.REGION.NAME>","Jail")) 
+      jailx 
+   endif 
+
+ON = @GetHit 
+   if !(STRMATCH("<SRC.REGION.NAME>","Jail")) 
+      jailx 
+   endif 
+   if ( <SRC.NPC> ) 
+      return 0 
+   endif 
+   SRC.SYSMESSAGE "You can't hurt them here!" 
+   return 1 
+
+ON = @Hit 
+   if !(STRMATCH("<SRC.REGION.NAME>","Jail")) 
+      jailx 
+   endif 
+   if ( <SRC.NPC> ) 
+      return 0 
+   endif 
+   SYSMESSAGE "You can't hurt other players here!" 
+   return 1 
+
+ON = @SkillStart 
+   if !(STRMATCH("<SRC.REGION.NAME>","Jail")) 
+      jailx 
+   endif 
+         ACTION = -1 
+
+ON = @SPELLEFFECT 
+   if !(STRMATCH("<SRC.REGION.NAME>","Jail")) 
+      jailx 
+   endif 
+   if ( 0 ) 
+   elseif ( <argn> ==  1 ) 
+   elseif ( <argn> ==  2 ) 
+   elseif ( <argn> ==  3 ) 
+   elseif ( <argn> ==  4 ) 
+   elseif ( <argn> ==  5 ) 
+   elseif ( <argn> ==  6 ) 
+   elseif ( <argn> ==  7 ) 
+   elseif ( <argn> ==  8 ) 
+   elseif ( <argn> ==  9 ) 
+   elseif ( <argn> ==  10 ) 
+   elseif ( <argn> ==  11 ) 
+   elseif ( <argn> ==  12 ) 
+   elseif ( <argn> ==  13 ) 
+   elseif ( <argn> ==  14 ) 
+   elseif ( <argn> ==  15 ) 
+   elseif ( <argn> ==  16 ) 
+   elseif ( <argn> ==  17 ) 
+   elseif ( <argn> ==  18 ) 
+   elseif ( <argn> ==  19 ) 
+   elseif ( <argn> ==  20 ) 
+   elseif ( <argn> ==  21 ) 
+//next argn = 22 and so on
+   elseif ( <argn> ==  22 ) 
+   elseif ( <argn> ==  23 ) 
+   elseif ( <argn> ==  24 ) 
+   elseif ( <argn> ==  25 ) 
+   elseif ( <argn> ==  26 ) 
+   elseif ( <argn> ==  27 ) 
+   elseif ( <argn> ==  28 ) 
+   elseif ( <argn> ==  29 ) 
+   elseif ( <argn> ==  30 ) 
+   elseif ( <argn> ==  31 ) 
+   elseif ( <argn> ==  32 ) 
+   elseif ( <argn> ==  33 ) 
+   elseif ( <argn> ==  34 ) 
+   elseif ( <argn> ==  35 ) 
+   elseif ( <argn> ==  36 ) 
+   elseif ( <argn> ==  37 ) 
+   elseif ( <argn> ==  38 ) 
+   elseif ( <argn> ==  39 ) 
+   elseif ( <argn> ==  40 ) 
+   elseif ( <argn> ==  41 ) 
+   elseif ( <argn> ==  42 ) 
+   elseif ( <argn> ==  43 ) 
+   elseif ( <argn> ==  44 ) 
+   elseif ( <argn> ==  45 ) 
+   elseif ( <argn> ==  46 ) 
+   elseif ( <argn> ==  47 ) 
+   elseif ( <argn> ==  48 ) 
+   elseif ( <argn> ==  49 ) 
+   elseif ( <argn> ==  50 ) 
+   elseif ( <argn> ==  51 ) 
+   elseif ( <argn> ==  52 ) 
+   elseif ( <argn> ==  53 ) 
+   elseif ( <argn> ==  54 ) 
+   elseif ( <argn> ==  55 ) 
+   elseif ( <argn> ==  56 ) 
+   elseif ( <argn> ==  57 ) 
+   elseif ( <argn> ==  58 ) 
+   elseif ( <argn> ==  59 ) 
+   elseif ( <argn> ==  60 ) 
+   elseif ( <argn> ==  61 ) 
+   elseif ( <argn> ==  62 ) 
+   elseif ( <argn> ==  63 ) 
+   elseif ( <argn> ==  64 ) 
+   else 
+      return 0 
+   endif 
+   return 1
+
+[EOF]

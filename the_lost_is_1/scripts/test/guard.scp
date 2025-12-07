@@ -1,0 +1,415 @@
+[CHARDEF c_good_gold_guard] //top-quality order guard
+//Male order GUARD
+DEFNAME=c_order_guard
+NAME=#NAMES_HUMANMALE the Gold Order Guard
+ID=C_MAN
+DAM=45,60
+ARMOR=40
+DESIRES=i_gold
+SHELTER=r_civilization
+//AVERSIONS=ANYONE WITH NEGATIVITY (SHOWS AGGRESION)
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+CATEGORY=Civilized
+SUBSECTION=Guards & Law
+DESCRIPTION=Good Gold Guard (male)
+
+ON=@Create
+flags&04000000
+NPC=brain_human
+//ALIGNMENT=GOOD
+karma={1000 2000}
+COLOR=colors_skin
+STR={250 350}
+DEX={400 500}
+INT={151 165}
+
+DETECTINGHIDDEN={90.0 100.0}
+FORENSICS={90.0 100.0}
+FENCING={90.0 100.0}
+PARRYING={90.0 100.0}
+SWORDSMANSHIP={90.0 100.0}
+WRESTLING={90.0 100.0}
+MACEFIGHTING={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+
+ON=@NPCRestock
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_pants
+COLOR=colors_all
+ITEM=i_platemail_chest
+ITEM=i_platemail_leggings
+ITEM=i_platemail_arms
+ITEM=013b9
+ITEM=i_shield_order
+attr=04
+ITEM=random_coin_purse
+
+ON=@NPCRefuseItem
+SAY I cannot be bribed. be gone.
+return 1
+
+ON=@NPCSEENEWPLAYER
+IF (<SRC.FLAGS>&02000000) || (<SRC.KILLS> > <SERV.MURDERMINCOUNT>) || (<SRC.KARMA> < (<SERV.PLAYERNEUTRAL> - 750))
+SAY Vile fiend, <SRC.NAME>! Prepare to die!
+ATTACK
+RETURN 1 //<---- Add this so it don't add that memory and the npc will always attack them when he/ she/it sees the player.
+ELSE
+RETURN 1 //<-- if the player is 'innocent' npc will keep thinking its seeing the player for the 1st time over and over.
+ENDIF
+
+[CHARDEF c_good_silver_guard] //medium strength order guard
+DEFNAME=c_order_guard
+NAME=#NAMES_HUMANMALE the Silver Order Guard
+ID=C_MAN
+DAM=30,45
+ARMOR=30
+DESIRES=i_gold
+SHELTER=r_civilization
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+CATEGORY=Civilized
+SUBSECTION=Guards & Law
+DESCRIPTION=Good Silver Guard (male)
+
+ON=@Create
+flags&04000000
+NPC=brain_human
+//ALIGNMENT=GOOD
+karma={1000 2000}
+COLOR=colors_skin
+STR={175 225}
+DEX={250 350}
+INT={151 165}
+
+DETECTINGHIDDEN={90.0 100.0}
+FORENSICS={90.0 100.0}
+FENCING={90.0 100.0}
+PARRYING={90.0 100.0}
+SWORDSMANSHIP={90.0 100.0}
+WRESTLING={90.0 100.0}
+MACEFIGHTING={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+
+ON=@NPCRestock
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_pants
+COLOR=colors_all
+ITEM=i_chainmail_tunic
+ITEM=i_chainmail_leggings
+ITEM=i_chainmail_coif
+ITEM=0f60
+ITEM=i_shield_order
+attr=04
+ITEM=0170b
+ITEM=random_coin_purse
+
+ON=@NPCRefuseItem
+SAY I cannot be bribed. be gone.
+return 1
+
+ON=@NPCSEENEWPLAYER
+IF (<SRC.FLAGS>&02000000) || (<SRC.KILLS> > <SERV.MURDERMINCOUNT>) || (<SRC.KARMA> < (<SERV.PLAYERNEUTRAL> - 750))
+SAY Halt! <src.name>, you must be brought to justice!
+ATTACK
+RETURN 1 //<---- Add this so it don't add that memory and the npc will always attack them when he/ she/it sees the player.
+ELSE
+RETURN 1 //<-- if the player is 'innocent' npc will keep thinking its seeing the player for the 1st time over and over.
+ENDIF 
+
+
+[CHARDEF c_good_bronze_guard] //cheapo order guard
+DEFNAME=c_order_guard
+NAME=#NAMES_HUMANMALE the Bronze Order Guard
+ID=C_MAN
+DAM=25,40
+ARMOR=25
+DESIRES=i_gold
+SHELTER=r_civilization
+//AVERSIONS=ANYONE WITH NEGATIVITY (SHOWS AGGRESION)
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+CATEGORY=Civilized
+SUBSECTION=Guards & Law
+DESCRIPTION=Good Bronze Guard (male)
+
+ON=@Create
+flags&04000000
+NPC=brain_human
+//ALIGNMENT=GOOD
+karma={1000 2000}
+COLOR=colors_skin
+STR={150 200}
+DEX={250 350}
+INT={151 165}
+
+DETECTINGHIDDEN={90.0 100.0}
+FORENSICS={90.0 100.0}
+FENCING={90.0 100.0}
+PARRYING={90.0 100.0}
+SWORDSMANSHIP={90.0 100.0}
+WRESTLING={90.0 100.0}
+MACEFIGHTING={90.0 100.0}
+MAGICRESISTANCE={9000.0 10000.0}
+TACTICS={90.0 100.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+
+ON=@NPCRestock
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_pants
+COLOR=colors_all
+ITEM=i_leather_tunic
+ITEM=i_leather_leggings
+ITEM=013b5
+ITEM=i_shield_order
+attr=04
+ITEM=0170b
+ITEM=random_coin_purse
+
+ON=@NPCRefuseItem
+SAY I cannot be bribed. be gone.
+return 1
+
+ON=@NPCSEENEWPLAYER
+IF (<SRC.FLAGS>&02000000) || (<SRC.KILLS> > <SERV.MURDERMINCOUNT>) || (<SRC.KARMA> < (<SERV.PLAYERNEUTRAL> - 250))
+SAY Uhh, stay right there, <src.name>! I have an order for your death!
+ATTACK
+RETURN 1 //<---- Add this so it don't add that memory and the npc will always attack them when he/ she/it sees the player.
+ELSE
+RETURN 1 //<-- if the player is 'innocent' npc will keep thinking its seeing the player for the 1st time over and over.
+ENDIF
+
+on=@gethit
+flags=010000 
+
+
+[CHARDEF c_evil_guard] //chaotic evil guard
+DEFNAME=c_evil_guard
+NAME=#NAMES_HUMANMALE the Chaos Guard
+ID=C_MAN
+DAM=30,45
+ARMOR=25
+DESIRES=i_gold
+SHELTER=r_civilization
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+CATEGORY=Civilized
+SUBSECTION=Guards & Law
+DESCRIPTION=Evil Guard (male)
+
+ON=@Create
+flags&04000000
+NPC=brain_human
+//ALIGNMENT=GOOD
+COLOR=colors_skin
+STR={250 350}
+DEX={200 250}
+INT={151 165}
+KARMA=-2001
+FAME={2000 2500}
+
+DETECTINGHIDDEN={90.0 100.0}
+FORENSICS={90.0 100.0}
+FENCING={90.0 100.0}
+PARRYING={90.0 100.0}
+SWORDSMANSHIP={90.0 100.0}
+WRESTLING={90.0 100.0}
+MACEFIGHTING={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+
+ON=@NPCRestock
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_pants
+COLOR=colors_all
+ITEM=i_platemail_chest
+ITEM=i_platemail_leggings
+ITEM=i_platemail_arms
+ITEM=013b9
+ITEM=i_shield_chaos
+attr=04
+ITEM=random_coin_purse
+
+ON=@NPCRefuseItem
+SAY I cannot be bribed. be gone.
+return 1
+
+ON=@NPCSEENEWPLAYER
+karma=-2500
+IF (<src.tag.follower>!=01)
+IF (<src.kills><5)
+IF (<src.karma>>=-2000)
+SAY <SRC.NAME>! You do not follow Metrik, and must now die! //Metrik=Chaotic Evil deity
+ATTACK
+RETURN 1 //<---- Add this so it doesn't add that memory and the npc will always attack them when he/ she/it sees the player.
+ENDIF
+endif
+endif
+return 1 
+
+
+[CHARDEF c_elf_guard] //chaotic good guard. attacks followers of metrik and evil people
+DEFNAME=c_elf_guard
+NAME=#NAMES_ELF_MALE the Elven Order Guard
+ID=C_MAN
+DAM=30,45
+ARMOR=50
+DESIRES=i_gold
+SHELTER=r_civilization
+//AVERSIONS=ANYONE WITH NEGATIVITY (SHOWS AGGRESION)
+
+TSPEECH=spk_human_prime
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+CATEGORY=Civilized
+SUBSECTION=Guards & Law
+DESCRIPTION=Elf Guard (male)
+
+ON=@Create
+flags&04000000
+NPC=brain_human
+//ALIGNMENT=GOOD
+karma={2000 4000}
+fame={1000 4000}
+COLOR=059e
+STR={200 250}
+DEX={400 500}
+INT={151 165}
+
+DETECTINGHIDDEN={90.0 100.0}
+FORENSICS={90.0 100.0}
+FENCING={90.0 100.0}
+PARRYING={90.0 100.0}
+SWORDSMANSHIP={90.0 100.0}
+WRESTLING={90.0 100.0}
+MACEFIGHTING={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+
+ITEMNEWBIE=i_hair_long
+COLOR=colors_hair
+
+ON=@NPCRestock
+ITEM=i_studded_sleeves
+COLOR=0599
+ITEM=i_studded_tunic
+COLOR=0599
+ITEM=i_studded_gloves
+COLOR=01bb
+ITEM=i_studded_leggings
+COLOR=0599
+ITEM=i_studded_gorget
+COLOR=0599
+ITEM=i_boots_calf
+COLOR=01bb
+ITEM=i_cape
+COLOR=01bb
+ITEM=i_sash
+COLOR=01bb
+ITEM=i_bow
+ITEM=i_scimitar
+ITEM=i_arrow,50
+ITEM=i_gold,{50 150}
+
+ON=@NPCRefuseItem
+SAY I cannot be bribed. be gone.
+return 1
+
+ON=@NPCSEENEWPLAYER
+IF (<SRC.FLAGS>&02000000) || (<SRC.KILLS> > <SERV.MURDERMINCOUNT>) || (<SRC.KARMA> < (<SERV.PLAYERNEUTRAL> - 250)) || (<src.tag.follower> = 01)
+SAY Halt, in the name of Nightbird! //good-aligned deity
+ATTACK
+RETURN 1 //<---- Add this so it don't add that memory and the npc will always attack them when he/ she/it sees the player.
+ELSE
+RETURN 1 //<-- if the player is 'innocent' npc will keep thinking its seeing the player for the 1st time over and over.
+ENDIF 
+
+
+[EOF]

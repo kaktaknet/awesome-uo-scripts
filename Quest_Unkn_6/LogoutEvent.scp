@@ -1,0 +1,44 @@
+// Put EVENTS=+e_logoutevent under Skillclass 0 in spheretables.scp in your scripts directory to install.
+// By: Admin Crypt
+// This makes it so when someone logs out it will put a timer on them (15 seconds) and when the timer is up
+// it sends them to green acres. When they log back in, it will bring them back to where they logged out.
+// put a wall around the area when you type .go green acres. Just in case.
+
+[ITEMDEF i_teleport_delay2]
+NAME=Delay Teleport
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	MORE1=15
+
+ON=@Equip
+	TIMER=1
+	
+ON=@Timer
+	// Take the effect we would like.
+	if ( <cont> )
+		if ( <more1> )
+			cont.message <EVAL(<more1>)> // put countdown above my head.
+			more1=<more1>-1
+			TIMER=1
+			return 1
+		else
+			cont.GO green acres
+		endif
+	endif
+	// normal timer fall through is to delete the item
+	remove
+	return 1
+
+[EVENTS e_logoutevent]
+ON=@LOGOUT
+SRC.TAG.POSITION=<src.p>
+src.newitem i_teleport_delay2
+src.act.equip
+
+ON=@LOGIN
+SRC.GO <src.tag.position>

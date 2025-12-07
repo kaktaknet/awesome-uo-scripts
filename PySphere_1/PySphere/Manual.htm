@@ -1,0 +1,197 @@
+<html><head><title>PySphere</title></head><body>
+<h1>PySphere Manual - PySphere Release 16</h1>
+<p>
+<p>Don't panic! Python is really easy to learn! (Even the modified dialect PySphere uses.)
+<p>You can look at the sample scripts for examples.
+
+<h2>Things that PySphere makes easier</h2>
+<p>Making menus for 99z+ easily, with the (new in release 16) <b>menudialog</b> construct. Unlike menu, 
+	menudialog is supported by ALL clients that support dialogs, AND automatically handles showing 
+	multiple pages when they are needed. (Menudialog does not work on versions prior to 99z. Technically, it COULD, but
+	it would not be easy to code.)
+<p>For loops, two kinds of them, <b>for <i>x</i> in range(<i>startValue</i>,<i>runWhileLessThanThis</i>)</b>,
+	and <b>for <i>x</i> in <i>array</i></b>. For loops do not exist in any Sphere version, but can be simulated 
+	with recursion in 55i or while loops in newer Sphere versions. The for...range statement is equivalent to 
+	C/C++/Java/C#'s <b>for (x=startValue; x<=runWhileLessThanThis; x++)</b> statement.
+<p>While loops. (Normal Sphere scripts for 99t2 and newer can do these.)
+<p>Parameter passing. (Normal sphere scripts for 99u or so and newer can do these.)
+<p>Local variables. (Normal sphere scripts for 99w or so and newer can do these.)
+<p>Variables as references. Example: local.nation.name.
+<p>Referring to things by their 99u+ name works for 55i still. For things which have a 55i equivalent, anyhow.
+	Such as 'safe', 'finduid', the 'userdclick' trigger and the like, and when you say say('Hi'), it will work correctly
+	no matter what sphere version it's for.
+<p>Arrays. (Normal sphere scripts for 99u or so and newer can do these with []s. Older ones can emulate them -
+	Internally, 99u+ represents an array element such as myarr[5] as myarr_5. PySphere actually does this itself when
+	compiling to 55i.)
+<p>Arrays of things in defnames. (def_array.py has an example.)
+<p>You can use +=, -=, *=, /=, and %= in any sphere version (As of PySphere Release 13.) 99x supports this naturally for
+	local variables (and possibly tags and vars too), and when PySphere compiles for 99x, it will use this support with
+	local variables.
+<p>You can edit your scripts while Sphere is running without worrying about it reloading them while it's running, because
+	the scripts you're editing aren't what Sphere is reading.
+<p>PySphere can automatically resync Sphere, when it compiles your scripts, so that you don't have to
+	(If you are running a local test server on the same computer the scripts are on).
+	To use this feature, run PySphere once, and it will generate a file named 'pysphere.ini'. Open it up and enter a
+	password for an account you can telnet in with. If you're using a Sphere version which doesn't ask for
+	an account name when you telnet to it, then leave the account= line blank. Once the information is in the file, when
+	you run PySphere from then on, it will attempt to connect to Sphere and resync (if it is running) automatically.
+	<br>If you do not want to use this feature, you don't have to do anything, it is disabled until a password is entered
+	in the file.
+<h2>Prefixes</h2>
+<p>#prefix-local indicates that you will prefix any local variable with 'local.', and anything else is called normally.
+<br>Example: <b>name="Duke "+local.oldname</b>
+<p>#prefix-sphere indicates that you will prefix everything EXCEPT local variables with 'sphere.'.
+<br>Example: <b>sphere.name="Duke "+local.oldname</b>
+<p>#prefix-auto attempts to automatically determine what is a local variable and what is not. It doesn't work very well,
+	however.
+<p>I personally recommend using #prefix-local.
+
+<h2>Specifying what Sphere version your scripts are for</h2>
+<p>Placing <b>#sphere-<i>version</i></b> at the beginning of a .py script specifies that the scripts are for 
+Sphere version <i>version</i>. 
+<p>For example, <b>#sphere-55i</b>, <b>#sphere-99x</b>, etc. 
+<p>Supported versions (In release 16)
+	are 55i, 99u, 99v, 99w, 99x, 99y, and 99z. (Note: this list may not be updated every version.)
+<p>If you omit <b>#sphere-<i>version</i></b>, PySphere will compile it for the latest
+	supported Sphere version. 
+<p>Note that the version names will NEVER have numbers after the letter - 99w is for 99w, 99w2,
+	and 99w3, etc. 99x works for 99x2, 99x5, etc. 
+<p>As a matter of fact, 99w works for 99x as well, so does 99u. The syntax is similar enough. However, if you attempt
+to write scripts for 55i without specifying #sphere-55i, they will not work on 55i due to the many syntax changes
+in 99u and newer. Even if you do specify it, there
+are a few things that won't work in 55i, though less than if you were coding in SphereScript.
+<p>The 99y patterns are at this time identical to the 99z patterns.
+<p>If you are working with a Sphere version below 99m, such as 99c, or 99f, then I recommend using #sphere-55i. I don't
+actually support those sphere versions at this time, 
+but if you let me know the differences between them and 55i (On the Sphere forums; You can PM me, I am Shadowlord.), 
+I can add support for them.
+
+<h2>Differences from normal Python</h2>
+<p>There is no class keyword, instead there are keywords for itemdefs, chardefs, events, defnames, and the like. 
+Take a look at the example script defs.py and defs.scp, which is what it compiles to, to see how each one looks.
+<p>You can't do array[3:6] or array[3:] or array[:3] or array [-1:] or array [:-1], etc, at this time.
+<p>You can't do string[something], or any of the above for arrays. You'll have to use the string functions in Sphere.
+	And if those do not work in older Sphere versions, you're out of luck.
+<p>Self does not exist as a keyword unless you use prefix-auto, which does not work properly. 
+	(You can try it if you want, but you have been warned...)
+<p>You can NOT specify argument values by name. For example: testarr(a=3, i=5) (When calling testarr).
+	That isn't supported at this time. It is on my to-do list, though. (But I ignore my to-do list until I need
+	a particular feature.)
+<p><b>something.function (my,parameters)</b> will NOT work. You cannot have a space after a function name and before
+	the starting (, or PySphere will get very confused and think something.function is the end of something that needs
+	&lt&gts around it. Meaning that the function call won't work. This is important, but a low-priority bug because
+	it is easily avoidable. And really hard to fix without breaking other things.
+<p>You cannot do something.function my,parameters. (As you can with normal Python's print function.)
+
+<h2>Incompatibilities with different sphere versions</h2>
+<p>55i does not support ARGV. Wherever possible, you are encouraged to specify parameters, NOT use argv. Parameters
+	passing in 55i is handled through global variables with really complicated names.
+<p>Any hardcoded function or variable which exists in a newer Sphere version but has no equivalent 
+in older versions will obviously not work in older versions. For instance, you cannot use <b>maxhits</b> in
+scripts intended to work on 55i. Most things that were renamed from 55i to 99u+ will still work properly on 55i,
+as PySphere detects them and knows what they were called for 55i. You should use the 99u+ names in PySphere, however.
+<p>I plan to add code to display warning messages when you compile a script for a version of sphere which does not support
+	a command used by that script.
+<p>menudialogs and dialogs will not really work in anything before 99z. You won't get a message to that effect when
+	compiling, though (Not in Release 16 or before anyhow).
+
+<h2>Things that work in 55i that you wouldn't expect</h2>
+<p>For loops and while loops work in 55i. PySphere will construct recursive functions and calls to those functions. Note
+	that recursion may have subtle bugs in 55i which cause inexplicable and virtually unfixable problems. Or it may not.
+	The inexplicable and virtually unfixable problems I've run into in 55i are so inexplicable and virtually unfixable
+	that I can't tell whether they were due to my use of recursion or not.
+<p>Local variables work in 55i. Local variable support wasn't actually added to SphereScript until around 99w, and PySphere
+	will emulate local variables when compiling to all Sphere versions before that, with, you guessed it, really long
+	and complicated variable names.
+<p>Parameter passing works in 55i, <b>if</b> the function you're passing parameters to is scripted in a .py file, and
+	the calls to it are from a .py file. If those conditions are true, PySphere will make calls to the function store
+	the parameters in global variables, and will make the function itself retrieve them. If those conditions are false,
+	PySphere will not attempt to handle parameter passing, because (1) If the function is scripted outside of a .py file,
+	PySphere has no guarantee that parameter passing will work, and no way to tell whether it's a hardcoded function
+	(Which normally supports parameter passing) or a scripted one 
+	(Which normally does not support parameter passing) being called, and (2) It has to make changes to the call 
+	to the function, and if it isn't compiling the call itself (I.E. The call is in a regular Sphere script),
+	it cannot do so. Ignore this paragraph if you are using 99u or newer; Those sphere versions support parameter passing
+	for functions naturally.
+	
+<p>Finduid works in 55i. PySphere converts Finduid calls to 55i's uid. syntax. Note that you may need to use #self is char,
+#src is char, etc, since PySphere may use tryp in Finduid calls, and needs to know a character it can use tryp on.
+	However, it is <b>NOT</b> recommended that you use finduid in 55i scripts, because of these complications. There <b>
+	is</b> a better way.
+<p>This is a no-brainer, but function calls to hardcoded functions, such as 'say', work in 55i.
+	You write them the same as for newer Sphere versions, however.
+For example, <b>say('Hi there!')</b> is compiled to <b>say Hi there!</b> for 55i.
+<p>You can use variables which are set to a UID as references - For instance:
+<ul><li>local.nation=src.tag.nation
+<li>local.ruler=local.nation.more2
+<li>local.ruler.say("It is good to be king!")
+</ul>
+<p>The preceding works in all Sphere versions. PySphere will
+	generate the proper SphereScript code for it with finduid (for newer sphere versions) or uid (for 55i). In this case,
+	PySphere is using its pattern parser, which is smart, whereas when you actually type out finduid, 
+	it works in 55i because I build a simple replacer in that looks for and changes certain things for 55i scripts.
+	Let's recap. The pattern replacer is smart; The replacer is dumb.
+<p>The replacer is not wholly useless, however. It handles some rather important tasks - Such as changing on=@userdclick
+	to on=@dclick for 55i. It doesn't go the other way, however, so you should always use def userdclick and the like in
+	PySphere, because if you use def dclick instead, your scripts will <b>only</b> work in 55i.
+<p>The safe keyword works in 55i, because PySphere changes 'safe.' to '0'. (Look at 55i scripts by any experienced 
+	scripter and you will find things like 'if 0<src.tag.race>', which is the same as if '<safe.src.tag.race>' in newer
+	Sphere versions.
+<p>You can treat defnames as arrays, if you define them like one, although 'for x in array' may not work on them.
+	See examples\def_array.py for an example. This works in any Sphere version, even 55i.
+
+<h2>Defname checking</h2>
+<p>Defname checking allows you to type things like <b>flags=flags|statf_war</b>. Without it, you would have to type
+	<b>flags=flags|'statf_war'</b>.
+<p>The first time PySphere is run, it will look through all your SCP files, and generate a defs.ini file containing
+	a list of defnames. From then on, it will read this file (fast), rather than looking through the SCP files (slow). 
+	(Note: PySphere will NOT read defs from SCP files which have a corresponding PY file. I.E. it will not read
+	defs from c_spells.scp if there's a file named c_spells.py in the same folder.)
+<p>To disable this feature, you will have to change one or more or the variables defined at the top of pysphere.py.
+<ul>
+<li>To make PySphere NOT generate and use defs.ini, change useScpDefNameList to 0.
+<li>If you do that, it will still not parse .scp files for defnames every time, unless you also change
+	enableScpDefNameChecking to 1.
+<li>If you want to disable defname checking entirely, you can, by setting enableDefNameChecking to 0.
+<li>If you want it to go back to working the way it did in Release 13 and before (reading the SCP files every time),
+	change useScpDefNameList to 0 and enableScpDefNameChecking to 1.
+</ul>
+
+<h2>Important Notes</h2>
+<p>As of 99x (Really as of 99w4, but that was a private build), you can set SRC in a def timer (on=@timer in Spherescript)
+	trigger. Note that while you can do this, it will not work in older Sphere versions. Here's a quick example:
+	<pre>
+	def timer:
+		src='topobj'
+		topobj.say('moo!')
+	</pre>
+<p>If you attempt to compile your scripts to 99v, none of your <b>for x in array</b> statements will work except when
+	'array' is ARGV. That was an experiment, and was left because that is the only difference between compiling to 99u
+	and 99v, so if you are using 99v, I recommend using #sphere-99u instead of #sphere-99v.
+<p>Sphere versions 99w and newer support local variables, and if you compile to 99w or newer, PySphere will use that support.
+	However, Sphere's local variable support is slightly different from PySphere's. 
+	(Techically, 99v8 is the first Sphere version to support local variables, but it was a private build.)
+<p>Sphere's local variables are 100% local to the
+	function or trigger they are called in, they cannot be accessed from any other trigger or function. PySphere's
+	emulated local variables are the same, EXCEPT that if you look at what they will be called and refer to 
+	them that way, they can be accessed from other functions or triggers. (They are
+	represented by global variables with really long names). They are never deleted, although Sphere versions
+	older than 99w will forget all global variables upon reboot. 99w and newer do not. (I am not sure, 99v and/or 99u
+	may not forget global variables either.) Note: With Sphere's local variable support, Local variables in a 
+	trigger are available in functions called by that trigger.
+<p>If you compile for a Sphere version older than 99w with #sphere-99w, then none of your
+	local variables will work. And if you compile for Sphere version 99w or newer with #sphere-99u, then none of the
+	variables with strange names used by PySphere to simulate local variables will ever be deleted.
+<p>If you want to, you can directly go into pySphere.py and change it; In particular, if you use a Sphere version
+that I haven't supported, you may wish to add support for it. This is fairly easy to do, as it generally just requires
+copying and changing the patterns of whatever sphere version is closest.
+
+<p>PySphere correctly converts all of the following for 55i.
+<br>ON=@UserStats		--> on=@stats, but may not exist in 55i.
+<br>ON=@UserClick		--> on=@click.
+<br>ON=@UserDClick		--> on=@dclick.
+<br>ON=@UserProfile		--> on=@profile, but may not exist in 55i.
+<br>ON=@UserSkills		--> on=@skills, but may not exist in 55i.
+<br>ON=@itemUserClick	--> on=@click
+<br>ON=@itemUserDClick	--> on=@dclick
+</body></html>

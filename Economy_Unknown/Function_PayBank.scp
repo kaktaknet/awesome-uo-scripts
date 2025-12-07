@@ -1,0 +1,94 @@
+///////////////////////////////////////////////////////////////////////
+// pay from bank version 1.0
+//
+// written by belgar of 'a virtual paradise'
+//
+// usage: SRC.payup 'amount to pay'
+// the FUNCTION will set var.enough so you can check IF
+//   there was enough gold. an item is included to test this FUNCTION
+// this FUNCTION will always pay from the bank first, and will make up
+//   the rest from the backpack IF needed
+//
+//  enjoy
+////////////////////////////////////////////////////////////////////////
+
+
+[FUNCTION payup] // main FUNCTION
+IF !(<args>) //empty command line?
+return 1 //then do nothing
+ENDIF
+
+var.enough=0 //IF not enough gold, var.enough will be '0'
+var.totalgold=<SRC.FINDLAYER.21.rescount i_gold> + <SRC.FINDLAYER.29.rescount i_gold>
+
+IF (<eval <args>> > <var.totalgold>) //the amount to pay is more then you own??
+
+ELSE //you have enough to pay
+	var.enough=1 //allow you to check transaction later
+	IF (<eval <args>> <= <SRC.FINDLAYER.29.rescount i_gold>) //can be paid with bank money alone
+		goldtopack <args> //put the needed money in the backpack
+	ELSE
+		goldtopackall // move all the gold in the bank to the backpack
+	ENDIF
+	payamount <args> //pay the needed amount
+
+ENDIF
+
+[FUNCTION goldtopackall] //move all gold to the backpack from the bank
+IF (<SRC.FINDLAYER.29.findid.i_gold.uid>) //any gold left ??
+
+	SRC.FINDLAYER.29.findid.i_gold.cont=<SRC.FINDLAYER.21.uid> //then move it to backpack
+	goldtopackall //make sure we get all the money
+
+ENDIF // we are done
+
+[FUNCTION goldtopack] //move enough gold so that we can pay
+var.counter=<eval <args>> // amount of gold left to move
+var.found=(<var.counter> - <SRC.FINDLAYER.29.findid.i_gold.amount>) //amount found
+
+IF (<var.found> > 0) //pile is not big enough, so move it all
+
+	SRC.FINDLAYER.29.findid.i_gold.cont=<SRC.FINDLAYER.21.uid> // transfer to backpack
+	goldtopack <var.found> //get the next pile of gold
+
+ELSE //not entire pile needed
+	
+	var.left=(0 - <var.found>) // get the amount of money left in this pile
+
+	IF (<var.left>)
+		SRC.FINDLAYER.29.findid.i_gold.amount <var.left> //set this amount
+	ELSE //player has EXACT Amount in bank (bug Fix by Admin Remedy)
+		SRC.FINDLAYER.29.findid.i_gold.remove
+	ENDIF
+
+	SRC.newitem i_gold //create a new pile of gold
+	SRC.act.amount <args> //the needed amount
+	SRC.act.cont=<SRC.FINDLAYER.21.uid> //place in backpack
+
+ENDIF //done
+
+[FUNCTION payamount]
+
+var.counter=<eval <args>> //amount left to pay
+
+IF (<var.counter> > 65000) // more then 65000 left to pay??
+	SRC.consume 65000 i_gold //consume 65000 first
+	var.counter=(<var.counter> - 65000) 
+	payamount <var.counter> //then get the rest
+ELSE
+	SRC.consume <args> i_gold //consume the rest of the needed amount
+ENDIF // we are finished
+
+[itemdef i_test_pay]
+id=i_bottle
+type=t_normal
+
+on=@dclick
+SRC.payup 10000 //try to pay 10000 gold
+IF (<var.enough>) //you have paid
+SRC.message adding backpack
+SRC.newitem i_backpack //add VERY expensive backpack
+SRC.act.bounce
+ENDIF
+SRC.updatex
+return 1

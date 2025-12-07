@@ -1,0 +1,36 @@
+/////////////Refurbished by Admin M-posted by Sub Zero//////
+Version sphere 55i 
+
+This will make it so when u make an item out of color cloth it will stay the same color 
+This was posted by sub zero but it didnt work.I got it working pretty well i think it. 
+Add the event to all your players under [SKILLCLASS 0] in spheretables.scp 
+ON=@LOGIN 
+SRC.EVENTS=+e_tailor_test 
+
+
+[events e_tailor_test]
+on=@skillstart 
+if (<action>==Tailoring) 
+newitem=i_tailor_mem 
+act.tag.color=<src.targ.color>
+act.cont=<uid> 
+act.timerd=1 
+endif 
+
+
+[itemdef i_tailor_mem]
+id=02007
+type=t_eq_script
+
+on=@create
+attr=04020
+
+on=@timer
+if (<cont.findlayer.21.findcont.0.dye>=1)&&(<tag.uid>!=<cont.findlayer.21.findcont.0.uid> )
+cont.findlayer.21.findcont.0.color=0<tag.color>
+endif
+remove
+return 1 
+
+
+[EOF]

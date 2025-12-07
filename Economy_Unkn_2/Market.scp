@@ -1,0 +1,456 @@
+       ///////////////////////////////////////////////////////////////////////////
+      //	 System of Payment the vendors and Shops of the market	       //
+     // Make by Roland (Randall Flagg) and improved By (-=ViMaS=-)            //
+    // The original script are in Spanish.. To take it, send a e-mail to:    //
+   // Vimas1@hotmail.com           and if you make a change in the script   //
+  // Please, Sendme it too.					           //
+ // This Script is shared at http://scriptsharing.shorturl.com	          //
+// Thanks to Amlaruil to share my Script ;)			         //	
+//////////////////////////////////////////////////////////////////////////
+//The improvements by (-=ViMaS=-) Are:(to automate the System generally)//
+//									//
+// Only need a Gm to add the book and the owner 1.			//
+// Now, the prices are automatics					//
+// The owner1 can add/remove other owners.				//
+// The book have a timer that every week requests the payment		//
+// Only the owner of the vendor can pay them.				//
+// Now one verifies the players by means of its UID, not in an Item.	//
+// (Avoiding Bugs)							//
+// Los Precios y el tiempo de pago... y de mas opciones estan el en     //
+// The prices and the timer of the Payment are in the ITEM		//
+// ([ITEMDEF i_pago_mercado])						//
+//									//
+//////////////////////////////////////////////////////////////////////////
+
+[DIALOG mercado]
+0, 0
+resizepic 100 1 3500 500 400
+text 300 10 0 0  
+text 130 50 0 1 
+text 130 150 0 2
+text 130 170 0 3 
+text 130 70 0 4 
+text 130 190 0 2 
+text 130 210 0 3 
+text 130 230 0 2 
+text 130 250 0 3 
+text 130 270 0 6 
+text 330 50 24 7 
+text 330 150 24 8
+text 330 190 24 9
+text 330 230 24 10
+text 230 90 0 11 
+text 230 110 0 12 
+text 230 130 0 13 
+text 230 170 0 11
+text 230 210 0 12
+text 230 250 0 13
+text 400 50 0 5 
+text 400 150 0 5 
+text 400 190 0 5 
+text 400 230 0 5 
+text 130 290 0 14
+button 450 55  2360 1361 1 0 1
+button 450 155 2360 2361 1 0 2
+button 450 195 2360 2361 1 0 3
+button 450 235 2360 2361 1 0 4
+button 450 275 2360 2361 1 0 5
+textentry 130 310 400 15 0 15 15
+textentry 130 325 400 15 0 16 16
+button 500 10 4012 4013 1 0 6
+button 120 350 4012 4013 1 0 7  
+text 155 350 0 17
+button 200 93 3 4 1 0 8
+button 200 113 3 4 1 0 9
+button 200 133 3 4 1 0 10
+
+[DIALOG mercado TEXT]
+Payment of the market //0
+For The Shop:
+For Vendor:
+Owner:
+Owners:
+Pay           //5
+Post a announcement (1000 GP):
+<eval <tag.preciotienda>>
+<eval <tag.preciovend1>>
+<eval <tag.preciovend2>>
+<eval <tag.preciovend3>> //10
+<tag.Propietario1Nombre>
+<tag.Propietario2Nombre>
+<tag.Propietario3Nombre>
+Write your announcement, and 'Post a announcement'
+>
+>
+Add a owner.
+
+[DIALOG mercado BUTTON]
+ONBUTTON=1
+if (<EVAL <SRC.REGION.TAG.CO1UID>> == <EVAL <SRC.UID>>) || (<EVAL <SRC.REGION.TAG.CO2UID>>==<EVAL <SRC.UID>>) || (<EVAL <SRC.UID>>==<SRC.TARG.REGION.TAG.NAME>)
+  if (<tag.pagosAlquiler>==0)
+     Speak You dont need pay the Shop
+     Return 1
+  else
+   if (<eval <tag.preciotienda>>==0)
+     return 1
+   elseif <src.restest <eval <tag.preciotienda>> i_gold>
+     src.consume <eval <tag.preciotienda>> i_gold
+     src.sysmessage The shop has been paid. <src.name>.
+     tag.preciotienda=0
+     tag.pagosAlquiler=0
+     tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+   else
+     src.sysmessage You dont have money to pay the shop.
+   endif
+  Endif
+ else
+   src.sysmessage This Shop isnt your.
+ endif
+If (<tag.Pagostotal>==0)
+	Color 70
+Else
+	Color 40
+Endif
+
+ return 1
+
+ONBUTTON=2
+If (<src.Isgm>)||(<src.UID>=<tag.propietario1>)
+  if (<tag.pagos1>==0)
+     Speak This vendor dont need be paid.
+     Return 1
+  else
+   if ( <eval <tag.preciovend1>> == 0 )
+     return 1
+   elseif <src.restest <eval <tag.preciovend1>> i_gold>
+     src.consume <eval <tag.preciovend1>> i_gold
+     src.sysmessage Vendor has been paid, <src.name>.
+     tag.preciovend1 0
+     tag.pagos1=0
+	tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+   else
+     src.sysmessage You dont have money to pay the vendor.
+   endif
+  Endif
+Else
+   Speak This vendor is of <tag.propietario1nombre>, only he can pay them.
+   Return 1
+Endif
+If (<tag.Pagostotal>==0)
+	Color 70
+Else
+	Color 40
+Endif
+ return 1
+
+ONBUTTON=3
+If (<src.Isgm>)||(<src.UID>==<tag.propietario2>)
+  if (<tag.pagos2>==0)
+     Speak This vendor dont need be paid.
+     Return 1
+  else
+   if ( <eval <tag.preciovend2>> == 0 )
+     return 1
+   elseif <src.restest <eval <tag.preciovend2>> i_gold>
+     src.consume <eval <tag.preciovend2>> i_gold
+     src.sysmessage Vendor has been paid, <src.name>.
+     tag.preciovend2 0
+     tag.pagos2=0
+	tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+   else
+     src.sysmessage You dont have money to pay the vendor
+   endif
+ Endif
+Else
+   Speak This vendor is of <tag.propietario2nombre>, only he can pay them.
+   Return 1
+Endif
+If (<tag.Pagostotal>==0)
+	Color 70
+Else
+	Color 40
+Endif
+
+ return 1
+
+ONBUTTON=4
+If (<src.Isgm>)||(<src.UID>==<tag.propietario3>)
+  if (<tag.pagos3>==0)
+     Speak This vendor dont need be paid.
+     Return 1
+  else
+   if ( <eval <tag.preciovend3>> == 0 )
+     return 1
+   elseif <src.restest <eval <tag.preciovend3>> i_gold>
+     src.consume <eval <tag.preciovend3>> i_gold
+     src.sysmessage Vendor has been paid, <src.name>.
+     tag.preciovend3 0
+     tag.pagos3=0
+	tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+   else
+     src.sysmessage You dont have money to pay the vendor.
+   endif
+Else
+   Speak This vendor is of <tag.propietario3nombre>, only he can pay them.
+   Return 1
+Endif
+If (<tag.Pagostotal>==0)
+	Color 70
+Else
+	Color 40
+Endif
+
+ return 1
+
+ONBUTTON=5
+ src.sysmessage (<tag.Propietario1>)
+If (<Src.UID>==<Tag.propietario1>)||If (<Src.UID>==<Tag.propietario2>)||If (<Src.UID>==<Tag.propietario3>)
+   if <src.restest 1000 i_gold>
+     src.consume 1000 i_gold
+     serv.allclients sysmessage PUBLICITY OF THE MARKET OF <src.region.name>
+     serv.allclients sysmessage
+     serv.allclients sysmessage <argtxt[15]>                                           .
+     serv.allclients sysmessage <argtxt[16]>                                           .
+   else
+     src.sysmessage You do not have money to pay the announcement.
+   endif
+ else
+   src.sysmessage This Shop isnt your.
+ endif
+ return 1
+ 
+ONBUTTON=6
+  if <src.isgm>
+    dialog mercado2
+  endif
+  return 1
+
+ONBUTTON=7
+Target
+Return 0
+
+ONBUTTON=8
+If (<src.Isgm>)
+	Speak The owner number 1 has been removed...
+	Tag.Propietario1=0
+	Tag.Propietario1Nombre="Vacant Position"
+	Return 0
+Else
+	Speak Only a Gm can remove the Owner number 1.
+	Return 1
+endif
+
+ONBUTTON=9
+If (<src.Isgm>)||(<src.UID>==<tag.propietario1>)
+	Speak The owner number 2 has been removed...
+	Tag.Propietario2=0
+	Tag.Propietario2Nombre="Vacant Position"
+	Return 0
+Else
+	Speak You cant do it....
+	Return 1
+endif
+
+ONBUTTON=10
+If (<src.Isgm>)||(<src.UID>==<tag.propietario1>)
+	Speak The owner number 3 has been removed...
+	Tag.Propietario3=0
+	Tag.Propietario3Nombre="Vacant Position"
+	Return 0
+Else
+	Speak You cant do it....
+	Return 1
+endif
+    
+[ITEMDEF i_pago_mercado]
+ID=i_book_open
+TYPE=t_eq_script
+NAME=Book of Payments
+
+on=@create
+color 40
+tag.preciotienda 10000  // Price of the Shop
+tag.preciovend1 0       // Start price of the owner1's vendor |
+tag.preciovend2 0       // Start price of the owner2's vendor  > Don't Change!!
+tag.preciovend3 0       // Start price of the owner3's vendor |
+tag.pagosAlquiler 1     // Start Debts. (1, The shop payment ;) )
+tag.pagos1 0		// Start Debts of owner1.|
+tag.pagos2 0		// Start Debts of owner2. > The Vendors.
+tag.pagos3 0		// Start Debts of owner3.|
+Tag.Propietario1 0     // The owner1 UID.
+Tag.Propietario2 0     // The owner2 UID.
+Tag.Propietario3 0     // The owner3 UID.
+Tag.Propietario1Nombre="Vacant Position"   // The Name of The owner1.
+Tag.Propietario2Nombre="Vacant Position"   // The Name of The owner2.
+Tag.Propietario3Nombre="Vacant Position"   // The Name of The owner3.
+tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>  // Sums of all Debts
+Timer=60*60*24*7      // The time of a new payment
+
+on=@click
+tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+
+on=@dclick
+tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+dialog mercado
+Return 1
+
+ON=@TARGON_ITEM
+SRC.Sysmessage This Isnt a Friend!!
+SRC.Sysmessage Canceling....
+Return 1
+
+ON=@TARGON_CHAR
+If (<Tag.Propietario1>==0)
+  if <src.isgm>
+	SRC.SYSMESSAGE The owner number 1 is <src.Targ.Name>
+	src.targ.sysmessage You are the owner number 1
+	TAG.Propietario1=<src.targ.UID>
+	TAG.Propietario1Nombre="<src.targ.Name>"
+	tag.pagos1=<tag.pagos1>+1
+	tag.preciovend1=<tag.preciovend1>+1000
+	tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+		If (<tag.Pagostotal>==0)
+			Color 70
+		Else
+			Color 40
+		Endif
+	RETURN 1
+  Else
+	Speak Only a Gm can add the owner1.
+	Return 1
+  Endif
+elseif (<Tag.Propietario2>==0)
+  If (<Src.Uid>==<tag.Propietario1>)||(<src.isgm>)
+	  If (<Src.targ.Uid>==<tag.Propietario1>)
+		Speak You are an other owner...
+		Return 1
+ 	  Endif
+	SRC.SYSMESSAGE The owner number 2 is <src.Targ.Name>
+	src.targ.sysmessage You are the owner number 2
+	TAG.Propietario2=<src.targ.UID>
+	TAG.Propietario2Nombre="<src.targ.Name>"
+	tag.pagos2=<tag.pagos2>+1
+	tag.preciovend2=<tag.preciovend2>+1000
+	tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+		If (<tag.Pagostotal>==0)
+			Color 70
+		Else
+			Color 40
+		Endif
+	RETURN 1
+  Else
+	Speak Only the owner1 (<tag.propietario1Nombre>) or a Gm can add an others owners 
+	Return 1
+  Endif
+
+elseif (<Tag.Propietario3>==0)
+  If (<Src.Uid>==<tag.Propietario1>)||(<src.isgm>)
+	  If (<Src.targ.Uid>==<tag.Propietario1>)||(<Src.targ.Uid>==<tag.Propietario2>)
+		Speak You are an other owner...
+		Return 1
+ 	  Endif
+	SRC.SYSMESSAGE The owner number 3 is <src.Targ.Name>
+	src.targ.sysmessage You are the owner number 3
+	TAG.Propietario3=<src.targ.UID>
+	TAG.Propietario3Nombre="<src.targ.Name>"
+	tag.pagos3=<tag.pagos3>+1
+	tag.preciovend3=<tag.preciovend3>+1000
+	tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+		If (<tag.Pagostotal>==0)
+			Color 70
+		Else
+			Color 40
+		Endif
+	RETURN 1
+   Else
+	Speak Only the owner1 (<tag.propietario1Nombre>)
+ or a Gm can add an others owners.
+	Return 1
+  Endif
+Else
+  Speak This shop cant have more owners
+  Return 1
+Endif
+
+On=@Timer
+Timer=60*60*24*7
+color 40
+tag.preciotienda=<tag.preciotienda>+10000
+tag.pagosAlquiler=<tag.pagosAlquiler>+1
+tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+
+If !(<Tag.propietario3>==0)
+	tag.preciovend3=<tag.preciovend3>+1000
+	tag.pagos3=<tag.pagos3>+1
+	tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+EndIf
+
+If !(<Tag.propietario2>==0)
+	tag.preciovend2=<tag.preciovend2>+1000
+	tag.pagos2=<tag.pagos2>+1
+	Tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+Endif
+
+If !(<Tag.propietario1>==0)
+	tag.preciovend1=<tag.preciovend1>+1000
+	tag.pagos1=<tag.pagos1>+1
+	tag.Pagostotal=<eval <eval <tag.pagosAlquiler>> + <eval <tag.pagos1>> + <eval <tag.pagos2>> + <eval <tag.pagos3>>>
+	EndIf
+Endif
+
+[DIALOG mercado2]
+0, 0
+resizepic 100 1 3500 500 400
+text 300 10 0 0 
+text 130 50 0 1 
+text 130 150 0 2 
+text 130 170 0 3 
+text 130 70 0 4 
+text 130 190 0 2 
+text 130 210 0 3 
+text 130 230 0 2 
+text 130 250 0 3 
+textentry 330 50 200 15 24 7 7 
+textentry 330 150 200 15 24 8 8
+textentry 330 190 200 15 24 9 9
+textentry 330 230 200 15 24 10 10
+textentry 230 90 200 15 0 11 11 //Amo1
+textentry 230 110 200 15 0 12 12 //Amo2
+textentry 230 130 200 15 0 13 13 //Amo3
+button 500 10 4012 4013 1 0 1
+text 130 270 0 14
+textentry 230 270 200 15 0 15 15
+
+
+[DIALOG mercado2 TEXT]
+Payment of the market //0
+For the Shop:
+For a Vendor:
+Owner:
+Owners:
+Pay           //5
+Post a announcement (1000 GP):
+<eval <tag.preciotienda>>
+<eval <tag.preciovend1>>
+<eval <tag.preciovend2>>
+<eval <tag.preciovend3>> //10
+<tag.Propietario1Nombre>
+<tag.Propietario2Nombre>
+<tag.Propietario3Nombre>
+Payments:
+<tag.pagosTotal>//15
+
+[DIALOG mercado2 BUTTON]
+ONBUTTON=1
+tag.preciotienda <eval <argtxt[7]>>
+tag.preciovend1 <eval <argtxt[8]>>
+tag.preciovend2 <eval <argtxt[9]>>
+tag.preciovend3 <eval <argtxt[10]>>
+tag.Propietario1 <argtxt[11]>
+tag.Propietario2 <argtxt[12]>
+tag.Propietario3 <argtxt[13]>
+tag.pagos <argtxt[15]>
+dialog mercado
+return 1
+
+[EOF]

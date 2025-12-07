@@ -1,0 +1,203 @@
+// --------------------------------- Vote Stone ---- >>
+///////////////////////////////////////
+// This script was made by SHS Shaku //
+// You may freely edit this script   //
+// but please give credit where it   //
+// is due.                           //
+///////////////////////////////////////
+/////////// How to Use ////////////////
+// First you need to go to somewhere //
+// that players will never go, then  //
+// do .add c_vote_mem and make sure  //
+// you single click it, then do      //
+// .static i_voting_stone and dbl    //
+// click it. When it gives you the   //
+// target,,, target the c_vote_mem   //
+// There it is all set now dbl click //
+// the stone again, set the topic    //
+// and the 2 answers and you are     //
+// good to go.  (now you can move    //
+// the stone to somewhere players    //
+// will be able to vote!)            //
+///////////////////////////////////////
+// NOTE: If you want to make another //
+// stone you must also make ANOTHER  //
+// memory char (c_vote_mem).         //
+///////////////////////////////////////
+[ITEMDEF i_voting_stone]
+ID=i_grave_stone_4
+NAME=Voting Stone
+TYPE=00
+ 
+ON=@CREATE
+MOREX={1 9999}
+ 
+ON=@CLICK
+MESSAGE=<Link.TAG.VTOPIC>
+MESSAGE=[<LINK.TAG.VA1>: <eval <MORE1>>]
+MESSAGE=[<LINK.TAG.VA2>: <eval <MORE2>>]
+RETURN 1
+ 
+ON=@TARGON_CHAR
+IF (<SRC.TARG.NPC>=0)
+SRC.SYSMESSAGE Using an active player char is not a good ideah..
+RETURN 1
+ELSE
+LINK=<SRC.TARG.UID>
+SRC.SYSMESSAGE Memory link active.
+RETURN 1
+ENDIF
+ 
+ON=@DCLICK
+IF (<SRC.ISGM>)&&(<LINK>=04fffffff)
+TARGET Target the NPC you wish to use as the memory NPC.
+SRC.SYSMESSAGE NOTE: If this NPC is killed it will mess up your vote stone.
+RETURN 1
+ELSEIF (<SRC.ISGM>)&&!(<LINK>=04fffffff)
+Dialog d_vCONTROL
+RETURN 1
+ELSEIF !(<SRC.ISGM>)&&(0<SRC.TAG.SVOTED>=<MOREX>)
+DIALOG d_svoted
+RETURN 1
+ELSEIF !(<SRC.ISGM>)&&!(0<SRC.TAG.SVOTED>=<MOREX>)
+DIALOG d_svote
+RETURN 1
+ENDIF
+ 
+
+[Dialog d_vCONTROL] 
+0,0 
+resizepic 0 0 2620 350 200 
+resizepic 100 80 2440 400 20 
+resizepic 100 100 2440 400 20 
+resizepic 100 120 2440 400 20
+textentry 105 100 253 25 0480 0 0
+textentry 105 120 253 25 0480 1 1
+textentry 105 80 253 25 0480 2 2
+text 32 80 0455 3
+text 15 100 0455 4
+text 10 120 0455 5
+text 25 30 0480 6
+button 58 160 4005 4006 1 0 1 
+button 200 160 4005 4006 1 0 2
+text 240 160 0455 7
+text 98 160 0455 8
+text 90 50 61 9
+button 185 55 2361 2362 1 0 3
+ 
+[Dialog d_vCONTROL TEXT] 
+<LINK.TAG.VA1>
+<LINK.TAG.VA2>
+<LINK.TAG.vTOPIC>
+Topic:
+Choice 1:
+Choice 2:
+Shaku's Vote System ::Staff Menu::
+Ok
+Cancel
+Wipe Votes
+ 
+
+[Dialog d_vCONTROL BUTTON]
+ON=0
+SRC.SYSMESSAGE Topic unchanged!
+RETURN 1
+ON=1
+SRC.SYSMESSAGE Topic unchanged!
+RETURN 1
+ON=2
+LINK.TAG.VHOST=<SRC.NAME>
+LINK.TAG.vTOPIC=<ARGTXT[2]>
+LINK.TAG.VA1=<ARGTXT[0]>
+LINK.TAG.VA2=<ARGTXT[1]>
+SRC.SYSMESSAGE Vote system information changed!
+RETURN 1
+ON=3
+SRC.SYSMESSAGE Votes Reset!
+MOREX={1 9999}
+MORE1=0
+MORE2=0
+RETURN 1
+ 
+
+[Dialog d_svote] 
+0,0 
+resizepic 0 0 2620 350 200 
+button 50 120 4005 4006 1 0 1 
+button 50 160 4005 4006 1 0 2
+text 70 20 0455 0
+text 20 60 0480 1
+text 20 80 0479 2
+text 90 120 0479 3
+text 90 160 0479 4
+ 
+[Dialog d_svote TEXT] 
+:: Shaku's Vote System ::
+Topic: <LINK.TAG.vTOPIC>
+Posted by: <LINK.TAG.VHOST>
+<LINK.TAG.VA1>
+<LINK.TAG.VA2>
+ 
+[DIALOG d_svote BUTTON]
+ON=0
+SRC.SYSMESSAGE Vote system cancelled!
+RETURN 1
+ON=1
+SRC.SYSMESSAGE You have casted your vote!
+SRC.TAG.SVOTED=<MOREX>
+MORE1=<eval <MORE1>> +1
+DIALOG d_svoted
+RETURN 1
+ 
+
+ON=2
+SRC.SYSMESSAGE You have casted your vote!
+SRC.TAG.SVOTED=<uid>
+MORE2=<eval <MORE2>> +1
+DIALOG d_svoted
+RETURN 1
+ 
+[Dialog d_svoted] 
+0,0 
+resizepic 0 0 2620 350 200 
+text 70 20 0455 0
+text 20 60 0480 1
+text 20 80 0479 2
+text 60 120 0479 3
+text 60 160 0479 4
+ 
+[Dialog d_svoted TEXT] 
+:: Shaku's Vote System ::
+Topic: <LINK.TAG.vTOPIC>
+Posted by: <LINK.TAG.VHOST>
+<LINK.TAG.VA1>   Votes: <EVAL <MORE1>>
+<LINK.TAG.VA2>   Votes: <EVAL <MORE2>>
+ 
+
+[CHARDEF c_vote_mem]
+ID=c_man
+NAME=votestone mem
+ 
+ON=@CREATE
+TITLE=important memory char
+FLAGS=00000000d
+EVENTS e_memchar
+NPC=brain_monster 
+STR=500
+ 
+[EVENTS e_memchar]
+ON=@CLICK
+IF (<SRC.ISGM>)
+MESSAGE [Do Not Remove]
+FLAGS=00000000d
+RETURN 1
+ELSE
+FLAGS=00000000d
+RETURN 1
+ENDIF
+ 
+ON=@GETHIT
+FLAGS=00000000d
+HITS=<STR>
+RETURN 1
+[EOF]

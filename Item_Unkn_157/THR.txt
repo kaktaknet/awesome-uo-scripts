@@ -1,0 +1,39 @@
+///////////////////////////////////////////ITEM JOHILLIAN + FULL HEAL RING at timer +
+
+[itemdef i_healring]
+
+id=i_ring_gold
+Name=Heal Ring
+
+ON=@equip
+    IF <MORE>==0
+    SRC.emote  has the heal ring on.
+    TIMER=20
+    MORE=1
+    link=<src.uid>
+    endif
+
+RETURN 0
+
+ON=@Timer   
+                 VAR.TEMP = <cont.STR>
+
+                 cont.HITPOINTS = <VAR.TEMP>
+
+                 cont.SOUND=snd_spell_heal
+           
+    timer=20
+
+return 1
+
+on=@unequip
+    src.emote takes off the heal ring
+    link=0
+    more=0
+    timer=-1
+           
+		
+
+
+
+

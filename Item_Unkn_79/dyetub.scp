@@ -1,0 +1,35 @@
+
+[ITEMDEF I_SPECIAL_DYE_TUB]
+//Dying Tub
+ID=0fab
+NAME=Special Dye Tub
+TYPE=T_DYE_VAT
+WEIGHT=10
+CATEGORY=Items by Professions
+SUBSECTION=Tailor
+DESCRIPTION=Special Dye Tub
+
+RESOURCES=5 i_log
+SKILLMAKE=CARPENTRY 50.0, t_carpentry
+RESOURCES2=10 i_board
+
+ON=@TARGON_ITEM
+if !(<src.restest 1 <src.targ.baseid>> >
+src.message things must be in your pack!
+sound 510
+return 1
+else
+SRC.FINDID.i_special_dye_tub
+src.targ.color=<color>
+src.targ.update
+RETURN 1
+ON=@TARGON_CHAR
+IF <SRC.TARG.ISMYPET>
+SRC.FINDID.i_special_dye_tub
+src.targ.color=<color>
+src.targ.update
+RETURN 1
+ELSE
+Message=You can't dye that.
+
+[eof]

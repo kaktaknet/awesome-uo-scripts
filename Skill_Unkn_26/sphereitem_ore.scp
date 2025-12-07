@@ -1,0 +1,1784 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            FRYAZINO DREAM II                                                   //
+//                                                GM JIM                                                          //
+//                                                 2003                                                           //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// 28.02.2003 Jim: Добавлен земляной элементаль для шахтеров
+// 16.06.2003 Jim: Добавлены брики для крафта домов
+
+[DEFNAME COLOR_ORE]
+color_o_iron		0 
+color_o_copper          00654
+color_o_silver          0042b
+color_o_steel           0042c
+color_o_shadow          00964
+color_o_agapite         008c1
+color_o_adamantine      00483
+color_o_verite          00826
+color_o_gold            00445
+color_o_valorite        0043a
+color_o_mytheril        007ea
+color_o_blackrock       00455
+color_o_bloodrock       00447
+color_o_icerock         00790
+color_o_radium          004ad
+color_o_inferno         00896
+color_o_aqua            00489
+color_o_terranium       005b7
+color_o_tantal          00431
+color_o_wolfram         0077b
+color_o_radonit         007a5
+color_o_crom            00916
+color_o_platina         00443
+color_o_meteor          009e1
+color_o_crystall        008e9
+
+color_o_stone           00962
+color_o_sandstone       00488
+color_o_marble          007ba
+color_o_plaster         007bd
+
+color_o_dwarf           00448
+color_o_dwarf_king      0055d
+color_o_paladin         00438
+color_o_paladin_king    00834
+color_o_elf             005dc
+color_o_night_elf       004a6
+color_o_barbarian       009a8
+color_o_falen_paladin   00871
+
+
+
+
+//********************************** Ores ***************************************************
+
+[ITEMDEF 019b7]
+DEFNAME=i_ore_iron
+NAME=Iron Ore
+TYPE=t_ore
+SKILLMAKE=MINING 20.0
+TDATA1=i_ingot_iron
+WEIGHT=2
+VALUE=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+On=@DClick
+	if <src.mining><20.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_copper]
+DEFNAME=i_ore_copper
+ID=019b7
+NAME=Copper Ore
+TYPE=t_ore
+SKILLMAKE=MINING 51.0
+TDATA1=i_ingot_copper
+WEIGHT=2
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_copper
+
+On=@DClick
+	if <src.mining><51.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_silver]
+DEFNAME=i_ore_silver
+ID=019b7
+NAME=Silver Ore
+TYPE=t_ore
+SKILLMAKE=MINING 55.0
+TDATA1=i_ingot_silver
+WEIGHT=2
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_silver
+
+On=@DClick
+	if <src.mining><55.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_steel]
+DEFNAME=i_ore_steel
+ID=019b7
+NAME=Steel Ore
+TYPE=t_ore
+SKILLMAKE=MINING 57.0
+TDATA1=i_ingot_steel
+WEIGHT=2
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_steel
+
+On=@DClick
+	if <src.mining><57.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_shadow]
+DEFNAME=i_ore_shadow
+ID=019b7
+NAME=Shadow Ore
+TYPE=t_ore
+SKILLMAKE=MINING 59.0
+TDATA1=i_ingot_shadow
+WEIGHT=2
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_shadow
+
+On=@DClick
+	if <src.mining><59.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_agapite]
+DEFNAME=i_ore_agapite
+ID=019b7
+NAME=Agapite Ore
+TYPE=t_ore
+SKILLMAKE=MINING 61.0
+TDATA1=i_ingot_Agapite
+WEIGHT=2
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_agapite
+
+On=@DClick
+	if <src.mining><61.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_adamantine]
+DEFNAME=i_ore_adamantine
+ID=019b7
+NAME=Adamantine Ore
+TYPE=t_ore
+SKILLMAKE=MINING 63.0
+TDATA1=i_ingot_adamantine
+WEIGHT=2
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_adamantine
+
+On=@DClick
+	if <src.mining><63.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_verite]
+DEFNAME=i_ore_verite
+ID=019b7
+NAME=Verite Ore
+TYPE=t_ore
+SKILLMAKE=MINING 65.0
+TDATA1=i_ingot_verite
+WEIGHT=2
+VALUE={2 5} //=3
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_verite
+
+On=@DClick
+	if <src.mining><65.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_gold]
+DEFNAME=i_ore_gold
+ID=019b7
+NAME=Gold Ore
+TYPE=t_ore
+SKILLMAKE=MINING 67.0
+TDATA1=i_ingot_gold
+WEIGHT=2
+VALUE={2 5} //=3
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_gold
+
+On=@DClick
+	if <src.mining><67.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_valorite]
+DEFNAME=i_ore_valorite
+ID=019b7
+NAME=Valorite Ore
+TYPE=t_ore
+SKILLMAKE=MINING 69.0
+TDATA1=i_ingot_valorite
+WEIGHT=2
+VALUE={2 5} //=2
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_valorite
+
+On=@DClick
+	if <src.mining><69.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_mytheril]
+DEFNAME=i_ore_mytheril
+ID=019b7
+NAME=Mytheril Ore
+TYPE=t_ore
+SKILLMAKE=MINING 71.0
+TDATA1=i_ingot_mytheril
+WEIGHT=2
+VALUE={2 5} //=2
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_mytheril
+
+On=@DClick
+	if <src.mining><71.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_blackrock]
+DEFNAME=i_ore_blackrock
+ID=019b7
+NAME=Blackrock Ore
+TYPE=t_ore
+SKILLMAKE=MINING 73.0
+TDATA1=i_ingot_blackrock
+WEIGHT=2
+VALUE={2 5} //=2
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_blackrock
+
+On=@DClick
+	if <src.mining><73.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_bloodrock]
+DEFNAME=i_ore_bloodrock
+ID=019b7
+NAME=Blood Rock Ore
+TYPE=t_ore
+SKILLMAKE=MINING 75.0
+TDATA1=i_ingot_bloodrock
+WEIGHT=2
+VALUE={2 5} //=2
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_bloodrock
+
+On=@DClick
+	if <src.mining><75.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_icerock]
+DEFNAME=i_ore_icerock
+ID=019b7
+NAME=Ice Rock Ore
+TYPE=t_ore
+SKILLMAKE=MINING 77.0
+TDATA1=i_ingot_icerock
+WEIGHT=2
+VALUE={2 5} //=2
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_icerock
+
+On=@DClick
+	if <src.mining><77.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_radium]
+DEFNAME=i_ore_radium
+ID=019b7
+NAME=Radium Ore
+TYPE=t_ore
+SKILLMAKE=MINING 79.0
+TDATA1=i_ingot_radium
+WEIGHT=2
+VALUE={2 5} //=2
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_radium
+
+On=@DClick
+	if <src.mining><79.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_inferno]
+DEFNAME=i_ore_inferno
+ID=019b7
+NAME=Inferno Ore
+TYPE=t_ore
+SKILLMAKE=MINING 81.0
+TDATA1=i_ingot_inferno
+WEIGHT=2
+VALUE={2 5} //=2
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_inferno
+
+On=@DClick
+	if <src.mining><81.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_aqua]
+DEFNAME=i_ore_aqua
+ID=019b7
+NAME=Aqua Ore
+TYPE=t_ore
+SKILLMAKE=MINING 84.0
+TDATA1=i_ingot_aqua
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_aqua
+
+On=@DClick
+	if <src.mining><84.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_terranium]
+DEFNAME=i_ore_terranium
+ID=019b7
+NAME=Terranium Ore
+TYPE=t_ore
+SKILLMAKE=MINING 87.0
+TDATA1=i_ingot_terranium
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_terranium
+
+On=@DClick
+	if <src.mining><87.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_tantal]
+DEFNAME=i_ore_tantal
+ID=019b7
+NAME=Tantal Ore
+TYPE=t_ore
+SKILLMAKE=MINING 90.0
+TDATA1=i_ingot_tantal
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_tantal
+
+On=@DClick
+	if <src.mining><90.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_wolfram]
+DEFNAME=i_ore_wolfram
+ID=019b7
+NAME=Wolfram Ore
+TYPE=t_ore
+SKILLMAKE=MINING 93.0
+TDATA1=i_ingot_wolfram
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_wolfram
+
+On=@DClick
+	if <src.mining><93.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_radonit]
+DEFNAME=i_ore_radonit
+ID=019b7
+NAME=Radonit Ore
+TYPE=t_ore
+SKILLMAKE=MINING 96.0
+TDATA1=i_ingot_radonit
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_radonit
+
+On=@DClick
+	if <src.mining><96.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_crom]
+DEFNAME=i_ore_crom
+ID=019b7
+NAME=Crom Ore
+TYPE=t_ore
+SKILLMAKE=MINING 99.0
+TDATA1=i_ingot_crom
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_crom
+
+On=@DClick
+	if <src.mining><99.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_platina]
+DEFNAME=i_ore_platina
+ID=019b7
+NAME=Platina Ore
+TYPE=t_ore
+SKILLMAKE=MINING 102.0
+TDATA1=i_ingot_platina
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_platina
+
+On=@DClick
+	if <src.mining><102.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_meteor]
+DEFNAME=i_ore_meteor
+ID=019b7
+NAME=Meteor Ore
+TYPE=t_ore
+SKILLMAKE=MINING 105.0
+TDATA1=i_ingot_meteor
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_meteor
+
+On=@DClick
+	if <src.mining><105.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_crystall]
+DEFNAME=i_ore_crystall
+ID=019b7
+NAME=Crystall Ore
+TYPE=t_ore
+SKILLMAKE=MINING 110.0
+TDATA1=i_ingot_crystall
+WEIGHT=2
+VALUE={2 5} //=1
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_crystall
+
+On=@DClick
+	if <src.mining><110.0
+		src.message You try to smelt <name> but your skill in mining is too low.
+		return 1
+	endif
+
+///////////////////////////////////////////////ORE BRICKS////////////////////////////////////
+
+
+[ITEMDEF i_ore_stone]
+DEFNAME=i_ore_stone
+ID=019b7
+NAME=Stone
+TYPE=t_ore
+SKILLMAKE=MINING 65.0
+TDATA1=i_brick_stone
+WEIGHT=0.1
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_stone
+
+On=@DClick
+	if <src.mining><65.0
+		src.message You try to make <name> but your skill in mining is too low.
+		return 1
+	endif
+
+
+[ITEMDEF i_ore_sandstone]
+DEFNAME=i_ore_sandstone
+ID=019b7
+NAME=Sandstone
+TYPE=t_ore
+SKILLMAKE=MINING 65.0
+TDATA1=i_brick_sandstone
+WEIGHT=0.1
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_sandstone
+
+On=@DClick
+	if <src.mining><65.0
+		src.message You try to make <name> but your skill in mining is too low.
+		return 1
+	endif
+
+[ITEMDEF i_ore_marble]
+DEFNAME=i_ore_marble
+ID=019b7
+NAME=Marble
+TYPE=t_ore
+SKILLMAKE=MINING 65.0
+TDATA1=i_brick_marble
+WEIGHT=0.1
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_marble
+
+On=@DClick
+	if <src.mining><65.0
+		src.message You try to make <name> but your skill in mining is too low.
+		return 1
+	endif
+ 
+[ITEMDEF i_ore_plaster]
+DEFNAME=i_ore_plaster
+ID=019b7
+NAME=Plaster
+TYPE=t_ore
+SKILLMAKE=MINING 65.0
+TDATA1=i_brick_plaster
+WEIGHT=0.1
+VALUE={2 5} //=4
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+on=@create
+color=color_o_plaster
+
+On=@DClick
+	if <src.mining><65.0
+		src.message You try to make <name> but your skill in mining is too low.
+		return 1
+	endif
+
+/////////////////////////////////////END OF BRICKS//////////////////////////////////////
+
+[ITEMDEF i_iron_spawn] 
+DEFNAME=i_iron_spawn
+ID=i_hole
+WEIGHT=16000
+TYPE=T_SPAWN_CHAR
+
+ON=@Create
+MOREP=0,0,3
+MORE2=0
+ATTR=attr_move_never|attr_invis
+MORE1=c_elem_earth
+TIMER=0
+
+ON=@TIMER
+IF !(<ATTR>&attr_identified)
+ATTR=<ATTR>|attr_identified
+RETURN 0
+ELSEIF <MORE2>==0
+REMOVE
+RETURN 1
+ELSE
+RETURN 0
+ENDIF 
+
+
+//**************************************INGOTS*************************************************
+
+[ITEMDEF 01bef]
+DEFNAME=i_ingot_iron
+TYPE=T_INGOT
+RESOURCES=i_ore_iron
+SKILLMAKE=20.0 MINING
+VALUE=1
+TDATA1=20.0
+TDATA2=20.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_iron
+
+[ITEMDEF 01be3]
+DEFNAME=i_ingot_copper
+NAME=Copper ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_copper
+SKILLMAKE=51.0 MINING
+TDATA1=51.0
+TDATA2=51.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_copper
+
+[ITEMDEF 01bf5]
+DEFNAME=i_ingot_silver
+NAME=Silver ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_silver
+SKILLMAKE=55.0 MINING
+TDATA1=55.0
+TDATA2=55.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_silver
+
+[ITEMDEF i_ingot_Steel]
+DEFNAME=i_ingot_Steel
+ID=01bef
+NAME=Steel ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Steel
+SKILLMAKE=57.0 MINING
+TDATA1=57.0
+TDATA2=57.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Steel
+
+[ITEMDEF i_ingot_Shadow]
+DEFNAME=i_ingot_Shadow
+ID=01bef
+NAME=Shadow ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Shadow
+SKILLMAKE=59.0 MINING
+TDATA1=59.0
+TDATA2=59.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Shadow
+
+[ITEMDEF i_ingot_Agapite]
+DEFNAME=i_ingot_Agapite
+ID=01bef
+NAME=Agapite ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Agapite
+SKILLMAKE=61.0 MINING
+TDATA1=61.0
+TDATA2=61.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Agapite
+
+[ITEMDEF i_ingot_Adamantine]
+DEFNAME=i_ingot_Adamantine
+ID=01bef
+NAME=Adamantine ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Adamantine
+SKILLMAKE=63.0 MINING
+TDATA1=63.0
+TDATA2=63.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Adamantine
+
+[ITEMDEF i_ingot_Verite]
+DEFNAME=i_ingot_Verite
+ID=01bef
+NAME=Verite ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Verite
+SKILLMAKE=65.0 MINING
+TDATA1=65.0
+TDATA2=65.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Verite
+
+[ITEMDEF 01be9]
+DEFNAME=i_ingot_Gold
+NAME=Gold ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Gold
+SKILLMAKE=67.0 MINING
+TDATA1=67.0
+TDATA2=67.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Gold
+
+[ITEMDEF i_ingot_Valorite]
+DEFNAME=i_ingot_Valorite
+ID=01bef
+NAME=Valorite ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Valorite
+SKILLMAKE=69.0 MINING
+TDATA1=69.0
+TDATA2=69.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Valorite
+
+[ITEMDEF i_ingot_Mytheril]
+DEFNAME=i_ingot_Mytheril
+ID=01bef
+NAME=Mytheril ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Mytheril
+SKILLMAKE=71.0 MINING
+TDATA1=71.0
+TDATA2=71.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Mytheril
+
+[ITEMDEF i_ingot_BlackRock]
+DEFNAME=i_ingot_BlackRock
+ID=01bef
+NAME=Black Rock ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_BlackRock
+SKILLMAKE=73.0 MINING
+TDATA1=73.0
+TDATA2=73.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_BlackRock
+
+[ITEMDEF i_ingot_BloodRock]
+DEFNAME=i_ingot_BloodRock
+ID=01bef
+NAME=Blood Rock ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_BloodRock
+SKILLMAKE=75.0 MINING
+TDATA1=75.0
+TDATA2=75.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_BloodRock
+
+[ITEMDEF i_ingot_IceRock]
+DEFNAME=i_ingot_IceRock
+ID=01bef
+NAME=Ice Rock ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_IceRock
+SKILLMAKE=77.0 MINING
+TDATA1=77.0
+TDATA2=77.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_IceRock
+
+[ITEMDEF i_ingot_Radium]
+DEFNAME=i_ingot_Radium
+ID=01bef
+NAME=Radium ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Radium
+SKILLMAKE=79.0 MINING
+TDATA1=79.0
+TDATA2=79.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Radium
+
+[ITEMDEF i_ingot_Inferno]
+DEFNAME=i_ingot_Inferno
+ID=01bef
+NAME=Inferno ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Inferno
+SKILLMAKE=81.0 MINING
+TDATA1=81.0
+TDATA2=81.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Inferno
+
+[ITEMDEF i_ingot_Aqua]
+DEFNAME=i_ingot_Aqua
+ID=01bef
+NAME=Aqua ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Aqua
+SKILLMAKE=84.0 MINING
+TDATA1=84.0
+TDATA2=84.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Aqua
+
+[ITEMDEF i_ingot_Terranium]
+DEFNAME=i_ingot_Terranium
+ID=01bef
+NAME=Terranium ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Terranium
+SKILLMAKE=87.0 MINING
+TDATA1=87.0
+TDATA2=87.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Terranium
+
+[ITEMDEF i_ingot_Tantal]
+DEFNAME=i_ingot_Tantal
+ID=01bef
+NAME=Tantal ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Tantal
+SKILLMAKE=90.0 MINING
+TDATA1=90.0
+TDATA2=90.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Tantal
+
+[ITEMDEF i_ingot_Wolfram]
+DEFNAME=i_ingot_Wolfram
+ID=01bef
+NAME=Wolfram ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Wolfram
+SKILLMAKE=93.0 MINING
+TDATA1=93.0
+TDATA2=93.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Wolfram
+
+[ITEMDEF i_ingot_Radonit]
+DEFNAME=i_ingot_Radonit
+ID=01bef
+NAME=Radonit ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Radonit
+SKILLMAKE=96.0 MINING
+TDATA1=96.0
+TDATA2=96.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Radonit
+
+[ITEMDEF i_ingot_Crom]
+DEFNAME=i_ingot_Crom
+ID=01bef
+NAME=Crom ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Crom
+SKILLMAKE=99.0 MINING
+TDATA1=99.0
+TDATA2=99.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Crom
+
+[ITEMDEF i_ingot_Platina]
+DEFNAME=i_ingot_Platina
+ID=01bef
+NAME=Platina ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Platina
+SKILLMAKE=102.0 MINING
+TDATA1=102.0
+TDATA2=102.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Platina
+
+[ITEMDEF i_ingot_Meteor]
+DEFNAME=i_ingot_Meteor
+ID=01bef
+NAME=Meteor ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Meteor
+SKILLMAKE=105.0 MINING
+TDATA1=105.0
+TDATA2=105.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Meteor
+
+[ITEMDEF i_ingot_Crystall]
+DEFNAME=i_ingot_Crystall
+ID=01bef
+NAME=Crystall ingot
+TYPE=T_INGOT
+RESOURCES=i_ore_Crystall
+SKILLMAKE=110.0 MINING
+TDATA1=110.0
+TDATA2=110.0
+WEIGHT=2
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+	if (<src.findlayer(layer_hand1).id> == 013e3) || (<src.findlayer(layer_hand1).id> == 0fb4)
+		return 0
+	else
+		src.sysmessage You must weild a smith hammer of some sort.
+		return 1
+	endif
+
+on=@create
+color=color_o_Crystall 
+
+////////////////////////////////////////////////BRICKS//////////////////////////
+
+[ITEMDEF i_brick_stone]
+DEFNAME=i_brick_stone
+ID=01be4
+NAME=Stone Brick
+TYPE=T_INGOT
+RESOURCES=i_ore_stone
+SKILLMAKE=65.0 MINING
+TDATA1=65.0
+TDATA2=65.0
+WEIGHT=0.1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+src.sysmessage You can`n use this
+return 1
+
+on=@create
+color=color_o_stone
+
+[ITEMDEF i_brick_sandstone]
+DEFNAME=i_brick_sandstone
+ID=01be4
+NAME=Sandstone Brick
+TYPE=T_INGOT
+RESOURCES=i_ore_sandstone
+SKILLMAKE=65.0 MINING
+TDATA1=65.0
+TDATA2=65.0
+WEIGHT=0.1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+src.sysmessage You can`n use this
+return 1
+
+on=@create
+color=color_o_sandstone
+
+[ITEMDEF i_brick_marble]
+DEFNAME=i_brick_marble
+ID=01be4
+NAME=Marble Brick
+TYPE=T_INGOT
+RESOURCES=i_ore_marble
+SKILLMAKE=65.0 MINING
+TDATA1=65.0
+TDATA2=65.0
+WEIGHT=0.1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+src.sysmessage You can`n use this
+return 1
+
+on=@create
+color=color_o_marble
+
+[ITEMDEF i_brick_plaster]
+DEFNAME=i_brick_plaster
+ID=01be4
+NAME=Plaster Brick
+TYPE=T_INGOT
+RESOURCES=i_ore_plaster
+SKILLMAKE=65.0 MINING
+TDATA1=65.0
+TDATA2=65.0
+WEIGHT=0.1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+On=@DClick
+src.sysmessage You can`n use this
+return 1
+
+on=@create
+color=color_o_plaster
+
+//********************************************** Resources ************************************
+
+[REGIONRESOURCE mr_iron]
+SKILL_LO=1.0
+SKILL_HI=30.0
+AMOUNT_LO=9
+AMOUNT_HI=30
+REAP=i_ore_iron
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_copper]
+SKILL_LO=50.0
+SKILL_HI=31.0
+AMOUNT_LO=9
+AMOUNT_HI=20
+REAP=i_ore_copper
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_silver]
+SKILL_LO=55.0
+SKILL_HI=55.0
+AMOUNT_LO=9
+AMOUNT_HI=15
+REAP=i_ore_silver
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_steel]
+SKILL_LO=57.0
+SKILL_HI=57.0
+AMOUNT_LO=3
+AMOUNT_HI=15
+REAP=i_ore_steel
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_shadow]
+SKILL_LO=59.0
+SKILL_HI=59.0
+AMOUNT_LO=3
+AMOUNT_HI=15
+REAP=i_ore_shadow
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_agapite]
+SKILL_LO=61.0
+SKILL_HI=61.0
+AMOUNT_LO=2
+AMOUNT_HI=14
+REAP=i_ore_agapite
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_adamantine]
+SKILL_LO=63.0
+SKILL_HI=63.0
+AMOUNT_LO=2
+AMOUNT_HI=14
+REAP=i_ore_adamantine
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_verite]
+SKILL_LO=65.0
+SKILL_HI=65.0
+AMOUNT_LO=2
+AMOUNT_HI=12
+REAP=i_ore_verite
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_gold]
+SKILL_LO=67.0
+SKILL_HI=67.0
+AMOUNT_LO=1
+AMOUNT_HI=12
+REAP=i_ore_gold
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_valorite]
+SKILL_LO=69.0
+SKILL_HI=69.0
+AMOUNT_LO=1
+AMOUNT_HI=10
+REAP=i_ore_valorite
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_mytheril]
+SKILL_LO=71.0
+SKILL_HI=71.0
+AMOUNT_LO=1
+AMOUNT_HI=9
+REAP=i_ore_mytheril
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_blackrock]
+SKILL_LO=73.0
+SKILL_HI=73.0
+AMOUNT_LO=1
+AMOUNT_HI=8
+REAP=i_ore_blackrock
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_bloodrock]
+SKILL_LO=75.0
+SKILL_HI=75.0
+AMOUNT_LO=1
+AMOUNT_HI=7
+REAP=i_ore_bloodrock
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_icerock]
+SKILL_LO=77.0
+SKILL_HI=77.0
+AMOUNT_LO=1
+AMOUNT_HI=6
+REAP=i_ore_icerock
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_radium]
+SKILL_LO=79.0
+SKILL_HI=79.0
+AMOUNT_LO=1
+AMOUNT_HI=6
+REAP=i_ore_radium
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_inferno]
+SKILL_LO=81.0
+SKILL_HI=81.0
+AMOUNT_LO=1
+AMOUNT_HI=5
+REAP=i_ore_inferno
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_aqua]
+SKILL_LO=84.0
+SKILL_HI=84.0
+AMOUNT_LO=1
+AMOUNT_HI=5
+REAP=i_ore_aqua
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_terranium]
+SKILL_LO=87.0
+SKILL_HI=87.0
+AMOUNT_LO=1
+AMOUNT_HI=4
+REAP=i_ore_terranium
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_tantal]
+SKILL_LO=90.0
+SKILL_HI=90.0
+AMOUNT_LO=1
+AMOUNT_HI=3
+REAP=i_ore_tantal
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_wolfram]
+SKILL_LO=93.0
+SKILL_HI=93.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_wolfram
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_radonit]
+SKILL_LO=96.0
+SKILL_HI=96.0
+AMOUNT_LO=1
+AMOUNT_HI=2 
+REAP=i_ore_radonit
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_crom]
+SKILL_LO=99.0
+SKILL_HI=99.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_crom
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_platina]
+SKILL_LO=102.0
+SKILL_HI=102.0
+AMOUNT_LO=1
+AMOUNT_HI=1
+REAP=i_ore_platina
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_meteor]
+SKILL_LO=105.0
+SKILL_HI=105.0
+AMOUNT_LO=1
+AMOUNT_HI=1
+REAP=i_ore_meteor
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_crystall]
+SKILL_LO=110.0
+SKILL_HI=110.0
+AMOUNT_LO=1
+AMOUNT_HI=1
+REAP=i_ore_crystall
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_element_iron] 
+SKILL_LO=0.0
+SKILL_HI=60.0
+AMOUNT_LO=1
+AMOUNT_HI=1
+REAP=i_iron_spawn
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_stone]
+SKILL_LO=65.0
+SKILL_HI=65.0
+AMOUNT_LO=5
+AMOUNT_HI=10
+REAP=i_ore_stone
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_sandstone]
+SKILL_LO=65.0
+SKILL_HI=65.0
+AMOUNT_LO=10
+AMOUNT_HI=20
+REAP=i_ore_sandstone
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_marble]
+SKILL_LO=65.0
+SKILL_HI=65.0
+AMOUNT_LO=5
+AMOUNT_HI=10
+REAP=i_ore_marble
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_plaser]
+SKILL_LO=65.0
+SKILL_HI=65.0
+AMOUNT_LO=5
+AMOUNT_HI=10
+REAP=i_ore_plaster
+REGEN=60*60*10
+
+[EOF]

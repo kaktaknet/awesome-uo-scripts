@@ -1,0 +1,209 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//Info:
+//This system will allow your players to choose between being a PvP or Non-PvP player.
+//Players who have chosen to be a Non-PvP player will be immune to all attacks from both PvP players
+//and Non-PvP players, they will not be able to loot each other, cast harmful spells onto each other,
+//attack in any way, and Non-PvP players will even be immune to pets!
+
+//Installation:
+//Add this following part to the bottom of the section [SKILLCLASS 0] in spheretables.scp
+//Make sure you remove this next section from this script after installation.
+
+ON=@LOGIN
+IF !(<SRC.ISEVENT.e_choice>)
+	SRC.EVENTS +e_choice
+ENDIF
+
+//The remainder of this script can stay within this file.
+//Now you have to find a way to make everyone use this following stone.
+//This stone will give your players the choice to be a Non-PvP or PvP player status.
+//You may also place this stone somewhere else in the world where they can access it at any time,
+//because this will give them the option to choose their status every 2 hours online time!
+
+[ITEMDEF i_stone_choice]
+DEFNAME=i_stone_choice
+NAME=Pvp/Non-Pvp Status Stone
+ID=i_grave_stone
+TYPE=t_normal
+
+ON=@CREATE
+ATTR=attr_move_never
+COLOR=02
+
+ON=@DCLICK
+IF (0<SRC.FINDID.i_memory_choice.UID>)
+	VAR.X=<SRC.FINDID.i_memory_choice.TIMER> /60
+	IF !(0<VAR.X>)
+		VAR.X=1
+	ENDIF
+	SRC.MESSAGE=You must wait <EVAL <VAR.X>> minutes before you can choose your status again.
+ELSE
+	SRC.DIALOG=d_choice
+ENDIF
+RETURN 1
+
+[ITEMDEF i_memory_choice]
+DEFNAME=i_memory_choice
+NAME=Choice Timer Memory
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+TIMER=60*60*2 //2 hours waiting time before they can choose whether they want to be pvp or non-pvp, this is online time :)
+
+ON=@TIMER
+IF (<EVAL <TOPOBJ.TAG.CHOICE>>==1)
+	TOPOBJ.SYSMESSAGE=You may now choose to be a Non-PvP player.
+ELSE
+	TOPOBJ.SYSMESSAGE=You may now choose to be a PvP player.
+ENDIF
+REMOVE
+RETURN 1
+
+[DIALOG d_choice]
+0,0
+page 0
+resizepic 75 100 83 500 275
+text 100 120 1152 0
+text 150 140 1103 1
+button 100 185 2117 2118 1 0 1
+text 125 180 1152 2
+text 150 200 1103 3
+text 150 220 1103 4
+button 100 265 2117 2118 1 0 2
+text 125 260 1152 5
+text 150 280 1103 6
+text 150 300 1103 7
+text 150 320 1103 8
+
+[DIALOG d_choice TEXT]
+PvP or Non-PvP
+The choice is yours!
+Non-PvP Player
+As a Non-PvP player you will be granted the
+priveledge to play Ultima Online safe from harm.
+PvP Player
+As a PvP player you will always need to be well
+equipped to fight off others. This option should
+only be for those who are well experienced in battle.
+
+[DIALOG d_choice BUTTON]
+ON=0
+SRC.MESSAGE=Changed your mind eh?  Come back anytime.
+ON=1
+IF (<EVAL <SRC.TAG.CHOICE>>==1)
+	SRC.MESSAGE=You were already a Non-PvP player.
+ELSE
+	SRC.TAG.CHOICE=1
+	SRC.NEWITEM=i_memory_choice
+	SRC.EQUIP=<SRC.ACT>
+	SRC.MESSAGE=Wise choice, you shall be free from harm!
+ENDIF
+ON=2
+IF (<EVAL <SRC.TAG.CHOICE>>==2)
+	SRC.MESSAGE=You were already a PvP player.
+ELSE
+	SRC.TAG.CHOICE=2
+	SRC.NEWITEM=i_memory_choice
+	SRC.EQUIP=<SRC.ACT>
+	SRC.MESSAGE=Prepare for war, you have chosen the dark side.
+ENDIF
+
+[EVENTS e_choice]
+ON=@GETHIT
+IF !(<SRC.NPC>)
+	IF (<EVAL <SRC.TAG.CHOICE>>==1) && (<EVAL <TAG.CHOICE>>==1)
+		RETURN 0
+	ELSEIF (<EVAL <SRC.TAG.CHOICE>>==1) && (<EVAL <TAG.CHOICE>>==2)
+		SRC.SYSMESSAGE=<NAME> appears to be a Non-PvP player.  <SEX He/She> is immune to the attack.
+		EFFECT=3,i_fx_glow,30,30,1
+		RETURN 1
+	ELSEIF (<EVAL <SRC.TAG.CHOICE>>==2) && (<EVAL <TAG.CHOICE>>==1)
+		SYSMESSAGE=<SRC.NAME> appears to be a Non-PvP player.  Your are immune to the attack.
+		SRC.EFFECT=3,i_fx_glow,30,30,1
+		RETURN 1
+	ENDIF
+ELSE
+	IF (<SRC.MEMORYFINDTYPE.(00002).LINK.TAG.CHOICE>>==1) && (<EVAL <TAG.CHOICE>>==1)
+		RETURN 0
+	ELSEIF (<SRC.MEMORYFINDTYPE.(00002).LINK.TAG.CHOICE>>==2) && (<EVAL <TAG.CHOICE>>==1)
+		SRC.MEMORYFINDTYPE.(00002).LINK.SYSMESSAGE=<NAME> appears to be a Non-PvP player.  <SEX He/She> is immune to the attack.
+		EFFECT=3,i_fx_glow,30,30,1
+		RETURN 1
+	ELSEIF (<SRC.MEMORYFINDTYPE.(00002).LINK.TAG.CHOICE>>==1) && (<EVAL <TAG.CHOICE>>==2)
+		SYSMESSAGE=<SRC.FINDMEMORYTYPE.(00002).LINK.NAME> appears to be a Non-PvP player.  You are immune to the attack.
+		SRC.EFFECT=3,i_fx_glow,30,30,1
+		RETURN 1
+	ENDIF
+ENDIF
+
+ON=@SPELLEFFECT
+IF (<ARGN>==49) || (<ARGN>==1) || (<ARGN>==27) || (<ARGN>==57) || (<ARGN>==42) || (<ARGN>==43) || (<ARGN>==3) || (<ARGN>==69) || (<ARGN>==28) || (<ARGN>==18) || (<ARGN>==51) || (<ARGN>==12) || (<ARGN>==30) || (<ARGN>==5) || (<ARGN>==31) || (<ARGN>==53) || (<ARGN>==46) || (<ARGN>==55) || (<ARGN>==37) || (<ARGN>==38) || (<ARGN>==47) || (<ARGN>==20) || (<ARGN>==39)
+	IF !(<SRC.UID>==<UID>)
+		IF !(<SRC.NPC>)
+			IF (<EVAL <SRC.TAG.CHOICE>>==1) && (<EVAL <TAG.CHOICE>>==1)
+				RETURN 0
+			ELSEIF (<EVAL <SRC.TAG.CHOICE>>==1) && (<EVAL <TAG.CHOICE>>==2)
+				SRC.SYSMESSAGE=<NAME> appears to be a Non-PvP player.  <SEX He/She> is immune to the attack.
+				EFFECT=3,i_fx_glow,30,30,1
+				RETURN 1
+			ELSEIF (<EVAL <SRC.TAG.CHOICE>>==2) && (<EVAL <TAG.CHOICE>>==1)
+				SYSMESSAGE=<SRC.NAME> appears to be a Non-PvP player.  Your are immune to the attack.
+				SRC.EFFECT=3,i_fx_glow,30,30,1
+				RETURN 1
+			ENDIF
+		ELSE
+			IF (<SRC.MEMORYFINDTYPE.(00002).LINK.TAG.CHOICE>>==1) && (<EVAL <TAG.CHOICE>>==1)
+				RETURN 0
+			ELSEIF (<SRC.MEMORYFINDTYPE.(00002).LINK.TAG.CHOICE>>==2) && (<EVAL <TAG.CHOICE>>==1)
+				SRC.MEMORYFINDTYPE.(00002).LINK.SYSMESSAGE=<NAME> appears to be a Non-PvP player.  <SEX He/She> is immune to the attack.
+				EFFECT=3,i_fx_glow,30,30,1
+				RETURN 1
+			ELSEIF (<SRC.MEMORYFINDTYPE.(00002).LINK.TAG.CHOICE>>==1) && (<EVAL <TAG.CHOICE>>==2)
+				SYSMESSAGE=<SRC.FINDMEMORYTYPE.(00002).LINK.NAME> appears to be a Non-PvP player.  You are immune to the attack.
+				SRC.EFFECT=3,i_fx_glow,30,30,1
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@ITEMTARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_corpse)
+	IF (<SRC.ACT.TYPE>==t_weapon_mace_smith) || (<SRC.ACT.TYPE>==t_weapon_mace_crook) || (<SRC.ACT.TYPE>==t_weapon_mace_sharp) || (<SRC.ACT.TYPE>==t_weapon_mace_pick) || (<SRC.ACT.TYPE>==t_weapon_sword) || (<SRC.ACT.TYPE>==t_weapon_fence) || (<SRC.ACT.TYPE>==t_weapon_bow) || (<SRC.ACT.TYPE>==t_weapon_xbow) || (<SRC.ACT.TYPE>==t_weapon_axe)
+		IF !(<SRC.TARG.LINK>==04fffffff)
+			IF (<EVAL <SRC.TARG.LINK.TAG.CHOICE>>==1) && (<EVAL <SRC.TAG.CHOICE>>==1)
+				RETURN 0
+			ELSEIF (<EVAL <SRC.TARG.LINK.TAG.CHOICE>>==2) && (<EVAL <SRC.TAG.CHOICE>>==1)
+				SRC.SYSMESSAGE=<SRC.TARG.LINK.NAME> appears to be a Non-PvP player.  You are unable to carve <SRC.TARG.LINK.SEX his/her> corpse.
+				RETURN 1
+			ELSEIF (<EVAL <SRC.TARG.LINK.TAG.CHOICE>>==1) && (<EVAL <SRC.TAG.CHOICE>>==2)
+				SRC.SYSMESSAGE=You appear to be a Non-PvP player.  You are unable to carve the corpse of <SRC.TARG.LINK.NAME>.
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@ITEMPICKUP_PACK
+IF (<SRC.ACT.TOPOBJ.TYPE>==t_corpse)
+	IF !(<SRC.ACT.TOPOBJ.LINK>==04fffffff)
+		IF (<EVAL <SRC.ACT.TOPOBJ.LINK.TAG.CHOICE>>==1) && (<EVAL <SRC.TAG.CHOICE>>==1)
+			RETURN 0
+		ELSEIF (<EVAL <SRC.ACT.TOPOBJ.LINK.TAG.CHOICE>>==2) && (<EVAL <SRC.TAG.CHOICE>>==1)
+			SRC.SYSMESSAGE=<SRC.ACT.TOPOBJ.LINK.NAME> appears to be a Non-PvP player.  You can not loot <SRC.ACT.TOPOBJ.LINK.SEX his/her> corpse.
+			RETURN 1
+		ELSEIF (<EVAL <SRC.ACT.TOPOBJ.LINK.TAG.CHOICE>>==1) && (<EVAL <SRC.TAG.CHOICE>>==2)
+			SRC.SYSMESSAGE=You appear to be a Non-PvP player.  You can not loot the corpse of <SRC.ACT.TOPOBJ.LINK.NAME>.
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+
+[EOF]

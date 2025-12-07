@@ -1,0 +1,21 @@
+//Created by Seph Dragoon (AdminofDiamondRealm). Fixed to no longer make spellbooks show up as
+//unidentified.
+//If any adjustments are made on the script, please include my name as the original author.
+
+[EVENTS e_unID_click]
+ON=@ITEMCLICK
+IF	(<ACT.ATTR>&attr_magic) && !(<ACT.ATTR>&attr_identified) && !(<ACT.DISPID>==i_spellbook)
+		ACT.MESSAGE=[unidentified]
+		SYSMESSAGE=You need to get that identified before you can discern the properties of that item.
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+//In spheretables.scp, find the bottom and put this:
+
+ON=@LOGIN
+SRC.EVENTS=+e_unID_click
+
+//If you use different events for classes besides "SKILLCLASS 0" put that under them as well. All players
+//must have this event on them.

@@ -1,0 +1,381 @@
+///////////////////////////////////Diamonds#Anti-Magic /////////////////////////////////////////////////////////////
+//
+// Script By Vimas and Jota 1
+// Shared in www.scriptsharing.shorturl.com
+// Please, Don't remove This.. :)
+// This is the English Version... To the Spanish Version... Send me a E-Mail:(Vimas_@hotmail.com)
+// To Install, Copy the next in SPHERESKILL.SCP.(Whitout the //) :P
+// To Change the time of the effect, Change the MORE1=X Of the [ITEMDEF I_TEMPORIZADOR_X] ;)
+// ;) Good Play.
+//
+///////////////////////////SKILLMAKE (en SPHERESKILL.SCP) /////////////////////////////////////////////////////////
+//Begin Tinkering Menu
+//[SKILLMENU sm_tinker]
+//Tinkering
+//
+//ON=i_spellbook Diamonds Specials
+//SKILLMENU=sm_Diamonds_Specials
+//
+//[SKILLMENU sm_Diamonds_Specials]
+//Diamonds
+//
+//ON=i_Diamond_antiLightning <name> (<resmake>)
+//MAKEITEM=i_Diamond_antiLightning
+//
+//ON=i_Diamond_Greater_Fire <name> (<resmake>)
+//MAKEITEM=i_Diamond_Greater_Fire
+//
+//ON=i_Diamond_Lesser_Fire <name> (<resmake>)
+//MAKEITEM=i_Diamond_Lesser_Fire
+//
+//ON=i_Diamond_Curses <name> (<resmake>)
+//MAKEITEM=i_Diamond_Curses
+//
+//ON=i_Diamond_Poison_Paralice <name> (<resmake>)
+//MAKEITEM=i_Diamond_Poison_Paralice
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+				/////////////////Lightning///////////////////
+[ITEMDEF I_Diamond_antiLightning] 
+ID=i_gem_star_sapphire 
+NAME=Diamond anti-Lightning
+SKILLMAKE=TINKERING 40.1, MAGERY 60.0, t_tinker_tools
+RESOURCES=3 i_gem_star_sapphire,5 i_reag_mandrake_root,5 i_reag_sulfur_ash,5 i_reag_ginseng,5 i_reag_spider_silk,5 i_reag_garlic,5 i_reag_blood_moss,5 i_reag_black_pearl,5 i_reag_nightshade
+
+CATEGORY=Diamantes Specials 
+SUBSECTION=Diamonds -anti- 
+DESCRIPTION=Diamond anti-Lightning 
+
+ON=@Create 
+ATTR=ATTR_MAGIC
+COLOR=0789
+
+ON=@Dclick 
+IF <SRC.RESTEST I_TEMPORIZADOR_Greater_Fire>||<SRC.RESTEST I_TEMPORIZADOR_ANTILightning>||<SRC.RESTEST I_TEMPORIZADOR_Lesser_Fire>||<SRC.RESTEST I_TEMPORIZADOR_Curses>||<SRC.RESTEST I_TEMPORIZADOR_Poison_Paralice>
+SRC.MESSAGE YOU ARE NOW UNDER DIAMOND PROTECTION! 
+ELSE 
+SRC.EFFECT 3,i_fx_sparkle,1,15,1 
+SRC.EFFECT 1,0,0,0,0 
+SRC.SYSMESSAGE You feel the inmunity to los Lightnings! 
+SRC.EVENTS +e_inmunidad_Lightning 
+SRC.NEWITEM=I_TEMPORIZADOR_ANTILightning 
+SRC.ACT.EQUIP 
+consume 1
+RETURN 1 
+ENDIF 
+
+[EVENTS e_inmunidad_Lightning] 
+ON=@SpellEffect 
+IF (<ARGN>==30)||(<ARGN>==49)||(<ARGN>==42) 
+EMOTE You repel the spell! 
+SRC.EFFECT 3,i_fx_curse,1,15,1
+RETURN 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[ITEMDEF I_TEMPORIZADOR_ANTILightning] 
+NAME=LDIAMOND TIMER 
+ID=i_worldgem_bit 
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@Create 
+ATTR=04084 
+MORE1=45 
+
+ON=@Equip 
+TIMER=1 
+
+ON=@Timer 
+if ( <cont> ) 
+if ( <more1> ) 
+more1=<more1>-1 
+TIMER=1 
+return 1 
+else 
+CONT.MESSAGE You aren't inmune to the the Lightnings! 
+CONT.EVENTS -e_inmunidad_Lightning 
+endif 
+endif 
+Remove 
+RETURN 1
+
+				/////////////////Fire +///////////////////
+[ITEMDEF I_Diamond_Greater_Fire] 
+ID=i_gem_ruby 
+NAME=Diamond anti-Greater Fire 
+SKILLMAKE=TINKERING 70.1, MAGERY 80.1, t_tinker_tools
+RESOURCES=3 i_gem_ruby,5 i_reag_mandrake_root,5 i_reag_sulfur_ash,5 i_reag_ginseng,5 i_reag_spider_silk,5 i_reag_garlic,5 i_reag_blood_moss,5 i_reag_black_pearl,5 i_reag_nightshade
+
+CATEGORY=Diamonds Specials 
+SUBSECTION=Diamonds -anti- 
+DESCRIPTION=Diamond anti-Greater Fire 
+
+ON=@Create
+COLOR=077a
+
+ON=@Dclick 
+IF <SRC.RESTEST I_TEMPORIZADOR_Greater_Fire>||<SRC.RESTEST I_TEMPORIZADOR_ANTILightning>||<SRC.RESTEST I_TEMPORIZADOR_Lesser_Fire>||<SRC.RESTEST I_TEMPORIZADOR_Curses>||<SRC.RESTEST I_TEMPORIZADOR_Poison_Paralice>
+SRC.MESSAGE YOU ARE NOW UNDER DIAMOND PROTECTION! 
+ELSE 
+SRC.EFFECT 3,i_fx_sparkle,1,15,1 
+SRC.EFFECT 2,i_fire_column,1,15,1
+src.SOUND=snd_SPELL_FLAMESTRIKE
+SRC.SYSMESSAGE You feel the inmunity to The Greater Fire!
+SRC.EVENTS +e_inmunidad_Greater_Fire
+SRC.NEWITEM=I_TEMPORIZADOR_Greater_Fire 
+SRC.ACT.EQUIP 
+consume 1
+RETURN 1 
+ENDIF 
+
+[EVENTS e_inmunidad_Greater_Fire]
+ON=@SpellEffect 
+IF (<ARGN>==51)||(<ARGN>==55)||(<ARGN>==43)
+EMOTE You repel the spell! 
+SRC.EFFECT 3,i_fx_curse,1,15,1
+RETURN 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[ITEMDEF I_TEMPORIZADOR_Greater_Fire] 
+NAME=LDIAMOND TIMER 
+ID=i_worldgem_bit 
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@Create 
+ATTR=04084 
+MORE1=30
+
+ON=@Equip 
+TIMER=1 
+
+ON=@Timer 
+if ( <cont> ) 
+if ( <more1> ) 
+more1=<more1>-1 
+TIMER=1 
+return 1 
+else 
+CONT.MESSAGE You aren't inmune to the Greater Fire! 
+CONT.EVENTS -e_inmunidad_Greater_Fire
+endif 
+endif 
+Remove 
+RETURN 1
+
+
+				/////////////////Fire -///////////////////
+
+[ITEMDEF I_Diamond_Lesser_Fire] 
+ID=i_gem_amber
+NAME=Diamond anti-Lesser Fire
+SKILLMAKE=TINKERING 50.1, MAGERY 53.1, t_tinker_tools
+RESOURCES=3 i_gem_amber,5 i_reag_mandrake_root,5 i_reag_sulfur_ash,5 i_reag_ginseng,5 i_reag_spider_silk,5 i_reag_garlic,5 i_reag_blood_moss,5 i_reag_black_pearl,5 i_reag_nightshade
+
+CATEGORY=Diamonds Specials 
+SUBSECTION=Diamonds -anti- 
+DESCRIPTION=Diamond anti-Lesser Fire 
+
+ON=@Create 
+COLOR=077c 
+
+ON=@Dclick 
+IF <SRC.RESTEST I_TEMPORIZADOR_Greater_Fire>||<SRC.RESTEST I_TEMPORIZADOR_ANTILightning>||<SRC.RESTEST I_TEMPORIZADOR_Lesser_Fire>||<SRC.RESTEST I_TEMPORIZADOR_Curses>||<SRC.RESTEST I_TEMPORIZADOR_Poison_Paralice>
+SRC.MESSAGE YOU ARE NOW UNDER DIAMOND PROTECTION! 
+ELSE 
+SRC.EFFECT 3,i_fx_sparkle,1,15,1 
+SRC.EFFECT 3,i_fx_explode_ball,1,15,1
+src.SOUND=snd_SPELL_FIREBALL
+SRC.SYSMESSAGE You feel the inmunity to the Lesser Fire! 
+SRC.EVENTS +e_inmunidad_Lesser_Fire
+SRC.NEWITEM=I_TEMPORIZADOR_Lesser_Fire 
+SRC.ACT.EQUIP 
+consume 1
+//REMOVE 
+RETURN 1 
+ENDIF 
+
+[EVENTS e_inmunidad_Lesser_Fire] 
+ON=@SpellEffect 
+IF (<ARGN>==5)||(<ARGN>==18)||(<ARGN>==28) 
+EMOTE You repel the spell! 
+SRC.EFFECT 3,i_fx_curse,1,15,1
+RETURN 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[ITEMDEF I_TEMPORIZADOR_Lesser_Fire] 
+NAME=LDIAMOND TIMER 
+ID=i_worldgem_bit 
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@Create 
+ATTR=04084 
+MORE1=60
+
+ON=@Equip 
+TIMER=1 
+
+ON=@Timer 
+if ( <cont> ) 
+if ( <more1> ) 
+more1=<more1>-1 
+TIMER=1 
+return 1 
+else 
+CONT.MESSAGE You aren't inmune to the Lesser Fire! 
+CONT.EVENTS -e_inmunidad_Lesser_Fire
+endif 
+endif 
+Remove 
+RETURN 1
+
+		/////////////////Curses and Dispels///////////////////
+
+[ITEMDEF I_Diamond_Curses] 
+ID=i_gem_diamond
+NAME=Diamond anti-Curses and Dispels
+SKILLMAKE=TINKERING 61.0, MAGERY 62.0, t_tinker_tools
+RESOURCES=5 i_gem_diamond,5 i_reag_mandrake_root,5 i_reag_sulfur_ash,5 i_reag_ginseng,5 i_reag_spider_silk,5 i_reag_garlic,5 i_reag_blood_moss,5 i_reag_black_pearl,5 i_reag_nightshade
+
+CATEGORY=Diamonds Specials 
+SUBSECTION=Diamonds -anti- 
+DESCRIPTION=Diamond anti-Curses and Dispels 
+
+ON=@Create 
+COLOR=0041c 
+
+ON=@Dclick 
+IF <SRC.RESTEST I_TEMPORIZADOR_Greater_Fire>||<SRC.RESTEST I_TEMPORIZADOR_ANTILightning>||<SRC.RESTEST I_TEMPORIZADOR_Lesser_Fire>||<SRC.RESTEST I_TEMPORIZADOR_Curses>||<SRC.RESTEST I_TEMPORIZADOR_Poison_Paralice>
+SRC.MESSAGE YOU ARE NOW UNDER DIAMOND PROTECTION! 
+ELSE 
+SRC.EFFECT 3,i_fx_sparkle,1,15,1 
+SRC.EFFECT 3,i_fx_heal_effect,1,15,1
+src.SOUND=snd_SPELL_DISPEL
+SRC.SYSMESSAGE You feel the inmunity to the Curses and dispels! 
+SRC.EVENTS +e_inmunidad_Curses
+SRC.NEWITEM=I_TEMPORIZADOR_Curses
+SRC.ACT.EQUIP 
+consume 1
+//REMOVE 
+RETURN 1 
+ENDIF 
+
+[EVENTS e_inmunidad_Curses] 
+ON=@SpellEffect 
+IF (<ARGN>==41)||(<ARGN>==1)||(<ARGN>==3)||(<ARGN>==54)||(<ARGN>==46)||(<ARGN>==8)
+EMOTE You repel the spell! 
+SRC.EFFECT 3,i_fx_curse,1,15,1
+RETURN 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[ITEMDEF I_TEMPORIZADOR_Curses] 
+NAME=LDIAMOND TIMER 
+ID=i_worldgem_bit 
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@Create 
+ATTR=0041C
+MORE1=40
+
+ON=@Equip 
+TIMER=1 
+
+ON=@Timer 
+if ( <cont> ) 
+if ( <more1> ) 
+more1=<more1>-1 
+TIMER=1 
+return 1 
+else 
+CONT.MESSAGE You aren't inmune to the Curses and Dispels! 
+CONT.EVENTS -e_inmunidad_Curses
+endif 
+endif 
+Remove 
+RETURN 1
+
+			/////////////////Poison and Paralice///////////////////
+
+[ITEMDEF I_Diamond_Poison_Paralice] 
+ID=i_gem_emerald 
+NAME=Diamond anti-Poison and Paralice
+SKILLMAKE=TINKERING 45.3, MAGERY 55.8, t_tinker_tools
+RESOURCES=4 i_gem_emerald,5 i_reag_mandrake_root,5 i_reag_sulfur_ash,5 i_reag_ginseng,5 i_reag_spider_silk,5 i_reag_garlic,5 i_reag_blood_moss,5 i_reag_black_pearl,5 i_reag_nightshade
+
+CATEGORY=Diamonds Specials 
+SUBSECTION=Diamonds -anti- 
+DESCRIPTION=Diamond anti-Poison and Paralice 
+
+ON=@Create 
+COLOR=07ab 
+
+ON=@Dclick 
+IF <SRC.RESTEST I_TEMPORIZADOR_Greater_Fire>||<SRC.RESTEST I_TEMPORIZADOR_ANTILightning>||<SRC.RESTEST I_TEMPORIZADOR_Lesser_Fire>||<SRC.RESTEST I_TEMPORIZADOR_Curses>||<SRC.RESTEST I_TEMPORIZADOR_Poison_Paralice>
+SRC.MESSAGE YOU ARE NOW UNDER DIAMOND PROTECTION! 
+ELSE 
+SRC.EFFECT 3,i_fx_sparkle,1,15,1 
+SRC.EFFECT 3,i_fx_glow_spike,1,15,1
+src.SOUND=snd_SPELL_PARALYZE
+SRC.SYSMESSAGE You feel the inmunity to the Poison and Paralice! 
+SRC.EVENTS +e_inmunidad_Poison_Paralice
+SRC.NEWITEM=I_TEMPORIZADOR_Poison_Paralice
+SRC.ACT.EQUIP 
+consume 1
+//REMOVE 
+RETURN 1 
+ENDIF 
+
+[EVENTS e_inmunidad_Poison_Paralice] 
+ON=@SpellEffect 
+IF (<ARGN>==38)||(<ARGN>==47)||(<ARGN>==20)||(<ARGN>==39)
+SRC.EFFECT 3,i_fx_curse,1,15,1
+EMOTE You repel the spell!
+RETURN 1 
+ELSE 
+RETURN 0 
+ENDIF 
+
+[ITEMDEF I_TEMPORIZADOR_Poison_Paralice] 
+NAME=LDIAMOND TIMER 
+ID=i_worldgem_bit 
+TYPE=T_EQ_SCRIPT 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@Create 
+ATTR=0041C
+MORE1=35
+
+ON=@Equip 
+TIMER=1 
+
+ON=@Timer 
+if ( <cont> ) 
+if ( <more1> ) 
+more1=<more1>-1 
+TIMER=1 
+return 1 
+else 
+CONT.MESSAGE You aren't inmune to the Poison and Paralice! 
+CONT.EVENTS -e_inmunidad_Poison_Paralice
+endif 
+endif 
+Remove 
+RETURN 1
+
+[EOF]

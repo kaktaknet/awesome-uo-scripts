@@ -1,0 +1,219 @@
+//Made By Raszith on Azure Dawn
+//Do NOT! remove this header or I shall Magic Arrow you to Death!
+
+//CASHIER CHECKS BY SPLIFF
+
+[ITEMDEF i_olde_bank_w]
+ID=0e42
+NAME=Ye Olde Bank Box
+TYPE=3
+FLIP=0
+
+ON=@DCLICK
+DIALOG d_bank_menu
+RETURN 1
+
+CATEGORY=Miscellaneous 
+SUBSECTION=Raszith's Items 
+DESCRIPTION=Ye Olde Bank Box (W) 
+
+[ITEMDEF i_olde_bank_n]
+ID=0e43
+NAME=Ye Olde Bank Box
+TYPE=3
+FLIP=0
+
+ON=@DCLICK
+DIALOG d_bank_menu
+RETURN 1
+
+CATEGORY=Miscellaneous 
+SUBSECTION=Raszith's Items 
+DESCRIPTION=Ye Olde Bank Box (N) 
+
+[DIALOG d_bank_menu]
+100, 100
+PAGE 0
+PAGE 1
+resizepic 0 0 5170 468 305
+gumppic 27 27 73
+button 242 58 5601 5605 1 0 1
+button 242 84 5601 5605 1 0 2
+button 242 111 5601 5605 1 0 3
+button 242 166 5601 5605 1 0 4
+button 242 193 5601 5605 1 0 5
+button 242 219 5601 5605 1 0 6
+button 241 246 5601 5605 1 0 7
+text 264 163 455 0
+text 264 190 455 1
+text 264 216 455 2
+text 264 243 455 3
+text 242 139 2011 4
+text 243 32 2011 5
+text 264 55 455 6
+text 265 108 455 7
+text 265 80 455 8
+text 49 75 2010 9
+
+[DIALOG d_bank_menu TEXT]
+Cashiers Check (5000)
+Cashiers Check (10000)
+Cashiers Check (25000)
+Cashiers Check (50000)
+Checks
+Bank
+Open your Bank box
+Withdraw all your gold
+Deposit all your gold
+Ye Olde Bank Box
+
+
+[DIALOG d_bank_menu BUTTON]
+on=1
+SRC.BANKSELF
+RETURN 1
+
+on=2
+SRC.f_bank_gold
+
+on=3
+SRC.f_wd_gold
+
+on=4
+IF (<SRC.RESTEST 5000 i_gold>)
+SRC.CONSUME 5000 i_gold
+SRC.NEWITEM=i_cashiers_check
+SRC.ACT.MORE=<MORE>+5000
+SRC.ACT.BOUNCE
+MESSAGE Thank You <SRC.NAME>
+RETURN 1
+ELSE
+VAR.GPN=(5000-<SRC.FINDLAYER(layer_pack).RESCOUNT i_gold>)
+MESSAGE You Require <EVAL <VAR.GPN>> More Gold Pieces <SRC.NAME>!
+RETURN 1
+ENDIF
+
+on=5
+IF (<SRC.RESTEST 10000 i_gold>)
+SRC.CONSUME 10000 i_gold
+SRC.NEWITEM=i_cashiers_check
+SRC.ACT.MORE=<MORE>+10000
+SRC.ACT.BOUNCE
+MESSAGE Thank You <SRC.NAME>
+RETURN 1
+ELSE
+VAR.GPN=(10000-<SRC.FINDLAYER(layer_pack).RESCOUNT i_gold>)
+MESSAGE You Require <EVAL <VAR.GPN>> More Gold Pieces <SRC.NAME>!
+RETURN 1
+ENDIF
+
+on=6
+IF (<SRC.RESTEST 25000 i_gold>)
+SRC.CONSUME 25000 i_gold
+SRC.NEWITEM=i_cashiers_check
+SRC.ACT.MORE=<MORE>+25000
+SRC.ACT.BOUNCE
+MESSAGE Thank You <SRC.NAME>
+RETURN 1
+ELSE
+VAR.GPN=(25000-<SRC.FINDLAYER(layer_pack).RESCOUNT i_gold>)
+MESSAGE You Require <EVAL <VAR.GPN>> More Gold Pieces <SRC.NAME>!
+RETURN 1
+ENDIF
+
+on=7
+IF (<SRC.RESTEST 50000 i_gold>)
+SRC.CONSUME 50000 i_gold
+SRC.NEWITEM=i_cashiers_check
+SRC.ACT.MORE=<MORE>+50000
+SRC.ACT.BOUNCE
+MESSAGE Thank You <SRC.NAME>
+RETURN 1
+ELSE
+VAR.GPN=(50000-<SRC.FINDLAYER(layer_pack).RESCOUNT i_gold>)
+MESSAGE You Require <EVAL <VAR.GPN>> More Gold Pieces <SRC.NAME>!
+RETURN 1
+ENDIF
+
+[FUNCTION f_bank_gold] 
+IF (<RESTEST 1 i_gold>) 
+VAR.ZACT=<ACT> 
+ACT=<FINDID.i_gold.UID> 
+ACT.CONT=<FINDLAYER.layer_bankbox.UID> 
+FINDLAYER.layer_pack.OPEN 
+ACT=<VAR.ZACT> 
+f_bank_gold 
+src.bankself
+ENDIF
+
+[ITEMDEF i_banker]
+ID=09ab
+NAME=banker
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0455
+
+ON=@DCLICK
+IF <SRC.RESTEST 25 i_reward_coin>
+SRC.CONSUME 25 i_reward_coin
+SRC.BANKSELF
+ELSE
+SRC.MESSAGE I must have 25 player reward tickets to acess my bank box.
+RETURN 1
+
+[ITEMDEF i_wand_Stone]
+ID=0ede
+TYPE=T_NORMAL
+NAME=mass dispel wand stone (210 tickets)
+
+ON=@CREATE
+COLOR=0482
+
+ON=@DCLICK
+IF <src.restest 210 i_reward_coin>
+SRC.NEWITEM i_wand_mass_dispel
+SRC.ACT.BOUNCE
+SRC.CONSUME 210 i_reward_Coin
+SRC.MESSAGE Thank you.
+ELSE
+SRC.MESSAGE I need 210 player reward tickets to buy a mass dispel wand.
+
+
+
+[FUNCTION f_wd_gold] 
+IF (<FINDLAYER.layer_bankbox.RESTEST 1 i_gold>) 
+VAR.ZACT=<ACT> 
+ACT=<FINDLAYER.layer_bankbox.FINDID.i_gold.UID> 
+ACT.CONT=<FINDLAYER.layer_pack.UID> 
+ACT.FIX 
+ACT=<VAR.ZACT> 
+f_wd_gold
+ENDIF
+
+[ITEMDEF i_cashiers_check] 
+ID=i_deed 
+NAME=Cashiers Check 
+WEIGHT=0 
+
+CATEGORY=Ferals Stuff 
+SUBSECTION=Misc 
+DESCRIPTION=Cashiers Check (blank) 
+
+ON=@CREATE 
+COLOR=0594 
+ATTR=004 //newbied 
+
+ON=@CLICK 
+MESSAGE <NAME> <MORE> 
+RETURN 1 
+
+ON=@DCLICK 
+SRC.NEWITEM=i_gold 
+SRC.ACT.AMOUNT=<MORE> 
+SRC.ACT.BOUNCE 
+REMOVE 
+SRC.SYSMESSAGE You Have Cashed the Check. 
+RETURN 1
+
+[EOF]

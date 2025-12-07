@@ -1,0 +1,193 @@
+//**************************************************Header/Revisions*********************************************************
+//Fog Giant, R1.6. Created 12/10/04-12/15/04 for use in any 55i-55r series shards.
+//Scripted by Khaotic Solitaire. Admin/Owner/Co-owner of Elusive Shadows game shard. Admin/Co-owner of Malkuth game shard.
+//Please leave header intact. Do not steal others scripts. Any mods done, just add your name. Do not take credit where credit //is not due.
+//
+//Any concerns and issues please contact me at khaotic_solitaire@hotmail.com
+//
+//Giants are being implimented into the server to represent more fantasy realism, per se. Even though you notice this is a //titan minus all the high str and hitpoints, its skills make up for that lacking, as does its high dam. In it's own glory //on a standard RP, PvM shard, this is a moderate advesary by my calculations and testing.
+//
+//Revisions:
+//R1.0
+//-Original concept and creature created. Harnasses a hide skill that lets the Giant hide in fog(per se) when no one is //near.
+//-Titan skills and stats, for testing purposes. All testing is done with gm skills, 100 in stats. Full plate, order //shield, and viking sword. Bow was also tested.
+//Testing completed. Complete change of stats block, skill block. Standard sphere difficuly, not challenging enough. Added //Maxhits line to give more HP then Str(this is 55r addition).
+//R1.1
+//-Karma/Fame increase/decrease.
+//-Skills, added in more balanced calculations to fighting skills to make up for low str and hp.
+//-Resources changed to give more meat from killing such a large humanoid.
+//-Added in use of a Club, which is newbied in sense of realism, no player should be able to fight with a giant's club. //This also supplements its high dam making him a tougher fighter. If a disarm function is used, he will still have a high //dam rating due to high base damage.
+//-More varied skill min/max. RP representation mainly to represent a feeble giant vs healthier one. Adds variety too. //Never know if you are fighting a giant that can kill you in one hit or is weak. Confuses players.
+//R1.2
+//-Increased Maxhits. Hitpoints was not sufficient enough for a giant to me.
+//-Added a proper loot after testing combat. Least for other shards.
+//-Raised parrying incase GM's want to add a shield for giant to use. This should be newbied. Again realism.
+//-Added a names template.
+//-Changed club from i_club to i_club_giant, i_club_giant adds more damage to attacks. Template included.
+//R1.3
+//-Added Giant Hides and Cut Giant Hide Leathers to script. In case anyone wants to make leather armor from this.
+//-Added poison immunity event. Poison seemed to effective on them.. I figure a giant has better immune system, so why not //add in immunity.
+//-changed i_rock and i_boulder to use templates.
+//R1.4
+//-Giant was having issues with over weight from tm_boulders, tm_rocks, took out 2 tm_rock lines.
+//-Added mt_run to CAN line. Found it useless that the giant cannot catch up to his advesaries.
+//R1.5
+//-Complete rebalance, issues in dieing fast from archers with rare weapons. Str, dex, int,  maxhits RAISED!
+//-ARMOR value RAISED!! Taking too much damage from archers. 46 armor value used now!! 19 was too WEAK!
+//R1.6
+//-Giant shield made, to lower AR back to 19 and provide a use for his parrying skill. Gives him better armor value.
+//*********************************************Bug Issues/Concerns/Future Additions******************************************
+//-Adding in a rand chance to catch archery projectiles. Thus making archery chars have a similar difficult time fighting as //do the hand to hand combat based chars.
+//-Adding in on=@death trigger to spawn a "puff" of "fog" so to say.
+//-Have to apparently add in a couple lines to force it to throw rocks and boulders. Doesn't seem to be a hardcoded Titan //function. Maybe a check for char distance should be used.
+//-I think this might be the end to this script when it is finally finished. Nothing else seems applicable for its use.
+//**************************************************Testing COnclusions******************************************************
+//So far, Fog Giant is a high Dmg.. and a worth while advesary. It can take alot of Dmg, and more or less I myself use the //46 armor value if I want a boss giant or a tougher mob.
+//Also might add a "fog" anim when it dies.
+//If someone makes a leather armor for the hides it should add about 2.5-5.0 Hiding for each piece. At most add in maybe a //small str bonus. Nothing too ridiculous. Since this would make sense for a fog giant.
+//**************************************************NPC Char Block***********************************************************
+
+[chardef c_fog_giant]
+defname=c_fog_giant
+name=#names_giant the Fog Giant
+id=c_titan
+sound=snd_monster_titan1
+dam=15,39
+armor=19 //46 for chieftan, shield added with high armor value to negate archers attacks.
+resources=20 i_ribs_raw, 10 i_giant_hides
+can=mt_walk|mt_usehands|mt_run
+foodtype=15 t_meat_raw
+shelter=r_mountains,r_forests
+desires=r_forests,c_fog_giant
+aversions=t_trap,r_civilization
+bloodcolor=0
+category=Humanoids
+subsection=Giants
+description=Fog Giant
+
+tevents=e_poison_immune
+
+on=@create
+npc=brain_monster
+color=color_gray_lt
+fame={1000 2000}
+karma={-1000 -4000}
+str={168 296}//add 100 to max
+maxhits={1456 2128}//switched and add 672 to max
+dex={112 192} //switched then added 80 to max
+int={104 184} //""""""
+
+hiding={55.0 75.0}
+parrying={75.0 105.0}
+tactics={75.0 195.0}
+wrestling={96.0 156.0} //wrestling has been added in case a disarm function is used.
+magicresistance={80.0 104.0}
+macefighting={136.0 210.0}
+
+itemnewbie=i_club_giant //newbied for realism, no player should be able to use a giant's club.
+itemnewbie=i_giant_shield //newbied again for realism
+
+on=@npcrestock
+item=tm_boulders,{1}
+item=tm_rocks,{1}
+item=random_potion
+item=random_jewel
+item=random_jewel
+item=i_gold,{200 450}
+
+on=@hit
+dorand 3
+say I CRUSH TINY PEOPLE!
+say I stomp skinnies!
+say Skinnies... mm taste good.. come ere!
+enddo
+
+on=@seenewplayer
+if (<src.flags> &~ statf_war)
+src.skill hiding
+act.timer=20
+return 1
+else
+endif
+
+//**************************************************Names for Giant**********************************************************
+
+[names names_giant]
+Anders
+Durin
+Grishnak
+Gurg
+Ishkin
+Sardonil
+Raoul
+
+//**************************************************Fog Giants Weapon********************************************************
+
+[itemdef i_club_giant]
+defname=i_club_giant
+name=Giant Club
+type=11
+id=i_club
+weight=50
+value=20
+dam=30,40
+skillmake=blacksmithing 50.0
+resources=15 i_board
+reqstr=150
+
+on=@create
+color=
+hitpoints={400 550}
+
+[itemdef i_giant_shield]
+defname=i_giant_shield
+name=Giant Wooden Shield
+id=i_shield_wood
+flip=1
+weight=30
+armor=30
+reqstr=125
+skillmake=carpentry 80.0, t_carpentry
+resources=28 i_board
+resources2=28 i_board,1 i_ingot_iron
+
+//***************************************************Poison Immune Event*****************************************************
+
+[events e_poison_immune]
+on=@spelleffect
+if (<argn1>&20)
+sayua 01 0 1 4 Haha weak toxins mean nothing to me!
+return 1
+endif
+
+//***************************************************Hides and Cut Leather***************************************************
+
+[itemdef i_giant_hides]
+defname=i_giant_hides
+name=Pile of Giant Hides
+id=i_hide
+flip=1
+weight=10 //5
+value= //15 for sell value? should be higher maybe? depending on rarity of armor.
+category=Leather Working
+subsection=Giant Humanoids
+description=Giant Hides
+
+on=@create
+color=color_gray_lt
+
+[itemdef i_cut_gianthide_leather]
+defname=i_cut_gianthide_leather
+name=Cut Giant Hide Leather
+id=i_cut_leather
+resources=1 i_giant_hides
+dye=1
+weight=5 //1
+category=Leather Working
+subsection=Giant Humanoids
+description=Cut Giant Hide Leather
+
+on=@create
+color=color_gray_lt
+
+[eof]

@@ -1,0 +1,66 @@
+//////////////////////////////////////////////////////
+///Broadcaster////////////////////////////////////////
+//////////////////////////////////////////////////////
+///////By Negafen/////////////////////////////////////
+//////////////////////////////////////////////////////
+////This broadcasts a message every X amount of time//
+////The time is set via .set tag.time X Where x is////
+////time between broadcasts (in seconds)//////////////
+//////////////////////////////////////////////////////
+////To set the message you do a .set tag.message X////
+////Where X is the message you want it to broadcast///
+//////////////////////////////////////////////////////
+////To check if you did it right simply click on the//
+////stone. To turn it off/on double click the stone///
+//////////////////////////////////////////////////////
+////For both of those sets target the stone!//////////
+//////////////////////////////////////////////////////
+//Please do not redistribute, remove this tag, or/////
+//claim this script as your own.//////////////////////
+//////////////////////////////////////////////////////
+//Negafen@Pbreview.com////////////////////////////////
+//////////////////////////////////////////////////////
+
+
+[itemdef i_broadcaster] 
+NAME=Broadcaster 
+ID=I_gravestone_17 
+TYPE=t_script 
+WEIGHT=0 
+
+
+ON=@CREATE
+ATTR=08010
+TIMER 5
+tag.time=50
+tag.message=Broadcast system by Negafen.
+
+
+ON=@TIMER 
+SERV.B Broadcast : <tag.Message>
+TIMER <eval 0<tag.time>>
+RETURN 1 
+
+
+on=@click
+IF <eval <timer>>= -1
+src.sysmessage Broadcaster is off.
+return 0
+else
+SRC.SYSMESSAGE Next broadcast in <timer> seconds. 
+SRC.SYSMESSAGE Message is set to "<tag.message>"
+SRC.SYSMESSAGE Time between broadcasts is <eval 0<tag.time>>
+return 0
+
+
+ON=@DCLICK 
+IF <eval <timer>>= -1
+TIMER=<eval 0<tag.time>>
+SRC.SYSMESSAGE Broadcaster has been turned on. Message will be broadcast in <timer> more seconds.
+RETURN 1
+
+
+ELSE 
+TIMER=-1
+SRC.SYSMESSAGE Broadcaster is now off.
+RETURN 1

@@ -1,0 +1,1164 @@
+//ATTENTION!! - NONE OF THESE SCRIPTS WERE STOLEN, ALL OF THESE SCRIPIS WERE MADE BY MAJESTY(ME). SO IF YOU HAVE GOTTEN THIS SCRIPT FROM SOMEONE ELSE, I MUST'VE GIVEN IT TO THEM, AND THEY REDISTRIBUTED THEM. SO THE BOTTOM LINE IS, I AM THE CREATOR OF THESE SCRIPTS, SO IF YOU USE/TWEAK THEM PLEASE GIVE ME MY DESERVED CREDIT, THANK YOU//
+
+
+
+
+
+
+
+////////////////////////////////////////////////
+//VERSION 1.0			 //
+//BANK/PACK ORGANIZER, BY: MAJESTY	 //
+//PLEASE DO NOT REMOVE THIS HEADER //
+////////////////////////////////////////////////
+
+[plevel 0]
+//plevel 1 if you want players to use it anytime/anywhere
+organizepack
+organizebank
+
+[function organizepack]
+if (<restest 500 i_gold >)
+consume=500 i_gold
+findlayer.21.updatex
+//The "FINDLAYER.." simply unequips everything, so it can be organized (but it will equip the spellbook)
+FINDLAYER(layer_hand1).BOUNCE
+FINDLAYER(layer_hand2).BOUNCE
+FINDLAYER(layer_shoes).BOUNCE
+FINDLAYER(layer_pants).BOUNCE
+FINDLAYER(layer_shirt).BOUNCE
+FINDLAYER(layer_helm).BOUNCE
+FINDLAYER(layer_gloves).BOUNCE
+FINDLAYER(layer_ring).BOUNCE
+FINDLAYER(layer_collar).BOUNCE
+FINDLAYER(layer_half_apron).BOUNCE
+FINDLAYER(layer_chest).BOUNCE
+FINDLAYER(layer_wrist).BOUNCE
+FINDLAYER(layer_tunic).BOUNCE
+FINDLAYER(layer_ears).BOUNCE
+FINDLAYER(layer_arms).BOUNCE
+FINDLAYER(layer_cape).BOUNCE
+FINDLAYER(layer_robe).BOUNCE
+FINDLAYER(layer_skirt).BOUNCE
+FINDLAYER(layer_legs).BOUNCE
+FINDTYPE.T_SPELLBOOK.EQUIP
+if (<findlayer.21.findcont> = 1 )   //must have atleast 1 item in your pack to organize
+updatex
+var.getbankuid=<findlayer.21.uid>
+findlayer.21.f_container_empty
+f_getbags
+findlayer.21.f_organize_bank
+findlayer.21.f_misccheck
+f_bags_to_bank	//This is also compatible with this function
+else
+sysmessage=You cannot do this while it is empty...
+endif
+else
+sysmessage=You need 500 gold to perform this action.
+endif
+
+
+[function organizebank]
+if (<restest 500 i_gold >)
+consume=500 i_gold
+if (<findlayer.29.findcont> = 1 )   //must have atleast 1 item in your bank to organize
+updatex
+var.getbankuid=<findlayer.29.uid>
+findlayer.29.f_container_empty
+f_getbags
+findlayer.29.f_organize_bank
+findlayer.29.f_misccheck
+f_bags_to_bank
+else
+sysmessage=You cannot do this with an empty bank...
+endif
+else
+sysmessage=You need 500 gold to perfom this action.
+endif
+
+[function f_getbags]
+newitem=i_pouch
+act.bounce
+act.drop
+act.color=058
+act.attr=0
+tag.armorbag=<act.uid>
+var.armorbag=<tag.armorbag>
+newitem=i_pouch
+act.bounce
+act.drop
+act.color=33
+act.attr=0
+tag.weaponbag=<act.uid>
+var.weaponbag=<tag.weaponbag>
+newitem=i_pouch
+act.bounce
+act.drop
+act.color=063
+tag.goldbag=<act.uid>
+var.goldbag=<tag.goldbag>
+newitem=i_pouch
+act.bounce
+act.drop
+act.color=0383
+act.attr=0
+tag.miscbag=<act.uid>
+var.miscbag=<tag.miscbag>
+newitem=i_pouch
+act.bounce
+act.drop
+act.color=09c
+act.attr=0
+tag.resbag=<act.uid>
+var.resbag=<tag.resbag>
+f_clear_sysmessage
+
+[function f_organize_bank]
+if (<findtype.t_armor> = 1 )||(<findtype.t_armor_leather> = 1 )||(<findtype.t_shield> = 1 )
+//Armors & Shields
+var.armorbag=<cont.tag.armorbag>
+findtype.t_armor.cont=<var.armorbag>
+findtype.t_armor_leather.cont=<var.armorbag>
+findtype.t_shield.cont=<var.armorbag>
+return <f_organize_bank>
+elseif (<findtype.t_weapon_sword> = 1 )||(<findtype.t_weapon_mace_smith> = 1 )||(<findtype.t_weapon_fence> = 1 )|| (<findtype.t_weapon_bow> = 1 )||(<findtype.t_weapon_xbow> = 1 )||(<findtype.t_weapon_mace_sharp> = 1 )||(<findtype.t_weapon_axe> = 1 )
+//Weapons
+var.weaponbag=<cont.tag.weaponbag>
+findtype.t_weapon_axe.cont=<var.weaponbag>
+findtype.t_weapon_mace_sharp.cont=<var.weaponbag>
+findtype.t_weapon_sword.cont=<var.weaponbag>
+findtype.t_weapon_mace_smith.cont=<var.weaponbag>
+findtype.t_weapon_fence.cont=<var.weaponbag>
+findtype.t_weapon_bow.cont=<var.weaponbag>
+findtype.t_weapon_xbow.cont=<var.weaponbag>
+return <f_organize_bank>
+elseif (<findtype.t_ingot> = 1 )||(<findtype.t_ore> = 1 )||(<findtype.t_log> = 1 )||(<findtype.t_board> = 1 )||(<findtype.t_feather> = 1 )
+//Resources for Craftables
+var.resbag=<cont.tag.resbag>
+findtype.t_feather.cont=<var.resbag>
+findtype.t_board.cont=<var.resbag>
+findtype.t_ingot.cont=<var.resbag>
+findtype.t_ore.cont=<var.resbag>
+findtype.t_log.cont=<var.resbag>
+return <f_organize_bank>
+elseif (<findtype.t_gold> = 1 )||(<findtype.t_scroll> = 1 )||(<findtype.t_reagent> = 1 )||(<findtype.t_bandage> = 1 )||(<findtype.t_potion> = 1 )||(<findtype.t_spellbook> = 1 )||(<findtype.t_scroll_blank> = 1 )||(<findtype.t_rune> = 1 )||(<findtype.t_gem> = 1 )
+//Gold, Regs, Potions, Bandages, Etc....
+var.goldbag=<cont.tag.goldbag>
+findtype.t_gem.cont=<var.goldbag>
+findtype.t_rune.cont=<var.goldbag>
+findtype.t_gold.cont=<var.goldbag>
+findtype.t_scroll.cont=<var.goldbag>
+findtype.t_reagent.cont=<var.goldbag>
+findtype.t_bandage.cont=<var.goldbag>
+findtype.t_potion.cont=<var.goldbag>
+findtype.t_spellbook.cont=<var.goldbag>
+findtype.t_scroll_blank.cont=<var.goldbag>
+return <f_organize_bank>
+else
+cont.sysmessage=You <name> is being organized...
+return 1
+endif
+
+[function f_misccheck]
+//checks for misc items (clothing, unusual items, etc..)
+if (<findcont> = 1 )
+var.miscbag=<cont.tag.miscbag>
+findcont(0).cont=<var.miscbag>
+return <f_misccheck>
+else
+cont.sysmessage=You <name> is now organized.
+endif
+
+[function f_container_empty]
+//checks for containers full of items, then takes the items out of the container.
+if (<findtype.t_container> = 1 )
+if (<findtype.t_container.findcont> = 1 )
+findtype.t_container.findcont(0).cont=<var.getbankuid>
+return <f_container_empty>
+else
+findtype.t_container.remove
+return <f_container_empty>
+endif
+endif
+
+[function f_bags_to_bank]
+//Sends the bags to your bank & clears tags and vars
+try uid.<var.weaponbag>.cont=<var.getbankuid>
+try uid.<var.armorbag>.cont=<var.getbankuid>
+try uid.<var.miscbag>.cont=<var.getbankuid>
+try uid.<var.goldbag>.cont=<var.getbankuid>
+try uid.<var.resbag>.cont=<var.getbankuid>
+try uid.<var.resbag>.update
+try uid.<var.weaponbag>.update
+try uid.<var.armorbag>.update
+try uid.<var.miscbag>.update
+try uid.<var.goldbag>.update
+tag.resbag=
+tag.miscbag=
+tag.weaponbag=
+tag.goldbag=
+tag.armorbag=
+var.armorbag=
+var.goldbag=
+var.weaponbag=
+var.miscbag=
+var.resbag=
+var.getbankuid=
+bankself
+updatex
+
+
+[function f_clear_sysmessage]
+//Simply clears the little sysmessages you get while it is organizing
+//so they cant see what really went on :P
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+
+
+//////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////
+//VERSION 1.0			 //
+//BANKBOUNCE COMMAND, BY: MAJESTY	 //
+//PLEASE DO NOT REMOVE THIS HEADER //
+////////////////////////////////////////////////
+
+
+[function bouncebank]
+if (<isitem> = 1 )
+src.updatex  //closes your bank
+p=1,1,1  //sends item to unseen location
+updatex  //updates the item
+cont=<src.findlayer.29.uid>  //sends item to the bank
+updatex   //updates the item again
+cont.cont.sysmessage=The <name> has been sent to your bank.
+src.sfx=87
+return 1
+endif
+return 0
+
+///////////////////////////////////////////////////
+
+
+//-------------------------------------------------//
+//TRASH SYSTEM & COMMAND BY, MAJESTY --//
+//PLEASE DO NOT REMOVE THIS HEADER  - --//
+//------------------------------------------------//
+
+[plevel 1]
+trash
+
+[function trash]
+newitem=i_maj_trash
+act.equip
+act.timer=25
+act.target
+sysmessage=Target the item you wish to trash.
+
+[itemdef i_maj_trash]
+id=i_memory
+type=t_eq_script
+name=Trash Memory
+
+on=@create
+attr=attr_decay
+timer=25
+
+
+on=@targon_item
+if (<src.targ.uid> = <src.findlayer.21.uid>)
+src.sysmessage=You cannot trash your main backpack!
+remove
+return 1
+endif
+
+
+if (<src.targ.topobj.uid> = <src.uid> )
+if (<src.targ.type> = t_gold )||(<src.targ.type> = t_coin )||(<src.targ.type> = t_ingot )||(<src.targ.type> = t_log )||(<src.targ.type> = t_board )||(<src.targ.type> = t_ore )||(<src.targ.type> = t_weapon_bolt )||(<src.targ.type> = t_weapon_arrow )||(<src.targ.type> = t_bandage )||(<src.targ.type> = t_cloth_bolt )
+src.sysmessage=Sorry, these <src.targ.name>s cannot be used with this system...
+remove
+return 1
+endif
+else
+src.sysmessage=You must have posession of that to trash it.
+remove
+return 1
+endif
+
+
+if (<src.targ.type> = t_container )||(<src.targ.type> = t_container_locked )
+src.targ.f_bounce_coins //gets the coins out of the container before processing.
+src.clearsysmessage
+src.targ.f_maj_get_containers
+src.sysmessage=You have trashed the <src.targ.name> and all of its contents.
+src.newitem=i_maj_silvercoin
+src.act.amount=<eval <var.getcoins>>
+src.act.bouncebank
+src.sysmessage=You have earned <eval <var.getcoins>> trash reward coins for the <src.targ.name> and its contents.
+var.getcoins=
+remove
+return 1
+else
+src.targ.f_maj_get_coins
+src.sysmessage=You have trashed the <src.targ.name>.
+src.newitem=i_maj_silvercoin
+src.act.amount=<eval <var.getcoins>>
+src.act.bouncebank
+src.sysmessage=You have earned <eval <var.getcoins>> trash reward coins for the <src.targ.name>.
+var.getcoins=
+remove
+return 1
+endif
+
+
+on=@targon_char
+if (<src.uid> = <src.targ.uid>)
+src.sysmessage=Heh...maybe you are trash...
+remove
+return 1
+else
+src.sysmessage=You cannot trash a living being...
+remove
+return 1
+endif
+
+on=@timer
+remove
+return 1
+
+[function f_maj_get_containers]
+if (<type> = t_container )||(<type> = t_container_locked )
+if (<findcont> = 1 )
+findcont(0).f_maj_get_coins
+return <f_maj_get_containers>
+else
+f_maj_get_coins
+return 1
+endif
+else
+f_maj_get_coins
+return 1
+endif
+
+
+[function f_maj_get_coins]
+if (<amount> > 1 )
+var.getcoins=<eval <var.getcoins>>+<eval <value>/4>
+amount=<eval <amount>-1>
+f_maj_get_coins
+else
+var.getcoins=<eval <var.getcoins>>+<eval <value>/4>
+remove
+return 1
+endif
+
+[function f_bounce_coins]
+if (<findtype.t_coin> = 1 )||(<findtype.t_gold> = 1 )||(<findtype.t_ingot> = 1 )||(<findtype.t_ore>=  1 )||<findtype.t_log> = 1 )||(<findtype.t_board> = 1 )
+findtype.t_gold.bouncebank
+findtype.t_coin.bouncebank
+findtype.t_ingot.bouncebank
+findtype.t_board.bouncebank
+findtype.t_log.bouncebank
+findtype.t_ore.bouncebank
+return <f_bounce_coins>
+elseif (<findtype.t_weapon_arrow> = 1 )||(<findtype.t_weapon_bolt> = 1 )||(<findtype.t_bandage> = 1 )||(<findtype.t_cloth_bolt> = 1 )
+findtype.t_weapon_arrow.bouncebank
+findtype.t_weapon_bolt.bouncebank
+findtype.t_bandage.bouncebank
+findtype.t_cloth_bolt.bouncebank
+return <f_bounce_coins>
+endif
+
+
+[function clearsysmessage]
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+sysmessage=
+
+[itemdef i_maj_silvercoin]
+id=i_coin_silver
+name=trash reward coins
+type=t_coin
+weight=0
+
+on=@create
+attr=attr_decay
+
+on=@dclick
+src.message=Keep <serv.name> clean and get rewards.
+src.sysmessage=Scripted By: Majesty
+return 1
+
+
+
+[DIALOG d_maj_trash_dialog]
+0, 0
+PAGE 0
+resizepic 63 36 2620 420 300
+button 216 138 2117 2118 1 0 1
+gumppic 149 73 1418
+button 84 57 2117 2118 1 0 2
+button 84 84 2117 2118 1 0 3
+button 84 111 2117 2118 1 0 4
+button 84 138 2117 2118 1 0 5
+button 84 165 2117 2118 1 0 6
+button 93 268 2151 2152 1 0 7
+button 216 57 2117 2118 1 0 8
+button 216 84 2117 2118 1 0 9
+button 216 111 2117 2118 1 0 10
+button 216 165 2117 2118 1 0 11
+button 216 192 2117 2118 1 0 12
+button 216 219 2117 2118 1 0 13
+button 216 246 2117 2118 1 0 14
+button 216 270 2117 2118 1 0 15
+button 210 297 2472 2473 1 0 16
+text 108 54 95 0
+text 106 81 1153 1
+text 105 108 995 2
+text 104 135 1101 3
+text 106 162 1250 4
+text 240 54 1313 5
+text 241 81 102 6
+text 241 108 301 7
+text 240 135 95 8
+text 239 162 1345 9
+text 243 190 1350 10
+text 241 216 32 11
+text 240 243 31 12
+text 239 267 152 13
+text 243 299 162 14
+text 81 249 455 15
+text 96 294 455 16
+text 63 17 1313 17
+text 63 332 95 18
+
+[DIALOG d_maj_trash_dialog TEXT]
+W. Upgrade[5k]
+3,000gp[10k]
+5,000gp[15k]
+10,000gp[20k]
+15,000gp[25k]
+Limited Black Dye Tub[30k]
+Limited White Dye Tub[35k]
+Limited Ice Dye Tub[40k]
+Limited Fire Dye Tub[45k]
+Limited Dye Tub(your choice)[50k]
+Colored Llama[55k]
+Colored Horse[60k]
+Any Colored Mount[65k]
+Rideable Bear[100k]
+Rideable Dragon[150k]
+How To
+Use
+<serv.name> Trash System * v1.0 Majesty
+You currently have <eval <src.rescount i_maj_silvercoin>> trash reward coins in your backpack.
+
+
+[DIALOG d_maj_trash_dialog BUTTON]
+on=2
+if (<src.restest 5000 i_maj_silvercoin>)
+src.newitem=i_weapon_upgrade_crystal
+src.act.bounce
+src.consume=5000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 5000 trash reward coins to get this...
+return 1
+endif
+on=3
+if (<src.restest 10000 i_maj_silvercoin>)
+src.newitem=i_gold
+src.act.amount=3000
+src.act.bounce
+src.consume=10000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 10000 trash reward coins to get this...
+return 1
+endif
+on=4
+if (<src.restest 15000 i_maj_silvercoin>)
+src.newitem=i_gold
+src.act.amount=5000
+src.act.bounce
+src.consume=15000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 15000 trash reward coins to get this...
+return 1
+endif
+on=5
+if (<src.restest 20000 i_maj_silvercoin>)
+src.newitem=i_gold
+src.act.amount=10000
+src.act.bounce
+src.consume=20000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 20000 trash reward coins to get this...
+return 1
+endif
+on=6
+if (<src.restest 25000 i_maj_silvercoin>)
+src.newitem=i_gold
+src.act.amount=15000
+src.act.bounce
+src.consume=25000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 25000 trash reward coins to get this...
+return 1
+endif
+on=8
+src.sysmessage=Sorry, this has been disabled untill further notice.
+return 1
+if (<src.restest 30000 i_maj_silvercoin>)
+src.newitem=i_dye_tub
+src.act.color=01
+src.act.bounce
+src.act.type=t_limited_tub
+src.act.morex=5
+src.consume=30000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 30000 trash reward coins to get this...
+return 1
+endif
+on=9
+src.sysmessage=Sorry, this has been disabled untill further notice.
+return 1
+if (<src.restest 35000 i_maj_silvercoin>)
+src.newitem=i_dye_tub
+src.act.color=0484
+src.act.bounce
+src.act.type=t_limited_tub
+src.act.morex=5
+src.consume=35000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 35000 trash reward coins to get this...
+return 1
+endif
+on=10
+src.sysmessage=Sorry, this has been disabled untill further notice.
+return 1
+if (<src.restest 40000 i_maj_silvercoin>)
+src.newitem=i_dye_tub
+src.act.color=0480
+src.act.bounce
+src.act.type=t_limited_tub
+src.act.morex=5
+src.consume=40000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 40000 trash reward coins to get this...
+return 1
+endif
+on=1
+src.sysmessage=Sorry, this has been disabled untill further notice.
+return 1
+if (<src.restest 45000 i_maj_silvercoin>)
+src.newitem=i_dye_tub
+src.act.color=077c
+src.act.bounce
+src.act.type=t_limited_tub
+src.act.morex=5
+src.consume=45000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 45000 trash reward coins to get this...
+return 1
+endif
+on=11
+src.sysmessage=Sorry, this has been disabled untill further notice.
+return 1
+if (<src.restest 50000 i_maj_silvercoin>)
+src.newitem=i_deed
+src.act.color=0589
+src.act.name=[authenic] Deed for a Limited Dye Tub of any color.(GM Assisted)
+src.act.bounce
+src.consume=50000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 50000 trash reward coins to get this...
+return 1
+endif
+on=12
+if (<src.restest 55000 i_maj_silvercoin>)
+src.newitem=i_deed
+src.act.color=0589
+src.act.name=[authenic] Deed for a Colored Llama.(GM Assisted)
+src.act.bounce
+src.consume=55000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 55000 trash reward coins to get this...
+return 1
+endif
+on=13
+if (<src.restest 60000 i_maj_silvercoin>)
+src.newitem=i_deed
+src.act.color=0589
+src.act.name=[authenic] Deed for a Colored Horse.(GM Assisted)
+src.act.bounce
+src.consume=60000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 60000 trash reward coins to get this...
+return 1
+endif
+on=14
+if (<src.rescount i_maj_silvercoin> > 64999 )
+src.newitem=i_deed
+src.act.color=0589
+src.act.name=[authenic] Deed for (any)Colored Mount.(GM Assisted)
+src.act.bounce
+src.consume=65000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 65000 trash reward coins to get this...
+return 1
+endif
+on=15
+if (<src.rescount i_maj_silvercoin> > 99999 )
+src.newitem=i_deed
+src.act.color=0589
+src.act.name=[authenic] Deed for Bear Mount.(GM Assisted)
+src.act.bounce
+src.consume=65000 i_maj_silvercoin
+src.consume=35000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 100,000 trash reward coins to get this...
+return 1
+endif
+on=16
+if (<src.rescount i_maj_silvercoin> > 149999 )
+src.newitem=i_deed
+src.act.color=0589
+src.act.name=[authenic] Deed for Drake Mount.(GM Assisted)
+src.act.bounce
+src.consume=65000 i_maj_silvercoin
+src.consume=35000 i_maj_silvercoin
+src.consume=50000 i_maj_silvercoin
+sfx=snd_spell_cunning
+src.sysmessage=Thank You for keeping <serv.name> clean, <src.name>.
+return 1
+else
+src.sysmessage=You need 150,000 trash reward coins to get this...
+return 1
+endif
+on=7
+dialog d_how_to_trash
+return 1
+
+
+[DIALOG d_how_to_trash]
+0, 0
+PAGE 0
+resizepic 63 9 5054 390 260
+text 72 24 1153 0
+text 72 51 1153 1
+text 72 78 1153 2
+text 72 105 1153 3
+text 72 132 1153 4
+text 72 159 1153 5
+text 72 186 1153 6
+text 72 213 1153 7
+text 72 240 1153 8
+text 139 266 102 9
+
+[DIALOG d_how_to_trash TEXT]
+You can earn trash reward coins
+by simply typing: .trash, then target
+the item that you wish to trash.
+You can also trash containers filled with items
+to get your reward coins fast and easy.
+Please take note that this system does
+NOT work with Ores, Ingots, Coins, Logs,
+Arrows, Bolts, and Bandages.
+Redeem your reward coins at this <name>.
+          How To Use
+
+
+[DIALOG d_how_to_trash BUTTON]
+on=0
+dialog d_maj_trash_dialog
+
+
+[itemdef i_maj_trash_system]
+defname=i_maj_trash_system
+id=i_barrel_open
+name=Trash Reward System
+type=t_container
+
+on=@create
+color=colors_white
+attr=00010
+
+on=@click
+message=<name>
+src.sysmessage=Redeem your 'Trash Reward Coins' here.
+return 1
+
+on=@dclick
+empty
+dialog d_maj_trash_dialog
+return 1
+
+on=@timer
+return 1
+
+
+[typedef t_limited_tub]
+on=@click
+message=[<morex> charges]
+message=Limited Dye Tub
+return 1
+
+on=@dclick
+target what do you wish to recolor?
+return 1
+
+on=@targon_item
+if (<src.targ.topobj.uid> = <src.uid>)
+if (<src.targ.type> = t_clothing )
+if (<morex> > 1 )
+morex=<morex>+-1
+src.targ.color=<color>
+return 1
+else
+src.sysmessage=You have completly used the dye from this tub.
+remove
+return 1
+endif
+else
+src.sysmessage=You can only dye clothing with this tub.
+return 1
+endif
+else
+src.sysmessage=You must have the <src.targ.name> in your pack to do this.
+return 1
+endif
+
+on=@targon_char
+if (<src.targ.uid> = <src.uid>)
+if (<morex> > 1 )
+morex=<morex>+-1
+src.targ.findlayer.11.color=<color>
+src.targ.findlayer.16.color=<color>
+return 1
+else
+src.sysmessage=You have completly used the tub from this tub.
+remove
+return 1
+endif
+else
+src.sysmessage=You cannot use this tub on other people.
+return 1
+endif
+
+
+
+
+///////////////////////////////////////////////////////
+
+
+//------------------------------------------
+//Color Casting Event - By Majesty     --
+//Please Do Not Remove This Header--
+//------------------------------------------
+
+
+[plevel 0]
+castingcolor
+
+[function castingcolor]
+sysmessage=Sorry, this function is no longer available.
+return 1
+
+if (<eval <args>> > 1000 )
+sysmessage=Invalid Color Selection.  [Must Be Between 2 - 1000]
+return 1
+elseif (<eval <args>> < 2 )
+sysmessage=Your Spellcast color will now be random.
+tag.castcolor=1
+return 1
+elseif (<eval <args>> > 1 )&&(<eval <args>> < 1001 )
+tag.castcolor=<eval <args>>
+tag.israndom=
+sysmessage=Your Spellcast color is now <eval <args>>.
+return 1
+endif
+
+[function f_color_default]
+//This function checks if they have a set color
+//if they dont have a set color, then it will give them a random color when casting :)
+if (<eval <tag.castcolor>> = 1 )||(<eval <tag.castcolor>> = 0 )
+tag.castcolor=<eval { 2 1000 }>
+tag.israndom=1
+return 1
+else
+if (<eval <tag.castcolor>> < 0 )
+tag.castcolor=2
+return 1
+endif
+endif
+
+[function f_random_check]
+if (<eval <tag.israndom>> = 1 )
+tag.castcolor=<eval { 2 1000 }>
+endif
+
+[events e_maj_colorcast]
+//Add this to your spheretables and a defualt event for players.
+
+on=@click
+if (<isgm> = 1 )
+events -e_maj_colorcast
+return 0
+endif
+
+on=@spellcast
+//f_color_default
+//f_random_check
+if (<argn> = 1 )
+sayu Uus Jux
+elseif (<argn> = 2 )
+sayu In Mani Ylem
+elseif (<argn> = 3 )
+sayu Rel Wis
+elseif (<argn> = 4 )
+sayu In Mani
+elseif (<argn> = 5 )
+sayu In Por Ylem
+elseif (<argn> = 6 )
+sayu In Lor
+elseif (<argn> = 7 )
+sayu Flam Sanct
+elseif (<argn> = 8 )
+sayu Des Mani
+elseif (<argn> = 9 )
+sayu Ex Uus
+elseif (<argn> = 10 )
+sayu Uus Wis
+elseif (<argn> = 11 )
+sayu An Nox
+elseif (<argn> = 12 )
+sayu An Mani
+elseif (<argn> = 13 )
+sayu In Jux
+elseif (<argn> = 14 )
+sayu An Jux
+elseif (<argn> = 15 )
+sayu Uus Sanct
+elseif (<argn> = 16 )
+sayu Uus Mani
+elseif (<argn> = 17 )
+sayu Rel Sanct
+elseif (<argn> = 18 )
+sayu Vas Flam
+elseif (<argn> = 19 )
+sayu An Por
+elseif (<argn> = 20 )
+sayu In Nox
+elseif (<argn> = 21 )
+sayu Ort Por Ylem
+elseif (<argn> = 22 )
+sayu Rel Por
+elseif (<argn> = 23 )
+sayu Ex Por
+elseif (<argn> = 24 )
+sayu In Sanct Ylem
+elseif (<argn> = 25 )
+sayu Vas An Nox
+elseif (<argn> = 26 )
+sayu Vas Uus Sanct
+elseif (<argn> = 27 )
+sayu Des Sanct
+elseif (<argn> = 28 )
+sayu In Flam Grav
+elseif (<argn> = 29 )
+sayu In Vas Mani
+elseif (<argn> = 30 )
+sayu Por Ort Grav
+elseif (<argn> = 31 )
+sayu Ort Rel
+elseif (<argn> = 32 )
+sayu Kal Ort Por
+elseif (<argn> = 33 )
+sayu In Hur Jux Ylem
+elseif (<argn> = 34 )
+sayu An Grav
+elseif (<argn> = 35 )
+sayu Kal In Ex
+elseif (<argn> = 36 )
+sayu In Jux Sanct
+elseif (<argn> = 37 )
+sayu Por Corp Wis
+elseif (<argn> = 38 )
+sayu An Ex Por
+elseif (<argn> = 39 )
+sayu In Nox Grav
+elseif (<argn> = 40 )
+sayu Kal Xen
+elseif (<argn> = 41 )
+sayu An Ort
+elseif (<argn> = 42 )
+sayu Corp Por
+elseif (<argn> = 43 )
+sayu Vas Ort Flam
+elseif (<argn> = 44 )
+sayu An Lor Xen
+elseif (<argn> = 45 )
+sayu Kal Por Ylem
+elseif (<argn> = 46 )
+sayu Vas Des Sanct
+elseif (<argn> = 47 )
+sayu In Ex Grav
+elseif (<argn> = 48 )
+sayu Wis Quas
+elseif (<argn> = 49 )
+sayu Vas Ort Grav
+elseif (<argn> = 50 )
+sayu In Sanct Grav
+elseif (<argn> = 51 )
+sayu Kal Vas Flam
+elseif (<argn> = 52 )
+sayu Vas Rel Por
+elseif (<argn> = 53 )
+sayu Ort Sanct
+elseif (<argn> = 54 )
+sayu Vas An Ort
+elseif (<argn> = 55 )
+sayu Flam Kal Des Ylem
+elseif (<argn> = 56 )
+sayu Vas Ylem Rel
+elseif (<argn> = 57 )
+sayu In Vas Por
+elseif (<argn> = 58 )
+sayu Vas Corp Por
+elseif (<argn> = 59 )
+sayu An Corp
+elseif (<argn> = 60 )
+sayu Kal Vas Xen Hur
+elseif (<argn> = 61 )
+sayu Kal Vas Xen Corp
+elseif (<argn> = 62 )
+sayu Kal Vas Xen Ylem
+elseif (<argn> = 63 )
+sayu Kal Vas Xen Flam
+elseif (<argn> = 64 )
+sayu Kal Vas Xen An Flam
+endif
+
+
+///////////////////////////////////////////////////
+//Add these to the healers
+//tevents=e_maj_healer
+//tspeech=s_maj_healer
+
+[events e_maj_healer]
+on=@click
+if (<eval <distance>> < 6 )
+if (<eval <src.flags>> & statf_dead )
+say By the gods of Brittania, I command thee to Live!
+src.resurrect
+return 1
+endif
+endif
+
+[speech s_maj_healer]
+on=heal me
+if (<src.stamina> > 25 )
+emote heal <src.name>
+src.hits=<src.stamina>+<src.hits>
+src.stamina=1
+if (<src.hits> > <src.str> )
+src.hits=<str>
+endif
+else
+say I cannot heal you anymore at this time <src.name>.
+endif
+
+
+[function regs]
+src.dialog d_reg_checker
+return 1
+
+[DIALOG d_reg_checker]
+0, 0
+PAGE 0
+resizepic 27 27 5120 225 240
+text 38 33 1152 0
+text 38 59 1152 1
+text 38 86 1152 2
+text 38 114 1152 3
+text 38 143 1152 4
+text 38 172 1152 5
+text 38 202 1152 6
+text 38 230 1152 7
+text 38 264 995 8
+
+[DIALOG d_reg_checker TEXT]
+Garlic: <src.rescount.i_reag_garlic>
+Mandrake Root: <src.rescount.i_reag_mandrake_root>
+Ginseng: <src.rescount.i_reag_ginseng>
+Spiders Silk: <src.rescount.i_reag_spider_silk>
+Black Pearl: <src.rescount.i_reag_black_pearl>
+Blood Moss: <src.rescount.i_reag_blood_moss>
+Night Shade: <src.rescount.i_reag_nightshade>
+Sulfur Ash: <src.rescount.i_reag_sulfur_ash>
+Reagents in you pack.
+
+
+[DIALOG d_reg_checker BUTTON]
+
+
+[plevel 0]
+regs
+
+
+
+////////////////////////////////
+////////////////////////////////
+
+
+//--------------------------------------------------|
+//Whos Online Function - By: Admin Majesty    |
+//Please do not remove this header	         |
+//--------------------------------------------------|
+
+
+//Simply type: '.whosonline' to see who is online or not.
+
+[plevel 0]
+whosonline
+
+[function whosonline]
+src.tag.chattercounts=0 
+src.tag.maxclientcounts=0 
+var.counts=200 
+f_clear_1 
+serv.allclients getchatteruid 
+src.tag.chattercounts=1 
+dialog d_whosonline_list
+
+[function getchatteruid]
+src.tag.maxclientcounts=<eval <src.tag.maxclientcounts>+1> 
+tryp 0 var.clientsnumber.<eval <src.tag.maxclientcounts>>.uid=<uid>
+update
+
+
+[function f_clear_1] 
+if <var.counts>>0 
+var.counts=<eval <var.counts>-1> 
+tryp 0 var.clientsnumber.<eval <var.counts>>.uid= 
+f_clear_2 
+endif 
+
+[function f_clear_2] 
+f_clear_1
+
+[DIALOG d_whosonline_list]
+0, 0
+PAGE 0
+resizepic 27 18 2620 270 230
+text 45 37 <eval colors_all> 0
+text 45 67 <eval colors_all> 1
+text 45 96 <eval colors_all> 2
+text 45 123 <eval colors_all> 3
+text 45 150 <eval colors_all> 4
+text 45 177 <eval colors_all> 5
+button 54 212 4014 4015 1 0 1
+button 240 212 4005 4006 1 0 2
+text 30 247 <eval colors_white> 6
+
+[DIALOG d_whosonline_list TEXT]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>>.uid>.name> - Fame: [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>>.uid>.fame>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+1>.uid>.name> - Fame: [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+1>.uid>.fame>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+2>.uid>.name> - Fame: [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+2>.uid>.fame>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+3>.uid>.name> - Fame: [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+3>.uid>.fame>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+4>.uid>.name> - Fame: [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+4>.uid>.fame>]
+<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+5>.uid>.name> - Fame: [<uid.<var.clientsnumber.<eval <src.tag.chattercounts>+5>.uid>.fame>]
+Players Currently In <serv.name>
+
+
+[DIALOG d_whosonline_list BUTTON]
+on=1
+tag.chattercounts=<eval <src.tag.chattercounts>-6> 
+if <tag.chattercounts><1 
+tag.chattercounts=1 
+endif 
+dialog d_whosonline_list 
+on=2
+tag.chattercounts=<eval <src.tag.chattercounts>+6> 
+dialog d_whosonline_list
+
+

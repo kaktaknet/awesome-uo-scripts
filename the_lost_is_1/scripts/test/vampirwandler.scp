@@ -1,0 +1,68 @@
+
+[ITEMDEF i_Vampirwandler]
+// Rassenitem Vampire 
+// die IF-Abfrage muss an den Shard angepasst werden.
+
+ID=020ee
+NAME=Vampirwandler (Fledermaus)
+CATEGORY=Neue Objekte
+SUBSECTION=Verschiedenes
+DESCRIPTION=Vampirwandler (Fledermaus)
+TYPE=t_normal
+WEIGHT=1
+
+ON=@Create
+ATTR=0004
+COLOR=0381
+
+ON=@DClick
+
+IF	(<SRC.FINDID.I_TOTENROBE>)
+	SRC.MESSAGE Du hast deine Seele noch nicht zurueck !
+ELSEIF ! ((<SRC.OSKIN>==003d5) && ((<SRC.OBODY>==c_man)||(<SRC.OBODY>==c_woman)))
+	SRC.MESSAGE Du bist kein Vampir !
+	Return 1
+ELSEIF !(<SRC.BODY>==c_mongbat)
+	SRC.SPELLEFFECT 41 3000
+	SRC.TAG.OSTR=<SRC.STR>
+	SRC.TAG.ODEX=<SRC.DEX>
+	SRC.TAG.OINT=<SRC.INT>
+	SRC.EMOTE nimmt die Gestalt einer Fledermaus an
+	SRC.SFX=00fd
+	SRC.BODY=c_mongbat
+	SRC.STR=10
+	SRC.DEX=30
+	SRC.INT=10
+	SRC.HITS=<SRC.STR>
+	SRC.STAMINA=<SRC.DEX>
+	SRC.MANA=<SRC.INT>
+	SRC.COLOR=0381
+	UPDATE
+	SRC.EFFECT 3,i_fx_sparkle,6,15,1
+	Return 1
+ELSE
+	SRC.EMOTE nimmt seine alte Gestalt wieder an
+	SRC.SFX=00fd
+	SRC.BODY=<SRC.OBODY>
+	SRC.STR=<SRC.TAG.OSTR>
+	SRC.DEX=<SRC.TAG.ODEX>
+	SRC.INT=<SRC.TAG.OINT>
+	SRC.COLOR=<SRC.OSKIN>
+	SRC.HITS=<SRC.STR>
+	SRC.STAMINA=<SRC.DEX>
+	SRC.MANA=<SRC.INT>
+	SRC.TAG.OSTR=
+	SRC.TAG.ODEX=
+	SRC.TAG.OINT=
+	UPDATE
+	SRC.EFFECT 3,i_fx_sparkle,6,15,1
+	Return 1
+ENDIF
+
+ON=@DEATH
+
+SRC.TAG.OSTR=<SRC.STR>
+SRC.TAG.ODEX=<SRC.DEX>
+SRC.TAG.OINT=<SRC.INT>
+
+[EOF]

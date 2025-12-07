@@ -1,0 +1,422 @@
+//Oblivion Shard healing system for Sphere .55i
+//Version 1.20  10/14/02
+//History
+// .90 - Initial build
+// .91 - Failure/GM level fixes
+// .92 - Bloody 'aids in pack
+// .93 - GM level gains
+// .94 - Words changed
+// .95 - MAX healing adjusted, plus consumption of aids and addition of bloody aids again.
+// .96 - Can't heal some brain types...
+// .97 - Consumption issues fixed
+// .98 - Checks for when Sphere is being stupid
+// .99 - Lag busting code (no updates)
+// 1.00 - First really nice version.  Gonna do vet skill next???
+// 1.10 - If the target is an animal or dragon the veterinary skill is used.  Monsters excluded totally now.
+// 1.20 - Various fixes to rezzing and "can't heal that" code
+//GM Iz and Admin Electro
+//www.oblivion2.com
+//Steal credit and die a horrid slow painful death =P
+//
+//Uses custom layers 109 and 110
+//Memory objects keep track of if healer can heal, and if the
+//target is being healed.  Etc....
+
+[ITEMDEF 0e21]
+DEFNAME=i_bandage
+RESOURCES=i_cloth
+TYPE=T_BANDAGE
+WEIGHT=.3
+DUPELIST=0ee9
+CATEGORY=Items by Professions
+SUBSECTION=Healer
+DESCRIPTION=Clean Bandages
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="You can't use bandages unless they are in your inventory."
+   RETURN 1
+ELSE
+   //Check, didn't del object
+   IF (<SRC.FINDLAYER(109).TIMER>==-1)
+      SRC.FINDLAYER(109).REMOVE
+   ENDIF
+   RETURN 0
+ENDIF
+
+//Targon item - items can't be healed
+ON=@TARGON_ITEM
+   IF <SRC.TARG.CANSEELOS>
+      //In order to wash bandages
+      IF ((<SRC.TARG.TYPE>==t_water)||(<SRC.TARG.TYPE>==t_water_wash)
+         RETURN 0
+      ENDIF
+   ENDIF
+   SRC.SYSMESSAGE="You can't use this on a <SRC.TARG.NAME>!"
+RETURN 1
+
+ON=@TARGON_CHAR
+   //Distance check
+   IF (<SRC.TARG.DISTANCE>>3)
+      SRC.SYSMESSAGE="You are too far to attempt to heal <SRC.TARG.NAME>"
+      RETURN 1
+   ENDIF
+
+   //Undead check
+   IF (<SRC.TARG.NPC>==BRAIN_UNDEAD)
+      SRC.SYSMESSAGE="You can not heal the undead."
+      RETURN 1
+   ENDIF
+
+   //Monster check
+   IF ((<SRC.TARG.NPC>==BRAIN_MONSTER)||(<SRC.TARG.NPC>==BRAIN_BESERK))
+      SRC.SYSMESSAGE="You really don't want to get that close to <SRC.TARG.NAME>."
+      RETURN 1
+   ENDIF
+
+   //Check for veterinary which animals and dragons use
+   IF ((<SRC.TARG.NPC>==BRAIN_ANIMAL)||(<SRC.TARG.NPC>==BRAIN_DRAGON))
+      SRC.TAG.HEALING=<SRC.VETERINARY>
+      SRC.TAG.HEALTYPE=2
+   ELSE
+      SRC.TAG.HEALING=<SRC.HEALING>
+      SRC.TAG.HEALTYPE=1
+   ENDIF
+
+   //Check to see if you are currently healing
+   IF (0<SRC.FINDLAYER(109).ID>!=0)
+      SRC.SYSMESSAGE="You can't use your healing skill again so soon."
+      RETURN 1
+   ENDIF
+
+   //Stupid sphere check, didn't del object
+   IF (<SRC.TARG.FINDLAYER(110).TIMER>==-1)
+      SRC.TARG.FINDLAYER(110).REMOVE
+   ENDIF
+
+   //Check to see if target is being healed
+   IF (0<SRC.TARG.FINDLAYER(110).ID>!=0)
+      SRC.SYSMESSAGE="The target is currently being healed."
+      RETURN 1
+   ENDIF
+
+   //Check for targ full HP, avoids macroing issues too
+   IF (<SRC.TARG.HITS>>=<SRC.TARG.STR>)
+      SRC.SYSMESSAGE="The target is fully healed."
+      RETURN 1
+   ENDIF
+
+   //Calculate how long the healer delay is
+   VAR.SKILLTIME=<EVAL (12-<SRC.TAG.HEALING>/100)>
+   IF (<VAR.SKILLTIME>)>7
+      VAR.SKILLTIME=7
+   ENDIF
+
+   //Calculate the MAX and MIN healing
+   VAR.MIN=<EVAL (<SRC.TAG.HEALING>/175)>
+   IF (<VAR.MIN><=0)
+      VAR.MIN=1
+   ENDIF
+   //Using 20 here means we have to roll 5 times to get the full result,
+   //It makes a bell curve shape more likely.  3 times would be fine too.  Then
+   //you would change this value to 30
+   VAR.MAX=<EVAL (<SRC.TAG.HEALING>/75)>
+   IF (<VAR.MAX><=3)
+      VAR.MAX=3
+   ENDIF
+
+   //Rezzing calc
+   IF ((<SRC.TAG.HEALING>>=900)&&(<SRC.ANATOMY>>=900))
+      VAR.REZ=1
+   ELSE
+      VAR.REZ=0
+   ENDIF
+   //Curing calc
+   IF ((<SRC.TAG.HEALING>>=750)&&(<SRC.ANATOMY>>=750))
+      VAR.CURE=1
+   ELSE
+      VAR.CURE=0
+   ENDIF
+
+   //Create healing object
+   SRC.NEWITEM i_memory_healing_healer
+   SRC.ACT.TIMER=<VAR.SKILLTIME>
+   SRC.ACT.CONT=<SRC.UID>
+   //Create targets healing object
+   SRC.TARG.NEWITEM i_memory_healing_patient
+   SRC.TARG.ACT.MORE=<VAR.MIN>
+   SRC.TARG.ACT.MORE2=<VAR.MAX>
+   SRC.TARG.ACT.MOREX=<VAR.REZ>
+   SRC.TARG.ACT.MOREY=<VAR.CURE>
+   SRC.TARG.ACT.LINK=<SRC.UID>
+   SRC.TARG.ACT.TIMER=3
+   SRC.TARG.ACT.CONT=<SRC.TARG.UID>
+RETURN 1
+
+[ITEMDEF i_memory_healing_healer]
+ID=i_memory
+TYPE = t_eq_script
+LAYER = 109
+NAME="Oblivion Healer"
+
+ON=@CREATE
+   ATTR=attr_decay
+CATEGORY=Memory Objects
+SUBSECTION=Healing
+DESCRIPTION=Healer
+
+[ITEMDEF i_memory_healing_patient]
+//MORE=minimum
+//MORE2=maximum
+//MOREX=rez, 1 or 0
+//MOREY=cure, 1 or 0
+//LINK=Healers UID (link to healer to send messages etc....)
+//TIMER=delay of 2
+ID=i_memory
+TYPE = t_eq_script
+LAYER = 110
+NAME="Oblivion Patient"
+CATEGORY=Memory Objects
+SUBSECTION=Healing
+DESCRIPTION=Patient
+
+ON=@CREATE
+   ATTR=attr_decay
+
+ON=@TIMER
+   //Skill gain for the LINK (healer) now that there has been success.
+   //We have to do it here before fail or you would never gain at lower levels....
+   //Check link first
+
+   IF ((0<LINK.UID>==0)||(<LINK.FLAGS>&statf_dead))
+      RETURN 0
+   ENDIF
+
+   //If they need gain
+   IF (<LINK.HEALING><1000)
+      //Random number we will use for everything
+      VAR.RANDOM=<EVAL {1 100}>
+      //For noobs with less than 600
+      IF 0<LINK.HEALING><0600
+         IF <VAR.RANDOM><=10
+            //Raise the proper skill
+            IF (0<LINK.TAG.HEALTYPE>==01)
+               LINK.HEALING=<LINK.HEALING>+1
+            ELIF (0<LINK.TAG.HEALTYPE>==02)
+               LINK.VETERINARY=<LINK.VETERINARY>+1
+            ENDIF
+            //LINK.SYSMESSAGE="Your healing has increased by 0.1%.  It is now <LINK.HEALING>."
+         ENDIF
+      //Not a noob anymore
+      ELIF ((<LINK.HEALING>>=600)&&(<LINK.HEALING><700))
+         IF <VAR.RANDOM><=4
+            //Raise the proper skill
+            IF (0<LINK.TAG.HEALTYPE>==01)
+               LINK.HEALING=<LINK.HEALING>+1
+            ELIF (0<LINK.TAG.HEALTYPE>==02)
+               LINK.VETERINARY=<LINK.VETERINARY>+1
+            ENDIF
+            //LINK.SYSMESSAGE="Your healing has increased by 0.1%.  It is now <LINK.HEALING>."
+         ENDIF
+      //Moderate in skill
+      ELIF ((<LINK.HEALING>>=700)&&(<LINK.HEALING><850))
+         IF <VAR.RANDOM><=3
+            //Raise the proper skill
+            IF (0<LINK.TAG.HEALTYPE>==01)
+               LINK.HEALING=<LINK.HEALING>+1
+            ELIF (0<LINK.TAG.HEALTYPE>==02)
+               LINK.VETERINARY=<LINK.VETERINARY>+1
+            ENDIF
+            //LINK.SYSMESSAGE="Your healing has increased by 0.1%.  It is now <LINK.HEALING>."
+         ENDIF
+      //Master
+      ELIF ((<LINK.HEALING>>=850)&&(<LINK.HEALING><950))
+         IF <VAR.RANDOM><=2
+            //Raise the proper skill
+            IF (0<LINK.TAG.HEALTYPE>==01)
+               LINK.HEALING=<LINK.HEALING>+1
+            ELIF (0<LINK.TAG.HEALTYPE>==02)
+               LINK.VETERINARY=<LINK.VETERINARY>+1
+            ENDIF
+            //LINK.SYSMESSAGE="Your healing has increased by 0.1%.  It is now <LINK.HEALING>."
+         ENDIF
+      //Grand master, its slooooo here
+      ELIF (<LINK.HEALING>>=950)
+         IF <VAR.RANDOM><=1
+            //Raise the proper skill
+            IF (0<LINK.TAG.HEALTYPE>==01)
+               LINK.HEALING=<LINK.HEALING>+1
+            ELIF (0<LINK.TAG.HEALTYPE>==02)
+               LINK.VETERINARY=<LINK.VETERINARY>+1
+            ENDIF
+            //LINK.SYSMESSAGE="Your healing has increased by 0.1%.  It is now <LINK.HEALING>."
+         ENDIF
+      ENDIF
+   ENDIF
+
+   //Check for failure.  10% min, 80% max
+   VAR.FAIL=<EVAL (10+(-<LINK.HEALING>/100))>
+   IF <VAR.FAIL><=0
+      VAR.FAIL=1
+   ELSEIF (<VAR.FAIL>>8)
+      VAR.FAIL=8
+   ENDIF
+
+   //Fail or pass, we don't need the tags anymore so lets dump them.
+   LINK.TAG.HEALTYPE=
+
+   //Do they fail?  If so consume a bandage and exit normally
+   IF ((<EVAL {1 10}>)<=(<VAR.FAIL>))
+      //If you are healing yourself then you dont want to say it twice.
+      IF (<CONT.UID>=<LINK.UID>)
+         CONT.SYSMESSAGE="You fail to heal yourself."
+      ELSE
+         CONT.SYSMESSAGE="The healer has failed to mend you."
+         LINK.SYSMESSAGE="You fail to heal the patient."
+      ENDIF
+      LINK.CONSUME=1 i_bandage
+      RETURN 0
+   ENDIF
+
+   //Ok no fail, time to check for dead (c_ghost_man or c_ghost_woman, who is a player)
+   IF (((<CONT.BODY>=c_ghost_man)||(<CONT.BODY>=c_ghost_woman)) &&(<CONT.NPC>=0))
+      //Check for enuf aids
+      IF !(<LINK.RESTEST 5 i_bandage>)
+         LINK.SYSMESSAGE="You do not have enough bandages to perform a resurrection."
+         RETURN 0 //Exit out, as this is an exclusive event
+      ENDIF
+      //0 means you cant do this yet!
+      IF (<MOREX>=0)
+         LINK.SYSMESSAGE="Lacking skill, you waste bandages trying to raise the dead."
+         LINK.CONSUME=2 i_bandage
+         RETURN 0 //Exit out, as this is an exclusive event
+      ELSE  //Ok to rez
+         //You rez them
+         IF ((<EVAL {1 10}>)<=7)
+            TOPOBJ.RESURRECT
+            IF (0(<SRC.TARG.RESTEST 1 i_deathshroud>)!=0) //remove death shroud, if there
+               SRC.TARG.CONSUME=1 i_deathshroud
+            ENDIF
+            LINK.CONSUME=5 i_bandage
+            CONT.SYSMESSAGE="You have been raised by <LINK.NAME>!"
+            LINK.SYSMESSAGE="You have raised <CONT.NAME> from the dead!"
+
+            //If not fail, put 3 dirty bandage in healers backpack
+            LINK.NEWITEM=i_bandage_bloody
+            LINK.ACT.AMOUNT=3
+            LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+            LINK.SOUND=057
+
+            RETURN 0 //Exit out, as this is an exclusive event
+         ELSE
+            LINK.SYSMESSAGE="You fail to raise <CONT.NAME> from the dead."
+            CONT.SYSMESSAGE="<LINK.NAME> fails to raise you from the dead."
+            LINK.CONSUME=2 i_bandage
+            RETURN 0 //Exit out, as this is an exclusive event
+         ENDIF
+      ENDIF
+   ENDIF
+
+   //Not dead, so lets check poison status
+   IF (0<CONT.FINDLAYER(42).ID>!=0)
+      //Check for enuf aids
+      IF <LINK.RESTEST 3 i_bandage>
+         //0 means we cant do this yet!
+         IF (<MOREY>=0)
+            //If you are healing yourself then you dont want to say it twice.
+            IF (<CONT.UID>=<LINK.UID>)
+               CONT.SYSMESSAGE="Although you are poisoned you lack the skill to cure yourself."
+            ELSE
+               LINK.SYSMESSAGE="Although <CONT.NAME> is poisoned, you lack the skill to cure them."
+            ENDIF
+         ELSE  //We can cure poison
+            VAR.CURE=<EVAL {1 10}>
+            //You cure them
+            IF <VAR.CURE><=8
+               //Check for bandages
+               //If you are healing yourself then you dont want to say it twice.
+               IF (<CONT.UID>=<LINK.UID>)
+                  CONT.SYSMESSAGE="You cure yourself!"
+               ELSE
+                  LINK.SYSMESSAGE="Your healing skill cures <CONT.NAME> of all poison."
+                  CONT.SYSMESSAGE="<LINK.NAME> cures you of all poison."
+               ENDIF
+               //Remove anything at the poison layer
+               CONT.FINDLAYER(42).REMOVE
+
+               //Remove bandage
+               LINK.CONSUME=2 i_bandage
+
+               //If not fail, put 1 dirty bandage in healers backpack
+               LINK.NEWITEM=i_bandage_bloody
+               LINK.ACT.AMOUNT=2
+               LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+               LINK.SOUND=057
+               //Don't RETURN 0 because this isn't exclusive like REZZING is.
+            ELSE //You fail to cure them
+               //If you are healing yourself then you dont want to say it twice.
+               IF (<CONT.UID>=<LINK.UID>)
+                  CONT.SYSMESSAGE="You fail to cure yourself."
+               ELSE
+                  LINK.SYSMESSAGE="You fail to cure the poison."
+                  CONT.SYSMESSAGE="<LINK.NAME> fails to cure you."
+               ENDIF
+
+               //Remove bandage
+               LINK.CONSUME=1 i_bandage
+               //Don't RETURN 0 because this isn't exclusive like REZZING is.
+            ENDIF
+         ENDIF
+      ELSE
+         LINK.SYSMESSAGE="You don't have enough bandages to cure poison."
+      ENDIF
+   ENDIF
+
+   //Time to calculate
+   //rnd((skill/10), skill/3)+rnd((skill/10), skill/3)+rnd((skill/10), skill/3)
+   VAR.ROLL1=<EVAL {<MORE> <MORE2>>
+   VAR.ROLL2=<EVAL {<MORE> <MORE2>>
+   VAR.ROLL3=<EVAL {<MORE> <MORE2>>
+   VAR.ROLL4=<EVAL {<MORE> <MORE2>>
+   VAR.ROLL5=<EVAL {<MORE> <MORE2>>
+   VAR.HEALED=<VAR.ROLL1>+<VAR.ROLL2>+<VAR.ROLL3>+<VAR.ROLL4>+<VAR.ROLL5>
+   //If its more than STR then just set to STR
+   IF ((<VAR.HEALED>+<CONT.HITS>)>(<CONT.STR>))
+      CONT.HITS=<CONT.STR>
+   ELSE  //otherwise add to HITS
+      CONT.HITS=(<CONT.HITS>+<VAR.HEALED>)
+   ENDIF
+
+   //Check for enuf aids
+   IF !<LINK.RESTEST 1 i_bandage>
+      LINK.SYSMESSAGE="You do not have enough bandages to heal."
+      RETURN 0
+   ENDIF
+
+   //Consume bandage
+   LINK.CONSUME=1 i_bandage
+
+   //If you are healing yourself then you dont want to say it twice.
+   IF (<CONT.UID>=<LINK.UID>)
+      CONT.SYSMESSAGE="You heal yourself."
+   ELSE
+      LINK.SYSMESSAGE="You heal <CONT.NAME>"
+      CONT.SYSMESSAGE="<LINK.NAME> heals you."
+   ENDIF
+
+   //If not fail, put dirty bandage in healers backpack
+   LINK.NEWITEM=i_bandage_bloody
+   LINK.ACT.CONT=<LINK.FINDLAYER(21).UID>
+   LINK.SOUND=057
+
+   //Update hits bar etc....  Causes too much lag, shame Sphere doesn't update JUST the bar on HITS difference....
+   //CONT.UPDATE
+   //LINK.UPDATE
+
+   //Debug information
+   //LINK.SAY="R1: <eval <var.roll1>>   R2: <eval <var.roll2>>   R3: <eval <var.roll3>>   R4: <eval <var.roll4>>   R5: <eval <var.roll5>>"
+   //LINK.SAY="Hits restored: <Eval <VAR.HEALED>>   Range:  <EVAL <MORE>> to <EVAL <MORE2>>"
+   //LINK.SAY="Calculated Range:  <EVAL (<more>*5)> to <EVAL (<more2>*5)>"
+RETURN 0
+
+[EOF]

@@ -1,0 +1,39 @@
+///By CLOUD_BR
+
+[EVENTS e_begging]
+ON=@SkillSuccess
+IF (<ARGN1>==SKILL_BEGGING)
+SKILLGAIN 75 Begging
+IF !(<ACT.ISPLAYER>)
+IF (<ACT.BODY>==c_man) || (<ACT.body>==c_woman)
+IF (<ACT.REGION.FLAGS>&REGION_FLAG_GUARDED)
+ADDGOLD <EVAL {100 200}>
+SAY @07ad Fine, here it is.
+ENDIF
+ENDIF
+ENDIF
+return 1
+ENDIF
+
+[FUNCTION skillgain] // this wasn't made by me
+IF (<SKILLTOTAL> > 699.9)
+return 1
+ENDIF
+LOCAL.SKILL=<streat <ARGS>>
+IF (<<LOCAL.SKILL>> > 99.9)
+	RETURN 1
+ENDIF
+IF (<EVAL(RAND(<<LOCAL.SKILL>>))> < <ARGN1>)
+	IF (<LOCAL.SKILL> < 300)
+		LOCAL.GAIN=<EVAL({1 3 2 1})>
+	ELSE
+		LOCAL.GAIN=1
+	ENDIF
+
+	TRY <LOCAL.SKILL>=<EVAL <<LOCAL.SKILL>>+<LOCAL.GAIN>>
+ENDIF
+IF (<<LOCAL.SKILL>> > 99.9)
+	TRY <LOCAL.SKILL>=1000
+ENDIF
+
+[EOF]

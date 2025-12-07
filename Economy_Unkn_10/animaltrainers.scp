@@ -1,0 +1,245 @@
+//Animal selling and training.
+//Stabling is POL style: Pay 50 gold, get a deed, take the deed to a
+//trainer (although in this script, the trainer must be within a certain
+//distance of the trainer that the animal was stabled at, for realism)
+//and get the animal back.
+//v1.0, by Rudenid
+//Installation instructions:
+//The speech block below should be added to the tamer NPC's definition.
+
+[SPEECH spk_trainer_commands]
+ON=*sell*animal*
+	SAY You want to sell an animal to me? Show it to me.
+	SRC.NEWITEM i_animal_sell
+	SRC.ACT.LINK=<UID>
+	SRC.ACT.EQUIP
+
+ON=*Retrieve*
+	IF <NPC>==BRAIN_ANIMAL_TRAINER
+		PETRETRIEVE
+		SAY If you want to retrieve any more animals, you'll need to show me the deed.
+
+		SRC.NEWITEM i_animal_stable_retrieve
+		SRC.ACT.LINK=<UID>
+		SRC.ACT.EQUIP
+	ENDIF
+
+ON=*Stable*
+	IF <NPC>==BRAIN_ANIMAL_TRAINER
+		SAY It costs 50 gold to stable an animal... the deed you'll get is good anywhere near these parts.
+		SRC.NEWITEM i_animal_stable
+		SRC.ACT.LINK=<UID>
+		SRC.ACT.EQUIP
+	ENDIF
+
+
+[ITEMDEF i_animal_sell]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Sell an animal
+
+ON=@Create
+ATTR=attr_move_never|attr_invis
+
+ON=@Equip
+TARGET Choose the animal to sell
+TIMER=60
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE That is not an animal.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISMYPET>)
+LINK.SAY Are you tryin' to pull a fast one on me? This ain't your animal.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.NPC> != brain_animal)
+LINK.SAY 'Fraid I have no use for <SRC.TARG.NAME>.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.FLAGS> & statf_conjured)
+LINK.SAY This animal ain't real!
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.UID> = <SRC.TARG.UID>)
+LINK.SAY I'm not interested in slaves, jus' animals.
+REMOVE
+RETURN 1
+ENDIF
+
+VAR.GOLDFORANIMAL=<EVAL <SRC.TARG.STR> + <SRC.TARG.INT> + <SRC.TARG.DEX>>
+VAR.GOLDFORANIMAL=<EVAL <VAR.GOLDFORANIMAL> + <EVAL -1*<SRC.TARG.MAXFOOD>>>
+VAR.GOLDFORANIMAL=<EVAL <VAR.GOLDFORANIMAL> + <SRC.TARG.FOOD>>
+
+IF (<SERV.ITEMDEF.<EVAL <SRC.TARG.ICON>>.VALUE> > 0)
+IF (<EVAL <VAR.GOLDFORANIMAL>> > <EVAL (<SERV.ITEMDEF.<EVAL <SRC.TARG.ICON>>.VALUE> * 85) / 100>)
+VAR.GOLDFORANIMAL=<EVAL (<SERV.ITEMDEF.<EVAL <SRC.TARG.ICON>>.VALUE> * 85) / 100>
+ENDIF
+ENDIF
+
+IF (<EVAL <VAR.GOLDFORANIMAL>> < 1)
+VAR.GOLDFORANIMAL=1
+ENDIF
+
+IF (<EVAL <VAR.GOLDFORANIMAL>> > 5000)
+LINK.SAY 'Fraid I can't afford that animal.
+VAR.GOLDFORANIMAL=
+REMOVE
+RETURN 1
+ENDIF
+
+LINK.SAY Hmm... here's <EVAL <VAR.GOLDFORANIMAL>> gold for <SRC.TARG.NAME>.
+CONT.NEWITEM i_gold
+CONT.ACT.AMOUNT=<EVAL <VAR.GOLDFORANIMAL>>
+CONT.ACT.CONT=<CONT.UID>
+SRC.TARG.REMOVE
+VAR.GOLDFORANIMAL=
+REMOVE
+RETURN 1
+
+ON=@Timer
+LINK.SAY Yer' taking too long to choose, and I've better things to do than wait for ya.
+REMOVE
+RETURN 1
+
+[ITEMDEF i_animal_stable]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Stable an animal
+
+ON=@Create
+ATTR=attr_move_never|attr_invis
+
+ON=@Equip
+TARGET Choose the animal to stable
+TIMER=60
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE That is not an animal.
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.ISMYPET>)
+LINK.SAY Are you tryin' to pull a fast one on me? This ain't your animal.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.NPC> != brain_animal)
+LINK.SAY 'Fraid I'm not able to care for <SRC.TARG.NAME>.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.TARG.FLAGS> & statf_conjured)
+LINK.SAY This animal ain't real, and there's no reason to stable it.
+REMOVE
+RETURN 1
+ENDIF
+
+IF (<SRC.UID> = <SRC.TARG.UID>)
+LINK.SAY I'm not interested in slaves, jus' animals.
+REMOVE
+RETURN 1
+ENDIF
+
+IF !(<SRC.RESTEST 50 i_gold>)
+LINK.SAY You don't have enough gold.
+REMOVE
+RETURN 1
+ENDIF
+
+LINK.SAY <SRC.TARG.NAME>? Don't worry, I'll take good care of it.
+SRC.CONSUME 50 i_gold
+
+SRC.NEWITEM=i_deed_animal
+SRC.ACT.NAME=Deed to <SRC.TARG.NAME> 
+SRC.ACT.TAG.ANIMALNAME=<SRC.TARG.NAME>
+SRC.ACT.TAG.ORIGINREGION=<LINK.REGION.NAME>
+SRC.ACT.TAG.ORIGINPX=<LINK.P.X>
+SRC.ACT.TAG.ORIGINPY=<LINK.P.Y>
+SRC.ACT.COLOR=<SRC.TARG.COLOR> 
+SRC.ACT.MORE1=<SRC.TARG.ID> 
+SRC.ACT.BOUNCE 
+SRC.TARG.REMOVE 
+REMOVE
+RETURN 1
+
+ON=@Timer
+LINK.SAY Yer' taking too long to choose, and I've better things to do than wait for ya.
+REMOVE
+RETURN 1
+
+[ITEMDEF i_animal_stable_retrieve]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Retrieve an animal
+
+ON=@Create
+ATTR=attr_move_never|attr_invis
+
+ON=@Equip
+TARGET Choose the deed to show to the tamer.
+TIMER=60
+
+ON=@TARGON_ITEM
+	IF (<SRC.TARG.BASEID> != i_deed_animal)
+		LINK.SAY This don't look like an animal deed to me.
+		REMOVE
+		RETURN 1
+	ENDIF
+
+	SRC.NEWITEM i_gold
+	SRC.ACT.ATTR=attr_invis|attr_decay
+	SRC.ACT.P=<EVAL <SRC.TARG.TAG.ORIGINPX>>,<EVAL <SRC.TARG.TAG.ORIGINPY>>
+	SRC.ACT.TIMER=5
+	
+	IF (<SRC.ACT.DISTANCE> > 2000)
+		LINK.SAY Yer' way too far from the stable you got this from. We don't have an animal like that here.
+		SRC.ACT.REMOVE
+		REMOVE
+		RETURN 1
+	ENDIF
+
+	SRC.ACT.REMOVE
+
+	SRC.NEWITEM <SERV.ITEMDEF.<EVAL <SRC.TARG.MORE1>>.ICON>
+	SRC.ACT.COLOR=<SRC.TARG.COLOR>
+	SRC.ACT.NAME=<SRC.TARG.TAG.ANIMALNAME>
+	SRC.ACT.LINK=<SRC.UID>
+	SRC.ACT.MORE1=<SRC.TARG.MORE1>
+
+	SRC.TARG.REMOVE
+
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.DCLICK
+
+
+	LINK.SAY You take good care of it now...
+
+	REMOVE
+	RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE This is not an animal deed. 
+REMOVE
+RETURN 1
+
+[ITEMDEF i_deed_animal]
+ID=i_map_rolled
+TYPE=t_eq_script
+NAME=deed to an animal
+VALUE=50
+
+ON=@DClick
+SRC.SYSMESSAGE Take that to an animal tamer near <TAG.ORIGINREGION> to claim <TAG.ANIMALNAME>.
+RETURN 1

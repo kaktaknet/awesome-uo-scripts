@@ -1,0 +1,1013 @@
+[EVENTS e_house]
+ON=@ItemClick
+	IF (<ACT.ISHOUSESIGN>)
+		VAR.NUM 0<ACT.LINK.REGION.TAG.NAME>
+		IF STRMATCH(<ACT.LINK.REGION.TAG.NAME>,<VAR.NUM>)
+			ACT.MESSAGE <EVAL <ACT.LINK.REGION.TAG.NAME>> (<SRC.UID.<ACT.LINK.MORE1>.NAME>)
+		ELSE
+			ACT.MESSAGE <ACT.LINK.REGION.TAG.NAME> (<SRC.UID.<ACT.LINK.MORE1>.NAME>)
+		ENDIF
+		RETURN 1
+	ELIF (<ACT.ISLOCKEDDOWN>)
+		ACT.MESSAGE <QVAL <ACT.TYPE> == t_secure ? [Secured] : [Locked Down]>
+	ENDIF
+
+ON=@ItemDClick
+	IF (<ACT.ISHOUSESIGN>)
+		ACT.LINK.house_init Coowner
+		ACT.LINK.house_init Friend
+		ACT.LINK.house_init Ban
+
+		IF !(0<ACT.LINK.REGION.TAG.MAXLOCKDOWNS>) || !(0<ACT.LINK.REGION.TAG.MAXSECURES>)
+			ACT.LINK.REGION.TAG.MAXLOCKDOWNS <EVAL <ACT.LINK.VALUE> / 100>
+			ACT.LINK.REGION.TAG.MAXSECURES <EVAL <ACT.LINK.VALUE> / 15000>
+		ENDIF
+
+		IF !(0<ACT.LINK.REGION.ISEVENT.r_housemenu>)
+			ACT.LINK.REGION.EVENTS r_housemenu
+		ENDIF
+
+		IF !(0<ACT.LINK.REGION.TAG.SIGN>)
+			ACT.LINK.REGION.TAG.SIGN <ACT.UID>
+		ENDIF
+
+		VAR.ACT <ACT.UID>
+
+		IF (<REGION.UID> == <ACT.LINK.UID>)
+			FINDID.i_housespk.REMOVE
+			NEWITEM i_housespk
+			ACT.LINK <UID.<VAR.ACT>.LINK.UID>
+			ACT.CONT <UID>
+			FLAGS <FLAGS> | 08000
+		ENDIF
+
+		SRC.TRY UID.<VAR.ACT>.LINK.house_page 1
+		ACT <VAR.ACT>
+		RETURN 1
+	ELIF (<ACT.ISLOCKEDDOWN>)
+		IF (<ACT.LAYER>)
+			RETURN 1
+		ELIF (<ACT.TYPE> == t_container)
+			RETURN 0
+		ELIF !(<UID.<ACT.REGION.UID>.ISOWNER>) && !(<UID.<ACT.REGION.UID>.ISCOOWNER>) && !(<UID.<ACT.REGION.UID>.ISFRIEND>)
+			SYSMESSAGE You are not a friend of the house, so you may not use this.
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@ItemPickUp_Ground
+	RETURN <ACT.ISLOCKEDDOWN>
+
+[FUNCTION ishousesign]
+IF (<BASEID> == i_sign_brass) || (<BASEID> == 0bcf) || (<BASEID> == i_sign_beekeeper) || (<BASEID> == 0c0d) || (<BASEID> == 0c0b) || (<BASEID> == 0bcd) || (<BASEID> == 0bcb) || (<BASEID> == 0bc9) || (<BASEID> == 0bc7) || (<BASEID> == 0bc5) || (<BASEID> == 0bc3) || (<BASEID> == 0bc1) || (<BASEID> == 0bbf) || (<BASEID> == 0bbd) || (<BASEID> == 0bbb) || (<BASEID> == 0bb9) || (<BASEID> == 0bb7) || (<BASEID> == 0bb5) || (<BASEID> == 0bb3) || (<BASEID> == 0bb1) || (<BASEID> == 0baf) || (<BASEID> == 0bad) || (<BASEID> == 0bab) || (<BASEID> == 0ba9) || (<BASEID> == i_sign_tinker) || (<BASEID> == i_sign_tailor) || (<BASEID> == i_sign_bakery) || (<BASEID> == 0b95) || (<BASEID> == 0c09) || (<BASEID> == 0c07) || (<BASEID> == 0c05) || (<BASEID> == 0c03) || (<BASEID> == 0c01) || (<BASEID> == 0bff) || (<BASEID> == 0bfd) || (<BASEID> == 0bfb) || (<BASEID> == 0bf9) || (<BASEID> == 0bf7) || (<BASEID> == 0bf5) || (<BASEID> == 0bf3) || (<BASEID> == 0bf1) || (<BASEID> == 0bef) || (<BASEID> == 0bed) || (<BASEID> == 0beb) || (<BASEID> == 0be9) || (<BASEID> == 0be7) || (<BASEID> == 0be5) || (<BASEID> == 0be3) || (<BASEID> == 0be1) || (<BASEID> == 0bdf) || (<BASEID> == 0bdd) || (<BASEID> == 0bdb) || (<BASEID> == 0bd9) || (<BASEID> == 0bd7) || (<BASEID> == 0bd5) || (<BASEID> == 0bd3) || (<BASEID> == i_sign_blank)
+	IF (<LINK.TYPE> == t_multi) && (<LINK.UID> == <REGION.UID>)
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 0
+
+[FUNCTION islockeddown]
+IF (<SRC.UID.<REGION.UID>.TYPE> != t_multi)
+ELIF (<LINK> == <REGION.UID>)
+ELIF (<ATTR> & attr_newbie|attr_owned|attr_invis|attr_stolen|attr_static)
+ELIF (<UID> != <TOPOBJ.UID>)
+ELIF (<ATTR> & attr_move_never)
+	RETURN 1
+ENDIF
+RETURN 0
+
+[FUNCTION house_init]
+IF !(0<REGION.TAG.<ARGS>>)
+	VAR.ACT <SRC.ACT>
+	SRC.NEWITEM i_bag
+	SRC.ACT.ATTR attr_static|attr_invis
+	SRC.ACT.COLOR 0480
+	SRC.ACT.NAME <ARGS>
+	SRC.ACT.LINK <UID>
+	SRC.ACT.P <P>
+	SRC.TRY REGION.TAG.<ARGS> <SRC.ACT.UID>
+	SRC.ACT <VAR.ACT>
+ENDIF
+
+[REGIONTYPE r_housemenu]
+ON=@Enter
+	VAR.ACT <SRC.ACT>
+	SRC.ACT <UID>
+	IF (<SRC.ACT.ISBAN>)
+		SRC.ACT <VAR.ACT>
+		SRC.UPDATE
+		RETURN 1
+	ENDIF
+
+	IF !(<SRC.NPC>)
+		TAG.VISITS 0<TAG.VISITS> + 1
+		SRC.FINDID.i_housespk.REMOVE
+		SRC.NEWITEM i_housespk
+		SRC.ACT.LINK <UID>
+		SRC.ACT.CONT <SRC.UID>
+		SRC.FLAGS <SRC.FLAGS> | 08000
+	ENDIF
+
+	SRC.ACT <VAR.ACT>
+
+ON=@Exit
+	IF !(<SRC.NPC>)
+		SRC.FINDID.i_housespk.REMOVE
+	ENDIF
+
+ON=@Step
+	IF !(<SRC.NPC>)
+		SRC.FLAGS <SRC.FLAGS> | 08000
+	ENDIF
+
+[FUNCTION house_page]
+DOSWITCH <ARGN> - 1
+BEGIN
+	VAR.PAGE1 1
+	VAR.PAGE2 2
+	VAR.PAGE3 3
+ENDIF
+BEGIN
+	VAR.PAGE1 2
+	VAR.PAGE2 1
+	VAR.PAGE3 3
+END
+BEGIN
+	VAR.PAGE1 3
+	VAR.PAGE2 2
+	VAR.PAGE3 1
+END
+ENDDO
+DIALOG d_house
+
+[FUNCTION isowner]
+RETURN <QVAL <SRC.ISGM> ? 1 : <QVAL <SRC.UID> == <MORE1> ? 1 : 0>>
+
+[FUNCTION iscoowner]
+house_is Coowner
+RETURN <VAR.RETURN>
+
+[FUNCTION isfriend]
+house_is Friend
+RETURN <VAR.RETURN>
+
+[FUNCTION isban]
+house_is Ban
+RETURN <VAR.RETURN>
+
+[FUNCTION house_is]
+VAR.OBJECT <ARGS>
+IF !(0<QVAL <REGION.TAG.TIS> ? <SRC.TARG.NPC> : <SRC.NPC>>) && (0<SRC.UID.<REGION.TAG.<ARGS>>.RESCOUNT> > 0)
+	house_is_r <SRC.UID.<REGION.TAG.<ARGS>>.RESCOUNT>
+	RETURN 0
+ENDIF
+VAR.RETURN 0
+
+[FUNCTION house_is_r]
+IF (<ARGN> > 0)
+	IF STRMATCH(<SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<EVAL <ARGN> - 1>.TAG.ACCOUNT>,<QVAL <REGION.TAG.TIS> ? <SRC.TARG.ACCOUNT> : <SRC.ACCOUNT>>)
+		VAR.RETURN 1
+	ELSE
+		house_is_r <EVAL <ARGN> - 1>
+	ENDIF
+ELSE
+	VAR.RETURN 0
+ENDIF
+
+[ITEMDEF i_housespk]
+ID=i_memory
+NAME=House Spk
+TYPE=t_comm_crystal
+LAYER=99
+ON=@Create
+	SPEECH spk_housemenu
+
+[SPEECH spk_housemenu]
+ON=*
+	IF (<CONT.UID> != <SRC.UID>)
+		RETURN 0
+	ELIF (<LINK.TYPE> != t_multi) || (<SRC.REGION.UID> != <LINK.UID>)
+		REMOVE
+		RETURN 0
+	ENDIF
+
+	IF STRMATCH(*house help*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>) || (<LINK.ISFRIEND>))
+		SRC.SYSMESSAGE Commands:
+		SRC.SYSMESSAGE *I ban thee*, *remove thyself*, *place*trash*, *lock this down*, *release this*, *secure this*
+	ELIF STRMATCH(*I ban thee*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>) || (<LINK.ISFRIEND>))
+		LINK.house_target Ban
+	ELIF STRMATCH(*remove thyself*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>) || (<LINK.ISFRIEND>))
+		LINK.house_target Eject
+	ELIF STRMATCH(*place*trash*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>))
+		IF (0<LINK.REGION.TAG.TRASH>)
+			SRC.TRY SRC.UID.<LINK.REGION.TAG.TRASH>.REMOVE
+			LINK.REGION.TAG.TRASH
+		ELSE
+			SRC.NEWITEM i_barrel_open
+			SRC.ACT.LINK <LINK.UID>
+			SRC.ACT.ATTR attr_move_never
+			SRC.ACT.TYPE t_trash_can
+			SRC.ACT.COLOR 07a1
+			SRC.ACT.P <SRC.P>
+			LINK.REGION.TAG.TRASH <SRC.ACT.UID>
+		ENDIF
+	ELIF STRMATCH(*lock this down*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>))
+		LINK.house_target Lockdown
+	ELIF STRMATCH(*release this*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>))
+		LINK.house_target Release
+	ELIF STRMATCH(*secure this*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>))
+		LINK.house_target Secure
+	ELIF STRMATCH(*nudge*up*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>))
+		LINK.house_target Nudge Up
+	ELIF STRMATCH(*nudge*down*,<ARGS>) && ((<LINK.ISOWNER>) || (<LINK.ISCOOWNER>))
+		LINK.house_target Nudge Down
+	ENDIF
+
+[FUNCTION house_gold]
+IF (<ARGN> > 0)
+	NEWITEM i_gold
+	ACT.AMOUNT 65000
+	ACT.CONT <FINDLAYER.layer_bankbox.UID>
+	house_gold <ARGN> +- 1
+ENDIF
+
+[FUNCTION house_namenum]
+VAR.NUM 0<REGION.TAG.NAME>
+IF STRMATCH(<REGION.TAG.NAME>,<VAR.NUM>)
+	RETURN 1
+ENDIF
+RETURN 0
+
+[DIALOG d_house]
+175,125
+resizepic 0 0 3600 450 350
+htmlgump <EVAL (450 / 2) - (<QVAL <EVAL (130 * <EVAL STRLEN(0<QVAL <house_namenum> ? <EVAL <VAR.NUM>> : <REGION.TAG.NAME>>)>) / 65> <VAR.lt> 125 ? 125 : <EVAL (130 * <EVAL STRLEN(0<QVAL <house_namenum> ? <EVAL <VAR.NUM>> : <REGION.TAG.NAME>>)>) / 65>>/ 2)> 20 <QVAL <EVAL (130 * <EVAL STRLEN(0<QVAL <house_namenum> ? <EVAL <VAR.NUM>> : <REGION.TAG.NAME>>)>) / 65> <VAR.lt> 125 ? 125 : <EVAL (130 * <EVAL STRLEN(0<QVAL <house_namenum> ? <EVAL <VAR.NUM>> : <REGION.TAG.NAME>>)>) / 65>> 85 0 1 0
+button 60 110 5606 5606 0 <EVAL <VAR.PAGE1>>
+text 80 108 1152 1	// Info
+button 180 110 5606 5606 0 <EVAL <VAR.PAGE2>>
+text 200 108 1152 2	// Friends
+button 320 110 5606 5606 0 <EVAL <VAR.PAGE3>>
+text 340 108 1152 3	// Options
+
+page <EVAL <VAR.PAGE1>>
+text 40 140 482 4	// Owned By
+text 150 140 1152 5
+text 40 160 482 6	// Secured Conts
+text 150 160 1152 7
+text 190 160 482 8	// Out Of
+text 260 160 1152 9
+text 40 180 482 10	// Lock Downs
+text 150 180 1152 11
+text 190 180 482 12	// Out Of
+text 260 180 1152 13
+text 40 220 482 14	// Visits
+text 150 220 1152 15
+button 310 315 5601 5601 1 0 1
+text 330 313 482 16	// Rename House
+
+page <EVAL <VAR.PAGE2>>
+button 40 140 5601 5601 1 0 2
+text 60 138 482 17	// List Coowners
+button 40 160 5601 5601 1 0 3
+text 60 158 482 18	// Add Coowners
+button 40 180 5601 5601 1 0 4
+text 60 178 482 19	// Remove Coowners
+button 40 200 5601 5601 1 0 5
+text 60 198 482 20	// Clear Coowners
+
+button 260 140 5601 5601 1 0 6
+text 280 138 482 21	// List Friends
+button 260 160 5601 5601 1 0 7
+text 280 158 482 22	// Add Friends
+button 260 180 5601 5601 1 0 8
+text 280 178 482 23	// Remove Friends
+button 260 200 5601 5601 1 0 9
+text 280 198 482 24	// Clear Friends
+
+button 115 240 5601 5601 1 0 10
+text 135 238 482 25	// Eject
+button 115 260 5601 5601 1 0 11
+text 135 258 482 26	// List Bans
+button 115 280 5601 5601 1 0 12
+text 135 278 482 27	// Add Bans
+button 115 300 5601 5601 1 0 13
+text 135 298 482 28	// Remove Bans
+
+page <EVAL <VAR.PAGE3>>
+button 40 140 5601 5601 1 0 14
+text 60 138 482 29
+button 40 160 5601 5601 0 4
+text 60 158 482 30
+button 40 180 5601 5601 1 0 15
+text 60 178 482 31
+button 40 200 5601 5601 1 0 16
+text 60 198 482 32
+//button 40 220 5601 5601 1 0 17
+//text 60 218 482 33
+
+page 4
+button 398 313 5606 5606 0 5
+button 415 313 5601 5601 1 0 18
+
+radio 55 150 2360 2361 0 0
+tilepic 65 140 2980
+radio 55 200 2360 2361 0 1
+tilepic 65 190 2982
+radio 55 250 2360 2361 0 2
+tilepic 65 240 2984
+radio 55 300 2360 2361 0 3
+tilepic 65 290 2986
+
+radio 115 150 2360 2361 0 4
+tilepic 125 140 2988
+radio 115 200 2360 2361 0 5
+tilepic 125 190 2990
+radio 115 250 2360 2361 0 6
+tilepic 125 240 2992
+radio 115 300 2360 2361 0 7
+tilepic 125 290 2994
+
+radio 175 150 2360 2361 0 8
+tilepic 185 140 2996
+radio 175 200 2360 2361 0 9
+tilepic 185 190 2998
+radio 175 250 2360 2361 0 10
+tilepic 185 240 3000
+radio 175 300 2360 2361 0 11
+tilepic 185 290 3002
+
+radio 235 150 2360 2361 0 12
+tilepic 245 140 3004
+radio 235 200 2360 2361 0 13
+tilepic 245 190 3006
+radio 235 250 2360 2361 0 14
+tilepic 245 240 3008
+radio 235 300 2360 2361 0 15
+tilepic 245 290 3010
+
+radio 295 150 2360 2361 0 16
+tilepic 305 140 3012
+radio 295 200 2360 2361 0 17
+tilepic 305 190 3014
+radio 295 250 2360 2361 0 18
+tilepic 305 240 3016
+radio 295 300 2360 2361 0 19
+tilepic 305 290 3018
+
+radio 355 150 2360 2361 0 20
+tilepic 365 140 3020
+radio 355 200 2360 2361 0 21
+tilepic 365 190 3022
+radio 355 250 2360 2361 0 22
+tilepic 365 240 3024
+radio 355 300 2360 2361 1 23
+tilepic 365 290 3026
+
+page 5
+button 398 313 5600 5600 0 4
+button 415 313 5601 5601 1 0 18
+
+radio 55 145 2360 2361 0 24
+tilepic 65 135 3028
+radio 55 185 2360 2361 0 25
+tilepic 65 175 3030
+radio 55 225 2360 2361 0 26
+tilepic 65 215 3032
+radio 55 265 2360 2361 0 27
+tilepic 65 255 3034
+radio 55 305 2360 2361 0 28
+tilepic 65 295 3036
+
+radio 115 145 2360 2361 0 29
+tilepic 125 135 3038
+radio 115 185 2360 2361 0 30
+tilepic 125 175 3040
+radio 115 225 2360 2361 0 31
+tilepic 125 215 3042
+radio 115 265 2360 2361 0 32
+tilepic 125 255 3044
+radio 115 305 2360 2361 0 33
+tilepic 125 295 3046
+
+radio 175 145 2360 2361 0 34
+tilepic 185 135 3048
+radio 175 185 2360 2361 0 35
+tilepic 185 175 3050
+radio 175 225 2360 2361 0 36
+tilepic 185 215 3052
+radio 175 265 2360 2361 0 37
+tilepic 185 255 3054
+radio 175 305 2360 2361 0 38
+tilepic 185 295 3056
+
+radio 235 145 2360 2361 0 39
+tilepic 245 135 3058
+radio 235 185 2360 2361 0 40
+tilepic 245 175 3060
+radio 235 225 2360 2361 0 41
+tilepic 245 215 3062
+radio 235 265 2360 2361 0 42
+tilepic 245 255 3064
+radio 235 305 2360 2361 0 43
+tilepic 245 295 3066
+
+radio 295 145 2360 2361 0 44
+tilepic 305 135 3068
+radio 295 185 2360 2361 0 45
+tilepic 305 175 3070
+radio 295 225 2360 2361 0 46
+tilepic 305 215 3072
+radio 295 265 2360 2361 0 47
+tilepic 305 255 3074
+radio 295 305 2360 2361 0 48
+tilepic 305 295 3076
+
+radio 355 145 2360 2361 0 49
+tilepic 365 135 3078
+radio 355 185 2360 2361 0 50
+tilepic 365 175 3080
+radio 355 225 2360 2361 0 51
+tilepic 365 215 3082
+radio 355 265 2360 2361 0 52
+tilepic 365 255 3084
+
+[DIALOG d_house TEXT]
+<QVAL <house_namenum> ? <EVAL <VAR.NUM>> : <REGION.TAG.NAME>>
+Info
+Friends
+Options
+Owned By
+<SRC.UID.<MORE1>.NAME>
+Secured Conts
+<EVAL <REGION.TAG.SECURES>>
+Out Of
+<EVAL <REGION.TAG.MAXSECURES>>
+Lock Downs
+<EVAL <REGION.TAG.LOCKDOWNS>>
+Out Of
+<EVAL <REGION.TAG.MAXLOCKDOWNS>>
+Visits
+<EVAL <REGION.TAG.VISITS>>
+Rename House
+
+List of Coowners
+Add a Coowner
+Remove a Coowner
+Clear Coowner List
+List of Friends
+Add a Friend
+Remove a Friend
+Clear Friend List
+Eject someone from the house
+View list of banned people
+Ban someone from the house
+Lift a ban
+
+Transfer ownership of the house
+Change the sign type
+Demolish house & get non-sellable deed
+Demolish house & get <VALUE> in bank
+//Newbify keys
+
+[DIALOG d_house BUTTON]
+ONBUTTON 1
+	IF (<ISOWNER>)
+		INPDLG REGION.TAG.NAME 200
+	ELSE
+		house_page 1
+	ENDIF
+ONBUTTON 3
+	IF (<ISOWNER>)
+		house_target Coowner
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 4
+	IF (<ISOWNER>)
+		house_remove Coowner
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 5
+	IF (<ISOWNER>)
+		house_clear Coowner
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 9
+	IF (<ISOWNER>)
+		house_clear Friend
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 14
+	IF (<ISOWNER>)
+		house_target Owner
+	ELSE
+		house_page 3
+	ENDIF
+ONBUTTON 7
+	IF (<ISOWNER> || <ISCOOWNER>)
+		house_target Friend
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 8
+	IF (<ISOWNER> || <ISCOOWNER>)
+		house_remove Friend
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 2
+	IF (<ISOWNER> || <ISCOOWNER> || <ISFRIEND>)
+		house_list Coowner
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 6
+	IF (<ISOWNER> || <ISCOOWNER> || <ISFRIEND>)
+		house_list Friend
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 10
+	IF (<ISOWNER> || <ISCOOWNER> || <ISFRIEND>)
+		house_target Eject
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 11
+	IF (<ISOWNER> || <ISCOOWNER> || <ISFRIEND>)
+		house_list Ban
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 12
+	IF (<ISOWNER> || <ISCOOWNER> || <ISFRIEND>)
+		house_target Ban
+	ELSE
+		house_page 2
+	ENDIF
+ONBUTTON 13
+	IF (<ISOWNER> || <ISCOOWNER> || <ISFRIEND>)
+		house_remove Ban
+	ELSE
+		house_page 2
+	ENDIF
+
+ONBUTTON 15
+	IF !(<ISOWNER>)
+		house_page 3
+		RETURN 0
+	ENDIF
+
+	IF (0<REGION.TAG.LOCKDOWNS>)
+		SRC.SYSMESSAGE You can't demolish the house with items locked down.
+	ELSE
+		SRC.NEWITEM i_deed
+		SRC.ACT.ATTR attr_newbie
+		SRC.ACT.MORE1 <BASEID>
+		SRC.ACT.NAME <NAME> (Don't Sell 2 NPC)
+		SRC.ACT.BOUNCE
+		SRC.SYSMESSAGE The deed that has been placed in your backpack can only be sold to an architect NPC for <SRC.ACT.VALUE> gold, however it's fully re-placable.
+		SRC.SYSMESSAGE If you'd like the real gold value of <VALUE> instead, re-place the house, and demolish it with the second option.
+		REMOVE
+	ENDIF
+
+ONBUTTON 16
+	IF !(<ISOWNER>)
+		house_page 3
+		RETURN 0
+	ENDIF
+
+	IF (0<REGION.TAG.LOCKDOWNS>)
+		SRC.SYSMESSAGE You can't demolish the house with items locked down.
+	ELSE
+		IF (<VALUE> <= 65535)
+			SRC.NEWITEM i_gold
+			SRC.ACT.AMOUNT <VALUE>
+			SRC.ACT.CONT <SRC.FINDLAYER.layer_bankbox.UID>
+		ELSE
+			SRC.house_gold <EVAL <VALUE> / 65000>
+			SRC.NEWITEM i_gold
+			SRC.ACT.AMOUNT <EVAL <VALUE> - ((<VALUE> / 65000) * 65000)>
+			SRC.ACT.CONT <SRC.FINDLAYER.layer_bankbox.UID>
+		ENDIF
+		SRC.SYSMESSAGE <VALUE> gold has been credited to your bank account.
+		REMOVE
+	ENDIF
+
+ONBUTTON 18
+	IF !(<ISOWNER>)
+		house_page 3
+		RETURN 0
+	ENDIF
+
+	IF (<ARGCHK[0]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0ba4
+	ELIF (<ARGCHK[1]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0ba6
+	ELIF (<ARGCHK[2]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0ba8
+	ELIF (<ARGCHK[3]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0baa
+	ELIF (<ARGCHK[4]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bac
+	ELIF (<ARGCHK[5]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bae
+	ELIF (<ARGCHK[6]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bb0
+	ELIF (<ARGCHK[7]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bb2
+	ELIF (<ARGCHK[8]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bb4
+	ELIF (<ARGCHK[9]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bb6
+	ELIF (<ARGCHK[10]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bb8
+	ELIF (<ARGCHK[11]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bba
+	ELIF (<ARGCHK[12]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bbc
+	ELIF (<ARGCHK[13]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bbe
+	ELIF (<ARGCHK[14]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bc0
+	ELIF (<ARGCHK[15]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bc2
+	ELIF (<ARGCHK[16]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bc4
+	ELIF (<ARGCHK[17]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bc6
+	ELIF (<ARGCHK[18]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bc8
+	ELIF (<ARGCHK[19]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bca
+	ELIF (<ARGCHK[20]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bcc
+	ELIF (<ARGCHK[21]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bce
+	ELIF (<ARGCHK[22]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bd0
+	ELIF (<ARGCHK[23]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bd2
+	ELIF (<ARGCHK[24]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bd4
+	ELIF (<ARGCHK[25]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bd6
+	ELIF (<ARGCHK[26]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bd8
+	ELIF (<ARGCHK[27]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bda
+	ELIF (<ARGCHK[28]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bdc
+	ELIF (<ARGCHK[29]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bde
+	ELIF (<ARGCHK[30]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0be0
+	ELIF (<ARGCHK[31]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0be2
+	ELIF (<ARGCHK[32]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0be4
+	ELIF (<ARGCHK[33]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0be6
+	ELIF (<ARGCHK[34]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0be8
+	ELIF (<ARGCHK[34]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bea
+	ELIF (<ARGCHK[35]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bec
+	ELIF (<ARGCHK[36]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bee
+	ELIF (<ARGCHK[37]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bf0
+	ELIF (<ARGCHK[38]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bf2
+	ELIF (<ARGCHK[39]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bf4
+	ELIF (<ARGCHK[40]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bf6
+	ELIF (<ARGCHK[42]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bf8
+	ELIF (<ARGCHK[43]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bfa
+	ELIF (<ARGCHK[44]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bfc
+	ELIF (<ARGCHK[45]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0bfe
+	ELIF (<ARGCHK[46]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0c00
+	ELIF (<ARGCHK[47]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0c02
+	ELIF (<ARGCHK[48]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0c04
+	ELIF (<ARGCHK[49]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0c06
+	ELIF (<ARGCHK[50]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0c08
+	ELIF (<ARGCHK[51]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0c0a
+	ELIF (<ARGCHK[52]>)
+		SRC.TRY SRC.UID.<REGION.TAG.SIGN>.DISPID 0c0c
+	ENDIF
+	SRC.TRY SRC.UID.<REGION.TAG.SIGN>.UPDATE
+
+[DEFNAME def_house]
+lt	<
+
+[FUNCTION house_clear]
+house_page 2
+SRC.TRY SRC.UID.<REGION.TAG.<ARGS>>.EMPTY
+SRC.SYSMESSAGE The <ARGS> list has been cleared.
+
+[FUNCTION house_target]
+IF ! STRMATCH(<ARGS>,Lockdown) && ! STRMATCH(<ARGS>,Secure) && ! STRMATCH(<ARGS>,Release) && ! STRMATCH(<ARGS>,Nudge Up) && ! STRMATCH(<ARGS>,Nudge Down)
+	IF (<SRC.UID.<REGION.TAG.<ARGS>>.RESCOUNT> >= <QVAL STRMATCH(<ARGS>,Coowner) ? 15 : <QVAL STRMATCH(<ARGS>,Friend) ? 30 : 50>>)
+		SRC.SYSMESSAGE The <ARGS> list is full.
+		RETURN 0
+	ENDIF
+ENDIF
+
+SRC.FINDID.i_house_targ.REMOVE
+SRC.NEWITEM i_house_targ
+SRC.ACT.NAME <ARGS>
+SRC.ACT.LINK <UID>
+SRC.ACT.CONT <SRC.UID>
+
+IF ! STRMATCH(<ARGS>,Lockdown) && ! STRMATCH(<ARGS>,Secure) && ! STRMATCH(<ARGS>,Release) && ! STRMATCH(<ARGS>,Nudge Up) && ! STRMATCH(<ARGS>,Nudge Down)
+	SRC.ACT.TARGET Target player <QVAL STRMATCH(<ARGS>,Owner) ? to become the new owner. : <QVAL STRMATCH(<ARGS>,Eject) ? to Eject. : for the <ARGS> list.>>
+ELSE
+	SRC.ACT.TARGET Target item.
+ENDIF
+
+[FUNCTION house_list]
+SRC.TRY VAR.<ARGS>LIST
+VAR.BUGAVOID 1
+VAR.OBJECT <ARGS>
+house_list_r <SRC.UID.<REGION.TAG.<ARGS>>.RESCOUNT>
+DIALOG d_house_list
+
+[FUNCTION house_list_r]
+IF (<ARGN> > 0)
+	IF (0<VAR.BUGAVOID>)
+		VAR.BUGAVOID
+		SRC.TRY VAR.<VAR.OBJECT>LIST <SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<EVAL <ARGN> - 1>.TAG.NAME>
+	ELSE
+		SRC.TRY VAR.<VAR.OBJECT>LIST <VAR.<VAR.OBJECT>LIST>, <SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<EVAL <ARGN> - 1>.TAG.NAME>
+	ENDIF
+	house_list_r <EVAL <ARGN> - 1>
+ENDIF
+
+[FUNCTION house_remove]
+REGION.TAG.REMOVE 1
+SRC.TRY VAR.<SRC.UID>.HOUSE.OBJECT <ARGS>
+house_list <ARGS>
+REGION.TAG.REMOVE
+
+[FUNCTION tiscoowner]
+REGION.TAG.TIS 1
+house_is Coowner
+REGION.TAG.TIS
+RETURN <QVAL <VAR.RETURN> ? 1 : 0>
+
+[FUNCTION tisfriend]
+REGION.TAG.TIS 1
+house_is Friend
+REGION.TAG.TIS
+RETURN <QVAL <VAR.RETURN> ? 1 : 0>
+
+[FUNCTION tisban]
+REGION.TAG.TIS 1
+house_is Ban
+REGION.TAG.TIS
+RETURN <QVAL <VAR.RETURN> ? 1 : 0>
+
+[DIALOG d_house_list]
+175,125
+resizepic 0 0 3600 450 <QVAL <REGION.TAG.REMOVE> ? 367 : 350>
+text 175 20 482 0
+htmlgump 25 50 400 <QVAL <REGION.TAG.REMOVE> ? 260 : 275> 1 1 0
+page <EVAL <REGION.TAG.REMOVE> - 1>
+resizepic 25 320 3000 270 22
+textentry 30 321 255 20 0 0 2
+button 392 320 4023 4025 1 0 1
+
+[DIALOG d_house_list TEXT]
+<QVAL <REGION.TAG.REMOVE> ? Remove <VAR.OBJECT> : <VAR.OBJECT> List>
+<VAR.<VAR.OBJECT>LIST>
+<NULL>
+
+[DIALOG d_house_list BUTTON]
+ONBUTTON 0
+	house_page 2
+ONBUTTON 1
+	VAR.OBJECT <VAR.<SRC.UID>.HOUSE.OBJECT>
+	SRC.TRY VAR.<SRC.UID>.HOUSE.OBJECT
+
+	IF ! STRMATCH(<ARGTXT[0]>,)
+		VAR.REMOVE <ARGTXT[0]>
+		house_remove_r <SRC.UID.<REGION.TAG.<VAR.OBJECT>>.RESCOUNT>
+	ENDIF
+	house_page 2
+
+[FUNCTION house_remove_r]
+IF (<ARGN> > 0)
+	IF STRMATCH(<SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<EVAL <ARGN> - 1>.TAG.NAME>,<VAR.REMOVE>)
+		SRC.SYSMESSAGE <SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<EVAL <ARGN> - 1>.TAG.NAME> has been removed from the <VAR.OBJECT> list.
+		SRC.TRY SRC.UID.<REGION.TAG.<VAR.OBJECT>>.FINDCONT.<EVAL <ARGN> - 1>.REMOVE
+	ELSE
+		house_remove_r <EVAL <ARGN> - 1>
+	ENDIF
+ELSE
+	SRC.SYSMESSAGE No record of <VAR.REMOVE> on the <VAR.OBJECT> list.
+ENDIF
+
+[ITEMDEF i_house_targ]
+ID=i_memory
+TYPE=t_eq_script
+NAME=House Char Targ
+
+ON=@Create
+	ATTR attr_decay
+	TIMER 30
+
+ON=@TargOn_Item
+	IF ! STRMATCH(<NAME>,Release) && ! STRMATCH(<NAME>,Nudge Up) && ! STRMATCH(<NAME>,Nudge Down) && (0<LINK.REGION.TAG.<NAME>s> >= 0<LINK.REGION.TAG.Max<NAME>s>)
+		SRC.SYSMESSAGE You are at the maximum allowed <NAME>s for this house.
+	ELIF (<SRC.TARG.REGION.UID> != <LINK.UID>)
+		SRC.SYSMESSAGE That's not in the house.
+	ELIF (<SRC.TARG.LINK.UID> == <LINK.UID>)
+		SRC.SYSMESSAGE You can't <NAME> that.
+	ELIF (<SRC.TARG.ATTR> & attr_newbie|attr_owned|attr_invis|attr_stolen|attr_static)
+		SRC.SYSMESSAGE You can't <NAME> that.
+	ELIF (<SRC.TARG.UID> != <SRC.TARG.TOPOBJ.UID>)
+		SRC.SYSMESSAGE You can't <NAME> that in a container.
+	ELIF STRMATCH(<NAME>,Lockdown)
+		IF (<SRC.TARG.TYPE> == t_secure)
+			SRC.SYSMESSAGE You must release this first.
+		ELIF (<SRC.TARG.ATTR> & attr_move_never)
+			SRC.SYSMESSAGE That's already locked down.
+		ELSE
+			SRC.TARG.SAYUA <NULL>,0,0,eng,[Locked Down]
+			SRC.TARG.SAY <SRC.TARG.NAME>
+			LINK.REGION.TAG.LOCKDOWNS 0<LINK.REGION.TAG.LOCKDOWNS> + 1
+			SRC.TARG.ATTR <SRC.TARG.ATTR> | attr_move_never
+		ENDIF
+	ELIF STRMATCH(<NAME>,Release)
+		IF !(<SRC.TARG.ATTR> & attr_move_never)
+			SRC.SYSMESSAGE That's not locked down.
+		ELSE
+			IF (<SRC.TARG.TYPE> == t_secure)
+				LINK.REGION.TAG.SECURES 0<LINK.REGION.TAG.SECURES> +- 1
+				SRC.TARG.TYPE t_container
+			ELSE
+				REGION.TAG.LOCKDOWNS 0<REGION.TAG.LOCKDOWNS> +- 1
+			ENDIF
+			SRC.TARG.ATTR <SRC.TARG.ATTR> &~ attr_move_never
+			SRC.TARG.SAYUA <NULL>,0,0,eng,[Released]
+			SRC.TARG.SAY <SRC.TARG.NAME>
+		ENDIF
+
+		IF (0<LINK.REGION.TAG.SECURES> < 0)
+			//SERV.ALLCLIENTS gmmessage The secure container amount of <SRC.NAME>'s house @ <LINK.P> just dropped below zero.
+			LINK.REGION.TAG.SECURES 0
+		ENDIF
+		IF (0<LINK.REGION.TAG.LOCKDOWNS> < 0)
+			//SERV.ALLCLIENTS gmmessage The lockdown count of <SRC.NAME>'s house @ <LINK.P> just dropped below zero.
+			LINK.REGION.TAG.LOCKDOWNS 0
+		ENDIF
+	ELIF STRMATCH(<NAME>,Secure)
+		IF (<SRC.TARG.TYPE> != t_container)
+			SRC.SYSMESSAGE That's not a container.
+		ELIF (<SRC.TARG.TYPE> == t_secure)
+			SRC.SYSMESSAGE That's already secured.
+		ELIF (<SRC.TARG.ATTR> & attr_move_never)
+			SRC.SYSMESSAGE You must release this first.
+		ELSE
+			SRC.TARG.SAYUA <NULL>,0,0,eng,[Secured]
+			SRC.TARG.SAY <SRC.TARG.NAME>
+			LINK.REGION.TAG.SECURES 0<LINK.REGION.TAG.SECURES> + 1
+			SRC.TARG.ATTR <SRC.TARG.ATTR> | attr_move_never
+			SRC.TARG.TYPE t_secure
+		ENDIF
+	ELIF STRMATCH(<NAME>,Nudge Up)
+		MOREZ <SRC.TARG.Z>
+		SRC.TARG.Z 126
+		SRC.TARG.FIX
+		IF (<EVAL <MOREZ> - 10> >= <SRC.TARG.Z>)
+			SRC.TARG.Z <MOREZ>
+		ELSE
+			SRC.TARG.Z <MOREZ> + 1
+		ENDIF
+	ELIF STRMATCH(<NAME>,Nudge Down)
+		MOREZ <SRC.TARG.Z>
+		SRC.TARG.FIX
+		IF (<MOREZ> <= <SRC.TARG.Z>)
+			SRC.TARG.Z <MOREZ>
+		ELSE
+			SRC.TARG.Z <MOREZ> +- 1
+		ENDIF
+	ELSE
+		TIMER 30
+		TARGET
+		RETURN 1
+	ENDIF
+	REMOVE
+	RETURN 1
+
+ON=@TargOn_Ground
+	TIMER 30
+	TARGET
+	RETURN 1
+
+ON=@TargOn_Char
+	IF ! STRMATCH(<NAME>,Lockdown) && ! STRMATCH(<NAME>,Secure) && ! STRMATCH(<NAME>,Release) && ! STRMATCH(<NAME>,Nudge Up) && ! STRMATCH(<NAME>,Nudge Down)
+		IF (<SRC.TARG.NPC>) && (STRMATCH(<NAME>,Eject) || STRMATCH(<NAME>,Ban))
+			IF (0<SRC.UID.<LINK.REGION.TAG.SIGN>.UID>)
+				IF (<SRC.TARG.REGION.UID> != <LINK.UID>)
+					SRC.SYSMESSAGE <SRC.TARG.NAME> is not within the house.
+				ELSE
+					SRC.TARG.P <SRC.UID.<LINK.REGION.TAG.SIGN>.P>
+					SRC.TARG.FIX
+					SRC.SYSMESSAGE <SRC.TARG.NAME> has been ejected from the house.
+				ENDIF
+			ELSE
+				SRC.SYSMESSAGE You must double click the house sign at least once before you're able to eject/ban.
+			ENDIF
+		ELIF ! STRMATCH(<NAME>,Owner) && (<SRC.UID.<LINK.REGION.TAG.COOWNER>.RESCOUNT> >= <QVAL STRMATCH(<NAME>,Coowner) ? 15 : <QVAL STRMATCH(<NAME>,Friend) ? 30 : 50>>)
+			SRC.SYSMESSAGE The <NAME> list is fill.
+		ELIF (<SRC.TARG.UID> == <LINK.MORE1>)
+			SRC.SYSMESSAGE <SRC.TARG.NAME> <QVAL STRMATCH(<NAME>,Owner) ? is already:is> the owner.
+		ELIF (<LINK.TISBAN>)
+			SRC.SYSMESSAGE <SRC.TARG.NAME> <QVAL STRMATCH(<NAME>,Ban) ? is already:is> on the Ban list.
+		ELIF (<LINK.TISCOOWNER>)
+			SRC.SYSMESSAGE <SRC.TARG.NAME> <QVAL STRMATCH(<NAME>,Coowner) ? is already:is> on the Coowner list.
+		ELIF (<LINK.TISFRIEND>)
+			SRC.SYSMESSAGE <SRC.TARG.NAME> <QVAL STRMATCH(<NAME>,Friend) ? is already:is> on the Friend list.
+		ELSE
+			IF STRMATCH(<NAME>,Owner)
+				SRC.SYSMESSAGE <SRC.TARG.NAME> is the new owner of the house.
+				SRC.TARG.SYSMESSAGE You are now the new owner of <SRC.NAME>'s house.
+				LINK.MORE1 <SRC.TARG.UID>
+			ELSE
+				IF STRMATCH(<NAME>,Eject) || STRMATCH(<NAME>,Ban)
+					IF (0<SRC.UID.<LINK.REGION.TAG.SIGN>.UID>)
+						IF (<SRC.TARG.REGION.UID> != <LINK.UID>)
+							IF STRMATCH(<NAME>,Eject)
+								SRC.SYSMESSAGE <SRC.TARG.NAME> is not within the house.
+							ENDIF
+						ELSE
+							SRC.TARG.P <SRC.UID.<LINK.REGION.TAG.SIGN>.P>
+							SRC.TARG.FIX
+						ENDIF
+					ELSE
+						SRC.SYSMESSAGE You must double click the house sign at least once before you're able to eject/ban.
+					ENDIF
+				ENDIF
+
+				IF ! STRMATCH(<NAME>,Eject)
+					SRC.SYSMESSAGE <SRC.TARG.NAME> is now on your <NAME> list.
+					SRC.TARG.SYSMESSAGE You are now on the <NAME> list of <SRC.NAME>'s house.
+					SRC.NEWITEM i_info
+					SRC.ACT.TAG.NAME <SRC.TARG.NAME>
+					SRC.ACT.TAG.TIME <SERV.TIME>
+					SRC.ACT.TAG.LINK <SRC.TARG.UID>
+					SRC.ACT.TAG.ACCOUNT <SRC.TARG.ACCOUNT>
+					SRC.ACT.CONT <LINK.REGION.TAG.<NAME>>
+				ENDIF
+			ENDIF
+		ENDIF
+		REMOVE
+	ELSE
+		TIMER 30
+		TARGET
+	ENDIF
+	RETURN 1
+
+[ITEMDEF i_info]
+ID=i_memory
+TYPE=t_eq_script
+
+[TYPEDEF t_secure]
+ON=@Click
+	IF (<SRC.UID.<REGION.UID>.TYPE> != t_multi)
+		SAY [No Longer Secured]
+		ATTR <ATTR> &~ attr_move_never
+		TYPE t_container
+	ENDIF
+
+ON=@DClick
+	TRIGGER @Click
+	IF (<SRC.REGION.UID> != <REGION.UID>)
+		SRC.SYSMESSAGE You can't reach that.
+	ELIF (<SRC.UID.<REGION.UID>.ISOWNER>) || (<SRC.UID.<REGION.UID>.ISCOOWNER>) || (<SRC.UID.<REGION.UID>.ISFRIEND>)
+		TYPE t_container
+		USE
+		TYPE t_secure
+		RETURN 1
+	ENDIF
+
+//[FUNCTION gmmessage]
+//IF (<PLEVEL> >= 4)
+//	SYSMESSAGE <ARGS>
+//ENDIF

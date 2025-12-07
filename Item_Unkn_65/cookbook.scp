@@ -1,0 +1,800 @@
+//Novakia's Cooking System - By Novak (Ben Novak)
+//URL: http://novakia.cjb.net
+//E-Mail: novakb@barak-online.net
+//Cookbook Based System, Use '.add i_cookbook' to use
+//Based on the Stratics web site
+//You can change this script as you like as long as you keep my name in the credits
+
+[ITEMDEF i_cookbook]
+DEFNAME=i_cookbook
+ID=i_book_lg
+NAME=Cookbook
+VALUE=6000
+CATEGORY=Novakia's Cooking Sys
+SUBSECTION=Items
+DESCRIPTION=Cookbook
+
+ON=@CREATE
+COLOR=0222
+
+ON=@DCLICK
+DIALOG d_cookbook
+RETURN 1
+
+[ITEMDEF i_pizza_uncooked] 
+NAME=Uncooked Pizza
+ID=i_pizza
+TYPE=T_FOOD_RAW 
+TDATA1=i_pizza
+WEIGHT=1
+
+[ITEMDEF i_pie_pumpkin] 
+NAME=pumpkin pie 
+ID=i_pie_baked 
+RESOURCES=3 i_FLOUR_SACK 
+WEIGHT=1 
+TYPE=T_FOOD 
+SKILLMAKE=COOKING 20.0 
+RESOURCES2=1 i_pie_pumpkin_unbaked 
+
+[ITEMDEF i_pie_pumpkin_unbaked] 
+NAME=Unbaked Pumpkin Pie 
+ID=i_pie_unbaked 
+TYPE=T_FOOD_RAW 
+TDATA1=i_pie_pumpkin 
+RESOURCES=1 i_bowl_dough, 1 T_FRUIT, 1 i_POT, i_lard 
+WEIGHT=1 
+
+[ITEMDEF i_quiche] 
+NAME=quiche 
+ID=i_pie_baked 
+RESOURCES=3 i_FLOUR_SACK 
+WEIGHT=1 
+TYPE=T_FOOD 
+SKILLMAKE=COOKING 20.0 
+RESOURCES2=1 i_quiche_unbaked 
+
+[ITEMDEF i_quiche_unbaked] 
+NAME=Unbaked Quiche 
+ID=i_pie_unbaked 
+TYPE=T_FOOD_RAW 
+TDATA1=i_quiche 
+RESOURCES=1 i_bowl_dough, 1 T_FRUIT, 1 i_POT, i_lard 
+WEIGHT=1 
+
+[ITEMDEF i_pie_apple] 
+NAME=apple pie 
+ID=i_pie_baked 
+RESOURCES=3 i_FLOUR_SACK 
+WEIGHT=1 
+TYPE=T_FOOD 
+SKILLMAKE=COOKING 20.0 
+RESOURCES2=1 i_pie_apple_unbaked 
+
+[ITEMDEF i_pie_apple_unbaked] 
+NAME=Unbaked Apple Pie 
+ID=i_pie_unbaked 
+TYPE=T_FOOD_RAW 
+TDATA1=i_pie_apple 
+RESOURCES=1 i_bowl_dough, 1 T_FRUIT, 1 i_POT, i_lard 
+WEIGHT=1 
+
+[ITEMDEF i_peach_cobbler] 
+NAME=peach cobbler 
+ID=i_pie_baked 
+RESOURCES=3 i_FLOUR_SACK 
+WEIGHT=1 
+TYPE=T_FOOD 
+SKILLMAKE=COOKING 20.0 
+RESOURCES2=1 i_peach_cobbler_unbaked 
+
+[ITEMDEF i_peach_cobbler_unbaked] 
+NAME=Unbaked Peach Cobbler 
+ID=i_pie_unbaked 
+TYPE=T_FOOD_RAW 
+TDATA1=i_peach_cobbler 
+RESOURCES=1 i_bowl_dough, 1 T_FRUIT, 1 i_POT, i_lard 
+WEIGHT=1 
+
+[ITEMDEF i_pie_meat] 
+NAME=meat pie 
+ID=i_pie_baked 
+RESOURCES=3 i_FLOUR_SACK 
+WEIGHT=1 
+TYPE=T_FOOD 
+SKILLMAKE=COOKING 20.0 
+RESOURCES2=1 i_pie_meat_unbaked 
+
+[ITEMDEF i_pie_meat_unbaked] 
+NAME=Unbaked Meat Pie 
+ID=i_pie_unbaked 
+TYPE=T_FOOD_RAW 
+TDATA1=i_pie_meat 
+RESOURCES=1 i_bowl_dough, 1 T_FRUIT, 1 i_POT, i_lard 
+WEIGHT=1 
+
+[ITEMDEF i_soup_chicken] 
+NAME=Chicken Soup
+ID=i_bowl_tomato_soup
+RESOURCES=3 i_FLOUR_SACK 
+WEIGHT=1 
+TYPE=T_FOOD 
+SKILLMAKE=COOKING 20.0 
+RESOURCES2=1 i_soup_chicken_uncooked
+
+[ITEMDEF i_soup_chicken_uncooked] 
+NAME=Uncooked Chicken Soup
+ID=i_bowl_tomato_soup 
+TYPE=T_FOOD_RAW 
+TDATA1=i_soup_chicken
+RESOURCES=1 i_bowl_dough, 1 T_FRUIT, 1 i_POT, i_lard 
+WEIGHT=1 
+
+[ITEMDEF i_soup_corn] 
+NAME=Corn Soup
+ID=i_bowl_tomato_soup
+RESOURCES=3 i_FLOUR_SACK 
+WEIGHT=1 
+TYPE=T_FOOD 
+SKILLMAKE=COOKING 20.0 
+RESOURCES2=1 i_soup_corn_uncooked
+
+ON=@CREATE
+COLOR 0161
+
+[ITEMDEF i_soup_corn_uncooked] 
+NAME=Uncooked Corn Soup
+ID=i_bowl_tomato_soup 
+TYPE=T_FOOD_RAW 
+TDATA1=i_soup_corn
+RESOURCES=1 i_bowl_dough, 1 T_FRUIT, 1 i_POT, i_lard 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR 0161
+
+[ITEMDEF 09eb] 
+DEFNAME=i_muffins 
+WEIGHT=0.5 
+TYPE=T_FOOD
+SKILLMAKE=COOKING 10.0 
+RESOURCES=1 i_FLOUR_SACK 
+RESOURCES2=1 i_bowl_dough,1 i_TRAY 
+
+[ITEMDEF i_sweet_dough] 
+NAME=sweet dough 
+ID=i_dough 
+RESOURCES=1 i_WATER, 1 i_EGG, 2 i_FLOUR_BOWL 
+TYPE=T_FOOD_RAW 
+TDATA1=i_muffins 
+WEIGHT=1 
+
+on=@create 
+COLOR=0fa
+
+[ITEMDEF i_cake_mix] 
+NAME=cake mix 
+ID=i_cookie_mix 
+TYPE=T_FOOD_RAW 
+TDATA1=i_cake 
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+[ITEMDEF i_illusion_cake] 
+NAME=cake of illusions
+ID=i_cake
+TYPE=t_food 
+
+ON=@create 
+COLOR=0035 
+
+ON=@DCLICK 
+IF <SRC.FINDID.i_cake_high> 
+SRC.FINDID.i_cake_high.MORE2=<SRC.FINDID.i_cake_high.MORE2>+2 
+SRC.EMOTE=feeling stupid 
+REMOVE 
+RETURN 1 
+ELSE 
+SRC.EMOTE=feeling stupid 
+SRC.ANIM 33 
+SRC.NEWITEM=i_cake_high
+SRC.ACT.EQUIP 
+SRC.ACT.TIMER 10 
+REMOVE 
+RETURN 1 
+ENDIF 
+
+[ITEMDEF i_cake_high] 
+NAME=High Memory 
+ID=i_memory 
+TYPE=t_eq_script 
+LAYER=layer_special 
+
+ON=@equip 
+SRC.FLAGS=<SRC.FLAGS>+000400000 
+SRC.FIX 
+SRC.UPDATE 
+TIMER=10 
+MORE2=5 
+RETURN 1 
+
+ON=@Timer 
+IF <MORE2>=0 
+CONT.FLAGS=(<CONT.FLAGS>+(-000400000)) 
+CONT.FIX 
+CONT.UPDATE 
+CONT.MESSAGE=You no longer feel stupid. 
+REMOVE 
+Return 1 
+ELSEIF RAND(2)==1 
+DORAND 5
+CONT.SAY=Did you see that? 
+CONT.SAY=I don't feel so good... 
+CONT.SAY=Did you see the size of that chicken? 
+CONT.SAY=What was that? 
+CONT.SAY=The rocks are lovely this time of year. 
+ENDDO 
+MORE2=<MORE2>+-1 
+TIMER=10 
+Return 1 
+ELSE 
+CONT.SAY=*HICK* 
+MORE2=<MORE2>+-1 
+TIMER=10 
+Return 1 
+ENDIF 
+
+[ITEMDEF i_illusion_cake_mix] 
+NAME=illusion cake mix 
+ID=i_cookie_mix 
+TYPE=T_FOOD_RAW 
+TDATA1=i_illusion_cake 
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+[ITEMDEF i_nightsight_cookie_mix] 
+NAME=nightsight cookies mix 
+ID=i_cookie_mix 
+TYPE=T_FOOD_RAW 
+TDATA1=i_nightsight_cookies
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+[ITEMDEF i_nightsight_cookies] 
+NAME=pan of nightsight cookies
+ID=i_pan_cookies
+TYPE=T_FOOD
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR=0283
+
+ON=@DCLICK
+SRC.SPELLEFFECT s_night_sight 1000
+
+[ITEMDEF i_heal_soup_uncooked] 
+NAME=Uncooked soup of healing
+ID=i_bowl_tomato_soup
+TYPE=T_FOOD_RAW 
+TDATA1=i_heal_soup
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR=0383
+
+[ITEMDEF i_heal_soup] 
+NAME=soup of healing
+ID=i_bowl_tomato_soup
+TYPE=T_FOOD
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR=0283
+
+ON=@DCLICK
+SRC.SPELLEFFECT s_greater_heal 1000
+
+[ITEMDEF i_invis_pie_unbaked] 
+NAME=Unbaked invisibility pie
+ID=i_pie_unbaked
+TYPE=T_FOOD_RAW 
+TDATA1=i_invis_pie
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+[ITEMDEF i_invis_pie] 
+NAME=invisibility pie
+ID=i_pie_baked
+TYPE=T_FOOD
+RESOURCES=1 i_bowl_dough, 1 i_POT 
+WEIGHT=1 
+
+ON=@CREATE
+COLOR=0183
+
+ON=@DCLICK
+SRC.SPELLEFFECT s_invisibility 1000
+
+
+/////////////////////////////////////////////////////////////////////// Dialog
+
+[DIALOG d_cookbook]
+80, 80
+PAGE 0
+gumppic 0 0 500
+PAGE 1
+text 87 7 455 0
+text 278 5 455 1
+button 356 0 502 502 0 2 0
+text 37 34 455 2
+text 53 54 2010 3
+text 52 70 2010 4
+text 38 122 455 5
+text 55 142 2010 6
+text 56 159 2010 7
+text 229 31 455 8
+text 246 51 2010 9
+text 246 70 2010 10
+text 247 89 2010 11
+text 247 107 2010 12
+text 228 131 455 13
+text 248 151 2010 14
+text 248 168 2010 15
+button 36 58 2117 2118 1 0 1
+button 36 74 2117 2118 1 0 2
+button 36 91 2117 2118 1 0 3
+button 37 147 2117 2118 1 0 4
+button 37 164 2117 2118 1 0 5
+button 228 55 2117 2118 1 0 6
+button 228 74 2117 2118 1 0 7
+button 228 92 2117 2118 1 0 8
+button 229 111 2117 2118 1 0 9
+button 230 155 2117 2118 1 0 10
+button 230 172 2117 2118 1 0 11
+text 53 87 2010 16
+PAGE 2
+text 89 4 455 17
+button 0 0 501 501 0 1 0
+text 39 34 455 18
+text 56 53 2010 19
+text 57 70 2010 20
+text 41 98 455 21
+text 58 116 2010 22
+text 59 133 2010 23
+text 60 151 2010 24
+text 60 168 2010 25
+gumppic 280 86 2241
+button 38 58 2117 2118 1 0 12
+button 38 75 2117 2118 1 0 13
+button 39 121 2117 2118 1 0 14
+button 39 138 2117 2118 1 0 15
+button 39 155 2117 2118 1 0 16
+button 40 172 2117 2118 1 0 17
+button 356 0 502 502 0 3 0
+PAGE 3
+button 0 0 501 501 0 2 0
+button 356 0 502 502 0 4 0
+text 93 4 455 26
+text 281 2 455 27
+gumppic 50 56 2241
+text 101 63 455 28
+gumppic 43 127 50
+gumppic 243 56 2241
+text 296 61 455 29
+gumppic 233 126 50
+text 53 146 2010 30
+text 53 163 2010 31
+text 245 145 2010 32
+text 245 162 2010 33
+PAGE 4
+button 0 0 501 501 0 3 0
+button 356 0 502 502 0 5 0
+text 99 4 455 34
+text 287 2 455 35
+gumppic 50 57 2241
+text 101 60 455 36
+text 101 78 455 37
+gumppic 43 131 50
+text 56 145 2010 38
+text 56 161 2010 39
+gumppic 243 57 2241
+text 295 63 455 40
+gumppic 233 131 50
+text 245 146 2010 41
+text 245 162 2010 42
+PAGE 5
+button 2 0 501 501 0 4 0
+button 356 0 502 502 0 6 0
+text 102 4 455 43
+text 291 3 455 44
+gumppic 49 60 2241
+text 102 63 455 45
+gumppic 45 137 50
+text 58 151 2010 46
+text 58 167 2010 47
+gumppic 239 62 2241
+text 292 64 455 48
+text 292 82 455 49
+gumppic 233 136 50
+text 243 150 2010 50
+text 243 167 2010 51
+PAGE 6
+button 0 0 501 501 0 5 0
+button 356 0 502 502 0 7 0
+text 105 3 455 52
+text 290 2 455 53
+gumppic 48 57 2241
+text 99 61 455 54
+text 100 78 455 55
+gumppic 46 137 50
+text 59 149 2010 56
+text 59 165 2010 57
+gumppic 240 58 2241
+text 291 61 455 58
+text 291 77 455 59
+gumppic 232 137 50
+text 245 148 2010 60
+text 245 164 2010 61
+PAGE 7
+text 106 1 455 62
+text 286 0 455 63
+button 0 0 501 501 0 6 0
+button 356 0 502 502 0 8 0
+gumppic 48 56 2241
+text 102 58 455 64
+text 103 77 455 65
+gumppic 43 139 50
+text 55 153 2010 66
+text 54 169 2010 67
+gumppic 241 56 2241
+text 294 59 455 68
+text 294 75 455 69
+gumppic 234 139 50
+text 248 151 2010 70
+text 249 168 2010 71
+PAGE 8
+text 100 1 455 72
+button 0 0 501 501 0 7 0
+button 356 0 502 502 0 9 0
+text 283 1 455 73
+gumppic 47 57 2241
+text 100 60 455 74
+text 100 76 455 75
+gumppic 45 139 50
+text 55 168 2010 76
+text 55 153 2010 77
+gumppic 240 56 2241
+text 293 60 455 78
+text 293 78 455 79
+gumppic 233 139 50
+text 246 152 2010 80
+text 246 168 2010 81
+PAGE 9
+button 0 0 501 501 0 8 0
+button 356 0 502 502 0 10 0
+text 100 2 455 82
+text 279 2 455 83
+gumppic 53 58 2241
+text 107 62 455 84
+text 107 79 455 85
+gumppic 45 135 50
+text 56 148 2010 86
+text 55 164 2010 87
+gumppic 241 58 2241
+text 295 62 455 88
+text 296 79 455 89
+gumppic 234 135 50
+text 247 148 2010 90
+text 247 165 2010 91
+PAGE 10
+button 0 0 501 501 0 9 0
+button 356 0 502 502 0 11 0
+text 103 2 455 92
+gumppic 49 54 2241
+text 103 58 455 93
+text 103 75 455 94
+gumppic 44 141 50
+text 56 154 2010 95
+text 56 170 2010 96
+text 277 2 455 97
+gumppic 240 54 2241
+text 293 59 455 98
+text 293 75 455 99
+gumppic 231 141 50
+text 243 154 2010 100
+text 243 171 2010 101
+PAGE 11
+button 0 0 501 501 0 10 0
+text 99 2 455 102
+gumppic 50 55 2241
+text 103 59 455 103
+text 103 76 455 104
+gumppic 44 140 50
+text 55 154 2010 105
+text 55 172 2010 106
+
+[DIALOG d_cookbook TEXT]
+INDEX
+INDEX
+Sweets
+Cake
+Cookies
+Misc
+Pizza
+Quiche
+Pies
+Pumpkin Pie
+Meat Pie
+Peach Cobbler
+Apple Pie
+Soups
+Chicken Soup
+Corn Soup
+Sweet Dough
+INDEX
+Brews
+Pitcher of Wine
+Pitcher of Cider
+Special
+Cake of Illusions
+Nightsight Cookies
+Soup of Healing
+Invisibility Pie
+Sweets
+Sweets
+Cake
+Cookies
+Sweet Dough
+Flour
+Sweet Dough
+Jar of Honey
+Sweets
+Misc
+Sweet
+Dough
+Dough
+Jar of Honey
+Pizza
+Dough
+Wheel of Cheese
+Misc
+Pies
+Quiche
+Dough
+Fresh Eggs
+Pumpkin
+Pie
+Dough
+Pumpkin
+Pies
+Pies
+Meat
+Pie
+Dough
+Raw Ribs
+Peach
+Cobbler
+Dough
+Peach
+Pies
+Soups
+Apple
+Pie
+Dough
+Apple
+Chicken
+Soup
+Chicken Leg
+Pitcher of Water
+Soups
+Brews
+Corn
+Soup
+Pitcher of Water
+Ear of Corn
+Pitcher of
+Wine
+Pitcher of Water
+Grapebunch
+Brews
+Special
+Pitcher of
+Cider
+Pitcher of Water
+Apple
+Cake of
+Illusions
+Sweet Dough
+Eye of Newt
+Special
+Nightsight
+Cookies
+Cookie Mix
+Spider's Silk
+Special
+Soup of
+Healing
+Pitcher of Water
+Ginseng
+Special
+Invisibility
+Pie
+Dough
+Nightshade
+
+
+[DIALOG d_cookbook BUTTON]
+on=1
+IF (<SRC.RESTEST 1 i_flour_sack>) && (<SRC.RESTEST 1 i_sweet_dough>)
+SRC.CONSUME 1 i_flour_sack
+SRC.CONSUME 1 i_sweet_dough
+SRC.SYSMESSAGE You mix the Sweet Dough and Flour and create a Cake Mix.
+src.newitem i_cake_mix
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a cake.
+ENDIF
+on=2
+IF (<SRC.RESTEST 1 i_jar_honey>) && (<SRC.RESTEST 1 i_sweet_dough>)
+SRC.CONSUME 1 i_jar_honey
+SRC.CONSUME 1 i_sweet_dough
+SRC.SYSMESSAGE You mix the Sweet Dough and Honey and create a Cookie Mix.
+src.newitem i_cookie_mix
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make cookies.
+ENDIF
+on=3
+IF (<SRC.RESTEST 1 i_jar_honey>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_jar_honey
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Honey and create a Sweet Dough.
+src.newitem i_sweet_dough
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a sweet dough.
+ENDIF
+on=4
+IF (<SRC.RESTEST 1 i_cheese_wheel>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_cheese_wheel
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Cheeze and create an Uncooked Pizza.
+src.newitem i_pizza_uncooked 
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a pizza.
+ENDIF
+on=5
+IF (<SRC.RESTEST 1 i_eggs_fresh>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_eggs_fresh
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Fresh Eggs and create an Unbaked Quiche.
+src.newitem i_quiche_unbaked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a quiche.
+ENDIF
+on=6
+IF (<SRC.RESTEST 1 i_fruit_pumpkin>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_fruit_pumpkin
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Pumpkin and create an Unbaked Pumpkin Pie.
+src.newitem i_pie_pumpkin_unbaked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a Pumpkin Pie.
+ENDIF
+on=7
+IF (<SRC.RESTEST 1 i_ribs_raw>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_ribs_raw
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Raw Ribs and create an Unbaked Meat Pie.
+src.newitem i_pie_meat_unbaked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a Meat Pie.
+ENDIF
+on=8
+IF (<SRC.RESTEST 1 i_fruit_peach>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_fruit_peach
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Peach and create an Unbaked Peach Cobbler.
+src.newitem i_peach_cobbler_unbaked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a Peach Cobbler.
+ENDIF
+on=9
+IF (<SRC.RESTEST 1 i_fruit_apple>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_fruit_apple
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Apple and create an Unbaked Apple Pie.
+src.newitem i_pie_apple_unbaked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make an Apple Pie.
+ENDIF
+on=10
+IF (<SRC.RESTEST 1 i_chicken_leg>) && (<SRC.RESTEST 1 i_pitcher_water>)
+SRC.CONSUME 1 i_chicken_leg
+SRC.CONSUME 1 i_pitcher_water
+SRC.SYSMESSAGE You brew the Water and Chicken Leg and create an Uncooked Chicken Soup.
+src.newitem i_soup_chicken_uncooked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a Chicken Soup.
+ENDIF
+on=11
+IF (<SRC.RESTEST 1 i_fruit_corn>) && (<SRC.RESTEST 1 i_pitcher_water>)
+SRC.CONSUME 1 i_fruit_corn
+SRC.CONSUME 1 i_pitcher_water
+SRC.SYSMESSAGE You brew the Water and Corn and create an Uncooked Corn Soup.
+src.newitem i_soup_corn_uncooked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a Corn Soup.
+ENDIF
+on=12
+IF (<SRC.RESTEST 1 i_fruit_grapes>) && (<SRC.RESTEST 1 i_pitcher_water>)
+SRC.CONSUME 1 i_fruit_grapes
+SRC.CONSUME 1 i_pitcher_water
+SRC.SYSMESSAGE You brew the Water and Grape Bunch and create a Wine.
+src.newitem i_pitcher_wine
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a wine.
+ENDIF
+on=13
+IF (<SRC.RESTEST 1 i_fruit_apple>) && (<SRC.RESTEST 1 i_pitcher_water>)
+SRC.CONSUME 1 i_fruit_apple
+SRC.CONSUME 1 i_pitcher_water
+SRC.SYSMESSAGE You brew the Water and Apple and create a Cider.
+src.newitem i_pitcher_cider
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a cider.
+ENDIF
+on=14
+IF (<SRC.RESTEST 1 i_reag_eye_of_newt>) && (<SRC.RESTEST 1 i_sweet_dough>)
+SRC.CONSUME 1 i_reag_eye_of_newt
+SRC.CONSUME 1 i_sweet_dough
+SRC.SYSMESSAGE You mix the Sweet Dough and Eye of Newt and create an Illusion Cake Mix.
+src.newitem i_illusion_cake_mix
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a Cake of Illusions.
+ENDIF
+on=15
+IF (<SRC.RESTEST 1 i_cookie_mix>) && (<SRC.RESTEST 1 i_spider_silk>)
+SRC.CONSUME 1 i_cookie_mix
+SRC.CONSUME 1 i_spider_silk
+SRC.SYSMESSAGE You mix the Cookie Mix and Spiders Silk and create a Nightsight Cookie Mix.
+src.newitem i_nightsight_cookie_mix
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make nightsight cookies.
+ENDIF
+on=16
+IF (<SRC.RESTEST 1 i_reag_ginseng>) && (<SRC.RESTEST 1 i_pitcher_water>)
+SRC.CONSUME 1 i_reag_ginseng
+SRC.CONSUME 1 i_pitcher_water
+SRC.SYSMESSAGE You brew the Water and Ginseng and create an Uncooked soup of healing.
+src.newitem i_heal_soup_uncooked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make a Soup of Healing.
+ENDIF
+on=17
+IF (<SRC.RESTEST 1 i_reag_nightshade>) && (<SRC.RESTEST 1 i_dough>)
+SRC.CONSUME 1 i_reag_nightshade
+SRC.CONSUME 1 i_dough
+SRC.SYSMESSAGE You mix the Dough and Nightshade and create an Unbaked Invisibility Pie.
+src.newitem i_invis_pie_unbaked
+src.act.bounce 
+ELSE 
+SRC.SYSMESSAGE You do not have the ingredients to make an Invisibility Pie.
+ENDIF
+

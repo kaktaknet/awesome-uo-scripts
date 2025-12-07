@@ -1,0 +1,2125 @@
+// AN NOX SCRIPTS
+// BY RAVON OF ANNOX
+// PLAY AT AN NOX THE CURE FOR THE UO ADDICITION.
+// ANNOX.UOSITE.COM
+
+//Bounty Hunting NPC
+//by Admin JEROME
+//modified by Ravon of An Nox
+//Updating for .99u - PLOTS no longer work, replaced with tag.AN_BH
+//all .99u features added by Ravon of An Nox 120902
+
+[FUNCTION QuickBuilder_BountyHunter] 
+DIALOG d_QuickBuilder_BountyHunter
+//SRC.MENU M_Quick_Builder_AN_BountyHunter
+
+//ITEMS & SPEECH
+
+[ITEMDEF I_Outlander_Head]
+DEFNAME=I_Outlander_Head
+NAME=outlander's head
+ID=01da0
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=an outlaw's head
+WEIGHT=1
+ON=@CREATE
+//head
+
+[ITEMDEF I_Gwiremar_Head]
+NAME=Gwiremar's head
+ID=01ce0
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Gwiremar's head
+WEIGHT=1
+ON=@CREATE
+//head
+
+//**Speech
+[SPEECH AN_Quest_BH_Ravon]
+ON=*hail*
+ON=*hello*
+ON=*hi*
+ON=*greetings*
+
+
+DORAND 5
+SAY=Mhh? Oh, hello, <SRC.NAME> are you looking for a quest?
+SAY=Hi!  I have a quest for you.
+SAY=Hello!  There is a quest starting.
+SAY=Greetings!  Ready for an adventure?
+SAY=Yeah, yeah, hello!  It time to quest.
+ENDRAND
+
+ON=*Adventure*
+ON=*adventure*
+ON=*Job*
+ON=*job*
+ON=*Quest*
+ON=*quest*
+
+SAY=I need your assistance <SRC.NAME>.
+
+ON=*assistance*
+ON=*ASSISTANCE*
+ON="*ASST*"
+ON="*asst*"
+ON=*OK*
+ON=*Ok*
+ON=*ok*
+ON=*Yes*
+ON=*yes*
+
+SAY=There is a murderer in the land of An Nox and he must be stopped.
+
+ON=*Murderer*
+ON=*murderer*
+ON=*Murder*
+ON=*murder*
+ON=*Stopped*
+ON=*stopped*
+ON=*Stop*
+ON=*stop*
+
+SAY=His name is Gwiremar and he travels the land preying on the weary.
+
+ON=*Gwiremar*
+ON=*gwiremar*
+ON=*Preying*
+ON=*preying*
+ON=*Weary*
+ON=*weary*
+
+SAY=Join the bounty hunters, help An Nox, and return here with his head.
+
+ON=*Bounty*
+ON=*bounty*
+ON=*Hunter*
+ON=*hunter*
+ON=*Join*
+ON=*join*
+SAY=Go to the Bounty Hunter in Minoc and ask to join his guild.
+
+ON=*Minoc*
+ON=*minoc*
+SAY=Minoc is a town just not far from here.  There are other Bounty Hunter shops located throughout Britain.
+
+ON=*Head*
+ON=*head*
+ON=*Reward*
+ON=*reward*
+
+IF (0<SRC.TAG.AN_BH>==1) && (<SRC.RESTEST 1 i_Gwiremar_Head> )
+
+SAY=Good Work!
+SRC.NEWITEM=i_Gold
+SRC.ACT.AMOUNT={10 25}
+SRC.ACT.BOUNCE
+SRC.NEWITEM=RANDOM_WAND_NEW
+SRC.ACT.BOUNCE
+
+SRC.CONSUME=1 i_Gwiremar_Head
+SRC.FAME=<SRC.FAME>+{100 200}
+SRC.SYSMESSAGE You have gained some fame.
+RETURN 1
+
+ELSE
+
+SAY=Sorry you do not meet the requirements to claim your reward!
+RETURN 1
+ENDIF
+
+//END
+
+ON=*25*
+ON=*10*
+ON=*only*
+ON=*more*
+SAY=What can I say, the gold is running low in An Nox.
+
+
+ON=
+DORAND 5
+SAY=Greeting, I'm Lord Ravon of An Nox.
+SAY=<SRC.NAME> how art thou today?
+SAY=Hello!  There is a quest starting?
+SAY=I wish Kull wouldn't change the color of the bank.
+SAY=Do you want to be a GM?
+ENDRAND
+
+SAY=Greeting, I'm Lord Ravon of An Nox.
+
+ON=*GM*
+SAY=Our world is fully staffed, thank thee for asking.
+
+[SPEECH AN_Quest_BH_Minoc]
+ON=*hail*
+ON=*hello*
+ON=*greetings*
+ON=*hi*
+
+DORAND 5
+SAY=Mhh? Oh, hello, <SRC.NAME>!
+SAY=Hi!
+SAY=Hello!
+SAY=Greetings!
+SAY=Yeah, yeah, hello!
+ENDRAND
+
+ON=*Head*
+ON=*head*
+SAY=YUCK!!  I'd give it to Ravon of An Nox.
+
+ON=*Ravon*
+ON=*ravon*
+SAY=He is the lord of An Nox.
+
+ON=*Quest*
+ON=*quest*
+SAY=You must ask Ravon of An Nox about the quest.
+
+ON=*Murder*
+ON=*murder*
+ON=*Gwiremar*
+ON=*gwiremar*
+ON=*Outlander*
+ON=*outlander*
+
+//SRC.SYSMESSAGE Your PvP setting is <SRC.TAG.AN_BH>
+IF (0<SRC.TAG.AN_BH>=1)
+	DORAND 4
+	SAY=I hear tales of a band of Outlander near Minoc.
+	SAY=They hide near Vesper.
+	SAY=Gwiremar never leaves the main land.
+	SAY=Sources say they have gathering near here.
+	ENDRAND
+ELSE
+	SAY=You are not a member of our guild.  I cannot tell you of these things till thoust join.
+ENDIF
+
+ON=*recruit*
+ON=*member*
+ON=*join*
+
+IF (0<SRC.TAG.AN_BH>=1)
+	SAY=Pff, thou art already a member!
+ELSE
+	SAY="Mhh? You want to join us? Welcome!"
+	SRC.TAG.AN_BH=1
+	SRC.TITLE=the Bounty Hunter
+ENDIF
+
+ON=*reward*
+
+IF (0<SRC.TAG.AN_BH>==1) && (<SRC.RESTEST 1 i_Outlander_Head> ) 
+
+SAY=Good Work!
+SRC.NEWITEM=i_GOLD
+SRC.ACT.AMOUNT={1 10}
+SRC.ACT.BOUNCE
+SRC.CONSUME=1 i_Outlander_Head
+SRC.FAME=<SRC.FAME>+{100 200}
+SRC.SYSMESSAGE You have gained some fame.
+RETURN 1
+
+ELSE
+
+SAY=Sorry you do not meet the requirements to claim your reward!
+RETURN 1
+ENDIF
+
+//END
+
+ON=*150*
+ON=*only*
+ON=*more*
+SAY=What can I say, the gold is running low in An Nox.
+
+[SPEECH AN_Quest_BH_Vesper]
+ON=*hail*
+ON=*hello*
+ON=*greetings*
+ON=*hi*
+
+DORAND 5
+SAY=Mhh? Oh, hello, <SRC.NAME>!
+SAY=Hi!
+SAY=Hello!
+SAY=Greetings!
+SAY=Yeah, yeah, hello!
+ENDRAND
+
+ON=*Head*
+ON=*head*
+SAY=YUCK!!  I'd give it to Ravon of An Nox.
+
+
+ON=*Ravon*
+ON=*ravon*
+SAY=He is the lord of An Nox.
+
+ON=*Quest*
+ON=*quest*
+SAY=You must ask Ravon of An Nox about the quest.
+
+ON=*Murder*
+ON=*murder*
+ON=*Gwiremar*
+ON=*gwiremar*
+ON=*Outlander*
+ON=*outlander*
+
+//SRC.SYSMESSAGE Your PvP setting is <SRC.TAG.AN_BH>
+IF (0<SRC.TAG.AN_BH>=1)
+	DORAND 4
+	SAY=A good healer saved a guards's life near the bridge.  He had been attacked by Gwiremar.
+	SAY=I hear tale of a band of Outlander east of Minoc.
+	SAY=They hide near the roads between Vesper and Minoc.
+	SAY=Sources say they may still be in this area.
+	ENDRAND
+ELSE
+	SAY=You are not a member of our guild.  I cannot tell you of these things till thoust join.
+ENDIF
+
+ON=*recruit*
+ON=*member*
+ON=*join*
+
+IF (0<SRC.TAG.AN_BH>=1)
+	SAY=Pff, thou art already a member!
+ELSE
+	SAY=Mhh? You want to join us? So, welcome!
+	SRC.TAG.AN_BH=1
+	SRC.TITLE=the Bounty Hunter
+ENDIF
+
+ON=*reward*
+
+IF (0<SRC.TAG.AN_BH>==1) && (<SRC.RESTEST 1 i_Outlander_Head> )
+
+SAY=Good Work!
+SRC.NEWITEM=i_Gold
+SRC.ACT.AMOUNT={1 10}
+SRC.ACT.BOUNCE
+SRC.CONSUME=1 i_Outlander_Head
+SRC.FAME=<SRC.FAME>+{100 200}
+SRC.SYSMESSAGE You have gained some fame.
+RETURN 1
+
+ELSE
+
+SAY=Sorry you do not meet the requirements to claim your reward!
+RETURN 1
+ENDIF
+
+//END
+
+ON=*150*
+ON=*only*
+ON=*more*
+SAY=What can I say, the gold is running low in An Nox.
+
+[SPEECH AN_QUEST_BH]
+ON=*hail*
+ON=*hello*
+ON=*greetings*
+ON=*hi*
+
+DORAND 5
+SAY=Mhh? Oh, hello, <SRC.NAME>!
+SAY=Hi!
+SAY=Hello!
+SAY=Greetings!
+SAY=Yeah, yeah, hello!
+ENDRAND
+
+ON=*Job*
+ON=*job*
+
+SAY=I am a Bounty Hunter.  You can be one too.  Join my guild.
+
+ON=*Guild*
+ON=*guild*
+ON=*Head*
+ON=*head*
+ON=*Heads*
+ON=*heads*
+
+SAY=Our guild kills the evil "Outlanders".  Return with their heads and I will reward thee.
+
+ON=*recruit*
+ON=*member*
+ON=*join*
+
+IF (0<SRC.TAG.AN_BH>=1)
+	SAY=Pff, thou art already a member!
+	RETURN 1
+ELSE
+SAY="Mhh? You want to join us? Welcome!  Now bring back some heads."
+SRC.TAG.AN_BH=1
+SRC.TITLE=the Bounty Hunter
+ENDIF
+
+ON=*reward*
+
+IF (0<SRC.TAG.AN_BH>==1) && (<SRC.RESTEST 1 i_Outlander_Head> )
+
+SAY=Good Work!
+SRC.NEWITEM=i_Gold
+SRC.ACT.AMOUNT={1 10}
+SRC.ACT.BOUNCE
+SRC.CONSUME=1 i_Outlander_Head
+SRC.FAME=<SRC.FAME>+{100 200}
+SRC.SYSMESSAGE You have gained some fame.
+RETURN 1
+
+ELSE
+
+SAY=Sorry you do not meet the requirements to claim your reward!
+RETURN 1
+ENDIF
+
+//END
+
+//Updated to work with .99u
+[CHARDEF C_H_Ravon]
+NAME="Ravon of An Nox"
+ID=c_Man
+RESOURCES=8 i_ribs_raw
+FOODTYPE=15 t_food
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Ravon of An Nox
+
+TSPEECH=AN_Quest_BH_Ravon
+
+ON=@Create
+     NAME="Ravon of An Nox"
+     NPC=BRAIN_HUMAN
+     COLOR=colors_skin
+
+     STR=100
+     DEX=100
+     INT=100
+
+     FENCING={15.0 38.0}
+     MACEFIGHTING={15.0 38.0}
+     MAGICRESISTANCE={15.0 38.0}
+     PARRYING={15.0 38.0}
+     SWORDSMANSHIP={15.0 38.0}
+     TACTICS={15.0 38.0}
+     WRESTLING={15.0 38.0}
+
+     ITEMNEWBIE=i_lantern
+     ITEMNEWBIE=random_male_hair
+     COLOR=colors_hair
+     ITEMNEWBIE=random_facial_hair
+     COLOR=match_hair
+
+     ITEMNEWBIE=i_shirt_plain
+     COLOR=colors_all
+     ITEMNEWBIE=random_pants
+     COLOR=colors_all
+     ITEMNEWBIE=random_shoes
+     COLOR=colors_neutral
+
+     ITEMNEWBIE=i_platemail_arms
+     COLOR=0482
+     ITEMNEWBIE=i_platemail_gloves
+     COLOR=0482
+     ITEMNEWBIE=i_platemail_leggings
+     COLOR=0482
+     ITEMNEWBIE=i_platemail_chest
+     COLOR=0021
+     ITEMNEWBIE=i_halberd
+
+[CHARDEF C_H_BountyHunter_Minoc_M]
+NAME=the Minoc Bounty Hunter
+ID=c_Man
+RESOURCES=8 i_ribs_raw
+FOODTYPE=15 t_food
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Minoc Bounty Hunter
+
+tspeech=AN_QUEST_BH
+tspeech=AN_QUEST_BH_MINOC
+
+ON=@Create
+     NAME="#NAMES_HUMAN_MALE"
+     TITLE="the Minoc Bounty Hunter"
+     NPC=BRAIN_HUMAN
+     COLOR=colors_skin
+
+     STR=100
+     DEX=100
+     INT=100
+
+     FENCING={15.0 38.0}
+     MACEFIGHTING={15.0 38.0}
+     MAGICRESISTANCE={15.0 38.0}
+     PARRYING={15.0 38.0}
+     SWORDSMANSHIP={15.0 38.0}
+     TACTICS={15.0 38.0}
+     WRESTLING={15.0 38.0}
+
+     ITEMNEWBIE=i_lantern
+     ITEMNEWBIE=random_male_hair
+     COLOR=colors_hair
+     ITEMNEWBIE=random_facial_hair
+     COLOR=match_hair
+
+     ITEMNEWBIE=i_shirt_plain
+     COLOR=colors_all
+     ITEMNEWBIE=random_pants
+     COLOR=colors_all
+
+     ITEMNEWBIE=i_ringmail_sleeves
+     ITEMNEWBIE=i_ringmail_tunic
+     ITEMNEWBIE=i_ringmail_gloves
+     ITEMNEWBIE=i_ringmail_leggings
+     ITEMNEWBIE=random_weapons
+     ITEMNEWBIE=random_boots
+     COLOR=colors_neutral
+     ITEMNEWBIE=i_sash
+     COLOR=0021
+
+[CHARDEF C_H_BountyHunter_Minoc_F]
+NAME="the Minoc Bounty Hunter"
+ID=c_woman
+RESOURCES=8 i_ribs_raw
+FOODTYPE=15 t_food
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Minoc Bounty Hunter Female
+
+tspeech=AN_QUEST_BH
+tspeech=AN_QUEST_BH_MINOC
+
+ON=@Create
+     NAME="#NAMES_HUMAN_FEMALE"
+     TITLE="the Minoc Bounty Hunter"
+     NPC=BRAIN_HUMAN
+     COLOR=colors_skin
+
+     STR=100
+     DEX=100
+     INT=100
+
+     FENCING={15.0 38.0}
+     MACEFIGHTING={15.0 38.0}
+     MAGICRESISTANCE={15.0 38.0}
+     PARRYING={15.0 38.0}
+     SWORDSMANSHIP={15.0 38.0}
+     TACTICS={15.0 38.0}
+     WRESTLING={15.0 38.0}
+
+     ITEMNEWBIE=i_lantern
+     ITEMNEWBIE=random_female_hair
+     COLOR=colors_hair
+
+     ITEMNEWBIE=i_shirt_plain
+     COLOR=colors_all
+     ITEMNEWBIE=random_pants
+     COLOR=colors_all
+
+     ITEMNEWBIE=i_ringmail_sleeves
+     ITEMNEWBIE=i_ringmail_tunic
+     ITEMNEWBIE=i_ringmail_gloves
+     ITEMNEWBIE=i_ringmail_leggings
+     ITEMNEWBIE=random_weapons
+     ITEMNEWBIE=random_boots
+     COLOR=colors_neutral
+     ITEMNEWBIE=i_sash
+     COLOR=0021
+
+
+[CHARDEF C_H_BountyHunter_Vesper_M]
+NAME="the Vesper Bounty Hunter"
+ID=c_Man
+RESOURCES=8 i_ribs_raw
+FOODTYPE=15 t_food
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Vesper Bounty Hunter Male
+
+tspeech=AN_QUEST_BH
+tspeech=AN_QUEST_BH_VESPER
+
+ON=@Create
+     NAME="#NAMES_HUMAN_MALE"
+     TITLE="the Vesper Bounty Hunter"
+     NPC=BRAIN_HUMAN
+     COLOR=colors_skin
+
+     STR=100
+     DEX=100
+     INT=100
+
+     FENCING={15.0 38.0}
+     MACEFIGHTING={15.0 38.0}
+     MAGICRESISTANCE={15.0 38.0}
+     PARRYING={15.0 38.0}
+     SWORDSMANSHIP={15.0 38.0}
+     TACTICS={15.0 38.0}
+     WRESTLING={15.0 38.0}
+
+     ITEMNEWBIE=i_lantern
+     ITEMNEWBIE=random_male_hair
+     COLOR=colors_hair
+     ITEMNEWBIE=random_facial_hair
+     COLOR=match_hair
+
+     ITEMNEWBIE=i_shirt_plain
+     COLOR=colors_all
+     ITEMNEWBIE=random_pants
+     COLOR=colors_all
+
+     ITEMNEWBIE=i_ringmail_sleeves
+     ITEMNEWBIE=i_ringmail_tunic
+     ITEMNEWBIE=i_ringmail_gloves
+     ITEMNEWBIE=i_ringmail_leggings
+     ITEMNEWBIE=random_weapons
+     ITEMNEWBIE=random_boots
+     COLOR=colors_neutral
+     ITEMNEWBIE=i_sash
+     COLOR=0021
+
+[CHARDEF C_H_BountyHunter_Vesper_F]
+NAME="the Vesper Bounty Hunter"
+ID=c_woman
+RESOURCES=8 i_ribs_raw
+FOODTYPE=15 t_food
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Vesper Bounty Hunter Female
+
+tspeech=AN_QUEST_BH
+tspeech=AN_QUEST_BH_VESPER
+
+ON=@Create
+     NAME="#NAMES_HUMAN_FEMALE"
+     TITLE="the Vesper Bounty Hunter"
+     NPC=BRAIN_HUMAN
+     COLOR=colors_skin
+
+     STR=100
+     DEX=100
+     INT=100
+
+     FENCING={15.0 38.0}
+     MACEFIGHTING={15.0 38.0}
+     MAGICRESISTANCE={15.0 38.0}
+     PARRYING={15.0 38.0}
+     SWORDSMANSHIP={15.0 38.0}
+     TACTICS={15.0 38.0}
+     WRESTLING={15.0 38.0}
+
+     ITEMNEWBIE=i_lantern
+     ITEMNEWBIE=random_female_hair
+     COLOR=colors_hair
+
+     ITEMNEWBIE=i_shirt_plain
+     COLOR=colors_all
+     ITEMNEWBIE=random_pants
+     COLOR=colors_all
+
+     ITEMNEWBIE=i_ringmail_sleeves
+     ITEMNEWBIE=i_ringmail_tunic
+     ITEMNEWBIE=i_ringmail_gloves
+     ITEMNEWBIE=i_ringmail_leggings
+     ITEMNEWBIE=random_weapons
+     ITEMNEWBIE=random_boots
+     COLOR=colors_neutral
+     ITEMNEWBIE=i_sash
+     COLOR=0021
+
+[CHARDEF C_H_Outlander_M]
+NAME="the Outlander"
+ID=C_MAN
+DESIRES=i_gold,e_notoriety,jobpirate,T_GEM
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_human_prime
+//TSPEECH=jobpirate
+//TSPEECH=spk_needs
+//TSPEECH=spk_rehello
+//TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+     NAME="#NAMES_HUMAN_MALE"
+     TITLE="the Outlander"
+     COLOR=colors_skin
+     STR={ 86 100 }
+     DEX={ 86 100 }
+     INT={ 71 85 }
+
+     KARMA={-3000 -4000}
+     FAME={2500 4000}
+
+     FENCING={ 25.0 48.0 }
+     PARRYING={65.0 88.0}
+     SWORDSMANSHIP={55.0 78.0}
+     WRESTLING={45.0 68.0}
+     MACEFIGHTING={25.0 48.0}
+     TACTICS={65.0 88.0}
+
+     NPC=brain_human
+
+     ITEMNEWBIE=random_male_hair
+     COLOR=colors_hair
+     ITEMNEWBIE=random_facial_hair
+     COLOR=match_hair
+
+ON=@NPCRestock
+     ITEM=random_extra_armor
+     ITEM=random_head_armor 
+     ITEM=random_body_armor
+     ITEM=random_chest_armor
+     ITEM=random_leg_armor
+     ITEM=random_weapons
+     ITEM={ i_bandana 1 i_skull_cap 1 i_sash 1 }
+     COLOR=colors_green
+     ITEM=i_boots_calf
+     COLOR=colors_neutral
+     ITEM=random_coin_purse
+     ITEM=i_outlander_head
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Outlander Normal(male)
+
+[CHARDEF C_H_Outlander_F]
+NAME="the Outlander"
+ID=C_WOMAN
+DESIRES=i_gold,e_notoriety,jobpirate,T_GEM
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_human_prime
+//TSPEECH=jobpirate
+//TSPEECH=spk_needs
+//TSPEECH=spk_rehello
+//TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+     NAME="#NAMES_HUMAN_FEMALE the Outlander"
+     COLOR=colors_skin
+     STR={86 100}
+     DEX={86 100}
+     INT={71 85}
+
+     FAME={1000 6000}
+     KARMA={-4000 -4999}
+
+     FENCING={25.0 48.0}
+     PARRYING={65.0 88.0}
+     SWORDSMANSHIP={55.0 78.0}
+     WRESTLING={45.0 68.0}
+     MACEFIGHTING={25.0 48.0}
+     TACTICS={65.0 88.0}
+
+     NPC=brain_human
+
+     ITEMNEWBIE=random_female_hair
+     COLOR=colors_hair
+
+ON=@NPCRestock
+     ITEM=random_extra_armor
+     ITEM=random_head_armor 
+     ITEM=random_body_armor
+     ITEM=random_chest_armor
+     ITEM=random_leg_armor
+     ITEM=random_weapons
+     ITEM={ i_bandana 1 i_skull_cap 1 i_sash 1 }
+     COLOR=colors_green
+     ITEM=i_boots_calf
+     COLOR=colors_neutral
+     ITEM=random_coin_purse
+     ITEM=i_outlander_head
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Outlander Normal(female)
+
+[CHARDEF C_H_Outlander_Elite_M]
+NAME="the Outlander Elite"
+ID=C_MAN
+//DAM=
+//ARMOR=
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_human_prime
+//TSPEECH=jobBrigand
+//TSPEECH=spk_needs
+//TSPEECH=spk_rehello
+//TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+     NAME="#NAMES_HUMAN_MALE"
+     TITLE="the Outlander Elite"
+     COLOR=colors_skin
+     
+     STR={150 250}
+     DEX={150 250}
+     INT={150 250}
+
+     KARMA={-3000 -4000}
+     FAME={2500 4000}
+
+     CAMPING={45.0 68.0}
+     HIDING={45.0 68.0}
+     POISONING={35.0 58.0}
+     SNOOPING={35.0 58.0}
+     LOCKPICKING={35.0 58.0}
+     STEALING={45.0 68.0}
+     FENCING={45.0 68.0}
+     PARRYING={55.0 78.0}
+     SWORDSMANSHIP={35.0 58.0}
+     WRESTLING={35.0 58.0}
+     MACEFIGHTING={25.0 48.0}
+     TACTICS={55.0 78.0}
+
+     NPC=BRAIN_MONSTER
+
+     ITEMNEWBIE=random_male_hair
+     COLOR=colors_hair
+     ITEMNEWBIE=random_facial_hair
+     COLOR=match_hair
+
+ON=@NPCRestock
+     ITEM=random_chest_armor_male
+     ITEM=random_leg_armor_male 
+     ITEM=random_arm_armor 
+     ITEM=random_neck_armor 
+     ITEM=random_helms
+     ITEM=random_hand_armor
+     ITEM=random_shields
+     ITEM=random_boots
+     ITEM=random_weapon
+     ITEM=random_coin_purse
+     ITEM=i_sash
+     COLOR=colors_green
+     ITEM=i_outlander_head
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Outlander Elite (male)
+
+[CHARDEF C_H_Outlander_Elite_F]
+NAME="the Outlander Elite"
+ID=C_WOMAN
+//HIREDAYWAGE=60
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_human_prime
+//TSPEECH=jobBrigand
+//TSPEECH=spk_rehello
+//TSPEECH=spk_needs
+//TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+     NAME="#NAMES_HUMAN_FEMALE"
+     TITLE="the Outlander Elite"
+     COLOR=colors_skin
+
+     STR={150 250}
+     DEX={150 250}
+     INT={150 250}
+
+     KARMA={-3000 -4000}
+     FAME={2500 4000}
+
+     CAMPING={45.0 68.0}
+     HIDING={45.0 68.0}
+     POISONING={35.0 58.0}
+     SNOOPING={35.0 58.0}
+     LOCKPICKING={35.0 58.0}
+     STEALING={45.0 68.0}
+     FENCING={45.0 68.0}
+     PARRYING={55.0 78.0}
+     SWORDSMANSHIP={35.0 58.0}
+     WRESTLING={35.0 58.0}
+     MACEFIGHTING={25.0 48.0}
+     TACTICS={55.0 78.0}
+
+     NPC=BRAIN_MONSTER
+     ITEMNEWBIE=random_female_hair
+     COLOR=colors_hair
+
+ON=@NPCRestock
+     ITEM=random_leg_armor_female
+     ITEM=random_chest_armor_female
+     ITEM=random_arm_armor 
+     ITEM=random_neck_armor 
+     ITEM=random_helms
+     ITEM=random_hand_armor
+     ITEM=random_shields
+     ITEM=i_sandals
+     COLOR=colors_neutral
+ 
+     ITEM=random_weapon
+     ITEM=random_coin_purse
+     ITEM=i_sash
+     COLOR=colors_green
+     ITEM=i_outlander_head
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Outlander Elite (female)
+
+[CHARDEF C_H_OutlanderMage_M]
+NAME="the Outlander Mage"
+ID=C_MAN
+DESIRES=i_gold,t_wand,t_reagent,t_bone
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_human_prime
+//TSPEECH=jobMageEvil
+//TSPEECH=jobMage
+//TSPEECH=spk_needs
+//TSPEECH=spk_rehello
+//TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+     NAME="#NAMES_HUMAN_MALE"
+     TITLE="the Outlander Mage"
+     COLOR=colors_skin
+     
+     STR={250 350}
+     DEX={150 250}
+     INT={175 255}
+     
+//     SPELLCIRCLESS={6 8}
+
+     EVALUATINGINTEL={55.0 78.0}
+     INSCRIPTION={76.0 90.0}
+     MAGERY={150.0 175.0}
+     WRESTLING={20.0 60.0}
+     MAGICRESISTANCE={100.0 125.0}
+     MEDITATION={75.0 100.0}
+     TACTICS={15.0 38.0}
+
+     NPC=BRAIN_UNDEAD
+     KARMA={-4000 -4999}
+     FAME={600 5000}
+     
+     ITEMNEWBIE=random_male_hair
+     COLOR=colors_hair
+     ITEMNEWBIE=random_facial_hair
+     COLOR=match_hair
+
+ON=@NPCRestock
+     ITEMNEWBIE=i_spellbook
+     ADDSPELL=s_Clumsy
+     ADDSPELL=s_Weaken
+     ADDSPELL=s_feeblemind
+     ADDSPELL=s_Harm
+     ADDSPELL=s_magic_arrow
+     ADDSPELL=s_fireball
+     ADDSPELL=s_curse
+     ADDSPELL=s_paralyze
+     ADDSPELL=s_dispel
+     ADDSPELL=s_summon_undead
+     ADDSPELL=s_animate_dead
+     ADDSPELL=s_fire_bolt
+     ADDSPELL=s_Hallucination
+
+     ITEM=i_robe
+     COLOR=colors_green
+     ITEM=i_sandals
+
+     ITEMNEWBIE=i_ringmail_sleeves
+     ITEMNEWBIE=i_ringmail_tunic
+     ITEMNEWBIE=i_ringmail_gloves
+     ITEMNEWBIE=i_ringmail_leggings
+
+     ITEM=random_coin_purse
+     ITEM=random_upper_scroll
+     ITEM=random_upper_scroll
+     ITEM=i_outlander_head
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Outlander Mage(male)
+
+[CHARDEF C_H_OutlanderMage_F]
+NAME="the Outlander Mage"
+ID=C_WOMAN
+DESIRES=i_gold,t_wand,t_reagent,t_bone
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_human_prime
+//TSPEECH=jobMageEvil
+//TSPEECH=jobMage
+//TSPEECH=spk_needs
+//TSPEECH=spk_rehello
+//TSPEECH=spk_human_default
+
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Environ
+
+ON=@Create
+     NAME="#NAMES_HUMAN_FEMALE"
+     TITLE="the Outlander Mage"
+     COLOR=colors_skin
+     STR={71 85}
+     DEX={81 95}
+     INT={96 110}
+
+     //SPELLCIRCLESS=3-5
+     //ALIGNMENT=EVIL
+
+     EVALUATINGINTEL={55.0 78.0}
+     INSCRIPTION={76.0 90.0}
+     MEDITATION={75.0 100.0}
+     MAGERY={86.0 100.0}
+     WRESTLING={20.0 60.0}
+     MAGICRESISTANCE={15.0 38.0}
+     TACTICS={15.0 38.0}
+
+     NPC=BRAIN_UNDEAD
+     KARMA={-3000 -3999}
+     FAME={600 5000}
+
+     ITEMNEWBIE=random_female_hair
+     COLOR=colors_hair
+
+ON=@NPCRestock
+     ITEMNEWBIE=i_spellbook
+     ADDSPELL=s_Clumsy
+     ADDSPELL=s_Weaken
+     ADDSPELL=s_feeblemind
+     ADDSPELL=s_Harm
+     ADDSPELL=s_magic_arrow
+     ADDSPELL=s_fireball
+     ADDSPELL=s_curse
+     ADDSPELL=s_paralyze
+     ADDSPELL=s_dispel
+     ADDSPELL=s_summon_undead
+     ADDSPELL=s_animate_dead
+     ADDSPELL=s_fire_bolt
+     ADDSPELL=s_Hallucination
+
+     ITEM=i_robe
+     COLOR=colors_green
+     ITEM=i_sandals
+
+     ITEMNEWBIE=i_ringmail_sleeves
+     ITEMNEWBIE=i_ringmail_tunic
+     ITEMNEWBIE=i_ringmail_gloves
+     ITEMNEWBIE=i_ringmail_leggings
+
+     ITEM=random_coin_purse
+     ITEM=random_upper_scroll
+     ITEM=random_upper_scroll
+     ITEM=i_outlander_head
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Outlander Mage(female)
+
+[CHARDEF C_H_GWIREMAR]
+//brigand dupe with executioner axe, and high ar,parry
+NAME=Gwiremar the Murder
+ID=c_man
+SOUND=snd_HUMAN_M_DIE_01 
+ICON=i_pet_man
+CAN=MT_WALK|MT_RUN|MT_EQUIP 
+DAM=35,46 
+ARMOR=55
+RESOURCES=i_flesh_head, i_flesh_torso, i_flesh_right_arm, i_flesh_left_arm, i_flesh_left_leg, i_flesh_right_leg, i_blood_2
+FOODTYPE=15 t_food, t_fruit
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+//TSPEECH=spk_human_prime
+//TSPEECH=jobBrigand
+//TSPEECH=spk_needs
+//TSPEECH=spk_rehello
+//TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+CATEGORY=An Nox Quest
+SUBSECTION=Bounty Hunting
+DESCRIPTION=Gwiremar
+
+ON=@Create
+	NAME="Gwiremar"
+        TITLE="the Murder"
+	COLOR=colors_skin
+	FAME={1000 6000}
+	KARMA={-4000 -4999}
+	NPC=BRAIN_DRAGON 
+	STR={86 100}
+	DEX={85 95}
+	INT={75 92}
+	HIDING={65.0 92.0}
+	POISONING={35.0 58.0}
+	SNOOPING={35.0 58.0}
+	LOCKPICKING={35.0 58.0}
+	STEALING={45.0 68.0}
+	PARRYING={85.0 95.0}
+	SWORDSMANSHIP={95.0 100.0}
+	WRESTLING={85.0 95.0}
+	TACTICS={85.0 97.0}
+
+	ITEMNEWBIE=random_male_hair
+	COLOR=colors_hair
+	ITEMNEWBIE=random_facial_hair
+	COLOR=match_hair
+
+ON=@NPCRestock
+     ITEMNEWBIE=i_axe_exec_FORCE
+     ITEMNEWBIE=i_ringmail_sleeves_DEFENSE_INDESTRUCTIBLE
+     ITEMNEWBIE=i_ringmail_tunic_DEFENSE_INDESTRUCTIBLE
+     ITEMNEWBIE=i_ringmail_gloves_DEFENSE_INDESTRUCTIBLE
+     ITEMNEWBIE=i_ringmail_leggings_DEFENSE_INDESTRUCTIBLE
+     ITEMNEWBIE=random_boots
+     COLOR=colors_neutral
+     ITEMNEWBIE=i_sash
+     COLOR=colors_green
+     ITEM=I_Gwiremar_Head
+
+ON=@Death
+     NEWITEM=loot_executioner
+     ACT.BOUNCE
+
+//[ITEMDEF i_spawnbit_AN_BH] 
+//ID=i_worldgem_bit 
+//NAME=Spawnpoint_AN_BH
+//
+//ON=@Create 
+//TYPE=34 
+//ATTR=0B0 
+//TIMER=2 
+//
+//ON=@Timer 
+//IF <MORE>==0 
+//REMOVE 
+//ENDIF 
+//RETURN 0 
+
+[MENU M_Quick_Builder_AN_BountyHunter]
+Choose Bounty Hunter Quest
+
+ON=0 Build NPCs between Minoc and Vesper
+//AN_BountyHunter
+
+SERV.ALLCLIENTS SYSMESSAGE Building World Spawns.  You WILL experience lag.
+
+//Level 1
+newitem=i_worldgem_bit 
+act.p=2721,538,8
+act.more=C_H_Outlander_M
+act.morep=5,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2732,532
+act.more=C_H_Outlander_F
+act.morep=5,5,10
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2651,532
+act.more=C_H_Outlander_M
+act.morep=5,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2675,539
+act.more=C_H_Outlander_F
+act.morep=5,5,10
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2647,549
+act.more=C_H_Outlander_M
+act.morep=5,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2660,555
+act.more=C_H_Outlander_F
+act.morep=5,5,
+act.attr=0B0 
+
+//far side
+newitem=i_worldgem_bit 
+act.p=2700,499,19
+act.more=C_H_Outlander_M
+act.morep=5,5,10 
+act.attr=0B0 
+
+//far side 
+newitem=i_worldgem_bit 
+act.p=2799,493,15
+act.more=C_H_Outlander_F
+act.morep=5,5,10
+act.attr=0B0 
+
+//Level 2
+newitem=i_worldgem_bit 
+act.p=2721,553,11
+act.more=C_H_Outlander_Elite_M
+act.morep=5,5,15,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2733,545
+act.more=C_H_Outlander_Elite_F
+act.morep=5,5,15,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2690,588
+act.more=C_H_Outlander_Elite_M
+act.morep=5,5,15,10
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2687,576
+act.more=C_H_Outlander_Elite_F
+act.morep=5,5,15,10 
+act.attr=0B0 
+
+//Level 3
+newitem=i_worldgem_bit 
+act.p=2706,574
+act.more=C_H_OutlanderMage_M
+act.morep=5,5,20,5 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2689,548,11
+act.more=C_H_OutlanderMage_F
+act.morep=5,5,20,5 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2712,578
+act.more=C_H_GWIREMAR
+act.morep=1,5,30
+act.attr=0B0 
+
+//Place Ravon & Bounty Hunters
+
+newitem=i_worldgem_bit 
+act.p=5659,568,21 
+act.more=C_H_Ravon
+act.morep=1,5,30,1 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=5659,568,21 
+act.more=C_H_BountyHunter_Minoc_M
+act.morep=1,5,30,5 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=5659,568,21 
+act.more=C_H_BountyHunter_Minoc_F
+act.morep=1,5,30,5 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=5659,568,21 
+act.more=C_H_BountyHunter_Vesper_M
+act.morep=1,5,30,5 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=5659,568,21 
+act.more=C_H_BountyHunter_Vesper_F
+act.morep=1,5,30,5 
+act.attr=0B0 
+
+SRC.MENU M_Quick_Builder_AN_BountyHunter
+
+ON=0 Build Camp between Minoc and Vesper
+//AN_BountyHunter
+
+SERV.ALLCLIENTS SYSMESSAGE Building World Spawns.  You WILL experience lag.
+
+//Warning Sign
+newitem=0bd2
+act.p=2733,509,15
+act.name=Beware! Outlanders Beware!
+ACT.ATTR=04
+
+newitem=01296
+act.p=2733,509,15
+ACT.ATTR=04
+
+newitem=0bd2
+act.p=2724,522,15
+act.name=Beware! Outlander Beware!
+ACT.ATTR=04
+
+newitem=01296
+act.p=2724,522,15
+ACT.ATTR=04
+
+//Decorum
+//Camp North
+newitem=i_rabbit_spitted
+act.p=2700,503,15
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2700,503,15
+act.attr=04
+
+newitem=i_blood_pool_large
+act.p=2699,504,15
+act.attr=04
+
+newitem=i_sticks
+act.p=2698,502,15
+act.attr=04
+
+newitem=i_bedroll
+act.p=2700,500,18
+act.attr=04
+
+//Camp East
+newitem=i_rabbit_spitted
+act.p=2807,503,15
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2807,503,15
+act.attr=04
+
+newitem=i_blood_pool_large
+act.p=2807,505,15
+act.attr=04
+
+newitem=i_sticks
+act.p=2808,504,15
+act.attr=04
+
+newitem=i_bedroll
+act.p=2808,502,15
+act.attr=04
+
+//Main East Camp
+newitem=i_rabbit_spitted
+act.p=2733,539,2
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2733,539,2
+act.attr=04
+
+newitem=i_bedroll
+act.p=2721,542,2
+act.attr=04
+
+newitem=i_bedroll
+act.p=2733,536,2
+act.attr=04
+
+newitem=0a56
+act.p=2730,539,3
+act.attr=04
+
+newitem=0a56
+act.p=2736,539
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2723,534,8
+act.attr=04
+
+newitem=i_bedroll
+act.p=2723,531,8
+act.attr=04
+
+newitem=i_axe_battle_large
+act.p=2725,533,8
+act.attr=04
+
+newitem=i_shield_chaos
+act.p=2725,534,8
+act.attr=04
+
+//Main West Camp
+newitem=i_multi_tent_green
+act.p=2650,544
+act.attr=04
+
+newitem=i_barrel_water
+act.p=2648,549
+act.attr=04
+
+newitem=i_rope
+act.p=2650,552
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2650,553
+act.attr=04
+
+newitem=i_crate_lg
+act.p=2650,555
+act.attr=04
+
+newitem=i_crate_lg
+act.p=2652,553
+act.attr=04
+
+newitem=i_tree_4
+act.p=2647,556
+act.attr=04
+
+newitem=i_tree_4
+act.p=2646,554
+act.attr=04
+
+newitem=i_tree_4
+act.p=2657,553
+act.attr=04
+
+//Main Camp
+
+newitem=i_multi_tent_green
+act.p=2710,565
+act.attr=04
+
+//Status
+newitem=012a0
+act.p=2709,570
+act.attr=04
+
+newitem=i_statue_stone_lg
+act.p=2709,571
+act.attr=04
+
+newitem=012a1
+act.p=2708,571
+act.attr=04
+
+newitem=012a0
+act.p=2714,570
+act.attr=04
+
+newitem=i_statue_stone_lg
+act.p=2714,571
+act.attr=04
+
+newitem=012a1
+act.p=2713,571
+act.attr=04
+
+//Stones Circle 1
+newitem=i_fire_column
+act.p=2707,578
+act.attr=04
+
+newitem=01779
+act.p=2708,578
+act.attr=04
+
+newitem=01779
+act.p=2708,577
+act.attr=04
+
+newitem=01779
+act.p=2707,577
+act.attr=04
+
+newitem=01779
+act.p=2706,578
+act.attr=04
+
+newitem=01779
+act.p=2706,579
+act.attr=04
+
+newitem=01779
+act.p=2707,579
+act.attr=04
+
+//Stones Circle 2
+newitem=i_fire_column
+act.p=2713,578
+act.attr=04
+
+newitem=01779
+act.p=2714,578
+act.attr=04
+
+newitem=01779
+act.p=2714,577
+act.attr=04
+
+newitem=01779
+act.p=2713,577
+act.attr=04
+
+newitem=01779
+act.p=2712,578
+act.attr=04
+
+newitem=01779
+act.p=2712,579
+act.attr=04
+
+newitem=01779
+act.p=2713,579
+act.attr=04
+
+//Stones Circle 3
+newitem=i_fire_column
+act.p=2708,583
+act.attr=04
+
+newitem=01779
+act.p=2709,583
+act.attr=04
+
+newitem=01779
+act.p=2709,582
+act.attr=04
+
+newitem=01779
+act.p=2708,582
+act.attr=04
+
+newitem=01779
+act.p=2707,583
+act.attr=04
+
+newitem=01779
+act.p=2707,584
+act.attr=04
+
+newitem=01779
+act.p=2708,584
+act.attr=04
+
+SRC.MENU M_Quick_Builder_AN_BountyHunter
+
+ON=0 Build BH in Britain Minoc and Vesper.
+//AN_BountyHunter
+
+SERV.ALLCLIENTS SYSMESSAGE Building World Spawns.  You WILL experience lag.
+
+
+//Place Ravon in Britain near entance of LB's Castle.
+newitem=i_worldgem_bit 
+act.p=1411,1615,30
+act.more=C_H_Ravon
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=0c04
+act.p=1416,1620,27
+act.name=Bounty Hunter Guild
+act.attr=04
+
+newitem=0c03
+act.p=1410,1622,30
+act.name=Bounty Hunter Guild
+act.attr=04
+
+newitem=i_bulletin_board_2
+act.p=1408,1617,30
+act.name=Bounty Hunter Britain
+act.attr=04
+
+//Place Bounty Hunter in Minoc
+newitem=i_worldgem_bit 
+act.p=2422,499,15
+act.more=C_H_BountyHunter_Minoc_M
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2419,496,15
+act.more=C_H_BountyHunter_Minoc_F
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=0c04
+act.p=2426,500,15
+act.name=Bounty Hunter Guild
+act.attr=04
+
+newitem=i_bulletin_board_2
+act.p=2426,495,15
+act.name=Bounty Hunter Minoc
+act.attr=04
+
+
+//Place Bounty Hunter in Vesper
+newitem=i_worldgem_bit 
+act.p=2846,798
+act.more=C_H_BountyHunter_Vesper_M
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2843,795
+act.more=C_H_BountyHunter_Vesper_F
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=0c04
+act.p=2848,799
+act.name=Bounty Hunter Guild
+act.attr=04
+
+newitem=i_bulletin_board_2
+act.p=2848,795
+act.name=Bounty Hunter Vesper
+act.attr=04
+
+SRC.MENU M_Quick_Builder_AN_BountyHunter
+
+[DIALOG d_QuickBuilder_BountyHunter]	
+0, 25
+page 0
+gumppic 100 10 500
+text 135 15 995 0
+button 175 200 243 241 1 0 0
+page 1
+text 130 40 995 1
+text 130 55 995 2
+text 130 70 995 3
+text 130 85 995 4
+text 130 100 995 5
+text 130 115 995 6
+text 130 130 995 7
+text 325 40 995 8
+button 325 65 210 211 1 0 1
+text 365 65 995 9
+button 325 90 210 211 1 0 2
+text 365 90 995 10
+button 325 115 210 211 1 0 3
+text 365 115 995 11
+button 325 140 210 211 1 0 4
+text 365 140 995 12
+
+
+[DIALOG d_QuickBuilder_BountyHunter TEXT]
+Bounty Hunter 122002
+Build the Bounty Hunter
+and Outlanders Quest.
+Ravon stays in Britian.
+Bounty Hunters are in
+Minoc and Vesper. 
+Outlanders camp between
+Minoc and Vesper. 
+Select     Category
+Ravon
+Bounty Hunters
+Outlanders
+Outlander Camp
+
+
+
+[DIALOG d_QuickBuilder_BountyHunter BUTTON]
+ONBUTTON=1
+//Place Ravon in Britain near entance of LB's Castle.
+newitem=i_worldgem_bit 
+act.p=1411,1615,30
+act.more=C_H_Ravon
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=0c04
+act.p=1416,1620,27
+act.name=Bounty Hunter Guild
+act.attr=04
+
+newitem=0c03
+act.p=1410,1622,30
+act.name=Bounty Hunter Guild
+act.attr=04
+
+newitem=i_bulletin_board_2
+act.p=1408,1617,30
+act.name=Bounty Hunter Britain
+act.attr=04
+
+DIALOG d_QuickBuilder_BountyHunter
+
+ONBUTTON=2
+//Place Bounty Hunter in Minoc
+newitem=i_worldgem_bit 
+act.p=2422,499,15
+act.more=C_H_BountyHunter_Minoc_M
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2419,496,15
+act.more=C_H_BountyHunter_Minoc_F
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=0c04
+act.p=2426,500,15
+act.name=Bounty Hunter Guild
+act.attr=04
+
+newitem=i_bulletin_board_2
+act.p=2426,495,15
+act.name=Bounty Hunter Minoc
+act.attr=04
+
+
+//Place Bounty Hunter in Vesper
+newitem=i_worldgem_bit 
+act.p=2846,798
+act.more=C_H_BountyHunter_Vesper_M
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2843,795
+act.more=C_H_BountyHunter_Vesper_F
+act.morep=1,5,10 
+act.attr=0B0 
+
+newitem=0c04
+act.p=2848,799
+act.name=Bounty Hunter Guild
+act.attr=04
+
+newitem=i_bulletin_board_2
+act.p=2848,795
+act.name=Bounty Hunter Vesper
+act.attr=04
+
+DIALOG d_QuickBuilder_BountyHunter
+
+ONBUTTON=3
+//AN_Outlanders
+
+SERV.ALLCLIENTS SYSMESSAGE Building World Spawns.  You WILL experience lag.
+
+//Level 1
+newitem=i_worldgem_bit 
+act.p=2721,538,8
+act.more=C_H_Outlander_M
+act.morep=5,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2732,532
+act.more=C_H_Outlander_F
+act.morep=5,5,10
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2651,532
+act.more=C_H_Outlander_M
+act.morep=5,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2675,539
+act.more=C_H_Outlander_F
+act.morep=5,5,10
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2647,549
+act.more=C_H_Outlander_M
+act.morep=5,5,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2660,555
+act.more=C_H_Outlander_F
+act.morep=5,5,
+act.attr=0B0 
+
+//far side
+newitem=i_worldgem_bit 
+act.p=2700,499,19
+act.more=C_H_Outlander_M
+act.morep=5,5,10 
+act.attr=0B0 
+
+//far side 
+newitem=i_worldgem_bit 
+act.p=2799,493,15
+act.more=C_H_Outlander_F
+act.morep=5,5,10
+act.attr=0B0 
+
+//Level 2
+newitem=i_worldgem_bit 
+act.p=2721,553,11
+act.more=C_H_Outlander_Elite_M
+act.morep=5,5,15,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2733,545
+act.more=C_H_Outlander_Elite_F
+act.morep=5,5,15,10 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2690,588
+act.more=C_H_Outlander_Elite_M
+act.morep=5,5,15,10
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2687,576
+act.more=C_H_Outlander_Elite_F
+act.morep=5,5,15,10 
+act.attr=0B0 
+
+//Level 3
+newitem=i_worldgem_bit 
+act.p=2706,574
+act.more=C_H_OutlanderMage_M
+act.morep=5,5,20,5 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2689,548,11
+act.more=C_H_OutlanderMage_F
+act.morep=5,5,20,5 
+act.attr=0B0 
+
+newitem=i_worldgem_bit 
+act.p=2712,578
+act.more=C_H_GWIREMAR
+act.morep=1,5,30
+act.attr=0B0 
+
+DIALOG d_QuickBuilder_BountyHunter
+
+ONBUTTON=4
+//AN_Outlander Camp
+
+SERV.ALLCLIENTS SYSMESSAGE Building World Spawns.  You WILL experience lag.
+
+//Warning Sign
+newitem=0bd2
+act.p=2733,509,15
+act.name=Beware! Outlanders Beware!
+ACT.ATTR=04
+
+newitem=01296
+act.p=2733,509,15
+ACT.ATTR=04
+
+newitem=0bd2
+act.p=2724,522,15
+act.name=Beware! Outlander Beware!
+ACT.ATTR=04
+
+newitem=01296
+act.p=2724,522,15
+ACT.ATTR=04
+
+//Decorum
+//Camp North
+newitem=i_rabbit_spitted
+act.p=2700,503,15
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2700,503,15
+act.attr=04
+
+newitem=i_blood_pool_large
+act.p=2699,504,15
+act.attr=04
+
+newitem=i_sticks
+act.p=2698,502,15
+act.attr=04
+
+newitem=i_bedroll
+act.p=2700,500,18
+act.attr=04
+
+//Camp East
+newitem=i_rabbit_spitted
+act.p=2807,503,15
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2807,503,15
+act.attr=04
+
+newitem=i_blood_pool_large
+act.p=2807,505,15
+act.attr=04
+
+newitem=i_sticks
+act.p=2808,504,15
+act.attr=04
+
+newitem=i_bedroll
+act.p=2808,502,15
+act.attr=04
+
+//Main East Camp
+newitem=i_rabbit_spitted
+act.p=2733,539,2
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2733,539,2
+act.attr=04
+
+newitem=i_bedroll
+act.p=2721,542,2
+act.attr=04
+
+newitem=i_bedroll
+act.p=2733,536,2
+act.attr=04
+
+newitem=0a56
+act.p=2730,539,3
+act.attr=04
+
+newitem=0a56
+act.p=2736,539
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2723,534,8
+act.attr=04
+
+newitem=i_bedroll
+act.p=2723,531,8
+act.attr=04
+
+newitem=i_axe_battle_large
+act.p=2725,533,8
+act.attr=04
+
+newitem=i_shield_chaos
+act.p=2725,534,8
+act.attr=04
+
+//Main West Camp
+newitem=i_multi_tent_green
+act.p=2650,544
+act.attr=04
+
+newitem=i_barrel_water
+act.p=2648,549
+act.attr=04
+
+newitem=i_rope
+act.p=2650,552
+act.attr=04
+
+newitem=i_fire_pit
+act.p=2650,553
+act.attr=04
+
+newitem=i_crate_lg
+act.p=2650,555
+act.attr=04
+
+newitem=i_crate_lg
+act.p=2652,553
+act.attr=04
+
+newitem=i_tree_4
+act.p=2647,556
+act.attr=04
+
+newitem=i_tree_4
+act.p=2646,554
+act.attr=04
+
+newitem=i_tree_4
+act.p=2657,553
+act.attr=04
+
+//Main Camp
+
+newitem=i_multi_tent_green
+act.p=2710,565
+act.attr=04
+
+//Status
+newitem=012a0
+act.p=2709,570
+act.attr=04
+
+newitem=i_statue_stone_lg
+act.p=2709,571
+act.attr=04
+
+newitem=012a1
+act.p=2708,571
+act.attr=04
+
+newitem=012a0
+act.p=2714,570
+act.attr=04
+
+newitem=i_statue_stone_lg
+act.p=2714,571
+act.attr=04
+
+newitem=012a1
+act.p=2713,571
+act.attr=04
+
+//Stones Circle 1
+newitem=i_fire_column
+act.p=2707,578
+act.attr=04
+
+newitem=01779
+act.p=2708,578
+act.attr=04
+
+newitem=01779
+act.p=2708,577
+act.attr=04
+
+newitem=01779
+act.p=2707,577
+act.attr=04
+
+newitem=01779
+act.p=2706,578
+act.attr=04
+
+newitem=01779
+act.p=2706,579
+act.attr=04
+
+newitem=01779
+act.p=2707,579
+act.attr=04
+
+//Stones Circle 2
+newitem=i_fire_column
+act.p=2713,578
+act.attr=04
+
+newitem=01779
+act.p=2714,578
+act.attr=04
+
+newitem=01779
+act.p=2714,577
+act.attr=04
+
+newitem=01779
+act.p=2713,577
+act.attr=04
+
+newitem=01779
+act.p=2712,578
+act.attr=04
+
+newitem=01779
+act.p=2712,579
+act.attr=04
+
+newitem=01779
+act.p=2713,579
+act.attr=04
+
+//Stones Circle 3
+newitem=i_fire_column
+act.p=2708,583
+act.attr=04
+
+newitem=01779
+act.p=2709,583
+act.attr=04
+
+newitem=01779
+act.p=2709,582
+act.attr=04
+
+newitem=01779
+act.p=2708,582
+act.attr=04
+
+newitem=01779
+act.p=2707,583
+act.attr=04
+
+newitem=01779
+act.p=2707,584
+act.attr=04
+
+newitem=01779
+act.p=2708,584
+act.attr=04
+
+DIALOG d_QuickBuilder_BountyHunter
+
+[EOF]

@@ -1,0 +1,164 @@
+//===============================================//
+// Craftable Special Dyes			 //
+// By Admin Falcon        			 //
+// Please dont remove this header.		 //
+//===============================================//
+
+//put this in your sphereskills.scp
+[SKILLMENU sm_craftabledye]
+What kind of dye do you want to make?
+
+ON=I_INFERNODYE <name> (<resmake>)
+MAKEITEM=I_INFERNODYE
+
+ON=I_WHITEDYE <name> (<resmake>)
+MAKEITEM=I_WHITEDYE
+
+ON=I_DBDYE <name> (<resmake>)
+MAKEITEM=I_DBDYE
+
+ON=I_BLACKDYE <name> (<resmake>)
+MAKEITEM=I_BLACKDYE
+
+ON=I_NBLUEDYE <name> (<resmake>)
+MAKEITEM=I_NBLUEDYE
+
+
+//put this in your customs folder
+[ITEMDEF i_tailorflask]
+ID=i_oil_flask
+WEIGHT=.5
+NAME=Tailor Dye Flask
+
+ON=@DCLICK
+src.SKILLMENU sm_craftabledye
+RETURN 0
+
+[ITEMDEF I_INFERNODYE]
+ID=i_oil_flask
+NAME=Inferno Dye
+RESOURCES=i_reag_volcanic_ash 10, i_tailorflask
+SKILLMAKE=TAILORING 85.0
+
+ON=@CREATE
+COLOR=00489
+
+ON=@DCLICK
+IF <AMOUNT>>1
+SRC.MESSAGE You have to seperate this from the stack to use it
+RETURN 1
+ENDIF
+
+TARGET What do you want to Dye?
+return 1
+
+ON=@TARGON_ITEM
+SRC.FINDID.I_INFERNODYE
+src.targ.color=<color>
+src.targ.update
+remove
+return 0
+
+[ITEMDEF I_WHITEDYE]
+ID=i_oil_flask
+WEIGHT=1
+NAME=Pure White Dye
+RESOURCES=i_reag_bone 10, i_tailorflask
+SKILLMAKE=TAILORING 90.0
+
+ON=@CREATE
+COLOR=008bb //Replace with your own color code
+
+ON=@DCLICK
+IF <AMOUNT>>1
+SRC.MESSAGE You have to seperate this from the stack to use it
+RETURN 1
+ENDIF
+
+TARGET What do you want to Dye?
+return 1
+
+ON=@TARGON_ITEM
+SRC.FINDID.I_WHITEDYE
+src.targ.color=<color>
+src.targ.update
+remove
+return 0
+
+[ITEMDEF I_DBDYE]
+ID=i_oil_flask
+WEIGHT=1
+NAME=Dragon Blood Dye
+RESOURCES=i_reag_dragon_blood 10, i_tailorflask
+SKILLMAKE=TAILORING 80.0
+
+ON=@CREATE
+COLOR=006fd //Replace with your own color code
+
+ON=@DCLICK
+IF <AMOUNT>>1
+SRC.MESSAGE You have to seperate this from the stack to use it
+RETURN 1
+ENDIF
+
+TARGET What do you want to Dye?
+return 1
+
+ON=@TARGON_ITEM
+SRC.FINDID.I_DBDYE
+src.targ.color=<color>
+src.targ.update
+remove
+return 0
+
+[ITEMDEF I_BLACKDYE]
+ID=i_oil_flask
+WEIGHT=1
+NAME=Pure Black Dye
+RESOURCES=i_reag_obsidian 10, i_tailorflask
+SKILLMAKE=TAILORING 70.0
+
+ON=@CREATE
+COLOR=00001 //Replace with your own color code
+
+ON=@DCLICK
+IF <AMOUNT>>1
+SRC.MESSAGE You have to seperate this from the stack to use it
+RETURN 1
+ENDIF
+
+TARGET What do you want to Dye?
+return 1
+
+ON=@TARGON_ITEM
+SRC.FINDID.I_BLACKDYE
+src.targ.color=<color>
+src.targ.update
+remove
+return 0
+
+[ITEMDEF I_NBLUEDYE]
+ID=i_oil_flask
+WEIGHT=1
+NAME=Blood Red Dye
+RESOURCES=i_reag_blood_vial 10, i_tailorflask
+SKILLMAKE=TAILORING 75.0
+
+ON=@CREATE
+COLOR=008b3 //Replace with your own color code
+
+ON=@DCLICK
+IF <AMOUNT>>1
+SRC.MESSAGE You have to seperate this from the stack to use it
+RETURN 1
+ENDIF
+
+TARGET What do you want to Dye?
+return 1
+
+ON=@TARGON_ITEM
+SRC.FINDID.I_NBLUEDYE
+src.targ.color=<color>
+src.targ.update
+remove
+return 0

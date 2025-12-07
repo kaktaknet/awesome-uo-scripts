@@ -1,0 +1,103 @@
+The script below is to be added to a forge... When added it will smelt player crafted items, and it also uses the tongs as a catalist for holding the metal while smelting.  Ores can be smelted without the use of tongs. It comes with safety measures to keep you from smelting stuff that you shoulnd't... And as far as I know it works perfectly.
+
+ON=@TARGON_ITEM 
+
+IF (<SRC.TARG.BASEID>=i_tongs) && (<SRC.TAG.FORGE>!=1) 
+
+TARGET 
+
+SRC.SYSMESSAGE=Select the item you wish to smelt. 
+
+SRC.TAG.FORGE=1 
+
+RETURN 1 
+
+ELSEIF (<SRC.TARG.TYPE>==T_FORGE) 
+
+SRC.MESSAGE=You can't smelt another forge! 
+
+SRC.TAG.FORGE= 
+
+RETURN 1 
+
+ELSEIF (<SRC.TAG.FORGE>==1) && (<SRC.TARG.DISPID>==i_ore_iron) 
+
+SRC.TAG.FORGE= 
+
+RETURN 0 
+
+ELSEIF (<SRC.TARG.DISPID>==i_ore_iron) 
+
+RETURN 0 
+
+ELSEIF (<SRC.TAG.FORGE>==1) && !(<SRC.TARG.ATTR>&attr_newbie|attr_magic|attr_move_never|attr_owned|attr_invis|attr_forsale| attr_static) 
+
+SRC.TAG.FORGE= 
+
+SRC.TARG.ATTR=0 
+
+RETURN 0 
+
+ELSEIF (<SRC.TAG.FORGE>==1) && (<SRC.TARG.ATTR>&attr_newbie|attr_magic) 
+
+SRC.TAG.FORGE= 
+
+SRC.MESSAGE=You cannot smelt magic or newbie items. 
+
+RETURN 1 
+
+ELSEIF (<SRC.TAG.FORGE>==1) && (<SRC.TARG.ATTR>&attr_move_never|attr_owned|attr_invis|attr_forsale|attr_static) 
+
+SRC.TAG.FORGE= 
+
+SRC.MESSAGE=You cannot smelt that item. 
+
+RETURN 1 
+
+ELSEIF (<SRC.TAG.FORGE>==1) 
+
+SRC.TAG.FORGE= 
+
+SRC.MESSAGE=You cannot smelt that item. 
+
+RETURN 1 
+
+ELSE 
+
+SRC.MESSAGE=You must select ore for smelting or some tongs to smelt the item with. 
+
+RETURN 1 
+
+ENDIF 
+
+ON=@TARGON_CHAR 
+
+IF (<SRC.TAG.FORGE>==1) 
+
+SRC.TAG.FORGE= 
+
+SRC.MESSAGE=You must select an item for smelting. 
+
+RETURN 1 
+
+ELSE 
+
+RETURN 1 
+
+ENDIF 
+
+ON=@TARGON_GROUND 
+
+IF (<SRC.TAG.FORGE>==1) 
+
+SRC.TAG.FORGE= 
+
+SRC.MESSAGE=You must select an item for smelting. 
+
+RETURN 1 
+
+ELSE 
+
+RETURN 1 
+
+ENDIF 

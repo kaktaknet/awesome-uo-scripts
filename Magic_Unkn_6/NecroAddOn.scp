@@ -1,0 +1,47 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//To use this script, you need the files:  NecroSpells.scp, Necro Book.scp, NecroChars.scp and NecroAddOns.scp.
+//Once that you have them all, you can create a necro book using:  .add i_necro_book
+//and just dclick it to open up the dialog and play with the custom made spells!
+//You will need to create the dialog yourself...
+
+//Please do not remove this header..
+
+//Enjoy!
+
+
+//The following script part must be added in the human Chardefs.  Use your Text Editor's search tool to find the strings: "defname=c_man" and "defname=c_woman" and add the scripts at the bottom of the scripts.
+
+ON=@SPELLEFFECT
+IF (<ARGN>==41) && (<RESTEST 1 i_mem_necrocursed>)
+STR=<EVAL <STR>+<TAG.CURSEDSTR>>
+DEX=<EVAL <DEX>+<TAG.CURSEDDEX>>
+INT=<EVAL <INT>+<TAG.CURSEDINT>>
+FINDID(i_mem_necrocursed).LINK.REMOVE
+FINDID(i_mem_necrocursed).REMOVE
+ENDIF
+IF (<ARGN>==25) && (<RESTEST 1 i_mem_necrocursed>)
+STR=<EVAL <STR>+<TAG.CURSEDSTR>>
+DEX=<EVAL <DEX>+<TAG.CURSEDDEX>>
+INT=<EVAL <INT>+<TAG.CURSEDINT>>
+FINDID(i_mem_necrocursed).LINK.REMOVE
+FINDID(i_mem_necrocursed).REMOVE
+ENDIF
+
+
+//The following script part must be added into every Chardef or Skillclass that can become a Necro.  If anyone can use the necro spells, then put that in the human chardefs as with the above script part.
+
+ON=@SPELLEFFECT
+IF (<ARGN>==41) && (<RESTEST 1 i_mem_poly>)
+BODY=<OBODY>
+STR=<TAG.ORIGINALSTR>
+DEX=<TAG.ORIGINALDEX>
+INT=<TAG.ORIGINALINT>
+TAG.POLYED=0
+COLOR=076b
+FINDID(i_mem_poly).LINK.REMOVE
+FINDID(i_mem_poly).REMOVE
+RETURN 0
+ENDIF

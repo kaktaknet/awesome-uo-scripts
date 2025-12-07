@@ -1,0 +1,94 @@
+[ITEMDEF 0c95]
+//coconut palm
+DEFNAME=i_tree_coconutpalm
+VALUE=2
+// TYPE=t_tree
+TYPE=T_FOLIAGE
+CATEGORY=Dekorationen - Pflanzen
+SUBSECTION=Bäume
+DESCRIPTION=Kokosnusspalme
+ON=@Create
+//FRUIT=i_fruit_coconut
+ATTR=08010
+
+[ITEMDEF i_setzling_kokosnuss]
+ID=0cea
+
+ON=@Create
+TIMER=60*60*24*1
+ATTR=08010
+TYPE=t_normal
+MOREZ {5 10}
+
+ON=@TIMER
+IF (<LINK>!=04fffffff)
+DORAND 2
+LINK.NEWITEM 0c95
+LINK.NEWITEM 0c95 // nur feur mehr Abwchslung bei bäumen :D
+ENDDO
+LINK.ACT.MORE <ID>
+LINK.ACT.P <P>
+LINK.ACT.LINK <LINK>
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_mutterboden]
+NAME=Boden
+TYPE=t_normal
+ID=0177d
+
+ON=@CREATE
+COLOR=0288
+ATTR=08010
+
+ON=@DCLICK
+IF (<LINK>=04fffffff)
+link=<src.uid>
+SRC.SYSMESSAGE Das gehoert nun euch
+RETURN 1
+ELSE
+SRC.SYSMESSAGE Das gehoert dir nicht // Nur tetsweise drinn es kann ja auch sein das es einem bereits gehört wid später rausgenommen
+RETURN 1
+
+
+ON=@TIMER
+IF (<MORE>==1) //über more soll spater geregelt werden was rauskommt zb. More1=2 Bananenbaum oder so
+LINK.NEWITEM i_setzling_kokosnuss
+LINK.ACT.P <P>
+LINK.ACT.LINK <LINK>
+REMOVE
+RETURN 1
+ENDIF
+
+
+[ITEMDEF i_kokossamen]
+NAME=Samen
+ID=0172d
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=0
+
+ON=@DCLICK
+TARGET
+
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID>==i_mutterboden) && (<SRC.TARG.MORE1>==00) && (<src.targ.link>==<src.uid>)
+SRC.TARG.MORE1=01
+SRC.TARG.TIMER=30*30*24*1
+SRC.SYSMESSAGE Du graebst den Samen ein
+IF (<AMOUNT>>1)
+AMOUNT <AMOUNT>+-1
+ELSE
+REMOVE
+ENDIF
+RETURN 1
+ENDIF
+ELSE
+SRC.MESSAGE Das geht nicht
+RETURN 1
+ENDIF
+
+[EOF] 

@@ -1,0 +1,265 @@
+/////////////////////////////////////////////////////////////////
+//////////////// Made By The_Blind_Sniper ///////////////////////
+////////////////// Please leave credit //////////////////////////
+///////////// Bug comments:Ppocrack@hotmail.com /////////////////
+/////////////////////////////////////////////////////////////////
+[ITEMDEF i_book_voodoo]
+ID=I_spellbook
+TYPE=t_script
+NAME=Voodoo book
+WEIGHT=1
+VALUE=15000
+
+RESOURCES=20 i_scroll_blank,5000 i_gold
+SKILLMAKE=100.0 INSCRIPTION,80.0 NECROMANCY,90.0 SPIRITSPEAK
+
+CATEGORY=New skills
+SUBSECTION=Voodoo
+DESCRIPTION=Voodoo book
+
+ON=@CREATE
+COLOR=0892
+
+ON=@DCLICK
+IF (<SRC.TARG.CONT>==<SRC.FINDLAYER(21).UID>)
+Target Choose an object with voodoo properties.
+ELSE
+SRC.SYSMESSAGE Could you have it in your backpack please?
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.CONT>!=<SRC.FINDLAYER(21).UID>)
+SRC.SYSMESSAGE Put the voodoo item in your backpack please.
+RETURN 1
+ENDIF
+VAR.REQ=<EVAL <EVAL <SRC.SPIRITSPEAK>/10>+<EVAL <SRC.NECROMANCY>/10>>
+VAR.REQ2=<EVAL RAND(128)+100>
+SRC.SAY <EVAL <VAR.REQ2>>
+IF !(<VAR.REQ> > <VAR.REQ2>)&&!(<SRC.ISGM>)
+SRC.TARG.CONSUME
+SRC.SAYU *You have failed the  Voodoo ritual!*
+RETURN 1
+ENDIF
+IF (<SRC.TARG.BASEID>==i_flesh_head)
+IF (<SRC.TARG.LINK>)
+SRC.NEWITEM <SRC.TARG.LINK.SEX i_voodoo_doll_m/i_voodoo_doll_f>
+SRC.ACT.NAME Voodoo doll of <SRC.TARG.LINK.NAME>
+SRC.ACT.LINK <SRC.TARG.LINK>
+SRC.ACT.CONT <SRC.UID>
+SRC.SAYUA 091 0 0 1  *Raphhala Un-Hiei <SRC.TARG.LINK.NAME>*
+SRC.TARG.CONSUME
+ENDIF
+ELSE
+SRC.SYSMESSAGE That doesn't have voodoo properties to be used!
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE mmm......no you can't do that.
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE mmm......no you can't do that.
+RETURN 1
+
+[ITEMDEF i_voodoo_doll_m]
+ID=i_pet_man_naked
+TYPE=t_script
+
+CATEGORY=New skills
+DESCRIPTION=Man Voodoo doll(blank)
+SUBSECTION=Voodoo
+
+ON=@DCLICK
+SRC.SYSMESSAGE Oh.... what a nice doll we have here....
+RETURN 1
+
+[ITEMDEF i_voodoo_doll_f]
+ID=i_pet_woman_naked
+TYPE=t_script
+
+CATEGORY=New skills
+DESCRIPTION=Woman Voodoo doll(blank)
+SUBSECTION=Voodoo
+
+ON=@DCLICK
+SRC.SYSMESSAGE Oh.... what a nice doll we have here....
+RETURN 1
+
+[ITEMDEF i_voodoo_harmer]
+ID=i_tinker_tools
+TYPE=t_script
+NAME=Torture instruments
+
+RESOURCES=8 i_ingot_iron,6 i_ingot_bloodrock
+SKILLMAKE=85.0 TINKERING,t_tinker_tools
+
+CATEGORY=New skills
+DESCRIPTION=Voodoo harming tools
+SUBSECTION=Voodoo
+
+ON=@CREATE
+COLOR=color_o_bloodrock
+
+ON=@DCLICK
+TARGET Which doll?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID>==i_voodoo_doll_m)||(<SRC.TARG.BASEID>==i_voodoo_doll_f)
+	IF !(<SRC.TARG.LINK.FLAGS>&02)
+		IF !(<SRC.TARG.LINK.UID>==<SRC.UID>)||(<SRC.ISGM>)
+	SRC.KILLS=<SRC.KILLS>+1
+	SRC.KARMA=<SRC.KARMA>+(-400) 
+	SRC.MENU m_voodoo
+	ELSE
+	SRC.MESSAGE *This doll's got your soul stupid! destroy it!*
+	ENDIF
+	ELSE
+	SRC.MESSAGE *You cannot feel the soul of the mortal!*
+	ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE mmm......no you can't do that.
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE mmm......no you can't do that.
+RETURN 1
+
+[MENU m_voodoo]
+list of harming possibilities to <SRC.TARG.NAME> 
+ON=0 Sew a doll's arm
+SRC.TARG.LINK.DAMAGE {10 29}
+SRC.TARG.LINK.DEX=<SRC.TARG.LINK.DEX>+(-1)
+f_puedekmerompa 8
+f_eliminame 0
+ON=1 Kick the doll away
+SRC.TARG.LINK.DAMAGE {15 40}
+f_puedekmerompa 4
+f_eliminame 1
+ON=2 Play a tune to the doll
+IF (<SRC.FINDLAYER(21).FINDTYPE.t_musical>)
+SRC.TARG.LINK.MESsAGE *You hear sounds in the air*
+DORAND 4
+TRY SRC.TARG.LINK.SFX 043
+TRY SRC.TARG.LINK.SFX 04c
+TRY SRC.TARG.LINK.SFX 045
+TRY SRC.TARG.LINK.SFX 052
+ENDDO
+ELSE 
+SRC.MESSAGE *I can't play with my bare hands!*
+ENDIF
+ON=3 Hit the doll with all your might
+SRC.TARG.LINK.DAMAGE {20 60}
+f_puedekmerompa 6
+f_eliminame 2
+ON=4 Try to cut the doll's neck
+SRC.TARG.LINK.DAMAGE {25 80}
+f_puedekmerompa 7
+f_eliminame 3
+ON=5 Bury the doll
+SRC.TARG.LINK.DAMAGE {30 100}
+f_puedekmerompa 9
+f_eliminame 4
+ON=6 Put the doll under a rock and jump on it
+f_puedekmerompa 10
+f_eliminame 5
+ON=7 Try to summon the doll's spiritual link to you
+f_puedekmerompa 11
+f_eliminame 6
+ON=8 Try to change the spirit's form
+f_puedekmerompa 12
+f_eliminame 6
+ON=9 Spit in the doll's face
+f_puedekmerompa 13
+f_eliminame 2
+ON=10 Destroy the doll
+SRC.TARG.REMOVE
+SRC.UPDATE
+
+[FUNCTION f_puedekmerompa]
+IF (<ARGS> < 10)
+	IF (<ARGS> > RAND(26))
+		SRC.DAMAGE {1 50}
+	SRC.MESSAGE *The Voodoo magic turns against you too*!
+	ELSEIF (<ARGS> > RAND(36))
+		SRC.DAMAGE {50 100}
+	SRC.MESSAGE *The Voodoo magic turns against you too*!
+	ELSEIF (<ARGS> > RAND(46))
+		SRC.DAMAGE {100 200}
+	SRC.MESSAGE *The Voodoo magic turns against you too*!
+	ENDIF
+ELSEIF (<ARGS>==11)
+	IF (<SRC.ISGM>)
+	SRC.TARG.LINK.SUMMONTO
+	ELSEIF (<ARGS> > RAND(36))
+	SRC.TARG.LINK.KILL
+	SRC.SAYUA 091 0 0 1 The voodoo magic killed <SRC.TARG.LINK.NAME>!
+	ELSEIF (<ARGS> > RAND(29))
+	SRC.KILL
+	SRC.SAYUA 091 0 0 1 The voodoo magic turned against and killed you!
+	ELSE
+SRC.TARG.LINK.MESSAGE *You've been summoned to <SRC.NAME>!*
+SRC.TARG.LINK.SUMMONTO
+	ENDIF
+ELSEIF (<ARGS>==12)
+	IF (<SRC.ISGM>)
+	SRC.TARG.LINK.BODY=<SRC.TARG.LINK.SEX C_woman/c_man>
+	ELSEIF (<ARGS> > RAND(36))
+	SRC.TARG.LINK.KILL
+	SRC.SAYUA 091 0 0 1 The voodoo magic killed <SRC.TARG.LINK.NAME>!
+	ELSEIF (<ARGS> > RAND(27))
+	SRC.KILL
+	SRC.SAYUA 091 0 0 1 The voodoo magic turned against and killed you!
+	ELSE
+SRC.TARG.LINK.BODY=<SRC.TARG.LINK.SEX C_woman/c_man>
+SRC.TARG.LINK.MESSAGE *You feel something weird going on...*
+	ENDIF
+ELSEIF (<ARGS>==13)
+SRC.TARG.LINK.MESSAGE *You feel something wet in your face*
+SRC.SAYU *JJJJ....Sptchua!
+RETURN 1
+ELSE
+	IF (<ARGS> > RAND(26))
+	SRC.TARG.LINK.KILL
+	SRC.SAYUA 091 0 0 1 The voodoo magic killed <SRC.TARG.LINK.NAME>!
+	ELSEIF (<ARGS> > RAND(26))
+	SRC.KILL
+	SRC.SAYUA 091 0 0 1 The voodoo magic turned against and killed you!
+	ELSE
+SRC.SAY *Nothing happened!*
+	ENDIF
+ENDIF
+DORAND 6
+SRC.SAYUA 091 0 0 1  Hammakarna Ughn <SRC.TARG.LINK.NAME>!
+SRC.SAYUA 091 0 0 1  Himmeth an Deark <SRC.TARG.LINK.NAME>!
+SRC.SAYUA 091 0 0 1  Rammmmakh al Kalln <SRC.TARG.LINK.NAME>!
+SRC.SAYUA 091 0 0 1  Phar ina dapaies <SRC.TARG.LINK.NAME>!
+SRC.SAYUA 091 0 0 1  Kalet kal Mmneth <SRC.TARG.LINK.NAME>!
+SRC.SAYUA 091 0 0 1  Pummmbele wnaio <SRC.TARG.LINK.NAME>!
+ENDDO
+SRC.UPDATE
+//SAYUA (color) 0 0 1 (frase) (sense ())
+
+[FUNCTION f_eliminame]
+DOSWITCH <ARGS>
+VAR.ALABAZURA=<EVAL {1 10}>
+VAR.ALABAZURA=<EVAL {3 12}>
+VAR.ALABAZURA=<EVAL {5 15}>
+VAR.ALABAZURA=<EVAL {8 18}>
+VAR.ALABAZURA=<EVAL {9 21}>
+VAR.ALABAZURA=<EVAL {12 25}>
+VAR.ALABAZURA=<EVAL {13 26}>
+ENDDO
+IF (<SRC.ISGM>)
+VAR.ALABAZURA=0
+ENDIF
+IF (<EVAL <EVAL {1 10}>+<VAR.ALABAZURA>> > <EVAL {20 40}>)
+SRC.TARG.CONSUME
+SRC.MESSAGE *The voodoo doll has been drained of all his strenght*
+ENDIF
+[EOF]

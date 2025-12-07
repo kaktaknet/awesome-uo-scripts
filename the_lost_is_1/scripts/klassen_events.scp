@@ -1,0 +1,64 @@
+//Klassen Events
+//Version 1.0
+
+[EVENTS e_armor_noplate] 
+
+ON=@itemEQUIP 
+IF (<ACT.dispid>==i_platemail_chest) || (<ACT.dispid>==01416) || (<ACT.dispid>==i_armor_female_plate) || (<ACT.dispid>==01c05) || (<ACT.dispid>==i_platemail_leggings) || (<ACT.dispid>==0141a) || (<ACT.dispid>==i_platemail_arms) || (<ACT.dispid>==01417) || (<ACT.dispid>==i_platemail_helm) || (<ACT.dispid>==01419) || (<ACT.dispid>==i_platemail_gloves) || (<ACT.dispid>==01418) || (<ACT.dispid>==i_platemail_gorget) || (<ACT.dispid>==i_shield_heater) || (<ACT.dispid>==01b77)
+	SRC.SYSMESSAGE="Du kannst diese Ruestung nicht tragen !"
+	SRC.ACT.UNEQUIP 
+ENDIF 
+
+[ITEMDEF i_noplate]
+
+ID=i_hole
+
+ON=@STEP
+	SRC.EVENTS +e_armor_noplate
+
+[EVENTS e_armor_noring] 
+
+ON=@itemEQUIP 
+IF (<ACT.dispid>==i_ringmail_leggings_decoration) || (<ACT.dispid>==013e6) || (<ACT.dispid>==i_ringmail_tunic_decoration) || (<ACT.dispid>==013e8) || (<ACT.dispid>==i_ringmail_sleeves_decoration) || (<ACT.dispid>==013ea) || (<ACT.dispid>==i_ringmail_gloves) || (<ACT.dispid>==013f2) || (<ACT.dispid>==i_ringmail_tunic) || (<ACT.dispid>==013ed) || (<ACT.dispid>==i_ringmail_sleeves) || (<ACT.dispid>==013ef) || (<ACT.dispid>==i_ringmail_leggings) || (<ACT.dispid>==013f1)
+	SRC.SYSMESSAGE="Du kannst diese Ruestung nicht tragen !"
+	SRC.ACT.UNEQUIP 
+ENDIF 
+
+[ITEMDEF i_noring]
+
+ID=i_hole
+
+ON=@STEP
+	SRC.EVENTS +e_armor_noring
+
+[EVENTS e_armor_nochain] 
+
+ON=@itemEQUIP 
+IF (<ACT.dispid>==i_chainmail_coif) || (<ACT.dispid>==013c0) || (<ACT.dispid>==i_chainmail_tunic_decoration) || (<ACT.dispid>==013c2) || (<ACT.dispid>==i_chainmail_leggings_decoration) || (<ACT.dispid>==013c1) || (<ACT.dispid>==i_chainmail_leggings) || (<ACT.dispid>==013c2) || (<ACT.dispid>==i_chainmail_tunic) || (<ACT.dispid>==013c3)
+	SRC.SYSMESSAGE="Du kannst diese Ruestung nicht tragen !"
+	SRC.ACT.UNEQUIP 
+ENDIF 
+
+[ITEMDEF i_nochain]
+
+ID=i_hole
+
+ON=@STEP
+	SRC.EVENTS +e_armor_nochain
+
+[EVENTS e_armor_noshield] 
+
+ON=@itemEQUIP 
+IF (<ACT.dispid>==i_shield_round_bronze) || (<ACT.dispid>==i_shield_kite_metal) || (<ACT.dispid>==01b75) || (<ACT.dispid>==i_shield_kite_wood) || (<ACT.dispid>==01b79) || (<ACT.dispid>==i_shield_wood)
+	SRC.SYSMESSAGE="Du kannst dieses Schild nicht tragen !"
+	SRC.ACT.UNEQUIP 
+ENDIF 
+
+[ITEMDEF i_noshield]
+
+ID=i_hole
+
+ON=@STEP
+	SRC.EVENTS +e_armor_noshield
+
+[EOF]

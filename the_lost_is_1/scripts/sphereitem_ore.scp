@@ -1,0 +1,2094 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Saturday, June 3, 2000
+//
+//For IT_ORE
+//TDATA1 is the ingot this will smelt to
+//For IT_INGOT
+//TDATA1 is the min skill required to smelt
+//TDATA2 is the skill required for maximum yield
+VERSION=0.54
+
+//Edited (C) Umbra Noctis @2003
+//Version 1.0
+//-Aveltarius
+//*******************************
+
+
+//***************ERZ FARBEN*************// 28 stück- Geordnet by P
+[DEFNAME COLOR_ORE]
+color_o_iron		0    			//option: 0763
+color_o_bronze       	06d6
+color_o_gold		045e 		//option: 084d
+color_o_copper		0641 		//option: 060c
+color_o_oldcopper	0590
+color_o_dullcopper 	060a
+color_o_silver    	03bc 			//def: 0231 , unser silver gleich :03bc
+color_o_shadow    	0770
+color_o_bloodrock 	04c2
+color_o_blackrock 	0455
+color_o_mytheril  	052d 		//or 0528
+color_o_rose      	0665
+color_o_verite    	07d1
+color_o_guarding	0596			//
+color_o_defense 	0672			//
+color_o_hardening	0549			//
+color_o_agapite  	0400
+color_o_rusty     	0750
+color_o_valorite  	0515
+color_o_forti  		070d			//
+color_o_charltin	030c				//
+color_o_granit		01100		//---> Gortaan
+color_o_ligten		00835		//
+color_o_invul		1887			//
+color_o_crystal		0065			//
+color_o_Starnin		0084d		//
+color_o_firin		0e9			//
+color_o_unholy		0083a 		//Vampire;Daywalker
+color_o_teran		0038f		//Drow
+color_o_siir		00038		//LichtElfen
+color_o_naturee		008a5		//waldelfen
+
+//added by Aveltarius (miningBugFix), nicht weg schmeissen!
+[DEFNAME min_mr]
+min_mr_rusty 0.1
+min_mr_iron 1.0 
+min_mr_old_copper 10.0 
+min_mr_dull_copper 20.0 
+min_mr_copper 30.0 
+min_mr_bronze 35.0 
+min_mr_silver 55.0
+min_mr_gold 60.0
+min_mr_granit 63.0
+min_mr_rose 66.0
+min_mr_agapite 70.0
+min_mr_charltin 75.0
+min_mr_shadow 78.0 
+min_mr_defense 79.0
+min_mr_bloodrock 80.0 
+min_mr_guarding 82.0
+min_mr_verite 84.0 
+min_mr_ligten 85.0
+min_mr_hardening 88.0
+min_mr_valorite 92.0 
+min_mr_forti 95.0
+min_mr_mytheril 96.0 
+min_mr_blackrock 99.0
+min_mr_starnin 99.5
+min_mr_crystal 99.7
+min_mr_firin 99.9
+min_mr_invulnerability 100.0
+min_mr_unholy 100.0
+min_mr_teran 100.0
+min_mr_siir 100.0
+min_mr_naturee 100.0
+min_mr_diamond 100.0
+//Fishing Ressources festlegen
+min_mr_fish1 0.1
+min_mr_fish2 30.0
+min_mr_fish3 40.0
+min_mr_fish4 50.0
+min_mr_temp_str 70.0
+min_mr_temp_dex 70.0
+min_mr_temp_int 70.0
+min_mr_healing 75.0
+min_mr_entgiftung 80.0
+min_mr_sunken_chest_1 85.0
+min_mr_sunken_chest_2 95.0
+min_mr_sunken_chest_3 100.0
+
+default_mining_mr mr_rusty // THIS IS THE DEFAULT RESOURCE TO OBTAIN
+default_fishing_mr mr_fish1 //default fürs fischen, falls zu hoch
+
+[FUNCTION resource_targon_ground] 		//ist hardgecoded
+if ( <SRC.findlayer(layer_horse.uid)> ) 
+src.sysmessage Get off your hourse!
+return 1 
+endif 
+
+if ( <src.findid(i_resprobe).uid> ) // we are still to be relocated 
+return 1 
+endif 
+
+if ( <SRC.ACTION> != -1 ) 
+SRC.ACTION = -1 // cancel current activity 
+endif 
+
+SRC.NEWITEM i_resprobe // Load the probe item that will send us back 
+SRC.ACT.P = <SRC.TARGP> // place it at the mining point 
+SRC.ACT.MOREP = <SRC.P> 
+
+
+if ( <SRC.ACT.DISTANCE> > 2 ) && (<SRC.FINDLAYER(1).dispID> == i_pickaxe)||(<SRC.FINDLAYER(1).type> == t_weapon_sword) // check for distance to mining point (fix fuers minen und lumberjacking)
+src.sysmessage="You are too far away!" 
+SRC.ACT.REMOVE 
+return 1 
+endif
+
+
+if ( !<SRC.ACT.CANSEELOS> ) && (<SRC.FINDLAYER(1).dispID> == i_pickaxe)||(<SRC.FINDLAYER(1).type> == t_weapon_sword)// check for line of sight to mining point 
+src.sysmessage="You can not see the place!"
+SRC.ACT.REMOVE 
+return 1 
+endif 
+
+SRC.ACT.ATTR = <SRC.ACT.ATTR>|attr_invis 
+SRC.ACT.EQUIP 
+
+SRC.EVENTS +e_probe 
+SRC.P = <SRC.TARGP> // move the character WITHOUT updating. Notice that 
+// it'll be moved back in at most 1sec, not noticeable 
+
+[EVENTS e_probe] 
+// here, SRC.ACT is the item being stepped on - the spawn 
+ON=@itemStep 
+if ( 0 ) 
+elseif ( <SRC.ACT.TYPE> == t_rock ) 
+elseif ( <SRC.ACT.TYPE> == t_tree ) 
+elseif ( <SRC.ACT.TYPE> == t_water ) 
+else 
+return 0 
+endif 
+
+SRC.EVENTS -e_probe 
+SRC.TAG.PROBE = <SRC.ACT.UID> 
+SRC.P = <SRC.FINDID(i_resprobe).MOREP> // restore original position 
+
+SRC.FINDID(i_resprobe).remove 
+
+if ( <SRC.isgm> ) // just a message for GMs, remove these 3 lines on final version 
+src.sysmessage <SRC.ACTION>:: <SRC.ACT.TYPE>, <SRC.ACT.AMOUNT> <SRC.ACT.MORE1> 
+endif 
+
+// ADD tests for skill here! 
+if ( 0) 
+elseif ( <SRC.ACT.TYPE> == t_rock ) 
+if ( 0 ) 
+elseif ( (<SRC.ACT.MORE1> == mr_iron) && (<src.mining> < min_mr_iron) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_rusty) && (<src.mining> < min_mr_rusty) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_dull_copper) && (<src.mining> < min_mr_dull_copper) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_old_copper) && (<src.mining> < min_mr_old_copper) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_copper) && (<src.mining> < min_mr_copper) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_gold) && (<src.mining> < min_mr_gold) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_bronze) && (<src.mining> < min_mr_bronze) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_blackrock) && (<src.mining> < min_mr_blackrock) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_silver) && (<src.mining> < min_mr_silver) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_verite) && (<src.mining> < min_mr_verite) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_valorite) && (<src.mining> < min_mr_valorite) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_rose) && (<src.mining> < min_mr_rose) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_mytheril) && (<src.mining> < min_mr_mytheril) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_bloodrock) && (<src.mining> < min_mr_bloodrock) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_agapite) && (<src.mining> < min_mr_agapite) ) 
+elseif ( (<SRC.ACT.MORE1> == mr_shadow) && (<src.mining> < min_mr_shadow) )
+elseif ( (<SRC.ACT.MORE1> == mr_granit) && (<src.mining> < min_mr_granit) ) 			//granit-->Gortaan
+elseif ( (<SRC.ACT.MORE1> == mr_charltin) && (<src.mining> < min_mr_charltin) )			//charltin
+elseif ( (<SRC.ACT.MORE1> == mr_defense) && (<src.mining> < min_mr_defense) )			//defense
+elseif ( (<SRC.ACT.MORE1> == mr_guarding) && (<src.mining> < min_mr_guarding) )			//guarding
+elseif ( (<SRC.ACT.MORE1> == mr_ligten) && (<src.mining> < min_mr_ligten) )			//ligten
+elseif ( (<SRC.ACT.MORE1> == mr_hardening) && (<src.mining> < min_mr_hardening) )		//hardening
+elseif ( (<SRC.ACT.MORE1> == mr_forti) && (<src.mining> < min_mr_forti) )			//forti
+elseif ( (<SRC.ACT.MORE1> == mr_starnin) && (<src.mining> < min_mr_starnin) )			//starnin
+elseif ( (<SRC.ACT.MORE1> == mr_crystal) && (<src.mining> < min_mr_crystal) )			//crystal
+elseif ( (<SRC.ACT.MORE1> == mr_firin) && (<src.mining> < min_mr_firin) )			//firin
+elseif ( (<SRC.ACT.MORE1> == mr_invulnerability) && (<src.mining> < min_mr_invulnerability) )	//invulnerability
+elseif ( (<SRC.ACT.MORE1> == mr_unholy) && (<src.mining> < min_mr_unholy) )			//Vamps,Daywalker
+elseif ( (<SRC.ACT.MORE1> == mr_diamond) && (<src.mining> < min_mr_diamond) )			//diamond
+elseif ( (<SRC.ACT.MORE1> == mr_teran) && (<src.mining> < min_mr_teran) )			//Dunkelelfen
+elseif ( (<SRC.ACT.MORE1> == mr_siir) && (<src.mining> < min_mr_siir) )				//Lichtelfen
+elseif ( (<SRC.ACT.MORE1> == mr_naturee) && (<src.mining> < min_mr_naturee) )			//Waldelfen
+elseif ( (<SRC.ACT.MORE1> == mr_nothing) ) 
+else 
+return 0 // it's ok, we can mine 
+endif 
+
+SRC.ACT.MORE1 = default_mining_mr // REPLACE the current mining resource 
+return 0 
+elseif ( <SRC.ACT.TYPE> == t_tree ) 
+return 0 
+elseif ( <SRC.ACT.TYPE> == t_water )
+if ( 0 )
+elseif ( (<SRC.ACT.MORE1> == mr_fish1) && (<src.fishing> < min_mr_fish1) )
+elseif ( (<SRC.ACT.MORE1> == mr_fish2) && (<src.fishing> < min_mr_fish2) )
+elseif ( (<SRC.ACT.MORE1> == mr_fish3) && (<src.fishing> < min_mr_fish3) )
+elseif ( (<SRC.ACT.MORE1> == mr_fish4) && (<src.fishing> < min_mr_fish4) )
+elseif ( (<SRC.ACT.MORE1> == mr_temp_str) && (<src.fishing> < min_mr_temp_str) )
+elseif ( (<SRC.ACT.MORE1> == mr_temp_dex) && (<src.fishing> < min_mr_temp_dex) )
+elseif ( (<SRC.ACT.MORE1> == mr_temp_int) && (<src.fishing> < min_mr_temp_int) )
+elseif ( (<SRC.ACT.MORE1> == mr_healing) && (<src.fishing> < min_mr_healing) )
+elseif ( (<SRC.ACT.MORE1> == mr_entgiftung) && (<src.fishing> < min_mr_entgiftung) )
+elseif ( (<SRC.ACT.MORE1> == mr_sunken_chest_1) && (<src.fishing> < min_mr_sunken_chest_1) )
+elseif ( (<SRC.ACT.MORE1> == mr_sunken_chest_2) && (<src.fishing> < min_mr_sunken_chest_2) )
+elseif ( (<SRC.ACT.MORE1> == mr_sunken_chest_3) && (<src.fishing> < min_mr_sunken_chest_3) )
+elseif ( (<SRC.ACT.MORE1> == mr_nothing) )
+else
+return 0 
+endif 
+
+SRC.ACT.MORE1 = default_fishing_mr	//Wenn skill nicht genugt --> default_fishing_mr (=fish1)
+return 0
+
+//endif
+
+[ITEMDEF i_resprobe] 
+ID = i_memory 
+TYPE = t_eq_script 
+LAYER = layer_special 
+
+ON=@Create 
+TIMER = 1 
+MORE2 = 0 
+ATTR = attr_move_never 
+
+ON=@Timer 
+// allow this to run twice, if we don't stop the action 
+if ( (<CONT.ACTION> != -1) && (<MORE2> == 0) ) 
+MORE2 = 1 
+TIMER = 1 
+return 1 
+endif 
+CONT.P = <MOREP> 
+CONT.UPDATE 
+remove 
+return 1
+//Ende
+
+
+//************** Ores/Erze **************************
+
+
+//-------------------------------------Hier ist Eisen
+[ITEMDEF 019b7]
+// DEFNAME2=METAL_ORE_1
+DEFNAME=i_ore_iron
+NAME="Iron Ore"
+TYPE=t_ore
+SKILLMAKE=MINING 1.0
+TDATA1=i_ingot_iron
+WEIGHT=2
+VALUE=6
+DUPELIST=019b8,019b9,019ba
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ore (Small Pile)
+
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <1.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Rusty/Rost
+[ITEMDEF i_ore_rusty]
+ID=i_ore_iron
+NAME="Rusty Ore"
+SKILLMAKE=MINING 0.1
+TDATA1=i_ingot_rusty
+VALUE=4
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Rusty Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_rusty
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <0.1)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Old Copper/Altes Kupfer
+[ITEMDEF i_ore_old_copper]
+ID=i_ore_iron
+NAME="Old Copper Ore"
+SKILLMAKE=MINING 10.0
+TDATA1=i_ingot_old_copper
+VALUE=5
+WEIGHT=2
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Old Copper Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_oldcopper
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <10.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Dull Copper
+[ITEMDEF i_ore_dull_copper]
+ID=i_ore_iron
+NAME="Dull Copper Ore"
+SKILLMAKE=MINING 20.0
+TDATA1=i_ingot_dull_copper
+VALUE=5
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Dull Copper Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_dullcopper
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <20.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//----------------------------------------------Hier ist Kupfer
+[ITEMDEF i_ore_copper]
+ID=i_ore_iron
+NAME="Copper Ore"
+SKILLMAKE=MINING 30.0
+TDATA1=i_ingot_copper
+VALUE=5
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Copper Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_copper
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <30.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Bronze
+[ITEMDEF i_ore_bronze]
+ID=i_ore_iron
+NAME="Bronze Ore"
+SKILLMAKE=MINING 35.0
+TDATA1=i_ingot_bronze
+VALUE=5
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Bronze Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_bronze
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <35.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Silber
+[ITEMDEF i_ore_silver]
+ID=i_ore_iron
+NAME="Silver Ore"
+SKILLMAKE=MINING 55.0
+TDATA1=i_ingot_silver
+VALUE=7
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Silver Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_silver
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <55.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Gold
+[ITEMDEF i_ore_gold]
+ID=i_ore_iron
+NAME="Gold Ore"
+SKILLMAKE=MINING 60.0
+TDATA1=i_ingot_gold
+VALUE=10
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Gold Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_gold
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <60.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE You must have 10 ores at least to continue with smelting.
+RETURN 1
+ENDIF
+//---------------------------------------------
+//----------------------------------------------Hier ist "Granit"    --> Gortaan
+[ITEMDEF i_ore_granit]
+ID=i_ore_iron
+NAME="Gortaan Ore"
+SKILLMAKE=MINING 63.4
+TDATA1=i_ingot_granit
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Gortaan Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_granit
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <63.4)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Rose
+[ITEMDEF i_ore_rose]
+ID=i_ore_iron
+NAME="Rose Ore"
+SKILLMAKE=MINING 66.0
+TDATA1=i_ingot_rose
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Rose Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_rose
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <66.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Agapite
+[ITEMDEF i_ore_agapite]
+ID=i_ore_iron
+NAME="Agapite Ore"
+SKILLMAKE=MINING 70.0
+TDATA1=i_ingot_agapite
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Agapite Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_agapite
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <70.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist mein Charltin 
+[ITEMDEF i_ore_charltin]
+ID=i_ore_iron
+NAME="Charltin Ore"
+SKILLMAKE=MINING 75.0
+TDATA1=i_ingot_charltin
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Charltin Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_charltin
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <75.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Shadow
+[ITEMDEF i_ore_shadow]
+ID=i_ore_iron
+NAME="Shadow Ore"
+SKILLMAKE=MINING 78.0
+TDATA1=i_ingot_shadow
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Shadow Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_shadow
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <78.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Defense (by metroman)
+[ITEMDEF i_ore_defense]
+ID=i_ore_iron
+NAME="Magic Defense Ore"
+SKILLMAKE=MINING 79.0
+TDATA1=i_ingot_defense
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Defense Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_defense
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <79.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><10)
+SRC.SYSMESSAGE "You must have 10 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//---------------------------------------------Hier ist Bloodrock
+[ITEMDEF i_ore_bloodrock]
+ID=i_ore_iron
+NAME="Bloodrock Ore"
+SKILLMAKE=MINING 80.0
+TDATA1=i_ingot_bloodrock
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Bloodrock Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_bloodrock
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <80.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><5)
+SRC.SYSMESSAGE "You must have 5 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Guarding
+[ITEMDEF i_ore_guarding]
+ID=i_ore_iron
+NAME="Magic Guarding Ore"
+SKILLMAKE=MINING 82.0
+TDATA1=i_ingot_guarding
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Guarding Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_guarding
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <82.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><5)
+SRC.SYSMESSAGE "You must have 5 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Verite
+[ITEMDEF i_ore_verite]
+ID=i_ore_iron
+NAME="Verite Ore"
+SKILLMAKE=MINING 84.0
+TDATA1=i_ingot_verite
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Verite Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_verite
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <84.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><5)
+SRC.SYSMESSAGE "You must have 5 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//--------------------------------------------- Ligten
+[ITEMDEF i_ore_ligten]
+ID=i_ore_iron
+NAME="Ligten Ore"
+SKILLMAKE=MINING 85.0
+TDATA1=i_ingot_ligten
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ligten Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_ligten
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <85.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><5)
+SRC.SYSMESSAGE "You must have 5 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Hardening
+[ITEMDEF i_ore_hardening]
+ID=i_ore_iron
+NAME="Magic Hardening Ore"
+SKILLMAKE=MINING 88.0
+TDATA1=i_ingot_hardening
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Hardening Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_hardening
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <88.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><4)
+SRC.SYSMESSAGE "You must have 4 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Valorite
+[ITEMDEF i_ore_valorite]
+ID=i_ore_iron
+NAME="Valorite Ore"
+SKILLMAKE=MINING 92.0
+TDATA1=i_ingot_valorite
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Valorite Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_valorite
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <92.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><4)
+SRC.SYSMESSAGE "You must have 4 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Fortification
+[ITEMDEF i_ore_forti]
+ID=i_ore_iron
+NAME="Magic Fortification Ore"
+SKILLMAKE=MINING 95.0
+TDATA1=i_ingot_forti
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Fortification Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_forti
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <95.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><3)
+SRC.SYSMESSAGE "You must have 3 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Mytheril
+[ITEMDEF i_ore_mytheril]
+ID=i_ore_iron
+NAME="Mytheril Ore"
+SKILLMAKE=MINING 96.0
+TDATA1=i_ingot_mytheril
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Mytheril Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_mytheril
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <96.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+IF (<AMOUNT><3)
+SRC.SYSMESSAGE "You must have 3 ores at least to continue with smelting."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Blackrock
+[ITEMDEF i_ore_blackrock]
+ID=i_ore_iron
+NAME="Blackrock Ore"
+SKILLMAKE=MINING 99.0
+TDATA1=i_ingot_blackrock
+VALUE=18
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Blackrock Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_blackrock
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <99.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+
+//---------------------------------------------
+
+//---------------------------------------------Starnin
+[ITEMDEF i_ore_starnin]
+ID=i_ore_iron
+NAME="Starnin Ore"
+SKILLMAKE=MINING 99.5
+TDATA1=i_ingot_starnin
+VALUE=15
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Starnin Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_starnin
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <99.5)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+
+//---------------------------------------------
+//---------------------------------------------Crystal 
+[ITEMDEF i_ore_crystal]
+ID=i_ore_iron
+NAME="Crystal Ore"
+SKILLMAKE=MINING 99.7
+TDATA1=i_ingot_crystal
+VALUE=18
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Crystal Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_crystal
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <99.7)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+
+//---------------------------------------------
+//---------------------------------------------Firin ; 
+[ITEMDEF i_ore_firin]
+ID=i_ore_iron
+NAME="Firin Ore"
+SKILLMAKE=MINING 99.9
+TDATA1=i_ingot_firin
+VALUE=18
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Firin Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_firin
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <99.9)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+
+//---------------------------------------------
+//---------------------------------------------Invul 
+[ITEMDEF i_ore_invulnerability]
+ID=i_ore_iron
+NAME="Invulnerability Ore"
+SKILLMAKE=MINING 100.0
+TDATA1=i_ingot_invul
+VALUE=18
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Invul Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_invul
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <100.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//--------------------------------------------- Unholy ;Vamps u. Daywalker
+[ITEMDEF i_ore_unholy]
+ID=i_ore_iron
+NAME="Unholy Ore"
+SKILLMAKE=MINING 100.0
+TDATA1=i_ingot_unholy
+VALUE=18
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Unholy Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_unholy
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <100.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//--------------------------------------------- Teran ;Dunkelelfen
+[ITEMDEF i_ore_teran]
+ID=i_ore_iron
+NAME="Teran Ore"
+SKILLMAKE=MINING 100.0
+TDATA1=i_ingot_teran
+VALUE=18
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Teran Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_teran
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <100.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+//---------------------------------------------
+//---------------------------------------------Siir ;Lichtelfen
+[ITEMDEF i_ore_siir]
+ID=i_ore_iron
+NAME="Siir Ore"
+SKILLMAKE=MINING 100.0
+TDATA1=i_ingot_siir
+VALUE=18
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Siir Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_siir
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <100.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+//--------------------------------------------- Naturee ,Waldelfen
+[ITEMDEF i_ore_naturee]
+ID=i_ore_iron
+NAME="Naturee Ore"
+SKILLMAKE=MINING 100.0
+TDATA1=i_ingot_naturee
+VALUE=18
+WEIGHT=2
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Naturee Ore (Small Pile)
+
+ON=@Create
+COLOR=color_o_naturee
+ON=@DCLICK
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="Ores must be in your backpack to smelt."
+   RETURN 1
+ENDIF
+IF (<SRC.MINING> <100.0)
+SRC.SYSMESSAGE "You are not skilled enough to know how to smelt this ore."
+RETURN 1
+ENDIF
+//---------------------------------------------
+
+//***********************************************************************************
+//************** Ingots ************************************************************
+
+//---------------------------------------------Eisen Barren
+[ITEMDEF 01bef]
+//DEFNAME2=INGOTS
+//DEFNAME2=IRON_INGOT
+DEFNAME=i_ingot_iron
+TYPE=T_INGOT
+RESOURCES=i_ore_iron
+SKILLMAKE=1.0 MINING
+TDATA1=1.0
+TDATA2=1.0
+WEIGHT=1
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+
+//---------------------------------------------Kupfer Barren
+[ITEMDEF 01be3]
+DEFNAME=i_ingot_copper
+TYPE=T_INGOT
+RESOURCES=i_ore_copper
+SKILLMAKE=MINING 30.0
+TDATA1=30.0
+TDATA2=30.0
+WEIGHT=1
+DUPELIST=01be4,01be5,01be6,01be7,01be8
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Copper Ingot
+
+//---------------------------------------------Gold Barren
+[ITEMDEF 01be9]
+DEFNAME=i_ingot_gold
+TYPE=T_INGOT
+SKILLMAKE=MINING 60.0
+TDATA1=60.0
+TDATA2=60.0
+RESOURCES=i_ore_gold
+WEIGHT=1
+DUPELIST=01bea,01beb,01bec,01bed,01bee
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Gold Ingot
+
+
+//---------------------------------------------Silber Barren
+[ITEMDEF 01bf5]
+DEFNAME=i_ingot_silver
+TYPE=T_INGOT
+SKILLMAKE=MINING 55.0
+TDATA1=55.0
+TDATA2=55.0
+RESOURCES=i_ore_silver
+WEIGHT=1
+DUPELIST=01bf6,01bf7,01bf8,01bf9,01bfa
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Silver Ingot
+
+ON=@Create
+COLOR=color_o_silver
+//---------------------------------------------Shadow Barren
+[ITEMDEF 04541]
+DEFNAME=i_ingot_shadow
+NAME=Shadow Ingot
+ID=i_ingot_iron
+SKILLMAKE=MINING 78.0
+TDATA1=78.0
+TDATA2=78.0
+RESOURCES=i_ore_shadow
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Shadow Ingot
+
+ON=@Create
+COLOR=color_o_shadow
+
+//---------------------------------------------Agapite Barren
+[ITEMDEF 04542]
+DEFNAME=i_ingot_agapite
+ID=i_ingot_iron
+NAME=Agapite
+SKILLMAKE=MINING 70.0
+TDATA1=70.0
+TDATA2=70.0
+RESOURCES=i_ore_agapite
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Agapite Ingot
+
+ON=@Create
+COLOR=color_o_agapite
+
+//---------------------------------------------Verite Barren
+[ITEMDEF 04543]
+DEFNAME=i_ingot_verite
+NAME=Verite Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_verite
+SKILLMAKE=MINING 84.0
+TDATA1=84.0
+TDATA2=84.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Verite Ingot
+
+ON=@Create
+COLOR=color_o_verite
+
+//---------------------------------------------Defense Barren
+[ITEMDEF i_ingot_defense]
+DEFNAME=i_ingot_defense
+NAME=Defense Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_defense
+SKILLMAKE=MINING 79.0
+TDATA1=79.0
+TDATA2=79.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Defense Ingot
+
+ON=@Create
+COLOR=color_o_defense
+
+//---------------------------------------------Hardening Barren
+[ITEMDEF i_ingot_hardening]
+DEFNAME=i_ingot_hardening
+NAME=Hardening Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_hardening
+SKILLMAKE=MINING 86.0
+TDATA1=86.0
+TDATA2=86.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Hardening Ingot
+
+ON=@Create
+COLOR=color_o_hardening
+
+//---------------------------------------------Guarding Barren
+[ITEMDEF i_ingot_guarding]
+DEFNAME=i_ingot_guarding
+NAME=Guarding Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_guarding
+SKILLMAKE=MINING 82.0
+TDATA1=82.0
+TDATA2=82.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Guarding Ingot
+
+ON=@Create
+COLOR=color_o_guarding
+
+//---------------------------------------------Rose Barren
+[ITEMDEF 04544]
+DEFNAME=i_ingot_rose
+ID=i_ingot_iron
+NAME=Rose Ingot
+RESOURCES=i_ore_rose
+SKILLMAKE=MINING 66.0
+TDATA1=66.0
+TDATA2=66.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Rose Ingot
+
+ON=@Create
+COLOR=color_o_rose
+
+//---------------------------------------------Mytherill Barren
+[ITEMDEF 04545]
+DEFNAME=i_ingot_mytheril
+ID=i_ingot_iron
+NAME=Mytheril Ingot
+RESOURCES=i_ore_mytheril
+SKILLMAKE=MINING 96.0
+TDATA1=96.0
+TDATA2=96.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Mytheril Ingot
+
+ON=@Create
+COLOR=color_o_mytheril
+
+//---------------------------------------------Blackrock Barren
+[ITEMDEF 04546]
+DEFNAME=i_ingot_blackrock
+ID=i_ingot_iron
+NAME=Black Rock Ingot
+RESOURCES=i_ore_blackrock
+SKILLMAKE=MINING 99.0
+TDATA1=99.0
+TDATA2=99.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Black Rock Ingot
+
+ON=@Create
+COLOR=color_o_blackrock
+
+//---------------------------------------------Bloodrock Barren
+[ITEMDEF 04547]
+DEFNAME=i_ingot_bloodrock
+ID=i_ingot_iron
+NAME=Blood Rock Ingot
+RESOURCES=i_ore_bloodrock
+SKILLMAKE=MINING 80.0
+TDATA1=80.0
+TDATA2=80.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Blood Rock Ingot
+
+ON=@Create
+COLOR=color_o_bloodrock
+
+//---------------------------------------------Charltin Barren
+[ITEMDEF i_charltin]
+DEFNAME=i_ingot_charltin
+ID=i_ingot_iron
+NAME=Charltin Ingot
+RESOURCES=i_ore_charltin
+SKILLMAKE=MINING 75.0
+TDATA1=75.0
+TDATA2=75.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Charltin Ingot
+
+ON=@Create
+COLOR=color_o_charltin
+
+//---------------------------------------------Ligten Barren
+[ITEMDEF i_ligten]
+DEFNAME=i_ingot_ligten
+ID=i_ingot_iron
+NAME=Ligten Ingot
+RESOURCES=i_ore_ligten
+SKILLMAKE=MINING 85.0
+TDATA1=85.0
+TDATA2=85.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ligten Ingot
+
+ON=@Create
+COLOR=color_o_ligten
+
+//---------------------------------------------Starnin Barren
+[ITEMDEF i_starnin]
+DEFNAME=i_ingot_starnin
+ID=i_ingot_iron
+NAME=Starnin Ingot
+RESOURCES=i_ore_starnin
+SKILLMAKE=MINING 99.5
+TDATA1=99.5
+TDATA2=99.5
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Starnin Ingot
+
+ON=@Create
+COLOR=color_o_starnin
+
+
+//---------------------------------------------Crystal Barren
+[ITEMDEF i_crystal]
+DEFNAME=i_ingot_crystal
+ID=i_ingot_iron
+NAME=Crystal Ingot
+RESOURCES=i_ore_crystal
+SKILLMAKE=MINING 99.7
+TDATA1=99.7
+TDATA2=99.7
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Crystal Ingot
+
+ON=@Create
+COLOR=color_o_crystal
+
+//---------------------------------------------Firin Barren
+[ITEMDEF i_firin]
+DEFNAME=i_ingot_firin
+ID=i_ingot_iron
+NAME=Firin Ingot
+RESOURCES=i_ore_firin
+SKILLMAKE=MINING 99.9
+TDATA1=99.9
+TDATA2=99.9
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Firin Ingot
+
+ON=@Create
+COLOR=color_o_firin
+
+//---------------------------------------------Gortaan Barren
+[ITEMDEF i_granit]
+DEFNAME=i_ingot_granit
+ID=i_ingot_iron
+NAME=Gortaan Ingot
+SKILLMAKE=MINING 63.4
+TDATA1=63.4
+TDATA2=63.4
+RESOURCES=i_ore_granit
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Gortaan Ingot
+
+ON=@Create
+COLOR=color_o_granit
+
+//---------------------------------------------Valorite Barren
+[ITEMDEF 0454a]
+DEFNAME=i_ingot_valorite
+NAME=Valorite Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_valorite
+SKILLMAKE=MINING 92.0
+TDATA1=92.0
+TDATA2=92.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Valorite Ingot
+
+ON=@Create
+COLOR=color_o_valorite
+
+//---------------------------------------------Forti Barren
+[ITEMDEF i_ingot_forti]
+DEFNAME=i_ingot_forti
+NAME=Fortification Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_forti
+SKILLMAKE=MINING 95.0
+TDATA1=95.0
+TDATA2=95.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Forti Ingot
+
+ON=@Create
+COLOR=color_o_forti
+
+//---------------------------------------------Bronze Barren
+[ITEMDEF 0454c]
+DEFNAME=i_ingot_bronze
+NAME=Bronze Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_bronze
+SKILLMAKE=MINING 35.0
+TDATA1=35.0
+TDATA2=35.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Bronze Ingot
+
+ON=@Create
+COLOR=color_o_bronze
+
+//---------------------------------------------Rusty Barren
+[ITEMDEF 04548]
+DEFNAME=i_ingot_rusty
+NAME=Rusty Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_rusty
+SKILLMAKE=MINING 0.1
+TDATA1=0.1
+TDATA2=0.1
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Rusty Ingot
+
+ON=@Create
+COLOR=color_o_rusty
+
+//---------------------------------------------Old Copper/Altes Kupfer Barren
+[ITEMDEF 04549]
+DEFNAME=i_ingot_old_copper
+NAME=Old Copper Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_old_copper
+SKILLMAKE=MINING 10.0
+TDATA1=10.0
+TDATA2=10.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Old Copper Ingot
+
+ON=@Create
+COLOR=color_o_oldcopper
+
+//---------------------------------------------Dull Copper Barren
+[ITEMDEF 0454b]
+DEFNAME=i_ingot_dull_copper
+ID=i_ingot_iron
+NAME=Dull Copper Ingot
+RESOURCES=i_ore_dull_copper
+SKILLMAKE=MINING 20.0
+TDATA1=20.0
+TDATA2=20.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Dull Copper Ingot
+
+ON=@Create
+COLOR=color_o_dullcopper
+
+//---------------------------------------------Invul Barren
+[ITEMDEF i_invulnerability]
+DEFNAME=i_ingot_invul
+ID=i_ingot_iron
+NAME=Invulnerability Ingot
+RESOURCES=i_ore_invulnerability
+SKILLMAKE=MINING 100.0
+TDATA1=100.0
+TDATA2=100.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Invulnerability Ingot
+
+ON=@Create
+COLOR=color_o_invul
+
+//---------------------------------------------Unholy Barren , Vamps Daywalker
+[ITEMDEF i_unholy]
+DEFNAME=i_ingot_unholy
+ID=i_ingot_iron
+NAME=Unholy Ingot
+RESOURCES=i_ore_unholy
+SKILLMAKE=MINING 100.0
+TDATA1=100.0
+TDATA2=100.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Unholy Ingot
+
+ON=@Create
+COLOR=color_o_unholy
+//---------------------------------------------Teran Barren, Dunkelelfen
+[ITEMDEF i_teran]
+DEFNAME=i_ingot_teran
+ID=i_ingot_iron
+NAME=Teran Ingot
+RESOURCES=i_ore_teran
+SKILLMAKE=MINING 100.0
+TDATA1=100.0
+TDATA2=100.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Teran Ingot
+
+ON=@Create
+COLOR=color_o_teran
+//---------------------------------------------Siir Barren, Lichtelfen
+[ITEMDEF i_siir]
+DEFNAME=i_ingot_siir
+ID=i_ingot_iron
+NAME=Siir Ingot
+RESOURCES=i_ore_siir
+SKILLMAKE=MINING 100.0
+TDATA1=100.0
+TDATA2=100.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Siir Ingot
+
+ON=@Create
+COLOR=color_o_siir
+//---------------------------------------------Naturee Barren, Waldelfen
+[ITEMDEF i_naturee]
+DEFNAME=i_ingot_naturee
+ID=i_ingot_iron
+NAME=Naturee Ingot
+RESOURCES=i_ore_naturee
+SKILLMAKE=MINING 100.0
+TDATA1=100.0
+TDATA2=100.0
+WEIGHT=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Naturee Ingot
+
+ON=@Create
+COLOR=color_o_naturee
+
+
+//**********************************************************************
+//***** default distributions of ores/ resources *******************
+
+[REGIONRESOURCE mr_iron]	// default mining result.
+// t_rock
+SKILL_LO=1.0
+SKILL_HI=50.0
+AMOUNT_LO=3	//mind. Menge
+AMOUNT_HI=15	//max. Menge
+REAP=i_ore_iron
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_rusty]				//def:[COMMENT REGIONRESOURCE mr_rusty]
+// t_rock - Iron gets rusty. It's not smeltable !
+SKILL_LO=0.1
+SKILL_HI=40.0
+AMOUNT_LO=3
+AMOUNT_HI=19
+REAP=i_ore_rusty
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_bronze]				//def.[COMMENT REGIONRESOURCE mr_bronze]		
+// Bronze is really copper and tin !
+// t_rock
+SKILL_LO=35.0
+SKILL_HI=50.0
+AMOUNT_LO=3
+AMOUNT_HI=10
+REAP=i_ore_bronze
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_old_copper]				//def.[COMMENT REGIONRESOURCE mr_old_copper]
+// this is really just a variety of copper. copper makes terrible armor
+// t_rock
+SKILL_LO=10.0
+SKILL_HI=50.0
+AMOUNT_LO=7
+AMOUNT_HI=18
+REAP=i_ore_old_copper
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_dull_copper]			//def.[COMMENT REGIONRESOURCE mr_dull_copper]
+// this is really just a variety of copper. copper makes terrible armor
+// t_rock
+SKILL_LO=20.0
+SKILL_HI=50.0
+AMOUNT_LO=5
+AMOUNT_HI=20
+REAP=i_ore_dull_copper
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_shadow]
+// t_rock
+SKILL_LO=78.0
+SKILL_HI=100.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_shadow
+REGEN=60*60*10
+
+[REGIONRESOURCE mr_copper]
+// copper makes terrible armor
+// t_rock
+SKILL_LO=30.0
+SKILL_HI=50.0
+AMOUNT_LO=5
+AMOUNT_HI=20
+REAP=i_ore_copper
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_gold]
+// t_rock - gold
+SKILL_LO=60.0
+SKILL_HI=80.0
+AMOUNT_LO=2
+AMOUNT_HI=6
+REAP=i_ore_gold
+REGEN=20*60*10
+
+//-------------------------Granit by P
+[REGIONRESOURCE mr_granit]	
+// t_rock - 
+SKILL_LO=63.4
+SKILL_HI=80.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_granit
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_rose]
+// t_rock
+SKILL_LO=66.0
+SKILL_HI=80.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_rose
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_agapite]
+// t_rock
+SKILL_LO=70.0
+SKILL_HI=100.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_agapite
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_bloodrock]
+// t_rock
+SKILL_LO=80.0
+SKILL_HI=100.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_bloodrock
+REGEN=20*60*10
+
+//charltin begin
+[REGIONRESOURCE mr_charltin]
+// t_rock
+SKILL_LO=75.0
+SKILL_HI=100.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_charltin
+REGEN=20*60*10
+
+//ligten begin
+[REGIONRESOURCE mr_ligten]
+// t_rock
+SKILL_LO=85.0
+SKILL_HI=100.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_ligten
+REGEN=20*60*10
+
+//starnin begin
+[REGIONRESOURCE mr_starnin]
+// t_rock
+SKILL_LO=99.5
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_starnin
+REGEN=20*60*10
+
+//Crystal begin
+[REGIONRESOURCE mr_crystal]
+// t_rock
+SKILL_LO=99.7
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_crystal
+REGEN=20*60*10
+
+//Firin begin
+[REGIONRESOURCE mr_firin]
+// t_rock
+SKILL_LO=99.9
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_firin
+REGEN=20*60*10
+
+//Defense begin
+[REGIONRESOURCE mr_defense]
+// t_rock
+SKILL_LO=79.0
+SKILL_HI=100.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_defense
+REGEN=20*60*10
+
+//Guarding begin
+[REGIONRESOURCE mr_guarding]
+// t_rock
+SKILL_LO=82.0
+SKILL_HI=100.0
+AMOUNT_LO=3
+AMOUNT_HI=6
+REAP=i_ore_guarding
+REGEN=20*60*10
+
+// Hardening begin
+[REGIONRESOURCE mr_hardening]
+// t_rock
+SKILL_LO=88.0
+SKILL_HI=100.0
+AMOUNT_LO=3
+AMOUNT_HI=5
+REAP=i_ore_hardening
+REGEN=20*60*10
+
+//Invul 
+[REGIONRESOURCE mr_invulnerability]
+// t_rock
+SKILL_LO=100.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_invulnerability
+REGEN=20*60*10
+
+//Unholy
+[REGIONRESOURCE mr_unholy]
+// t_rock
+SKILL_LO=100.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_unholy
+REGEN=20*60*10
+
+//Teran, Drow
+[REGIONRESOURCE mr_teran]
+// t_rock
+SKILL_LO=100.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_teran
+REGEN=20*60*10
+
+//Siir, Lichtelfen
+[REGIONRESOURCE mr_siir]
+// t_rock
+SKILL_LO=100.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_siir
+REGEN=20*60*10
+
+//Naturee, Waldelfen
+[REGIONRESOURCE mr_naturee]
+// t_rock
+SKILL_LO=100.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_ore_naturee
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_silver]
+// t_rock
+SKILL_LO=45.0
+SKILL_HI=60.0
+AMOUNT_LO=3
+AMOUNT_HI=10
+REAP=i_ore_silver
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_verite]
+// t_rock
+SKILL_LO=84.0
+SKILL_HI=100.0
+AMOUNT_LO=2
+AMOUNT_HI=6
+REAP=i_ore_verite
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_Valorite]
+// t_rock
+SKILL_LO=92.0
+SKILL_HI=100.0
+AMOUNT_LO=2
+AMOUNT_HI=6
+REAP=i_ore_Valorite
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_forti]		
+// t_rock
+SKILL_LO=95.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=3
+REAP=i_ore_forti
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_mytheril]
+// t_rock
+SKILL_LO=96.0
+SKILL_HI=100.0
+AMOUNT_LO=2
+AMOUNT_HI=4
+REAP=i_ore_mytheril
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_blackrock]
+// t_rock
+SKILL_LO=99.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=3
+REAP=i_ore_blackrock
+REGEN=20*60*10
+
+//********************************Steine*********
+
+[REGIONRESOURCE mr_diamond]
+// t_rock
+SKILL_LO=95.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gem_diamond
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_ruby]
+// t_rock
+SKILL_LO=90.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gem_ruby
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_citrine]
+// t_rock
+SKILL_LO=90.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gem_citrine
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_Emerald]
+// t_rock
+SKILL_LO=90.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gem_Emerald
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_Star_Sapphire]
+// t_rock
+SKILL_LO=95.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gem_Star_Sapphire
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_Sapphire]
+// t_rock
+SKILL_LO=90.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gem_Sapphire
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_Amethyst]
+// t_rock
+SKILL_LO=90.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gem_Amethyst
+REGEN=20*60*10
+
+[REGIONRESOURCE mr_Tourmaline]
+// t_rock
+SKILL_LO=90.0
+SKILL_HI=100.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gem_Tourmaline
+REGEN=20*60*10
+
+
+[COMMENT OTHER ORES]
+// other things that could be mined for .
+//ChanceofVein, MinFindSkill,	Item, Color, Name, OrePerVein Min, Max
+
+//Dragon, 	0593,	100.0, 1.0, 1-2, 06037
+//Titan,		0736,	100.0,1.0,1-2,06035
+//Crystaline,	0065,	100.0,1.0,1-2,06039
+//Kryptonite,	0170,	100.0,1.0,1-2,06505
+//Vulcan,	6324,	100.0,1.0,1-2,06506
+//Sand Rock,	0709,	100.0,1.0,1-2,06507
+//Blood Crest,	064e,	100.0,1.0,1-2,06508
+//Steel,		0540,	100.0,1.0,1-2,06509
+//Elvin,		0596,	100.0,1.0,1-2,06510
+//Gorgan,	0456,	100.0,1.0,1-2,06512
+//Acid,		0078,	100.0,1.0,1-2,06514
+//Aqua,		123982,	100.0,1.0,1-2,06513
+//Eldar,		04d8,	100.0,1.0,1-2,06511
+
+[EOF]

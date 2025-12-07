@@ -1,0 +1,662 @@
+//****************************************************************************
+//********EVIL MACER'S SKILL POT SYSTEM Copyright 2002 All rights 
+reserved*****
+//********Please do not remove the copyright giving me credit for making 
+this*
+//********To use create a skill stone .static i_skill_stone then 
+you**********
+//********Can either give skill pots out for quests or spawn them as 
+loot*****
+//********Any questions or ideas for things to be added email me 
+at***********
+//********evilmacer@askchopper.com or 
+uonews@hotmail.com**********************
+//********Skill Pot Version V1.0 
+2002*****************************************
+
+
+[ITEMDEF i_halfskill_pot] //Half Skill Pot
+DEFNAME=i_halfskill_pot
+ID=i_bottle
+NAME=Half Skill Pot
+
+ON=@create
+COLOR=022
+return 0
+
+ON=@dclick
+src.sysmessage You should go to the skill pot stone to use this!
+Return 1
+
+[ITEMDEF i_skill_pot] //Full Skill Pot
+DEFNAME=i_skill_pot
+ID=I_bottle
+Name=Full Skill Pot
+
+On=@create
+Color=02
+return 0
+
+On=@dclick
+src.sysmessage You should go to the skill pot stone to use this!
+return 1
+
+[ITEMDEF i_skillpot_stone] //Skill Pot Stone
+DEFNAME=I_skillpot_stone
+ID=I_gravestone_8
+Name Skill Pot Stone
+
+ON=@CREATE
+Color 0482
+return 0
+
+ON=@DCLICK
+DIALOG d_skillpot
+Return 1
+
+[Dialog d_skillpot]
+125,100
+nomove
+resizepic 0 0 9200 400 350 //Gump @ 23f0
+text 25 20 03 0
+text 50 70 03 1
+button 50 90 2473 2472 1 0 1000
+text 50 120 03 2
+button 50 140 2473 2472 1 0 2000
+text 50 170 03 3
+button 50 190 2473 2472 1 0 3000
+text 50 220 03 4
+button 50 240 2473 2472 1 0 4000
+text 25 320 0480 5
+[dialog d_skillpot TEXT]
+Skill Potion Stone
+Full Skill Potions
+Half Skill Potions
+Trade a full skill pot for 2 half skill pots
+Trade 2 half skill pots for 1 full skill pot
+Copyright 2002 EVIL MACER
+
+[Dialog d_skillpot BUTTON]
+ONBUTTON=1000
+IF <SRC.RESTEST 1 i_skill_pot>
+    SRC.CONSUME=1 i_skill_pot
+    DIALOG d_skillpot1
+    Sound 0243
+    SERV.ALLCLIENTS SYSMESSAGE <SRC.NAME> Has used a full skill pot!!
+    SRC.SYSMESSAGE Please choose your skill to gain 1 Point in. Do not log 
+off or you will lose your skill pot!
+ELSE
+    SRC.SYSMESSAGE You dont have any skill pots you trying to scam me?
+ENDIF
+ONBUTTON=2000
+IF <SRC.RESTEST 1 i_halfskill_pot>
+    SRC.CONSUME=1 i_halfskill_pot
+    DIALOG d_skillpot2
+    SOUND 0243
+    SERV.ALLCLIENTS SYSMESSAGE <SRC.NAME> Has used a half skill pot!!
+    SRC.SYSMESSAGE Please choose your skill to gain .5 in. Do not log off or 
+you will lose your skill pot!
+ELSE
+    SRC.SYSMESSAGE You dont have any skill pots you trying to scam me?
+ONBUTTON=3000
+IF <SRC.RESTEST 1 i_skill_pot>
+    SRC.CONSUME 1 i_skill_pot
+    src.NEWITEM=i_halfskill_pot
+    src.act.bounce
+    src.newitem=I_halfskill_pot
+    src.act.bounce
+    SRC.SYSMESSAGE You receive two skill pots!
+    SOUND 0243
+ELSE
+    SRC.SYSMESSAGE You lack the full skill pot to do this.
+ENDIF
+ONBUTTON=4000
+IF <SRC.RESTEST 2 i_halfskill_pot>
+    SRC.CONSUME 2 i_halfskill_pot
+    src.newitem=I_skill_pot
+    src.act.bounce
+    src.sysmessage You receive a skill pot!
+    sound 0243
+ELSE
+    src.sysmessage You lack the half skill pots to do this.
+ENDIF
+RETURN 1
+
+[Dialog d_skillpot1]
+75,75
+noclose
+nomove
+resizepic 0 0 9200 625 375
+//1st Row
+TEXT 0 0 03 0 			//Alchemy
+button 110 0 9767 9766 1 0 3000
+TEXT 0 20 03 1			//Anatomy
+button 110 20 9767 9766 1 0 4000
+TEXT 0 40 03 2			//Animal Lore
+button 110 40 9767 9766 1 0 5000
+TEXT 0 60 03 3			//Animal Taming
+button 110 60 9767 9766 1 0 6000
+TEXT 0 80 03 4			//Archery
+button 110 80 9767 9766 1 0 7000
+TEXT 0 100 03 5			//Armslore
+button 110 100 9767 9766 1 0 8000
+TEXT 0 120 03 6			//Begging
+button 110 120 9767 9766 1 0 9000
+TEXT 0 140 03 7			//Blacksmithing
+button 110 140 9767 9766 1 0 10000
+TEXT 0 160 03 8			//Bowcraft
+button 110 160 9767 9766 1 0 11000
+TEXT 0 180 03 9			//Camping
+button 110 180 9767 9766 1 0 12000
+TEXT 0 200 03 10		//Carpentry
+button 110 200 9767 9766 1 0 13000
+TEXT 0 220 03 11		//Cartography
+button 110 220 9767 9766 1 0 14000
+TEXT 0 240 03 12		//Cooking
+button 110 240 9767 9766 1 0 15000
+TEXT 0 260 03 13		//Detect Hidden
+button 110 260 9767 9766 1 0 16000
+TEXT 0 280 03 14		//Enticement
+button 110 280 9767 9766 1 0 17000
+//2nd Row
+TEXT 160 0 03 15		//Evaluating Int.
+button 270 0 9767 9766 1 0 18000
+TEXT 160 20 03 16		//Fencing
+button 270 20 9767 9766 1 0 19000
+TEXT 160 40 03 17		//Fishing
+button 270 40 9767 9766 1 0 20000
+TEXT 160 60 03 18		//Forensics
+button 270 60 9767 9766 1 0 21000
+TEXT 160 80 03 19		//Healing
+button 270 80 9767 9766 1 0 22000
+TEXT 160 100 03 20		//Herding
+button 270 100 9767 9766 1 0 23000
+TEXT 160 120 03 21		//Hiding
+button 270 120 9767 9766 1 0 24000
+TEXT 160 140 03 22		//Inscription
+button 270 140 9767 9766 1 0 25000
+TEXT 160 160 03 23		//Item ID
+button 270 160 9767 9766 1 0 26000
+TEXT 160 180 03 24		//Lockpicking
+button 270 180 9767 9766 1 0 27000
+TEXT 160 200 03 25		//Lumberjacking
+button 270 200 9767 9766 1 0 28000
+TEXT 160 220 03 26		//Mace Fighting
+button 270 220 9767 9766 1 0 29000
+TEXT 160 240 03 27		//Magery
+button 270 240 9767 9766 1 0 30000
+TEXT 160 260 03 28		//Magic Resist
+button 270 260 9767 9766 1 0 31000
+TEXT 160 280 03 29		//Meditation
+button 270 280 9767 9766 1 0 32000
+//3rd Row
+TEXT 320 0 03 30		//Mining
+button 420 0 9767 9766 1 0 33000
+TEXT 320 20 03 31		//Musicianship
+button 420 20 9767 9766 1 0 34000
+TEXT 320 40 03 32		//Parrying
+button 420 40 9767 9766 1 0 35000
+TEXT 320 60 03 33		//Peacemaking
+button 420 60 9767 9766 1 0 36000
+TEXT 320 80 03 34		//Poisoning
+button 420 80 9767 9766 1 0 37000
+TEXT 320 100 03 35		//Provocation
+button 420 100 9767 9766 1 0 38000
+TEXT 320 120 03 36		//Remove Trap
+button 420 120 9767 9766 1 0 39000
+TEXT 320 140 03 37		//Snooping
+button 420 140 9767 9766 1 0 40000
+TEXT 320 160 03 38		//Spirit Speak
+button 420 160 9767 9766 1 0 41000
+TEXT 320 180 03 39		//Stealing
+button 420 180 9767 9766 1 0 42000
+TEXT 320 200 03 40		//Stealth
+button 420 200 9767 9766 1 0 43000
+TEXT 320 220 03 41		//Swordsmanship
+button 420 220 9767 9766 1 0 44000
+TEXT 320 240 03 42		//Tactics
+button 420 240 9767 9766 1 0 45000
+TEXT 320 260 03 43		//Tailoring
+button 420 260 9767 9766 1 0 46000
+TEXT 320 280 03 44		//Taste ID
+button 420 280 9767 9766 1 0 47000
+//4th Row
+TEXT 480 100 03 45		//Tinkering
+button 590 100 9767 9766 1 0 48000
+TEXT 480 120 03 46		//Tracking
+button 590 120 9767 9766 1 0 49000
+TEXT 480 140 03 47		//Veterinary
+button 590 140 9767 9766 1 0 50000
+TEXT 480 160 03 48		//Wrestling
+button 590 160 9767 9766 1 0 51000
+//Bottom Text
+TEXT 0 300 0481 49
+TEXT 0 320 0481 50
+TEXT 0 340 0480 51
+[Dialog d_skillpot1 Text]
+Alchemy
+Anatomy
+Animal Lore
+Animal Taming
+Archery
+Armslore
+Begging
+Blacksmithing
+Bowcraft
+Camping
+Carpentry
+Cartography
+Cooking
+Detect Hidden
+Enticement
+Evaluating Int.
+Fencing
+Fishing
+Forensics
+Healing
+Herding
+Hiding
+Inscription
+Item ID
+Lockpicking
+Lumberjacking
+Mace Fighting
+Magery
+Magic Resist
+Meditation
+Mining
+Musicianship
+Parrying
+Peacemaking
+Poisoning
+Provocation
+Remove Trap
+Snooping
+Spirit Speak
+Stealing
+Stealth
+Swordsmanship
+Tactics
+Tailoring
+Taste ID
+Tinkering
+Tracking
+Veterinary
+Wrestling
+//bottom
+Hello <SRC.NAME> this is the <SERV.NAME> skill pot system.
+Click on the arrow next to the skill you would like to gain 1 point in.
+This system was made and Copyrighted by EVIL MACER.
+[Dialog d_skillpot1 Button]
+ONBUTTON=3000
+SRC.ALCHEMY=<SRC.ALCHEMY>+1.0
+ONBUTTON=4000
+SRC.anatomy=<SRC.ANATOMY>+1.0
+ONBUTTON=5000
+SRC.animallore=<SRC.ANIMALLORE>+1.0
+ONBUTTON 6000
+SRC.taming=<SRC.TAMING>+1.0
+ONBUTTON 7000
+SRC.archery=<SRC.ARCHERY>+1.0
+ONBUTTON 8000
+SRC.armslore=<SRC.ARMSLORE>+1.0
+ONBUTTON 9000
+SRC.BEGGING=<SRC.BEGGING>+1.0
+ONBUTTON 10000
+SRC.BLACKSMITHING=<SRC.BLACKSMITHING>+1.0
+ONBUTTON 11000
+SRC.BOWCRAFT=<SRC.BOWCRAFT>+1.0
+ONBUTTON 12000
+SRC.CAMPING=<SRC.CAMPING>+1.0
+ONBUTTON 13000
+SRC.CARPENTRY=<SRC.CARPENTRY>+1.0
+ONBUTTON 14000
+SRC.CARTOGRAPHY=<SRC.CARTOGRAPHY>+1.0
+ONBUTTON 15000
+SRC.COOKING=<SRC.COOKING>+1.0
+ONBUTTON 16000
+SRC.DETECTINGHIDDEN=<SRC.DETECTINGHIDDEN>+1.0
+ONBUTTON 17000
+SRC.ENTICEMENT=<SRC.ENTICEMENT>+1.0
+ONBUTTON 18000
+SRC.EvaluatingIntel=<SRC.EvaluatingIntel>+1.0
+ONBUTTON 19000
+SRC.FENCING=<SRC.ENTICEMENT>+1.0
+ONBUTTON 20000
+SRC.FISHING=<SRC.FISHING>+1.0
+ONBUTTON 21000
+SRC.Forensics=<SRC.Forensics>+1.0
+ONBUTTON 22000
+SRC.HEALING=<SRC.HEALING>+1.0
+ONBUTTON 23000
+SRC.HERDING=<SRC.HERDING>+1.0
+ONBUTTON 24000
+SRC.HIDING=<SRC.HIDING>+1.0
+ONBUTTON 25000
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+1.0
+ONBUTTON 26000
+SRC.ITEMID=<SRC.ITEMID>+1.0
+ONBUTTON 27000
+SRC.LOCKPICKING=<SRC.LOCKPICKING>+1.0
+ONBUTTON 28000
+SRC.LUMBERJACKING=<SRC.LUMBERJACKING>+1.0
+ONBUTTON 29000
+SRC.MACEFIGHTING=<SRC.MACEFIGHTING>+1.0
+ONBUTTON 30000
+SRC.MAGERY=<SRC.MAGERY>+1.0
+ONBUTTON 31000
+SRC.MAGICRESISTANCE=<SRC.MAGICRESISTANCE>+1.0
+ONBUTTON 32000
+SRC.MEDITATION=<SRC.MEDITATION>+1.0
+ONBUTTON 33000
+SRC.MINING=<SRC.MINING>+1.0
+ONBUTTON 34000
+SRC.MUSICIANSHIP=<SRC.MUSICIANSHIP>+1.0
+ONBUTTON 35000
+SRC.PARRYING=<SRC.PARRYING>+1.0
+ONBUTTON 36000
+SRC.PEACEMAKING=<SRC.PEACEMAKING>+1.0
+ONBUTTON 37000
+SRC.POISONING=<SRC.POISONING>+1.0
+ONBUTTON 38000
+SRC.PROVOCATION=<SRC.PROVOCATION>+1.0
+ONBUTTON 39000
+SRC.REMOVETRAP=<SRC.REMOVETRAP>+1.0
+ONBUTTON 40000
+SRC.SNOOPING=<SRC.SNOOPING>+1.0
+ONBUTTON 41000
+SRC.SPIRITSPEAK=<SRC.SPIRITSPEAK>+1.0
+ONBUTTON 42000
+SRC.STEALING=<SRC.STEALING>+1.0
+ONBUTTON 43000
+SRC.STEALTH=<SRC.STEALTH>+1.0
+ONBUTTON 44000
+SRC.SWORDSMANSHIP=<SRC.SWORDSMANSHIP>+1.0
+ONBUTTON 45000
+SRC.TACTICS=<SRC.TACTICS>+1.0
+ONBUTTON 46000
+SRC.TAILORING=<SRC.TAILORING>+1.0
+ONBUTTON 47000
+SRC.TASTEID=<SRC.TASTEID>+1.0
+ONBUTTON 48000
+SRC.TINKERING=<SRC.TINKERING>+1.0
+ONBUTTON 49000
+SRC.TRACKING=<SRC.TRACKING>+1.0
+ONBUTTON 50000
+SRC.VETERINARY=<SRC.VETERINARY>+1.0
+ONBUTTON 51000
+SRC.WRESTLING=<SRC.WRESTLING>+1.0
+Return 1
+//End Full Skill Pot
+//
+//
+//
+//Start Half Skill Pot
+[Dialog d_skillpot2]
+75,75
+noclose
+nomove
+resizepic 0 0 9200 625 375
+//1st Row
+TEXT 0 0 03 0 			//Alchemy
+button 110 0 9767 9766 1 0 3000
+TEXT 0 20 03 1			//Anatomy
+button 110 20 9767 9766 1 0 4000
+TEXT 0 40 03 2			//Animal Lore
+button 110 40 9767 9766 1 0 5000
+TEXT 0 60 03 3			//Animal Taming
+button 110 60 9767 9766 1 0 6000
+TEXT 0 80 03 4			//Archery
+button 110 80 9767 9766 1 0 7000
+TEXT 0 100 03 5			//Armslore
+button 110 100 9767 9766 1 0 8000
+TEXT 0 120 03 6			//Begging
+button 110 120 9767 9766 1 0 9000
+TEXT 0 140 03 7			//Blacksmithing
+button 110 140 9767 9766 1 0 10000
+TEXT 0 160 03 8			//Bowcraft
+button 110 160 9767 9766 1 0 11000
+TEXT 0 180 03 9			//Camping
+button 110 180 9767 9766 1 0 12000
+TEXT 0 200 03 10		//Carpentry
+button 110 200 9767 9766 1 0 13000
+TEXT 0 220 03 11		//Cartography
+button 110 220 9767 9766 1 0 14000
+TEXT 0 240 03 12		//Cooking
+button 110 240 9767 9766 1 0 15000
+TEXT 0 260 03 13		//Detect Hidden
+button 110 260 9767 9766 1 0 16000
+TEXT 0 280 03 14		//Enticement
+button 110 280 9767 9766 1 0 17000
+//2nd Row
+TEXT 160 0 03 15		//Evaluating Int.
+button 270 0 9767 9766 1 0 18000
+TEXT 160 20 03 16		//Fencing
+button 270 20 9767 9766 1 0 19000
+TEXT 160 40 03 17		//Fishing
+button 270 40 9767 9766 1 0 20000
+TEXT 160 60 03 18		//Forensics
+button 270 60 9767 9766 1 0 21000
+TEXT 160 80 03 19		//Healing
+button 270 80 9767 9766 1 0 22000
+TEXT 160 100 03 20		//Herding
+button 270 100 9767 9766 1 0 23000
+TEXT 160 120 03 21		//Hiding
+button 270 120 9767 9766 1 0 24000
+TEXT 160 140 03 22		//Inscription
+button 270 140 9767 9766 1 0 25000
+TEXT 160 160 03 23		//Item ID
+button 270 160 9767 9766 1 0 26000
+TEXT 160 180 03 24		//Lockpicking
+button 270 180 9767 9766 1 0 27000
+TEXT 160 200 03 25		//Lumberjacking
+button 270 200 9767 9766 1 0 28000
+TEXT 160 220 03 26		//Mace Fighting
+button 270 220 9767 9766 1 0 29000
+TEXT 160 240 03 27		//Magery
+button 270 240 9767 9766 1 0 30000
+TEXT 160 260 03 28		//Magic Resist
+button 270 260 9767 9766 1 0 31000
+TEXT 160 280 03 29		//Meditation
+button 270 280 9767 9766 1 0 32000
+//3rd Row
+TEXT 320 0 03 30		//Mining
+button 420 0 9767 9766 1 0 33000
+TEXT 320 20 03 31		//Musicianship
+button 420 20 9767 9766 1 0 34000
+TEXT 320 40 03 32		//Parrying
+button 420 40 9767 9766 1 0 35000
+TEXT 320 60 03 33		//Peacemaking
+button 420 60 9767 9766 1 0 36000
+TEXT 320 80 03 34		//Poisoning
+button 420 80 9767 9766 1 0 37000
+TEXT 320 100 03 35		//Provocation
+button 420 100 9767 9766 1 0 38000
+TEXT 320 120 03 36		//Remove Trap
+button 420 120 9767 9766 1 0 39000
+TEXT 320 140 03 37		//Snooping
+button 420 140 9767 9766 1 0 40000
+TEXT 320 160 03 38		//Spirit Speak
+button 420 160 9767 9766 1 0 41000
+TEXT 320 180 03 39		//Stealing
+button 420 180 9767 9766 1 0 42000
+TEXT 320 200 03 40		//Stealth
+button 420 200 9767 9766 1 0 43000
+TEXT 320 220 03 41		//Swordsmanship
+button 420 220 9767 9766 1 0 44000
+TEXT 320 240 03 42		//Tactics
+button 420 240 9767 9766 1 0 45000
+TEXT 320 260 03 43		//Tailoring
+button 420 260 9767 9766 1 0 46000
+TEXT 320 280 03 44		//Taste ID
+button 420 280 9767 9766 1 0 47000
+//4th Row
+TEXT 480 100 03 45		//Tinkering
+button 590 100 9767 9766 1 0 48000
+TEXT 480 120 03 46		//Tracking
+button 590 120 9767 9766 1 0 49000
+TEXT 480 140 03 47		//Veterinary
+button 590 140 9767 9766 1 0 50000
+TEXT 480 160 03 48		//Wrestling
+button 590 160 9767 9766 1 0 51000
+//Bottom Text
+TEXT 0 300 0481 49
+TEXT 0 320 0481 50
+TEXT 0 340 0480 51
+[Dialog d_skillpot2 Text]
+Alchemy
+Anatomy
+Animal Lore
+Animal Taming
+Archery
+Armslore
+Begging
+Blacksmithing
+Bowcraft
+Camping
+Carpentry
+Cartography
+Cooking
+Detect Hidden
+Enticement
+Evaluating Int.
+Fencing
+Fishing
+Forensics
+Healing
+Herding
+Hiding
+Inscription
+Item ID
+Lockpicking
+Lumberjacking
+Mace Fighting
+Magery
+Magic Resist
+Meditation
+Mining
+Musicianship
+Parrying
+Peacemaking
+Poisoning
+Provocation
+Remove Trap
+Snooping
+Spirit Speak
+Stealing
+Stealth
+Swordsmanship
+Tactics
+Tailoring
+Taste ID
+Tinkering
+Tracking
+Veterinary
+Wrestling
+//bottom
+Hello <SRC.NAME> this is the <SERV.NAME> skill pot system.
+Click on the arrow next to the skill you would like to gain half a point in.
+This system was made and Copyrighted by EVIL MACER.
+[Dialog d_skillpot2 Button]
+ONBUTTON=3000
+SRC.ALCHEMY=<SRC.ALCHEMY>+.5
+ONBUTTON=4000
+SRC.anatomy=<SRC.ANATOMY>+.5
+ONBUTTON=5000
+SRC.animallore=<SRC.ANIMALLORE>+.5
+ONBUTTON 6000
+SRC.taming=<SRC.TAMING>+.5
+ONBUTTON 7000
+SRC.archery=<SRC.ARCHERY>+.5
+ONBUTTON 8000
+SRC.armslore=<SRC.ARMSLORE>+.5
+ONBUTTON 9000
+SRC.BEGGING=<SRC.BEGGING>+.5
+ONBUTTON 10000
+SRC.BLACKSMITHING=<SRC.BLACKSMITHING>+.5
+ONBUTTON 11000
+SRC.BOWCRAFT=<SRC.BOWCRAFT>+.5
+ONBUTTON 12000
+SRC.CAMPING=<SRC.CAMPING>+.5
+ONBUTTON 13000
+SRC.CARPENTRY=<SRC.CARPENTRY>+.5
+ONBUTTON 14000
+SRC.CARTOGRAPHY=<SRC.CARTOGRAPHY>+.5
+ONBUTTON 15000
+SRC.COOKING=<SRC.COOKING>+.5
+ONBUTTON 16000
+SRC.DETECTINGHIDDEN=<SRC.DETECTINGHIDDEN>+.5
+ONBUTTON 17000
+SRC.ENTICEMENT=<SRC.ENTICEMENT>+.5
+ONBUTTON 18000
+SRC.EvaluatingIntel=<SRC.EvaluatingIntel>+.5
+ONBUTTON 19000
+SRC.FENCING=<SRC.ENTICEMENT>+.5
+ONBUTTON 20000
+SRC.FISHING=<SRC.FISHING>+.5
+ONBUTTON 21000
+SRC.Forensics=<SRC.Forensics>+.5
+ONBUTTON 22000
+SRC.HEALING=<SRC.HEALING>+.5
+ONBUTTON 23000
+SRC.HERDING=<SRC.HERDING>+.5
+ONBUTTON 24000
+SRC.HIDING=<SRC.HIDING>+.5
+ONBUTTON 25000
+SRC.INSCRIPTION=<SRC.INSCRIPTION>+.5
+ONBUTTON 26000
+SRC.ITEMID=<SRC.ITEMID>+.5
+ONBUTTON 27000
+SRC.LOCKPICKING=<SRC.LOCKPICKING>+.5
+ONBUTTON 28000
+SRC.LUMBERJACKING=<SRC.LUMBERJACKING>+.5
+ONBUTTON 29000
+SRC.MACEFIGHTING=<SRC.MACEFIGHTING>+.5
+ONBUTTON 30000
+SRC.MAGERY=<SRC.MAGERY>+.5
+ONBUTTON 31000
+SRC.MAGICRESISTANCE=<SRC.MAGICRESISTANCE>+.5
+ONBUTTON 32000
+SRC.MEDITATION=<SRC.MEDITATION>+.5
+ONBUTTON 33000
+SRC.MINING=<SRC.MINING>+.5
+ONBUTTON 34000
+SRC.MUSICIANSHIP=<SRC.MUSICIANSHIP>+.5
+ONBUTTON 35000
+SRC.PARRYING=<SRC.PARRYING>+.5
+ONBUTTON 36000
+SRC.PEACEMAKING=<SRC.PEACEMAKING>+.5
+ONBUTTON 37000
+SRC.POISONING=<SRC.POISONING>+.5
+ONBUTTON 38000
+SRC.PROVOCATION=<SRC.PROVOCATION>+.5
+ONBUTTON 39000
+SRC.REMOVETRAP=<SRC.REMOVETRAP>+.5
+ONBUTTON 40000
+SRC.SNOOPING=<SRC.SNOOPING>+.5
+ONBUTTON 41000
+SRC.SPIRITSPEAK=<SRC.SPIRITSPEAK>+.5
+ONBUTTON 42000
+SRC.STEALING=<SRC.STEALING>+.5
+ONBUTTON 43000
+SRC.STEALTH=<SRC.STEALTH>+.5
+ONBUTTON 44000
+SRC.SWORDSMANSHIP=<SRC.SWORDSMANSHIP>+.5
+ONBUTTON 45000
+SRC.TACTICS=<SRC.TACTICS>+.5
+ONBUTTON 46000
+SRC.TAILORING=<SRC.TAILORING>+.5
+ONBUTTON 47000
+SRC.TASTEID=<SRC.TASTEID>+.5
+ONBUTTON 48000
+SRC.TINKERING=<SRC.TINKERING>+.5
+ONBUTTON 49000
+SRC.TRACKING=<SRC.TRACKING>+.5
+ONBUTTON 50000
+SRC.VETERINARY=<SRC.VETERINARY>+.5
+ONBUTTON 51000
+SRC.WRESTLING=<SRC.WRESTLING>+.5
+RETURN 1
+
+
+

@@ -1,0 +1,234 @@
+//Dungeon Travel Agent NPCs for Sphere
+//These go in your spherechar2.scp
+//Dont forget to number them appropriately!
+//See below for items to add to your SPEECH directory! 
+//I strongly recommend making these hard to find.
+//Thanks to Mara Jade for the initial idea!
+//Created by Thadius, Tranquillus Decorum, Revised: 5/21/2000
+
+[xxxx]
+//Male Dungeon Travel Agent
+NAME=#HUMANMALE the Dungeon Mystic
+ID=MALE
+COLOR=all_skin_colors
+//ATT=
+//DEF=
+STR=61-75
+DEX=71-85
+INT=86-100
+HITPOINTS=61-75
+STAMINA=71-85
+MANA=86-100
+INSCRIPTION=50.0-65.0
+MEDITATION=75.0-100.0
+MAGERY=86.0-100.0
+WRESTLING=15.0-38.0
+MAGICRESISTANCE=65.0-88.0
+TACTICS=15.0-38.0
+DESIRES=GOLD,NOTORIETY,MAGIC,REAGENTS
+NPC=brain_human
+
+TSPEECH=humanPRIME
+TSPEECH=jobdungeonagent
+TSPEECH=convbye
+TSPEECH=needs
+TSPEECH=rehello
+TSPEECH=TOWN
+TSPEECH=humanGENERAL
+TEVENTS=eHearUnk
+
+TEVENTS=eAcceptItem
+TEVENTS=econvinit
+TEVENTS=egreetings
+TEVENTS=einternalspace
+TEVENTS=eneedresponse
+TEVENTS=erefuseitem
+
+ITEM=hair_long
+COLOR=all_hair_colors
+ITEM=facial_hair
+COLOR=match_hair
+ITEM=robe
+COLOR=all_colors
+ITEM=random_shoes
+COLOR=all_colors
+ITEM=black_staff
+ITEM=random_coin_purse
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=Dungeon Mystic (male)
+
+[xxxx]
+//Female Dungeon Travel Agent
+NAME=#HUMANFEMALE the Dungeon Mystic
+ID=FEMALE
+COLOR=all_skin_colors
+//ATT=
+//DEF=
+STR=61-75
+DEX=71-85
+INT=86-100
+HITPOINTS=61-75
+STAMINA=71-85
+MANA=86-100
+MEDITATION=75.0-100.0
+INSCRIPTION=50.0-65.0
+MAGERY=86.0-100.0
+WRESTLING=15.0-38.0
+MAGICRESISTANCE=65.0-88.0
+TACTICS=15.0-38.0
+DESIRES=GOLD,NOTORIETY,MAGIC,REAGENTS
+NPC=brain_human
+
+TSPEECH=humanPRIME
+TSPEECH=jobdungeonagent
+TSPEECH=convbye
+TSPEECH=needs
+TSPEECH=rehello
+TSPEECH=TOWN
+TSPEECH=humanGENERAL
+TEVENTS=eHearUnk
+
+TEVENTS=eAcceptItem
+TEVENTS=econvinit
+TEVENTS=egreetings
+TEVENTS=einternalspace
+TEVENTS=eneedresponse
+TEVENTS=erefuseitem
+
+ITEM=hair_long
+COLOR=all_hair_colors
+ITEM=robe
+COLOR=all_colors
+ITEM=random_shoes
+COLOR=all_colors
+ITEM=black_staff
+ITEM=random_coin_purse
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=Dungeon Mystic (female)
+
+
+
+//Below, add this to a new file called
+//jobdungeonagent.scp and place it in your speech directory!
+//All Dungeons and Wind are included, 
+//as well as modified the text to give more of a "magical" feel...
+
+ON=*gate*
+ON=*travel*
+IF ( SRC.KARMA.WICKED || SRC.KARMA.BELLIGERANT )
+SAY I'm a Dungeon Mystic. I can gate thee to different dungeons, or near them. Just say I wish to go to "dungeonname".
+ELIF ( SRC.KARMA.NEUTRAL )
+IF ( COMPLEXITY.HIGH || COMPLEXITY.MEDIUM )
+DORAND 2
+SAY I'm a Dungeon Mystic. I can gate thee to different dungeons, or near them. Just say I wish to go to "dungeonname".
+ENDDO
+ELSE
+DORAND 2
+SAY I'm a Dungeon Mystic. I can gate thee to different dungeons, or near them. Just say I wish to go to "dungeonname".
+ENDDO
+ENDIF
+ELSE
+IF ( COMPLEXITY.HIGH )
+DORAND 2
+SAY I'm a Dungeon Mystic. I can gate thee to different dungeons, or near them. Just say I wish to go to "dungeonname".
+ENDDO
+ELIF ( COMPLEXITY.MEDIUM)
+DORAND 2
+SAY I'm a Dungeon Mystic. I can gate thee to different dungeons, or near them. Just say I wish to go to "dungeonname".
+ENDDO
+ELSE
+DORAND 2
+SAY I'm a Dungeon Mystic. I can gate thee to different dungeons, or near them. Just say I wish to go to "dungeonname".
+ENDDO
+ENDIF
+ENDIF
+ON=hail*
+ON=greetings*
+ON=hi*
+ON=hello*
+SAY=Greetings, Traveller. Wouldst thou wish to travel to a dungeon? I can gate thee.
+
+ON=dungeon*
+ON=Dungeon*
+SAY Yes, there are dungeons. If you do not knowest the names, I suggest you ask around!
+
+ON=*dead*
+ON=*Dead*
+SAY *Chuckles* Yes, dead as a doorspike!
+
+ON=*creatures*
+ON=*Creatures*
+SAY Yes, all kinds. Big un's, Little un's. Depends on where you go. Are you through pestering me?
+
+ON=names*
+ON=Names*
+SAY Well, names like Hythloth,Covetous,Deceit,Destard,Shame,Wrong, and Despise.
+SAY But remember, they are places ridden with creatures that would soon see you dead!
+
+ON=*I wish to go to Hythloth*
+ON=*I wish to go to hythloth* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Hythloth
+
+ON=*I wish to go to Covetous*
+ON=*I wish to go to covetous* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Covetous
+
+ON=*I wish to go to Deceit*
+ON=*I wish to go to deceit* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Deceit
+
+ON=*I wish to go to Destard*
+ON=*I wish to go to destard* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Destard
+
+ON=*I wish to go to Shame*
+ON=*I wish to go to shame* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Shame
+
+ON=*I wish to go to Wrong*
+ON=*I wish to go to wrong* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Wrong
+
+ON=*I wish to go to Wind*
+ON=*I wish to go to wind* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Outside Wind
+
+ON=*I wish to go to Despise*
+ON=*I wish to go to despise* 
+SRC.NEWITEM=0f6c 
+SRC.ACT.TYPE=17 
+SRC.ACT.MOREP=1430 1688 0 
+SRC.ACT.TIMER=10
+SRC.GOPLACE=Despise

@@ -1,0 +1,128 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//To use this script, put this file inside your Script folder, and then, run your server.
+//Next step..  Get to a place where your players will never go (as an example, Star Chamber)
+//And create a new npc.. any one you like.. And Paralyze it so it won't leave the chamber :)
+//Then, retrieve it's uid using:  .xshow uid  and target the NPC.. Enter the value that you
+//get in the DEFNAME top_player_board_uid  ...
+//Then, you can create the Boards..  .add i_top_player_board
+//Link it to the NPC using the same uid with:  .set link <uid>
+//And you're done :)  Now your top player boards are active :)  You only need 1 NPC for any
+//amount of boards you want to put.
+
+//Please do not remove this header..
+
+//Enjoy!
+
+[DEFNAME TopPlayerBoard]
+top_player_board_uid 01F6F
+
+[ITEMDEF i_top_player_board]
+DEFNAME=i_top_player_board
+NAME=Top Player Board
+ID=i_bulletin_board
+
+ON=@CREATE
+COLOR=0160
+ATTR=010
+TIMER=3600*24
+
+ON=@DCLICK
+SERV.ALLCLIENTS UPDATEBOARD
+SRC.TAG.STR2=<LINK.TAG.STR2>
+SRC.TAG.DEX2=<LINK.TAG.DEX2>
+SRC.TAG.INT2=<LINK.TAG.INT2>
+SRC.TAG.KARMA2=<LINK.TAG.KARMA2>
+SRC.TAG.KARMA4=<LINK.TAG.KARMA4>
+SRC.TAG.FAME2=<LINK.TAG.FAME2>
+SRC.DIALOG top_player_board
+RETURN 1
+
+[FUNCTION UPDATEBOARD]
+VAR.BOARD=<EVAL (top_player_board_uid)>
+IF (<SRC.ACCOUNT.PLEVEL><2)
+IF (<STR>><UID.<VAR.BOARD>.TAG.STR>)
+TRY UID.<VAR.BOARD>.TAG.STR=<STR>
+TRY UID.<VAR.BOARD>.TAG.STR2=<NAME> (<EVAL <STR>>)
+ENDIF
+IF (<DEX>><UID.<VAR.BOARD>.TAG.DEX>)
+TRY UID.<VAR.BOARD>.TAG.DEX=<DEX>
+TRY UID.<VAR.BOARD>.TAG.DEX2=<NAME> (<EVAL <DEX>>)
+ENDIF
+IF (<INT>><UID.<VAR.BOARD>.TAG.INT>)
+TRY UID.<VAR.BOARD>.TAG.INT=<INT>
+TRY UID.<VAR.BOARD>.TAG.INT2=<NAME> (<EVAL <INT>>)
+ENDIF
+IF (<KARMA>><UID.<VAR.BOARD>.TAG.KARMA>)
+TRY UID.<VAR.BOARD>.TAG.KARMA=<KARMA>
+TRY UID.<VAR.BOARD>.TAG.KARMA2=<NAME> (<EVAL <KARMA>>)
+ENDIF
+IF (<FAME>><UID.<VAR.BOARD>.TAG.FAME>)
+TRY UID.<VAR.BOARD>.TAG.FAME=<FAME>
+TRY UID.<VAR.BOARD>.TAG.FAME2=<NAME> (<EVAL <FAME>>)
+ENDIF
+IF (<KARMA><<UID.<VAR.BOARD>.TAG.KARMA3>)
+TRY UID.<VAR.BOARD>.TAG.KARMA3=<KARMA>
+TRY UID.<VAR.BOARD>.TAG.KARMA4=<NAME> (<EVAL <KARMA>>)
+ENDIF
+ENDIF
+
+[DIALOG top_player_board]
+
+200, 200	
+resizepic 0 0 3600 400 350
+page 0
+
+tilepic 290 110 14140
+tilepic 300 70 14212
+tilepic 310 50 14214
+tilepic 290 20 14213
+tilepic 160 75 14001
+tilepic 300 70 14027
+tilepic 235 45 14159
+tilepic 159 27 14184
+
+page 1
+gumppic 85 80 1418
+gumppic 155 90 41
+
+tilepic 100 130 14145
+tilepic 200 240 14134
+tilepic 240 250 14134
+tilepic 140 130 14133
+tilepic 220 80 14181
+
+text 150 25 995 0
+text 140 55 995 1
+
+text 109 130 2 2
+text 60 160 9 3
+text 125 190 15 4
+text 99 220 19 6
+text 81 250 23 5
+text 99 280 32 7
+
+text 210 130 2 8
+text 210 160 9 9
+text 210 190 15 10
+text 210 220 19 12
+text 210 250 23 11
+text 210 280 32 13
+
+[DIALOG top_player_board TEXT]
+Eternal Myst //id 0
+Top Player Board
+Strongest:
+Most Intelligent:
+Fastest:
+Most Famous: //id 5
+Most Holy:
+Most Vile:
+<SRC.tag.str2>
+<SRC.tag.int2>
+<SRC.tag.dex2> //id 10
+<SRC.tag.fame2>
+<SRC.tag.karma2>
+<SRC.tag.karma4>

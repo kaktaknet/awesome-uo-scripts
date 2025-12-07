@@ -1,0 +1,191 @@
+
+
+//********************************************************************
+// Small trap & Large trap 2.0 by Jevon                              ~
+// 								     ~
+// Instructions:						     ~
+// All you have to do is to get a i_trap_small and doubleclick it.   ~
+// The trap is placed automaticly to the ground and if a creature    ~
+// With less than 25 strenght steps on it the owner of the trap will ~
+// be informed and the stepper dies. However if a creature with over ~
+// 25 strenght steps on it the trap is destoyed.                     ~
+// The basics are the same for the large traps.                      ~
+//     								     ~
+// Version 2.0:							     ~
+// -added SKillgain						     ~
+// -added A couple of tests					     ~
+// -added Large traps						     ~
+// -added Trap recycling					     ~
+// -added Trap unarming						     ~
+//********************************************************************
+
+
+[ITEMDEF i_trap_small]
+NAME=small trap
+ID=0e7e
+TYPE=T_NORMAL
+
+SKILLMAKE=CARPENTRY 38.4, TINKERING 40.0, t_tinker_tools
+RESOURCES=2 i_ingot_iron, 4 i_board
+
+ON=@DCLICK
+SRC.BOW
+SRC.SFX 023d
+SRC.EMOTE try set a trap
+IF (<eval(RAND((1000)/<SRC.REMOVETRAP>)>)=1
+SRC.NEWITEM i_trap_small_set
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.UID>
+SRC.SYSMESSAGE You attach the trap
+SRC.TRAPGAIN 3
+ELSE
+SRC.SYSMESSAGE You fail to attach the trap
+SRC.TRAPGAIN 1
+ENDIF
+REMOVE
+
+//ON=@TARGON_GROUND
+//SRC.NEWITEM i_trap_small_set
+//SRC.ACT.P=<SRC.TARGP>
+//SRC.ACT.LINK=<SRC.UID>
+//SRC.SYSMESSAGE You attach the trap
+//SRC.EMOTE set a trap
+//REMOVE
+
+[ITEMDEF i_trap_small_set]
+NAME=Small trap (set)
+ID=01b25
+TYPE=T_NORMAL
+
+ON=@CREATE
+ATTR=attr_decay
+TIMER=60*30
+
+ON=@CLICK
+IF (<SRC.UID>=<LINK.UID>)||(<SRC.DETECTINGHIDDEN> >= 50.0)
+RETURN 0
+ELSE
+MESSAGE leaves
+RETURN 1
+ENDIF
+
+ON=@DCLICK
+IF (<EVAL(RAND(550/<SRC.REMOVETRAP>)>)=1
+SRC.MESSAGE You unarm and take the trap
+SRC.NEWITEM i_trap_large
+SRC.ACT.BOUNCE
+ELSE
+SRC.MESSAGE You fail to unarm the trap and it breaks
+ENDIF
+REMOVE
+
+ON=@STEP
+IF (<argn>=0)
+IF (<SRC.STR> < 25)
+SRC.EMOTE walk to a trap
+SFX 223
+SRC.SUICIDE
+LINK.SYSMESSAGE Someone has gone to your trap!
+ELSE
+SRC.SFX 0155
+SRC.EMOTE Walk over a trap destroying it
+SFX 0210
+SRC.HITS=<SRC.HITS>+-6
+REMOVE
+ENDIF
+ENDIF
+
+[ITEMDEF i_trap_large]
+NAME=large trap
+ID=i_barrel_hoops
+TYPE=T_NORMAL
+
+SKILLMAKE=5 i_ingot_iron, 2 i_board
+
+ON=@DCLICK
+SRC.BOW
+SRC.SFX 023d
+SRC.EMOTE try set a trap
+IF (<eval(RAND((1750)/<SRC.REMOVETRAP>)>)=1
+SRC.NEWITEM i_trap_large_set
+SRC.ACT.P=<SRC.P>
+SRC.ACT.LINK=<SRC.UID>
+SRC.SYSMESSAGE You attach the trap
+SRC.TRAPGAIN 4
+ELSE
+SRC.SYSMESSAGE You fail to attach the trap
+SRC.TRAPGAIN 2
+ENDIF
+REMOVE
+
+[ITEMDEF i_trap_large_set]
+NAME=large trap (set)
+ID=i_barrel_hoops
+TYPE=T_NORMAL
+
+ON=@CREATE
+ATTR=attr_decay
+TIMER=60*30
+
+ON=@DCLICK
+IF (<EVAL(RAND(750/<SRC.REMOVETRAP>)>)=1
+SRC.MESSAGE You unarm and take the trap
+SRC.NEWITEM i_trap_large
+SRC.ACT.BOUNCE
+REMOVE
+ELSE
+SRC.MESSAGE You fail to unarm the trap and it smashes on you!
+SRC.HITS=(<SRC.HITS>/2)+-20
+ID=i_trap_large_used
+UPDATE
+ENDIF
+
+ON=@STEP
+IF (<argn>=0)
+IF (<SRC.STR> < 25)
+SRC.EMOTE walk over a trap
+ELSEIF (<SRC.STR> < 100)
+ID=i_trap_large_used
+UPDATE
+SFX 0234
+SRC.SUICIDE
+LINK.SYSMESSAGE Someone has gone to your trap!
+ELSE
+SRC.SFX 0155
+SRC.EMOTE Walk over a trap destroying it
+SFX 0210
+SRC.HITS=<SRC.HITS>+-12
+REMOVE
+REMOVE
+ENDIF
+ENDIF
+
+[ITEMDEF i_trap_large_used]
+NAME=used large trap
+ID=010e2
+TYPE=T_NORMAL
+
+ON=@DCLICK
+SRC.MESSAGE You take the trap
+SRC.NEWITEM i_trap_large
+SRC.ACT.BOUNCE
+REMOVE
+
+[FUNCTION trapgain]
+IF <eval(RAND(1,5))>=1
+IF <SRC.REMOVETRAP> < 25.0
+SRC.REMOVETRAP=<SRC.REMOVETRAP>+(<args>*{0.2 0.4})
+ELSEIF <SRC.REMOVETRAP> < 48.3
+SRC.REMOVETRAP=<SRC.REMOVETRAP>+(<args>*{0.2 0.3})
+ELSEIF <SRC.REMOVETRAP> < 56.6
+SRC.REMOVETRAP=<SRC.REMOVETRAP>+(<args>*{0.1 0.3})
+ELSEIF <SRC.REMOVETRAP> < 64.4
+SRC.REMOVETRAP=<SRC.REMOVETRAP>+(<args>*{0.1 0.2})
+ELSEIF <SRC.REMOVETRAP> < 78.9
+SRC.REMOVETRAP=<SRC.REMOVETRAP>+(<args>*0.1)
+ELSEIF <SRC.REMOVETRAP> < 100.0
+SRC.REMOVETRAP=<SRC.REMOVETRAP>+(<args>*0.1)+-0.1
+ENDIF
+ENDIF
+
+[eof]

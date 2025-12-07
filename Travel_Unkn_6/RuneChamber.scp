@@ -1,0 +1,544 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+//To use the Rune Chamber System, first of all, you have to create the 12 different
+//tiles by using:  .add i_code1, .add i_code2, until .add i_code12 .
+//Then you have to create the Gate by using:  .add i_runechamber_portal
+//To activate the gate, you have to retrieve it's UID using:  .xshow uid
+//and targetting the door, then you have to use:  .set link <uid> on each tile,
+//<uid> being the UID of the gate that you have retrieved earlier.
+//After this, I suggest you change the rune chamber codes (not only moving their locations,
+//but changing them completely) because since many shards may use this system, some
+//may give out their codes while some others want players to have fun finding them, or give
+//them as rewards after quests...
+
+//Another suggestion is that you put that chamber in some unused place, and add an option
+//for players to summon a runestone, waiting 1 minutes after it, to be teleported to that
+//closed chamber where they can use their codes to teleport themselves anywhere the codes
+//will bring them..
+//But if you do that, make sure they can't use those stones while they are in jail ;)
+
+
+//Please do not remove this header..
+
+//Enjoy!
+
+[ITEMDEF i_code1]
+DEFNAME=i_code1
+ID=i_rune_alchem_1
+
+ON=@CREATE
+ATTR=010
+NAME="1"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+01
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-01
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code2]
+DEFNAME=i_code2
+ID=i_rune_alchem_2
+
+ON=@CREATE
+ATTR=010
+NAME=" 2"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+02
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-02
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code3]
+DEFNAME=i_code3
+ID=i_rune_alchem_3
+
+ON=@CREATE
+ATTR=010
+NAME=" 3"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+04
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-04
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code4]
+DEFNAME=i_code4
+ID=i_rune_alchem_4
+
+ON=@CREATE
+ATTR=010
+NAME=" 4"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+010
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-010
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code5]
+DEFNAME=i_code5
+ID=i_rune_alchem_5
+
+ON=@CREATE
+ATTR=010
+NAME=" 5"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+020
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-020
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code6]
+DEFNAME=i_code6
+ID=i_rune_alchem_6
+
+ON=@CREATE
+ATTR=010
+NAME=" 6"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+040
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-040
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code7]
+DEFNAME=i_code7
+ID=i_rune_alchem_7
+
+ON=@CREATE
+ATTR=010
+NAME=" 7"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+0100
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-0100
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code8]
+DEFNAME=i_code8
+ID=i_rune_alchem_8
+
+ON=@CREATE
+ATTR=010
+NAME=" 8"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+0200
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-0200
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code9]
+DEFNAME=i_code9
+ID=i_rune_alchem_9
+
+ON=@CREATE
+ATTR=010
+NAME=" 9"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+0400
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-0400
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code10]
+DEFNAME=i_code10
+ID=i_rune_alchem_10
+
+ON=@CREATE
+ATTR=010
+NAME=" 10"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+01000
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-01000
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code11]
+DEFNAME=i_code11
+ID=i_rune_alchem_11
+
+ON=@CREATE
+ATTR=010
+NAME=" 11"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+02000
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-02000
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_code12]
+DEFNAME=i_code12
+ID=i_rune_alchem_12
+
+ON=@CREATE
+ATTR=010
+NAME=" 12"
+
+ON=@DCLICK
+IF !(<MORE1>==01)
+IF (<LINK.MORE2><05)
+COLOR=0160
+TIMER=25
+LINK.MORE1=<LINK.MORE1>+04000
+LINK.MORE2=<LINK.MORE2>+01
+MORE1=01
+IF (<LINK.MORE2>==05)
+LINK.COLOR=0160
+ENDIF
+ENDIF
+ENDIF
+RETURN 1
+
+ON=@TIMER
+COLOR=0
+LINK.MORE1=<LINK.MORE1>+-04000
+LINK.MORE2=<LINK.MORE2>+-01
+MORE1=0
+LINK.COLOR=0
+RETURN 1
+
+[ITEMDEF i_runechamber_portal]
+DEFNAME=i_runechamber_portal
+ID=I_MOONGATE_BLUE
+NAME=Portal
+
+ON=@CREATE
+ATTR=010
+
+ON=@STEP
+IF (<MORE1>==037)
+SRC.GO 1431,1695
+//1,2,3,4,5
+ELSEIF (<MORE1>==07600)
+SRC.GO trinsic
+//8,9,10,11,12
+ELSEIF (<MORE1>==057)
+SRC.GO 1385,1500,10
+//1,2,3,4,6
+ELSEIF (<MORE1>==03221)
+SRC.GO buccaneer's den
+//1,5,8,10,11
+ELSEIF (<MORE1>==04324)
+SRC.GO cove
+//3,5,7,8,12
+ELSEIF (<MORE1>==05054)
+SRC.GO jhelom
+//3,4,6,10,12
+ELSEIF (<MORE1>==0532)
+SRC.GO magincia
+//2,4,5,7,9
+ELSEIF (<MORE1>==0525)
+SRC.GO minoc
+//1,3,5,7,9
+ELSEIF (<MORE1>==02710)
+SRC.GO moonglow
+//4,7,8,9,11
+ELSEIF (<MORE1>==01065)
+SRC.GO nujel'm
+//1,3,5,6,10
+ELSEIF (<MORE1>==05430)
+SRC.GO serpent's hold
+//4,5,9,10,12
+ELSEIF (<MORE1>==0646)
+SRC.GO skara brae
+//2,3,6,8,9
+ELSEIF (<MORE1>==05460)
+SRC.GO vesper
+//5,6,9,10,12
+ELSEIF (<MORE1>==04701)
+SRC.GO outside wind
+//1,7,8,9,12
+ELSEIF (<MORE1>==04161)
+SRC.GO yew
+//1,5,6,7,12
+ELSEIF (<MORE1>==0631)
+SRC.GO covetous
+//1,4,5,8,9
+ELSEIF (<MORE1>==01431)
+SRC.GO covetous level 2
+//1,4,5,9,10
+ELSEIF (<MORE1>==06031)
+SRC.GO covetous level 3
+//1,4,5,11,12
+ELSEIF (<MORE1>==0661)
+SRC.GO covetous lake
+//1,5,6,8,9
+ELSEIF (<MORE1>==01432)
+SRC.GO deceit
+//2,4,5,9,10
+ELSEIF (<MORE1>==01426)
+SRC.GO deceit level 2
+//2,3,5,9,10
+ELSEIF (<MORE1>==01425)
+SRC.GO deceit level 3
+//1,3,5,9,10
+ELSEIF (<MORE1>==05025)
+SRC.GO deceit level 4
+//1,3,5,10,12
+ELSEIF (<MORE1>==05540)
+SRC.GO despise
+//6,7,9,10,12
+ELSEIF (<MORE1>==05520)
+SRC.GO despise level 2
+//5,7,9,10,12
+ELSEIF (<MORE1>==06460)
+SRC.GO despise level 3
+//5,6,9,11,12
+ELSEIF (<MORE1>==03442)
+SRC.GO destard
+//2,6,9,10,11
+ELSEIF (<MORE1>==05442)
+SRC.GO destard level 2
+//2,6,9,10,12
+ELSEIF (<MORE1>==01443)
+SRC.GO destard level 3
+//1,2,6,9,10
+ELSEIF (<MORE1>==05111)
+SRC.GO hythloth
+//1,4,7,10,12
+ELSEIF (<MORE1>==05105)
+SRC.GO hythloth level 2
+//1,3,7,10,12
+ELSEIF (<MORE1>==05221)
+SRC.GO hythloth level 3
+//1,5,8,10,12
+ELSEIF (<MORE1>==05205)
+SRC.GO hythloth level 4
+//1,3,8,10,12
+ELSEIF (<MORE1>==01650)
+SRC.GO shame
+//4,6,8,9,10
+ELSEIF (<MORE1>==01624)
+SRC.GO shame level 2
+//3,5,8,9,10
+ELSEIF (<MORE1>==02650)
+SRC.GO shame level 3
+//4,6,8,9,11
+ELSEIF (<MORE1>==04624)
+SRC.GO shame level 4
+//3,5,8,9,12
+ELSEIF (<MORE1>==02330)
+SRC.GO wrong
+//4,5,7,8,11
+ELSEIF (<MORE1>==02154)
+SRC.GO wrong level 2
+//3,4,6,7,11
+ELSEIF (<MORE1>==02264)
+SRC.GO wrong level 3
+//3,5,6,8,11
+ELSEIF (<MORE1>==0332)
+SRC.GO 5202,1110,95
+//2,4,5,7,8
+ELSEIF (<MORE1>==06103)
+SRC.GO RIVIUM
+//1,2,7,11,12
+ELSEIF (<MORE1>==02720)
+SRC.GO 5164,1121
+//5,7,8,9,11
+ELSEIF (<MORE1>==03111)
+SRC.GO 5177,2130
+//1,4,7,10,11
+
+
+ELSE
+SRC.SYSMESSAGE Invalid Code!
+ENDIF

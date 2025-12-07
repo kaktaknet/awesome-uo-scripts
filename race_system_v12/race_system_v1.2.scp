@@ -1,0 +1,2079 @@
+////////////////////////////////////////
+//Majesty's Unique Race System v1.2
+//Please do not remove this header
+////////////////////////////////////////
+
+
+//TO SETUP, SIMPLY ADD 'I_MAJ_RACESTONE' AND LET THE PLAYERS USE IT!!
+//YES, ITS THAT SIMPLE
+
+
+[itemdef i_special_fix]
+id=i_memory
+name=special fix delay
+type=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@timer
+remove
+return 1
+
+
+[function fix_special]
+if (<restest 1 i_special_fix >)
+sysmessage=You must wait <eval <findid.i_special_fix.timer>/60> hours to do this again...
+return 1
+else
+findid.i_race_info.timer=3
+newitem=i_special_fix
+act.equip
+act.timer=60*60*6
+sysmessage=Your special has been fixed...
+return 1
+endif
+
+
+[function vampire_special_2]
+if (<eval <tag.racevampire>> = 1 )
+if (<SRC.FLAGS> & 000000002 )
+if (<eval <tag.racedelay>> = 1 )
+sysmessage=You cant use another ability yet.
+else
+sayua 50,0,0,0 ::special:: (resurrect)
+SRC.RESURRECT
+race_adv
+tag.racedelay=1
+findid.i_race_info.timer=<eval specialdelay>
+endif
+else
+sysmessage=Your Not Fully Dead Yet....
+endif
+else
+sysmessage=You are not the 'Vampire' race.
+endif
+
+
+[function cure_virus]
+if (<restest 1 i_viral_infect >)
+consume 1 i_viral_infect
+hits=<hits>+-15
+sayua 50,0,0,0 ::cured virus::
+sysmessage=15 hitpoints have been tooken for this cure!
+else
+sysmessage=You are not infected!
+endif
+
+
+
+[function f_clear_race]
+tag.racepicked=
+events -e_race_vampire
+events -e_race_stone
+events -e_race_dwarf
+events -e_race_viral
+events -e_race_cannibal
+events -e_race_titan
+events -e_race_guard
+tag.racevampire=
+tag.racestone=
+tag.racedwarf=
+tag.raceviral=
+tag.racecannibal=
+tag.racetitan=
+tag.raceguard=
+consume 2 i_race_info
+consume 2 i_vamp_events
+color=colors_skin
+oskin=<color>
+
+
+[function stone_special]
+sysmessage=You must now use .racestone_special
+return 1
+
+
+[function stone_special_2]
+sysmessage=You must now use .racestone_special
+return 1
+
+
+[function stone_]
+sysmessage=You account name has been recorded, you may be banned in 3 days for exploiting this command!
+return 1
+
+
+[plevel 2]
+page
+jail
+forgive
+stone
+
+
+[plevel 0]
+cure_virus
+fix_special
+vampire_special
+vampire_special_2
+dwarf_special
+racestone_special
+racestone_special_2
+viral_special
+cannibal_special
+cannibal_special_2
+guard_special
+titan_special
+raceinfo
+
+
+[defname racedelaytime]
+specialdelay 60*5
+//Note: 60*5 = 5 Minutes. Adjust it for how long you want the special used between times.
+
+
+[events racetest]
+on=@gethit
+return 1
+
+
+on=@spelleffect
+return 1
+
+
+[function levelup]
+findid.i_race_info.tag.racelvl=<args>
+
+
+//[function lvl]
+//sysmessage <eval <findid.i_race_info.tag.racelvl>>
+//sysmessage <findid.i_race_info.tag.racelvl>
+
+
+
+[itemdef i_raceinfo]
+id=i_memory
+name=race checker
+type t_eq_script
+
+
+on=@create
+timer=20
+
+
+on=@targon_char
+src.dialog d_raceinfo
+src.sysmessage=Info on <src.targ.name>
+remove
+return 1
+
+
+on=@targon_item
+src.sysmessage=You must target this on living beings
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+[function raceinfo]
+newitem=i_raceinfo
+act.equip
+act.timer=20
+act.target
+sysmessage=Target the char you want info on.
+
+
+
+[itemdef i_race_info]
+id=i_memory
+name=Race Info [!do not remove!]
+type=t_eq_script
+
+
+on=@equip
+link=<src.uid>
+
+
+on=@create
+timer=-1
+attr=attr_invis
+tag.racelvl=1
+tag.racename=None
+
+
+on=@timer
+//tag.racelvl=<eval <tag.racelvl>>+1
+//link.sysmessage=You have advanced in your abilities.
+link.race_adv
+link.tag.racedelay=
+timer=-1
+return 1
+
+
+[function race_adv]
+//THIS FUNCTION DETERMAINS THE "ADVANCEMENT SPEED" OF THE RACE LEVEL
+//RIGHT NOW IT IS ABOUT A 15% CHANCE OF ADVANCEING ON EACH TIME THIER ABILITIES ARE USED
+//ADJUST THE "RAND #" TOO SPEED UP OR SLOW DOWN ADVANCEMENT
+//NOTE: no_adv is the fail rate
+//HEH, IM JUST KEEPIN IT SIMPLE :*)
+
+
+if (<eval <findid.i_race_info.tag.racelvl>> > 99 )
+findid.i_race_info.tag.racelvl=100
+return 0
+else
+dorand=100
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+findid.i_race_info.tag.racelvl=<eval <findid.i_race_info.tag.racelvl>>+1
+no_adv
+no_adv
+no_adv
+no_adv
+enddo
+return 0 
+endif
+
+
+
+[function no_adv]
+//THIS IS SIMPLY THE "FAIL" RATE OF THE ADVANCMENT
+
+
+
+[events e_race_titan]
+on=@click
+message=[<findid.i_race_info.tag.racename>]
+
+
+on=@death
+sfx=613
+cure_virus
+
+
+on=@hit
+if (<eval <findid.i_race_info.tag.racelvl>> < 100 )
+dorand=4
+race_adv
+no_adv
+src.hits=<eval <src.hits> - <eval ((<findid.i_race_info.tag.racelvl>*2)/13)>>
+no_adv
+enddo
+endif
+
+
+[itemdef i_titan_scream]
+id=i_memory
+name=Titan Special
+type=t_eq_script
+
+
+on=@equip
+if (<eval <src.tag.racedelay>> = 1 )
+src.sysmessage=You cannot use another ability yet.
+remove
+return 1
+else
+timer=15
+target
+src.sysmessage=Target your victim.
+return 1
+endif
+
+
+on=@targon_item
+src.sysmessage=No use in yelling at a <src.targ.name>.
+remove
+return 1
+
+
+
+on=@targon_char
+if (<src.targ.distance> > 4 )
+src.sysmessage=<src.targ.name> is too far.
+remove
+return 1
+else
+src.sound=611
+src.targ.effect=0,i_fx_ebolt,16,16,0
+src.targ.stamina=0
+src.targ.damage=<eval ((<src.findid.i_race_info.tag.racelvl>*6)/10)>
+//src.say=<eval ((<src.findid.i_race_info.tag.racelvl>*6)/10)>
+src.findid.i_race_info.timer=<eval specialdelay>
+src.tag.racedelay=1
+src.race_adv
+src.sayua 50,0,0,eng ::special:: (yell)
+remove
+return 1
+endif
+
+
+on=@timer
+remove
+return 1
+
+
+[function titan_special]
+if (<hits> < 1 )
+sysmessage=You cannot do this while you are dead...
+return 1
+endif
+
+
+if (<eval <tag.racetitan>> = 1 )
+newitem=i_titan_scream
+act.equip
+else
+sysmessage=You are not a 'Titan'.
+endif
+
+
+
+//////////////////////
+
+
+[events e_race_guard]
+on=@click
+message=[<findid.i_race_info.tag.racename>]
+
+
+on=@hit
+if (<eval <findlayer(1).baseid>> = 0 )&&(<eval <findlayer(2).baseid>> = 0 )
+src.damage=1
+return 1
+endif
+
+
+
+if (<eval <findlayer(1).baseid>> = 0 )&&(<eval <findlayer(2).type>> = t_shield )
+src.damage=1
+return 1
+endif
+
+
+
+if (<eval <findid.i_race_info.tag.racelvl>> < 100 )
+dorand=3
+race_adv
+no_adv
+no_adv
+enddo
+endif
+
+
+if (<eval <src.flags>> & <eval statf_criminal> )||(<eval <src.kills>> > <eval <serv.mudermincount>> )
+dorand=3
+no_adv
+no_adv
+src.hits=<eval <src.hits> - <eval ((<findid.i_race_info.tag.racelvl>*2)/17)>>
+enddo
+//say=<eval <src.hits> - <eval ((<findid.i_race_info.tag.racelvl>*2)/10)>>
+race_adv
+//src.say=<src.hits>
+else
+return 0
+endif
+
+
+
+[events e_guard_special]
+on=@hittry
+sayua 50,0,0,0 ::special:: (judgement)
+effect=1,1,16,16,0
+effect=1,1,16,16,0
+sound=0206
+
+
+on=@hit
+race_adv
+src.effect=1,1,16,16,0
+src.effect=3,i_fire_column,16,16,16
+sfx=011d
+sfx=0222
+//src.say=<src.hits>
+src.hits=<eval <src.hits> - <eval ((<findid.i_race_info.tag.racelvl>*2)/7)>>
+tag.racedelay=1
+findid.i_race_info.timer=<eval specialdelay>
+events -e_guard_special
+tag.guardspec=
+src.damage 1
+return 1
+
+
+[function guard_special]
+if (<hits> < 1 )
+sysmessage=You cannot do this while you are dead...
+return 1
+endif
+
+
+if (<eval <tag.raceguard>> = 1 )
+if (<eval <tag.racedelay>> = 0 )&&(<eval <tag.guardspec>> = 0 )
+if (<eval <tag.guardspec>> = 1 )
+sysmessage=You havent finished using your last special.
+else
+events +e_guard_special
+race_adv
+tag.guardspec=1
+src.sysmessage=You used your special!
+endif
+else
+sysmessage=You cant use your ability again yet.
+endif
+else
+sysmessage=You are not a 'Guard'.
+endif
+
+
+/////////////////////////
+
+
+[events e_race_cannibal]
+on=@click
+message=[<findid.i_race_info.tag.racename>]
+
+
+on=@hit
+if (<eval <findid.i_race_info.tag.racelvl>> < 100 )
+dorand=10
+race_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+enddo
+endif
+
+
+[itemdef i_cannibal_feast]
+id=i_memory
+name=Canibal Feast
+type=t_eq_script
+
+
+on=@create
+timer=20
+morex=2
+
+
+on=@equip
+if (<eval <tag.racedelay>> = 1 )
+src.sysmessage=You cant use another ability yet.
+remove
+return 1
+else
+target
+src.sysmessage=Which corpse will you feast on?
+return 1
+endif
+
+
+on=@targon_item
+if (<src.targ.distance> > 1 )
+src.sysmessage=Thats too far away.
+target
+return 1
+endif
+
+
+
+if (<src.targ.type> = t_corpse )
+if !(<eval <src.hits>> > <src.str> )&&!(<eval <src.hits>> = <src.str> )
+if !(<eval <morex>> = 0 )
+morex=<eval <morex>>+-1
+src.hits=<eval <src.hits>>+<eval <src.findid.i_race_info.tag.racelvl>/4>
+src.bow
+src.newitem=i_blood_smear
+src.act.attr=attr_decay | attr_static
+src.act.timer=15
+src.act.p=<src.targ.p>
+src.sfx=003b
+src.sfx=80
+src.race_adv
+src.targ.say=::<src.name> is feasting on this corpse::
+src.sayua 50,0,0,0 ::special:: (feast)
+src.feastfix
+src.tag.racedelay=1
+src.findid.i_race_info.timer=<eval specialdelay>
+src.targ.timer=250
+target
+timer=20
+return 1
+else
+src.sysmessage=You are finished eating!
+src.sfx=00246
+src.feastfix
+src.targ.timer=250
+src.race_adv
+src.findid.i_race_info.timer=<eval specialdelay>
+src.tag.racedelay=1
+remove
+return 1
+endif
+else
+src.sysmessage=You dont want to eat that.
+src.feastfix
+remove
+return 1
+endif
+else
+src.sysmessage=That is not a corpse.
+target
+return 1
+endif
+
+
+on=@targon_char
+src.sysmessage=You must target a corpse.
+target
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+
+[function feastfix]
+if (<hits> > <str> )
+hits=<str>
+endif
+
+
+
+[function cannibal_special]
+if (<hits> < 1 )
+sysmessage=You cannot do this while you are dead...
+return 1
+endif
+
+
+if (<eval <tag.racecannibal>> = 1 )
+if (<eval <tag.racedelay>> = 1 )
+src.sysmessage=You cannot use another ability yet.
+return 1
+else
+newitem i_cannibal_feast
+act.equip
+endif
+else
+sysmessage=You are not a 'Cannibal'.
+endif
+
+
+[itemdef i_cannibal_bite]
+id=i_memory
+name=Cannibal Bite memory
+type=t_eq_script
+
+
+on=@create
+timer=15
+
+
+on=@equip
+if (<eval <src.tag.racedelay>> = 1 )
+src.sysmessage=You cant use another ability yet.
+remove
+return 1
+else
+target
+timer=15
+src.sysmessage=Who will you bite?
+return 1
+
+
+on=@targon_char
+if (<src.targ.distance> > 1 )
+src.sysmessage=<src.targ.name> is too far away.
+remove
+return 1
+else
+src.targ.hits=<eval <src.targ.hits> - <eval ((<src.findid.i_race_info.tag.racelvl>*2)/6)>>
+src.hits=<eval <src.hits>>+<eval <src.findid.i_race_info.tag.racelvl>/4>
+src.targ.damage=1
+src.bow
+src.sound=019e
+src.sayua 50,0,0,0 ::special:: (bite)
+src.targ.sysmessage=You were bitten by <src.name>!
+src.tag.racedelay=1
+src.findid.i_race_info.timer=<eval specialdelay>
+src.race_adv
+remove
+return 1
+
+
+on=@targon_item
+src.sysmessage=Bite living beings.
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+
+[function cannibal_special_2]
+if (<hits> < 1 )
+sysmessage=You cannot do this while you are dead...
+return 1
+endif
+
+
+if (<eval <tag.racecannibal>> = 1 )
+newitem=i_cannibal_bite
+act.equip
+else
+sysmessage=You are not a 'Cannibal'.
+
+
+///////////////////
+
+
+[events e_race_viral]
+on=@click
+message=[<findid.i_race_info.tag.racename>]
+
+
+on=@death
+sfx=01c9
+cure_virus
+
+
+
+on=@hit
+var.poisonmem=<eval <uid>>
+dorand=15
+src.viral_infect
+race_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+src.viral_infect
+no_adv
+enddo
+
+
+on=@spelleffect
+if (<argn> = 20 )
+sayua 50,0,0,0 ::ability:: (resist poison)
+return 1
+
+
+
+[function viral_infect]
+if (<restest 1 i_viral_infect >)
+return 1
+else
+newitem=i_viral_infect
+act.equip
+act.link=<eval <var.poisonmem>>
+act.morey=<eval <act.morey> + <eval ((<act.link.findid.i_race_info.tag.racelvl>*2)/7)>>
+act.timer=1
+var.poisonmem=
+endif
+
+
+
+
+
+[itemdef i_viral_infect]
+id=i_memory
+name=Viral Infect timer
+type=t_eq_script
+
+
+on=@create
+morey=2
+
+
+on=@timer
+if (<eval <morey>>)
+morey=<eval <morey>>+-1
+cont.sayua <eval colors_green>,0,0,0 -3 (infected)
+cont.hits=<cont.hits>+-3
+timer=2
+return 1
+else
+link.race_adv
+remove
+return 1
+endif
+//return 1
+
+
+
+
+[function viral_special]
+if (<hits> < 1 )
+sysmessage=You cannot do this while you are dead...
+return 1
+endif
+
+
+if (<eval <tag.raceviral>> = 1 )
+if (<eval <tag.racedelay>> = 1 )
+sysmessage=You cant use another ability yet.
+else
+sayua 50,0,0,0 ::special:: (viral morph)
+race_adv
+events +e_viral_slime
+newitem=i_viral_delay
+act.equip
+act.timer=<eval <act.timer> + <eval ((<src.findid.i_race_info.tag.racelvl>*6)/10)>>
+tag.viralbody=<body>
+tag.viralid=<id>
+tag.viralobody=<obody>
+tag.viralname=<name>
+body=c_slime
+obody=c_slime
+id=c_slime
+name=Viral Substance
+fix
+sfx=snd_monster_slime1
+tag.racedelay=1
+findid.i_race_info.timer=<eval specialdelay>
+endif
+else
+sysmessage=You are not the 'Viral' race.
+endif
+
+
+[events e_viral_slime]
+on=@spelleffect
+src.sysmessage=Spells will not harm <name> in this form.
+return 1
+
+
+on=@itemdclick
+sysmessage=You cannot use items in this form.
+return 1
+
+
+on=@gethit
+src.sysmessage=<name> is absorbing the damage.
+hits=<hits>+-1
+src.sayua <eval colors_green>,0,0,0 -3
+src.hits=<src.hits>+-3
+return 1
+
+
+on=@spellcast
+sysmessage=You cannot cast spells in this form.
+return 1
+
+
+on=@hit
+var.poisonmem=<eval <uid>>
+src.viral_infect
+src.sysmessage=You have been infected by <name>.
+src.message=type: .cure_virus to cure your infection.
+src.damage=1
+return 1
+
+
+on=@death
+findid.i_viral_delay.timer=1
+
+
+[itemdef i_viral_delay]
+id=i_memory
+name=Viral Slime delay
+type=t_eq_script
+
+
+on=@create
+timer=5
+
+
+on=@timer
+cont.body=<cont.tag.viralbody>
+cont.id=<cont.tag.viralid>
+cont.obody=<cont.tag.viralobody>
+cont.name=<cont.tag.viralname>
+cont.fix
+cont.events -e_viral_slime
+cont.tag.viralbody=
+cont.tag.viralid=
+cont.tag.viralobody=
+cont.tag.viralname=
+remove
+return 1
+
+
+
+///////////////////////////////////
+
+
+[events e_race_stone]
+on=@click
+message=[<findid.i_race_info.tag.racename>]
+
+
+on=@death
+sfx=010d
+cure_virus
+
+
+on=@hit
+dorand=10
+race_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+src.hits=<eval <src.hits> - <eval ((<findid.i_race_info.tag.racelvl>*2)/10)>>
+no_adv
+no_adv
+enddo
+
+
+[events e_racestone_special]
+
+
+on=@gethit
+if (<eval <tag.stonespec>> > 0 )
+src.hits=<eval <src.hits> - <eval ((<findid.i_race_info.tag.racelvl>*2)/13)>>
+src.sayua 50,0,0,0 ::damaged self::
+tag.stonespec=<eval <tag.stonespec>>+-1
+src.anim=20
+sfx=0237
+return 0
+else
+race_adv
+sayua 35,0,0,0 ::stoned skin destroyed::
+findid.i_race_info.timer=<eval specialdelay>
+events -e_racestone_special
+endif
+
+
+
+[function racestone_special]
+if (<hits> < 1 )
+sysmessage=You cannot do this while you are dead...
+return 1
+endif
+
+
+if (<eval <tag.racestone>> = 1 )
+if (<eval <tag.racedelay>> = 1 )
+sysmessage=You cant use another ability yet.
+else
+sfx=605
+tag.stonespec=10
+events +e_racestone_special
+sayua 50,0,0,0 ::special:: (stoned skin)
+tag.racedelay=1
+endif
+else
+sysmessage=You are not the 'Stone' race.
+endif
+
+
+
+[function racestone_special_2]
+if (<hits> < 1 )
+sysmessage=You cannot do this while you are dead...
+return 1
+endif
+
+
+if (<restest 1 i_sss_delay >)
+sysmessage=You have left 'stone protection' mode.
+consume=1 i_sss_delay
+sfx=605
+stone=0
+return 1
+else
+if (<eval <tag.racestone>> = 1 )
+if (<eval <tag.racedelay>> = 1 )
+sysmessage=You cant use another ability yet.
+else
+sfx=snd_spell_lightning
+effect=3,i_fx_sparkle,10,10,0
+sfx=605
+sayua 50,0,0,0 ::special:: (stone protection)
+tag.racedelay=1
+stone=1
+findid.i_race_info.timer=<eval specialdelay>
+race_adv
+newitem=i_sss_delay
+act.equip
+act.timer=<eval ((<findid.i_race_info.tag.racelvl>*2)/10)>
+endif
+else
+sysmessage=You are not the 'Stone' race.
+endif
+endif
+
+
+[itemdef i_sss_delay]
+name=stone protection timer
+type=t_eq_script
+
+
+on=@create
+attr=attr_decay
+
+
+on=@timer
+cont.stone=0
+
+
+
+
+
+//////////////////////////////
+
+
+[itemdef i_dwarven_hammer]
+id=i_hammer_war
+name=Dwarven War Hammer
+weight=9
+dam=5
+
+
+on=@create
+color=666
+hitpoints=30000
+attr=attr_newbie
+
+
+on=@equip
+if (<eval <src.tag.racedwarf>> = 1 )
+src.sysmessage=The current level of this is <eval ((<src.findid.i_race_info.tag.racelvl>*2)/20)>
+else
+src.findlayer(2).unequip
+src.sysmessage=You are not a 'Dwarf', you cannot use this weapon.
+return 1
+endif
+
+
+on=@damage
+src.hits=<eval <src.hits> - <eval ((<cont.findid.i_race_info.tag.racelvl>*2)/13)>>
+src.effect=3,i_fire_column,5,5,0
+src.sfx=011c
+dorand=5
+race_adv
+no_adv
+no_adv
+no_adv
+no_adv
+enddo
+
+
+
+[events e_dwarf_special]
+on=@hittry
+sayua 50,0,0,0 ::special:: (critical blow)
+effect=3,i_fire_column,16,16,0
+effect=3,i_fire_column,16,16,0
+sound=0028
+
+
+on=@hit
+race_adv
+tag.drawfspec=
+src.effect=3,i_fx_explosion_2,16,16,0
+src.effect=3,i_fire_column,16,16,16
+sfx=011d
+sfx=0222
+//src.say=<src.hits>
+src.hits=<eval <src.hits> - <eval ((<findid.i_race_info.tag.racelvl>*2)/7)>>
+tag.racedelay=1
+findid.i_race_info.timer=<eval specialdelay>
+events -e_dwarf_special
+src.damage 1
+return 1
+
+
+
+[function dwarf_special]
+if (<hits> < 1 )
+sysmessage=You cannot do this while you are dead...
+return 1
+endif
+
+
+if (<eval <tag.racedwarf>> = 1 )
+if (<findlayer(2).baseid> = i_dwarven_hammer )
+if (<eval <tag.racedelay>> = 0 )&&(<eval <tag.dwarfspec>> = 0 )
+if (<eval <tag.dwarfspec>> = 1 )
+sysmessage=You havent finished using your last special.
+else
+events +e_dwarf_special
+race_adv
+tag.dwarfspec=0
+src.sysmessage=You used your special!
+endif
+else
+sysmessage=You cant use your ability again yet.
+endif
+else
+sysmessage=You must have the Dwarven War Hammer equiped to do this.
+endif
+else
+sysmessage=You are not a 'Dwarf'.
+endif
+
+
+[events e_race_dwarf]
+on=@click
+message=[<findid.i_race_info.tag.racename>]
+
+
+on=@death
+sfx=01b4
+cure_virus
+
+
+on=@hit
+if (<findlayer(2).baseid> = i_dwarven_hammer )
+dorand=10
+race_adv
+no_adv
+no_adv
+race_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+no_adv
+enddo
+else
+no_adv
+endif
+
+
+
+//////////////////////////////
+
+
+[events e_race_vampire]
+on=@click
+message=[<findid.i_race_info.tag.racename>]
+
+
+on=@death
+sfx=643
+cure_virus
+
+
+on=@itemdclick
+if (<act.type> = t_blood )
+if !(<restest 4 i_vampire_blood >)
+if (<act.distance> < 2 )
+if (<restest 1 i_bottle_empty >)
+act.remove
+consume=1 i_bottle_empty
+sysmessage=You quickly save the blood.
+newitem=i_vampire_blood
+act.bounce
+bow
+sfx=0240
+return 1
+else
+sysmessage=You dont have any empty bottles.
+return 1
+endif
+else
+sysmessage=You are too far from the <act.name>.
+return 1
+endif
+else
+sysmessage=You have enough blood stored already.
+return 1
+endif
+else
+return 0
+endif
+
+
+
+[itemdef i_vampire_blood]
+id=i_bottle_empty
+name=Bottle of Blood
+type=t_normal
+
+
+on=@create
+color=025
+
+
+on=@dclick
+if (<eval <src.tag.racevampire>> = 1 )
+if (<eval <src.tag.blooddrink>> > 0 )
+src.tag.blooddrink=<eval <src.tag.blooddrink>>+-1
+src.hits=<eval <src.hits> + <eval ((<src.findid.i_race_info.tag.racelvl>*1)/8)>>
+src.sysmessage=You drink the blood and discard the empty bottle.
+src.salute
+src.sfx=0031
+//src.sfx=003e
+src.feastfix
+consume=1 i_vampire_blood
+return 1
+else
+src.f_blooddrink
+src.sysmessage=You must wait <eval <src.findid.i_blooddrink.timer>> seconds to drink this blood.
+return 1
+endif
+else
+src.sysmessage=You are not a 'Vampire', you cannot drink this.
+return 1
+endif
+
+
+ON=@DROPON_GROUND
+src.sysmessage=The blood is waisted as it hits the ground.
+sfx=003e
+remove
+return 1
+
+
+on=@timer
+remove
+return 1
+
+
+[function vampire_special]
+if (<eval <tag.racevampire>> = 1 )
+if (<eval <sector.isdark>> = 1 )
+sysmessage=This area is dark enough to regenerate in!
+else
+sysmessage=There is too much light in this area to regenerate in.
+endif
+else
+sysmessage=You are not a 'Vampire'.
+endif
+
+
+
+[itemdef i_blooddrink]
+id=i_memory
+name=Blood drink memory[dont touch]
+type=t_eq_script
+
+
+on=@equip
+timer=<eval specialdelay>
+
+
+on=@timer
+cont.tag.blooddrink=4
+cont.race_adv
+cont.race_adv
+cont.race_adv
+cont.findid.i_race_info.timer=5
+remove
+return 1
+
+
+[function f_blooddrink]
+if (<restest 1 i_blooddrink >)
+return 0
+else
+src.newitem=i_blooddrink
+src.act.equip
+endif
+
+
+
+[itemdef i_vamp_events]
+id=i_memory
+name=Vampire Event[!do not remove!]
+type=t_eq_script
+
+
+on=@create
+timer=5
+
+
+on=@timer
+cont.f_vamp_events
+timer=5
+timer=5
+return 1
+
+
+[function f_vamp_events]
+if (<sector.isdark>)&&(<hits> > 0 )
+hits=<hits>+3
+feastfix
+else
+//if  vamp is weak in light areas add: hits = <hits>+-2 right here
+return 0
+endif
+
+
+/////////////////
+//DIALOGS!!//
+////////////////
+
+
+
+[itemdef i_maj_race_stone]
+id=i_crystal_purple
+name=Race Stone
+type=t_normal
+
+
+on=@create
+color=colors_all
+attr=00010
+
+
+on=@dclick
+if (<eval <src.tag.racepicked>> = 1 )
+src.sysmessage=You cannot choose another race!
+return 1
+else
+dialog d_maj_races
+return 1
+endif
+
+
+on=@click
+src.sysmessage=All races have different abilities, select the race thats fits you.
+
+
+
+
+[DIALOG d_race_vampire]
+0, 0
+PAGE 0
+resizepic 36 18 2620 480 360
+text 297 27 1101 0
+text 297 51 1101 1
+text 297 72 1101 2
+text 297 96 1101 3
+text 297 117 1101 4
+text 45 270 1153 5
+text 45 288 1153 6
+text 45 306 1153 7
+text 45 324 1153 8
+text 45 342 95 9
+text 270 140 1350 10
+button 342 180 2311 2312 1 0 1
+text 306 211 32 11
+gumppic 65 20 50468                     // Cloak
+gumppic 65 20 50479                     // Sandals
+//gumppic 65 20 50469                   // Robe
+//gumppic 65 20 50981                   // Left Wand
+//gumppic 65 20 50985                   // Right Spellbook
+gumppic 65 20 50701                     // Hair
+//gumppic 65 20 50805                   // Beard
+
+
+[DIALOG d_race_vampire TEXT]
+Race: Vampire
+Offence: 6
+Defence: 8
+Ability: 8
+Special: 7
+Vampires have been known to kill innocent people just to
+to quench thier everlasting thirst for blood. Vampires have
+the ability to regenerate(special) in dark areas, and can also drink
+blood by double clicking it as it falls from the victim. they also resurrect!
+Commands: .vampire_special  .vampire_special_2
+1(weak) - 10(powerful)
+Become a Vampire
+
+
+
+[DIALOG d_race_vampire BUTTON]
+on=0
+dialog d_maj_races
+
+
+on=1
+src.oskin=08fd
+src.color=08fd
+src.tag.racevampire=1
+src.tag.racepicked=1
+src.newitem=i_race_info
+src.act.equip
+src.act.tag.racename=Vampire
+src.newitem=i_vamp_events
+src.act.equip
+src.tag.blooddrink=4
+src.events +e_race_vampire
+src.sysmessage=You are now a <src.findid.i_race_info.tag.racename>
+src.dialog d_maj_racenote
+return 1
+
+
+
+/////////////////////////////////////
+
+
+[DIALOG d_race_dwarf]
+0, 0
+PAGE 0
+resizepic 36 18 2620 480 360
+text 297 27 1101 0
+text 297 51 1101 1
+text 297 72 1101 2
+text 297 96 1101 3
+text 297 117 1101 4
+text 45 270 1153 5
+text 45 288 1153 6
+text 45 306 1153 7
+text 45 324 1153 8
+text 45 342 95 9
+text 270 140 1350 10
+button 342 180 2311 2312 1 0 1
+text 306 211 32 11
+gumppic 65 20 50468                     // Cloak
+gumppic 65 20 50479                     // Sandals
+gumppic 65 20 50646                     // Hammer
+//gumppic 65 20 50981                   // Left Wand
+//gumppic 65 20 50985                   // Right Spellbook
+//gumppic 65 20 50701                   // Hair
+gumppic 65 20 50805                     // Beard
+
+
+[DIALOG d_race_dwarf TEXT]
+Race: Dwarf
+Offence: 8
+Defence: 6
+Ability: 7
+Special: 7
+Dwarves are usually workers, but they will fight if they 
+have to. Dwarves have a magical War Hammer that stays with
+them forever. It levels up as you use it, and you can also
+use the magic from it to perform critical strikes(special).
+Commands: .dwarf_special
+1(weak) - 10(powerful)
+Become a Dwarf
+
+
+
+[DIALOG d_race_dwarf BUTTON]
+on=0
+dialog d_maj_races
+
+
+on=1
+src.oskin=0901
+src.color=0901
+src.tag.racedwarf=1
+src.tag.racepicked=1
+src.newitem=i_race_info
+src.act.equip
+src.act.tag.racename=Dwarf
+src.newitem=i_dwarven_hammer
+src.act.bounce
+src.events +e_race_dwarf
+src.sysmessage=You are now a <src.findid.i_race_info.tag.racename>
+src.dialog d_maj_racenote
+return 1
+
+
+
+////////////////////////////////
+
+
+
+[DIALOG d_race_stone]
+0, 0
+PAGE 0
+resizepic 36 18 2620 480 360
+text 297 27 1101 0
+text 297 51 1101 1
+text 297 72 1101 2
+text 297 96 1101 3
+text 297 117 1101 4
+text 45 270 1153 5
+text 45 288 1153 6
+text 45 306 1153 7
+text 45 324 1153 8
+text 45 342 95 9
+text 270 140 1350 10
+button 342 180 2311 2312 1 0 1
+text 306 211 32 11
+gumppic 65 20 60491                     // Vest
+gumppic 65 20 50479                     // Sandals
+gumppic 65 20 60530                     // Gloves
+//gumppic 65 20 50981                   // Left Wand
+//gumppic 65 20 60440                   // Gloves
+gumppic 65 20 50715                     // Hair
+//gumppic 65 20 50805                   // Beard
+
+
+[DIALOG d_race_stone TEXT]
+Race: Stone
+Offence: 8
+Defence: 8
+Ability: 9
+Special: 8
+The Stone race are protectors of thier territory, they will
+destroy any invaders of thier turf. This race have stoned skin
+therfore thier attacks sometimes hit harder, they can also
+activate super stone skin(special) for extra defense.
+Commands: .racestone_special .racestone_special_2
+1(weak) - 10(powerful)
+Become the Stone race
+
+
+
+[DIALOG d_race_stone BUTTON]
+on=0
+dialog d_maj_races
+
+
+on=1
+src.oskin=887
+src.color=887
+src.tag.racestone=1
+src.tag.racepicked=1
+src.newitem=i_race_info
+src.act.equip
+src.act.tag.racename=Stone
+src.events +e_race_stone
+src.sysmessage=You are now a <src.findid.i_race_info.tag.racename>
+src.dialog d_maj_racenote
+return 1
+
+
+
+////////////////////////////////////////////////////
+
+
+
+
+
+[DIALOG d_race_viral]
+0, 0
+PAGE 0
+resizepic 36 18 2620 480 360
+text 297 27 1101 0
+text 297 51 1101 1
+text 297 72 1101 2
+text 297 96 1101 3
+text 297 117 1101 4
+text 45 270 1153 5
+text 45 288 1153 6
+text 45 306 1153 7
+text 45 324 1153 8
+text 45 342 95 9
+text 270 140 1350 10
+button 342 180 2311 2312 1 0 1
+text 306 211 32 11
+//gumppic 65 20 60491                   // Vest
+//gumppic 65 20 50479                   // Sandals
+//gumppic 65 20 60530                   // Gloves
+//gumppic 65 20 50981                   // Left Wand
+//gumppic 65 20 60440                   // Gloves
+//gumppic 65 20 50713                   // Hair
+//gumppic 65 20 50805                   // Beard
+gumppic 65 20 12                        // Man
+
+
+[DIALOG d_race_viral TEXT]
+Race: Viral
+Offence: 9
+Defence: 5
+Ability: 8
+Special: 8
+The Viral race are extremely evolved bacteria, and like most
+bacteria thier main goal is to invade and takeover. They have
+the ability to infect thier victims while in battle. And they can
+also morph(special) into thier ancient state for defence and offence.
+Commands: .viral_special  Note: (viral is also resistant to poison)
+1(weak) - 10(powerful)
+Become the Viral race
+
+
+
+[DIALOG d_race_viral BUTTON]
+on=0
+dialog d_maj_races
+
+
+on=1
+src.oskin=77
+src.color=77
+src.tag.raceviral=1
+src.tag.racepicked=1
+src.newitem=i_race_info
+src.act.equip
+src.act.tag.racename=Viral
+src.events +e_race_viral
+src.sysmessage=You are now a <src.findid.i_race_info.tag.racename>
+src.dialog d_maj_racenote
+return 1
+
+
+
+//////////////////////////////////////
+
+
+
+[DIALOG d_race_cannibal]
+0, 0
+PAGE 0
+resizepic 36 18 2620 540 360
+text 297 27 1101 0
+text 297 51 1101 1
+text 297 72 1101 2
+text 297 96 1101 3
+text 297 117 1101 4
+text 45 270 1153 5
+text 45 288 1153 6
+text 45 306 1153 7
+text 45 324 1153 8
+text 45 342 95 9
+text 270 140 1350 10
+button 342 180 2311 2312 1 0 1
+text 306 211 32 11
+gumppic 65 20 50554                     // Bone Chest
+gumppic 65 20 50555                     // Bone Leggings
+gumppic 65 20 50557                     // Bone Gloves
+gumppic 65 20 50562                     // Bone Skull
+gumppic 65 20 50629                     // Butcher Knife
+//gumppic 65 20 50713                   // Hair
+//gumppic 65 20 50805                   // Beard
+//gumppic 65 20 12                      // Man
+
+
+[DIALOG d_race_cannibal TEXT]
+Race: Cannibal
+Offence: 8
+Defence: 7
+Ability: 7
+Special: 9
+Cannibals are humans, but with the mentality of an untamed beast.
+Thier only goal is to survive. They have the ability to bite(special) thier
+victims, and they will also feast(special) on dead corpses for health.
+Cannibals usually travel in groups.
+Commands: .cannibal_special  .cannibal_special_2
+1(weak) - 10(powerful)
+Become a Cannibal
+
+
+
+[DIALOG d_race_cannibal BUTTON]
+on=0
+dialog d_maj_races
+
+
+on=1
+//src.oskin=77
+//src.color=77
+src.tag.racecannibal=1
+src.tag.racepicked=1
+src.newitem=i_race_info
+src.act.equip
+src.act.tag.racename=Cannibal
+src.events +e_race_cannibal
+src.sysmessage=You are now a <src.findid.i_race_info.tag.racename>
+src.dialog d_maj_racenote
+return 1
+
+
+
+
+///////////////////////////////////
+
+
+
+
+[DIALOG d_race_guard]
+0, 0
+PAGE 0
+resizepic 36 18 2620 550 360
+text 297 27 1101 0
+text 297 51 1101 1
+text 297 72 1101 2
+text 297 96 1101 3
+text 297 117 1101 4
+text 45 270 1153 5
+text 45 288 1153 6
+text 45 306 1153 7
+text 45 324 1153 8
+text 45 342 95 9
+text 270 140 1350 10
+button 342 180 2311 2312 1 0 1
+text 306 211 32 11
+gumppic 65 20 60992                     // Order Shield
+//gumppic 65 20 60559                   // Helmet
+gumppic 65 20 50475                     // Plate Legs
+//gumppic 65 20 60530                   // Plate Gloves
+gumppic 65 20 60531                     // Gorget
+gumppic 65 20 50647                     // Long Sword
+//gumppic 65 20 50805                   // Beard
+//gumppic 65 20 12                      // Man
+
+
+[DIALOG d_race_guard TEXT]
+Race: Guard
+Offence: 8
+Defence: 7
+Ability: 8
+Special: 9
+Guards are humans, and are the self-proclaimed "protectors of brittania".
+They have the ability to deal more damage to murderers and criminals. some
+guards have been known to practice crime and yet punish other criminals.
+They also have the "final judgement"(special) to inflict heavy damage.
+Commands: .guard_special
+1(weak) - 10(powerful)
+Become a Guard
+
+
+
+[DIALOG d_race_guard BUTTON]
+on=0
+dialog d_maj_races
+
+
+on=1
+//src.oskin=77
+//src.color=77
+src.tag.raceguard=1
+src.tag.racepicked=1
+src.newitem=i_race_info
+src.act.equip
+src.act.tag.racename=Guard
+src.events +e_race_guard
+src.sysmessage=You are now a <src.findid.i_race_info.tag.racename>
+src.dialog d_maj_racenote
+return 1
+
+
+
+
+/////////////////////////////////////
+
+
+
+
+[DIALOG d_race_titan]
+0, 0
+PAGE 0
+resizepic 36 18 2620 550 360
+text 297 27 1101 0
+text 297 51 1101 1
+text 297 72 1101 2
+text 297 96 1101 3
+text 297 117 1101 4
+text 45 270 1153 5
+text 45 288 1153 6
+text 45 306 1153 7
+text 45 324 1153 8
+text 45 342 95 9
+text 270 140 1350 10
+button 342 180 2311 2312 1 0 1
+text 306 211 32 11
+//gumppic 65 20 60992                   // Order Shield
+//gumppic 65 20 60559                   // Helmet
+gumppic 65 20 50450                     // Leather Kilt
+gumppic 65 20 50524                     // Leather Gloves
+gumppic 65 20 60531                     // Gorget
+gumppic 65 20 50624                     // Halberd
+//gumppic 65 20 50805                   // Beard
+//gumppic 65 20 12                      // Man
+gumppic 65 20 50479                     // Sandals
+
+
+[DIALOG d_race_titan TEXT]
+Race: Titan
+Offence: 10
+Defence: 5
+Ability: 8
+Special: 7
+Titans are ancient warriors dating back 1000's of years. Titans are
+very strong, so they will sometimes deal extra damage to thier victim.
+They also have the ability to yell(special) at thier victim which stuns them.
+Titans usually keep to themselves, but sometimes they think otherwise...
+Commands: .titan_special
+1(weak) - 10(powerful)
+Become a Titan
+
+
+
+[DIALOG d_race_titan BUTTON]
+on=0
+dialog d_maj_races
+
+
+on=1
+src.oskin=48
+src.color=48
+src.tag.racetitan=1
+src.tag.racepicked=1
+src.newitem=i_race_info
+src.act.equip
+src.act.tag.racename=Titan
+src.events +e_race_titan
+src.sysmessage=You are now a <src.findid.i_race_info.tag.racename>
+src.dialog d_maj_racenote
+return 1
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+                                ////DIALOGS CONTINUED////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+[DIALOG d_maj_races]
+0, 0
+PAGE 0
+resizepic 36 23 2620 360 280
+button 62 36 2151 2152 1 0 1
+text 99 42 1153 0
+button 63 70 2151 2152 1 0 2
+text 99 73 1153 1
+button 63 104 2151 2152 1 0 3
+text 99 108 1153 2
+button 63 137 2151 2152 1 0 4
+text 99 141 1153 3
+button 63 171 2151 2152 1 0 5
+text 99 175 1153 4
+button 63 205 2151 2152 1 0 6
+text 99 207 1153 5
+button 63 238 2151 2152 1 0 7
+text 99 241 1153 6
+text 133 300 32 7
+text 289 2 1350 8
+gumppic 259 120 50647
+tilepic 270 130 14091
+
+
+[DIALOG d_maj_races TEXT]
+Vampire
+Dwarf
+Stone
+Viral
+Cannibal
+Guard
+Titan
+- Select Your Race -
+By: Majesty
+
+
+
+[DIALOG d_maj_races BUTTON]
+on=1
+dialog d_race_vampire
+src.sfx=0222
+src.sysmessage=Remember, races are Permanent!!
+return 1
+on=2
+dialog d_race_dwarf
+src.sfx=0222
+src.sysmessage=Remember, races are Permanent!!
+return 1
+on=3
+dialog d_race_stone
+src.sfx=0222
+src.sysmessage=Remember, races are Permanent!!
+return 1
+on=4
+dialog d_race_viral
+src.sfx=0222
+src.sysmessage=Remember, races are Permanent!!
+return 1
+on=5
+dialog d_race_cannibal
+src.sfx=0222
+src.sysmessage=Remember, races are Permanent!!
+return 1
+on=6
+dialog d_race_guard
+src.sfx=0222
+src.sysmessage=Remember, races are Permanent!!
+return 1
+on=7
+dialog d_race_titan
+src.sfx=0222
+src.sysmessage=Remember, races are Permanent!!
+return 1
+
+
+
+
+/////////////////////////
+
+
+
+[DIALOG d_raceinfo]
+0, 0
+PAGE 0
+resizepic 27 27 2620 250 200
+text 45 36 1153 0
+text 45 63 1153 1
+text 45 87 1153 2
+gumppic 109 163 204
+gumppic 153 163 205
+gumppic 109 119 206
+gumppic 153 119 207
+
+
+[DIALOG d_raceinfo TEXT]
+Name: <src.targ.name>
+Race: <src.targ.findid.i_race_info.tag.racename>
+Level: <eval <src.targ.findid.i_race_info.tag.racelvl>>/100
+
+
+
+[DIALOG d_raceinfo BUTTON]
+
+
+
+
+//////////////////////////////////////////
+
+
+
+
+[DIALOG d_maj_racenote]
+0, 0
+PAGE 0
+resizepic 36 17 3500 695 280
+text 63 36 1152 0
+text 63 60 1152 1
+text 63 81 1152 2
+text 63 104 1152 3
+text 63 126 1152 4
+text 63 150 1152 5
+text 63 171 1152 6
+text 63 193 1152 7
+text 63 217 1152 8
+text 63 240 1152 9
+text 135 296 1152 10
+
+
+[DIALOG d_maj_racenote TEXT]
+-Once you use your special you must wait atleast <eval <eval specialdelay>/60> minutes to use it again.
+-Your abilities effectiveness depends on how high your level is. [100 = max]
+-The higher your level the more effective your abilities and specials will be.
+-You can only get your level up by performing your abilities and specials.
+-You will NOT get your level up by simply staying logged on the shard.
+-Exploiting any bug you find will have your account banned.
+-Use .raceinfo to check the race level of yourself or others.
+-At the beginning your abilities may be weak, but as you level up it gets more effective.
+-No race is unstoppable, its up to you to use your mind & abilities to bring them down.
+-All abilities have weakness, its up to you to find them out and up your survival/kill rate.
+                       - ABOUT RACES -
+
+
+
+[DIALOG d_maj_racenote BUTTON]
+on=0
+src.sysmessage=Set macros of your race's special command for easier use.
+
+
+
+///////////////////////
+
+
+[regiontype r_norace_region]
+on=@enter
+src.events +e_norace
+src.sysmessage=Race abilities are NOT allowed in this region.
+
+
+on=@exit
+src.events -e_norace
+src.sysmessage=You have left 'No Race' the region.
+
+
+on=@login
+src.events +e_norace
+src.sysmessage=Race abilities are NOT allowed in this region.
+
+
+on=@logout
+src.events -e_norace
+
+
+[events e_norace]
+on=@hittry
+sysmessage=No attacking in this area!
+return 1
+
+
+on=@gethit
+return 1
+
+
+on=@hit
+return 1
+
+
+on=@logout
+events -e_norace
+
+
+on=@itemtargon_item
+if <targ.type> = t_corpse )
+src.sysmessage=You cant effect this corpse in anyway.
+return 1
+else
+return 0
+
+
+[itemdef i_norace_switch]
+id=i_lever
+name=Region NoRace Lever
+type=t_eq_script
+dupelist=0108e
+
+
+on=@create
+attr=attr_static|attr_invis
+color=colors_white
+tag.raceon=0
+
+
+on=@click
+If (<tag.raceon> = 0 )
+message=Race Abilities is ON for <region.name>
+else
+message=Race Abilities is OFF for <region.name>
+endif
+
+
+on=@dclick
+if (<tag.raceon> = 0 )
+flip
+sfx=237
+region.allclients sysmessage Race Abilities has been disabled in <region.name>.
+region.events +r_norace_region
+region.allclients events +e_norace
+tag.raceon=1
+return 1
+else
+region.allclients sysmessage Race Abilities has been enabled in <region.name>.
+region.events -r_norace_region
+region.allclients events -e_norace
+flip
+sfx=237
+tag.raceon=0
+return 1
+endif
+
+
+[eof]

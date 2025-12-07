@@ -1,0 +1,97 @@
+[comment on this script...]
+made for Sphere.55R4.0.1 by Moe
+This lets NPCs run faster. If you have players with one HP on a mount running away from a dragon to heal themselves and come back 20 seconds later to continue, then this is the way to teach them some respect.
+To use it insert "TEVENTS=e_monster_turbo" in the NPC script, or use ".xturbo" ingame on any NPC.
+
+[defname turbo_constants]
+turbo.speed=1 //how many steps will NPCs make in one; don't set this too high or NPCs "jump"
+//with a setting of 1 NPCs reach aproximatly mounted speed
+//with a setting of 2 it's impossible to outrun a "turbo-NPC"
+
+[function turbo]
+if (!<ischar>)
+	message use this on NPCs only
+	return 0
+endif
+if (<isplayer>)
+	message use this on NPCs only
+	return 0
+endif
+if (<restest i_monster_turbo>)||(<tag0.turbo>)||(<isevent.e_monster_turbo>)
+	message turbo allready active
+	return 0
+endif
+events +e_monster_turbo
+message turbo installed!
+return 1
+
+[Events e_monster_turbo]
+on=@NPCActFollow
+call f_monster_turbo
+on=@NPCActFight
+call f_monster_turbo
+
+[function f_monster_turbo]
+if !(<tag0.turbo>) //is it active?
+	serv.newitem i_monster_turbo
+	tag.turbo=<serv.lastnewitem.uid>
+	obj=<tag.turbo>
+	obj.timerd 2
+	obj.link=<uid>
+	obj.p=<p>
+endif
+
+on=@death
+if (<tag0.turbo>)
+	obj=<tag.turbo>
+	obj.remove
+endif
+
+[itemdef i_monster_turbo]
+id=i_memory
+type=t_script
+name=Monsterturbo
+
+on=@create
+attr=attr_invis
+
+on=@timer
+if !((<link.action>==Skill_Wrestling)||(<link.action>==Skill_Macefighting)||(<link.action>==Skill_Swordsmanship)||(<link.action>==Skill_Fencing)||(<link.action>==064))
+	link.tag.turbo
+	remove
+	return 1
+endif
+
+if (<link.distance <link.act.uid>> > 1) //don't run if allready close
+	for x 1 <def.turbo.speed>
+		link.f_run //run one step to enemy
+		link.f_face <link.act.uid> //turn toward enemy to take up new direction
+	endfor
+	link.timer //reset chartimer for instant combat action
+endif
+timerd 2 //reset itemtimer for next running action
+p=<link.p>
+update
+return 1
+
+
+[function f_run]
+doswitch <dir>
+	run n
+	run ne
+	run e
+	run se
+	run s
+	run sw
+	run w
+	run nw
+enddo
+
+[function f_face]
+if (<uid.<args>.ischar> && <ischar>)
+	trysrc <args> face
+endif
+
+
+
+[EOF]

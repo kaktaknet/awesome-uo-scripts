@@ -1,0 +1,846 @@
+[COMMENT OOH_READ_ME]
+-----------------------------------------------------
+|                 Dawgy Presents:                   |
+|                                                   |
+|            The Socketed Item System               |
+|                   Version 0.8                     |
+|               dawgy@boxofhate.com                 |
+|                                                   |
+|          p.s  Read the readme.txt  :P             |
+|                                                   |
+-----------------------------------------------------
+
+// -------------------------------[ DEFNAMES, info about gems and their powers. ]-------------------------------
+
+// Misc. Settings such as item/gem drops
+
+[DEFNAMES Socket_Settings]
+socket_item_chance		1				// If higher, there is a lesser chance of a socketed item turning up on the corpse. 1=Always
+socket_gem_chance			1				// If higher, there is a lesser chance of a gem turning up on the corpse. 1=Always
+
+[DEFNAMES Gems]							   
+Test_Gem_Name										Gem of Additional Might				// The gem name
+Test_Gem_Events									t_Socket_Gem_Strength				// the event name
+Test_Gem_info										+5 Strength								// a Breif description of the gem powers
+Test_Gem_special_tag[0]							1												// 0=No,1=Yes :: Does the item need a special tag? ( are the powers stackable? )
+Test_Gem_special_tag[1]							STACK_ADD_STR								// The tag itself (tag.STACK_ADD_STR)
+Test_Gem_special_tag[2]							5												// The value
+Test_Gem_itemid								   5											// The gem id, selected from the socket_gem_baseid_dec array
+Test_Gem_type										1											// gem type: 1= weapon only, 2= armor only, 3= Shield only, 0= ANY SOCKETABLE ITEM
+
+Test2_Gem_Name										Gem of Additional Swiftness
+Test2_Gem_Events									t_Socket_Gem_Dexterity
+Test2_Gem_info										+5 Dexterity
+Test2_Gem_special_tag[0]						1
+Test2_Gem_special_tag[1]						STACK_ADD_DEX
+Test2_Gem_special_tag[2]						5
+Test2_Gem_itemid							   	2
+Test2_Gem_type										2
+
+Test3_Gem_Name										Gem of Impressive Might
+Test3_Gem_Events									t_Socket_Gem_Strength				// Because this gem is stackable upon the lesser ones, it uses the same function, but adds a bigger value to the weapon's str addition tag (TAG.STACK_ADD_STR)
+Test3_Gem_info										+10 Strength
+Test3_Gem_special_tag[0]						1
+Test3_Gem_special_tag[1]						STACK_ADD_STR
+Test3_Gem_special_tag[2]						10
+Test3_Gem_itemid								   5
+Test3_Gem_type										3
+
+Test4_Gem_Name										Gem of Additional Intelligence
+Test4_Gem_Events									t_Socket_Gem_Intelligence
+Test4_Gem_info										+5 Intelligence
+Test4_Gem_special_tag[0]						1
+Test4_Gem_special_tag[1]						STACK_ADD_INT
+Test4_Gem_special_tag[2]						5
+Test4_Gem_itemid								   1
+Test4_Gem_type										0
+
+Test5_Gem_Name										Quite Sexy Gem
+Test5_Gem_Events									t_Socket_Gem_Sexy
+Test5_Gem_info										Silly.
+Test5_Gem_special_tag[0]						0
+Test5_Gem_itemid								   4
+Test5_Gem_type										0
+
+[DEFNAMES Gemarrays] // socket_gem_array[GEMID] DEFNAME
+socket_gem_count			5			// How many types are there
+socket_gem_array[1]		Test
+socket_gem_array[2]		Test2
+socket_gem_array[3]		Test3
+socket_gem_array[4]		Test4
+socket_gem_array[5]		Test5
+
+// The gem array, holding all useful information for each gem, such as the event name it triggers when socketed, 
+// the gem baseid (for the item item itself), Name, etc, etc, etc.... mmgood!
+
+[DEFNAMES Gembaseid]			// Virtue stones! 
+socket_gem_baseid_dec[0]	6249
+socket_gem_baseid_dec[1]	6250
+socket_gem_baseid_dec[2]	6251
+socket_gem_baseid_dec[3]	6252
+socket_gem_baseid_dec[4]	6253
+socket_gem_baseid_dec[5]	6254
+socket_gem_baseid_dec[6]	6255
+socket_gem_baseid_dec[7]	6256
+
+[DEFNAMES WEAPONGROUPS] // Grouped(mainly) by SKILL USED! // Also used in my magic [prefix/suffix style] weapon generator, so if you have that, you can delete this defname group (as its the same)
+RND_AXE              { i_axe_exec 1 i_axe_battle 1 i_hatchet 1 i_axe 1 i_axe_double 1 i_axe_two_hand 1 } // SWORDSMANSHIP
+RND_FENCING				{ i_spear_short 1 i_spear 1 i_war_fork 1 i_dagger 1 i_kryss 1 }
+RND_MACE             { i_club 1 i_mace_war 1 i_mace 1 i_maul 1 i_hammer_war 1 i_axe_war 1 i_hammer_pick 1 }
+RND_SWORD            { i_bardiche 1 i_cutlass 1 i_halberd 1 i_katana 1 i_sword_broad 1 i_sword_long 1 i_sword_long_b 1 i_sword_viking 1 i_scimitar 1 }
+RND_STAFF            { i_staff_gnarled 1 i_staff_quarter 1 i_staff_black 1 } // MACEFIGHTING
+RND_BOW		         { i_bow 1 i_crossbow 1 i_crossbow_heavy 1 }
+
+// -------------------------------[ FUNCTIONS, for various things! ]-------------------------------
+
+[function f_socket_memory_tag] // I like to create small one line functions lol..
+src.findid(i_socket_memory).tag.<ARGV[0]>="<ARGV[1]>"
+
+[function f_socket_memory_test]
+say <src.findid(i_socket_memory).tag.<ARGV[0]>>
+
+[function f_socket_memory_returnvalue]
+return<src.findid(i_socket_memory).tag.<ARGV[0]>>
+
+[function f_socket_memory_create]
+src.newitem i_socket_memory
+src.act.equip
+
+[function f_socket_memory_delete]
+src.findid(i_socket_memory).consume
+
+
+[FUNCTION f_socket_create_gem_rand] // Usage .f_socket_create_gem_rand
+var.x=<eval(rand(<socket_gem_count>)+1)>
+f_socket_create_gem(<var.x>)
+
+[FUNCTION f_socket_getinfo_gem] // Usage .f_socket_getinfo_gem(SOCKETNUMBER) 
+var.x=<socket_gem_array[<ARGV[0]>]>
+var.name="<?<var.x>_Gem_Name?>"
+var.id2=<?<var.x>_Gem_itemid?>
+var.id2="<?socket_gem_baseid_dec[<var.id2>]?>"
+var.info="<?<var.x>_Gem_info?>"
+var.stackable="<?<var.x>_Gem_special_tag[0]?>"
+var.gtype="<?<var.x>_Gem_type?>"
+
+[FUNCTION f_socket_create_gem] // Usage .f_socket_create_gem2(GEMID) [Chosen from the socket_gem_array[X] array]
+var.gtype=""
+f_socket_getinfo_gem(<ARGV[0]>)
+newitem i_socket_basegem
+act.name=<var.name>
+act.id=<var.id2>
+if(0<var.gtype>==1)
+act.tag.gtype="Weapon"
+endif
+if(0<var.gtype>==2)
+act.tag.gtype="Armor"
+endif
+if(0<var.gtype>==3)
+act.tag.gtype="Shield"
+endif
+act.tag.GEMID=<ARGV[0]>
+act.EVENTS=+t_Gems
+
+act.bounce
+
+[FUNCTION f_socket_weapon]			// Usage .x.f_socket_weapon(GEMID) [Chosen from the socket_gem_array[X] array]
+var.z=<socket_gem_array[<ARGV[0]>]>
+var.gtype="<?<var.z>_Gem_type?>"
+if (0<VAR.GTYPE>==1) && (!STRMATCH(<TYPE>,t_weapon*))				// Check if this gem is item specific..
+		src.sysmessage "This gem only fits in Weapons"			// item is not same type as the gem wants.
+		return 1
+endif
+if (0<VAR.GTYPE>==2) && (!STRMATCH(<TYPE>,t_armor*)) 
+		src.sysmessage "This gem only fits in Armors"
+		return 1
+endif
+if (0<VAR.GTYPE>==3) && (!STRMATCH(<TYPE>,t_shield)) 
+		src.sysmessage "This gem only fits in Shields"
+		return 1
+endif
+IF (<EVAL (0<TAG.MAXSOCKETS>)> < 1)							// Weapon has no tag.maxsockets = not socketed
+	src.sysmessage="This weapon is not socketed"
+	return 1
+endif
+IF (<EVAL (<TAG.MAXSOCKETS> - <TAG.SOCKETS>)> < 1)		// Weapon has less than one socket = FULL
+	src.sysmessage="This weapon has no free sockets"
+	return 1
+endif
+TAG.SOCKETS=<EVAL ((TAG.SOCKETS)+1)>			// Fill up a socket
+TAG.SOCKET<TAG.SOCKETS>=<ARGV[0]>				// Set the now filled socket to the GEMID
+var.x=<?<var.z>_Gem_Events?>
+EVENTS=+<var.x>										// Add the events that change the weapon
+	SRC.TARG.CONSUME
+	var.x=<EVAL (0<tag.MAXSOCKETS> - <tag.sockets>)>
+	if (0<var.x> > 1)
+	SRC.SYSMESSAGE="You place the gem in the socket, you have <var.x> Sockets left"
+	elif (0<var.x> = 1)
+	SRC.SYSMESSAGE="You place the gem in the socket, you have One Socket left"
+	elif (0<var.x> = 0)
+	SRC.SYSMESSAGE="You place the gem in the socket, you have No Sockets left"
+	endif
+	var.x="<?<var.z>_Gem_special_tag[0]?>"
+	if (0<var.x> = 0)
+			// This gem does not use special tags.
+		else
+				// This gem uses special tags.
+		var.tag="<?<var.z>_Gem_special_tag[1]?>"
+		var.value="<?<var.z>_Gem_special_tag[2]?>"
+		f_add_tag(<var.tag>,<var.value>)
+	endif
+
+[FUNCTION f_add_tag]
+var.x="<argv[1]>"
+var.y="<tag.<argv[0]>>"
+tag.<argv[0]>=<eval((<var.x>)+<var.y>)>
+
+
+[FUNCTION f_socket_create_item] // Usage f_socket_create_item(Type,Maxsockets) Type= itemdef for weapon, or a defname array, such as RND_AXE,i_viking_sword, RND_SWORD , RND_BOW, RANDOM_HEAD_ARMOR etc.etc. Maxsockets can only be from 1 to 5, going over 5 WILL result in errors)
+src.newitem=<ARGV[0]>
+act.TAG.SOCKETS=0
+act.TAG.MAXSOCKETS=<ARGV[1]>
+act.events=+t_Socketed
+act.bounce
+
+[Function f_socket_create_weapon] // Usage f_socket_create_weapon(Type,Maxsockets) Type= 0=Random 1=Sword 2=Bow 3=Axe 4=Mace 5=Fencing weapons || Maxsockets can only be from 1 to 5, going over 5 WILL result in errors
+Var.x=<ARGV[0]>
+var.XYZ=<ARGV[1]>
+	if (<Var.x>==0)
+		var.x=<eval(rand(5)+1)>
+	endif
+	if (<Var.x>==1)
+		f_socket_create_item(RND_SWORD,<var.XYZ>)
+	endif
+	if (<Var.x>==2)						// Rinse and repeat.
+		f_socket_create_item(RND_BOW,<var.XYZ>)
+	endif
+	if (<Var.x>==3)
+		f_socket_create_item(RND_AXE,<var.XYZ>)	
+	endif
+	if (<Var.x>==4)
+		f_socket_create_item(RND_MACE,<var.XYZ>)
+	endif
+	if (<Var.x>==5)
+		f_socket_create_item(RND_FENCING,<var.XYZ>)	
+	endif
+
+[Function f_socket_create_armor] // Usage f_socket_create_armor(Type,Maxsockets) Type= 0=Random 1=Leggings 2=Arms 3=Gloves 4=Helmet/Coif 5=Chest 6=Gorget || Maxsockets can only be from 1 to 5, going over 5 WILL result in errors
+Var.x=<ARGV[0]>
+var.XYZ=<ARGV[1]>
+	if (<Var.x>==0)
+		var.x=<eval(rand(6)+1)>
+	endif
+	if (<Var.x>==1)
+		f_socket_create_item(RANDOM_LEG_ARMOR,<var.XYZ>)
+	endif
+	if (<Var.x>==2)
+		f_socket_create_item(RANDOM_ARM_ARMOR,<var.XYZ>)
+	endif
+	if (<Var.x>==3)
+		f_socket_create_item(RANDOM_GLOVES,<var.XYZ>)
+	endif
+	if (<Var.x>==4)
+		f_socket_create_item(RANDOM_HEAD_ARMOR,<var.XYZ>)
+	endif
+	if (<Var.x>==5)
+		f_socket_create_item(RANDOM_CHEST_ARMOR,<var.XYZ>)
+	endif
+	if (<Var.x>==6)
+		f_socket_create_item(RANDOM_GORGET,<var.XYZ>)
+	endif
+
+[Function f_socket_create_shield] // Usage f_socket_create_shield(Maxsockets)
+var.XYZ=<ARGV[0]>
+	f_socket_create_item(RANDOM_SHIELD,<var.XYZ>)
+
+[FUNCTION f_socket_add]
+src.newitem=i_socket_adder
+src.act.link=<src.targ.uid>
+src.act.p=<src.p>
+src.act.dclick
+
+[FUNCTION f_test_socket]
+if (0<src.targ.tag.socket<ARGV[0]>> < 1)
+f_socket_add // Socket is unused, so bring up the add gem target
+else 
+// Socket is used, so bring up the gem info dialog
+var.x=<src.targ.tag.socket<ARGV[0]>>
+f_socket_getinfo_gem(<var.x>)
+if (0<var.stackable>==0)
+f_socket_memory_tag(stackable,210)
+else
+f_socket_memory_tag(stackable,211)
+endif
+f_socket_memory_tag(socket,<ARGV[0]>)
+f_socket_memory_tag(id2,<var.id2>)
+f_socket_memory_tag(name,<var.name>)
+f_socket_memory_tag(info,<var.info>)
+dialog d_socket_geminfo
+endif
+
+[FUNCTION f_socket_vacancy_check] // Checks if socket has a gem, Usage f_socket_vacancy_check(SOCKETNUMBER,X,Y)
+IF (0<SRC.TARG.TAG.SOCKET<ARGV[0]>> < 1)
+var.x="tilepic 0 0 7897"
+return<var.x>								// HACK: this artpeice is a small unnoticable black dot in the top left corner :P
+else
+// Checking of gem artid
+var.x=<src.targ.tag.socket<ARGV[0]>>
+var.x=<?socket_gem_array[<var.x>]?>
+var.x=<?<var.x>_Gem_itemid?>
+var.x=<?socket_gem_baseid_dec[<var.x>]?>
+var.x="tilepic <?ARGV[1]?> <?ARGV[2]?> <?var.x?>"
+return<var.x>
+endif
+
+[FUNCTION f_socket_countsockets] // Counts the socket of the item, Usage f_socket_countsockets(SOCKETNUMBER,X,Y)
+IF (0<SRC.TARG.TAG.MAXSOCKETS> < <ARGV[0]>)
+var.x="button 0 0 7897 7897 0 0 <?ARGV[3]?>"
+return<var.x>								// HACK: this artpeice is a small unnoticable black dot in the top left corner :P (Button Disabled aswell)
+else
+var.x="button <?ARGV[1]?> <?ARGV[2]?> 9021 9021 1 0 <?ARGV[0]?>"
+return<var.x>
+endif
+
+[FUNCTION f_socket_getinfo_gem_stack] // Usage .f_socket_getinfo_gem_stack(GEMID) 
+var.x=<socket_gem_array[<ARGV[0]>]>
+var.stackable="<?<var.x>_Gem_special_tag[0]?>"
+
+[FUNCTION f_socket_gem_search] // Usage f_socket_gem_search(maxsockets,gemid)
+var.k=1
+while ( <var.k> <= <ARGV[0]> )
+   var.xx="<?LINK.TAG.SOCKET<var.k>?>"
+    if (0<var.xx>==<ARGV[1]>)
+	 	  var.gem=1
+		  return 1
+	 else
+	   var.k=<eval(<var.k> + 1)>
+	 endif
+endwhile
+var.gem=0
+return 0
+
+// -------------------------------[ DIALOGS, tool menu & gem info menu ]-------------------------------
+
+[DIALOG D_socket_menu]
+0, 0
+PAGE 0
+resizepic 32 24 5054 337 232
+resizepic 407 226 5054 1 0
+resizepic 274 73 5120 80 78
+text 295 51 1153 0
+tilepic 297 88 <SRC.TARG.DISPIDDEC>
+text 142 25 1152 1
+text 63 63 1153 2
+text 63 90 1153 3
+text 63 117 1153 4
+text 63 144 1153 5
+gumppic 113 63 2445
+gumppic 171 89 2444
+gumppic 171 116 2444
+gumppic 171 145 2444
+text 120 63 95 6
+text 189 90 95 7
+text 189 117 95 8
+text 189 145 95 9
+gumppic 171 173 2444
+text 189 173 95 10
+text 63 172 1153 11
+<?f_socket_countsockets(1,273,154)?>		// Socket 1
+<?f_socket_countsockets(2,290,154)?>    // Socket 2
+<?f_socket_countsockets(3,307,154)?> 	// Socket 3
+<?f_socket_countsockets(4,323,154)?>    // Socket 4
+<?f_socket_countsockets(5,339,154)?>    // Socket 5
+<?f_socket_vacancy_check(1,260,158)?>					// Gem 1 - Formula is buttonX - 13, buttonY +4
+<?f_socket_vacancy_check(2,277,158)?>					// Gem 2
+<?f_socket_vacancy_check(3,294,158)?>					// Gem 3
+<?f_socket_vacancy_check(4,310,158)?>					// Gem 4
+<?f_socket_vacancy_check(5,326,158)?>					// Gem 5
+button 235 214 2151 2152 1 0 6
+text 128 217 1153 12
+
+[DIALOG D_socket_menu TEXT]
+Item:
+Item Socket Tool
+Name
+Socketed?
+Total Sockets
+Sockets used
+<?SRC.TARG.NAME?>
+<?f_socket_memory_returnvalue(SOCKETABLE)?>
+<?EVAL(0<SRC.TARG.TAG.MAXSOCKETS>)?>
+<?f_socket_memory_returnvalue(USEDSOCKETS)?>
+<?f_socket_memory_returnvalue(FREESOCKETS)?>
+Sockets free
+Place a new gem
+
+
+[DIALOG D_socket_menu BUTTON]
+on=0
+f_socket_memory_delete
+return 1
+on=1 //Socket 1
+f_test_socket(1)
+return 1
+on=2 //Socket 2
+f_test_socket(2)
+on=3 //Socket 3
+f_test_socket(3)
+on=4 //Socket 4
+f_test_socket(4)
+on=5 //Socket 5
+f_test_socket(5)
+on=6 //Place new gem
+f_socket_add
+
+[DIALOG d_socket_geminfo]
+150, 150
+PAGE 0
+resizepic 24 16 5054 350 135
+text 90 17 1152 0
+resizepic 36 20 5120 25 24
+tilepic 27 27 <?f_socket_memory_returnvalue(id2)?>
+text 36 45 1153 1
+gumppic 88 45 1143
+text 36 72 1153 2
+gumppic 89 72 1143
+text 37 99 1153 3
+gumppic 89 99 2444
+text 97 48 95 4
+text 97 75 95 5
+text 116 100 95 6
+text 160 99 1153 7
+gumppic 215 100 <?f_socket_memory_returnvalue(STACKABLE)?>
+button 27 126 4014 4015 1 0 1
+text 59 126 1153 8
+
+[DIALOG d_socket_geminfo TEXT]
+Gem info
+Name
+Info
+Socket
+<?f_socket_memory_returnvalue(NAME)?>
+<?f_socket_memory_returnvalue(INFO)?>
+<?f_socket_memory_returnvalue(SOCKET)?>
+Stacking
+<?f_socket_memory_returnvalue(BUTTONTXT)?>
+
+[DIALOG d_socket_geminfo BUTTON]
+on=0
+f_socket_memory_delete
+return 1
+on=1
+IF (0<f_socket_memory_returnvalue(JUSTGEM)>==1)
+f_socket_memory_delete
+return 1
+else
+DIALOG D_socket_menu
+endif
+
+// -------------------------------[ ITEMS, Item count: 3!!! ]-------------------------------
+
+[ITEMDEF i_socket_basegem] // Base Gem item
+id=01869
+name=powerless gem 
+TYPE=T_NORMAL
+FLIP=0
+
+[itemdef i_socket_memory] // Dialog memory object
+id=i_memory
+TYPE=t_eq_script
+name=Socket memory!
+
+[ITEMDEF i_socket_tools]
+ID=i_tongs
+name="Item Socket tool"
+RESOURCES=2 i_ingot_iron
+WEIGHT=1
+VALUE=500
+TYPE=t_normal
+flip=1
+RESOURCES2=1 i_ingot_iron
+
+on=@UserDclick					// Here could be skill checking stuff, if you want socketing to be skill specific.
+Target "Target a socketed item or a Gem"
+return 1
+
+on=@Targon_item
+f_socket_memory_delete
+f_socket_memory_create
+f_socket_memory_tag(itemname,<src.targ.name>)
+f_socket_memory_tag(freesockets,<EVAL (<src.targ.tag.MAXSOCKETS> - <src.targ.tag.sockets>)>)
+f_socket_memory_tag(usedsockets,<EVAL (<src.targ.tag.MAXSOCKETS> - <f_socket_memory_returnvalue(freesockets)>)>)
+if (0<src.targ.tag.maxsockets> < 1) 
+	f_socket_memory_tag(socketable,No)
+	else
+	f_socket_memory_tag(socketable,Yes)
+endif
+	IF (<SRC.TARG.TOPOBJ>=<SRC.UID> ) // Item is in backpack or bank! Yay!
+		if(0<SRC.TARG.TAG.GEMID> > 0)
+		f_socket_memory_tag(justgem,1)
+		f_socket_memory_tag(buttontxt,Close)
+	var.x=<SRC.TARG.TAG.GEMID>
+		f_socket_getinfo_gem(<var.x>)
+		if (0<var.stackable>==0)
+		f_socket_memory_tag(stackable,210)
+		else
+		f_socket_memory_tag(stackable,211)
+		endif
+		f_socket_memory_tag(id2,<var.id2>)
+		f_socket_memory_tag(name,<var.name>)
+		f_socket_memory_tag(info,<var.info>)
+		f_socket_memory_tag(socket,N/A)
+		dialog d_socket_geminfo
+		else
+		f_socket_memory_tag(justgem,0)
+		f_socket_memory_tag(buttontxt,Back to Tool menu)
+		src.dialog D_Socket_menu
+		endif
+		else
+			// No, it isnt!! boo!
+			SRC.SYSMESSAGE="The item must either be in your backpack or your bank box"
+		ENDIF
+
+return 1
+
+CATEGORY=Dawgy/Custom items
+SUBSECTION=Socket system
+DESCRIPTION=Socket tool
+
+
+[ITEMDEF i_socket_adder]
+id=i_book_sm
+name=The amazing socket adding thingy
+type=t_normal
+
+on=@create
+attr=attr_invis
+timer=20
+
+on=@userdclick
+target="Target a gem to place in your item" 
+return 1
+
+on=@targon_item
+//blabla, checks to see if target it gem or not//In your pack
+	IF (0<SRC.TARG.TAG.GEMID> > 0 ) // Is it a gem?
+			// Yes it is!
+			var.stackable=0	
+			f_socket_getinfo_gem_stack(<SRC.TARG.TAG.GEMID>)								// Is it stackable?
+			if (0<var.stackable>==0)																// If not:	
+				f_socket_gem_search(<LINK.TAG.MAXSOCKETS>,<SRC.TARG.TAG.GEMID>)		// Check if item already has this gem
+					if (0<var.gem>==1)																// strangely, 1 means no, 0 means yes (No sleep for Dawgy!)
+					src.sysmessage="This gem is not stackable, and you already have one in this item"
+					f_socket_memory_delete
+					return 1
+					endif
+			endif
+				IF (<SRC.TARG.TOPOBJ>=<SRC.UID> ) // Item is in backpack or bank! Yay!
+				LINK.BOUNCE								 // lets not allow eqipped items to be added to.
+				LINK.f_socket_weapon(<SRC.TARG.TAG.GEMID>)
+			else
+			// No, it isnt!! boo!
+			SRC.SYSMESSAGE="The gem must either be in your backpack or your bank box"
+		ENDIF
+ELSE
+SRC.SYSMESSAGE="This is not a gem"
+endif
+f_socket_memory_delete
+timer=1
+return 1
+
+// -------------------------------[ TYPEDEFS, Powers added to items ]-------------------------------
+
+[TYPEDEF t_Socketed]
+ON=@UserClick 
+	  MESSAGE=(Socketed) // The message shown when player clicks a socketed item.
+	  MESSAGE=<NAME>
+	  return 1
+
+[TYPEDEF t_Gems]
+on=@UserClick
+if (strlen(<tag.gtype>) > 0) // The message is shown when player clicks a gem, and the gem is item specific (All around gems 
+MESSAGE="(<tag.gtype> only)"
+MESSAGE=<NAME>
+return 1
+endif
+return 0
+
+
+[TYPEDEF t_Socket_Gem_Strength] 
+ON=@EQUIP 
+	SRC.STR=<EVAL ((SRC.STR)+<TAG.STACK_ADD_STR>)> 
+ON=@UNEQUIP 
+	SRC.STR=<EVAL ((SRC.STR)-<TAG.STACK_ADD_STR>)> 
+
+[TYPEDEF t_Socket_Gem_Dexterity] 
+ON=@EQUIP 
+	SRC.DEX=<EVAL ((SRC.DEX)+<TAG.STACK_ADD_DEX>)> 
+ON=@UNEQUIP 
+	SRC.DEX=<EVAL ((SRC.DEX)-<TAG.STACK_ADD_DEX>)> 
+
+[TYPEDEF t_Socket_Gem_Intelligence] 
+ON=@EQUIP 
+	SRC.INT=<EVAL ((SRC.INT)+<TAG.STACK_ADD_INT>)> 
+ON=@UNEQUIP 
+	SRC.INT=<EVAL ((SRC.INT)-<TAG.STACK_ADD_INT>)> 
+
+[TYPEDEF t_Socket_Gem_Sexy] 
+ON=@EQUIP 
+	src.say="Oh God i'm so sexy!"
+ON=@UNEQUIP 
+	src.say="Boo, i'm less sexy!! (But still quite sexy!)"
+
+// -------------------------------[ MONSTER EVENTS, So they drop the new Socketed weapons || Gems ]-------------------------------
+
+// Put one of these events on your monsters
+[FUNCTION f_socket_randomize_weapon]	   // Usage f_socket_randomize_weapon(weapon type,maxsockets[optional]) 0=Random 1=Sword 2=Bow 3=Axe 4=Mace 5=Fencing weapons
+var.x=<eval((<rand(socket_item_chance)>)+1)>		// Calculate the chance of it dropping 
+if (<var.x>==1)											// If true
+var.x=<eval(0<ARGV[1]>)>		
+if (0<var.x>==0)											// If no max sockets were given
+	var.x=<eval((<rand(5)>)+1)>							// Randomize max sockets from 1 to 5
+endif
+var.y=<ARGV[0]>
+	f_socket_create_weapon(<var.y>,<var.x>)				// Call the function to drop the weapon
+endif
+
+[FUNCTION f_socket_randomize_shield]	 // Usage f_socket_randomize_shield(maxsockets[optional]) 0=Random 1=Sword 2=Bow 3=Axe 4=Mace 5=Fencing weapons
+var.x=<eval((<rand(socket_item_chance)>)+1)>
+if (<var.x>==1)							
+var.x=<eval(0<ARGV[0]>)>		
+if (0<var.x>==0)							
+	var.x=<eval((<rand(5)>)+1)>		
+endif
+	f_socket_create_shield(<var.x>)	
+endif
+
+[FUNCTION f_socket_randomize_armor]	   // Usage f_socket_randomize_armor(armor type,maxsockets[optional]) 0=Random 1=Leggings 2=Arms 3=Gloves 4=Helmet/Coif 5=Chest 6=Gorget
+var.x=<eval((<rand(socket_item_chance)>)+1)>
+if (<var.x>==1)										
+var.x=<eval(0<ARGV[1]>)>		
+if (0<var.x>==0)										
+	var.x=<eval((<rand(5)>)+1)>					
+endif
+var.y=<ARGV[0]>
+	f_socket_create_armor(<var.y>,<var.x>)		
+endif
+
+[FUNCTION f_socket_randomize_gem]	   // Usage f_socket_randomize_gem
+var.x=<eval((<rand(socket_gem_chance)>)+1)>		// Calculate the chance of it dropping 
+if (<var.x>==1)											// If true
+	f_socket_create_gem_rand							// a random gem
+return 0
+
+
+[EVENTS E_SOCKET_RANDOM_WEAPON]	// Drop a random socketed weapon
+ON=@DEATH													// When the monster is dead
+f_socket_randomize_weapon(0)	
+return 0														// Continue the on=@death (If the monster has another event that calls on=@death :P)
+
+[EVENTS E_SOCKET_RANDOM_SWORD]	// Drop a random socketed sword
+ON=@DEATH													
+f_socket_randomize_weapon(1)			
+return 0		
+
+[EVENTS E_SOCKET_RANDOM_BOW]		// Drop a random socketed bow
+ON=@DEATH													
+f_socket_randomize_weapon(2)			
+return 0					
+
+[EVENTS E_SOCKET_RANDOM_AXE]		// Drop a random socketed axe
+ON=@DEATH													
+f_socket_randomize_weapon(3)			
+return 0					
+
+[EVENTS E_SOCKET_RANDOM_MACE]		// Drop a random socketed mace
+ON=@DEATH													
+f_socket_randomize_weapon(4)			
+return 0					
+
+[EVENTS E_SOCKET_RANDOM_FENCING]		// Drop a random socketed fencing weapon
+ON=@DEATH													
+f_socket_randomize_weapon(5)			
+return 0		
+
+[EVENTS E_SOCKET_RANDOM_WEAPON_3SOCKET]		// Drop a random socketed weapon ( 3 Sockets )
+ON=@DEATH													
+f_socket_randomize_weapon(0,3)			
+return 0	
+
+[EVENTS E_SOCKET_RANDOM_WEAPON_4SOCKET]		// Drop a random socketed weapon ( 4 Sockets )
+ON=@DEATH													
+f_socket_randomize_weapon(0,4)			
+return 0	
+
+[EVENTS E_SOCKET_RANDOM_WEAPON_5SOCKET]		// Drop a random socketed weapon ( 5 Sockets )
+ON=@DEATH													
+f_socket_randomize_weapon(0,5)			
+return 0	
+
+[EVENTS E_SOCKET_RANDOM_ARMOR] // Drop a random socketed armor
+ON=@DEATH
+f_socket_randomize_armor(0)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_LEGGING] // Drop a random socketed Legging
+ON=@DEATH
+f_socket_randomize_armor(1)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_ARM] // Drop a random socketed Arm
+ON=@DEATH
+f_socket_randomize_armor(2)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_GLOVE] // Drop a random socketed Glove
+ON=@DEATH
+f_socket_randomize_armor(3)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_HELM] // Drop a random socketed Helm
+ON=@DEATH
+f_socket_randomize_armor(4)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_CHEST] // Drop a random socketed Chest
+ON=@DEATH
+f_socket_randomize_armor(5)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_GORGET] // Drop a random socketed gorget
+ON=@DEATH
+f_socket_randomize_armor(6)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_3SOCKET] // Drop a random socketed armor (3 sockets)
+ON=@DEATH
+f_socket_randomize_armor(0,3)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_4SOCKET] // Drop a random socketed armor (4 sockets)
+ON=@DEATH
+f_socket_randomize_armor(0,4)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ARMOR_5SOCKET] // Drop a random socketed armor (5 sockets)
+ON=@DEATH
+f_socket_randomize_armor(0,5)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_SHIELD] // Drop a random socketed shield
+ON=@DEATH
+f_socket_randomize_shield
+return 0
+
+[EVENTS E_SOCKET_RANDOM_SHIELD_3SOCKET] // Drop a random socketed shield (3 sockets)
+ON=@DEATH
+f_socket_randomize_shield(3)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_SHIELD_4SOCKET] // Drop a random socketed shield (4 sockets)
+ON=@DEATH
+f_socket_randomize_shield(4)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_SHIELD_5SOCKET] // Drop a random socketed shield (5 sockets)
+ON=@DEATH
+f_socket_randomize_shield(5)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ITEM_3SOCKET] // Drop a random socketed item (3 sockets)
+ON=@DEATH
+var.x=rand(3)
+if (<var.x>==2)
+	f_socket_randomize_armor(0,3)
+	return 0
+endif
+	if (<VAR.X>==1)
+	f_socket_randomize_shield(3)
+	return 0
+endif
+f_socket_randomize_weapon(0,3)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ITEM_4SOCKET] // Drop a random socketed item (4 sockets)
+ON=@DEATH
+var.x=rand(3)
+if (<var.x>==2)
+	f_socket_randomize_armor(0,4)
+	return 0
+endif
+	if (<VAR.X>==1)
+	f_socket_randomize_shield(4)
+	return 0
+endif
+f_socket_randomize_weapon(0,4)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_ITEM_5SOCKET] // Drop a random socketed item (5 sockets)
+ON=@DEATH
+var.x=rand(3)
+var.x=rand(3)
+if (<var.x>==2)
+	f_socket_randomize_armor(0,5)
+	return 0
+endif
+	if (<VAR.X>==1)
+	f_socket_randomize_shield(5)
+	return 0
+endif
+f_socket_randomize_weapon(0,5)
+return 0
+
+[EVENTS E_SOCKET_RANDOM_GEM]		// a random gem
+ON=@DEATH
+f_socket_randomize_gem
+return 0
+
+// You can write some events here that specifically drops f.ex. only str gems, only int gems.. easy stuff, just use f_socket_randomize_gem(GEMID)
+[COMMENT E_SOCKET_STRENGTH_GEMS] // ooh, comment! :|, These are both strength gems, and this is only added as an example.
+ON=@DEATH
+var.x="<?eval((<rand(2)>)+1)?>
+IF (<VAR.X>==1)
+f_socket_randomize_gem(1) 
+ELSE
+f_socket_randomize_gem(3)
+ENDIF
+
+
+// -------------------------------[ MISC STUFF, For testing. ]-------------------------------
+
+[CHARDEF C_socket_test_guy]		// this guy has ALL the loot events!
+ID=C_ORC
+NAME=Mr. Bungle
+on=@create
+STR=1000
+MAXSTAM=1000
+EVENTS=+E_SOCKET_RANDOM_SWORD
+EVENTS=+E_SOCKET_RANDOM_BOW
+EVENTS=+E_SOCKET_RANDOM_AXE
+EVENTS=+E_SOCKET_RANDOM_MACE
+EVENTS=+E_SOCKET_RANDOM_FENCING
+EVENTS=+E_SOCKET_RANDOM_GEM
+EVENTS=+E_SOCKET_RANDOM_ARMOR
+EVENTS=+E_SOCKET_RANDOM_ARMOR_LEGGING
+EVENTS=+E_SOCKET_RANDOM_ARMOR_ARM	
+EVENTS=+E_SOCKET_RANDOM_ARMOR_GLOVE	
+EVENTS=+E_SOCKET_RANDOM_ARMOR_HELM		
+EVENTS=+E_SOCKET_RANDOM_ARMOR_CHEST		
+EVENTS=+E_SOCKET_RANDOM_ARMOR_GORGET		
+EVENTS=+E_SOCKET_RANDOM_WEAPON_3SOCKET		
+EVENTS=+E_SOCKET_RANDOM_WEAPON_4SOCKET		
+EVENTS=+E_SOCKET_RANDOM_WEAPON_5SOCKET		
+EVENTS=+E_SOCKET_RANDOM_ARMOR_3SOCKET		
+EVENTS=+E_SOCKET_RANDOM_ARMOR_4SOCKET		
+EVENTS=+E_SOCKET_RANDOM_ARMOR_5SOCKET		
+EVENTS=+E_SOCKET_RANDOM_ITEM_3SOCKET		
+EVENTS=+E_SOCKET_RANDOM_ITEM_4SOCKET		
+EVENTS=+E_SOCKET_RANDOM_ITEM_5SOCKET	
+EVENTS=+E_SOCKET_RANDOM_SHIELD
+EVENTS=+E_SOCKET_RANDOM_SHIELD_3SOCKET		
+EVENTS=+E_SOCKET_RANDOM_SHIELD_4SOCKET		
+EVENTS=+E_SOCKET_RANDOM_SHIELD_5SOCKET	
+
+
+
+[EOF]

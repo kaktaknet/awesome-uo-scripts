@@ -1,0 +1,153 @@
+<#########################################################################################>
+<## Mivascript Account Creation System							##>
+<## Scripted by Warped Dragon								##>
+<## Copyright (c) 2003 Dallen Wilson							##>
+<## All rights reserved									##>
+<## This Script is Freeware. You may modify it for your own use, or redistribute it,	##>
+<## so long as it is unmodified and this header remains intact.				##>
+<## Please read the readme.txt that accompanies this script for instructions on how to	##>
+<## use it										##>
+<#########################################################################################>
+
+<#########################################################################################>
+<##         Set the following variables to reflect your websites configeration		##>
+<#########################################################################################>
+
+<## The following two variables do not need changing. Modify at your peril		##>
+<MvASSIGN NAME="htmlon"	VALUE="<MIVA STANDARDOUTPUTLEVEL=\"html,text,compresswhitespace\">">
+<MvASSIGN NAME="htmloff" VALUE="<MIVA STANDARDOUTPUTLEVEL=\"\">">
+
+<## Set this to the name of this script ##>
+<MvASSIGN NAME="scripturl" VALUE="account.mv">
+
+<## Set the path for the log file ##>
+<MvASSIGN NAME="logfile" VALUE="uo/account.dat">
+
+<## Set this to the background color of your choice ##>
+<MvASSIGN NAME="bgcolor" VALUE="#000000">	
+
+<## Set this to the text color of your choice ##>
+<MvASSIGN NAME="txtcolor" VALUE="#808080">
+
+<## Set this to the background image of your choice. Leave blank for none ##>
+<MvASSIGN NAME="bgimage" VALUE="images/Main_Background.jpg">
+
+<#########################################################################################>
+<##           Anything changed beyond this point is changed at your own risk!		##>
+<#########################################################################################>
+
+&[htmlon]
+<html>
+<head>
+</head>
+&[htmloff]
+
+<MvIF EXPR="{bgimage EQ ''}">
+	&[htmlon]
+	<body text="&[txtcolor]" bgcolor="&[bgcolor]">
+	&[htmloff]
+<MvELSE>
+	&[htmlon]
+	<body text="&[txtcolor]" bgcolor="&[bgcolor]" background="&[bgimage]">
+	&[htmloff]
+</MvIF>
+
+<font size="2">
+<p></p>
+</font>
+
+<p align="center"><font size="2">Use the form below to request an account on OoV.</font></P>
+&[htmloff]
+
+<MvASSIGN NAME="joined" VALUE="NO">
+<MvASSIGN NAME="old_user_ip_addr" value="">
+<MvASSIGN NAME="old_user_account_name" VALUE="">
+<MvASSIGN NAME="old_user_account_email" VALUE="">
+<MvASSIGN NAME="old_user_active" VALUE="">
+
+<MvIF EXPR="{joined EQ 'NO' AND account_name NE '' AND account_email NE ''}">
+	<MvIMPORT 
+		FILE = "&[logfile]" 
+		FIELDS = "old_user_active,old_user_ip_addr,old_user_account_email,old_user_account_name" 
+		DELIMITER = ",">
+
+	<MvIF EXPR="{remote_addr EQ old_user_ip_addr}">
+		<MvASSIGN NAME="joined" VALUE="ALREADY_IP">
+		<MvIMPORTSTOP>
+	</MvIF>
+
+	<MvIF EXPR="{account_name EQ old_user_account_name}">
+		<MvASSIGN NAME="joined" VALUE="ALREADY_NAME">
+		<MvIMPORTSTOP>
+	</MvIF>
+
+	<MvIF EXPR="{account_email EQ old_user_account_email}">
+		<MvASSIGN NAME="joined" VALUE="ALREADY_EMAIL">
+		<MvIMPORTSTOP>
+	</MvIF>
+
+	</MvIMPORT>
+
+	<MvIF EXPR="{joined EQ 'NO'}">
+		<MvASSIGN NAME="joined" VALUE="YES">
+		<MvASSIGN NAME="user_active" VALUE="INACTIVE">
+		<MvEXPORT 
+			FILE = "&[logfile]" 
+			FIELDS = "user_active,remote_addr,account_email,account_name" 
+			DELIMITER = ",">
+	</MvIF>
+</MvIF>
+
+<MvIF EXPR="{joined EQ 'NO'}">
+&[htmlon]
+	<p align="center"><font size="2">Use the form below to request an account on OoV.</font></P>
+
+	<p align="center"><font size="2">You will be emailed your password. It will consist of eight random
+	numbers and letters. You may change it once you log on if you so wish, see
+	player commands page for information on how to do this. And remember, only one account per person!</font></P>
+	<form method="POST" action="&[ARG1]" enctype="multipart/form-data">
+	  <p align="center"><font size="2">Account Name:</font> <input type="text" name="account_name" size="20"></p>
+	  <p align="center"><font size="2">Email Address:</font> <input type="text" name="account_email" size="20"></p>
+	  <p align="center"><input type="submit" value="Submit" name="submit_form"> <input type="reset" value="Reset" name="B2"></p>
+	</form>
+&[htmloff]
+</MvIF>
+
+<MvIF EXPR="{joined EQ 'YES'}">
+&[htmlon]
+	<p>&nbsp;</p>
+	<p align="center"><font size="2">Thank you for joining! Your account will be added and you will
+	be emailed a password in a few hours to a few days. Please be patient!</font></p>
+&[htmloff]
+</MvIF>
+
+<MvIF EXPR="{joined EQ 'ALREADY_IP'}">
+&[htmlon]
+	<p>&nbsp;</p>
+	<p align="center"><font size="2">We are sorry, but your IP Address has already been linked to an account. If you have not yet registered for an account, but are still getting this error, please contact the <A href="mailto:warped_dragon@hotmail.com">Site Admin</a>.</font></p>
+&[htmloff]
+</MvIF>
+
+<MvIF EXPR="{joined EQ 'ALREADY_NAME'}">
+&[htmlon]
+	<p>&nbsp;</p>
+	<p align="center"><font size="2">We are sorry, but the account name you have requested is already taken! Please use the form to choose another.</font></p>
+	<form method="POST" action="&[ARG1]" enctype="multipart/form-data">
+	  <p align="center">Account Name: <input type="text" name="account_name" size="20"></p>
+	  <p align="center">Email Address: <input type="text" name="account_email" size="20"></p>
+	  <p align="center"><input type="submit" value="Submit" name="submit_form"> <input type="reset" value="Reset" name="B2"></p>
+	</form>
+&[htmloff]
+</MvIF>
+
+<MvIF EXPR="{joined EQ 'ALREADY_EMAIL'}">
+&[htmlon]
+	<p>&nbsp;</p>
+	<p align="center"><font size="2">We are sorry, but your Email Address has already been linked to an account. If you have not yet registered for an account, but are still getting this error, please contact the <A href="mailto:warped_dragon@hotmail.com">Site Admin</a>.</font></p>
+&[htmloff]
+</MvIF>
+
+&[htmlon]
+</body>
+</html>
+&[htmloff]

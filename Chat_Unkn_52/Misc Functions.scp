@@ -1,0 +1,674 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+// This simply function package was made by Night Walker									//
+// Dispite they're being simply they're usefull 										//
+// This package contains:													//
+// Function Gmb ----> Change your body to Gm Body, if you type again your body return to normal					//
+// Function Skillgain ----> This is used to make you gain skills. You can use in timers or not !				//
+// and it can be used with or w/o my skill function										//
+// Randcor ----> Its a pretty nice thing to have random colored sysmessages, messages etc. Usage sysmessage @randcor		//
+// Messagecolor ----> A short cut to sysmessage @randcor.
+// Function Newpass ----> It will generate a 6 digit random password and your players can only change one time per day		//
+// Function Staff ----> It will say to you how many staffers are online								//
+// Function Gmchat ----> This function is to tell something only to your staffers. Type .gmchat <message>			//
+// Function Goldtopackall ----> This function transfer all gold from the bank to the pack					//
+// Function Consumegold ----> This function consume any amount of gold from the player's bankbox. Usage: consumegold <amount>   // 
+// Function Givegold ----> This function adds to the player's bankbox any amount of gold. Usage: givegold <amount>		//
+// Function Bring ----> Bring a player to you. Usage: .bring name. May crash you
+// Function Goplayer ----> Go to a player. May crash you. 
+// Function Rename ----> rename something and give a better log information than .xname
+// Function Paint ----> paint something and give better log information than .xcolor
+// Function Teleto ----> Teletransport someone from one place to another. The same thing as if you were using a crook.
+// Function Isstaff ----> It will return 1 if have a plevel higher than 1, and return 0 if it is a player or a guest.
+// Function Wipe ----> It will remove a hudge amount of itens from the world. Usage: .wipe <itemid>.				//
+// It may lag the server, and crash the user but it'll never crash the server							//
+// Skill Cap System ----> With it your players will can only raise two work skill. BUT TO THIS WORK WILL NEED TO PUT 		//
+// UNDER EVERY WORK SKILL THIS LINES												//
+// ON=@GAIN															//
+// SKILLGAIN <argn1>														//
+// RETURN 1															//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+[DEFNAME USEFULLDEFS]
+RANDCOR {2 100} //This return a random color usefull to messages, sysmessages etc.
+HAVESKILLCAP 1 // If you using my skillcap sistem let this 1 if don't turn this 0
+
+// This functions change your body into Gm Body, 
+// If you type .gmb again turn back your body to normal
+// Very usefull
+
+[function gmb]
+
+if <body>==c_man
+src.body=c_man_gm
+src.resend
+return 1
+endif
+
+if <body>==c_woman
+src.body=c_man_gm
+src.resend
+return 1
+endif
+
+if <body>==c_man_gm
+src.body=<src.obody>
+src.resend
+return 1
+endif
+
+//A function to make the player gain in a skill
+//How to use: Type skillgain skill 
+//If using in a timer type: skillgain skill 1 if not type: skillgain skill 0 ou just skillgain skill
+//Ex.: Skillgain taming 1 ( So you're using it on timer and will make you gain 0.1 of taming )
+//If you're using my skillcap system you can still use this couse it will check if def.haveskillcap is equal to 1
+//If you're not using my skillcap sistem turn haveskillcap in the usefulldefs to 0 !
+
+[FUNCTION skillgain]
+
+LOCAL.SKILL=<STRARG <ARGS>>
+
+	IF (<DEF.HAVESKILLCAP>==1)
+
+		if !<findlayer.100.tag.<<local.skill>.key>>
+		sysmessage @randcor You cannot raise this skill becouse of the skill cap.
+		return 1
+		elseif (<findlayer.100.tag.<<local.skill>.key>> == 0)
+		sysmessage @randcor You cannot raise this skill becouse of the skill cap.
+		return 1
+		elseif (<findlayer.100.tag.<<local.skill>.key>> == 1)
+		return 0
+		endif
+	ENDIF
+
+	IF (<<LOCAL.SKILL>> < 1000)
+	<LOCAL.SKILL> +=0.1
+	ENDIF
+
+LOCAL.SKILL=
+
+[function newpass]
+IF !<src.findid.i_trokasemtim>
+src.password <eval <newpass2><newpass2><newpass2><newpass2><newpass2><newpass2>>
+src.dialog d_newpass
+else
+src.sysmessage @randcor You must wait to change your password again.
+endif
+
+[dialog d_newpass]
+0,0
+resizepic 340 133 3600 278 104
+text 362 191 95 0
+text 442 191 30 1
+text 360 153 92 2
+
+[dialog d_newpass text]
+It's now:
+<src.account.password>
+You have changed your password
+
+[function newpass2]
+return {0 9} 
+
+// This function brings a player to you EVEN IF HE IS LOGGED OUT
+// WARNING THIS MAY CRASH THE SERVER !!! 
+
+[function BRING]
+if !(STRCMPI(<ARGS>,))
+src.sysmessage @RANDCOR You have to type someone's name.
+return 1
+endif
+
+local.p=<src.p>
+local.isp=0
+
+src.goplayer <args>
+
+OBJ.GO <LOCAL.P>
+SRC.GO <LOCAL.P>
+IF (<OBJ.ISONLINE>==0)
+SRC.ALLSHOW 1 
+ENDIF
+SRC.HIDEMESSAGE
+SRC.MESSAGECOLOR You bring <obj.name> to you.
+
+
+//This is the dialog to the skillcap system here the player choose
+//wich work skills he would like to raise
+//he can only raise two skills but you can easy edit it to suport more skills
+
+[DIALOG d_skillcap]
+0,0
+noclose
+resizepic 222 107 5054 512 275
+button 260 170 5540 5541 1 0 1
+button 260 200 5540 5541 1 0 2
+button 260 230 5540 5541 1 0 3
+button 260 260 5540 5541 1 0 4
+button 260 290 5540 5541 1 0 5
+button 260 320 5540 5541 1 0 6
+button 565 170 5540 5541 1 0 7
+button 565 200 5540 5541 1 0 8
+button 565 230 5540 5541 1 0 9
+button 565 260 5540 5541 1 0 10
+button 565 290 5540 5541 1 0 11
+button 565 320 5540 5541 1 0 12
+button 260 350 5540 5541 1 0 13
+text 250 123 73 0
+text 286 170 32 1
+text 286 200 32 2
+text 286 230 32 3
+text 286 260 32 4
+text 286 290 32 5
+text 286 320 32 6
+text 590 170 32 7
+text 590 200 32 8
+text 590 230 32 9
+text 590 260 32 10
+text 590 290 32 11
+text 590 320 32 12
+text 286 350 32 13
+
+[DIALOG d_skillcap text]
+Choose two skills and remember you can't gain the others!
+Blacksmithing
+Bowcraft
+Alchemy
+Animal Taming
+Carpentry
+Cooking
+Mining
+Lumberjacking
+Inscription
+Tailoring
+Tinkering
+Fishing
+Stealing
+
+
+[DIALOG d_skillcap button]
+on=1
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.7=1
+src.7 500
+var.skillcap=1
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.7=1
+src.7 500
+return 1
+endif
+
+on=2
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.8=1
+src.8 500
+var.skillcap=1
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.8=1
+src.8 500
+return 1
+endif
+
+on=3
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.0=1
+var.skillcap=1
+src.0 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.0=1
+src.0 500
+return 1
+endif
+
+on=4
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.35=1
+var.skillcap=1
+src.35 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.35=1
+src.35 500
+return 1
+endif
+
+on=5
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.11=1
+var.skillcap=1
+src.11 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.11=1
+src.11 500
+return 1
+endif
+
+on=6
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.13=1
+var.skillcap=1
+src.13 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.13=1
+src.13 500
+return 1
+endif
+
+on=7
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.45=1
+var.skillcap=1
+src.45 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.45=1
+src.45 500
+return 1
+endif
+
+on=8
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.44=1
+var.skillcap=1
+src.44 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.44=1
+src.44 500
+return 1
+endif
+
+on=9
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.23=1
+var.skillcap=1
+src.23 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.23=1
+src.23 500
+return 1
+endif
+
+on=10
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.34=1
+src.34 500
+var.skillcap=1
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.34=1
+src.34 500
+return 1
+endif
+
+on=11
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.37=1
+src.37 500
+var.skillcap=1
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.37=1
+src.37 500
+return 1
+endif
+
+on=12
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.18=1
+var.skillcap=1
+src.18 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.18=1
+src.18 500
+return 1
+endif
+
+on=13
+IF (<var.SKILLCAP>=0)
+src.sysmessage @randcor Make your last choose.
+src.findlayer.100.tag.33=1
+var.skillcap=1
+src.33 500
+src.dialog d_skillcap
+return 1
+elseif (<var.skillcap>=1)
+src.sysmessage @randcor Now that you've already choose your skills you cannot raise the others work skills!
+src.findlayer.100.tag.33=1
+src.33 500
+return 1
+endif
+
+//This is the skillcap memory 
+//Here is where will record wich skills the player will can raise
+[ITEMDEF i_skillcap]
+id=i_memory
+name=Skill Cap 
+type=t_eq_script
+layer=100
+
+// If you want to use my skill cap sistem put this to all players
+// Just put under skillclass 0
+// On=@login
+// src.events +e_skillcap
+
+[events e_skillcap]
+ON=@LOGIN
+IF (<SRC.FINDLAYER.100> == 0)
+SRC.DIALOG d_skillcap
+SRC.ALLSKILLS 350
+SRC.BLACKSMITHING=0
+SRC.BOWCRAFT=0
+SRC.ALCHEMY=0
+SRC.TAMING=0
+SRC.CARPENTRY=0
+SRC.COOKING=0
+SRC.STEALING=0
+SRC.MINING=0
+SRC.LUMBERJACKING=0
+SRC.INSCRIPTION=0
+SRC.TAILORING=0
+SRC.TINKERING=0
+SRC.FISHING=0
+SRC.NECROMANCY=0
+src.newitem i_skillcap
+new.equip
+var.SKILLCAP=0
+ENDIF
+
+[ITEMDEF i_trokasentim] 
+NAME=Password Timer [DO NOT REMOVE]
+ID=i_memory 
+TYPE=t_eq_script 
+
+ON=@CREATE
+ATTR=attr_decay
+
+
+ON=@Equip
+	TIMER=86400
+	
+ON=@Timer
+remove
+return 1
+
+// This function say how many staffers are online
+
+[FUNCTION Staff]
+var.staffers=0
+countstaff
+
+if (<eval <VAR.STAFFERS>>==0)
+src.sysmessage @randcor There is no staff online!
+
+elseif (<eval <VAR.STAFFERS>>==1)
+src.sysmessage There is 1 staff online!
+
+else
+src.sysmessage There are <eval <VAR.STAFFERS>> staffs online!
+RETURN 1
+ENDIF
+
+// This 2 functions counts how mane staffers are online
+[function countstaff]
+serv.allclients countstaff2
+
+[function countstaff2]
+if <account.plevel>>1
+var.staffers=<var.staffers>+1
+endif
+
+// Gmchat function. Simply type .gmchat <message>
+[FUNCTION gmchat]
+serv.allclients gmhear <src.name>: <args>
+
+// This is what make the staffers saw the message
+[FUNCTION GMHEAR]
+IF (<isstaff>==1)
+SYSMESSAGE @randcor <ARGS>
+ENDIF
+
+// This function consume an amount of gold from the bank
+// Usage: .consumegold <amount>
+// You can consume even more than 50.000.000 w/o crashes the server
+// Or lag it ! But remember it will consume ONLY from the bank
+
+[function consumegold]
+local.amnt=<args>
+
+if (<Local.amnt> > <src.bankbalance>)
+src.sysmessage @randcor You don't have enough money.
+var.enough=0
+return 1
+endif
+var.enough=1
+
+while (<local.amnt> >= 50000)
+local.uid=<src.findlayer.29.findid.i_gold.uid>
+local.amnx=<uid.<local.uid>.amount>
+uid.<local.uid>.remove
+local.amnt -= <local.amnx>
+endwhile
+
+if (<local.amnt> != 0)
+local.uid=<src.findlayer.29.findid.i_gold.uid>
+local.amnx=<uid.<local.uid>.amount>
+
+if (<local.amnx> > <local.amnt>)
+uid.<local.uid>.amount -= <local.amnt>
+local.amnt=
+local.amnx=
+elseif (<local.amnx> == <local.amnt>)
+uid.<local.uid>.remove
+local.amnt=
+local.amnx=
+elseif (<local.amnx> < <local.amnt>)
+uid.<local.uid>.remove
+local.amnt -= <local.amnx>
+endif
+endif
+
+src.resend
+
+// This functions adds any amount of gold to your bank
+// This might be little laggy but does not crashes the shard no matter the amount is (tested up to 50.000.000)
+// Usage: .givegold <amount>
+
+[function givegold]
+local.amnt=<args>
+
+while (<local.amnt> > 50000)
+src.newitem i_gold
+new.amount 50000
+new.cont <src.findlayer(29).uid>
+local.amnt -= 50000
+endwhile
+
+if (<local.amnt> != 0)
+src.newitem i_gold
+new.amount <local.amnt>
+new.cont <src.findlayer(29).uid>
+local.amnt=
+endif
+
+src.resend
+return 1
+
+// This function transfer all gold from the bankbox to the players backpack
+
+[function goldtopackall]
+while (<src.findlayer(29).findid.i_gold>)
+src.findlayer(29).findid.i_gold.cont <src.findlayer(21)>.uid>
+endwhile
+
+// This function is used to wipe itens from the world
+// Unfortunetly it execute so many go commands that it will crash you
+// But will crash ONLY YOU not the server. May lag the server 
+// It can remove up to 1500 itens
+
+[function wipe]
+if !(strcmpi(<args>,))
+src.sysmessage @randcor You must type a itemid.
+return 1
+endif
+
+serv.newitem <args>
+new.p <src.p>
+local.total=<eval <new.instances>-1>
+local.id=<new.baseid>
+local.name=<new.name>
+local.quantos=0
+new.remove
+
+if (<local.total> > 1500)
+local.total=1500
+endif
+
+while (<Local.total> > 0)
+goitemid <local.id>
+act.remove
+local.total -= 1
+local.quantos += 1
+endwhile
+
+serv.allclients sysmessage @randcor <local.quantos> <local.name> were removed from the world.
+
+[function teleto]
+if !(strcmpi(<args>,))
+src.messagecolor Who do you wish to teletransport?
+targetf teste 1
+return 1
+elseif (strmatch(<args>,1))
+obj=<argo.uid>
+src.messagecolor Target where to
+targetfg teste 2
+return 1
+elseif (strmatch(<args>,2))
+obj.go <src.targp>
+return 1
+endif
+
+[function messagecolor] 
+sysmessage @randcor <args>
+
+//Go to a player
+[FUNCTION goplayer]
+if !(strcmpi(<Args>,))
+src.messagecolor You have to type some name
+return 1
+endif
+local.p=<src.p>
+local.isp=0
+while (<local.isp>==0)
+src.goname <args>
+obj=<act.uid>
+if (<obj.isitem>==0) && (<obj.isplayer>==1) && (strmatch(<obj.name>,<args>))
+local.isp=1
+src.hidemessage
+endif
+endwhile 
+
+//The same thing as .xcolor but get much better log information 
+[function paint]
+targetf colorir <args>
+src.messagecolor What do you wish to change the color to <args>
+return 1
+
+[function colorir]
+obj=<argo.uid>
+obj.color=<args>
+serv.log <src.name> [<src.account>] changed <obj.name>'s color. Uid: <obj.uid>. New color: <obj.color>
+
+//The same thing as .xname but get much better log information 
+[function rename]
+targetf nomear <args>
+src.messagecolor Target what do you want to change the name to: <args>
+return 1
+
+[function nomear]
+obj=<argo.uid>
+local.nome=<obj.name>
+obj.name <args>
+serv.log <src.name> [<src.account>] changed <local.nome>'s name. Uid: <obj.uid>. New name: <obj.name>
+
+[FUNCTION HIDEMESSAGE]
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE
+
+//A function that return 1 if your plevel is higher than 1, zero if not.
+[function isstaff]
+doswitch <account.plevel>
+return 0
+return 0
+return 1
+return 1
+return 1
+return 1
+return 1
+return 1
+enddo
+
+[EOF]

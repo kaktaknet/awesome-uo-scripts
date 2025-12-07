@@ -1,0 +1,709 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Friday, April 28, 2000
+//
+VERSION=0.54
+
+//********************************
+// Custom objects in vendor templates.
+
+[ITEMDEF i_wizards_hat_plus_int]
+Name=Mage Hat
+ID=i_hat_wizards
+RESOURCES=i_hat_wizards, i_scroll_CUNNING
+SKILLMAKE=60.0 TAILORING, 60.0 MAGERY, t_sewing_kit
+
+[ITEMDEF 04100]
+//Comm. Crystal (500) RED
+DEFNAME=i_crystal_of_com_t1
+NAME=Communications Crystal
+ID=I_CRYSTAL_RED
+TYPE=T_COMM_CRYSTAL
+VALUE=81
+WEIGHT=1
+
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Communication Crystals
+DESCRIPTION=Communication Crystal (red)
+
+ON=@Create
+MORE=500
+
+[ITEMDEF 04101]
+// Comm. Crystal (1000) GREEN
+DEFNAME=i_CRYSTAL_OF_COM_T2
+ID=I_CRYSTAL_GREEN
+NAME=Communications Crystal
+TYPE=T_COMM_CRYSTAL
+VALUE=158
+WEIGHT=1
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Communication Crystals
+DESCRIPTION=Communication Crystal (green)
+
+ON=@Create
+MORE=1000
+
+[ITEMDEF 04102]
+// Comm. Crystal (2000) GREEN
+DEFNAME=i_CRYSTAL_OF_COM_T3
+ID=I_CRYSTAL_GREEN
+TYPE=T_COMM_CRYSTAL
+NAME=Communications Crystal
+VALUE=310
+WEIGHT=1
+
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Communication Crystals
+DESCRIPTION=Communication Crystal (green)
+
+ON=@Create
+MORE=2000
+
+[ITEMDEF 04103]
+DEFNAME=i_beard_NONE
+ID=I_EQ_MARKER
+NAME=No Beard
+TYPE=T_BEARD
+LAYER=layer_beard
+VALUE=30
+
+ON=@Create
+	ATTR=attr_newbie
+	TIMER=1728000	 //=20Tage	
+
+ON=@TIMER
+	if !<cont>	// on ground?
+		return 0
+	endif
+	if <cont.brain>	// players only
+		return 1
+	endif
+	cont.newitem=i_beard_mustache
+	cont.act.color=<cont.findlayer(layer_beard).color>
+	cont.equip <cont.act.uid>
+	return 1
+
+[ITEMDEF 04104]
+DEFNAME=i_hair_NONE
+ID=I_EQ_MARKER
+NAME=No Hair
+TYPE=T_HAIR
+LAYER=layer_hair
+VALUE=30
+
+ON=@Create
+ATTR=attr_newbie
+TIMER=1728000		//=20 tage
+
+ON=@TIMER
+	if !<cont>	// on ground?
+		return 0
+	endif
+	if <cont.brain>	// players only
+		return 1
+	endif
+	cont.newitem=i_hair_krisna
+	cont.act.color=<cont.findlayer(layer_hair).color>
+	cont.equip <cont.act.uid>
+	return 1
+
+[ITEMDEF 04501]
+NAME=GM Robe
+ID=i_robe_gm
+ARMOR=500
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=GM Robes
+DESCRIPTION=GM Robe
+
+ON=@Create
+COLOR=021
+
+[ITEMDEF 04502]
+NAME=Seer Robe
+ID=i_robe_gm
+ARMOR=500
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=GM Robes
+DESCRIPTION=Seer Robe
+
+ON=@Create
+COLOR=01D3
+
+[ITEMDEF 04503]
+NAME=Counselor Robe
+ID=i_robe_gm
+ARMOR=500
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=GM Robes
+DESCRIPTION=Counselor Robe
+
+ON=@Create
+COLOR=003
+
+[ITEMDEF 04506]
+DEFNAME=i_CHECKERBOARD
+//DEFNAME=CHECKERBOARD
+ID=i_game_board
+NAME=Checkerboard
+TYPE=T_GAME_BOARD
+SKILLMAKE=tinkering 40.0, carpentry 40.0
+RESOURCES=3 i_board, 3 i_log
+
+CATEGORY=Items by Professions
+SUBSECTION=BarKeep
+DESCRIPTION=Checkerboard
+
+ON=@Create
+MORE=1	// make this checkers.
+
+[ITEMDEF 04507]
+DEFNAME=i_CHESSBOARD
+ID=i_game_board
+NAME=Chessboard
+TYPE=T_GAME_BOARD
+SKILLMAKE=tinkering 60.0, carpentry 60.0
+RESOURCES=3 i_board, 4 i_log
+
+CATEGORY=Items by Professions
+SUBSECTION=BarKeep
+DESCRIPTION=Chessboard
+
+[ITEMDEF 04520]
+// Guild Stone
+DEFNAME=i_guild_stone
+ID=i_guildstone
+NAME=Guildstone
+TYPE=T_STONE_GUILD
+
+CATEGORY=Provisions - Deeds
+SUBSECTION=Guild and Town Stones
+DESCRIPTION=Guild Stone
+
+[ITEMDEF 04521]
+// Town Stone
+DEFNAME=i_town_stone
+ID=i_guildstone
+NAME=Townstone
+TYPE=T_STONE_TOWN
+
+CATEGORY=Provisions - Deeds
+SUBSECTION=Guild and Town Stones
+DESCRIPTION=Town Stone
+
+//Dark Wood Boegen / Armbrueste *********************************
+
+//Logs:
+[ITEMDEF i_log_dark]
+DEFNAME=i_log_dark
+NAME=Darkwood log%s
+ID=i_log
+VALUE=3
+TYPE=T_LOG
+WEIGHT=2
+CATEGORY=Items by Professions
+SUBSECTION=Archers/Bowyers
+DESCRIPTION=Darkwood Log (SE)
+DUPELIST=01bde,01bdf,01be0,01be1,01be2
+ON=@CREATE
+COLOR=00840
+ON=@DCLICK
+SRC.SYSMESSAGE="You should use a dagger or something sharp on it."
+RETURN 1
+
+//darkwood shafts
+[ITEMDEF i_arrow_shaft_dark]
+DEFNAME=i_arrow_shaft_dark
+NAME=Darkwood shaft%s
+ID=i_arrow_shaft
+TYPE=T_SHAFT
+RESOURCES=i_log_dark
+REPLICATE=1
+SKILLMAKE=30.0 BOWCRAFT
+WEIGHT=.1
+CATEGORY=Items by Professions
+SUBSECTION=Archers/Bowyers
+DESCRIPTION=darkwood Shaft
+DUPELIST=
+
+ON=@CREATE
+COLOR=00840
+
+ON=@dclick
+IF STRMATCH(0<TOPOBJ.ACCOUNT>,0)
+   SRC.SYSMESSAGE="That must be in your inventory."
+   RETURN 1
+ENDIF
+IF (<SRC.RESTEST i_feather>)
+SRC.SKILLMENU=sm_bolts_dark
+return 1
+ELSE
+SRC.SYSMESSAGE "You need feathers!"
+RETURN 1
+ENDIF
+
+//darkwood arrows
+[ITEMDEF i_arrow_dark]
+DEFNAME=i_arrow_dark
+ID=i_arrow
+NAME=Darkwood arrow%s
+TYPE=T_WEAPON_ARROW
+FLIP=1
+RESOURCES=1 i_arrow_shaft_dark, 1 i_feather
+REPLICATE=1
+SKILLMAKE=55.0 BOWCRAFT
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Archers/Bowyers
+DESCRIPTION=Darkwood Arrow
+DUPELIST=
+ON=@CREATE
+COLOR=00840
+
+//darkwood bolts
+[ITEMDEF i_xbolt_dark]
+DEFNAME=i_xbolt_dark
+ID=i_xbolt
+NAME=Darkwood bolt%s
+TYPE=T_WEAPON_BOLT
+FLIP=1
+REPLICATE=1
+RESOURCES=1 i_arrow_shaft_dark, 1 i_feather
+SKILLMAKE=55.0 BOWCRAFT
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Archers/Bowyers
+DESCRIPTION=Darkwood Crossbow Bolt
+DUPELIST=
+ON=@CREATE
+COLOR=00840
+
+//Darkwood  Bow
+[ITEMDEF i_bow_dark]
+DEFNAME=i_bow_dark
+ID=i_bow
+NAME=Darkwood Bow
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=8 i_log_dark
+DAM=11,24		//=+3,+2
+//SPEED=20
+SKILL=Archery
+REQSTR=70
+TWOHANDS=Y
+WEIGHT=6
+TDATA3=i_arrow_dark	//resources
+TDATA4=i_arrow_x		//anim
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Darkwood Bow
+
+ON=@Create
+COLOR=00840
+HITPOINTS={50 65}		//{+20 +10}
+
+ON=@EQUIP
+IF (<SRC.FINDLAYER(13).dispID> == i_platemail_chest)	//plate chest
+SRC.FINDLAYER(13).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(6).dispID> == i_platemail_helm)		//plate helm
+SRC.FINDLAYER(6).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(19).dispID> == i_platemail_arms)	//plate arms
+SRC.FINDLAYER(19).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(7).dispID> == i_platemail_gloves)	//plate gloves
+SRC.FINDLAYER(7).UNEQUIP
+ENDIF
+//Dark Wood Superior Bow
+[ITEMDEF i_bow_sup_dark]
+DEFNAME=i_bow_sup_dark
+ID=i_bow
+NAME=Darkwood Superior Bow
+SKILLMAKE=75.0 BOWCRAFT
+RESOURCES=8 i_log_dark
+DAM=13,28		//=+3,+2
+//SPEED=20
+SKILL=Archery
+REQSTR=70
+TWOHANDS=Y
+WEIGHT=6
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Darkwood Superior Bow
+TDATA3=i_arrow_dark	//resources
+TDATA4=i_arrow_x		//anim
+ON=@Create
+COLOR=00840
+HITPOINTS={60 90}		//{+20 +10}
+ON=@EQUIP
+IF (<SRC.FINDLAYER(13).dispID> == i_platemail_chest)	//plate chest
+SRC.FINDLAYER(13).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(6).dispID> == i_platemail_helm)		//plate helm
+SRC.FINDLAYER(6).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(19).dispID> == i_platemail_arms)	//plate arms
+SRC.FINDLAYER(19).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(7).dispID> == i_platemail_gloves)	//plate gloves
+SRC.FINDLAYER(7).UNEQUIP
+ENDIF
+//Darkwood Exceptional Bow
+[ITEMDEF I_BOW_EXCEP_dark]
+DEFNAME=I_BOW_EXCEP_dark
+ID=i_bow
+NAME=Darkwood Exceptional Bow
+RESOURCES=9 i_log_dark
+SKILLMAKE=80.0 BOWCRAFT
+DAM=14,35		
+//SPEED=20
+SKILL=Archery
+REQSTR=70
+TWOHANDS=Y
+WEIGHT=6
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Darkwood Exceptional Bow
+TDATA3=i_arrow_dark	//resources
+TDATA4=i_arrow_x		//anim
+ON=@Create
+HITPOINTS={71 130}
+COLOR=00840
+//Darwood Crossbows
+
+//Darkwood Crossbow
+[ITEMDEF i_crossbow_dark]
+DEFNAME=i_crossbow_dark
+NAME=Darkwood Crossbow
+TYPE=T_WEAPON_XBOW
+ID=i_crossbow
+FLIP=1
+RESOURCES=15 i_log_dark
+SKILLMAKE=80.0 BOWCRAFT
+DAM=7,30
+//SPEED=18
+SKILL=Archery
+REQSTR=30
+TWOHANDS=Y
+WEIGHT=15
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows
+DESCRIPTION=Darkwood Crossbow
+DUPELIST=
+
+TDATA3=i_xbolt_dark
+TDATA4=i_xbolt_x
+
+ON=@Create
+HITPOINTS={51 90}
+COLOR=00840
+
+
+//Darkwood Superior Crossbow
+[ITEMDEF I_XBOW_SUP_dark]
+DEFNAME=I_XBOW_SUP_dark
+NAME=Darkwood Superior Crossbow
+ID=i_crossbow
+RESOURCES=15 i_log_dark
+SKILLMAKE=80.0 BOWCRAFT
+DAM=9,32
+//SPEED=20
+SKILL=Archery
+REQSTR=70
+TWOHANDS=Y
+WEIGHT=8
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=darwood Superior Crossbow
+TDATA3=i_xbolt_dark	 //resource
+TDATA4=i_xbolt_x	//anim
+ON=@Create
+HITPOINTS={51 110}
+COLOR=00840
+//Darkwood Exceptional Crossbow
+[ITEMDEF I_XBOW_EXCEP_dark]
+DEFNAME=I_XBOW_EXCEP_dark
+ID=i_crossbow
+NAME=Darkwood Exceptional Crossbow
+RESOURCES=15 i_log_dark
+SKILLMAKE=85.0 BOWCRAFT
+DAM=7,30
+//SPEED=20
+SKILL=Archery
+REQSTR=70
+TWOHANDS=Y
+WEIGHT=8
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Exceptional Crossbow
+TDATA3=i_xbolt_dark	 //resource
+TDATA4=i_xbolt_x	//anim
+ON=@Create
+HITPOINTS={61 150}
+COLOR=00840
+//Heavy Crossbows
+
+//Darkwood Heavy Crossbow
+[ITEMDEF i_crossbow_heavy_DARK]
+DEFNAME=i_crossbow_heavy_DARK
+ID=i_crossbow_heavy
+NAME=Darkwood Heavy Crossbow
+SKILLMAKE=80.0 BOWCRAFT
+RESOURCES=16 i_log_dark
+DAM=10,36
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=9
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Dw Heavy Crossbow
+TDATA3=i_xbolt_dark	 //resource
+TDATA4=i_xbolt_x	//anim
+ON=@Create
+HITPOINTS={61 130}
+COLOR=00840
+
+//Darkwood Superior Heavy Crossbow
+[ITEMDEF I_HXBOW_SUP_dark]
+DEFNAME=I_HXBOW_SUP_dark
+ID=i_crossbow_heavy
+NAME=Darkwood Superior Heavy Crossbow
+SKILLMAKE=90.0 BOWCRAFT
+RESOURCES=16 i_log_dark
+DAM=12,38
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=9
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Superior Heavy Crossbow
+TDATA3=i_xbolt_dark	 //resource
+TDATA4=i_xbolt_x	//anim
+ON=@Create
+HITPOINTS={61 130}
+COLOR=00840
+//Darkwood Exceptional Heavy Crossbow
+[ITEMDEF I_HXBOW_EXCEP_dark]
+DEFNAME=I_HXBOW_EXCEP_dark
+ID=i_crossbow_heavy
+NAME=Darkwood Exceptional Heavy Crossbow
+DAM=9,42
+//SPEED=20
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=9
+SKILLMAKE=95.0 BOWCRAFT
+RESOURCES=16 i_log_dark
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Exceptional Heavy Crossbow
+TDATA3=i_xbolt_dark	 //resource
+TDATA4=i_xbolt_x	//anim
+ON=@Create
+HITPOINTS={61 120}
+COLOR=00840
+
+//Darkwood Ende
+
+
+[ITEMDEF 05000]
+//Superior Bow
+DEFNAME=I_BOW_SUP
+ID=i_bow
+NAME=Superior Bow
+SKILLMAKE=55.0 BOWCRAFT
+RESOURCES=8 i_log
+DAM=10,25
+//SPEED=20
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=6
+
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Superior Bow
+
+ON=@Create
+HITPOINTS={41 80}
+ON=@EQUIP
+IF (<SRC.FINDLAYER(13).dispID> == i_platemail_chest)	//plate chest
+SRC.FINDLAYER(13).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(6).dispID> == i_platemail_helm)		//plate helm
+SRC.FINDLAYER(6).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(19).dispID> == i_platemail_arms)	//plate arms
+SRC.FINDLAYER(19).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(7).dispID> == i_platemail_gloves)	//plate gloves
+SRC.FINDLAYER(7).UNEQUIP
+ENDIF
+
+[ITEMDEF 05003]
+//Exceptional Bow
+DEFNAME=I_BOW_EXCEP
+ID=i_bow
+NAME=Exceptional Bow
+RESOURCES=9 i_log
+SKILLMAKE=65.0 BOWCRAFT
+DAM=11,28
+//SPEED=20
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=6
+
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Exceptional Bow
+
+ON=@Create
+HITPOINTS={51 120}
+
+ON=@EQUIP
+IF (<SRC.FINDLAYER(13).dispID> == i_platemail_chest)	//plate chest
+SRC.FINDLAYER(13).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(6).dispID> == i_platemail_helm)		//plate helm
+SRC.FINDLAYER(6).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(19).dispID> == i_platemail_arms)	//plate arms
+SRC.FINDLAYER(19).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(7).dispID> == i_platemail_gloves)	//plate gloves
+SRC.FINDLAYER(7).UNEQUIP
+ENDIF
+
+[ITEMDEF 05006]
+DEFNAME=i_Bow_Elven
+NAME=Elven Bow
+ID=i_bow
+DAM=14,37
+//SPEED=20
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=6
+RESOURCES=9 i_log
+SKILLMAKE=95.0 BOWCRAFT
+
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Elven Bow
+ON=@Create
+HITPOINTS={100 160}
+COLOR=color_o_oldcopper
+
+ON=@EQUIP
+IF (<SRC.FINDLAYER(13).dispID> == i_platemail_chest)	//plate chest
+SRC.FINDLAYER(13).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(6).dispID> == i_platemail_helm)		//plate helm
+SRC.FINDLAYER(6).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(19).dispID> == i_platemail_arms)	//plate arms
+SRC.FINDLAYER(19).UNEQUIP
+ENDIF
+IF (<SRC.FINDLAYER(7).dispID> == i_platemail_gloves)	//plate gloves
+SRC.FINDLAYER(7).UNEQUIP
+ENDIF
+
+[ITEMDEF 05001]
+//Superior Crossbow
+DEFNAME=I_XBOW_SUP
+NAME=Superior Crossbow
+ID=i_crossbow
+RESOURCES=15 i_log
+SKILLMAKE=55.0 BOWCRAFT
+DAM=7,30
+//SPEED=20
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=8
+
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Superior Crossbow
+
+ON=@Create
+HITPOINTS={41 100}
+
+[ITEMDEF 05004]
+//Exceptional Crossbow
+DEFNAME=I_XBOW_EXCEP
+ID=i_crossbow
+NAME=Exceptional Crossbow
+RESOURCES=15 i_log
+SKILLMAKE=85.0 BOWCRAFT
+DAM=7,30
+//SPEED=20
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=8
+
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Exceptional Crossbow
+
+ON=@Create
+HITPOINTS={51 140}
+
+[ITEMDEF 05002]
+//Superior Heavy Crossbow
+DEFNAME=I_HXBOW_SUP
+ID=i_crossbow_heavy
+NAME=Superior Heavy Crossbow
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=16 i_log
+DAM=10,36
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=9
+
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Superior Heavy Crossbow
+
+ON=@Create
+HITPOINTS={41 120}
+
+[ITEMDEF 05005]
+//Exceptional Heavy Crossbow
+DEFNAME=I_HXBOW_EXCEP
+ID=i_crossbow_heavy
+NAME=Exceptional Heavy Crossbow
+DAM=7,40
+//SPEED=20
+SKILL=Archery
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=9
+SKILLMAKE=80.0 BOWCRAFT
+RESOURCES=18 i_log
+
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Exceptional Heavy Crossbow
+
+ON=@Create
+HITPOINTS={41 100}
+
+
+[EOF]

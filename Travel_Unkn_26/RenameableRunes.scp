@@ -1,0 +1,65 @@
+[ITEMDEF 01f14]
+DEFNAME=i_rune_marker
+TYPE=T_RUNE
+VALUE={16 20}
+WEIGHT=1
+
+ON=@DCLICK 
+IF !<MOREP> 
+ RETURN 1 
+ELSE 
+ DIALOG d_RenameRune
+ TOPOBJ.SYSMESSAGE @50 What would you like to rename the rune? 
+ RETURN 1 
+ENDIF 
+
+[DIALOG d_RenameRune] 
+150,200 
+gumppic 100 10 2070 
+resizepic 130 45 3000 115 22 
+button 165 85 247 248 1 0 1 
+textentry 135 45 95 15 0 0 0
+
+
+[DIALOG d_RenameRune TEXT] 
+<NAME>
+
+[DIALOG d_RenameRune BUTTON] 
+
+ON=0
+
+ONBUTTON=1 
+IF (<STRLENGTH <ARGTXT[0]>> == 0)
+ TOPOBJ.SYSMESSAGE @50 You must specify a name for the rune.
+ RETURN 1
+ELSEIF (<STRLENGTH <ARGTXT[0]>> > 12)
+ TOPOBJ.SYSMESSAGE @50 Please specify a shorter name.
+ RETURN 1
+ELSE
+ NAME=<ARGTXT[0]>
+ RETURN 1
+ENDIF
+
+
+
+CATEGORY=Provisions - Alchemy & Magic
+SUBSECTION=Magical Items
+DESCRIPTION=Recall Rune
+DUPELIST=01f15,01f16,01f17
+
+[ITEMDEF 01f15]
+//recall rune
+DUPEITEM=01f14
+
+[ITEMDEF 01f16]
+//recall rune
+DUPEITEM=01f14
+
+[ITEMDEF 01f17]
+//Recall Rune
+DUPEITEM=01f14
+
+
+
+[function strlength]
+return <strpos 0 ® <args>®>

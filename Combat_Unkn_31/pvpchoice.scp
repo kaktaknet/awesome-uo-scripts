@@ -1,0 +1,525 @@
+////By Admin M some spell code and hit code done by kell thx kell :P//////////
+/////Otherwise please give credit for this :) and thank you.//////////
+////admim m's e-mail sosarianelements@hotmail.com gimmie a shout if ya need any help with this////
+
+I have fixed this script and it works to my liking.It takes a bit to install but it was worth it to me :P.
+
+//This script gives your players a choice to be a pvp or non-pvp player.
+//Non-pvp players will not be able to attack anyone in anyway. 
+//I have tested this for hours and it should work fine. 
+//Pvp players will obviously can only attack pvp players  (this all includes pets)
+//simply add this part to your scripts and do .add i_pvp_stone 
+//I will explain part 2 below(the lame part:P)
+
+
+//For this to work on 55i you must remove all of the @54 in the sysmessages 
+
+
+
+
+
+//This pad is what i use for testing or fixing bugs it simply 
+//removes the memory object from you player on step.it will not remove the [Non-pvp] or [PVP] 
+//title from you because that is read from the event applied to your char 
+//it will change when u change you choice.
+
+
+
+[ITEMDEF i_mem_pad]
+ID=i_rune_alchem_2
+Name=Enter the tournament
+TYPE=t_normal
+CATEGORY=Admin M
+SUBSECTION=Event stuff
+DESCRIPTION=touny pad
+
+ON=@CREATE
+COLOR=0480
+ATTR=8010
+
+
+ON=@STEP
+SRC.FINDID.i_memory_pvp.remove
+SRC.FINDID.i_memory_not_pvp.remove
+SRC.FINDID.i_memory_pvp_wait.remove
+SRC.FINDID.i_memory_wait_not_pvp.remove
+RETURN 0
+
+
+
+
+
+
+//////////pvp wait memorys///////////
+
+
+
+
+[ITEMDEF i_memory_pvp_wait]
+DEFNAME=i_memory_pvp_wait
+NAME=pwait
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+equip
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+TIMER=60*60*3
+
+ON=@TIMER
+REMOVE
+
+
+
+
+
+
+[ITEMDEF i_memory_wait_not_pvp]
+DEFNAME=i_memory_wait_not_pvp
+NAME=nwait
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+equip
+ATTR=attr_move_never|attr_invis
+
+
+ON=@EQUIP
+TIMER=60*60*3
+ON=@TIMER
+REMOVE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////PVP MEMORY's//////////////////
+
+
+
+
+[ITEMDEF i_memory_pvp]
+DEFNAME=i_memory_pvp
+NAME=pvper
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+equip
+ATTR=attr_move_never|attr_invis
+
+
+
+
+
+
+
+
+
+[ITEMDEF i_memory_not_pvp]
+DEFNAME=i_memory_not_pvp
+NAME=npvp
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+equip
+ATTR=attr_move_never|attr_invis
+
+
+
+
+//////////////The pvp stone//////////
+
+
+[ITEMDEF i_pvp_stone] 
+ID=i_grave_Stone 
+NAME=PvP Choice Stone
+WEIGHT=0 
+
+
+ON=@Create 
+COLOR=0b9a
+ATTR=014 
+
+ON=@DCLICK 
+if (<src.flags>&statf_dead)
+src.sysmessage You are dead and cannot do that!
+RETURN 1
+ELSEIF (<SRC.findid.i_memory_f>) || (<SRC.findid.i_memory_earth>) || (<SRC.findid.i_memory_w>) || (<SRC.findid.i_memory_wat>)
+SRC.SYSMESSAGE @54 You must leave factions to use this stone!
+RETURN 1
+else
+SRC.SFX 555 
+DIALOG d_join_pvp 
+RETURN 1 
+endif
+
+
+//////////////////////////Dialog pvp choice///////////////
+
+
+
+[DIALOG d_join_pvp]
+0,0                                    	// Position
+resizepic 50 100 2600 560 300 // Curved Grey background 
+PAGE 0
+gumppic 225 132 1418
+gumppic 225 132 1418
+text 167 116 455 0
+text 90 207 31 1
+//text 90 229 31 2
+text 90 143 31 3
+text 90 183 31 4
+//text 90 249 31 5
+//text 90 271 31 6
+
+button 72 187 2117 2118 1 0 1
+button 72 211 2117 2118 1 0 2
+//button 72 234 2117 2118 1 0 3
+//button 72 255 2117 2118 1 0 4
+//button 72 275 2117 2118 1 0 5
+
+[DIALOG d_join_pvp TEXT]
+PVP/NON-PVP system v 1.0 by Admin M
+Become a Non-PvP Player //2
+Once you choose this u must wait 3 day before you can leave //3
+Once you choose this u must wait 3 hours before you can leave
+Become a PVP Player//1
+Once you choose this u must wait 3 day before you can leave //4
+Once you choose this u must wait 3 day before you can leave //5
+
+
+[DIALOG d_join_pvp BUTTON]
+ON=1 
+IF (<SRC.FINDID.i_memory_pvp>)
+src.sysmessage @54 you are already a pvp player!
+RETURN 1 
+endif
+IF (<SRC.FINDID.i_memory_wait_not_pvp>)
+src.sysmessage @54 you can't Become a PvP player yet!
+RETURN 1 
+ELSE
+SRC.FINDID.i_memory_not_pvp.REMOVE
+SRC.NEWITEM=i_memory_pvp 
+SRC.NEWITEM=i_memory_pvp_wait 
+SRC.EVENTS=+e_pvp
+SRC.EVENTS=-e_not_pvp
+SRC.SYSMESSAGE @54 You are Now a PvP player!
+RETURN 0
+endif
+ON=2 
+IF (<SRC.FINDID.i_memory_not_pvp>)
+src.sysmessage @54 you are already a Non-PvP player!
+RETURN 1
+endif 
+IF (<SRC.FINDID.i_memory_pvp_wait>)
+src.sysmessage @54 you can't Become a Non-PvP player yet!
+RETURN 1 
+ELSE
+SRC.FINDID.i_memory_pvp.REMOVE
+SRC.NEWITEM=i_memory_wait_not_pvp
+SRC.NEWITEM=i_memory_not_pvp  
+SRC.EVENTS=+e_not_pvp
+SRC.EVENTS=-e_pvp
+SRC.SYSMESSAGE @54 You are now safe from harm!
+RETURN 0
+endif
+//ON=3 
+//ON=4 
+//ON=5 
+
+
+
+///////////////////////////////////////////
+
+
+
+[EVENTS e_pvp]
+
+ON=@CLICK
+IF (<SRC.EVENTS>==e_pvp>)
+MESSAGE @70 [PvP]
+
+
+
+ON = @Hit
+  if ( <act.memoryfindtype(memory_ipet).link.findid.i_memory_not_pvp.uid> ) // Player can't hit pets
+     flags = <flags>&~ statf_war
+     src.sysmessage @54 You can't attack <act.name>.
+    return 1
+else
+return 0
+ENDIF
+
+
+
+ON=@ITEMTARGON_ITEM
+IF (<SRC.targ.LINK.findid.i_memory_not_pvp>)
+SRC.SYSMESSAGE=@54 You are unable to carve their corpse.
+RETURN 1
+ENDIF
+
+
+ON=@GETHIT
+ if ( <src.memoryfindtype(memory_ipet).link.findid.i_memory_not_pvp.uid> ) // Pets can't hit player
+     src.flags = <src.flags>&~ statf_war
+     src.memoryfindtype(memory_ipet).link.sysmessage @54 Your pet <src.name> can't attack them.
+RETURN 1
+else 
+return 0
+endif
+
+
+
+ON=@spellcast
+if ( <act.memoryfindtype(memory_ipet).link.findid.i_memory_not_pvp.uid> )
+if (<argn>==38)||(<argn>==47)||(<argn>==49)||(<argn>==55)||(<argn>==20)||(<argn>==1)||(<argn>==27)||(<argn>==31)||(<argn>==46)||(<argn>==8)||(<argn>==3)||(<argn>==12)||(<argn>==5)||(<argn>==18)||(<argn>==30)||(<argn>==31)||(<argn>==37)||(<argn>==41)||(<argn>==42)||(<argn>==43)||(<argn>==49)||(<argn>==51)
+SRC.SYSMESSAGE @54 you cannot harm pets owned by them!
+return 1
+else
+RETURN 0
+endif
+endif
+endif
+
+
+[EVENTS e_not_pvp]
+
+ON=@CLICK
+IF (<SRC.EVENTS>==e_not_pvp>)
+MESSAGE @70 [NoN-PvP]
+
+
+ON = @GetHit
+  if ( <src.memoryfindtype(memory_ipet).uid> ) // Pets can't hit player
+     src.flags = <src.flags>&~ statf_war
+     src.memoryfindtype(memory_ipet).link.sysmessage @54 Your pet <src.name> can't attack them.
+RETURN 1
+ENDIF
+  if ( <SRC.NPC> )
+     return 0
+  endif
+src.flags = <src.flags>&~ statf_war
+  SRC.SYSMESSAGE @54 You cant do that to them!
+  return 1
+
+ON = @Hit
+  if ( <act.memoryfindtype(memory_ipet).uid> ) // Player can't hit pets
+     flags = <flags>&~ statf_war
+     sysmessage @54 You can't attack pet <act.name>.
+    return 1
+ENDIF
+IF (<SRC.findid.i_memory_pvp>)
+flags = <flags>&~ statf_war
+     sysmessage @54 You can't attack them!
+RETURN 1
+ENDIF
+
+
+
+
+ON=@ITEMTARGON_ITEM
+	if ( <src.targ.type> == t_corpse ) && ( <src.targ.link.uid> )
+		SRC.SYSMESSAGE @54 you can't cut this persons corpse!
+		return 1
+	endif
+endif
+
+
+
+
+ON = @SkillStart
+  if ( <SRC.ACTION> == Skill_Stealing )
+     if ( <SRC.ACT.NPC> )
+        SYSMESSAGE @54 You can't steal from players!
+        ACTION = -1
+        return 1
+     endif
+  elseif ( <SRC.ACTION> == Skill_Snooping )
+     if ( <SRC.ACT.NPC> )
+        SYSMESSAGE @54 You can't snoop other players!
+        ACTION = -1
+        return 1
+     endif
+  endif
+  return 0
+
+ON = @SpellEffect
+  if ( <SRC.NPC> )
+     return 0
+  endif
+
+  // offensive spells
+  if ( 0 )
+  elseif ( <argn> ==  1 )
+  elseif ( <argn> ==  3 )
+  elseif ( <argn> ==  5 )
+  elseif ( <argn> ==  8 )
+  elseif ( <argn> == 12 )
+  elseif ( <argn> == 18 )
+  elseif ( <argn> == 20 )
+  elseif ( <argn> == 27 )
+  elseif ( <argn> == 30 )
+  elseif ( <argn> == 31 )
+  elseif ( <argn> == 37 )
+  elseif ( <argn> == 38 )
+  elseif ( <argn> == 42 )
+  elseif ( <argn> == 43 )
+  elseif ( <argn> == 46 )
+  elseif ( <argn> == 47 )
+  elseif ( <argn> == 49 )
+  elseif ( <argn> == 51 )
+  elseif ( <argn> == 53 )
+  elseif ( <argn> == 57 )
+  else
+     return 0
+  endif
+ 
+  SRC.SYSMESSAGE @54 the spell seems to do nothing
+  return 1
+
+ON = @SpellCast
+  if ( <act.memoryfindtype(memory_ipet).uid> ) // Player can't hit pets
+if (<argn>==38)||(<argn>==47)||(<argn>==49)||(<argn>==55)||(<argn>==20)||(<argn>==1)||(<argn>==27)||(<argn>==31)||(<argn>==46)||(<argn>==8)||(<argn>==3)||(<argn>==12)||(<argn>==5)||(<argn>==18)||(<argn>==30)||(<argn>==31)||(<argn>==37)||(<argn>==41)||(<argn>==42)||(<argn>==43)||(<argn>==49)||(<argn>==51)
+     flags = <flags>&~ statf_war
+     sysmessage @54 You can't attack pet <act.name>.
+    return 1
+ENDIF
+ENDIF
+  if ( !<SRC.ACT> )
+     return 0
+  endif
+
+  if ( !<SRC.ACT.ISCHAR> )
+     return 0
+  endif
+
+  if ( <SRC.ACT.NPC> )
+     return 0
+  endif
+
+  // offensive spells
+  if ( 0 )
+  elseif ( <argn> ==  1 )
+  elseif ( <argn> ==  3 )
+  elseif ( <argn> ==  5 )
+  elseif ( <argn> ==  8 )
+  elseif ( <argn> == 12 )
+  elseif ( <argn> == 18 )
+  elseif ( <argn> == 20 )
+  elseif ( <argn> == 27 )
+  elseif ( <argn> == 30 )
+  elseif ( <argn> == 31 )
+  elseif ( <argn> == 37 )
+  elseif ( <argn> == 38 )
+  elseif ( <argn> == 42 )
+  elseif ( <argn> == 43 )
+  elseif ( <argn> == 46 )
+  elseif ( <argn> == 47 )
+  elseif ( <argn> == 49 )
+  elseif ( <argn> == 51 )
+  elseif ( <argn> == 53 )
+  elseif ( <argn> == 57 )
+  else
+     return 0
+  endif
+endif
+endif
+ 
+  SRC.SYSMESSAGE @54 the spell seems to do nothing
+  return 1
+
+
+
+///////////////Pets attacking pets prevention event/////////////////
+
+this is part 2 the pet event. This will prevent pets attacking in the right circumstances . Pvp pets can't attack non-pvp pets etc...
+The thing about this you must add this event to any tameable creatures in your scripts .I know ewwwww your saying but meh what the hell .
+
+
+
+[EVENTS e_safe_pets]
+ON=@hit
+   if ( <src.memoryfindtype(memory_ipet).LINK.FINDID.i_memory_not_pvp> )
+     memoryfindtype(memory_ipet).link.sysmessage @54 you can't attack their pets !
+     flags = <flags>&~ statf_war
+     return 1
+endif
+
+ON=@GETHIT
+if ( <src.memoryfindtype(memory_ipet).LINK.FINDID.i_memory_not_pvp> )
+src.memoryfindtype(memory_ipet).link.sysmessage @54 you can't attack their pets !
+    src.flags = <flags>&~ statf_war
+RETURN 1
+endif
+
+
+ON=@SPELLCAST
+   if ( <src.memoryfindtype(memory_ipet).LINK.FINDID.i_memory_not_pvp> )
+     memoryfindtype(memory_ipet).link.sysmessage @54 you can't attack their pets !
+     flags = <flags>&~ statf_war
+     return 1
+endif
+
+ON=@SPELLEFFECT
+if ( <src.memoryfindtype(memory_ipet).LINK.FINDID.i_memory_not_pvp> )
+src.memoryfindtype(memory_ipet).link.sysmessage @54 you can't attack their pets !
+    src.flags = <flags>&~ statf_war
+RETURN 1
+endif
+
+
+
+
+///////////Either add this under [Resources] in spheretables.scp or put the ON=@DCLICK trigger//
+/////in your corpse script in sphereitemb7.scp
+
+[ITEMDEF 02006]
+//corpse(allcorpsesnormallyarehere)
+DEFNAME=i_corpse
+TYPE=T_CORPSE
+TDATA2=09
+CATEGORY=Miscellaneous
+SUBSECTION=Corpses
+DESCRIPTION=AllCorpses(Ogredefault)
+
+on = @dclick
+if ( <link.uid> )
+IF (<LINK.findid.i_memory_not_pvp>) 
+ if ( <src.uid> != <link.uid> )
+ SRC.SYSMESSAGE @54 you can't loot non-pvp players!
+  return 1
+endif
+endif
+endif
+IF (<src.findid.i_memory_not_pvp>)
+IF (<LINK.findid.i_memory_pvp>) 
+SRC.SYSMESSAGE @54 Non-pvp players can't loot other players
+RETURN 1
+endif
+endif
+
+
+
+
+
+
+
+
+
+
+[EOF]

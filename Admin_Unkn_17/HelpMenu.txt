@@ -1,0 +1,74 @@
+[plevel 6] 
+staff 
+
+[function countstaff] 
+if (<ACCOUNT.PLEVEL> > 1)||(<ISGM>) 
+VAR.GMS=<eval <VAR.GMS>+1> 
+TRYP 0 VAR.PLEVEL<ACCOUNT.PLEVEL> = <EVAL <VAR.PLEVEL<ACCOUNT.PLEVEL>>+1> 
+endif 
+UPDATE
+return 1 
+
+[function staff] 
+VAR.GMS=0 
+VAR.PLEVEL2=0 
+VAR.PLEVEL3=0 
+VAR.PLEVEL4=0 
+VAR.PLEVEL5=0 
+VAR.PLEVEL6=0 
+VAR.PLEVEL7=0 
+serv.allclients countstaff 
+
+[DIALOG d_gmpage]
+145, 110
+PAGE 0
+resizepic 0 0 2600 512 383
+resizepic 60 60 2620 393 212
+resizepic 60 172 2620 150 100
+
+gumppic 160 40 12
+gumppic 140 47 50987
+gumppic 180 47 50987
+gumppic 160 40 50987
+
+text 115 28 455 0
+text 180 85 1101 1
+text 70 280 1313 2
+text 85 180 1152 3
+text 80 205 1152 4
+text 100 205 1152 5
+text 100 230 1152 6
+text 80 230 1152 7
+text 84 258 365 8
+
+button 238 129 2151 2152 1 0 1
+button 240 256 2472 2473 1 0 2
+button 120 256 2472 2473 1 1 3
+button 360 256 2472 2473 1 0 4
+button 216 311 1144 1145 1 0 0
+
+[DIALOG d_gmpage TEXT]
+Welcome to <Serv.name>'s help system.
+Page a Game Master
+   -:- Status   -: Server Informations   :- Website -:-
+ Online Status
+<eval <serv.VAR.GMS>>//Gm
+Game Masters
+Clients
+<serv.clients>//Client
+--->
+
+[DIALOG d_gmpage BUTTON]
+on=1
+SRC.GMPAGE
+on=3
+src.staff
+dialog=d_gmpage
+//update
+on=2
+src.information
+src.version
+on=4
+src.weblink C:\sphere\Web\spherejoin.htm
+
+[EOF]

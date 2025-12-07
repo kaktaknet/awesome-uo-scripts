@@ -1,0 +1,2713 @@
+//*************************************
+//Class Of Magic System v2.0 - (Pt. 1)
+//Orginally Scripted 100% By: Majesty
+//PLEASE DO NOT REMOVE THIS HEADER
+//*************************************
+
+//*********************************************************
+//INSTALLATION - INSTALLATION - INSTALLATION - INSTALLATION
+//---------------------------------------------------------
+//To Install, Simply Add: i_class_selection
+//---------------------------------------------------------
+//And Set The <morep> To Where They Wanna Go After Selecting.
+//---------------------------------------------------------
+//INSTALLATION - INSTALLATION - INSTALLATION - INSTALLATION
+//*********************************************************
+
+//TO USE:
+//-.Status (Brings Up Dialog)
+//-.Special # (Casts Your Special Spell 1 - 5)
+
+
+//Wizard**
+//Illusionist**
+//Shaman**
+//Warlock** 
+//Psychic** 
+//Witch Doctor*
+//Necromancer**
+//Sorcerer** 
+//Monk **
+//Priest**
+
+
+//TOTAL # OF ATTRIBUTE POINTS & NEXT TO LEVEL EXP #
+[defname attributesandexp]
+attributemax=30 //The Maximum Attribute Stat # You Can Have
+nexttolevel=3000 //The EXP You Need For Each Level
+
+
+[DIALOG d_storyline]
+0, 0
+PAGE 0
+resizepic 66 36 5054 480 320
+resizepic 81 45 2520 450 300
+text 182 54 102 0
+text 107 87 32 1
+text 107 107 32 2
+text 107 126 32 3
+text 107 145 32 4
+text 106 168 32 5
+text 105 189 32 6
+text 105 209 32 7
+text 104 231 32 8
+text 104 252 32 9
+text 104 274 32 10
+text 212 314 1345 11
+
+[DIALOG d_storyline TEXT]
+Chronicals Of <serv.name>
+The time has come! Once rumored to be a myth,
+clouds have open, and mystic energy poured from
+the sky. After looking into the Ball Of Fate, 
+you now notice a strange force surrounding your whole
+body. You think nothing of it, but then again you
+have seen images of this. You now have been chosen!
+You see that there is a destiny you must fulfill for
+your own, and the sake of your kind. You set forward
+only to find out that others are here with thier own
+destiny, and will stop at NOTHING to alter thier fate!
+   - Fate Or Destiny -
+
+
+[DIALOG d_storyline BUTTON]
+
+
+
+[DIALOG d_classsystem_main]
+75, 75
+PAGE 0
+resizepic 18 18 5054 430 300
+text 36 24 32 0
+text 36 42 152 1
+text 36 60 162 2
+text 36 78 1250 3
+text 36 96 102 4
+tilepic 117 29 6254 //power 1
+tilepic 127 29 <qval (<eval <src.targ.tag.power2>>==1)? 6254: 9999> //power 2
+tilepic 137 29 <qval (<eval <src.targ.tag.power3>>==1)? 6254: 9999> //power 3
+tilepic 147 29 <qval (<eval <src.targ.tag.power4>>==1)? 6254: 9999> //power 4
+tilepic 157 29 <qval (<eval <src.targ.tag.power5>>==1)? 6254: 9999> //power 5
+tilepic 167 29 <qval (<eval <src.targ.tag.power6>>==1)? 6254: 9999> //power 6
+tilepic 177 29 <qval (<eval <src.targ.tag.power7>>==1)? 6254: 9999> //power 7
+tilepic 187 29 <qval (<eval <src.targ.tag.power8>>==1)? 6254: 9999> //power 8
+tilepic 197 29 <qval (<eval <src.targ.tag.power9>>==1)? 6254: 9999> //power 9
+tilepic 207 29 <qval (<eval <src.targ.tag.power10>>==1)? 6254: 9999> //power 10
+//
+tilepic 117 47 6256 //endurance 1
+tilepic 127 47 <qval (<eval <src.targ.tag.endurance2>>==1)? 6256: 9999> //endurance 2
+tilepic 137 47 <qval (<eval <src.targ.tag.endurance3>>==1)? 6256: 9999> //endurance 3
+tilepic 147 47 <qval (<eval <src.targ.tag.endurance4>>==1)? 6256: 9999> //endurance 4
+tilepic 157 47 <qval (<eval <src.targ.tag.endurance5>>==1)? 6256: 9999> //endurance 5
+tilepic 167 47 <qval (<eval <src.targ.tag.endurance6>>==1)? 6256: 9999> //endurance 6
+tilepic 177 47 <qval (<eval <src.targ.tag.endurance7>>==1)? 6256: 9999> //endurance 7
+tilepic 187 47 <qval (<eval <src.targ.tag.endurance8>>==1)? 6256: 9999> //endurance 8
+tilepic 197 47 <qval (<eval <src.targ.tag.endurance9>>==1)? 6256: 9999> //endurance 9
+tilepic 207 47 <qval (<eval <src.targ.tag.endurance10>>==1)? 6256: 9999> //endurance 10
+//
+tilepic 117 65 6251 //technique 1
+tilepic 127 65 <qval (<eval <src.targ.tag.technique2>>==1)? 6251: 9999> //technique 2
+tilepic 137 65 <qval (<eval <src.targ.tag.technique3>>==1)? 6251: 9999> //technique 3
+tilepic 147 65 <qval (<eval <src.targ.tag.technique4>>==1)? 6251: 9999> //technique 4
+tilepic 157 65 <qval (<eval <src.targ.tag.technique5>>==1)? 6251: 9999> //technique 5
+tilepic 167 65 <qval (<eval <src.targ.tag.technique6>>==1)? 6251: 9999> //technique 6
+tilepic 177 65 <qval (<eval <src.targ.tag.technique7>>==1)? 6251: 9999> //technique 7
+tilepic 187 65 <qval (<eval <src.targ.tag.technique8>>==1)? 6251: 9999> //technique 8
+tilepic 197 65 <qval (<eval <src.targ.tag.technique9>>==1)? 6251: 9999> //technique 9
+tilepic 207 65 <qval (<eval <src.targ.tag.technique10>>==1)? 6251: 9999> //technique 10
+//
+tilepic 117 83 6249 //discipline 1
+tilepic 127 83 <qval (<eval <src.targ.tag.discipline2>>==1)? 6249: 9999> //discipline 2
+tilepic 137 83 <qval (<eval <src.targ.tag.discipline3>>==1)? 6249: 9999> //discipline 3
+tilepic 147 83 <qval (<eval <src.targ.tag.discipline4>>==1)? 6249: 9999> //discipline 4
+tilepic 157 83 <qval (<eval <src.targ.tag.discipline5>>==1)? 6249: 9999> //discipline 5
+tilepic 167 83 <qval (<eval <src.targ.tag.discipline6>>==1)? 6249: 9999> //discipline 6
+tilepic 177 83 <qval (<eval <src.targ.tag.discipline7>>==1)? 6249: 9999> //discipline 7
+tilepic 187 83 <qval (<eval <src.targ.tag.discipline8>>==1)? 6249: 9999> //discipline 8
+tilepic 197 83 <qval (<eval <src.targ.tag.discipline9>>==1)? 6249: 9999> //discipline 9
+tilepic 207 83 <qval (<eval <src.targ.tag.discipline10>>==1)? 6249: 9999> //discipline 10
+//
+tilepic 117 101 6250 //wisdom 1
+tilepic 127 101 <qval (<eval <src.targ.tag.wisdom2>>==1)? 6250: 9999> //wisdom 2
+tilepic 137 101 <qval (<eval <src.targ.tag.wisdom3>>==1)? 6250: 9999> //wisdom 3
+tilepic 147 101 <qval (<eval <src.targ.tag.wisdom4>>==1)? 6250: 9999> //wisdom 4
+tilepic 157 101 <qval (<eval <src.targ.tag.wisdom5>>==1)? 6250: 9999> //wisdom 5
+tilepic 167 101 <qval (<eval <src.targ.tag.wisdom6>>==1)? 6250: 9999> //wisdom 6
+tilepic 177 101 <qval (<eval <src.targ.tag.wisdom7>>==1)? 6250: 9999> //wisdom 7
+tilepic 187 101 <qval (<eval <src.targ.tag.wisdom8>>==1)? 6250: 9999> //wisdom 8
+tilepic 197 101 <qval (<eval <src.targ.tag.wisdom9>>==1)? 6250: 9999> //wisdom 9
+tilepic 207 101 <qval (<eval <src.targ.tag.wisdom10>>==1)? 6250: 9999> //wisdom 10
+//
+resizepic 29 126 5120 410 185
+//resizepic 216 131 83 30 175
+resizepic 251 23 2620 190 100
+text 261 27 1152 5
+text 261 42 1153 6
+text 261 60 995 7
+text 261 96 1350 8
+text 261 78 301 9
+tilepic 30 135 4029
+tilepic 30 169 4029
+tilepic 30 205 4029
+tilepic 30 241 4029
+tilepic 30 277 4029
+tilepic 160 72 14278
+tilepic 160 104 14278
+tilepic 160 142 14278
+tilepic 160 177 14278
+tilepic 160 212 14278
+text 72 135 31 10
+text 72 168 31 11
+text 72 204 31 12
+text 72 240 31 13
+text 72 276 31 14
+text 255 135 700 15
+text 255 168 700 16
+text 255 204 700 17
+text 255 240 700 18
+text 255 276 700 19
+button 27 320 2117 2118 1 0 11
+text 51 315 1250 20
+text 334 315 1345 21
+
+[DIALOG d_classsystem_main TEXT]
+Power:
+Endurance:
+Technique:
+Discipline:
+Wisdom:
+Name: <src.targ.name>
+Exp: <eval <src.targ.tag.exp>>
+Next: <eval <src.targ.tag.nextexp>>
+Total Exp: <eval <src.targ.tag.totalexp>>
+Level: <eval <src.targ.tag.level>> / 10
+<src.targ.tag.spell1name>
+<src.targ.tag.spell2name>
+<src.targ.tag.spell3name>
+<src.targ.tag.spell4name>
+<src.targ.tag.spell5name>
+<src.targ.tag.ability1name>
+<src.targ.tag.ability2name>
+<src.targ.tag.ability3name>
+<src.targ.tag.ability4name>
+<src.targ.tag.ability5name>
+Modify
+Majesty v2.0
+
+
+[DIALOG d_classsystem_main BUTTON]
+on=11
+menu m_modify_menu
+
+//******************************************
+//CLASS SELECTION SELECTION CLASS SELECTION
+//******************************************
+
+
+[DIALOG d_class_select_wizard]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8369 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_wizard TEXT]
+The Wizard is one of the most respected
+immortals of the land. Wizards usually are
+protectors of thier land. When people are
+in need of help, they usually call for the
+assistance of the Wizard. They specialize
+in Arcane Arts, and rely on swift attacks 
+and defenses down the enemy.
+Wizard
+Offense: 7
+Defense: 7
+Healing: 2
+Combat Technique: 8
+Survival: 7
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_wizard BUTTON]
+on=1
+dialog d_class_select_priest
+sfx=snd_spell_cunning
+on=2
+dialog d_class_select_illusionist
+sfx=00f7
+on=3
+src.tag.magicclass=Wizard
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+/////////
+
+[DIALOG d_class_select_illusionist]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8329 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_illusionist TEXT]
+The Illusionist is one of the most cunning
+immortals in the land. They use thier mystic
+talents to create some powerful and devious
+traps. While lacking in Offense, thier 
+Defensive abilitys almost combines as one.
+Illusionists usually refrain from battles, 
+but when working in groups they are deadly.
+Illusionist
+Offense: 4
+Defense: 8
+Healing: 2
+Combat Technique: 10
+Survival: 6
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_illusionist BUTTON]
+on=1
+dialog d_class_select_wizard
+sfx=0206
+on=2
+dialog d_class_select_shaman
+sfx=019d
+on=3
+src.tag.magicclass=Illusionist
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+/////////
+
+
+[DIALOG d_class_select_shaman]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8375 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_shaman TEXT]
+The Shaman practices the art of Voodoo, and
+uses it for evil. They have corrupted the
+souls of many. While almost the same as 
+the Witch Doctor, the Shaman is all about 
+Destruction. Their attacks usually effect
+the body aswell as the soul of thier victims. 
+Shamans are widely despised in the lands.
+Shaman
+Offense: 8
+Defense: 3
+Healing: 1
+Combat Technique: 8
+Survival: 7
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_shaman BUTTON]
+on=1
+dialog d_class_select_illusionist
+sfx=00f7
+on=2
+dialog d_class_select_warlock
+sfx=0222
+sfx=011d
+on=3
+src.tag.magicclass=Shaman
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+
+
+/////////
+
+
+[DIALOG d_class_select_warlock]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8370 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_warlock TEXT]
+The Warlock is one of the most destructive
+forces in the land. Driven by the thought
+of world domination, they have killed many 
+who stepped in thier way. The nemesis of 
+the Warlock is the Wizard. Warlocks use
+attacks that can be devestating if the 
+victim is not cautious or prepared. 
+Warlock
+Offense: 9
+Defense: 3
+Healing: 3
+Combat Technique: 7
+Survival: 7
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_warlock BUTTON]
+on=1
+dialog d_class_select_shaman
+sfx=019d
+on=2
+dialog d_class_select_psychic
+sfx=253
+on=3
+src.tag.magicclass=Warlock
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+
+////////
+
+
+
+[DIALOG d_class_select_psychic]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8350 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_psychic TEXT]
+The Psychic is a mortal, but is gifted with
+talents only seen in immortals. The Psychic
+is usually a nuetral party in the lands. 
+But wisemen has said that anyone gifted with 
+psychic abilities have been chosen for an
+unknown destiny. Psychics use thier mind to 
+perform overwhelming defensive actions.
+Psychic
+Offense: 4
+Defense: 10
+Healing: 3
+Combat Technique: 7
+Survival: 7
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_psychic BUTTON]
+on=1
+dialog d_class_select_warlock
+sfx=0222
+sfx=011d
+on=2
+dialog d_class_select_witchdoctor
+sfx=611
+on=3
+src.tag.magicclass=Psychic
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+
+///////
+
+
+[DIALOG d_class_select_witchdoctor]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8331 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_witchdoctor TEXT]
+The Witch Doctor practices the mystic art
+of Voodoo, but unlike his Rival, the Shaman,
+the Witch Doctor uses his powers for unknown 
+purposes. Some has said that the Witch Doctor 
+pretends to be good, while his heart is really
+bent on destruction. Witch Doctors use powerful  
+healing, curses, and rituals to destroy thier foes. 
+Witch Doctor
+Offense: 6
+Defense: 1
+Healing: 10
+Combat Technique: 8
+Survival: 7
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_witchdoctor BUTTON]
+on=1
+dialog d_class_select_psychic
+sfx=253
+on=2
+dialog d_class_select_necromancer
+sfx=snd_monster_liche1
+on=3
+src.tag.magicclass=Witchdoctor
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+
+
+///////////////
+
+
+
+[DIALOG d_class_select_necromancer]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8373 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_necromancer TEXT]
+The Necromancer is probably the most evil
+immortal in the lands. They have killed whole
+towns only to resurrect them as undead slaves. 
+Necromancers have mastered the wicked art of 
+reanimation, and hypnosis. They usually summon
+the undead to do thier bidding, but they also 
+use thier own evil attacks to kill thier victim.
+Necromancer
+Offense: 4
+Defense: 7
+Healing: 6
+Combat Technique: 8
+Survival: 8
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_necromancer BUTTON]
+on=1
+dialog d_class_select_witchdoctor
+sfx=611
+on=2
+dialog d_class_select_sorcerer
+sfx=240
+sfx=0222
+on=3
+src.tag.magicclass=Necromancer
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+
+///////////////////////
+
+
+
+[DIALOG d_class_select_sorcerer]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8337 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_sorcerer TEXT]
+The Sorcerer is a Knight blessed with the
+art of Magic, that's how his title is formed.
+The Sorcerer has vowed to rid the lands of 
+corrupt, wicked, and evil beings. Some has said 
+the Sorcerer is a desendant of a Warlock...They use
+different elemental attacks and defenses, they 
+also use thier mysterious inner power for.......
+Sorcerer
+Offense: 7
+Defense: 7
+Healing: 4
+Combat Technique: 6
+Survival: 8
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_sorcerer BUTTON]
+on=1
+dialog d_class_select_necromancer
+sfx=snd_monster_liche1
+on=2
+dialog d_class_select_monk
+sfx=256
+on=3
+src.tag.magicclass=Sorcerer
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+
+////////////
+
+
+
+[DIALOG d_class_select_monk]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8354 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_monk TEXT]
+The Monk is one of The Chosen, they are
+in the lands to fulfill thier unknown destiny.
+Monks are very secretive, and mysterious. 
+Noone knows the TRUE motives of the Monk,  
+they are very secluded. Monks use a mysterious
+art to overwhelm, protect, or even kill thier enemy. 
+Monks usually travel alone, or with fellow monks..
+Monk
+Offense: 6
+Defense: 8
+Healing: 3
+Combat Technique: 8
+Survival: 6
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_monk BUTTON]
+on=1
+dialog d_class_select_sorcerer
+sfx=240
+sfx=0222
+on=2
+dialog d_class_select_priest
+sfx=snd_spell_cunning
+on=3
+src.tag.magicclass=Monk
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+//////////
+
+
+[DIALOG d_class_select_priest]
+75, 75
+PAGE 0
+resizepic 63 36 5100 370 300
+resizepic 72 162 3600 350 170
+resizepic 71 48 2620 130 110
+tilepic 115 80 8378 //ICON
+text 90 180 32 0
+text 90 195 32 1
+text 90 213 32 2
+text 90 231 32 3
+text 90 249 32 4
+text 90 266 32 5
+text 90 285 32 6
+text 207 51 1153 7
+text 207 69 1101 8
+text 207 87 1101 9
+text 207 105 1101 10
+text 207 123 1101 11
+text 207 141 1101 12
+button 81 338 4014 4015 1 0 1
+button 387 338 4005 4006 1 0 2
+button 230 339 2472 2473 1 0 3
+text 220 362 95 13
+text 169 14 31 14
+
+[DIALOG d_class_select_priest TEXT]
+The Priest is not exactly a mortal, but
+an Angel sent down from the skys. They
+have tooken the body of a christian mortal 
+to blend in with the civiliation. The Priest  
+is the Arch Nemesis of the Necromancer.
+The Priest uses divine arts to summon, heal, 
+defend, or even judge thier foes. 
+Priest
+Offense: 5
+Defense: 7
+Healing: 8
+Combat Technique: 6
+Survival: 7
+Choose
+Choose Your Destiny
+
+
+[DIALOG d_class_select_priest BUTTON]
+on=1
+dialog d_class_select_monk
+sfx=256
+on=2
+dialog d_class_select_wizard
+sfx=snd_spell_lightning
+sfx=0222
+on=3
+src.tag.magicclass=Priest
+serv.b A New <src.tag.magicclass> Is Born!
+serv.b (<src.name>)
+serv.allclients sfx=0101
+src.tag.statpoints=0
+src.tag.totalstats=0
+src.tag.exp=0
+src.tag.totalexp=0
+src.clearspellnames
+src.tag.level=1
+src.tag.nextexp=<eval nexttolevel>
+src.events +e_class_system
+src.dialog d_storyline
+src.f_apply_power
+src.f_apply_technique
+src.f_apply_endurance
+src.f_apply_discipline
+src.f_apply_wisdom
+src.go=<morep>
+src.effect=3,i_fx_sparkle_2,16,16,0
+src.tag.classpicked=1
+return 1
+
+
+
+
+
+//*****************************************************
+//EXP SYSTEM / SPELL AQUIRING  FUNCTIONS / PVP SYSTEM!!
+//*****************************************************
+
+
+[function clearspellnames]
+tag.spell1name=...?...
+tag.spell2name=...?...
+tag.spell3name=...?...
+tag.spell4name=...?...
+tag.spell5name=...?...
+tag.spellaquired=0
+return 1
+
+
+[function f_aquire_spell]
+if (strmatch(<tag.magicclass>,Wizard))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Strike
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Barrial Escape
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Magic Bomb
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Invisible Assualt
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Arcane Execution
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+/////////////////////////////////
+
+if (strmatch(<tag.magicclass>,Illusionist))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Deception
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Painful Decoy
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Invisible Trap
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Realm Switch
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Mystic Protection
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+////////////////////////////
+
+if (strmatch(<tag.magicclass>,Shaman))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Mind Drain
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Agile Savant
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Wicked Fury
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Spirit Summon
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Soul Corruptor
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+/////////////////////////////
+
+if (strmatch(<tag.magicclass>,Warlock))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Soul Insert
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Living Arrow
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Silence
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Warlock's Embrace
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Armageddon
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+////////////////////////////
+
+if (strmatch(<tag.magicclass>,Psychic))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Tele Switch
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Mind Collapse
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Mind Swap
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Mind Barrier
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Psychic Defense
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+////////////////////////////////
+
+if (strmatch(<tag.magicclass>,Witchdoctor))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Health Absorb
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Infection
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Body Restore
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Voodoo Doll
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Voodoo Rage
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+//////////////////////////////
+
+if (strmatch(<tag.magicclass>,Necromancer))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Weakness
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Undead Incognito
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Necro Blast
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Reanimate
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Call Of Necropolis
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+///////////////////////////////////
+
+if (strmatch(<tag.magicclass>,Sorcerer))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Flame Attack
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Arctic Field
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Judgement
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Flame Barrier
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Sorcerer's Touch
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+////////////////////////////
+
+if (strmatch(<tag.magicclass>,Monk))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Warp
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Shadow Blast
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Mystic Defense
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Living Shadow
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Burning Execution
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+/////////////////////////
+
+if (strmatch(<tag.magicclass>,Priest))
+if (<eval <tag.spellaquired>> = 0 )
+tag.spell1name=Holy Energy
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell1name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 1 )
+tag.spell2name=Soul Purification
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell2name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 2 )
+tag.spell3name=Guardian Angel
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell3name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 3 )
+tag.spell4name=Ankh Summon
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell4name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+if (<eval <tag.spellaquired>> = 4 )
+tag.spell5name=Wrath Of God
+sysmessage=You have aquired a New Spell!
+sysmessage=(<tag.spell5name>)
+effect=3,i_fx_sparkle_2,16,16,0
+sfx=257
+tag.spellaquired=<eval <tag.spellaquired>>+1
+return 1
+endif
+endif
+
+[function f_exp_gains]
+if (<eval <isitem>> == 1)||(<eval <npc>> > 0 )
+return 1
+endif
+sayu=Exp +<eval <var.expgain>>
+tag.exp=<eval <tag.exp>>+<eval <var.expgain>>
+tag.nextexp=<eval <tag.nextexp>>+-<eval <var.expgain>>
+tag.totalexp=<eval <tag.totalexp>>+<eval <var.expgain>>
+if (<eval <tag.nextexp>> < 1 )
+tag.statpoints=<eval <tag.statpoints>>+4
+tag.nextexp=<eval nexttolevel>
+sfx=<qval (<eval <tag.spellaquired>>==5)? snd_spell_cunning: 0>
+hits=<str>
+mana=<int>
+stamina=<dex>
+if (<eval <tag.level>> < 10 )
+emote=level up
+tag.level=<eval <tag.level>>+1
+endif
+f_get_spell_levels
+return 1
+endif
+
+[function f_get_spell_levels]
+if (<eval <tag.level>> = 2 )
+f_aquire_spell
+return 1
+elseif (<eval <tag.level>> = 4 )
+f_aquire_spell
+return 1
+elseif (<eval <tag.level>> = 6 )
+f_aquire_spell
+return 1
+elseif (<eval <tag.level>> = 8 )
+f_aquire_spell
+return 1
+elseif (<eval <tag.level>> = 10 )
+f_aquire_spell
+return 1
+endif
+
+[events e_exp_gains]
+on=@death
+var.expgain=<eval <str>/8>
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+findid.i_memory.f_exp_gain_npc
+return 0
+
+[function f_exp_gain_npc]
+link.f_exp_gains
+remove
+return 0
+
+[events e_class_system]
+on=@click
+message=[<tag.magicclass>]
+return 0
+
+on=@hit
+if (<src.npc>)&&(<eval <src.isevent.e_exp_gains>> = 0 )&&!(<src.flags> & statf_conjured )
+src.events=+e_exp_gains
+return 0
+endif
+
+if (<src.region.flags> & region_flag_safe )||(<src.region.flags> & region_flag_no_pvp )
+return 0
+else
+src.hits=<src.hits>+-{ 0 <eval <tag.totalpower>> }+{ 0 <eval <src.tag.totalendurance>> }
+src.stamina=<src.stamina>+-{ 0 <eval <tag.totaltechnique>> }+{ 0 <eval <src.tag.totalendurance>> }
+f_fix_stats
+return 0
+endif
+
+on=@death
+If (<act.brain> == 0 )&&(<eval <tag.exp>> > 199 )
+act.tag.exp=<eval <act.tag.exp>>+200
+tag.exp=<eval <tag.exp>>+-200
+act.sayu=Exp +200
+sayu=Exp -200
+//act.tag.nextexp=<eval <act.tag.nextexp>>+-200
+//tag.nextexp=<eval <tag.nextexp>>+200
+act.tag.totalexp=<eval <act.tag.totalexp>>+200
+if (<eval <act.tag.nextexp>> < 1 )
+act.tag.statpoints=<eval <act.tag.statpoints>>+4
+act.tag.nextexp=<eval nexttolevel>
+act.sfx=<qval (<eval <tag.spellaquired>>==5)? snd_spell_cunning: 0>
+act.hits=<act.str>
+act.mana=<act.int>
+act.stamina=<act.dex>
+if (<eval <act.tag.level>> < 10 )
+act.emote=level up
+act.tag.level=<eval <act.tag.level>>+1
+endif
+act.f_get_spell_levels
+return 0
+endif
+
+on=@spelleffect
+if (<argn> == 51 )||(<argn> == 30 )||(<argn> == 42 )
+var.placement=<uid>
+//var.lastact=<act>
+if (<findid.i_anti_gank_mem> == 1 )
+findid.i_anti_gank_mem.timer=5
+//act=<src.uid>
+var.lastact=
+return 0
+else
+newitem=i_anti_gank_mem
+act.cont=<var.placement>
+act.timer=5
+//act=<src.uid>
+//var.lastact=
+var.placement=
+return 0
+endif
+endif
+
+
+[function f_absorb_exp]
+link.tag.exp=<eval <link.tag.exp>>+<eval <cont.tag.exp>/10>
+if (<eval <link.tag.nextexp>> < 1 )
+link.tag.statpoints=<eval <link.tag.statpoints>>+4
+link.tag.nextexp=<eval nexttolevel>
+link.sfx=<qval (<eval <link.tag.spellaquired>>==5)? snd_spell_cunning: 0>
+link.hits=<link.str>
+link.mana=<link.int>
+link.stamina=<link.dex>
+if (<eval <link.tag.level>> < 10 )
+link.emote=level up
+link.tag.level=<eval <link.tag.level>>+1
+endif
+link.f_get_spell_levels
+if (<cont.tag.exp> < 1 )
+cont.tag.exp=1
+endif
+link.sayu=Exp +<eval <cont.tag.exp>/10>
+remove
+return 1
+endif
+
+
+
+[function f_fix_stats]
+if (<src.stamina> < 1 )
+src.stamina=0
+endif
+if (<src.stamina> > <src.dex> )
+src.stamina=<src.dex>
+endif
+if (<src.hits> > <src.str> )
+src.hits=<src.str>
+endif
+
+[menu m_aquire_ability_slot_remove]
+Which Slot Will You Remove An Ability From?
+
+on=0 Slot 1
+tag.addinslot=1
+if (strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is no ability in this slot to remove.
+return 1
+else
+tag.ability1name=None
+events=-<tag.ability1event>
+sysmessage=You have removed the Ability from Slot 1.
+return 1
+endif
+
+on=0 Slot 2
+tag.addinslot=2
+if (strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is no ability in this slot to remove.
+return 1
+else
+tag.ability2name=None
+events=-<tag.ability2event>
+sysmessage=You have removed the Ability from Slot 2.
+return 1
+endif
+
+on=0 Slot 3
+tag.addinslot=3
+if (strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is no ability in this slot to remove.
+return 1
+else
+tag.ability3name=None
+events=-<tag.ability3event>
+sysmessage=You have removed the Ability from Slot 3.
+return 1
+endif
+
+on=0 Slot 4
+tag.addinslot=4
+if (strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is no ability in this slot to remove.
+return 1
+else
+tag.ability4name=None
+events=-<tag.ability4event>
+sysmessage=You have removed the Ability from Slot 4.
+return 1
+endif
+
+on=0 Slot 5
+tag.addinslot=5
+if (strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is no ability in this slot to remove.
+return 1
+else
+tag.ability5name=None
+events=-<tag.ability5event>
+sysmessage=You have removed the Ability from Slot 5.
+return 1
+endif
+
+[menu m_aquire_ability_choose]
+What Will You Do?
+
+on=0 Aquire Ability
+menu m_aquire_ability_slot
+
+on=0 Remove Ability From A Slot
+menu m_aquire_ability_slot_remove
+
+[menu m_modify_menu]
+What Action Do You Wish To Perform?
+on=0 Raise Attributes
+menu m_raise_attributes
+
+on=0 Aquire Abilties
+menu m_aquire_ability_choose
+
+on=0 Reconstruct Attributes (!No Restoration!) (10000 EXP)
+if (<eval <tag.exp>> > 9999 )
+tag.exp=<eval <tag.exp>>+-10000
+f_clear_attributes
+return 1
+else
+sysmessage=You need atleast (10000 EXP) to perfom this action.
+return 1
+endif
+
+[menu m_raise_attributes]
+Which Attribute Will You Raise? (You Currently Have <eval <tag.statpoints>> Stat Points)
+on=0 Power
+if (<eval <tag.totalstats>> > <eval attributemax> )//||(<eval <tag.totalstats>> = <eval attributemax> )
+sysmessage=You have reached your Limit of Attribute Points...
+return 1
+endif
+if (<eval <tag.totalpower>> > 9 )
+sysmessage=Your Power Attribute Is Maxed...
+return 1
+endif
+if (<eval <tag.statpoints>> < 1 )
+sysmessage=You do not have any Stat Points To Raise This...
+return 1
+endif
+if (<eval <tag.power9>> = 1 )
+tag.power10=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power8>> = 1 )
+tag.power9=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power7>> = 1 )
+tag.power8=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power6>> = 1 )
+tag.power7=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power5>> = 1 )
+tag.power6=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power4>> = 1 )
+tag.power5=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power3>> = 1 )
+tag.power4=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power2>> = 1 )
+tag.power3=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power10>> = 1 )
+sfx=245
+sayu=Power (Maxed)
+menu m_raise_attributes
+return <f_apply_power>
+elseif (<eval <tag.power2>> = 0 )
+tag.power2=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=Power (+1)
+menu m_raise_attributes
+return <f_apply_power>
+endif 
+
+on=0 Endurance
+if (<eval <tag.totalstats>> > <eval attributemax> )//||(<eval <tag.totalstats>> = <eval attributemax> )
+sysmessage=You have reached your Limit of Attribute Points...
+return 1
+endif
+if (<eval <tag.totalendurance>> > 9 )
+sysmessage=Your Endurance Attribute Is Maxed...
+return 1
+endif
+if (<eval <tag.statpoints>> < 1 )
+sysmessage=You do not have any Stat Points To Raise This...
+return 1
+endif
+if (<eval <tag.endurance9>> = 1 )
+tag.endurance10=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance8>> = 1 )
+tag.endurance9=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance7>> = 1 )
+tag.endurance8=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance6>> = 1 )
+tag.endurance7=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance5>> = 1 )
+tag.endurance6=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance4>> = 1 )
+tag.endurance5=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance3>> = 1 )
+tag.endurance4=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance2>> = 1 )
+tag.endurance3=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance10>> = 1 )
+sfx=245
+sayu=endurance (Maxed)
+menu m_raise_attributes
+return <f_apply_endurance>
+elseif (<eval <tag.endurance2>> = 0 )
+tag.endurance2=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=endurance (+1)
+menu m_raise_attributes
+return <f_apply_endurance>
+endif
+
+on=0 Technique
+if (<eval <tag.totalstats>> > <eval attributemax> )//||(<eval <tag.totalstats>> = <eval attributemax> )
+sysmessage=You have reached your Limit of Attribute Points...
+return 1
+endif
+if (<eval <tag.totaltechnique>> > 9 )
+sysmessage=Your Technique Attribute Is Maxed...
+return 1
+endif
+if (<eval <tag.statpoints>> < 1 )
+sysmessage=You do not have any Stat Points To Raise This...
+return 1
+endif
+if (<eval <tag.technique9>> = 1 )
+tag.technique10=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique8>> = 1 )
+tag.technique9=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique7>> = 1 )
+tag.technique8=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique6>> = 1 )
+tag.technique7=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique5>> = 1 )
+tag.technique6=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique4>> = 1 )
+tag.technique5=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique3>> = 1 )
+tag.technique4=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique2>> = 1 )
+tag.technique3=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique10>> = 1 )
+sfx=245
+sayu=technique (Maxed)
+menu m_raise_attributes
+return <f_apply_technique>
+elseif (<eval <tag.technique2>> = 0 )
+tag.technique2=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=technique (+1)
+menu m_raise_attributes
+return <f_apply_technique>
+endif
+
+on=0 Discipline
+if (<eval <tag.totalstats>> > <eval attributemax> )//||(<eval <tag.totalstats>> = <eval attributemax> )
+sysmessage=You have reached your Limit of Attribute Points...
+return 1
+endif
+if (<eval <tag.totaldiscipline>> > 64 )
+sysmessage=Your Discipline Attribute Is Maxed...
+return 1
+endif
+if (<eval <tag.statpoints>> < 1 )
+sysmessage=You do not have any Stat Points To Raise This...
+return 1
+endif
+if (<eval <tag.discipline9>> = 1 )
+tag.discipline10=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline8>> = 1 )
+tag.discipline9=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline7>> = 1 )
+tag.discipline8=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline6>> = 1 )
+tag.discipline7=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline5>> = 1 )
+tag.discipline6=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline4>> = 1 )
+tag.discipline5=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline3>> = 1 )
+tag.discipline4=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline2>> = 1 )
+tag.discipline3=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline10>> = 1 )
+sfx=245
+sayu=discipline (Maxed)
+menu m_raise_attributes
+return <f_apply_discipline>
+elseif (<eval <tag.discipline2>> = 0 )
+tag.discipline2=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=discipline (+1)
+menu m_raise_attributes
+return <f_apply_discipline>
+endif
+
+on=0 Wisdom
+if (<eval <tag.totalstats>> > <eval attributemax> )//||(<eval <tag.totalstats>> = <eval attributemax> )
+sysmessage=You have reached your Limit of Attribute Points...
+return 1
+endif
+if (<eval <tag.totalwisdom>> > 9 )
+sysmessage=Your Wisdom Attribute Is Maxed...
+return 1
+endif
+if (<eval <tag.statpoints>> < 1 )
+sysmessage=You do not have any Stat Points To Raise This...
+return 1
+endif
+if (<eval <tag.wisdom9>> = 1 )
+tag.wisdom10=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom8>> = 1 )
+tag.wisdom9=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom7>> = 1 )
+tag.wisdom8=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom6>> = 1 )
+tag.wisdom7=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom5>> = 1 )
+tag.wisdom6=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom4>> = 1 )
+tag.wisdom5=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom3>> = 1 )
+tag.wisdom4=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom2>> = 1 )
+tag.wisdom3=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom10>> = 1 )
+sfx=245
+sayu=wisdom (Maxed)
+menu m_raise_attributes
+return <f_apply_wisdom>
+elseif (<eval <tag.wisdom2>> = 0 )
+tag.wisdom2=1
+sfx=245
+tag.statpoints=<eval <tag.statpoints>>+-1
+tag.totalstats=<eval <tag.totalstats>>+1
+sayu=wisdom (+1)
+menu m_raise_attributes
+return <f_apply_wisdom>
+endif
+
+on=0 Stat/Attribute Information
+classstatinfo
+
+
+[menu m_aquire_ability_slot]
+Which Slot Will You Add This Ability?
+
+on=0 Slot 1
+if (<eval <tag.totaltechnique>> < 2 )
+sysmessage=Your Technique isn't adept enough for this slot...
+return 1
+endif
+tag.addinslot=1
+menu m_aquire_ability_add
+
+on=0 Slot 2
+if (<eval <tag.totaltechnique>> < 4 )
+sysmessage=Your Technique isn't adept enough for this slot...
+return 1
+endif
+tag.addinslot=2
+menu m_aquire_ability_add
+
+on=0 Slot 3
+if (<eval <tag.totaltechnique>> < 6 )
+sysmessage=Your Technique isn't adept enough for this slot...
+return 1
+endif
+tag.addinslot=3
+menu m_aquire_ability_add
+
+on=0 Slot 4
+if (<eval <tag.totaltechnique>> < 8 )
+sysmessage=Your Technique isn't adept enough for this slot...
+return 1
+endif
+tag.addinslot=4
+menu m_aquire_ability_add
+
+on=0 Slot 5
+if (<eval <tag.totaltechnique>> < 10 )
+sysmessage=Your Technique isn't adept enough for this slot...
+return 1
+endif
+tag.addinslot=5
+menu m_aquire_ability_add
+
+[menu m_aquire_ability_add]
+Which Ability Whill You Aquire?
+
+on=0 Thermal Reflect (15000 Exp)
+if !(strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is already an Ability in this slot...
+return 1
+endif
+
+if (<eval <tag.exp>> > 14999 )
+tag.exp=<eval <tag.exp>>+-15000
+var.abilityname=Thermal Reflect
+var.abilityevent=e_thermal_reflect
+f_input_slot_name
+events=+e_thermal_reflect
+sfx=snd_spell_cunning
+sysmessage=You Have Aquired A New Ability...
+return 1
+else
+sysmessage=You need atleast (15000 Exp) to Aquire this Ability.
+return 1
+endif
+
+on=0 Poison Reflect (10000 Exp)
+if !(strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is already an Ability in this slot...
+return 1
+endif
+
+if (<eval <tag.exp>> > 9999 )
+tag.exp=<eval <tag.exp>>+-10000
+var.abilityname=Poison Reflect
+var.abilityevent=e_poison_reflect
+f_input_slot_name
+events=+e_poison_reflect
+sfx=snd_spell_cunning
+sysmessage=You Have Aquired A New Ability...
+return 1
+else
+sysmessage=You need atleast (10000 Exp) to Aquire this Ability.
+return 1
+endif
+
+on=0 Blessed Flesh (10000 Exp)
+if !(strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is already an Ability in this slot...
+return 1
+endif
+
+if (<eval <tag.exp>> > 9999 )
+tag.exp=<eval <tag.exp>>+-10000
+var.abilityname=Blessed Flesh
+var.abilityevent=e_blessed_flesh
+f_input_slot_name
+events=+e_blessed_flesh
+sfx=snd_spell_cunning
+sysmessage=You Have Aquired A New Ability...
+return 1
+else
+sysmessage=You need atleast (10000 Exp) to Aquire this Ability.
+return 1
+endif
+
+on=0 Para Resist (10000 Exp)
+if !(strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is already an Ability in this slot...
+return 1
+endif
+
+if (<eval <tag.exp>> > 9999 )
+tag.exp=<eval <tag.exp>>+-10000
+var.abilityname=Para Resist
+var.abilityevent=e_para_resist
+f_input_slot_name
+events=+e_para_resist
+sfx=snd_spell_cunning
+sysmessage=You Have Aquired A New Ability...
+return 1
+else
+sysmessage=You need atleast (10000 Exp) to Aquire this Ability.
+return 1
+endif
+
+on=0 Mind Slay (15000 Exp)
+if !(strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is already an Ability in this slot...
+return 1
+endif
+
+if (<eval <tag.exp>> > 14999 )
+tag.exp=<eval <tag.exp>>+-15000
+var.abilityname=Mind Slay
+var.abilityevent=e_mind_slay
+f_input_slot_name
+events=+e_mind_slay
+sfx=snd_spell_cunning
+sysmessage=You Have Aquired A New Ability...
+return 1
+else
+sysmessage=You need atleast (15000 Exp) to Aquire this Ability.
+return 1
+endif
+
+
+on=0 Electric Absorb (15000 Exp)
+if !(strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is already an Ability in this slot...
+return 1
+endif
+
+if (<eval <tag.exp>> > 14999 )
+tag.exp=<eval <tag.exp>>+-15000
+var.abilityname=Electric Absorb
+var.abilityevent=e_electric_absorb
+f_input_slot_name
+events=+e_electric_absorb
+sfx=snd_spell_cunning
+sysmessage=You Have Aquired A New Ability...
+return 1
+else
+sysmessage=You need atleast (15000 Exp) to Aquire this Ability.
+return 1
+endif
+
+on=0 Blood Lust (10000 Exp)
+if !(strmatch(<tag.ability<eval <tag.addinslot>>name>,None))
+sysmessage=There is already an Ability in this slot...
+return 1
+endif
+
+if (<eval <tag.exp>> > 9999 )
+tag.exp=<eval <tag.exp>>+-10000
+var.abilityname=Blood Lust
+var.abilityevent=e_blood_lust
+f_input_slot_name
+events=+e_blood_lust
+sfx=snd_spell_cunning
+sysmessage=You Have Aquired A New Ability...
+return 1
+else
+sysmessage=You need atleast (10000 Exp) to Aquire this Ability.
+return 1
+endif
+
+
+
+
+[function f_input_slot_name]
+if (<eval <tag.addinslot>> = 1 )
+tag.ability1name=<var.abilityname>
+var.abilityname=
+tag.ability1event=<var.abilityevent>
+var.abilityevent=
+tag.addinslot=
+return 1
+endif
+if (<eval <tag.addinslot>> = 2 )
+tag.ability2name=<var.abilityname>
+var.abilityname=
+tag.ability2event=<var.abilityevent>
+var.abilityevent=
+tag.addinslot=
+return 1
+endif
+if (<eval <tag.addinslot>> = 3 )
+tag.ability3name=<var.abilityname>
+var.abilityname=
+tag.ability3event=<var.abilityevent>
+var.abilityevent=
+tag.addinslot=
+return 1
+endif
+if (<eval <tag.addinslot>> = 4 )
+tag.ability4name=<var.abilityname>
+var.abilityname=
+tag.ability4event=<var.abilityevent>
+var.abilityevent=
+tag.addinslot=
+return 1
+endif
+if (<eval <tag.addinslot>> = 5 )
+tag.ability5name=<var.abilityname>
+var.abilityname=
+tag.ability5event=<var.abilityevent>
+var.abilityevent=
+tag.addinslot=
+return 1
+endif
+
+//SELF EXPLANITORY
+[function f_clear_attributes]
+//tag.exp=0
+//tag.nextexp=<eval nexttolevel>
+//tag.level=1
+//tag.totalexp=0
+tag.power2=
+tag.power3=
+tag.power4=
+tag.power5=
+tag.power6=
+tag.power7=
+tag.power8=
+tag.power9=
+tag.power10=
+tag.discipline2=
+tag.discipline3=
+tag.discipline4=
+tag.discipline5=
+tag.discipline6=
+tag.discipline7=
+tag.discipline8=
+tag.discipline9=
+tag.discipline10=
+tag.endurance2=
+tag.endurance3=
+tag.endurance4=
+tag.endurance5=
+tag.endurance6=
+tag.endurance7=
+tag.endurance8=
+tag.endurance9=
+tag.endurance10=
+tag.technique2=
+tag.technique3=
+tag.technique4=
+tag.technique5=
+tag.technique6=
+tag.technique7=
+tag.technique8=
+tag.technique9=
+tag.technique10=
+tag.wisdom2=
+tag.wisdom3=
+tag.wisdom4=
+tag.wisdom5=
+tag.wisdom6=
+tag.wisdom7=
+tag.wisdom8=
+tag.wisdom9=
+tag.wisdom10=
+tag.statpoints=<eval <tag.level>*3>
+//tag.totalstats=<eval <tag.level>*3>
+tag.totalstats=0
+//tag.level=1
+sfx=251
+sysmessage=Your Attributes have been RESET!!
+sayu=!Attributes Reset!
+f_apply_power
+f_apply_endurance
+f_apply_technique
+f_apply_discipline
+f_apply_wisdom
+tag.totaldiscipline=1
+tag.totalpower=0
+tag.totalendurance=0
+tag.totalwisdom=0
+tag.totaltechnique=0
+return <applystats>
+
+//SELF EXPLANITORY
+[function f_clear_class]
+tag.classpicked=
+tag.magicclass=
+events -e_class_system
+tag.exp=0
+tag.nextexp=<eval nexttolevel>
+tag.level=1
+tag.totalexp=0
+tag.power2=
+tag.power3=
+tag.power4=
+tag.power5=
+tag.power6=
+tag.power7=
+tag.power8=
+tag.power9=
+tag.power10=
+tag.discipline2=
+tag.discipline3=
+tag.discipline4=
+tag.discipline5=
+tag.discipline6=
+tag.discipline7=
+tag.discipline8=
+tag.discipline9=
+tag.discipline10=
+tag.endurance2=
+tag.endurance3=
+tag.endurance4=
+tag.endurance5=
+tag.endurance6=
+tag.endurance7=
+tag.endurance8=
+tag.endurance9=
+tag.endurance10=
+tag.technique2=
+tag.technique3=
+tag.technique4=
+tag.technique5=
+tag.technique6=
+tag.technique7=
+tag.technique8=
+tag.technique9=
+tag.technique10=
+tag.wisdom2=
+tag.wisdom3=
+tag.wisdom4=
+tag.wisdom5=
+tag.wisdom6=
+tag.wisdom7=
+tag.wisdom8=
+tag.wisdom9=
+tag.wisdom10=
+tag.statpoints=0
+tag.totalstats=0
+tag.level=1
+sfx=251
+sysmessage=Your Class Have Been Cleared!!
+sayu=!Class Reset!
+f_apply_power
+f_apply_endurance
+f_apply_technique
+f_apply_discipline
+f_apply_wisdom
+tag.totaldiscipline=1
+tag.totalpower=0
+tag.totalendurance=0
+tag.totalwisdom=0
+tag.totaltechnique=0
+return <applystats>
+
+[function applystats]
+f_apply_power
+f_apply_endurance
+f_apply_technique
+f_apply_wisdom
+f_apply_discipline
+return 1
+
+[itemdef i_class_selection]
+id=i_crystal_ball
+type=t_script
+name=Fate Selection
+
+on=@create
+attr=attr_static
+
+on=@click
+dorand=20
+src.sysmessage=*You see terrible images of Death and Destruction...*
+src.sysmessage=*You see an image of a Wizard slaying a wicked beast...*
+src.sysmessage=*You now see an image of a peaceful town...*
+src.sysmessage=*You see an image of a land full of Undeads...*
+src.sysmessage=*You see an image of a group of Monks staring at you...*
+src.sysmessage=*You see images of slaves and a horrible Town Ruler...*
+src.sysmessage=*You just seen a quick image of your Corpse!*
+src.sysmessage=*You see horrible images of innocent people being Crucified...*
+src.sysmessage=*You see unbarable images of Armageddon...*
+src.sysmessage=*You now see an image of a man feeding his horse...*
+src.sysmessage=*You just seen an innocent child decapitated...*
+src.sysmessage=*You see images of a Psychic protecting a helpless man from danger...*
+src.sysmessage=*You now see an image of a woman creating destruction upon a city...*
+src.sysmessage=*You see an image of a city full of female citizens...*
+src.sysmessage=*You see an image of a nice family having dinner...*
+src.sysmessage=*You see a quick image of Majesty staring directly into your eyes!*
+src.sysmessage=*You see an image of a Tournament being held by a well-known Elder*
+src.sysmessage=*You see an image of Town Citizens protesting against the Town Leader...*
+src.sysmessage=*You seen an image of a Priest battling a Necromancer...*
+src.sysmessage=*You see a disturbing image of a Sorcerer partnered with a Warlock!*
+enddo 
+return 0
+
+on=@dclick
+if (<eval <src.tag.classpicked>> = 0 )
+src.tag.ability5name=None
+src.tag.ability4name=None
+src.tag.ability3name=None
+src.tag.ability2name=None
+src.tag.ability1name=None
+dialog d_class_select_wizard
+sfx=snd_spell_lightning
+sfx=0222
+src.sysmessage=Select Your Class, <src.name>...
+return 1
+else
+src.sysmessage=You Have Already Chosen Your Destiny...
+return 1
+endif
+
+[function status]
+if (strmatch(<tag.magicclass>,))
+sysmessage=You must first select a Class Of Magic before you check your Status.
+return 1
+endif
+newitem=i_class_status
+act.equip
+act.target
+src.sysmessage=Whos Status You Wish To Check?
+act.timer=20
+return 1
+
+[itemdef i_class_status]
+id=i_memory
+type=t_eq_script
+name=Class Status Memory
+
+on=@create
+attr=attr_decay
+
+on=@targon_char
+if (<src.targ.npc>)
+src.targ.message=( +<eval <src.targ.str>/8> Exp )
+remove
+return 1
+else
+src.sfx=250
+src.dialog=d_classsystem_main
+remove
+return 1
+endif
+
+on=@targon_item
+src.sysmessage=You Must Target A Player Or NPC...
+remove
+return 1
+
+on=@timer
+remove
+return 1
+
+[plevel 0]
+status
+special
+
+[eof]

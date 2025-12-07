@@ -1,0 +1,622 @@
+[FUNCTION FLY]
+IF	!(<CAN>&MT_FLY)
+		SYSMESSAGE=Who do you think you are? superman?
+ELSEIF	(STRMATCH( "take off", "<ARGS>" ))
+		IF	(<FINDID(i_fly).AMOUNT>>=1)
+				SYSMESSAGE=You are already flying.
+		ELSE
+		IF	!(<FINDID(i_jump).AMOUNT>>=1)
+				FINDID(i_jump).REMOVE
+		ELSE
+		ENDIF
+		IF	!(<FINDID(i_long_jump).AMOUNT>>=1)
+				FINDID(i_long_jump).REMOVE
+		ELSE
+		ENDIF
+		NEWITEM=i_fly
+		ACT.EQUIP
+		ANIM=06
+		SYSMESSAGE=You take off.
+		ENDIF
+ELSEIF	(STRMATCH( "menu", "<ARGS>" ))
+		IF	(0<TAG.FLYINGX>==0)
+		TAG.FLYINGX=0
+		ELSE
+		ENDIF
+		IF	(0<TAG.FLYINGY>==0)
+		TAG.FLYINGY=0
+		ELSE
+		ENDIF
+		DIALOG d_flying
+ELSEIF	!(<FINDID(i_fly).AMOUNT>>=1)
+		SYSMESSAGE=You must be flying to use any other commands.
+ELSEIF	(STRMATCH( "land", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		FINDID(i_fly).MORE1=3
+		SYSMESSAGE=You begin your landing.
+		ENDIF
+ELSEIF	(STRMATCH( "level out", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You pull out of the dive into a steady decent.
+				FINDID(i_fly).MORE1=5
+		ELSE
+		FINDID(i_fly).MORE1=2
+		SYSMESSAGE=You level out.
+		ENDIF
+ELSEIF	(STRMATCH( "turn left", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		IF	(<FINDID(i_turn_timer).AMOUNT>>=1)
+				SYSMESSAGE=You have not leveled out enough to turn.
+		ELSE
+		NEWITEM=i_turn_timer
+		ACT.EQUIP
+		IF	(<DIR>==0)
+				DIR=7
+				UPDATE
+		ELSE
+				DIR=<DIR>+(-1)
+				UPDATE
+		ENDIF
+		ENDIF
+		ENDIF
+ELSEIF	(STRMATCH( "turn right", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		IF	(<FINDID(i_turn_timer).AMOUNT>>=1)
+				SYSMESSAGE=You have not leveled out enough to turn.
+		ELSE
+		NEWITEM=i_turn_timer
+		ACT.EQUIP
+		IF	(<DIR>==7)
+				DIR=0
+				UPDATE
+		ELSE
+				DIR=<DIR>+1
+				UPDATE
+		ENDIF
+		ENDIF
+		ENDIF
+ELSEIF	(STRMATCH( "ascend", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		FINDID(i_fly).MORE1=4
+		SYSMESSAGE=You start to rise into the air.
+		ENDIF
+ELSEIF	(STRMATCH( "descend", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		FINDID(i_fly).MORE1=5
+		SYSMESSAGE=You start to descend.
+		ENDIF
+ELSEIF	(STRMATCH( "speed up", "<ARGS>" ))
+		IF	!(<FINDID(i_fly).MOREX>==5)
+				FINDID(i_fly).MOREX=<FINDID(i_fly).MOREX>+1
+				SYSMESSAGE=You speed up.
+		ELSE
+				SYSMESSAGE=You cannot speed up any more.
+		ENDIF
+ELSEIF	(STRMATCH( "slow down", "<ARGS>" ))
+		IF	!(<FINDID(i_fly).MOREX>==1)
+				FINDID(i_fly).MOREX=<FINDID(i_fly).MOREX>+(-1)
+				SYSMESSAGE=You slow down.
+		ELSE
+				SYSMESSAGE=If you slow down anymore, you will fall from the sky.
+		ENDIF
+ELSEIF	(STRMATCH( "dive", "<ARGS>" ))
+		FINDID(i_fly).MORE1=6
+		SYSMESSAGE=You begin to dive down.
+ELSEIF	(STRMATCH( "altitude", "<ARGS>" ))
+		SYSMESSAGE=You are <eval <ALTITUDE>/3> feet above the ground.
+ELSE
+ENDIF
+
+[FUNCTION .FLY]
+IF	!(<CAN>&MT_FLY)
+		SYSMESSAGE=Who do you think you are? superman?
+ELSEIF	(STRMATCH( "take off", "<ARGS>" ))
+		IF	(<FINDID(i_fly).AMOUNT>>=1)
+				SYSMESSAGE=You are already flying.
+		ELSE
+		NEWITEM=i_fly
+		ACT.EQUIP
+		ANIM=06
+		SYSMESSAGE=You take off.
+		ENDIF
+ELSEIF	(STRMATCH( "menu", "<ARGS>" ))
+		IF	(0<TAG.FLYINGX>==0)
+		TAG.FLYINGX=0
+		ELSE
+		ENDIF
+		IF	(0<TAG.FLYINGY>==0)
+		TAG.FLYINGY=0
+		ELSE
+		ENDIF
+		DIALOG d_flying
+ELSEIF	!(<FINDID(i_fly).AMOUNT>>=1)
+		SYSMESSAGE=You must be flying to use any other commands.
+ELSEIF	(STRMATCH( "land", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		FINDID(i_fly).MORE1=3
+		SYSMESSAGE=You begin your landing.
+		ENDIF
+ELSEIF	(STRMATCH( "level out", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You pull out of the dive into a steady decent.
+				FINDID(i_fly).MORE1=5
+		ELSE
+		FINDID(i_fly).MORE1=2
+		SYSMESSAGE=You level out.
+		ENDIF
+ELSEIF	(STRMATCH( "turn left", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		IF	(<FINDID(i_turn_timer).AMOUNT>>=1)
+				SYSMESSAGE=You have not leveled out enough to turn.
+		ELSE
+		NEWITEM=i_turn_timer
+		ACT.EQUIP
+		IF	(<DIR>==0)
+				DIR=7
+				UPDATE
+		ELSE
+				DIR=<DIR>+(-1)
+				UPDATE
+		ENDIF
+		ENDIF
+		ENDIF
+ELSEIF	(STRMATCH( "turn right", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		IF	(<FINDID(i_turn_timer).AMOUNT>>=1)
+				SYSMESSAGE=You have not leveled out enough to turn.
+		ELSE
+		NEWITEM=i_turn_timer
+		ACT.EQUIP
+		IF	(<DIR>==7)
+				DIR=0
+				UPDATE
+		ELSE
+				DIR=<DIR>+1
+				UPDATE
+		ENDIF
+		ENDIF
+		ENDIF
+ELSEIF	(STRMATCH( "ascend", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		FINDID(i_fly).MORE1=4
+		SYSMESSAGE=You start to rise into the air.
+		ENDIF
+ELSEIF	(STRMATCH( "descend", "<ARGS>" ))
+		IF	(<FINDID(i_fly).MORE1>==6)
+				SYSMESSAGE=You must pull out of the dive before using this.
+		ELSE
+		FINDID(i_fly).MORE1=5
+		SYSMESSAGE=You start to descend.
+		ENDIF
+ELSEIF	(STRMATCH( "speed up", "<ARGS>" ))
+		IF	!(<FINDID(i_fly).MOREX>==5)
+				FINDID(i_fly).MOREX=<FINDID(i_fly).MOREX>+1
+				SYSMESSAGE=You speed up.
+		ELSE
+				SYSMESSAGE=You cannot speed up any more.
+		ENDIF
+ELSEIF	(STRMATCH( "slow down", "<ARGS>" ))
+		IF	!(<FINDID(i_fly).MOREX>==1)
+				FINDID(i_fly).MOREX=<FINDID(i_fly).MOREX>+(-1)
+				SYSMESSAGE=You slow down.
+		ELSE
+				SYSMESSAGE=If you slow down anymore, you will fall from the sky.
+		ENDIF
+ELSEIF	(STRMATCH( "dive", "<ARGS>" ))
+		FINDID(i_fly).MORE1=6
+		SYSMESSAGE=You begin to dive down.
+ELSEIF	(STRMATCH( "altitude", "<ARGS>" ))
+		SYSMESSAGE=You are <eval <ALTITUDE>/3> feet above the ground.
+ELSE
+ENDIF
+
+[ITEMDEF i_fly]
+ID=i_memory
+TYPE=T_EQ_SCRIPT
+NAME=Flying
+
+ON=@EQUIP
+TIMERD=1
+MORE1=1
+MOREX=1
+MOREZ=2
+SRC.FLAGS=<SRC.FLAGS>|statf_freeze
+
+ON=@UNEQUIP
+SRC.FLAGS=<SRC.FLAGS>&~statf_freeze
+
+ON=@TIMER
+CONT.FLAGS=<CONT.FLAGS>|statf_fly
+IF	!(<CONT.CAN>&MT_FLY)
+		CONT.SYSMESSAGE=You fall from the sky since you can no longer fly.
+		CONT.FALL
+		REMOVE
+	RETURN 1
+ELSE
+ENDIF
+IF	(<CONT.STAM><=10)
+		CONT.SYSMESSAGE=You fall form the sky exausted.
+		CONT.FALL
+		REMOVE
+	RETURN 1
+ELSE
+ENDIF
+IF	(<MORE1>==1) && (<MOREM><5)
+		IF	(<eval <CONT.Z>+4>>=120)
+				CONT.FLY level out
+		ELSE
+		CONT.NUDGEUP 4
+		ENDIF
+		IF	(<MOREM>==0)
+				NUDGEUP 5
+		ELSE
+		ENDIF
+		CONT.STAM=<CONT.STAM>+(-2)
+		CONT.MOVEFORWARDS
+		IF	<CONT.WALLCHECK>
+				CONT.MOVEBACKWARDS
+				CONT.SAY ouch!
+				CONT.DAMAGE={25 50}
+				CONT.FALL
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.ANIM=015
+				REMOVE
+			RETURN 1
+		ELSE
+		ENDIF
+		MOREM=<MOREM>+1
+ELSEIF	(<MORE1>==1) && (<MOREM>>=5)
+		CONT.MOVEFORWARDS
+		CONT.STAM=<CONT.STAM>+(-1)
+		IF	<CONT.WALLCHECK>
+				CONT.MOVEBACKWARDS
+				CONT.SAY ouch!
+				CONT.DAMAGE={25 50}
+				CONT.FALL
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.ANIM=015
+				REMOVE
+			RETURN 1
+		ELSE
+		ENDIF
+		MOREM=0
+		MORE1=2
+ELSEIF	(<MORE1>==2)
+		CONT.MOVEFORWARDS
+		CONT.STAM=<CONT.STAM>+(-1)
+		IF	<CONT.WALLCHECK>
+				CONT.MOVEBACKWARDS
+				CONT.SAY ouch!
+				CONT.DAMAGE=<eval {25 50}*<MOREX>>
+				CONT.FALL
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.ANIM=015
+				REMOVE
+			RETURN 1
+		ELSE
+		ENDIF
+		IF	(<MOREX>>=2)
+				CONT.MOVEFORWARDS
+				CONT.STAM=<CONT.STAM>+(-1)
+				IF	<CONT.WALLCHECK>
+						CONT.MOVEBACKWARDS
+						CONT.SAY ouch!
+						CONT.DAMAGE=<eval {25 50}*<MOREX>>
+						CONT.FALL
+						CONT.SOUND=0145
+						CONT.ECHO=0145
+						CONT.ANIM=015
+						REMOVE
+					RETURN 1
+				ELSE
+				ENDIF
+		ELSE
+		ENDIF
+		IF	(<MOREX>>=3)
+				CONT.MOVEFORWARDS
+				CONT.STAM=<CONT.STAM>+(-2)
+				IF	<CONT.WALLCHECK>
+						CONT.MOVEBACKWARDS
+						CONT.SAY ouch!
+						CONT.DAMAGE=<eval {25 50}*<MOREX>>
+						CONT.FALL
+						CONT.SOUND=0145
+						CONT.ECHO=0145
+						CONT.ANIM=015
+						REMOVE
+					RETURN 1
+				ELSE
+				ENDIF
+		ELSE
+		ENDIF
+		IF	(<MOREX>>=4)
+				CONT.MOVEFORWARDS
+				CONT.STAM=<CONT.STAM>+(-3)
+				IF	<CONT.WALLCHECK>
+						CONT.MOVEBACKWARDS
+						CONT.SAY ouch!
+						CONT.DAMAGE=<eval {25 50}*<MOREX>>
+						CONT.FALL
+						CONT.SOUND=0145
+						CONT.ECHO=0145
+						CONT.ANIM=015
+						REMOVE
+					RETURN 1
+				ELSE
+				ENDIF
+		ELSE
+		ENDIF
+		IF	(<MOREX>>=5)
+				CONT.MOVEFORWARDS
+				CONT.STAM=<CONT.STAM>+(-4)
+				IF	<CONT.WALLCHECK>
+						CONT.MOVEBACKWARDS
+						CONT.SAY ouch!
+						CONT.DAMAGE=<eval {25 50}*<MOREX>>
+						CONT.FALL
+						CONT.SOUND=0145
+						CONT.ECHO=0145
+						CONT.ANIM=015
+						REMOVE
+					RETURN 1
+				ELSE
+				ENDIF
+		ELSE
+		ENDIF
+ELSEIF	(<MORE1>==3)
+		IF (<CONT.ALTITUDE>>0)
+		IF	(<CONT.ALTITUDE><5)
+		CONT.NUDGEDOWN <CONT.ALTITUDE>
+		ELSE
+		CONT.NUDGEDOWN 5
+		ENDIF
+		CONT.MOVEFORWARDS
+		IF	(<CONT.WALLCHECK>)
+				CONT.MOVEBACKWARDS
+				CONT.SAY ouch!
+				CONT.DAMAGE=<eval {25 50}*<MOREX>>
+				CONT.FALL
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.ANIM=015
+				REMOVE
+			RETURN 1
+		ENDIF
+		ELSE
+			CONT.FIX
+			REMOVE
+		ENDIF
+ELSEIF	(<MORE1>==4)
+		IF	(<eval <CONT.Z>+<eval <MOREX>*2>>>=120)
+				CONT.FLY level out
+		ELSE
+		CONT.NUDGEUP <eval <MOREX>*2>
+		ENDIF
+		CONT.MOVEFORWARDS
+		CONT.STAM=<CONT.STAM>+(-<MOREX>*2)
+		IF	<CONT.WALLCHECK>
+				CONT.MOVEBACKWARDS
+				CONT.SAY ouch!
+				CONT.DAMAGE=<eval {25 50}*<MOREX>>
+				CONT.FALL
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.ANIM=015
+				REMOVE
+			RETURN 1
+		ELSE
+		ENDIF
+ELSEIF	(<MORE1>==5)
+		IF (<CONT.ALTITUDE>>0)
+		IF	(<CONT.ALTITUDE><<eval <MOREX>*2>)
+		CONT.NUDGEDOWN <CONT.ALTITUDE>
+		ELSE
+		CONT.NUDGEDOWN <eval <MOREX>*2>
+		ENDIF
+		CONT.MOVEFORWARDS
+		IF	(<CONT.WALLCHECK>)
+				CONT.MOVEBACKWARDS
+				CONT.SAY ouch!
+				CONT.DAMAGE=<eval {25 50}*<MOREX>>
+				CONT.FALL
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.ANIM=015
+				REMOVE
+			RETURN 1
+		ENDIF
+		ELSE
+				CONT.SAY ouch!
+				CONT.DAMAGE=<eval {25 50}*<MOREX>>
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.FIX
+				REMOVE
+		ENDIF
+ELSEIF	(<MORE1>==6)
+		IF (<CONT.ALTITUDE>>0)
+		IF	(<CONT.ALTITUDE><<eval <MOREX>*4>)
+		CONT.NUDGEDOWN <CONT.ALTITUDE>
+		ELSE
+		CONT.NUDGEDOWN <eval <MOREX>*4>
+		ENDIF
+		CONT.MOVEFORWARDS
+		IF	(<CONT.WALLCHECK>)
+				CONT.MOVEBACKWARDS
+				CONT.SAY ouch!
+				CONT.DAMAGE=<eval {25 50}*<MOREX>*2>
+				CONT.FALL
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.ANIM=015
+				REMOVE
+			RETURN 1
+		ENDIF
+		ELSE
+				CONT.SAY ouch!
+				CONT.DAMAGE=<eval {25 50}*<MOREX>*2>
+				CONT.SOUND=0145
+				CONT.ECHO=0145
+				CONT.FIX
+				REMOVE
+		ENDIF
+ELSE
+ENDIF
+IF	(<MORE1>==3) && (<CONT.ALTITUDE><=5) && !(<CONT.ALTITUDE>==0)
+		CONT.ANIM=06
+ELSEIF	(<CONT.ALTITUDE>==0)
+ELSE
+IF	(<MOREZ>==2)
+		MOREZ=1
+		CONT.ANIM=013
+ELSE
+		MOREZ=2
+ENDIF
+ENDIF
+TIMERD=1
+IF	(<CONT.FINDID(i_control_rain).AMOUNT>>=1)
+		VAR.NOENVIRONCHANGE=01
+		CONT.SECTOR.RAIN
+		VAR.NOENVIRONCHANGE=
+ELSEIF	(<CONT.FINDID(i_control_snow).AMOUNT>>=1)
+		VAR.NOENVIRONCHANGE=01
+		CONT.SECTOR.RAIN
+		VAR.NOENVIRONCHANGE=
+ELSE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_turn_timer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Turn Timer
+
+ON=@EQUIP
+TIMER=1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[DIALOG d_flying]
+0,0
+page 0
+resizepic <eval <TAG.FLYINGX>> <eval <TAG.FLYINGY>> 5100 250 270
+resizepic <eval <TAG.FLYINGX>+100> <eval <TAG.FLYINGY>+240> 3000 50 20
+resizepic <eval <TAG.FLYINGX>+165> <eval <TAG.FLYINGY>+240> 3000 50 20
+page 1
+BUTTON <eval <TAG.FLYINGX>+95> <eval <TAG.FLYINGY>+10> 4500 4500 1 0 1001
+TEXT <eval <TAG.FLYINGX>+85> <eval <TAG.FLYINGY>+55> 1152 1
+BUTTON <eval <TAG.FLYINGX>+20> <eval <TAG.FLYINGY>+10> 4507 4507 1 0 1002
+TEXT <eval <TAG.FLYINGX>+5> <eval <TAG.FLYINGY>+55> 37 6
+BUTTON <eval <TAG.FLYINGX>+170> <eval <TAG.FLYINGY>+10> 4501 4501 1 0 1003
+TEXT <eval <TAG.FLYINGX>+162> <eval <TAG.FLYINGY>+55> 37 7
+BUTTON <eval <TAG.FLYINGX>+101> <eval <TAG.FLYINGY>+95> 2642 2643 1 0 1004
+TEXT <eval <TAG.FLYINGX>+85> <eval <TAG.FLYINGY>+135> 0 3
+BUTTON <eval <TAG.FLYINGX>+20> <eval <TAG.FLYINGY>+90> 4500 4500 1 0 1005
+TEXT <eval <TAG.FLYINGX>+20> <eval <TAG.FLYINGY>+135> 53 4
+BUTTON <eval <TAG.FLYINGX>+170> <eval <TAG.FLYINGY>+90> 4500 4500 1 0 1006
+TEXT <eval <TAG.FLYINGX>+165> <eval <TAG.FLYINGY>+135> 2 8
+BUTTON <eval <TAG.FLYINGX>+20> <eval <TAG.FLYINGY>+170> 4504 4504 1 0 1007
+TEXT <eval <TAG.FLYINGX>+20> <eval <TAG.FLYINGY>+215> 53 5
+BUTTON <eval <TAG.FLYINGX>+95> <eval <TAG.FLYINGY>+170> 4504 4504 1 0 1008
+TEXT <eval <TAG.FLYINGX>+100> <eval <TAG.FLYINGY>+215> 1152 2
+BUTTON <eval <TAG.FLYINGX>+170> <eval <TAG.FLYINGY>+170> 4504 4504 1 0 1009
+TEXT <eval <TAG.FLYINGX>+160> <eval <TAG.FLYINGY>+215> 2 9
+TEXT <eval <TAG.FLYINGX>+10> <eval <TAG.FLYINGY>+240> 1152 11
+TEXT <eval <TAG.FLYINGX>+85> <eval <TAG.FLYINGY>+240> 1152 12
+TEXT <eval <TAG.FLYINGX>+150> <eval <TAG.FLYINGY>+240> 1152 13
+TEXTENTRY <eval <TAG.FLYINGX>+102> <eval <TAG.FLYINGY>+240> 50 20 0 1 14
+TEXTENTRY <eval <TAG.FLYINGX>+167> <eval <TAG.FLYINGY>+240> 50 20 0 2 15
+BUTTON <eval <TAG.FLYINGX>+220> <eval <TAG.FLYINGY>+242> 5601 5605 1 0 1000
+
+[DIALOG d_flying TEXT]
+<VAR.NOTHING>
+Take Off
+Land
+Level Out
+Ascend
+Descend
+Turn Left
+Turn Right
+Speed Up
+Slow Down
+Dive
+Offsets:
+X
+Y
+<eval <TAG.FLYINGX>>
+<eval <TAG.FLYINGY>>
+
+[DIALOG d_flying BUTTON]
+ONBUTTON=1000
+IF	(<eval <ARGTXT[1]>>>775)
+TAG.FLYINGX=775
+ELSE
+TAG.FLYINGX=<eval <ARGTXT[1]>>
+ENDIF
+IF	(<eval <ARGTXT[2]>>>450)
+TAG.FLYINGY=450
+ELSE
+TAG.FLYINGY=<eval <ARGTXT[2]>>
+ENDIF
+DIALOG d_flying
+
+ONBUTTON=1001
+FLY=Take Off
+DIALOG d_flying
+
+ONBUTTON=1002
+FLY=Turn Left
+DIALOG d_flying
+
+ONBUTTON=1003
+FLY=Turn Right
+DIALOG d_flying
+
+ONBUTTON=1004
+FLY=Level Out
+DIALOG d_flying
+
+ONBUTTON=1005
+FLY=Ascend
+DIALOG d_flying
+
+ONBUTTON=1006
+FLY=Speed Up
+DIALOG d_flying
+
+ONBUTTON=1007
+FLY=Descend
+DIALOG d_flying
+
+ONBUTTON=1008
+FLY=Land
+DIALOG d_flying
+
+ONBUTTON=1009
+FLY=Slow Down
+DIALOG d_flying
+
+[EOF]

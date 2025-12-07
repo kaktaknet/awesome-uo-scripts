@@ -1,0 +1,165 @@
+LAST UPDATE Wednesday, August 22, 20001 by Trachonok
+NOTE: Das Reisesytem ist noch mit weiteren Städten und/oder Dungeons erweiterbar!!!
+
+[ITEMDEF i_reiseglobus]
+ID=01047
+NAME=Reiseglobus
+TYPE=T_SCRIPT
+CATEGORY=Travelsystem
+SUBSECTION=Travelsystem
+DESCRIPTION=Reiseglobus
+
+ON=@DCLICK
+DIALOG d_travel
+RETURN 1
+
+[DIALOG d_travel]
+0, 0
+noclose
+nomove
+PAGE 0
+resizepic 0 0 3600 550 400
+gumppic 10 10 5528
+text 440 20 1152 0
+text 390 40 0 1
+text 390 60 1101 2
+text 390 80 1101 3
+text 390 100 1101 4
+text 390 120 1101 5
+text 390 140 1101 6
+text 390 160 1101 7
+text 390 230 0 8
+text 390 260 1101 9
+text 390 280 1101 10
+text 390 300 1101 11
+text 210 50 95 12
+text 240 90 95 13
+text 190 110 95 14
+text 50 90 95 15
+text 140 160 95 16
+text 170 250 95 17
+text 140 90 95 18
+text 110 100 95 19
+text 60 140 95 20
+button 190 55 2117 2118 1 0 1
+button 220 90 2117 2118 1 0 2
+button 175 115 2117 2118 1 0 3
+button 35 92 2117 2118 1 0 4
+button 120 160 2117 2118 1 0 5
+button 155 255 2117 2118 1 0 6
+button 170 90 2117 2118 1 0 7
+button 95 100 2117 2118 1 0 8
+button 45 145 2117 2118 1 0 9
+button 510 360 2708 2709 1 0 10
+
+[DIALOG d_travel TEXT]
+Reise
+Staedte
+Minoc 1
+Vesper 2
+Cove 3
+Yew 4
+Britain 5
+Trinsic 6
+Dungeons
+Coventus 7
+Despice 8
+Shame 9
+<-1
+<-2
+<-3
+<-4
+<-5
+<-6
+7->
+<-8
+<-9
+
+[DIALOG d_travel BUTTON]
+ONBUTTON=0
+ DIALOG d_travel
+ONBUTTON=1
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=2553,505,14
+ src.message Willkommen in Minoc!
+ ENDIF
+ RETURN 1
+ONBUTTON=2
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=2900,662
+ src.message Willkommen in Vesper!
+ ENDIF
+ RETURN 1
+ONBUTTON=3
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=2273,1208
+ src.message Willkommen in Cove!
+ ENDIF
+ RETURN 1
+ONBUTTON=4
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=569,982
+ src.message Willkommen in Yew!
+ ENDIF
+ RETURN 1
+ONBUTTON=5
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=1471,1624,20
+ src.message Willkommen in Britain!
+ ENDIF
+ RETURN 1
+ONBUTTON=6
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=1829,2778
+ src.message Willkommen in Trinsic!
+ ENDIF
+ RETURN 1
+ONBUTTON=7
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=2496,923
+ src.message Willkommen im Dungeon Coventus!
+ ENDIF
+ RETURN 1
+ONBUTTON=8
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=1299,1075
+ src.message Willkommen im Dungeon Despice!
+ ENDIF
+ RETURN 1
+ONBUTTON=9
+ if !(<src.restest 50 i_gold>)
+ src.message Ihr habt nicht genug Gold fuer die Reise!
+ ELSE
+ src.consume=50 i_gold
+ src.go=512,1562
+ src.message Willkommen im Dungeon Shame!
+ ENDIF
+ RETURN 1
+ONBUTTON=10
+ RETURN 1
+
+[EOF]

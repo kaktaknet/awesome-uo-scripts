@@ -1,0 +1,60 @@
+[PLEVEL 3]
+newsflash
+
+//example ussage, this one is
+//used with ashley's disease scripts
+[FUNCTION disease_checkifnewregion]
+ if (<region.tag.hasdisease> != 1)
+  NEWSFLASH("The disease has spread to <region.name>","/docs/disease.html")
+  region.tag.hasdisease=1
+ endif
+
+
+[function NEWSFLASH]
+//adds some news to some global variables, which are then put in a ticker on a website :-)
+//a link is optionally specified to allow for more information
+//Coding example:
+//on=@death
+// NEWSFLASH <src.name> has died!
+//The top news item would then be "Ashley has died"
+//10 items in total are displayed in the ticker.
+
+//Links can be specified as a second argumnt, ie:
+//NEWSFLASH <src.name> has saved cove from the orcs,/info/coveorcquest.cgi
+//experiment
+
+var.nupto=<var.nupto>+1
+
+serv.allclients.sysmessage "News Flash: <ARGV[0]>"
+
+
+if (<var.nupto>==10)
+ var.nupto=0
+endif
+
+doswitch <var.nupto>
+ var.n0t=<ARGV[0]>
+ var.n1t=<ARGV[0]>
+ var.n2t=<ARGV[0]>
+ var.n3t=<ARGV[0]>
+ var.n4t=<ARGV[0]>
+ var.n5t=<ARGV[0]>
+ var.n6t=<ARGV[0]>
+ var.n7t=<ARGV[0]>
+ var.n8t=<ARGV[0]>
+ var.n9t=<ARGV[0]>
+enddo
+
+
+doswitch <var.nupto>
+ var.n0l=<ARGV[1]>
+ var.n1l=<ARGV[1]>
+ var.n2l=<ARGV[1]>
+ var.n3l=<ARGV[1]>
+ var.n4l=<ARGV[1]>
+ var.n5l=<ARGV[1]>
+ var.n6l=<ARGV[1]>
+ var.n7l=<ARGV[1]>
+ var.n8l=<ARGV[1]>
+ var.n9l=<ARGV[1]>
+enddo

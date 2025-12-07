@@ -1,0 +1,380 @@
+##############################################################
+#                  Race System By we3ley                     #
+#                                                            #
+#                 Email= yo_its_me@msn.com                   #
+#                                                            #
+#                                                            #
+##############################################################
+
+(Original Template by SHS Shaku)
+
+
+
+[ITEMDEF i_racestone2]
+ID=i_grave_stone
+NAME=Race Stone
+TYPE=t_script
+
+ON=@DCLICK
+SRC.ALLSKILLS=30.0
+SRC.STR=60
+SRC.INT=60
+SRC.DEX=60
+menu m_races
+RETURN 1
+
+[MENU m_races]
+Race Stone by Asclepius (Version 1.1)
+
+on=0 Dragon Master
+menu m_DragonMaster
+on=0 Vampire 
+menu m_Vampire
+on=0 Paladin
+menu m_paladin
+on=0 Daemon Master
+menu m_DaemonMaster
+on=0 Dark Rider
+menu m_darkrider
+on=0 Predator
+menu m_predator
+on=0 About the Classes
+menu m_races
+SRC.SYSMESSAGE 7 Classes are avilable currently.  They are Mage, Ranger, Warrior, Tamer, BlackSmith, Crafter and Warlock.  Only the human race can select from all 7.
+
+
+[menu m_DragonMaster]
+Orc
+
+on=0 Whats a Dragon Master?
+menu m_Dragon Master
+SRC.SYSMESSAGE Dragon Master are fighters.  they are able to use amazing weapons and are ultima swordsmen,mace fighters, and archers.  
+on=0 Classes Available
+menu m_Dragon Master
+SRC.SYSMESSAGE Classes Available - Conjurer, Master 
+on=0 Bac
+MENU m_races
+on=0 Become a Dragon Master
+SRC.TAG.RACENAME=Dragon
+menu m_DragonMaster_classes
+
+[menu m_vampire]
+Elf
+
+on=0 Whats a Vampire?
+menu m_elf
+SRC.SYSMESSAGE Vampire are an evil race that is prone to sunlight. they live in the night itself.And must wear colkes at all time to rome around in sunlight 
+on=0 Classes Available
+menu m_Vampire
+SRC.SYSMESSAGE Classes Available - Summoner, Blade Master
+on=0 Back
+MENU m_races
+on=0 Become a Vampire
+SRC.TAG.RACENAME=Vampire
+menu m_Vampire_classes
+
+[menu m_Paladin]
+Dwarf
+
+on=0 Whats a Paladin?
+menu m_Paladin
+SRC.SYSMESSAGE Paladins are anti-Dark Riders. they are devoted to holyness, rightiousness and order  
+on=0 Classes Available
+menu m_Paladin
+SRC.SYSMESSAGE Classes Available - Holy Fighter, Ply Mage
+on=1 Back
+MENU m_races
+on=2 Become a Paladin
+SRC.TAG.RACENAME=Paladin
+menu m_Paladin_classes
+
+
+[menu m_DaemonMaster]
+Shadowmen
+
+on=0 Whats an Daemon Master?
+menu m_daemonmaster
+SRC.SYSMESSAGE daemonmaster are a magical race.  They have a unique ability to be found anywhere that strong magic is being used.  They are a secret race and are not very well known for mixing in with the other races.
+on=0 Classes Available
+menu m_shadowmen
+SRC.SYSMESSAGE Classes Available - conjurer, Berserker
+on=0 Back
+MENU m_races
+on=0 Become a DaemonMaster
+SRC.TAG.RACENAME=Daemon Master
+menu m_daemonmaster_classes
+
+[menu m_darkrider]
+DarkRider
+
+on=0 Whats a darkrider?
+menu m_darkrider
+SRC.SYSMESSAGE Dark Riders are the anti-paladins, devoted to death destruction and chaos
+on=0 Classes Available
+menu m_darkrider
+SRC.SYSMESSAGE Classes Available - Mage, Warrior, Warlock
+on=0 Back
+MENU m_races
+on=0 Become a darkrider
+SRC.TAG.RACENAME=DarkRider
+menu m_darkrider_classes
+SRC.COLOR=001
+SRC.SKINCOLOR=001
+
+[menu m_predator]
+DarkRider
+
+on=0 Whats Predator?
+menu m_Predator
+SRC.SYSMESSAGE predators are a vicious tribe that kill to prove there manlyhood and collect trophies for there kills
+on=0 Classes Available
+menu m_Predator
+SRC.SYSMESSAGE Classes Available - stealthed Swordsman ,stealthed Fencer,Stealthed Mace Fighter
+on=0 Back
+MENU m_races
+on=0 Become a Predator
+SRC.TAG.RACENAME=Predatorian
+menu m_predator_classes
+
+************************************************************************************************************************************************************************************************************************************************************
+//////////////////////////////////////////////// RACE CLASSES //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+************************************************************************************************************************************************************************************************************************************************************
+
+[EVENTS e_allraces]
+ON=@CLICK
+MESSAGE [<tag.racename> <tag.classname>]
+RETURN 0
+
+[menu m_darkrider_classes]
+
+Choose your Class
+on=0 Mage
+SRC.OSKIN=001
+SRC.COLOR=001
+SRC.TAG.CLASSNAME=Mage
+BLOODCOLOR=001
+SRC.STR=100
+SRC.INT=140
+SRC.DEX=115
+SRC.MAGERY=100.0
+SRC.ALCHEMY=60.0
+SRC.MEDITATION=80.0
+SRC.MAGICRESISTANCE=50.0
+SRC.GO 5692,647
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+on=0 Warrior
+SRC.OSKIN=001
+SRC.COLOR=001
+SRC.TAG.CLASSNAME=Warrior
+BLOODCOLOR=001
+SRC.STR=140
+SRC.INT=100
+SRC.DEX=130
+SRC.TACTICS=70.0
+SRC.PARRYING=80.0
+SRC.SWORDSMANSHIP=80.0
+SRC.ARMSLORE=50.0
+SRC.HEALING=50.0
+SRC.GO 5692,647
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+
+[menu m_predator_classes]
+
+Choose your Class
+on=0 stealthed Fencer
+BLOODCOLOR=0873
+SRC.OSKIN=009b2
+SRC.COLOR=009b2
+SRC.TAG.CLASSNAME=stealthed fencer
+SRC.STR=130
+SRC.INT=100
+SRC.DEX=140
+SRC.TACTICS=70.0
+SRC.PARRYING=70.0
+SRC.FENCING=80.0
+SRC.ARMSLORE=50.0
+SRC.HEALING=60.0
+SRC.GO 5712,648
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+on=0 Stealthed Warrior
+SRC.OSKIN=009b2
+SRC.COLOR=009b2
+BLOODCOLOR=0873
+SRC.TAG.CLASSNAME= Stealthed Warrior
+SRC.STR=140
+SRC.INT=100
+SRC.DEX=130
+SRC.TACTICS=70.0
+SRC.PARRYING=70.0
+SRC.SWORDSMANSHIP=80.0
+SRC.ARMSLORE=50.0
+SRC.HEALING=60.0
+SRC.GO 5712,648
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+on=0 Stealthed Mace Fighter
+SRC.OSKIN=009b2
+SRC.COLOR=009b2
+BLOODCOLOR=0873
+SRC.TAG.CLASSNAME= Stealthed Mace Fighter
+SRC.STR=160
+SRC.INT=100
+SRC.DEX=120
+SRC.TACTICS=70.0
+SRC.PARRYING=70.0
+SRC.MACEFIGHTING=80.0
+SRC.ARMSLORE=50.0
+SRC.HEALING=60.0
+SRC.GO 5712,648
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+
+
+[menu m_DragonMaster_classes]
+Choose your Class
+
+on=0 Conjurer
+SRC.STR=80
+SRC.INT=120
+SRC.DEX=100
+SRC.TAG.CLASSNAME=Conjurer
+SRC.MAGERY=80.0
+SRC.ALCHEMY=60.0
+SRC.MEDITATION=70.0
+SRC.STEALTH=50.0
+SRC.MAGICRESISTANCE=50.0
+SRC.GO 5693,629
+SRC.OSKIN=020
+SRC.COLOR=020
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+on=0 Master
+SRC.STR=120
+SRC.INT=60
+SRC.DEX=120
+SRC.TAG.CLASSNAME=Master
+SRC.TACTICS=70.0
+SRC.PARRYING=70.0
+SRC.SWORDSMANSHIP=80.0
+SRC.ARCHERY=80.0
+SRC.FENCING=80.0
+SRC.MACEFIGHTING=80.0
+SRC.WRESTLING=60.0
+SRC.ARMSLORE=50.0
+SRC.HEALING=40.0
+SRC.GO 5693,629
+SRC.OSKIN=020
+SRC.COLOR=020
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+
+
+[menu m_Vampire_classes]
+Choose your Class
+
+on=0 Summoner
+SRC.STR=80
+SRC.INT=120
+SRC.DEX=100
+SRC.TAG.CLASSNAME=Summoner
+SRC.MAGERY=80.0
+SRC.ALCHEMY=60.0
+SRC.MEDITATION=70.0
+SRC.STEALTH=50.0
+SRC.MAGICRESISTANCE=50.0
+SRC.GO 5714,633
+SRC.OSKIN=038a
+SRC.COLOR=038a
+BLOODCOLOR=001
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+on=0 Edge Master
+SRC.STR=100
+SRC.INT=60
+SRC.DEX=140
+SRC.TAG.CLASSNAME=Edge Master
+SRC.MACEFIGHTING=70.0
+SRC.TACTICS=60.0
+SRC.PARRYING=80.0
+SRC.WRESTLING=30.0
+SRC.GO 5714,633
+SRC.OSKIN=038a
+SRC.COLOR=038a
+BLOODCOLOR=001
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+
+[menu m_Paladin_classes]
+Choose your Class
+
+on=0 Holy Fighter
+SRC.OSKIN=07a1
+SRC.COLOR=07a1
+SRC.TAG.CLASSNAME=Holy Fighter
+SRC.STR=120
+SRC.INT=80
+SRC.DEX=120
+SRC.TACTICS=70.0
+SRC.PARRYING=70.0
+SRC.SWORDSMANSHIP=80.0
+SRC.ARMSLORE=50.0
+SRC.HEALING=60.0
+SRC.GO 1399,1685,52
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+on=0 Ply Mage
+SRC.OSKIN=07a1
+SRC.COLOR=07a1
+SRC.TAG.CLASSNAME=Ply Mage
+SRC.STR=100
+SRC.INT=100
+SRC.DEX=100
+SRC.MAGERY=80.0
+SRC.ALCHEMY=60.0
+SRC.MEDITATION=70.0
+SRC.STEALTH=50.0
+SRC.MAGICRESISTANCE=50.0
+SRC.GO 1399,1685,52
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+
+[menu m_daemonmaster_classes]
+Choose your Class
+
+on=0 conjurer
+SRC.TAG.CLASSNAME=Conjurer
+SRC.OSKIN=00025
+SRC.COLOR=00025
+SRC.STR=80
+SRC.INT=150
+SRC.DEX=100
+SRC.MAGERY=80.0
+SRC.ALCHEMY=60.0
+SRC.MEDITATION=70.0
+SRC.MAGICRESISTANCE=50.0
+SRC.GO 1719,1065
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+on=0 berserker
+SRC.TAG.CLASSNAME=Berserker
+SRC.OSKIN=00025
+SRC.COLOR=00025
+SRC.STR=120
+SRC.INT=80
+SRC.DEX=120
+SRC.TACTICS=70.0
+SRC.PARRYING=70.0
+SRC.SWORDSMANSHIP=80.0
+SRC.WRESTLING=60.0
+SRC.ARMSLORE=50.0
+SRC.HEALING=40.0
+SRC.GO 1730,1065
+SRC.EVENTS +e_allraces
+SRC.SYSMESSAGE You have chosen the path of <SRC.TAG.RACENAME> <SRC.TAG.CLASSNAME>!
+
+
+[EOF]
+

@@ -1,0 +1,205 @@
+// The title pretty much explains it. Increases to stealth. The 
+// gloves allow the wearer to disarm opponents weapons while not inside 
+// a noharm/guard zone. The balron blood used to craft them has been 
+// added to the bottom of the script. 
+
+//// 
+
+[ITEMDEF i_ninja_leather_tunic] 
+DEFNAME=i_ninja_leather_tunic 
+NAME=ninja tunic 
+ID=i_leather_tunic 
+TYPE=t_armor 
+RESOURCES=10 i_hide, 2 i_balron_blood 
+SKILLMAKE=TAILORING 99.2,STEALTH 80.0, t_sewing_kit 
+WEIGHT=0.2 
+ARMOR=75 
+REQSTR=50 
+VALUE={1 15} 
+
+ON=@Create 
+COLOR=0455 
+HITPOINTS={100 400} 
+
+ON=@Equip 
+SRC.STEALTH=(<SRC.STEALTH> +25) 
+
+ON=@UnEquip 
+SRC.STEALTH=(<SRC.STEALTH> +-25) 
+
+CATEGORY=Custom 
+SUBSECTION=Ninja Armor 
+DESCRIPTION=Ninja Tunic 
+
+[ITEMDEF i_ninja_leather_gorget] 
+DEFNAME=i_ninja_leather_gorget 
+NAME=ninja gorget 
+ID=i_leather_gorget 
+TYPE=t_armor 
+RESOURCES=5 i_hide, 1 i_balron_blood 
+SKILLMAKE=TAILORING 99.2,STEALTH 80.0, t_sewing_kit 
+WEIGHT=0.1 
+ARMOR=60 
+REQSTR=50 
+VALUE={1 15} 
+
+ON=@Equip 
+SRC.STEALTH=(<SRC.STEALTH> +25) 
+
+ON=@UnEquip 
+SRC.STEALTH=(<SRC.STEALTH> +-25) 
+
+ON=@Create 
+COLOR=0455 
+HITPOINTS={100 400} 
+
+CATEGORY=Custom 
+SUBSECTION=Ninja Armor 
+DESCRIPTION=Ninja Gorget 
+
+[ITEMDEF i_ninja_leather_sleeves] 
+DEFNAME=i_ninja_leather_sleeves 
+TYPE=t_armor 
+NAME=ninja sleeves 
+ID=i_leather_sleeves 
+RESOURCES=5 i_hide, 4 i_balron_blood 
+SKILLMAKE=TAILORING 99.2,STEALTH 80.0, t_sewing_kit 
+WEIGHT=0.1 
+ARMOR=50 
+REQSTR=50 
+VALUE={1 15} 
+
+ON=@Equip 
+SRC.STEALTH=(<SRC.STEALTH> +25) 
+
+ON=@UnEquip 
+SRC.STEALTH=(<SRC.STEALTH> +-25) 
+
+ON=@Create 
+COLOR=0455 
+HITPOINTS={100 400} 
+
+CATEGORY=Custom 
+SUBSECTION=Ninja Armor 
+DESCRIPTION=Ninja Sleeves 
+
+[ITEMDEF i_ninja_leather_gloves] 
+DEFNAME=i_ninja_leather_gloves 
+NAME=ninja gloves 
+ID=i_leather_gloves 
+TYPE=t_armor 
+RESOURCES=5 i_hide, 2 i_balron_blood 
+WEIGHT=0.3 
+ARMOR=50 
+SKILLMAKE=TAILORING 99.2,STEALTH 80.0, t_sewing_kit 
+VALUE={1 15} 
+
+ON=@Equip 
+SRC.STEALTH=(<SRC.STEALTH> +25) 
+SRC.WRESTLING=(<SRC.WRESTLING> +50) 
+src.events=+e_disarm 
+
+ON=@UnEquip 
+SRC.STEALTH=(<SRC.STEALTH> +-25) 
+SRC.WRESTLING=(<SRC.WRESTLING> +-50) 
+src.events=-e_disarm 
+
+ON=@Create 
+COLOR=0455 
+HITPOINTS={100 400} 
+
+CATEGORY=Custom 
+SUBSECTION=Ninja Armor 
+DESCRIPTION=Ninja Gloves 
+
+[ITEMDEF i_ninja_leather_leggings] 
+DEFNAME=i_ninja_leather_leggings 
+NAME=ninja leggings 
+ID=i_leather_leggings 
+TYPE=t_armor 
+RESOURCES=10 i_hide, 5 i_balron_blood 
+SKILLMAKE=TAILORING 99.2,STEALTH 80.0, t_sewing_kit 
+WEIGHT=0.5 
+ARMOR=75 
+VALUE={1 15} 
+
+ON=@Equip 
+SRC.STEALTH=(<SRC.STEALTH> +25) 
+
+ON=@UnEquip 
+SRC.STEALTH=(<SRC.STEALTH> +-25) 
+
+ON=@Create 
+COLOR=0455 
+HITPOINTS={100 400} 
+
+CATEGORY=Custom 
+SUBSECTION=Ninja Armor 
+DESCRIPTION=Ninja Leggings 
+
+[ITEMDEF i_deed_ninja_ar] 
+ID=i_deed 
+NAME=Full Suit of Ninja Armor 
+CATEGORY=Custom 
+SUBSECTION=Deeds 
+DESCRIPTION=Ninja Armor Deed 
+RESOURCES=35 i_hide, 14 i_balron_blood 
+SKILLMAKE=TAILORING 99.2,STEALTH 85.0, t_sewing_kit 
+
+On=@Create 
+COLOR=0455 
+
+On=@dclick 
+SRC.NEWITEM=i_ninja_leather_tunic 
+SRC.ACT.BOUNCE 
+SRC.NEWITEM=i_ninja_leather_gorget 
+SRC.ACT.BOUNCE 
+SRC.NEWITEM=i_ninja_leather_sleeves 
+SRC.ACT.BOUNCE 
+SRC.NEWITEM=i_ninja_leather_gloves 
+SRC.ACT.BOUNCE 
+SRC.NEWITEM=i_ninja_leather_leggings 
+SRC.ACT.BOUNCE 
+REMOVE 
+
+[events e_disarm] 
+ON=@GetHit 
+IF (<src.region.guarded> == 1 ) || (<src.region.safe> == 1) 
+SAY I cant disarm my opponent while in a town. 
+ELSE 
+IF (<DISTANCE>>3) 
+SAY <name> is too far away to disarm. 
+ELSE 
+IF (<EVAL {1 10}>==1) // yet only 20% chances 
+IF ((<src.findlayer(1)>) && (<src.findlayer(1).attr> != 04)) 
+src.findlayer(1).drop 
+FIX 
+SAY <NAME> disarms <SRC.NAME> !!!! 
+ELSE 
+IF ((<src.findlayer(2)>) && (<src.findlayer(2).attr> != 04)) 
+src.findlayer(2).drop 
+FIX 
+SAY <NAME> disarms <SRC.NAME> !!!! 
+ENDIF 
+ELSE 
+ENDIF 
+ELSE 
+ENDIF 
+ELSE 
+ENDIF 
+ENDIF 
+RETURN 0 
+
+[ITEMDEF i_balron_blood] 
+NAME=vile of balron's blood 
+id=i_bottle_empty 
+weight=0.1 
+
+on=@create 
+color=0455 
+
+CATEGORY=Custom 
+SUBSECTION=Ingrediants 
+DESCRIPTION=Balrons Blood 
+
+[EOF]

@@ -1,0 +1,501 @@
+//Spawner 
+//Crafted by Silver Ghost 
+//SRC.TAG.SPAWNER_MAXX_FROMGM - tag for random X distance from GM to new spawn. 
+//SRC.TAG.SPAWNER_MAXY_FROMGM - tag for random Y distance from GM to new spawn. 
+//SRC.TAG.SPAWNER_MAXDIST - tag for maximum distance of a new spawn. 
+//SRC.TAG.SPAWNER_SPAWN_WHO - tag for the creature which will be spawned. 
+//SRC.TAG.SPAWNER_FAIL - tag for check if argument was incorrect. 
+//SRC.TAG.SPAWNER_MAXTIME - tag for maximum time 
+//SRC.TAG.SPAWNER_MINTIME - tag for minimum time 
+
+[PLEVEL 4] 
+spawner 
+spawner1 
+
+[FUNCTION spawner1] 
+DIALOG d_spawner_help_basic 
+
+[DIALOG d_spawner_help_basic] 
+0,0 
+nomove 
+page 0 
+resizepic 0 0 3600 400 600 
+resizepic 20 450 5120 120 60 
+gumppic 30 455 5508 
+gumppic 175 445 5536 
+button 300 455 1147 1148 1 0 100 
+text 107 15 152 1 
+text 20 40 1152 2 
+text 20 60 1152 3 
+text 20 80 1152 4 
+text 20 105 1152 5 
+text 20 125 1152 6 
+text 20 150 1152 7 
+text 20 170 1152 8 
+text 20 190 1152 9 
+text 20 210 1152 10 
+text 20 230 1152 11 
+text 30 480 152 12 
+text 20 250 1152 13 
+text 20 270 1152 14 
+text 20 290 1152 15 
+text 20 310 1152 16 
+text 20 330 1152 17 
+text 20 350 1152 18 
+text 20 370 1152 19 
+text 20 390 1152 20 
+
+
+[DIALOG d_spawner_help_basic TEXT] 
+<VAR.BLANKLINE> 
+Spawner Basic Information. 
+This "spawner" is made to help GMs to populate 
+their world faster. In fact, it works at least 15 
+times faster then axis. Here are the steps: 
+- Set all the variables so they best fit your taste. 
+- In game type ".spawn SID/SANAME" without ". 
+Variables can be set by clicking at the small dot 
+next to each one. First two variables - DistanceX, 
+and DistanceY stand for random distance in which 
+spawn will appear (distance from your character). 
+Max Distance - the biggest amount of steps, that 
+Silver Ghost 
+NPC can walk away from the spawn. Max time 
+and Min time are the periods in which your 
+spawn will re-spawn. SID stands for "Spawner 
+ID", SANAME - "Spawner Alternative Name". In 
+game you can type either ".spawn orc", or ".spawn 70 
+", and effect will be the same. "Spawner" can be 
+easily modified with a basic scripting knowledge. If 
+you use it or modify it, please, leave the credit. 
+[DIALOG d_spawner_help_basic BUTTON] 
+ONBUTON=100 
+DIALOG d_spawner_help 
+
+
+[DIALOG d_spawner_help] 
+0,0 
+nodispose 
+nomove 
+page 0 
+resizepic 390 0 3600 250 200 
+resizepic 0 0 3600 400 600 
+
+gumppic 530 38 2443 
+gumppic 530 60 2443 
+gumppic 530 80 2443 
+gumppic 530 100 2443 
+gumppic 530 120 2443 
+
+text 120 15 152 1 
+text 20 35 152 2 
+text 170 35 152 3 
+text 320 35 152 3 
+text 410 15 152 4 
+text 410 40 1152 5 
+text 410 60 1152 6 
+text 410 80 1152 7 
+text 410 100 1152 8 
+text 410 120 1152 9 
+textentry 558 39 20 20 152 100 10 
+textentry 558 61 20 20 152 200 11 
+textentry 558 81 20 20 152 300 12 
+textentry 558 102 20 20 152 400 13 
+textentry 558 122 20 20 152 450 14 
+text 410 160 152 15 
+
+button 600 42 2362 2360 1 0 100 
+button 600 63 2362 2360 1 0 200 
+button 600 83 2362 2360 1 0 300 
+button 600 103 2362 2360 1 0 400 
+button 600 124 2362 2360 1 0 450 
+button 600 165 2362 2360 1 0 500 
+
+page 1 
+text 25 60 1152 16 
+text 25 80 1152 17 
+text 25 100 1152 18 
+text 25 120 1152 19 
+text 25 140 1152 20 
+text 25 160 1152 21 
+text 25 180 1152 22 
+text 25 200 1152 23 
+text 25 220 1152 24 
+text 25 240 1152 25 
+text 25 260 1152 26 
+text 25 280 1152 27 
+text 25 300 1152 28 
+text 25 320 1152 29 
+text 25 340 1152 30 
+text 25 360 1152 31 
+text 25 380 1152 32 
+text 25 400 1152 33 
+text 25 420 1152 34 
+text 25 440 1152 35 
+text 25 460 1152 36 
+text 25 480 1152 37 
+text 25 500 1152 38 
+text 25 520 1152 39 
+button 250 535 4502 4502 0 2 9999 
+
+page 2 
+text 25 60 1152 40 
+text 25 80 1152 41 
+text 25 100 1152 42 
+text 25 120 1152 43 
+text 25 140 1152 44 
+text 25 160 1152 45 
+text 25 180 1152 46 
+text 25 200 1152 47 
+text 25 220 1152 48 
+text 25 240 1152 49 
+text 25 260 1152 50 
+text 25 280 1152 51 
+text 25 300 1152 52 
+text 25 320 1152 53 
+text 25 340 1152 54 
+text 25 360 1152 55 
+text 25 380 1152 56 
+text 25 400 1152 57 
+text 25 420 1152 58 
+text 25 440 1152 59 
+text 25 460 1152 60 
+text 25 480 1152 61 
+text 25 500 1152 62 
+text 25 520 1152 63 
+button 250 535 4502 4502 0 3 9998 
+button 100 535 4506 4506 0 1 9997 
+
+page 3 
+text 25 60 1152 64 
+text 25 80 1152 65 
+text 25 100 1152 66 
+text 25 120 1152 67 
+text 25 140 1152 68 
+text 25 160 1152 69 
+text 25 180 1152 70 
+text 25 200 1152 71 
+text 25 220 1152 72 
+text 25 240 1152 73 
+text 25 260 1152 74 
+text 25 280 1152 75 
+text 25 300 1152 76 
+text 25 320 1152 77 
+text 25 340 1152 78 
+text 25 360 1152 79 
+text 25 380 1152 80 
+text 25 400 1152 81 
+text 25 420 1152 82 
+text 25 440 1152 83 
+text 25 460 1152 84 
+text 25 480 1152 85 
+text 25 500 1152 86 
+text 25 520 1152 87 
+button 250 535 4502 4502 0 4 9996 
+button 100 535 4506 4506 0 2 9995 
+
+page 4 
+text 25 60 1152 88 
+text 25 80 1152 89 
+text 25 100 1152 90 
+button 100 535 4506 4506 0 3 9993 
+
+[DIALOG d_spawner_help BUTTON] 
+ONBUTTON=100 
+SRC.SYSMESSAGE DistanceX is now <ARGTXT[100]>! 
+SRC.TAG.SPAWNER_MAXX_FROMGM=<ARGTXT[100]> 
+ONBUTTON=200 
+SRC.SYSMESSAGE DistanceY is now <ARGTXT[200]>! 
+SRC.TAG.SPAWNER_MAXY_FROMGM=<ARGTXT[200]> 
+ONBUTTON=300 
+SRC.SYSMESSAGE Max Distance is now <ARGTXT[300]>! 
+SRC.TAG.SPAWNER_MAXDIST=<ARGTXT[300]> 
+ONBUTTON=400 
+SRC.SYSMESSAGE Max Time is now <ARGTXT[400]>! 
+SRC.TAG.SPAWNER_MAXTIME=<ARGTXT[400]> 
+ONBUTTON=450 
+SRC.SYSMESSAGE Min Time is now <ARGTXT[450]>! 
+SRC.TAG.SPAWNER_MINTIME=<ARGTXT[450]> 
+
+ONBUTTON=500 
+DIALOG d_spawner_help_basic 
+
+[DIALOG d_spawner_help TEXT] 
+<VAR.BLANKLINE> 
+Spawner Help Menu 
+SID 
+SAName 
+Variables 
+DistanceX //5 
+DistanceY 
+Max Distance 
+Max Time 
+Min Time 
+<EVAL <SRC.TAG.SPAWNER_MAXX_FROMGM>> //10 
+<EVAL <SRC.TAG.SPAWNER_MAXY_FROMGM>> 
+<EVAL <SRC.TAG.SPAWNER_MAXDIST>> 
+<EVAL <SRC.TAG.SPAWNER_MAXTIME>> 
+<EVAL <SRC.TAG.SPAWNER_MINTIME>> 
+Basic information //15 
+1 bird birds //page 1 
+2 farm farm 
+3 forest forest 
+4 jungle jungle 
+5 pole pole 
+6 wolf wolfs 
+7 bear bears 
+8 lion lions 
+9 rabbit rabbits 
+10 hind hinds 
+11 snake snakes 
+12 rat rats 
+13 dolphin dolphins 
+14 zostrich zostriches 
+15 orn orns 
+16 oclock oclocks 
+17 bandit bandits 
+18 barbarian barbarians 
+19 dark elf dark elves 
+20 dread lord dread lords 
+21 fighter fighters 
+22 mercenary mercenaries 
+23 paladin paladins 
+24 ranger rangers 
+25 warrior warriors 
+26 frost elf frost elves 
+27 brigand brigands 
+28 evil mage evil mages 
+29 pirate pirates 
+30 prisoner prisoners 
+31 monk monks 
+32 priest priests 
+33 sprite elf sprite elves 
+34 witch witches 
+35 wood elf wood elves 
+36 daemon daemon 
+37 gargoyle gargoyle 
+38 ice fiend ice fiends 
+39 dragon dragons 
+40 drake drakes 
+41 ice dragon ice dragon 
+42 wyrm wyrms 
+43 wyvern wyverns 
+44 elemental elementals 
+45 air elemental air elementals 
+46 blood elemental blood elementals 
+47 earth elemetal earth elementals 
+48 fire elemental fire elementals 
+49 ice elemental ice elementals 
+50 poison elemental poison elementals 
+51 snow elemental snow elementals 
+52 water elemental water elementals 
+53 efreet efreets 
+54 cyclop cyclops 
+55 ettin ettins 
+56 frost ettin frost ettins 
+57 frost troll frost trolls 
+58 troll trolls 
+59 ogre ogres 
+60 titan titans 
+61 ice insect ice insects 
+62 lava insect lava insects 
+63 giant insect giant insects 
+64 goblin goblins 
+65 lizardman lizardmen 
+66 harpy harpies 
+67 mongbat mongbats 
+68 sea monster sea monsters 
+69 orc orcs 
+70 ratman ratmen 
+71 scorpion scorpions 
+72 ophidian ophidians 
+73 terathan terathans 
+74 weak undead weak undeads 
+75 strong undead strong undeads 
+
+[FUNCTION spawner] 
+SRC.TAG.SPAWNER_FAIL=0 
+IF (<EVAL <SRC.TAG.SPAWNER_MAXX_FROMGM>>)||(<EVAL <SRC.TAG.SPAWNER_MAXX_FROMGM>>)||(<EVAL <SRC.TAG.SPAWNER_MAXDIST>>)||(<EVAL <SRC.TAG.SPAWNER_MINTIME>>)||(<EVAL <SRC.TAG.SPAWNER_MAXTIME>>) 
+
+ELSE 
+SRC.TAG.SPAWNER_MAXX_FROMGM=5 
+SRC.TAG.SPAWNER_MAXY_FROMGM=5 
+SRC.TAG.SPAWNER_MAXDIST=5 
+SRC.TAG.SPAWNER_MAXTIME=20 
+SRC.TAG.SPAWNER_MINTIME=5 
+ENDIF 
+
+IF (!STRCMPI("<ARGS>","help")) 
+DIALOG d_spawner_help 
+SRC.TAG.SPAWNER_FAIL=1 
+ELSEIF (!STRCMPI("<ARGS>","")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={06 2 01026 2 05 2 01027 2 01061 2 0e8 1 0e9 1 0c9 2 0d8 1 0e7 1 0d9 2 0c8 1 0cc 1 0e4 1 0e2 1 0DF 2 0DC 2 0123 2 0124 2 0CB 2 0CF 2 0CA 1 01056 1 0122 2 0D3 1 051 2 0600 2 01015 1 0D1 2 01D 2 01031 2 0D4 1 0EA 2 0ED 2 01029 2 C_A_Lion 2 01010 2 0d6 1 0cd 2 034 2 0e1 2 01032 1} 
+ELSEIF (!STRCMPI("<ARGS>","1"))||(!STRCMPI("<ARGS>","bird"))||(!STRCMPI("<ARGS>","birds")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0D0 1 06 1 01026 1 05 1 01027 1 01061 1 01060 1} 
+ELSEIF (!STRCMPI("<ARGS>","2"))||(!STRCMPI("<ARGS>","farm")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0D0 1 0E8 1 0E9 1 0C9 1 0D8 1 0E7 1 0D9 1 0C8 1 0DF 1 0DC 1 0CB 1 0CF 1 0D1 1} 
+ELSEIF (!STRCMPI("<ARGS>","3"))||(!STRCMPI("<ARGS>","forest")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01056 1 0122 1 0D3 1 0600 1 01015 1 01031 1 0D4 1 0EA 1 0ED 1 01029 1 C_A_Lion 1 0D6 1 0CD 1 0EE 1 034 1 0E1 1 01032 1} 
+ELSEIF (!STRCMPI("<ARGS>","4"))||(!STRCMPI("<ARGS>","jungle")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0CA 1 051 1 01D 1 C_A_Lion 1 0D6 1 034 1 0600 1 01015 1} 
+ELSEIF (!STRCMPI("<ARGS>","5"))||(!STRCMPI("<ARGS>","pole")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01013 1 0D5 1 01059 1 0DD 1} 
+ELSEIF (!STRCMPI("<ARGS>","6"))||(!STRCMPI("<ARGS>","wolf"))||(!STRCMPI("<ARGS>","wolfs")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01015 1 01031 1 0E1 1 01032 1} 
+ELSEIF (!STRCMPI("<ARGS>","7"))||(!STRCMPI("<ARGS>","bear"))||(!STRCMPI("<ARGS>","bears")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01056 1 0D3 1 0D4 1} 
+ELSEIF (!STRCMPI("<ARGS>","8"))||(!STRCMPI("<ARGS>","cougar"))||(!STRCMPI("<ARGS>","cougars"))||(!STRCMPI("<ARGS>","lion"))||(!STRCMPI("<ARGS>","lions"))|| (!STRCMPI("<ARGS>","panther"))||(!STRCMPI("<ARGS>","panthers")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0600 1 C_A_Lion 1 01059 1 0D6 1} 
+ELSEIF (!STRCMPI("<ARGS>","9"))||(!STRCMPI("<ARGS>","rabbit"))||(!STRCMPI("<ARGS>","rabbits")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01029 1 0CD 1} 
+ELSEIF (!STRCMPI("<ARGS>","10"))||(!STRCMPI("<ARGS>","hind"))||(!STRCMPI("<ARGS>","hinds"))||(!STRCMPI("<ARGS>","hart"))||(!STRCMPI("<ARGS>","harts"))|| (!STRCMPI("<ARGS>","deer"))||(!STRCMPI("<ARGS>","deers")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0EA 1 0ED 1} 
+ELSEIF (!STRCMPI("<ARGS>","11"))||(!STRCMPI("<ARGS>","snake"))||(!STRCMPI("<ARGS>","snakes")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01013 1 01014 1 034 2} 
+ELSEIF (!STRCMPI("<ARGS>","12"))||(!STRCMPI("<ARGS>","rat"))||(!STRCMPI("<ARGS>","rats")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0EE 1 01030 1 0D7 1} 
+ELSEIF (!STRCMPI("<ARGS>","13"))||(!STRCMPI("<ARGS>","dolphin"))||(!STRCMPI("<ARGS>","dolphins")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=097 
+ELSEIF (!STRCMPI("<ARGS>","14"))||(!STRCMPI("<ARGS>","zostrich"))||(!STRCMPI("<ARGS>","zostriches")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=0DA 
+ELSEIF (!STRCMPI("<ARGS>","15"))||(!STRCMPI("<ARGS>","orn"))||(!STRCMPI("<ARGS>","orns")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=0DB 
+ELSEIF (!STRCMPI("<ARGS>","16"))||(!STRCMPI("<ARGS>","oclock"))||(!STRCMPI("<ARGS>","oclocks")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=0D2 
+ELSEIF (!STRCMPI("<ARGS>","17"))||(!STRCMPI("<ARGS>","bandit"))||(!STRCMPI("<ARGS>","bandits")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01088 1 01087 1} 
+ELSEIF (!STRCMPI("<ARGS>","18"))||(!STRCMPI("<ARGS>","barbarian"))||(!STRCMPI("<ARGS>","barbarians")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01080 1 01081 1 01079 2 01082 2} 
+ELSEIF (!STRCMPI("<ARGS>","19"))||(!STRCMPI("<ARGS>","dark elf"))||(!STRCMPI("<ARGS>","dark elves")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01103 1 01099 1 01104 1 01102 1 01101 1} 
+ELSEIF (!STRCMPI("<ARGS>","20"))||(!STRCMPI("<ARGS>","dread lord"))||(!STRCMPI("<ARGS>","dread lords")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01090 1 01089 2} 
+ELSEIF (!STRCMPI("<ARGS>","21"))||(!STRCMPI("<ARGS>","fighter"))||(!STRCMPI("<ARGS>","fighters")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0565 1 0564 1} 
+ELSEIF (!STRCMPI("<ARGS>","22"))||(!STRCMPI("<ARGS>","mercenary"))||(!STRCMPI("<ARGS>","mercenaries")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0569 1 0568 1} 
+ELSEIF (!STRCMPI("<ARGS>","23"))||(!STRCMPI("<ARGS>","paladin"))||(!STRCMPI("<ARGS>","paladins")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0571 1 0570 1} 
+ELSEIF (!STRCMPI("<ARGS>","24"))||(!STRCMPI("<ARGS>","ranger"))||(!STRCMPI("<ARGS>","rangers")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0543 1 0542 1} 
+ELSEIF (!STRCMPI("<ARGS>","25"))||(!STRCMPI("<ARGS>","warrior"))||(!STRCMPI("<ARGS>","warriors")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0567 1 0566 1} 
+ELSEIF (!STRCMPI("<ARGS>","26"))||(!STRCMPI("<ARGS>","frost elf"))||(!STRCMPI("<ARGS>","frost elves")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01076 1 01077 1 01074 1 01075 2 01078 1} 
+ELSEIF (!STRCMPI("<ARGS>","27"))||(!STRCMPI("<ARGS>","brigand"))||(!STRCMPI("<ARGS>","brigands")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0423 1 0422 1} 
+ELSEIF (!STRCMPI("<ARGS>","28"))||(!STRCMPI("<ARGS>","evil mage"))||(!STRCMPI("<ARGS>","evil mages")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0497 1 0496 1} 
+ELSEIF (!STRCMPI("<ARGS>","29"))||(!STRCMPI("<ARGS>","pirate"))||(!STRCMPI("<ARGS>","pirates")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0471 1 0470 1} 
+ELSEIF (!STRCMPI("<ARGS>","30"))||(!STRCMPI("<ARGS>","prisoner"))||(!STRCMPI("<ARGS>","prisoners")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0473 1 0472 1} 
+ELSEIF (!STRCMPI("<ARGS>","31"))||(!STRCMPI("<ARGS>","monk"))||(!STRCMPI("<ARGS>","monks")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0459 1 0458 1} 
+ELSEIF (!STRCMPI("<ARGS>","32"))||(!STRCMPI("<ARGS>","priest"))||(!STRCMPI("<ARGS>","priestes")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0464 1 0465 1} 
+ELSEIF (!STRCMPI("<ARGS>","33"))||(!STRCMPI("<ARGS>","sprite elf"))||(!STRCMPI("<ARGS>","sprite elves")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01070 1 01073 1 01071 1 01072 1} 
+ELSEIF (!STRCMPI("<ARGS>","34"))||(!STRCMPI("<ARGS>","witch"))||(!STRCMPI("<ARGS>","witches")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01086 1 01085 1 01083 2 01084 2} 
+ELSEIF (!STRCMPI("<ARGS>","35"))||(!STRCMPI("<ARGS>","wood elf"))||(!STRCMPI("<ARGS>","wood elves")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01105 1 01095 1 01096 1 01100 1 01097 1 01098 1} 
+ELSEIF (!STRCMPI("<ARGS>","36"))||(!STRCMPI("<ARGS>","daemon"))||(!STRCMPI("<ARGS>","daemons")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={09 1 0A 1} 
+ELSEIF (!STRCMPI("<ARGS>","37"))||(!STRCMPI("<ARGS>","gargoyle"))||(!STRCMPI("<ARGS>","gargoyles")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={04 2 01033 1} 
+ELSEIF (!STRCMPI("<ARGS>","38"))||(!STRCMPI("<ARGS>","ice fiend"))||(!STRCMPI("<ARGS>","ice fiends")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01019 
+ELSEIF (!STRCMPI("<ARGS>","39"))||(!STRCMPI("<ARGS>","dragon"))||(!STRCMPI("<ARGS>","dragons")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01106 1 0C 1 03B 1} 
+ELSEIF (!STRCMPI("<ARGS>","40"))||(!STRCMPI("<ARGS>","drake"))||(!STRCMPI("<ARGS>","drakes")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={03C 1 03D 1 01111 1 01109 1 01108 1 01113 1 01110 1 01107 1 01112 1} 
+ELSEIF (!STRCMPI("<ARGS>","41"))||(!STRCMPI("<ARGS>","ice dragon"))||(!STRCMPI("<ARGS>","ice dragons")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01011 
+ELSEIF (!STRCMPI("<ARGS>","42"))||(!STRCMPI("<ARGS>","wyrm"))||(!STRCMPI("<ARGS>","wyrms")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01025 
+ELSEIF (!STRCMPI("<ARGS>","43"))||(!STRCMPI("<ARGS>","wyvern"))||(!STRCMPI("<ARGS>","wyverns")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01016 
+ELSEIF (!STRCMPI("<ARGS>","44"))||(!STRCMPI("<ARGS>","elemental"))||(!STRCMPI("<ARGS>","elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={0D 1 01012 1 0E 1 01038 1 0F 1 01018 1 01043 1 01051 1 010 1} 
+ELSEIF (!STRCMPI("<ARGS>","45"))||(!STRCMPI("<ARGS>","air elemental"))||(!STRCMPI("<ARGS>","air elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=0D 
+ELSEIF (!STRCMPI("<ARGS>","46"))||(!STRCMPI("<ARGS>","blood elemental"))||(!STRCMPI("<ARGS>","blood elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01012 
+ELSEIF (!STRCMPI("<ARGS>","47"))||(!STRCMPI("<ARGS>","earth elemental"))||(!STRCMPI("<ARGS>","earth elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=0E 
+ELSEIF (!STRCMPI("<ARGS>","48"))||(!STRCMPI("<ARGS>","fire elemental"))||(!STRCMPI("<ARGS>","fire elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=0F 
+ELSEIF (!STRCMPI("<ARGS>","49"))||(!STRCMPI("<ARGS>","ice elemental"))||(!STRCMPI("<ARGS>","ice elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01018 
+ELSEIF (!STRCMPI("<ARGS>","50"))||(!STRCMPI("<ARGS>","poison elemental"))||(!STRCMPI("<ARGS>","poison elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01043 
+ELSEIF (!STRCMPI("<ARGS>","51"))||(!STRCMPI("<ARGS>","snow elemental"))||(!STRCMPI("<ARGS>","snow elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01051 
+ELSEIF (!STRCMPI("<ARGS>","52"))||(!STRCMPI("<ARGS>","water elemental"))||(!STRCMPI("<ARGS>","water elementals")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=010 
+ELSEIF (!STRCMPI("<ARGS>","53"))||(!STRCMPI("<ARGS>","efreet"))||(!STRCMPI("<ARGS>","efreet")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01038 
+ELSEIF (!STRCMPI("<ARGS>","54"))||(!STRCMPI("<ARGS>","cyclop"))||(!STRCMPI("<ARGS>","cyclops")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={04C 1 01127 1} 
+ELSEIF (!STRCMPI("<ARGS>","55"))||(!STRCMPI("<ARGS>","ettin"))||(!STRCMPI("<ARGS>","ettins")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={02 2 012 2 01128 1} 
+ELSEIF (!STRCMPI("<ARGS>","56"))||(!STRCMPI("<ARGS>","frost ettin"))||(!STRCMPI("<ARGS>","frost ettins")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01124 
+ELSEIF (!STRCMPI("<ARGS>","57"))||(!STRCMPI("<ARGS>","frost troll"))||(!STRCMPI("<ARGS>","frost trolls")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=01054 
+ELSEIF (!STRCMPI("<ARGS>","58"))||(!STRCMPI("<ARGS>","troll"))||(!STRCMPI("<ARGS>","trolls")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={036 1 037 1 035 1} 
+ELSEIF (!STRCMPI("<ARGS>","59"))||(!STRCMPI("<ARGS>","ogre"))||(!STRCMPI("<ARGS>","ogres")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01 2 01040 1} 
+ELSEIF (!STRCMPI("<ARGS>","60"))||(!STRCMPI("<ARGS>","titan"))||(!STRCMPI("<ARGS>","titans")) 
+SRC.TAG.SPAWNER_SPAWN_WHO=04b 
+ELSEIF (!STRCMPI("<ARGS>","61"))||(!STRCMPI("<ARGS>","ice insect"))||(!STRCMPI("<ARGS>","ice insects")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01052 1 01049 01013} 
+ELSEIF (!STRCMPI("<ARGS>","62"))||(!STRCMPI("<ARGS>","lava insect"))||(!STRCMPI("<ARGS>","lava insects")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01014 1 01062 1 01050 1} 
+ELSEIF (!STRCMPI("<ARGS>","63"))||(!STRCMPI("<ARGS>","giant insect"))||(!STRCMPI("<ARGS>","giant insects")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={030 1 015 1 01C 1 050 1} 
+ELSEIF (!STRCMPI("<ARGS>","64"))||(!STRCMPI("<ARGS>","goblin"))||(!STRCMPI("<ARGS>","goblins")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01064 1 01066 1 01126 1 01065 1 01125 1} 
+ELSEIF (!STRCMPI("<ARGS>","65"))||(!STRCMPI("<ARGS>","lizardman"))||(!STRCMPI("<ARGS>","lizardmen")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={021 1 024 1 023 1} 
+ELSEIF (!STRCMPI("<ARGS>","66"))||(!STRCMPI("<ARGS>","harpy"))||(!STRCMPI("<ARGS>","harpies")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01E 2 01020 1} 
+ELSEIF (!STRCMPI("<ARGS>","67"))||(!STRCMPI("<ARGS>","mongbat"))||(!STRCMPI("<ARGS>","mongbats")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01021 1 01023 1 027 1} 
+ELSEIF (!STRCMPI("<ARGS>","68"))||(!STRCMPI("<ARGS>","sea monster"))||(!STRCMPI("<ARGS>","sea monsters")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={05F 1 096 1} 
+ELSEIF (!STRCMPI("<ARGS>","69"))||(!STRCMPI("<ARGS>","orc"))||(!STRCMPI("<ARGS>","orcs")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={011 2 029 2 01057 1 07 1 01058 2} 
+ELSEIF (!STRCMPI("<ARGS>","70"))||(!STRCMPI("<ARGS>","ratman"))||(!STRCMPI("<ARGS>","ratmen")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={02C 1 02A 1 02D 1} 
+ELSEIF (!STRCMPI("<ARGS>","71"))||(!STRCMPI("<ARGS>","scorpion"))||(!STRCMPI("<ARGS>","scorpions")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01092 1 01091 2 01093 2 01094 1} 
+ELSEIF (!STRCMPI("<ARGS>","72"))||(!STRCMPI("<ARGS>","ophidian"))||(!STRCMPI("<ARGS>","ophidians")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01044 1 01048 1 055 2 057 1 056 2} 
+ELSEIF (!STRCMPI("<ARGS>","73"))||(!STRCMPI("<ARGS>","terathan"))||(!STRCMPI("<ARGS>","terathans")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01055 1 047 1 048 1 046 1} 
+ELSEIF (!STRCMPI("<ARGS>","74"))||(!STRCMPI("<ARGS>","weak undead"))||(!STRCMPI("<ARGS>","weak undeads")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={032 2 038 2 039 1 0900 1 01047 1 01046 1 01A 1 03 2} 
+ELSEIF (!STRCMPI("<ARGS>","75"))||(!STRCMPI("<ARGS>","strong undead"))||(!STRCMPI("<ARGS>","strong undeads")) 
+SRC.TAG.SPAWNER_SPAWN_WHO={01068 2 01067 2 03CA 1 018 2 01041 1 01022 1} 
+ELSE 
+SRC.SYSMESSAGE Spawn name is incorrect. Use ".spawner help" for help. 
+SRC.TAG.SPAWNER_FAIL=1 
+ENDIF 
+
+IF (<SRC.TAG.SPAWNER_FAIL>==0) 
+SRC.NEWITEM=01EA7 
+SRC.ACT.P=<SRC.P> 
+SRC.ACT.MOVE <EVAL {-<EVAL <SRC.TAG.SPAWNER_MAXX_FROMGM>> <EVAL <SRC.TAG.SPAWNER_MAXX_FROMGM>>}> <EVAL {-<EVAL <SRC.TAG.SPAWNER_MAXY_FROMGM>> <EVAL <SRC.TAG.SPAWNER_MAXY_FROMGM>>}> 0 
+SRC.ACT.FIX 
+SRC.ACT.TYPE=34 
+SRC.ACT.AMOUNT=1 
+SRC.ACT.MORE=<EVAL <SRC.TAG.SPAWNER_SPAWN_WHO>> 
+SRC.ACT.MOREP <SRC.TAG.SPAWNER_MINTIME>> <EVAL <SRC.TAG.SPAWNER_MAXTIME>> <EVAL <SRC.TAG.SPAWNER_MAXDIST>> 
+SRC.ACT.ATTR=00B0 
+SRC.ACT.TIMER=1 
+ENDIF 
+
+[EOF]

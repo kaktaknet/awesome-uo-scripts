@@ -1,0 +1,485 @@
+//-------------------------------------------------------------------------
+// Krilldonia Online profanity detection script by Wpn-z-
+// V1.25
+//-------------------------------------------------------------------------
+// Credits go to Kell for the idea
+// behind speech recognition items
+//-------------------------------------------------------------------------
+
+//This script will bust people that use profanity on your shard.
+//It keeps a warning level and a total number of offenses for every player.
+//The warning level goes up whenever someone curses, and will decay at a rate of 1 per 8 hours.
+
+
+//By Default:
+//Warning level 1 - 3 will fine the player 1k
+//Warning level 4 - 5 will fine the player 5k
+//Warning level 6 and up will get the player a day in jail and a fine of 10k.
+//  Every time they use profanity while they are in jail will earn them another day.
+//  When their sentence is up, they will be forgiven and sent to the position they were at before they were jailed.
+//  GM's may use the command "SPEECH_UNJAIL" to end a sentence early.
+//Most of this can be customized in the options section
+
+
+//To use this script, you can choose one of the following options:
+//  a) Add the i_speech_detect_stone somewhere in the world.  It must be placed on the ground to work, if it is in a container it will not function properly.
+//  b) Add the e_speech_detect event to every player on your shard
+//  c) Add what's in the e_speech_detect event to an event that every player on your shard has.
+//  d) Slap sumptin else together that works and use it
+//  Note: Option (a) is recommended for easiest use
+
+
+//In-Game commands:
+//  Player
+//    SpeechInfo - Displays the player's profanity warning level and total profanity offenses.
+//  GM
+//    XSpeechInfo - Displays the player's profanity warning level and total profanity offenses to GM.
+//    Speech_Unjail - Forgives player from jail for using excessive profanity, but does not set their profanity warning level.
+//    Speech_ClearWarning - Sets player's profanity warning level to 0.
+//    Speech_ClearOffense - Sets the player's profanity offenses to 0.
+//    Speech_Fix - If a player is outside of jail still displays the Jailed for cursing... Tag above his/her head, you may use this command to fix him/her. (Although this should not happen if nothing is tampered with)
+
+//Please send any bugs/complaints/comments/suggestions/etc to Wpn-z- via one of the following:
+// ICQ - 102405529
+// AIM - Wepn Z
+// Yahoo - thewpnz
+// MSN - wpnz@jclcg.com
+// Email - wpnz@jclcg.com
+
+//Visit http://www.wpnz.cjb.net/ For the latest updates of my scripts
+
+//Enjoy and thank you for using my script!
+
+
+[DEFNAME PDOPTS]
+
+//Profanity Detection Options
+
+// Below you may select who profanity detection will not apply to
+// Note: Profanity Detection is always applied to players
+//       If GM's have GM off, they will be recognized as a player
+
+// 0=Not Applied | 1=Applied
+pd_2_applied		1	// Counseler
+pd_3_applied		1	// Seer
+pd_4_applied		1	// GM
+pd_5_applied		0	// Developer
+pd_6_applied		0	// Administrator
+pd_7_applied		0	// Owner
+
+// Default Timer for the world speech detect stone to perform checks on all clients for speech detection item (in seconds)
+// Only change this if you know what you are doing
+pd_worldstone_timer	5
+
+// Decay Rate of Warning Level (in seconds)
+// Note: Will still decay while logged out.
+pd_warning_decay	8*60*60
+
+// Clear warning level when Speech_Unjail command is used
+// 1=True, 0=False
+pd_unjail_clearwarning	1
+
+// Initial Jail Time at warning level 6 (in seconds)
+pd_jailtime_initial	24*60*60
+
+// Additional Jail Time for every offense while jailed for profanity
+pd_jailtime_additional	24*60*60
+
+// Clear warning level when jail time is up and automatically released from jail
+// 1=True, 0=False
+pd_jailup_clearwarning 0
+
+// When released from jail:
+// 0=Forgiven, but remains in jail cell
+// 1=Sent to location he/she was at, before he/she was jailed
+pd_jailp_onrelease	1
+
+// Fines for different warning levels
+pd_warning_1_fine	1000
+pd_warning_2_fine	1000
+pd_warning_3_fine	1000
+pd_warning_4_fine	5000
+pd_warning_5_fine	5000
+pd_warning_6_fine	10000
+
+[PLEVEL 1]
+SpeechInfo
+
+[PLEVEL 4]
+Speech_Unjail
+Speech_ClearWarning
+Speech_ClearOffense
+
+[ITEMDEF i_speech_detect_stone]
+ID=01184
+NAME=Automated World Speech Detection Stone
+WEIGHT=1000
+TYPE=t_script
+
+ON=@Create
+ATTR=0090
+COLOR=07a5
+TAG.TIMER=pd_worldstone_timer
+TIMER=<TAG.TIMER>
+
+ON=@Click
+IF (<TIMER> > <TAG.TIMER>) || (<TIMER>==-1)
+	TIMER=<TAG.TIMER>
+ENDIF
+RETURN 0
+
+ON=@Dclick
+IF (<TIMER> > <TAG.TIMER>) || (<TIMER>==-1)
+	TIMER=<TAG.TIMER>
+ENDIF
+RETURN 1
+
+ON=@Timer
+SERV.ALLCLIENTS f_speech_detect
+TIMER=<TAG.TIMER>
+RETURN 1
+
+CATEGORY=Profanity Detection
+SUBSECTION=Stone
+DESCRIPTION=Automated World Speech Detection Stone
+
+[EVENTS e_speech_detect]
+ON=@Login
+f_speech_detect
+RETURN 0
+
+[FUNCTION SPEECHINFO]
+IF (<SRC.UID>==<UID>)
+	SYSMESSAGE=You have a profanity warning level of <EVAL <TAG.CURSELVL>>, and a total of <EVAL <TAG.CURSENUM>> profanity offenses.
+ELSE
+	SRC.SYSMESSAGE=<SRC.NAME> has a profanity warning level of <EVAL <TAG.CURSELVL>>, and a total of <EVAL <TAG.CURSENUM>> profanity offenses.
+ENDIF
+
+[FUNCTION SPEECH_UNJAIL]
+NEWITEM=i_speech_targeter
+ACT.TAG.N=1
+ACT.P=<P>
+ACT.TARGET Select the person you wish to forgive for excessive profanity.
+
+[FUNCTION SPEECH_CLEARWARNING]
+NEWITEM=i_speech_targeter
+ACT.TAG.N=2
+ACT.P=<P>
+ACT.TARGET Select the person you wish to remove the profanity warning level of.
+
+[FUNCTION SPEECH_CLEAROFFENSE]
+NEWITEM=i_speech_targeter
+ACT.TAG.N=3
+ACT.P=<P>
+ACT.TARGET Select the person you wish to remove the profanity offenses of.
+
+[FUNCTION SPEECH_FIX]
+NEWITEM=i_speech_targeter
+ACT.TAG.N=4
+ACT.P=<P>
+ACT.TARGET Select the person you wish to fix
+
+[ITEMDEF i_speech_targeter]
+ID=i_memory
+NAME=Speech Unjail Targeter
+TYPE=t_script
+
+ON=@Create
+ATTR=0090
+TIMER=120 //Timer so this item will decay eventually if not used
+
+ON=@TargOn_Char
+IF (<TAG.N>==1)
+	IF (<SRC.TARG.RESTEST 1 i_speech_jail>)
+		SRC.TARG.CONSUME=1 i_speech_jail
+		SRC.SYSMESSAGE=You forgive <SRC.TARG.NAME> for using profanity.
+		SRC.TARG.SYSMESSAGE=You have been forgiven for your excessive use of profanity.
+		VAR.PDOPT=pd_unjail_clearwarning
+		IF (<VAR.PDOPT>==1)
+			SRC.TARG.TAG.CURSELVL=0
+		ENDIF
+	ELSE
+		SRC.SYSMESSAGE=<SRC.TARG.NAME> was not jailed for using profanity.
+	ENDIF
+ELIF (<TAG.N>==2)
+	SRC.TARG.TAG.CURSELVL=0
+	SRC.SYSMESSAGE=<SRC.TARG.NAME>'s profanity warning level has been set to 0.
+	SRC.TARG.SYSMESSAGE=Your profanity warning level has been set to 0.
+ELIF (<TAG.N>==3)
+	SRC.TARG.TAG.CURSENUM=0
+	SRC.SYSMESSAGE=<SRC.TARG.NAME>'s profanity offenses have been set to 0.
+	SRC.TARG.SYSMESSAGE=Your profanity offenses have been set to 0.
+ELIF (<TAG.N>==4)
+	SRC.TARG.CONSUME 5 i_speech_jail
+	SRC.TARG.EVENTS=-e_speech_jail
+	SRC.TARG.TAG.SJP=
+ENDIF
+REMOVE
+RETURN 1
+
+ON=@Timer
+REMOVE
+RETURN 1
+
+[FUNCTION f_speech_detect]
+IF (<RESTEST 1 i_speech_detect>)
+	FINDID.i_speech_detect.EQUIP
+ELSE
+	NEWITEM=i_speech_detect
+	EQUIP=<ACT.UID>
+ENDIF
+	
+
+[ITEMDEF i_speech_detect]
+ID=i_worldgem_bit
+NAME=Speech Item
+TYPE=t_comm_crystal
+LAYER=99
+
+ON=@Create
+SPEECH=spk_speech_detect
+TYPE=t_eq_script
+
+ON=@Equip
+TYPE=t_comm_crystal
+SRC.FLAGS=<SRC.FLAGS>|08000
+ATTR=<ATTR>|attr_newbie|attr_move_never
+
+ON=@Timer
+TIMER=pd_warning_decay
+IF (<CONT.TAG.CURSELVL> > 0)
+	CONT.TAG.CURSELVL=<EVAL <CONT.TAG.CURSELVL>+(-1)>
+ENDIF
+RETURN 1
+
+[SPEECH spk_speech_detect]
+ON=*blowjob*
+ON=*blow job*
+SRC.f_curse_num 'Blowjob' No cursing!
+
+ON=*pussy*
+SRC.f_curse_num 'Pussy' No profanity! Use cat or feline.
+
+ON=cunt
+ON=* cunt
+ON=cunt *
+ON=* cunt *
+SRC.f_curse_num 'Cunt' No cursing!
+
+ON=*fagot*
+SRC.f_curse_num 'Fagot' No cursing! Use bundle of sticks.
+
+ON=*faggot*
+SRC.f_curse_num 'Faggot' No cursing! Use bundle of sticks.
+
+ON=fag
+ON=* fag
+ON=fag *
+ON=* fag *
+SRC.f_curse_num 'Fag' No cursing! Use toil or labor.
+
+ON=*damnit*
+SRC.f_curse_num 'Damnit' No cursing! Use cursed, darnit, or dangit.
+
+ON=damn
+ON=* damn
+ON=damn *
+ON=* damn *
+SRC.f_curse_num 'Damn' No cursing! Use cursed, darn, or dang.
+
+ON=ass
+ON=* ass
+ON=ass *
+ON=* ass *
+ON=*asswipe*
+SRC.f_curse_num 'Ass' No cursing! Use butt, behind, bottom, rear, or arse.
+
+ON=*asshole*
+SRC.f_curse_num 'Asshole' No cursing! Use rude, rear, arse, behind, bottom, or butt.
+
+ON=*dumbass*
+SRC.f_curse_num 'Dumbass' No cursing! Use stupid, dumb, slow, or idiot.
+
+ON=shit
+ON=shit *
+ON=* shit
+ON=* shit *
+ON=*s h i t*
+ON=*bullshit*
+SRC.f_curse_num 'Shit' No cursing! Use turd, feces, or poop.
+
+ON=*bitch*
+ON=*bytch*
+ON=*bitsh*
+ON=*bich*
+ON=*biatch*
+ON=*beotch*
+ON=*beeotch*
+SRC.f_curse_num 'Bitch' No cursing! Use female dog.
+
+ON=*fuck*
+ON=*fuk*
+SRC.f_curse_num 'Fuck' No cursing! Use fornicate of procreate.
+
+ON=nigga *
+ON=* nigga
+ON=* nigga *
+ON=*nigger*
+SRC.f_curse_num 'Nigger' This is considered offensive if you didnt know.
+
+ON=*
+IF (<SRC.UID>==<CONT.UID>)
+	IF (0<SRC.TAG.GOLDOWED> > 0)
+		IF (<SRC.RESTEST <SRC.TAG.GOLDOWED> i_gold>)
+			SRC.SYSMESSAGE Thanks for the <EVAL <SRC.TAG.GOLDOWED>> gold you owe me for cursing, Sucker!
+			SRC.CONSUME=<SRC.TAG.GOLDOWED> i_gold
+			SRC.TAG.GOLDOWED=
+		ELSEIF (<SRC.TAG.GOLDOWED> >=<SRC.FINDID.i_gold.AMOUNT>)
+			IF (<SRC.FINDID.i_gold.AMOUNT> > 0)
+				SRC.TAG.GOLDOWED=<EVAL <SRC.TAG.GOLDOWED>+(-<SRC.FINDID.i_gold.AMOUNT>)>
+				SRC.SYSMESSAGE Thanks for the <EVAL <SRC.FINDID.i_gold.AMOUNT>> gold, but you still owe me <EVAL <SRC.TAG.GOLDOWED>> gold for cursing. No worries, I'll get it later.
+				SRC.CONSUME=<SRC.FINDID.i_gold.AMOUNT> i_gold
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+IF (<TIMER> > pd_warning_decay) || (<TIMER>==-1)
+	TIMER=pd_warning_decay
+ENDIF
+
+[FUNCTION f_curse_num]
+IF (<GM>)
+	VAR.PDOPT=pd_<EVAL <ACCOUNT.PLEVEL>>_applied
+	IF (<ACCOUNT.PLEVEL>==2) && (<VAR.PDOPT>==1)
+		RETURN 1
+	ELIF (<ACCOUNT.PLEVEL>==3) && (<VAR.PDOPT>==0)
+		RETURN 1
+	ELIF (<ACCOUNT.PLEVEL>==4) && (<VAR.PDOPT>==0)
+		RETURN 1
+	ELIF (<ACCOUNT.PLEVEL>==5) && (<VAR.PDOPT>==0)
+		RETURN 1
+	ELIF (<ACCOUNT.PLEVEL>==6) && (<VAR.PDOPT>==0)
+		RETURN 1
+	ELIF (<ACCOUNT.PLEVEL>==7) && (<VAR.PDOPT>==0)
+		RETURN 1
+	ENDIF
+ENDIF
+
+SAY <ARGS>
+IF (0<TAG.CURSENUM>==0)
+	TAG.CURSENUM=0
+ENDIF
+IF (0<TAG.CURSELVL>==0)
+	TAG.CURSELVL=0
+ENDIF
+TAG.CURSENUM=<EVAL <TAG.CURSENUM>+1>
+TAG.CURSELVL=<EVAL <TAG.CURSELVL>+1>
+FINDID.i_speech_detect.TIMER=pd_warning_decay
+SAY That is offense #<EVAL <TAG.CURSENUM>>; your warning level is at <EVAL <TAG.CURSELVL>>.
+IF (<TAG.CURSELVL> > 6)
+	VAR.PDOPT=pd_warning_6_fine
+ELSE
+	VAR.PDOPT=pd_warning_<EVAL <TAG.CURSELVL>>_fine
+ENDIF
+IF (<TAG.CURSELVL> >=6)
+	IF (!<SRC.RESTEST 1 i_speech_jail>)
+		SYSMESSAGE
+		SYSMESSAGE Alright, I've given you enough chances.
+		SYSMESSAGE
+		SYSMESSAGE Do not pass go.
+		SYSMESSAGE Do not collect $200.
+		SYSMESSAGE Go directly to Jail.
+		SYSMESSAGE
+		NEWITEM=i_speech_jail
+		EQUIP=<SRC.ACT.UID>
+	ELSE
+		SYSMESSAGE
+		SYSMESSAGE Hahah you idiots never learn. *Adds another day to your punishment*
+		SYSMESSAGE
+		FINDID.i_speech_jail.TIMER=<FINDID.i_speech_jail.TIMER>+(pd_jailtime_additional)
+	ENDIF
+	IF (<RESTEST <EVAL <VAR.PDOPT>> i_gold>)
+		CONSUME=<EVAL <VAR.PDOPT>> i_gold
+		f_randmsg_takegold
+	ELSE
+		IF (0<TAG.GOLDOWED>==0)
+			TAG.GOLDOWED=0
+		ENDIF
+		TAG.GOLDOWED=<EVAL <TAG.GOLDOWED>+<VAR.PDOPT>>
+		SYSMESSAGE
+		SYSMESSAGE Dang you are one poor bastard! You owe me <EVAL <TAG.GOLDOWED>> gold. Don't worry, i'll get it later hahahah.
+		SYSMESSAGE
+	ENDIF
+ELSEIF (<TAG.CURSELVL> >=1)
+	IF (<TAG.CURSELVL> >=4)
+		SYSMESSAGE Whew, your warning level is at <EVAL <TAG.CURSELVL>>. Should I throw yer arse in jail? Naw, I'm feelin generous.  I'll just take some gold.
+	ENDIF
+	IF (<RESTEST <EVAL <VAR.PDOPT>> i_gold>)
+		CONSUME=<EVAL <VAR.PDOPT>> i_gold
+		f_randmsg_takegold
+	ELSE
+		IF (0<TAG.GOLDOWED>==0)
+			TAG.GOLDOWED=0
+		ENDIF
+		TAG.GOLDOWED=<EVAL <TAG.GOLDOWED>+<VAR.PDOPT>>
+		SYSMESSAGE
+		SYSMESSAGE Dang you are one poor bastard! You owe me <EVAL <TAG.GOLDOWED>> gold. Don't worry, i'll get it later hahahah.
+		SYSMESSAGE
+	ENDIF
+ENDIF
+
+[FUNCTION f_randmsg_takegold]
+SYSMESSAGE
+DORAND 5
+	SYSMESSAGE *Yoink* Thanks for the gold sucker!
+	SYSMESSAGE *Yoink* Thanks for the gold suckah!
+	SYSMESSAGE *Grabs <EVAL <VAR.PDOPT>> gold peices and runs*
+	SYSMESSAGE Your gold has been generously donated to... ME!
+	SYSMESSAGE Who is that guy that takes your money when you curse anyway?
+ENDDO
+SYSMESSAGE
+
+[ITEMDEF i_speech_jail]
+ID=i_memory
+NAME=Speech Jail Item
+WEIGHT=0
+TYPE=t_eq_script
+
+ON=@Equip
+SRC.EVENTS=+e_speech_jail
+SRC.TAG.SJP=<SRC.P>
+SRC.JAIL
+TIMER=pd_jailtime_initial
+RETURN 0
+
+ON=@UnEquip
+SRC.EVENTS=-e_speech_jail
+SRC.FORGIVE
+VAR.PDOPT=pd_jailp_onrelease
+IF (<VAR.PDOPT>==0)
+ELIF (<VAR.PDOPT>==1)
+	SRC.GO=<SRC.TAG.SJP>
+ENDIF
+SRC.SYSMESSAGE You have regained your freedom, but watch your language or you'll get busted again.
+SRC.TAG.SJP=
+VAR.PDOPT=pd_jailup_clearwarning
+IF (<VAR.PDOPT>==1)
+	SRC.TARG.TAG.CURSELVL=0
+ENDIF
+
+ON=@Timer
+REMOVE
+RETURN 1
+
+[EVENTS e_speech_jail]
+ON=@Click
+TAG.JHOURS=<EVAL (<FINDID.i_speech_jail.TIMER>/3600)>
+TAG.JMINS=<EVAL ((<FINDID.i_speech_jail.TIMER>/60)+(-<TAG.JHOURS>*60))>
+TAG.JSECS=<EVAL ((<FINDID.i_speech_jail.TIMER>+(-(<TAG.JHOURS>*3600)))+(-(<TAG.JMINS>*60)))>
+MESSAGE [Jailed for cursing; <EVAL <TAG.JHOURS>> hours, <EVAL <TAG.JMINS>> minutes, and <EVAL <TAG.JSECS>> seconds left of jail time]
+MESSAGE
+TAG.JHOURS=
+TAG.JMINS=
+TAG.JSECS=
+
+[EOF]

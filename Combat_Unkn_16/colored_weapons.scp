@@ -1,0 +1,4292 @@
+//COLORED WEAPONS//
+
+
+//
+// Agapite Weapons
+//
+
+[FUNCTION agapite_wep]
+IF (<SRC.BRAIN>)
+RETURN 0
+ELSEIF (<SRC.KARMA> < <SERV.PLAYERNEUTRAL>)
+	SRC.DAMAGE=20,50
+	SRC.EFFECT=3,i_fx_curse,6,15,1
+	SRC.SOUND=snd_SPELL_POISON
+	RETURN 0
+ELSEIF (<SRC.KILLS> > <SERV.MURDERMINCOUNT>)
+	SRC.DAMAGE=20,50
+	SRC.EFFECT=3,i_fx_curse,6,15,1
+	SRC.SOUND=snd_SPELL_POISON
+	RETURN 0
+ELSEIF <SRC.FLAGS>&statf_criminal
+	SRC.DAMAGE=20,50
+	SRC.EFFECT=3,i_fx_curse,6,15,1
+	SRC.SOUND=snd_SPELL_POISON
+	RETURN 0
+ELSE
+RETURN 0
+ENDIF
+
+
+[ITEMDEF i_axe_war_agapite]
+NAME=Agapite War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=6,22
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Agapite
+SKILLMAKE=BLACKSMITHING 74.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+
+[ITEMDEF i_hammer_war_agapite]  
+NAME=Agapite War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=6,50
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 69.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_sword_broad_agapite] 
+NAME=Agapite Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 70.8
+WEIGHT=6 
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_kryss_agapite] 
+NAME=Agapite Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=8,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 72.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_katana_agapite] 
+NAME=Agapite Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=6,22
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 79.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_halberd_agapite] 
+NAME=Agapite Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=6,50
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 74.4
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_mace_war_agapite] 
+NAME=Agapite War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=9,37
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_war_fork_agapite]
+NAME=Agapite War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=6,28
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 73.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_sword_viking_agapite]
+NAME=Agapite Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=8,34
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 60.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_spear_agapite]
+NAME=Agapite Spear
+ID=i_spear
+TYPE=t_weapon_fence
+DAM=6,40
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 83.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_sword_long_agapite] 
+NAME=Agapite Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_agapite
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+[ITEMDEF i_double_battle_axe_agapite]
+ID=013fa
+NAME=Agapite Double Battle Axe
+RESOURCES=14 i_ingot_agapite
+SKILLMAKE=BLACKSMITHING 65.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=9,37
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Agapite
+DESCRIPTION=Agapite Double Battle Axe
+
+ON=@Create
+COLOR=color_o_agapite
+HITPOINTS={31 110}
+
+ON=@DAMAGE
+AGAPITE_WEP
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_agapite_weapons]
+Agapite Weapons
+
+ON=i_axe_war_agapite <name> (<resmake>)
+MAKEITEM=i_axe_war_agapite
+
+ON=i_hammer_war_agapite <name> (<resmake>)
+MAKEITEM=i_hammer_war_agapite
+
+ON=i_sword_broad_agapite <name> (<resmake>)
+MAKEITEM=i_sword_broad_agapite
+
+ON=i_kryss_agapite <name> (<resmake>)
+MAKEITEM=i_kryss_agapite
+
+ON=i_katana_agapite <name> (<resmake>)
+MAKEITEM=i_katana_agapite
+
+ON=i_halberd_agapite <name> (<resmake>)
+MAKEITEM=i_halberd_agapite
+
+ON=i_mace_war_agapite <name> (<resmake>)
+MAKEITEM=i_mace_war_agapite
+
+ON=i_War_fork_agapite <name> (<resmake>)
+MAKEITEM=i_war_fork_agapite
+
+ON=i_sword_viking_agapite <name> (<resmake>)
+MAKEITEM=i_sword_viking_agapite
+
+ON=i_sword_long_agapite <name> (<resmake>)
+MAKEITEM=i_sword_long_agapite
+
+ON=i_spear_agapite <name> (<resmake>)
+MAKEITEM=i_spear_agapite
+
+ON=i_double_battle_axe_agapite <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_agapite
+
+//
+// Blackrock Weapons
+//
+
+[ITEMDEF i_axe_war_Blackrock]
+NAME=Blackrock War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=4,20
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 79.4
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_Blackrock
+
+
+
+[ITEMDEF i_hammer_war_Blackrock]  
+NAME=Blackrock War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=4,48
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 74.7
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_sword_broad_Blackrock] 
+NAME=Blackrock Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=5,29
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 75.8
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_kryss_Blackrock] 
+NAME=Blackrock Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=6,18
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 77.0
+WEIGHT=1
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_katana_Blackrock] 
+NAME=Blackrock Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=4,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 84.1
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_halberd_Blackrock] 
+NAME=Blackrock Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=4,48
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 79.4
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_mace_war_Blackrock] 
+NAME=Blackrock War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=7,35
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 68.8
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_war_fork_Blackrock]
+NAME=Blackrock War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=4,26
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 78.2
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_sword_viking_Blackrock]
+NAME=Blackrock Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=6,32
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 65.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_spear_Blackrock]
+NAME=Blackrock Spear
+ID=i_spear
+TYPE=t_weapon_fence
+DAM=4,38
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 88.8
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_sword_long_Blackrock] 
+NAME=Blackrock Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=5,29
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Blackrock
+SKILLMAKE=BLACKSMITHING 68.8
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Blackrock
+
+
+[ITEMDEF i_double_battle_axe_blackrock]
+ID=013fa
+NAME=Blackrock Double Battle Axe
+RESOURCES=14 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 70.0
+WEIGHT=5
+TYPE=T_WEAPON_AXE
+DAM=7,35
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Blackrock
+DESCRIPTION=Blackrock Double Battle Axe
+
+ON=@Create
+COLOR=color_o_blackrock
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Blackrock_weapons]
+Blackrock Weapons
+
+ON=i_axe_war_Blackrock <name> (<resmake>)
+MAKEITEM=i_axe_war_Blackrock
+
+ON=i_hammer_war_Blackrock <name> (<resmake>)
+MAKEITEM=i_hammer_war_Blackrock
+
+ON=i_sword_broad_Blackrock <name> (<resmake>)
+MAKEITEM=i_sword_broad_Blackrock
+
+ON=i_kryss_Blackrock <name> (<resmake>)
+MAKEITEM=i_kryss_Blackrock
+
+ON=i_katana_Blackrock <name> (<resmake>)
+MAKEITEM=i_katana_Blackrock
+
+ON=i_halberd_Blackrock <name> (<resmake>)
+MAKEITEM=i_halberd_Blackrock
+
+ON=i_mace_war_Blackrock <name> (<resmake>)
+MAKEITEM=i_mace_war_Blackrock
+
+ON=i_war_fork_Blackrock <name> (<resmake>)
+MAKEITEM=i_war_fork_Blackrock
+
+ON=i_sword_viking_Blackrock <name> (<resmake>)
+MAKEITEM=i_sword_viking_Blackrock
+
+ON=i_sword_long_Blackrock <name> (<resmake>)
+MAKEITEM=i_sword_long_Blackrock
+
+ON=i_spear_Blackrock <name> (<resmake>)
+MAKEITEM=i_spear_Blackrock
+
+ON=i_double_battle_axe_blackrock <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_blackrock
+
+//
+// Bloodrock Weapons
+//
+
+[ITEMDEF i_axe_war_Bloodrock]
+NAME=Bloodrock War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=4,20
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 79.4
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_hammer_war_Bloodrock]  
+NAME=Bloodrock War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=4,48
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 74.7
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_sword_broad_Bloodrock] 
+NAME=Bloodrock Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=5,29
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 75.8
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_kryss_Bloodrock] 
+NAME=Bloodrock Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=6,18
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 77.0
+WEIGHT=1
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_katana_Bloodrock] 
+NAME=Bloodrock Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=4,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 84.1
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_halberd_Bloodrock] 
+NAME=Bloodrock Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=4,48
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 79.4
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_mace_war_Bloodrock] 
+NAME=Bloodrock War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=7,35
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 68.8
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_war_fork_Bloodrock]
+NAME=Bloodrock War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=4,26
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 78.2
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_sword_viking_Bloodrock]
+NAME=Bloodrock Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=6,32
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 65.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_spear_Bloodrock]
+NAME=Bloodrock Spear
+ID=i_spear
+TYPE=t_weapon_fence
+DAM=4,38
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 88.8
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_sword_long_Bloodrock] 
+NAME=Bloodrock Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=5,29
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Bloodrock
+SKILLMAKE=BLACKSMITHING 68.8
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Bloodrock
+
+
+[ITEMDEF i_double_battle_axe_bloodrock]
+ID=013fa
+NAME=Bloodrock Double Battle Axe
+RESOURCES=14 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 70.0
+WEIGHT=5
+TYPE=T_WEAPON_AXE
+DAM=7,35
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bloodrock
+DESCRIPTION=Bloodrock Double Battle Axe
+
+ON=@Create
+COLOR=color_o_bloodrock
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Bloodrock_weapons]
+Bloodrock Weapons
+
+ON=i_axe_war_Bloodrock <name> (<resmake>)
+MAKEITEM=i_axe_war_Bloodrock
+
+ON=i_hammer_war_Bloodrock <name> (<resmake>)
+MAKEITEM=i_hammer_war_Bloodrock
+
+ON=i_sword_broad_Bloodrock <name> (<resmake>)
+MAKEITEM=i_sword_broad_Bloodrock
+
+ON=i_kryss_Bloodrock <name> (<resmake>)
+MAKEITEM=i_kryss_Bloodrock
+
+ON=i_katana_Bloodrock <name> (<resmake>)
+MAKEITEM=i_katana_Bloodrock
+
+ON=i_halberd_Bloodrock <name> (<resmake>)
+MAKEITEM=i_halberd_Bloodrock
+
+ON=i_mace_war_Bloodrock <name> (<resmake>)
+MAKEITEM=i_mace_war_Bloodrock
+
+ON=i_war_fork_Bloodrock <name> (<resmake>)
+MAKEITEM=i_war_fork_Bloodrock
+
+ON=i_sword_viking_Bloodrock <name> (<resmake>)
+MAKEITEM=i_sword_viking_Bloodrock
+
+ON=i_sword_long_Bloodrock <name> (<resmake>)
+MAKEITEM=i_sword_long_Bloodrock
+
+ON=i_spear_Bloodrock <name> (<resmake>)
+MAKEITEM=i_spear_Bloodrock
+
+ON=i_double_battle_axe_bloodrock <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_bloodrock
+
+//
+// Bronze Weapons
+//
+
+[ITEMDEF i_axe_war_Bronze]
+NAME=Bronze War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=4,15
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 54.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_hammer_war_Bronze]  
+NAME=Bronze War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=4,35
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 49.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_sword_broad_Bronze] 
+NAME=Bronze Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=4,23
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 50.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_kryss_Bronze] 
+NAME=Bronze Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=5,15
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 52.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_katana_Bronze] 
+NAME=Bronze Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=4,15
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 59.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_halberd_Bronze] 
+NAME=Bronze Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=4,35
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 54.4
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_mace_war_Bronze] 
+NAME=Bronze War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=5,30
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 43.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_war_fork_Bronze]
+NAME=Bronze War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=4,20
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 53.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_sword_viking_Bronze]
+NAME=Bronze Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=4,25
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 40.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_spear_Bronze]
+NAME=Bronze Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=4,30
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_sword_long_Bronze] 
+NAME=Bronze Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=4,23
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Bronze
+SKILLMAKE=BLACKSMITHING 43.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Bronze
+
+
+[ITEMDEF i_double_battle_axe_bronze]
+ID=013fa
+NAME=Bronze Double Battle Axe
+RESOURCES=14 i_ingot_bronze
+SKILLMAKE=BLACKSMITHING 45.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=5,30
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Bronze
+DESCRIPTION=Bronze Double Battle Axe
+
+ON=@Create
+COLOR=color_o_bronze
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Bronze_weapons]
+Bronze Weapons
+
+ON=i_axe_war_Bronze <name> (<resmake>)
+MAKEITEM=i_axe_war_Bronze
+
+ON=i_hammer_war_Bronze <name> (<resmake>)
+MAKEITEM=i_hammer_war_Bronze
+
+ON=i_sword_broad_Bronze <name> (<resmake>)
+MAKEITEM=i_sword_broad_Bronze
+
+ON=i_kryss_Bronze <name> (<resmake>)
+MAKEITEM=i_kryss_Bronze
+
+ON=i_katana_Bronze <name> (<resmake>)
+MAKEITEM=i_katana_Bronze
+
+ON=i_halberd_Bronze <name> (<resmake>)
+MAKEITEM=i_halberd_Bronze
+
+ON=i_mace_war_Bronze <name> (<resmake>)
+MAKEITEM=i_mace_war_Bronze
+
+ON=i_war_fork_Bronze <name> (<resmake>)
+MAKEITEM=i_war_fork_Bronze
+
+ON=i_sword_viking_Bronze <name> (<resmake>)
+MAKEITEM=i_sword_viking_Bronze
+
+ON=i_sword_long_Bronze <name> (<resmake>)
+MAKEITEM=i_sword_long_Bronze
+
+ON=i_Spear_Bronze <name> (<resmake>)
+MAKEITEM=i_Spear_Bronze
+
+ON=i_double_battle_axe_bronze <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_bronze
+
+//
+// Copper Weapons
+//
+
+[ITEMDEF i_axe_war_copper]
+NAME=Copper War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=4,15
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 54.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_hammer_war_copper]  
+NAME=Copper War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=4,35
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 49.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_sword_broad_copper] 
+NAME=Copper Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=4,23
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 50.8
+WEIGHT=6 
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_kryss_copper] 
+NAME=Copper Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=5,15
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 52.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_katana_copper] 
+NAME=Copper Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=4,15
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 59.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_halberd_copper] 
+NAME=Copper Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=4,35
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 54.4
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_mace_war_copper] 
+NAME=Copper War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=5,30
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 43.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_war_fork_copper]
+NAME=Copper War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=4,20
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 53.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_sword_viking_copper]
+NAME=Copper Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=4,25
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 40.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_Spear_copper]
+NAME=Copper Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=4,30
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_sword_long_copper] 
+NAME=Copper Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=4,23
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 43.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_copper
+
+
+[ITEMDEF i_double_battle_axe_copper]
+ID=013fa
+NAME=Copper Double Battle Axe
+RESOURCES=14 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 45.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=5,30
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Copper
+DESCRIPTION=Copper Double Battle Axe
+
+ON=@Create
+COLOR=color_o_copper
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_copper_weapons]
+Copper Weapons
+
+ON=i_axe_war_copper <name> (<resmake>)
+MAKEITEM=i_axe_war_copper
+
+ON=i_hammer_war_copper <name> (<resmake>)
+MAKEITEM=i_hammer_war_copper
+
+ON=i_sword_broad_copper <name> (<resmake>)
+MAKEITEM=i_sword_broad_copper
+
+ON=i_kryss_copper <name> (<resmake>)
+MAKEITEM=i_kryss_copper
+
+ON=i_katana_copper <name> (<resmake>)
+MAKEITEM=i_katana_copper
+
+ON=i_halberd_copper <name> (<resmake>)
+MAKEITEM=i_halberd_copper
+
+ON=i_mace_war_copper <name> (<resmake>)
+MAKEITEM=i_mace_war_copper
+
+ON=i_war_fork_copper <name> (<resmake>)
+MAKEITEM=i_war_fork_copper
+
+ON=i_sword_viking_copper <name> (<resmake>)
+MAKEITEM=i_sword_viking_copper
+
+ON=i_sword_long_copper <name> (<resmake>)
+MAKEITEM=i_sword_long_copper
+
+ON=i_Spear_copper <name> (<resmake>)
+MAKEITEM=i_Spear_copper
+
+ON=i_double_battle_axe_copper <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_copper
+
+//
+// Dull Copper Weapons
+//
+
+[ITEMDEF i_axe_war_dull_copper]
+NAME=Dull Copper War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=4,15
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 54.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_hammer_war_Dull_Copper]  
+NAME=Dull Copper War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=4,35
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 49.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_sword_broad_Dull_Copper] 
+NAME=Dull Copper Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=4,23
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 50.8
+WEIGHT=6 
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_kryss_Dull_Copper] 
+NAME=Dull Copper Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=4,15
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 52.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_katana_Dull_Copper] 
+NAME=Dull Copper Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=4,15
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 59.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_halberd_Dull_Copper] 
+NAME=Dull Copper Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=4,35
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 54.4
+WEIGHT=10
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_mace_war_Dull_Copper] 
+NAME=Dull Copper War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=5,30
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 43.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_war_fork_Dull_Copper]
+NAME=Dull Copper War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=4,20
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 53.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_sword_viking_Dull_Copper]
+NAME=Dull Copper Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=4,25
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 40.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_Spear_Dull_Copper]
+NAME=Dull Copper Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=4,30
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_sword_long_Dull_Copper] 
+NAME=Dull Copper Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=4,23
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Dull_Copper
+SKILLMAKE=BLACKSMITHING 43.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_DullCopper
+
+
+[ITEMDEF i_double_battle_axe_dull_copper]
+ID=013fa
+NAME=Dull Copper Double Battle Axe
+RESOURCES=14 i_ingot_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=5,30
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Dull Copper
+DESCRIPTION=Dull Copper Double Battle Axe
+
+ON=@Create
+COLOR=color_o_dullcopper
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Dull_Copper_weapons]
+Dull Copper Weapons
+
+ON=i_axe_war_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_axe_war_Dull_Copper
+
+ON=i_hammer_war_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_hammer_war_Dull_Copper
+
+ON=i_sword_broad_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_sword_broad_Dull_Copper
+
+ON=i_kryss_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_kryss_Dull_Copper
+
+ON=i_katana_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_katana_Dull_Copper
+
+ON=i_halberd_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_halberd_Dull_Copper
+
+ON=i_mace_war_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_mace_war_Dull_Copper
+
+ON=i_war_fork_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_war_fork_Dull_Copper
+
+ON=i_sword_viking_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_sword_viking_Dull_Copper
+
+ON=i_sword_long_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_sword_long_Dull_Copper
+
+ON=i_Spear_Dull_Copper <name> (<resmake>)
+MAKEITEM=i_Spear_Dull_Copper
+
+ON=i_double_battle_axe_dull_copper <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_dull_copper
+
+//
+// Gold Weapons
+//
+
+[ITEMDEF i_axe_war_gold]
+NAME=Gold War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=6,22
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 69.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_hammer_war_gold]  
+NAME=Gold War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=6,50
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 64.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_sword_broad_gold] 
+NAME=Gold Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 65.8
+WEIGHT=6 
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_kryss_gold] 
+NAME=Gold Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=8,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 67.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_katana_gold] 
+NAME=Gold Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=6,22
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 74.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_halberd_gold] 
+NAME=Gold Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=6,50
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 69.4
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_mace_war_gold] 
+NAME=Gold War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=9,37
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 58.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_war_fork_gold]
+NAME=Gold War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=6,28
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 68.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_sword_viking_gold]
+NAME=Gold Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=8,34
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 55.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_Spear_gold]
+NAME=Gold Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=6,40
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 78.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_sword_long_gold] 
+NAME=Gold Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 58.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_gold
+
+
+[ITEMDEF i_double_battle_axe_gold]
+ID=013fa
+NAME=Gold Double Battle Axe
+RESOURCES=14 i_ingot_gold
+SKILLMAKE=BLACKSMITHING 60.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=9,37
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Gold
+DESCRIPTION=Gold Double Battle Axe
+
+ON=@Create
+COLOR=color_o_gold
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_gold_weapons]
+Gold Weapons
+
+ON=i_axe_war_gold <name> (<resmake>)
+MAKEITEM=i_axe_war_gold
+
+ON=i_hammer_war_gold <name> (<resmake>)
+MAKEITEM=i_hammer_war_gold
+
+ON=i_sword_broad_gold <name> (<resmake>)
+MAKEITEM=i_sword_broad_gold
+
+ON=i_kryss_gold <name> (<resmake>)
+MAKEITEM=i_kryss_gold
+
+ON=i_katana_gold <name> (<resmake>)
+MAKEITEM=i_katana_gold
+
+ON=i_halberd_gold <name> (<resmake>)
+MAKEITEM=i_halberd_gold
+
+ON=i_mace_war_gold <name> (<resmake>)
+MAKEITEM=i_mace_war_gold
+
+ON=i_war_fork_gold <name> (<resmake>)
+MAKEITEM=i_war_fork_gold
+
+ON=i_sword_viking_gold <name> (<resmake>)
+MAKEITEM=i_sword_viking_gold
+
+ON=i_sword_long_gold <name> (<resmake>)
+MAKEITEM=i_sword_long_gold
+
+ON=i_Spear_gold <name> (<resmake>)
+MAKEITEM=i_Spear_gold
+
+ON=i_double_battle_axe_gold <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_gold
+
+//
+// Hellfire Weapons
+//
+
+[ITEMDEF i_axe_war_Hellfire]
+NAME=Hellfire War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=7,25
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=1
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_hammer_war_Hellfire]  
+NAME=Hellfire War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=7,53
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_sword_broad_Hellfire] 
+NAME=Hellfire Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=8,34
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_kryss_Hellfire] 
+NAME=Hellfire Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=9,23
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=0.1
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_katana_Hellfire] 
+NAME=Hellfire Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=7,25
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=1
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_halberd_Hellfire] 
+NAME=Hellfire Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=7,53
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_mace_war_Hellfire] 
+NAME=Hellfire War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=10,40
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_war_fork_Hellfire]
+NAME=Hellfire War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=7,31
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_sword_viking_Hellfire]
+NAME=Hellfire Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=9,37
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_Spear_Hellfire]
+NAME=Hellfire Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=7,43
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_sword_long_Hellfire] 
+NAME=Hellfire Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=8,34
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Hellfire
+
+
+[ITEMDEF i_double_battle_axe_hellfire]
+ID=013fa
+NAME=Hellfire Double Battle Axe
+RESOURCES=14 i_ingot_hellfire
+SKILLMAKE=BLACKSMITHING 98.9
+WEIGHT=4
+TYPE=T_WEAPON_AXE
+DAM=10,40
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Hellfire
+DESCRIPTION=Hellfire Double Battle Axe
+
+ON=@Create
+COLOR=color_o_hellfire
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Hellfire_weapons]
+Hellfire Weapons
+
+ON=i_axe_war_Hellfire <name> (<resmake>)
+MAKEITEM=i_axe_war_Hellfire
+
+ON=i_hammer_war_Hellfire <name> (<resmake>)
+MAKEITEM=i_hammer_war_Hellfire
+
+ON=i_sword_broad_Hellfire <name> (<resmake>)
+MAKEITEM=i_sword_broad_Hellfire
+
+ON=i_kryss_Hellfire <name> (<resmake>)
+MAKEITEM=i_kryss_Hellfire
+
+ON=i_katana_Hellfire <name> (<resmake>)
+MAKEITEM=i_katana_Hellfire
+
+ON=i_halberd_Hellfire <name> (<resmake>)
+MAKEITEM=i_halberd_Hellfire
+
+ON=i_mace_war_Hellfire <name> (<resmake>)
+MAKEITEM=i_mace_war_Hellfire
+
+ON=i_war_fork_Hellfire <name> (<resmake>)
+MAKEITEM=i_war_fork_Hellfire
+
+ON=i_sword_viking_Hellfire <name> (<resmake>)
+MAKEITEM=i_sword_viking_Hellfire
+
+ON=i_sword_long_Hellfire <name> (<resmake>)
+MAKEITEM=i_sword_long_Hellfire
+
+ON=i_Spear_Hellfire <name> (<resmake>)
+MAKEITEM=i_Spear_Hellfire
+
+ON=i_double_battle_axe_hellfire <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_hellfire
+
+//
+// Mytheril Weapons
+//
+
+[ITEMDEF i_axe_war_Mytheril]
+NAME=Mytheril War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=6,22
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 94.4
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_hammer_war_Mytheril]  
+NAME=Mytheril War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=6,50
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 89.7
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_sword_broad_Mytheril] 
+NAME=Mytheril Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 90.8
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_kryss_Mytheril] 
+NAME=Mytheril Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=8,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 92.0
+WEIGHT=1
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_katana_Mytheril] 
+NAME=Mytheril Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=6,22
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 89.1
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_halberd_Mytheril] 
+NAME=Mytheril Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=6,50
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 94.4
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_mace_war_Mytheril] 
+NAME=Mytheril War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=9,37
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 93.8
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_war_fork_Mytheril]
+NAME=Mytheril War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=6,28
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 93.2
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_sword_viking_Mytheril]
+NAME=Mytheril Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=8,34
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 90.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_Spear_Mytheril]
+NAME=Mytheril Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=6,40
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 93.8
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_sword_long_Mytheril] 
+NAME=Mytheril Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 93.8
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Mytheril
+
+
+[ITEMDEF i_double_battle_axe_Mytheril]
+ID=013fa
+NAME=Mytheril Double Battle Axe
+RESOURCES=14 i_ingot_Mytheril
+SKILLMAKE=BLACKSMITHING 95.0
+WEIGHT=5
+TYPE=T_WEAPON_AXE
+DAM=9,37
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Mytheril
+DESCRIPTION=Mytheril Double Battle Axe
+
+ON=@Create
+COLOR=color_o_Mytheril
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Mytheril_weapons]
+Mytheril Weapons
+
+ON=i_axe_war_Mytheril <name> (<resmake>)
+MAKEITEM=i_axe_war_Mytheril
+
+ON=i_hammer_war_Mytheril <name> (<resmake>)
+MAKEITEM=i_hammer_war_Mytheril
+
+ON=i_sword_broad_Mytheril <name> (<resmake>)
+MAKEITEM=i_sword_broad_Mytheril
+
+ON=i_kryss_Mytheril <name> (<resmake>)
+MAKEITEM=i_kryss_Mytheril
+
+ON=i_katana_Mytheril <name> (<resmake>)
+MAKEITEM=i_katana_Mytheril
+
+ON=i_halberd_Mytheril <name> (<resmake>)
+MAKEITEM=i_halberd_Mytheril
+
+ON=i_mace_war_Mytheril <name> (<resmake>)
+MAKEITEM=i_mace_war_Mytheril
+
+ON=i_war_fork_Mytheril <name> (<resmake>)
+MAKEITEM=i_war_fork_Mytheril
+
+ON=i_sword_viking_Mytheril <name> (<resmake>)
+MAKEITEM=i_sword_viking_Mytheril
+
+ON=i_sword_long_Mytheril <name> (<resmake>)
+MAKEITEM=i_sword_long_Mytheril
+
+ON=i_Spear_Mytheril <name> (<resmake>)
+MAKEITEM=i_Spear_Mytheril
+
+ON=i_double_battle_axe_Mytheril <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_Mytheril
+
+//
+// Rose Weapons
+//
+
+[ITEMDEF i_axe_war_Rose]
+NAME=Rose War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=4,20
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 64.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_hammer_war_Rose]  
+NAME=Rose War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=4,48
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 59.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_sword_broad_Rose] 
+NAME=Rose Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=5,29
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 60.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_kryss_Rose] 
+NAME=Rose Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=6,18
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 62.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_katana_Rose] 
+NAME=Rose Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=4,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 69.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_halberd_Rose] 
+NAME=Rose Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=4,48
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 64.4
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_mace_war_Rose] 
+NAME=Rose War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=7,35
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 53.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_war_fork_Rose]
+NAME=Rose War_fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=4,26
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 63.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_sword_viking_Rose]
+NAME=Rose Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=6,32
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 50.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_Spear_Rose]
+NAME=Rose Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=4,38
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 73.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_sword_long_Rose] 
+NAME=Rose Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=5,29
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 53.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Rose
+
+
+[ITEMDEF i_double_battle_axe_Rose]
+ID=013fa
+NAME=Rose Double Battle Axe
+RESOURCES=14 i_ingot_Rose
+SKILLMAKE=BLACKSMITHING 55.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=7,35
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Rose
+DESCRIPTION=Rose Double Battle Axe
+
+ON=@Create
+COLOR=color_o_Rose
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Rose_weapons]
+Rose Weapons
+
+ON=i_axe_war_Rose <name> (<resmake>)
+MAKEITEM=i_axe_war_Rose
+
+ON=i_hammer_war_Rose <name> (<resmake>)
+MAKEITEM=i_hammer_war_Rose
+
+ON=i_sword_broad_Rose <name> (<resmake>)
+MAKEITEM=i_sword_broad_Rose
+
+ON=i_kryss_Rose <name> (<resmake>)
+MAKEITEM=i_kryss_Rose
+
+ON=i_katana_Rose <name> (<resmake>)
+MAKEITEM=i_katana_Rose
+
+ON=i_halberd_Rose <name> (<resmake>)
+MAKEITEM=i_halberd_Rose
+
+ON=i_mace_war_Rose <name> (<resmake>)
+MAKEITEM=i_mace_war_Rose
+
+ON=i_war_fork_Rose <name> (<resmake>)
+MAKEITEM=i_war_fork_Rose
+
+ON=i_sword_viking_Rose <name> (<resmake>)
+MAKEITEM=i_sword_viking_Rose
+
+ON=i_sword_long_Rose <name> (<resmake>)
+MAKEITEM=i_sword_long_Rose
+
+ON=i_Spear_Rose <name> (<resmake>)
+MAKEITEM=i_Spear_Rose
+
+ON=i_double_battle_axe_Rose <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_Rose
+
+//
+// Shadow Weapons
+//
+
+[FUNCTION shadow_wep]
+IF (<SRC.BRAIN>)
+RETURN 0
+ELSEIF (<SRC.KARMA> > 100)
+	SRC.STAM=(<SRC.STAM> +- <eval RAND(20))
+	RETURN 0
+ELSEIF (<SRC.KILLS> < 1)
+	SRC.STAM=(<SRC.STAM> +- <eval RAND(20))
+	RETURN 0
+ELSE
+RETURN 0
+ENDIF
+
+
+[ITEMDEF i_axe_war_shadow]
+NAME=Shadow War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=6,22
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 74.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_hammer_war_shadow]  
+NAME=Shadow War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=6,50
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 69.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_sword_broad_shadow] 
+NAME=Shadow Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 70.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_kryss_shadow] 
+NAME=Shadow Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=8,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 72.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_katana_shadow] 
+NAME=Shadow Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=6,22
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 79.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_halberd_shadow] 
+NAME=Shadow Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=6,50
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 74.4
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_mace_war_shadow] 
+NAME=Shadow War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=9,37
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_war_fork_shadow]
+NAME=Shadow War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=6,28
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 73.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_sword_viking_shadow]
+NAME=Shadow Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=8,34
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 60.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_Spear_shadow]
+NAME=Shadow Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=6,40
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 83.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_sword_long_shadow] 
+NAME=Shadow Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_shadow
+
+ON=@DAMAGE
+SHADOW_WEP
+
+
+[ITEMDEF i_double_battle_axe_shadow]
+ID=013fa
+NAME=Shadow Double Battle Axe
+RESOURCES=14 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 65.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=9,37
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Shadow
+DESCRIPTION=Shadow Double Battle Axe
+
+ON=@Create
+COLOR=color_o_shadow
+HITPOINTS={31 110}
+
+ON=@DAMAGE
+SHADOW_WEP
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_shadow_weapons]
+Shadow Weapons
+
+ON=i_axe_war_shadow <name> (<resmake>)
+MAKEITEM=i_axe_war_shadow
+
+ON=i_hammer_war_shadow <name> (<resmake>)
+MAKEITEM=i_hammer_war_shadow
+
+ON=i_sword_broad_shadow <name> (<resmake>)
+MAKEITEM=i_sword_broad_shadow
+
+ON=i_kryss_shadow <name> (<resmake>)
+MAKEITEM=i_kryss_shadow
+
+ON=i_katana_shadow <name> (<resmake>)
+MAKEITEM=i_katana_shadow
+
+ON=i_halberd_shadow <name> (<resmake>)
+MAKEITEM=i_halberd_shadow
+
+ON=i_mace_war_shadow <name> (<resmake>)
+MAKEITEM=i_mace_war_shadow
+
+ON=i_war_fork_shadow <name> (<resmake>)
+MAKEITEM=i_war_fork_shadow
+
+ON=i_sword_viking_shadow <name> (<resmake>)
+MAKEITEM=i_sword_viking_shadow
+
+ON=i_sword_long_shadow <name> (<resmake>)
+MAKEITEM=i_sword_long_shadow
+
+ON=i_Spear_shadow <name> (<resmake>)
+MAKEITEM=i_Spear_shadow
+
+ON=i_double_battle_axe_shadow <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_shadow
+
+//
+// Silver Weapons
+//
+
+[ITEMDEF i_axe_war_silver]
+NAME=Silver War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=9,37
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 74.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_hammer_war_silver]  
+NAME=Silver War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=6,50
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 69.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_sword_broad_silver] 
+NAME=Silver Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 70.8
+WEIGHT=6 
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_kryss_silver] 
+NAME=Silver Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=8,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 72.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_katana_silver] 
+NAME=Silver Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=6,22
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 79.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_halberd_silver] 
+NAME=Silver Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=6,50
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 74.4
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_mace_war_silver] 
+NAME=Silver War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=9,37
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_war_fork_silver]
+NAME=Silver War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=6,28
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 73.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_sword_viking_silver]
+NAME=Silver Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=8,34
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 60.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_Spear_silver]
+NAME=Silver Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=6,40
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 83.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_sword_long_silver] 
+NAME=Silver Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_silver
+SKILLMAKE=BLACKSMITHING 63.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_silver
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+
+[ITEMDEF i_double_battle_axe_Silver]
+ID=013fa
+NAME=Silver Double Battle Axe
+RESOURCES=14 i_ingot_Silver
+SKILLMAKE=BLACKSMITHING 65.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=9,37
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Silver
+DESCRIPTION=Silver Double Battle Axe
+
+ON=@Create
+COLOR=color_o_Silver
+HITPOINTS={31 110}
+
+ON=@DAMAGE
+	IF (<SRC.NPC>==BRAIN_UNDEAD)
+	SRC.SPELLEFFECT 12,1000
+	RETURN 0
+	ENDIF
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_silver_weapons]
+Silver Weapons
+
+ON=i_axe_war_silver <name> (<resmake>)
+MAKEITEM=i_axe_war_silver
+
+ON=i_hammer_war_silver <name> (<resmake>)
+MAKEITEM=i_hammer_war_silver
+
+ON=i_sword_broad_silver <name> (<resmake>)
+MAKEITEM=i_sword_broad_silver
+
+ON=i_kryss_silver <name> (<resmake>)
+MAKEITEM=i_kryss_silver
+
+ON=i_katana_silver <name> (<resmake>)
+MAKEITEM=i_katana_silver
+
+ON=i_halberd_silver <name> (<resmake>)
+MAKEITEM=i_halberd_silver
+
+ON=i_mace_war_silver <name> (<resmake>)
+MAKEITEM=i_mace_war_silver
+
+ON=i_war_fork_silver <name> (<resmake>)
+MAKEITEM=i_war_fork_silver
+
+ON=i_sword_viking_silver <name> (<resmake>)
+MAKEITEM=i_sword_viking_silver
+
+ON=i_sword_long_silver <name> (<resmake>)
+MAKEITEM=i_sword_long_silver
+
+ON=i_Spear_silver <name> (<resmake>)
+MAKEITEM=i_Spear_silver
+
+ON=i_double_battle_axe_Silver <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_Silver
+
+//
+// Valorite Weapons
+//
+
+[ITEMDEF i_axe_war_valorite]
+NAME=Valorite War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=6,22
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 94.4
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_valorite
+
+
+[ITEMDEF i_hammer_war_valorite]  
+NAME=Valorite War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=6,50
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 89.7
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_valorite
+
+
+[ITEMDEF i_sword_broad_valorite] 
+NAME=Valorite Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 90.8
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_valorite
+
+
+[ITEMDEF i_kryss_valorite] 
+NAME=Valorite Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=8,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 92.0
+WEIGHT=1
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_valorite
+
+
+[ITEMDEF i_katana_valorite] 
+NAME=Valorite Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=6,22
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 89.1
+WEIGHT=2
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_valorite
+
+
+[ITEMDEF i_halberd_valorite] 
+NAME=Valorite Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=6,50
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 94.4
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_valorite
+
+
+[ITEMDEF i_mace_war_valorite] 
+NAME=Valorite War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=9,37
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 93.8
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_valorite
+
+
+[ITEMDEF i_war_fork_valorite]
+NAME=Valorite War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=6,28
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 93.2
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_valorite
+
+
+[ITEMDEF i_sword_viking_valorite]
+NAME=Valorite Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=8,34
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 90.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Valorite
+
+
+[ITEMDEF i_Spear_Valorite]
+NAME=Valorite Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=6,40
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Valorite
+SKILLMAKE=BLACKSMITHING 93.8
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Valorite
+
+
+[ITEMDEF i_sword_long_Valorite] 
+NAME=Valorite Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Valorite
+SKILLMAKE=BLACKSMITHING 93.8
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Valorite
+
+
+[ITEMDEF i_double_battle_axe_Valorite]
+ID=013fa
+NAME=Valorite Double Battle Axe
+RESOURCES=14 i_ingot_Valorite
+SKILLMAKE=BLACKSMITHING 95.0
+WEIGHT=5
+TYPE=T_WEAPON_AXE
+DAM=9,37
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Valorite
+DESCRIPTION=Valorite Double Battle Axe
+
+ON=@Create
+COLOR=color_o_Valorite
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Valorite_weapons]
+Valorite Weapons
+
+ON=i_axe_war_Valorite <name> (<resmake>)
+MAKEITEM=i_axe_war_Valorite
+
+ON=i_hammer_war_Valorite <name> (<resmake>)
+MAKEITEM=i_hammer_war_Valorite
+
+ON=i_sword_broad_Valorite <name> (<resmake>)
+MAKEITEM=i_sword_broad_Valorite
+
+ON=i_kryss_Valorite <name> (<resmake>)
+MAKEITEM=i_kryss_Valorite
+
+ON=i_katana_Valorite <name> (<resmake>)
+MAKEITEM=i_katana_Valorite
+
+ON=i_halberd_Valorite <name> (<resmake>)
+MAKEITEM=i_halberd_Valorite
+
+ON=i_mace_war_Valorite <name> (<resmake>)
+MAKEITEM=i_mace_war_Valorite
+
+ON=i_war_fork_Valorite <name> (<resmake>)
+MAKEITEM=i_war_fork_Valorite
+
+ON=i_sword_viking_Valorite <name> (<resmake>)
+MAKEITEM=i_sword_viking_Valorite
+
+ON=i_sword_long_Valorite <name> (<resmake>)
+MAKEITEM=i_sword_long_Valorite
+
+ON=i_Spear_Valorite <name> (<resmake>)
+MAKEITEM=i_Spear_Valorite
+
+ON=i_double_battle_axe_Valorite <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_Valorite
+
+//
+// Verite Weapons
+//
+
+[ITEMDEF i_axe_war_Verite]
+NAME=Verite War Axe
+ID=i_axe_war
+TYPE=t_weapon_mace_sharp
+DAM=6,22
+REQSTR=45
+TWOHANDS=N
+VALUE=350
+RESOURCES=16 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 69.4
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite War Axe
+
+ON=@CREATE
+	HITPOINTS={41 90}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_hammer_war_Verite]  
+NAME=Verite War Hammer 
+ID=i_hammer_war
+TYPE=t_weapon_mace_smith
+DAM=6,50
+SKILL=Mace Fighting 
+REQSTR=50 
+TWOHANDS=Y 
+VALUE=350
+RESOURCES=16 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 64.7
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite War Hammer
+
+ON=@CREATE
+	HITPOINTS={41 120}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_sword_broad_Verite] 
+NAME=Verite Broad Sword 
+ID=i_sword_broad
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 65.8
+WEIGHT=6 
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite Broad Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_kryss_Verite] 
+NAME=Verite Kryss 
+ID=i_kryss
+TYPE=t_weapon_fence
+DAM=8,20
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 67.0
+WEIGHT=3
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite Kryss
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_katana_Verite] 
+NAME=Verite Katana
+ID=i_katana
+TYPE=t_weapon_sword
+DAM=6,22
+REQSTR=15
+VALUE=350
+RESOURCES=10 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 74.1
+WEIGHT=4
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite Katana
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_halberd_Verite] 
+NAME=Verite Halberd
+ID=i_halberd
+TYPE=t_weapon_sword
+DAM=6,50
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 69.4
+WEIGHT=9
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite Halberd
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_mace_war_Verite] 
+NAME=Verite War Mace
+ID=i_mace_war
+TYPE=t_weapon_mace_smith
+DAM=9,37
+REQSTR=15
+VALUE=350
+RESOURCES=15 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 58.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite War Mace
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_war_fork_Verite]
+NAME=Verite War Fork
+ID=i_war_fork
+TYPE=t_weapon_fence
+DAM=6,28
+REQSTR=12
+VALUE=350
+RESOURCES=12 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 68.2
+WEIGHT=5
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite War Fork
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_sword_viking_Verite]
+NAME=Verite Viking Sword
+ID=i_sword_viking
+TYPE=t_weapon_sword
+DAM=8,34
+REQSTR=12
+VALUE=350
+RESOURCES=13 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 55.2
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite Viking Sword
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_Spear_Verite]
+NAME=Verite Spear
+ID=i_Spear
+TYPE=t_weapon_fence
+DAM=6,40
+REQSTR=5
+VALUE=350
+RESOURCES=9 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 78.8
+WEIGHT=7
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite Spear
+
+ON=@Create
+	HITPOINTS={41 100}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_sword_long_Verite] 
+NAME=Verite Long Sword 
+ID=i_sword_long
+TYPE=t_weapon_sword 
+DAM=7,31
+SKILL=Swordsmanship 
+REQSTR=30 
+TWOHANDS=N 
+VALUE=350
+RESOURCES=10 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 58.8
+WEIGHT=6
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite Long Sword
+
+ON=@CREATE
+	HITPOINTS={41 110}
+	COLOR=color_o_Verite
+
+
+[ITEMDEF i_double_battle_axe_Verite]
+ID=013fa
+NAME=Verite Double Battle Axe
+RESOURCES=14 i_ingot_Verite
+SKILLMAKE=BLACKSMITHING 60.0
+WEIGHT=7
+TYPE=T_WEAPON_AXE
+DAM=9,37
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+
+CATEGORY=Custom Weapons
+SUBSECTION=Verite
+DESCRIPTION=Verite Double Battle Axe
+
+ON=@Create
+COLOR=color_o_Verite
+HITPOINTS={31 110}
+
+//
+// Skill Menu
+//
+
+[SKILLMENU sm_Verite_weapons]
+Verite Weapons
+
+ON=i_axe_war_Verite <name> (<resmake>)
+MAKEITEM=i_axe_war_Verite
+
+ON=i_hammer_war_Verite <name> (<resmake>)
+MAKEITEM=i_hammer_war_Verite
+
+ON=i_sword_broad_Verite <name> (<resmake>)
+MAKEITEM=i_sword_broad_Verite
+
+ON=i_kryss_Verite <name> (<resmake>)
+MAKEITEM=i_kryss_Verite
+
+ON=i_katana_Verite <name> (<resmake>)
+MAKEITEM=i_katana_Verite
+
+ON=i_halberd_Verite <name> (<resmake>)
+MAKEITEM=i_halberd_Verite
+
+ON=i_mace_war_Verite <name> (<resmake>)
+MAKEITEM=i_mace_war_Verite
+
+ON=i_war_fork_Verite <name> (<resmake>)
+MAKEITEM=i_war_fork_Verite
+
+ON=i_sword_viking_Verite <name> (<resmake>)
+MAKEITEM=i_sword_viking_Verite
+
+ON=i_sword_long_Verite <name> (<resmake>)
+MAKEITEM=i_sword_long_Verite
+
+ON=i_Spear_Verite <name> (<resmake>)
+MAKEITEM=i_Spear_Verite
+
+ON=i_double_battle_axe_Verite <name> (<resmake>)
+MAKEITEM=i_double_battle_axe_Verite
+
+[EOF]

@@ -1,0 +1,991 @@
+[ITEMDEF i_level_menusel]
+DEFNAME=i_level_menusel
+ID=i_gravestone
+
+ON=@CREATE
+	COLOR=056
+
+ON=@DCLICK
+IF !(<EVAL <SRC.TAG.RACESEL>>)
+SRC.MENU m_race
+RETURN 1
+ELSE
+SRC.MENU m_class
+RETURN 1
+
+[MENU m_race]
+Please select your race. Be wise, your race cannot be reversed.
+ON=0 View races & info on webpage
+WEBLINK http:\\uolegends.ath.cx\races.html
+SRC.MENU m_race
+ON=0 Human
+SRC.SYSMESSAGE You are now a human.
+SRC.TAG.RACESEL 1
+SRC.MENU m_class
+SRC.COLOR=colors_skin
+SRC.OSKIN colors_skin
+SRC.EMOTE is a human!
+SRC.TAG.HUMAN 1
+SRC.TAG.RACE Human
+SRC.FINDLAYER.layer_beard.REMOVE
+SRC.FINDLAYER.layer_hair.REMOVE
+SRC.NEWITEM i_hair_receding
+SRC.ACT.COLOR colors_skin
+SRC.ACT.EQUIP
+ON=0 Dark Elf
+SRC.SYSMESSAGE You are now a dark elf.
+SRC.TAG.RACESEL 1
+SRC.MENU m_class
+SRC.COLOR=colors_blue
+SRC.OSKIN colors_blue
+SRC.EMOTE is a dark elf!
+SRC.TAG.DARKELF 1
+SRC.TAG.RACE Dark Elf
+SRC.FINDLAYER.layer_beard.REMOVE
+SRC.FINDLAYER.layer_hair.REMOVE
+SRC.NEWITEM i_hair_long
+SRC.ACT.COLOR 0481
+SRC.ACT.EQUIP
+ON=0 Wood Elf
+SRC.SYSMESSAGE You are now a wood elf.
+SRC.TAG.RACESEL 1
+SRC.MENU m_class
+SRC.COLOR=0592
+SRC.OSKIN 0592
+SRC.EMOTE is a wood elf!
+SRC.TAG.WOODELF 1
+SRC.TAG.RACE Wood Elf
+SRC.FINDLAYER.layer_beard.REMOVE
+SRC.FINDLAYER.layer_hair.REMOVE
+SRC.NEWITEM i_hair_afro
+SRC.ACT.COLOR colors_green
+SRC.ACT.EQUIP
+ON=0 High Elf
+SRC.SYSMESSAGE You are now a high elf.
+SRC.TAG.RACESEL 1
+SRC.MENU m_class
+SRC.COLOR=06b9
+SRC.OSKIN 06b9
+SRC.EMOTE is a high elf!
+SRC.TAG.HIGHELF 1
+SRC.TAG.RACE High Elf
+SRC.FINDLAYER.layer_beard.REMOVE
+SRC.FINDLAYER.layer_hair.REMOVE
+SRC.NEWITEM i_hair_short
+SRC.ACT.COLOR colors_yellow
+SRC.ACT.EQUIP
+ON=0 Halfling
+SRC.SYSMESSAGE You are now a halfling.
+SRC.TAG.RACESEL 1
+SRC.MENU m_class
+SRC.COLOR=colors_white
+SRC.OSKIN colors_white
+SRC.EMOTE is a halfling!
+SRC.TAG.HALFLING 1
+SRC.TAG.RACE Halfling
+SRC.FINDLAYER.layer_beard.REMOVE
+SRC.FINDLAYER.layer_hair.REMOVE
+SRC.NEWITEM i_hair_long
+SRC.ACT.COLOR colors_yellow
+SRC.ACT.EQUIP
+ON=0 Dwarf
+SRC.SYSMESSAGE You are now a dwarf.
+SRC.TAG.RACESEL 1
+SRC.MENU m_class
+SRC.COLOR=colors_black
+SRC.OSKIN colors_black
+SRC.EMOTE is a dwarf!
+SRC.TAG.DWARF 1
+SRC.TAG.RACE Dwarf
+SRC.FINDLAYER.layer_beard.REMOVE
+SRC.FINDLAYER.layer_hair.REMOVE
+SRC.NEWITEM i_hair_pageboy
+SRC.ACT.COLOR colors_black
+SRC.ACT.EQUIP
+SRC.NEWITEM i_beard_long_med
+SRC.ACT.COLOR colors_white
+SRC.ACT.EQUIP
+ON=0 Barbarian
+SRC.SYSMESSAGE You are now a barbarian.
+SRC.TAG.RACESEL 1
+SRC.MENU m_class
+SRC.COLOR=colors_skin
+SRC.OSKIN colors_skin
+SRC.EMOTE is a barbarian!
+SRC.TAG.BARBARIAN 1
+SRC.TAG.RACE Barbarian
+SRC.FINDLAYER.layer_beard.REMOVE
+SRC.FINDLAYER.layer_hair.REMOVE
+SRC.NEWITEM i_hair_afro
+SRC.ACT.EQUIP
+SRC.NEWITEM i_beard_short_med
+SRC.ACT.EQUIP
+
+[MENU m_class]
+Please Select your class. Be wise, your class cannot be reversed.
+ON=0 View classes & info on webpage
+WEBLINK http:\\uolegends.ath.cx\classes.html
+SRC.MENU m_class
+ON=0 Bard
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Bard.
+SRC.TAG.BARD 1
+SRC.TAG.CLASS <TAG.CLASS>/Bard
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DWARF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HALFLING>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HIGHELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DARKELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a bard.
+SRC.TAG.CLASS Bard
+SRC.TAG.BARD 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_lute
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_dagger
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.MUSICIANSHIP 400
+SRC.PROVOCATION 400
+SRC.PEACEMAKING 400
+SRC.GO BRITAIN
+ON=0 Cleric
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Cleric.
+SRC.TAG.CLERIC 1
+SRC.TAG.CLASS <TAG.CLASS>/Cleric
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.WOODELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Cleric.
+SRC.TAG.CLASS Cleric
+SRC.TAG.CLERIC 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_dagger
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_platemail_chest
+SRC.ACT.NAME healer's will
+SRC.ACT.COLOR 0544
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.HEALING 400
+SRC.MACEFIGHTING 400
+SRC.MAGERY 400
+SRC.GO BRITAIN
+ON=0 Druid
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Druid.
+SRC.TAG.DRUID 1
+SRC.TAG.CLASS <TAG.CLASS>/Druid
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DWARF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HIGHELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DARKELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Druid.
+SRC.TAG.CLASS Druid
+SRC.TAG.DRUID 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_staff_quarter
+SRC.ACT.COLOR colors_green
+SRC.ACT.NAME druid's stave
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.HEALING 400
+SRC.MACEFIGHTING 250
+SRC.ANATOMY 400
+SRC.GO BRITAIN
+ON=0 Enchanter
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Enchanter.
+SRC.TAG.ENCHANTER 1
+SRC.TAG.CLASS <TAG.CLASS>/Enchanter
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DWARF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HALFLING>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.WOODELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now an Enchanter.
+SRC.TAG.CLASS Enchanter
+SRC.TAG.ENCHANTER 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_staff_quarter
+SRC.ACT.COLOR colors_black
+SRC.ACT.NAME enchanter's staff
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.ITEMID 400
+SRC.MACEFIGHTING 250
+SRC.GO BRITAIN
+SRC.ADDENCHANT
+SRC.ADDENCHANT
+SRC.ADDENCHANT
+ON=0 Magician
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Magician.
+SRC.TAG.MAGICIAN 1
+SRC.TAG.CLASS <TAG.CLASS>/Mage
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DWARF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HALFLING>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.WOODELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Magician.
+SRC.TAG.CLASS Magician
+SRC.TAG.MAGICIAN 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_staff_quarter
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_SPELLBOOK
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_scroll_fireball
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_scroll_lightning
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.MAGERY 400
+SRC.FENCING 250
+SRC.GO BRITAIN
+ON=0 Monk
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Monk.
+SRC.TAG.MONK 1
+SRC.TAG.CLASS <TAG.CLASS>/Monk
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DWARF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HALFLING>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HIGHELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.WOODELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Monk.
+SRC.TAG.CLASS Monk
+SRC.TAG.MONK 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.WRESTLING 400
+SRC.TACTICS 400
+SRC.GO BRITAIN
+ON=0 Necromancer
+SRC.SYSMESSAGE You may purchase this account. See webpage for more information.
+ON=0 Paladin
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Paladin.
+SRC.TAG.PALADIN 1
+SRC.TAG.CLASS <TAG.CLASS>/Paladin
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HALFLING>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.WOODELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DARKELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Paladin.
+SRC.TAG.CLASS Paladin
+SRC.TAG.PALADIN 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sword_viking
+SRC.ACT.NAME paladin's carva
+SRC.ACT.COLOR 074
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.SWORDSMANSHIP 400
+SRC.TACTICS 400
+SRC.GO BRITAIN
+SRC.ADDPALADIN
+SRC.ADDPALADIN
+SRC.ADDPALADIN
+SRC.NEWITEM i_pal_book
+SRC.ACT.ATTR attr_newbie
+SRC.ACT.BOUNCE
+ON=0 Ranger
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Ranger.
+SRC.TAG.RANGER 1
+SRC.TAG.CLASS <TAG.CLASS>/Ranger
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DWARF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HALFLING>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HIGHELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.WOODELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DARKELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Ranger.
+SRC.TAG.CLASS Ranger
+SRC.TAG.RANGER 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_bow
+SRC.ACT.COLOR 098
+SRC.ACT.NAME ranger's bow
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.ARCHERY 400
+SRC.TACTICS 400
+SRC.GO BRITAIN
+ON=0 Rogue
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Rogue.
+SRC.TAG.ROGUE 1
+SRC.TAG.CLASS <TAG.CLASS>/Rogue
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.HIGHELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_dagger
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.STEALTH 400
+SRC.FENCING 400
+SRC.SYSMESSAGE You are now a Rogue.
+SRC.TAG.CLASS Rogue
+SRC.TAG.ROGUE 1
+SOUND 503
+SRC.GO BRITAIN
+ON=0 Shaman
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Shaman.
+SRC.TAG.SHAMAN 1
+SRC.TAG.CLASS <TAG.CLASS>/Shaman
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.DWARF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HALFLING>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HIGHELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.WOODELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DARKELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HUMAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Shaman.
+SRC.TAG.CLASS Shaman
+SRC.TAG.SHAMAN 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_dagger
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_mortar_pestle
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_reag_ginseng
+SRC.ACT.AMOUNT 40
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.ALCHEMY 400
+SRC.SWORDSMANSHIP 400
+SRC.GO BRITAIN
+ON=0 Warrior
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Warrior.
+SRC.TAG.WARRIOR 1
+SRC.TAG.CLASS <TAG.CLASS>/Warrior
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.HIGHELF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Warrior.
+SRC.TAG.CLASS Warrior
+SRC.TAG.WARRIOR 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sword_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shield_wood
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.SWORDSMANSHIP 400
+SRC.TACTICS 400
+SRC.PARRYING 400
+SRC.GO BRITAIN
+ON=0 Wizard
+IF (<EVAL <SRC.TAG.TIER>>=4)
+SRC.SYSMESSAGE You are now a <TAG.CLASS> / Wizard.
+SRC.TAG.WIZARD 1
+SRC.TAG.CLASS <TAG.CLASS>/Wizard
+SERV.B <NAME> is now dual-classed into <SRC.TAG.CLASS>.
+SRC.GO BRITAIN
+ELSE
+IF (<EVAL <SRC.TAG.BARBARIAN>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.DWARF>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+IF (<EVAL <SRC.TAG.HALFLING>>=1)
+SRC.SYSMESSAGE You cannot select that class as per your race restriction.
+MENU m_class
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are now a Wizard.
+SRC.TAG.CLASS Wizard
+SRC.TAG.WIZARD 1
+SOUND 503
+SRC.FINDLAYER.layer_hand1.REMOVE		
+SRC.FINDLAYER.layer_hand2.REMOVE	
+SRC.FINDLAYER.layer_shoes.REMOVE	
+SRC.FINDLAYER.layer_pants.REMOVE	
+SRC.FINDLAYER.layer_shirt.REMOVE	
+SRC.FINDLAYER.layer_helm.REMOVE	
+SRC.FINDLAYER.layer_gloves.REMOVE
+SRC.FINDLAYER.layer_ring.REMOVE
+SRC.FINDLAYER.layer_light.REMOVE
+SRC.FINDLAYER.layer_collar.REMOVE
+SRC.FINDLAYER.layer_half_apron.REMOVE
+SRC.FINDLAYER.layer_chest.REMOVE
+SRC.FINDLAYER.layer_wrist.REMOVE	
+SRC.FINDLAYER.layer_hidden.REMOVE	
+SRC.FINDLAYER.layer_tunic.REMOVE	
+SRC.FINDLAYER.layer_ears.REMOVE	
+SRC.FINDLAYER.layer_arms.REMOVE	
+SRC.FINDLAYER.layer_cape.REMOVE	
+SRC.FINDLAYER.layer_pack.REMOVE	
+SRC.FINDLAYER.layer_robe.REMOVE	
+SRC.FINDLAYER.layer_skirt.REMOVE	
+SRC.FINDLAYER.layer_legs.REMOVE
+SRC.NEWITEM i_gold
+SRC.ACT.AMOUNT 1000
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_staff_quarter
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_pants_long
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_shirt_fancy
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_sandals
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_SPELLBOOK
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_scroll_fireball
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_scroll_lightning
+SRC.ACT.BOUNCE
+SRC.NEWITEM i_scroll_energy_bolt
+SRC.ACT.BOUNCE
+SRC.ALLSKILLS 0
+SRC.MAGERY 400
+SRC.EVALUATINGINTEL 250
+SRC.GO BRITAIN
+
+[EOF]

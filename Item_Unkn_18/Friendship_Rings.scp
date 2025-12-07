@@ -1,0 +1,149 @@
+[ITEMDEF i_friend_ring] 
+
+ID=i_ring_gold
+
+TYPE=t_jewelry
+
+NAME=Friendship Ring
+
+
+
+ON=@CREATE 
+
+ATTR=attr_newbie 
+
+COLOR=0045
+
+
+
+On=@Click
+
+IF (<LINK>=04fffffff)
+
+MESSAGE Unlinked
+
+ELSE
+
+MESSAGE Linked to <LINK.NAME>
+
+ENDIF
+
+
+
+ON=@DCLICK
+
+IF (<LINK>=04fffffff)
+
+SRC.SAY Where is your friend?
+
+TARGET Where is your friend?
+
+ELSE
+
+SRC.SAY You send a means of transportation to your friend.
+
+LINK.SAY <CONT.CONT.NAME> has sent you a means to transport to them.
+
+LINK.NEWITEM=i_friend_transport
+
+LINK.ACT.NAME=Teleport Stone For <CONT.CONT.NAME>. DClick to use.
+
+LINK.ACT.TAG.USER=<LINK.UID>
+
+LINK.ACT.P=<LINK.P>
+
+LINK.ACT.MOREP=<CONT.CONT.P>
+
+ENDIF 
+
+
+
+ON=@TARGON_CHAR 
+
+IF !(<SRC.TARG.NPC>) 
+
+IF !(<SRC.UID>=<SRC.TARG.UID>)
+
+SAY Ring is now linked to <LINK.NAME>
+
+LINK=<SRC.TARG.UID>
+
+ELSEIF (<SRC.UID>=<SRC.TARG.UID>) 
+
+SAY You can't select yourself! 
+
+ENDIF 
+
+ELSE 
+
+SAY Target must a player! 
+
+ENDIF 
+
+
+
+ON=@TARGON_ITEM 
+
+SAY That isn't a live creature! 
+
+
+
+ON=@TARGON_GROUND 
+
+SAY That isn't a live creature! 
+
+ 
+
+CATEGORY=Custom
+
+SUBSECTION=Misc
+
+DESCRIPTION=Friend Ring
+
+
+
+[ITEMDEF i_friend_transport]
+
+ID=i_virtstone_2
+
+NAME=Teleport Stone
+
+TYPE=t_script
+
+
+
+On=@Create
+
+ATTR=0c010
+
+COLOR=0045
+
+TIMER=45
+
+
+
+On=@DClick
+
+IF (<SRC.UID>==<TAG.USER>)
+
+SRC.GO <MOREP>
+
+REMOVE
+
+ELSE
+
+SRC.SAY You may not use this stone.
+
+RETURN 1
+
+ENDIF
+
+
+
+On=@Timer
+
+REMOVE
+
+
+
+[EOF]

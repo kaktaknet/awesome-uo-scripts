@@ -1,0 +1,88 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//Firing Bows and Crossbows While Moving v0.3
+//-Added Consumption of Arrows/xBolts
+//-Added SFX for firing a bow/xbow
+//-Added ANIM for firing your bow/xbow
+//-Added a Max Distance check, now you can only fire a bow while walking when you're 12 tiles or less away from the enemy.
+
+//Info:
+//This script will allow you to fire a bow while moving
+
+//Installation:
+//Add this event to all your players.
+
+[EVENTS e_archery_while_moving]
+ON=@SKILLSTART
+IF (<SRC.ACTION>==skill_archery) || (<SRC.ACTION>==01f)
+	IF !(0<SRC.FINDID.i_memory_archery_while_moving.UID>)
+		SRC.TAG.ARCHERY_P.Y=<SRC.P.Y>
+		SRC.TAG.ARCHERY_P.X=<SRC.P.X>
+		VAR.OLD_ACT=<ACT>
+		SRC.NEWITEM=i_memory_archery_while_moving
+		SRC.ACT.LINK=<VAR.OLD_ACT>
+		SRC.ACT.TIMER=3
+		SRC.EQUIP=<SRC.ACT>
+		ACT=<VAR.OLD_ACT>
+	ENDIF
+ENDIF
+
+[ITEMDEF i_memory_archery_while_moving]
+DEFNAME=i_memory_archery_while_moving
+NAME=Archery Memory
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=attr_move_never|attr_invis
+
+ON=@EQUIP
+IF (0<MORE>)
+	IF (<LINK.CANSEELOS>) && (<LINK.DISTANCE> <= 12)
+		IF !(<SRC.P.X>==<SRC.TAG.ARCHERY_P.X>) || !(<SRC.P.Y>==<SRC.TAG.ARCHERY_P.Y>)
+			VAR.X=<EVAL ((<SRC.STR> /15) + (<SRC.TACTICS> /100) + (<SRC.ARCHERY> /200))>
+			VAR.X2=<EVAL <VAR.X> /5>
+			VAR.X=<EVAL {<VAR.X2> <VAR.X>}>
+			VAR.X2=
+			LINK.DAMAGE=<VAR.X> 0001 <SRC.UID>
+			IF (<SRC.FINDLAYER.(2).TYPE>==t_weapon_bow)
+				IF (<SRC.RESTEST 1 i_arrow>)
+					SRC.CONSUME=1 i_arrow
+					LINK.EFFECT=0,i_arrow_x,5,1,0
+				ELSE
+					SRC.TAG.ARCHERY_P.X=
+					SRC.TAG.ARCHERY_P.Y=
+					REMOVE
+				ENDIF
+			ELSE
+				IF (<SRC.RESTEST 1 i_xbolt>)
+					SRC.CONSUME=1 i_xbolt
+					LINK.EFFECT=0,i_xbolt_x,5,1,0
+				ELSE
+					SRC.TAG.ARCHERY_P.X=
+					SRC.TAG.ARCHERY_P.Y=
+					REMOVE
+				ENDIF
+			ENDIF
+			VAR.X=
+			SRC.SOUND=564
+		ENDIF
+	ENDIF
+	SRC.TAG.ARCHERY_P.X=
+	SRC.TAG.ARCHERY_P.Y=
+	REMOVE
+ELSE
+	SRC.ANIM=18
+ENDIF
+
+ON=@TIMER
+TOPOBJ.NEWITEM=i_memory_archery_while_moving
+TOPOBJ.ACT.LINK=<LINK>
+TOPOBJ.ACT.MORE=1
+TOPOBJ.EQUIP=<TOPOBJ.ACT>
+REMOVE
+RETURN 1
+
+[EOF]

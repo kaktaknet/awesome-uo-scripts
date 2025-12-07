@@ -1,0 +1,46 @@
+//Sex Change Potion
+//by Blade
+//(www.lusitania.pt.la)  
+
+[ITEMDEF i_sex_change_potion]
+defname=i_sex_change_potion
+ID=0f0e
+NAME=Sex Change Potion
+VALUE=1000
+TYPE=t_normal
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_spider_silk 10, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 100.0
+
+on=@create
+color=00037
+attr=04
+
+ON=@DCLICK   
+IF (<SRC.RESTEST i_sex_change_deed>) //check if they actually have it
+	IF (<src.body> == c_man) //man to woman
+		SRC.BODY=c_woman
+		SRC.0BODY=c_woman
+		SRC.SOUND=0216
+		SRC.SYSMESSAGE=Poof! You are now a woman!
+		SRC.EMOTE suddenly turn into a woman!
+		SRC.CONSUME=i_sex_change_potion	
+		SRC.FIX
+		SRC.EFFECT=1,1,6,15,1
+	elseif (<src.body> == c_woman) //woman to man
+		SRC.BODY=c_man
+		SRC.0BODY=c_man
+		SRC.SOUND=0216
+		SRC.SYSMESSAGE=Poof! You are now a man!
+
+		SRC.EMOTE suddenly turn into a man!
+		SRC.CONSUME=i_sex_change_potion
+		SRC.FIX
+		SRC.EFFECT=1,1,6,15,1
+	end if
+else
+	SRC.SYSMESSAGE The Potion must be in your backpack
+end if
+
+
+[EOF]

@@ -1,0 +1,293 @@
+// Bard that sings "Crawling"
+// Scripted by Xelah
+// Copyright 2005 Travis George
+// This script is free to use on the condition that this header be kept intact,
+// also if the script is reposted anywhere else, original credit must be given
+// to the author of both the script and the song to avoid legal complications.
+
+// Please send any comments/suggestions/complaints to travis_george@dellmail.com
+
+[CHARDEF c_x_crawling_bard]
+DEFNAME=c_x_crawling_bard
+NAME=#names_humanmale
+ID=C_MAN
+CAN=mt_equip
+
+ON=@Create
+EVENTS E_BARD
+TITLE=the Bard
+STR=99
+DEX=1
+INT=1
+
+TAG.RACE=Human
+
+NPC=brain_vendor
+COLOR=0407
+FLAGS=000000005
+NEED=i_gold
+SPEECHCOLOR=04
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEM=i_tunic
+COLOR=colors_blue
+ITEM=i_pants_long
+COLOR=colors_blue
+ITEM=random_shoes
+COLOR=colors_neutral
+ITEM=I_BARD_CRAWLING
+TIMER=3
+
+
+CATEGORY=Vendors
+SUBSECTION=Stonecrest
+DESCRIPTION=Bard (singer)
+
+[EVENTS E_BARD]
+ON=@NPCSEENEWPLAYER
+IF <FINDID.I_BARD_CRAWLING.TIMER><1
+FINDID.I_BARD_CRAWLING.TIMER=1
+ENDIF
+
+[ITEMDEF I_BARD_CRAWLING]
+ID=I_RUNE_RESURRECTION
+TYPE=T_EQ_SCRIPT
+NAME=BARD_SINGING_LINKIN_PARK
+
+ON=@CREATE
+MOREX=0
+MOREY=0
+
+ON=@TIMER
+TIMER=9
+IF <MOREX>=0
+	IF <MOREY>=0
+	Cont.SAY crawling in my skin
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.SAY these wounds they will not heal
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.SAY fear is how I fall
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.SAY confusing what is real
+	MOREY=0
+	MOREX=1
+	RETURN 1
+	ENDIF
+ENDIF
+
+IF <MOREX>=1
+	IF <MOREY>=0
+	Cont.say there's something inside me that pulls beneath the surface
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.say consuming/confusing
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.say this lack of self-control I fear is never ending
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.say controlling/I can't seem
+	MOREY=0
+	MOREX=2
+	RETURN 1
+	ENDIF
+ENDIF
+
+IF <MOREX>=2
+	IF <MOREY>=0
+	Cont.say to find myself again
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.say my walls are closing in
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.say (without a sense of confidence and I'm convinced that there's just too much pressure to take)
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.say I've felt this way before
+	MOREY=4
+	RETURN 1
+	ENDIF
+	IF <MOREY>=4
+	Cont.say so insecure
+	MOREY=0
+	MOREX=3
+	RETURN 1
+	ENDIF
+ENDIF
+
+IF <MOREX>=3
+	IF <MOREY>=0
+	Cont.say crawling in my skin
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.say these wounds they will not heal
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.say fear is how I fall
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.say confusing what is real
+	MOREY=0
+	MOREX=4
+	RETURN 1
+	ENDIF
+ENDIF
+
+IF <MOREX>=4
+	IF <MOREY>=0
+	Cont.say discomfort, endlessly has pulled itself upon me
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.say distracting/reacting
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.say against my will I stand beside my own reflection
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.say it's haunting how I can't seem...
+	MOREY=0
+	MOREX=5
+	RETURN 1
+	ENDIF
+ENDIF
+
+IF <MOREX>=5
+	IF <MOREY>=0
+	Cont.say to find myself again
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.say my walls are closing in
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.say (without a sense of confidence and I'm convinced that there's just too much pressure to take)
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.say I've felt this way before
+	MOREY=4
+	RETURN 1
+	ENDIF
+	IF <MOREY>=4
+	Cont.say so insecure
+	MOREY=0
+	MOREX=6
+	RETURN 1
+	ENDIF
+ENDIF
+
+IF <MOREX>=6
+	IF <MOREY>=0
+	Cont.say crawling in my skin
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.say these wounds they will not heal
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.say fear is how I fall
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.say confusing what is real
+	MOREY=0
+	MOREX=7
+	RETURN 1
+	ENDIF
+ENDIF
+
+IF <MOREX>=7
+	IF <MOREY>=0
+	Cont.say crawling in my skin
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.say these wounds they will not heal
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.say fear is how I fall
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.say confusing confusing what is real
+	MOREY=0
+	MOREX=8
+	RETURN 1
+	ENDIF
+ENDIF
+
+IF <MOREX>=8
+	IF <MOREY>=0
+	Cont.say there's something inside me that pulls beneath the surface
+	MOREY=1
+	RETURN 1
+	ENDIF
+	IF <MOREY>=1
+	Cont.say consuming/confusing what is real
+	MOREY=2
+	RETURN 1
+	ENDIF
+	IF <MOREY>=2
+	Cont.say this lack of self-control I fear is never ending
+	MOREY=3
+	RETURN 1
+	ENDIF
+	IF <MOREY>=3
+	Cont.say controlling/confusing what is real
+	MOREY=4
+	RETURN 1
+	ENDIF
+	IF <MOREY>=4
+	Cont.say ((Crawling by Linkin Park, Hybrid Theory))
+	TIMER=-1
+	MOREY=0
+	MOREX=0
+	RETURN 1
+	ENDIF
+ENDIF

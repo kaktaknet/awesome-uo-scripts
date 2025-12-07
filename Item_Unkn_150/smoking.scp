@@ -1,0 +1,48 @@
+/////////////////////////////////////////////////////
+//Pipe Smoking                                   ///    
+/////////////////////////////////////////////////////////////////////
+///This may need tweaking for your shard. If you have any troubles //
+///Contact me at Paul@sailirc.net                                  //
+/////////////////////////////////////////////////////////////////////
+[ITEMDEF 0F42]
+DEFNAME=i_pipe
+NAME=pipe
+TYPE=t_normal 
+RESOURCES=3 i_log
+SKILLMAKE=CARPENTRY 50.0, t_carpentry
+
+ON=@CREATE 
+COLOR=046c 
+
+ON=@DCLICK 
+TARGET What pipe-weed do you want to smoke? 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+RETURN 1 
+
+ON=@TARGON_ITEM 
+IF <SRC.TARG.CONT>==<SRC.FINDLAYER(layer_pack).UID> 
+   IF <SRC.TARG.DEFNAME>==i_fruit_leaf_longbottom 
+      SRC.Emote Smokes the Pipe 
+      SRC.CONSUME 1 i_fruit_leaf_longbottom 
+      SRC.EFFECT 3,03728,15,15,0,0 
+   ELSEIF <SRC.TARG.DEFNAME>==i_fruit_leaf_otherweed //This is to add more weed....
+      //Add the stuff above into here
+   ELSE 
+      SRC.SYSMESSAGE You cannot smoke that! 
+   ENDIF 
+ELSE 
+   SRC.SYSMESSAGE The weed has to be in your backpack 
+ENDIF 
+RETURN 1 
+
+
+/////The Weed for the Pipe
+[ITEMDEF i_fruit_leaf_longbottom] 
+ID=0cb4 
+NAME=longbottom leaf 
+TYPE=00 
+
+ON=@CREATE 
+COLOR=006cf// some brown color 

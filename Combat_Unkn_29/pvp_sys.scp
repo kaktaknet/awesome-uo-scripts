@@ -1,0 +1,472 @@
+//-------------------------- /////
+////PVP Stone - by ClouD /////
+//--------------------------
+////E-mail: alexbastos@ism.com.br ////
+//--------------------------
+////ICQ: 133411911 ////
+//--------------------------
+////Note: Edit only the defs if you're a begginer ////
+//--------------------------
+////You can edit FUNCTIONs at the end of file
+//--------------------------
+////Please, do not take this header out :D plz? ////
+//-------------------------- /////
+
+----------------
+----------------
+||     /\     ||
+||    /  \    ||
+||   /    \   ||
+||  /      \  ||
+|| /  ____  \ ||   Brazil!
+||/  |    |  \||
+||\  |    |  /||
+|| \ |____| / ||
+||  \      /  ||
+||   \    /   ||
+||    \  /    ||
+||     \/     ||
+----------------
+----------------
+
+//////Important Notes://///
+
+////The players kills/deaths/karma/fame aren't changed during the PVP///
+
+////You have to create the arenas and set the MOREP of the PVP Stone to where you want it to
+////make the player go when entering the arena///
+
+///NOTE: The MOREP is automatically set when you create the stone, to the place where you are
+///standing (you can change it)
+
+////You can have as much pvp stones as you want//////
+
+///Important Note: to prevent players from exiting the arena with recall, and etc.
+///Use this check at where you want:
+
+///IF (<findid.i_pvp_time>)
+///sysmessage You can't do that in a PVP
+///return 1
+///ENDIF
+
+///For 55r4.0.2 or greater ONLY///
+
+//Begin of Defs//
+///-----------///
+
+[DEFNAME pvp_stone_msgs]
+thereare_already_2_players "@036 There are already 2 players in the arena."
+thereis_aplayer_looting "@036 There's 1 player looting in the arena."
+pvpfinished "@07a3 PVP Finished."
+doyouaccept "Do you accept the PVP?" //<-- gump text
+thereareplayersinthearena "@07a3 There are players in the arena."
+toofar_pvp "@07a3 You're too far from the stone."
+noonetofight "@07a3 There are no opponents to fight with you."
+pvpyoucantusethis "@036 You cant use this in a PVP!"
+youwin "@07ad You win the PVP!"
+youloose "@07ad You lose the PVP!"
+pvpendedlogout "@07a1 The PVP has ended for LogOut Timer."
+
+[DEFNAME pvp_switches]
+pvptime 6 ///<-- time in minutes players can stay in the arena and fight.
+pvplogouttimer 2 ///<-- time in minutes players can stay logged out before the script ejects him
+pvpnohiding 1 ///Blocks the use of the hiding/stealth skill (1=Yes, 0=No)
+pvpblockmagics 1 ///Blocks the use of Invisibility and Summon magics.
+lootingtimer 30 //Time in seconds the player can stay in the arena to loot his opponent when the looting is enabled
+
+[ITEMDEF i_pvp_stone]
+NAME=PVP Stone
+ID=i_gravestone_18
+TYPE=t_normal
+
+ON=@Create
+morep=<src.p>
+color=0ad
+attr=attr_move_never|attr_static
+
+ON=@Click
+IF (<More1>==2)
+say <eval <timer>> seconds to end the PVP
+return 1
+ENDIF
+
+ON=@Dclick
+IF (<more2>==2)
+src.sysmessage <def.thereis_aplayer_looting>
+return 1
+ENDIF
+IF (<more1>==2)
+src.sysmessage <def.thereare_already_2_players>
+return 1
+ENDIF
+IF (<more1>==1) && (<src.findid.i_pvp_time>)
+src.go <src.tag.pvp.lastp>
+src.spelleffect s_dispel,1000
+src.flags &= ~statf_incognito
+src.flags &= ~statf_criminal
+src.findid.i_pvp_time.remove
+more1=0
+more2=0
+src.clear_pvp_tags
+tag.participante1=
+color=0ad
+say @07ad <src.name> exits the PVP Arena!
+timer -1
+return 1
+ENDIF
+IF (<more1>==1)
+sdialog d_pvp 2
+return 1
+ENDIF
+IF (<more1>==0)
+sdialog d_pvp 1
+return 1
+ENDIF
+
+ON=@TIMER
+LOCAL.TMP=<OBJ>
+FOR 2
+IF (<TAG0.PARTICIPANTE<EVAL <LOCAL._FOR>>>)
+OBJ=<TAG0.PARTICIPANTE<EVAL <LOCAL._FOR>>>
+obj.go <obj.tag0.pvp.lastp>
+obj.memoryfindtype.memory_harmedby.remove
+obj.memoryfindtype.memory_iaggressor.remove
+obj.memoryfindtype.memory_fight.remove
+obj.memoryfindtype.memory_sawcrime.remove
+obj.memoryfindtype.memory_aggreived.remove
+obj.memoryfindtype.memory_war_targ.remove
+obj.hits=<obj.str>
+obj.mana=<obj.int>
+obj.stam=<obj.dex>
+obj.spelleffect s_dispel,1000
+obj.flags &= ~statf_criminal
+obj.flags &= ~statf_incognito
+obj.flags &= ~statf_war
+obj.flags &= ~statf_invisible
+obj.fame=<obj.tag0.pvp.fame>
+obj.karma=<obj.tag0.pvp.karma>
+obj.kills=<obj.tag0.pvp.kills>
+obj.deaths=<obj.tag0.pvp.deaths>
+obj.clear_pvp_tags
+obj.update
+obj.findid.i_pvp_logout.remove
+obj.flags &= ~statf_criminal
+obj.sysmessage <def.pvpfinished>
+obj.findid.i_pvp_time.remove
+ENDIF
+try tag.participante<eval <local._for>>=
+more2=0
+color=0ad
+more1=0
+ENDFOR
+OBJ=<LOCAL.TMP>
+timer=-1
+return 1
+
+[DIALOG d_pvp]
+200,100
+PAGE 1
+resizepic 20 20 3600 300 130
+checkertrans 20 20 300 130
+tilepic 160 70 9684
+dtext 130 40 39 PVP System
+button 40 70 2117 2118 1 0 1
+dtext 60 67 1152 With looting
+button 40 100 2117 2118 1 0 2
+dtext 60 97 1152 Without Looting
+
+PAGE 2
+resizepic 20 20 3600 270 190
+checkertrans 20 20 270 190
+tilepic 130 140 9607
+dtext 40 40 88 <uid.<tag0.participante1>.name> is wating an oponent
+dtext 40 60 88 for a PVP <QVAL <more2> ? with looting : without looting>.
+dtext 80 90 39 <def.doyouaccept>
+button 50 130 2311 2312 1 0 3
+button 200 130 243 241 1 0 0
+
+[DIALOG d_pvp BUTTON]
+ON=1
+IF (<more1> > 0)
+src.sysmessage <def.thereareplayersinthearena>
+return 1
+ENDIF
+IF (<distance> > 5)
+src.sysmessage <def.toofar_pvp>
+return 1
+ENDIF
+src.events +e_pvp
+more1 += 1
+tag.participante1=<src>
+serv.newitem=i_pvp_time
+src.equip <new>
+new.link=<uid>
+timer <eval 60*3>
+color=036
+say @07ad <src.name> enters the arena!
+src.tag.pvp.karma=<src.karma>
+src.tag.pvp.deaths=<src.deaths>
+src.tag.pvp.kills=<src.kills>
+src.tag.pvp.fame=<src.fame>
+src.tag.pvp.lastp=<src.p>
+src.spelleffect s_dispel,1000
+src.flags |= statf_incognito|statf_criminal
+src.removefromview
+src.moveto <morep>
+src.update
+src.effect 3,i_fx_smoke,16,16
+more2=1
+
+ON=2
+IF (<more1> > 0)
+src.sysmessage <def.thereareplayersinthearena>
+return 1
+ENDIF
+IF (<distance> > 5)
+src.sysmessage <def.toofar_pvp>
+return 1
+ENDIF
+src.events +e_pvp
+more1 += 1
+tag.participante1=<src>
+serv.newitem=i_pvp_time
+src.equip <new>
+new.link=<uid>
+timer <eval 60*3>
+color=036
+say @07ad <src.name> enters the arena!
+src.tag.pvp.karma=<src.karma>
+src.tag.pvp.deaths=<src.deaths>
+src.tag.pvp.kills=<src.kills>
+src.tag.pvp.fame=<src.fame>
+src.tag.pvp.lastp=<src.p>
+src.spelleffect s_dispel,1000
+src.flags |= statf_incognito|statf_criminal
+src.removefromview
+src.moveto <morep>
+src.update
+src.effect 3,i_fx_smoke,16,16
+more2=0
+
+ON=3
+IF (<more1>==0)
+src.sysmessage <def.noonetofight>
+return 1
+ENDIF
+IF (<more1>==2)
+src.sysmessage <def.thereare_already_2_players>
+return 1
+ENDIF
+IF (<distance> > 5)
+src.sysmessage <def.toofar_pvp>
+return 1
+ENDIF
+src.events +e_pvp
+more1 += 1
+tag.participante2=<src>
+serv.newitem=i_pvp_time
+src.equip <new>
+new.link=<uid>
+timer <eval 60*<def.pvptime>>
+color=36
+say @07ad <src.name> enters the arena!
+src.tag.pvp.karma=<src.karma>
+src.tag.pvp.deaths=<src.deaths>
+src.tag.pvp.kills=<src.kills>
+src.tag.pvp.fame=<src.fame>
+src.tag.pvp.lastp=<src.p>
+src.spelleffect s_dispel,1000
+src.flags |= statf_incognito|statf_criminal
+src.removefromview
+src.moveto <morep>
+src.update
+src.effect 3,i_fx_smoke,16,16
+say @07ad You have <eval <def.pvptime>> minutes to fight! START!
+
+///////////////////////////////
+
+[EVENTS e_pvp]
+ON=@Click
+IF !(<isonline>)
+message @07a3 [Offline]
+ENDIF
+
+ON=@LogOut
+flags |= statf_invisible
+serv.newitem=i_pvp_logout
+new.link=<findid.i_pvp_time.link>
+new.link.say @07ad <name> has logged out, he has <eval 60*<def.pvplogouttimer>> minutes to return.
+equip <new>
+new.timer=<eval 60*<def.pvplogouttimer>>
+
+ON=@LogIn
+findid.i_pvp_logout.remove
+flags &= ~statf_invisible
+
+ON=@SkillStart
+IF (<def.pvpnohiding>==1)
+IF (<ACTION>==SKILL_HIDING) || (<ACTION>==SKILL_STEALTH)
+src.sysmessage <def.pvpyoucantusethis>
+action -1
+return 1
+endif
+ENDIF
+
+ON=@SpellCast
+IF (<argn1>==s_mark) || (<argn1>==s_recall) || (<argn1>==s_gate_travel)
+action -1
+return 1
+ENDIF
+IF (<def.pvpblockmagics>==1)
+IF (<ARGN1>==s_summon_creature) || (<ARGN1>==s_summon_daemon) || (<ARGN1>==s_blade_spirits) || (<ARGN1>==s_summon_elem_air) || (<ARGN1>==s_summon_elem_earth) || (<ARGN1>==s_summon_elem_fire) || (<ARGN1>==s_summon_elem_water) || (<ARGN1>==s_energy_vortex) || (<ARGN1>==s_invisibility
+action=-1
+sysmessage <def.pvpyoucantusethis>
+return 1
+endif
+endif
+
+ON=@Death
+memoryfindtype.memory_harmedby.remove
+memoryfindtype.memory_iaggressor.remove
+memoryfindtype.memory_fight.remove
+memoryfindtype.memory_sawcrime.remove
+memoryfindtype.memory_aggreived.remove
+memoryfindtype.memory_war_targ.remove
+act.memoryfindtype.memory_harmedby.remove
+act.memoryfindtype.memory_iaggressor.remove
+act.memoryfindtype.memory_fight.remove
+act.memoryfindtype.memory_sawcrime.remove
+act.memoryfindtype.memory_aggreived.remove
+act.memoryfindtype.memory_war_targ.remove
+sysmessage <def.youloose>
+act.sysmessage <def.youwin>
+LOCAL.TMP=<OBJ>
+OBJ=<FINDID.I_PVP_TIME.LINK>
+OBJ.SAY @036 <ACT.NAME> wins!
+SERV.B @036 <ACT.NAME> wins a PVP against <NAME>
+IF !(<OBJ.MORE2>)
+go <tag0.pvp.lastp>
+act.go <act.tag0.pvp.lastp>
+OBJ.TIMER 0
+action -1
+obj=<local.tmp>
+return 1
+ENDIF
+dismount 1 ///send to bank
+obj=<local.tmp>
+
+ON=@DeathCorpse
+LOCAL.TMP=<OBJ>
+OBJ=<FINDID.I_PVP_TIME.LINK>
+IF (<OBJ.MORE2>==1)
+FOR 2
+IF (<OBJ.TAG0.PARTICIPANTE<EVAL <LOCAL._FOR>>>==<UID>)
+try obj.tag.participante<eval <local._for>>
+ENDIF
+ENDFOR
+obj.timer 30
+SPELLEFFECT s_dispel,1000
+go <tag0.pvp.lastp>
+flags &= ~statf_incognito
+flags &= ~statf_war
+flags &= ~statf_invisible
+findid.i_pvp_time.remove
+fame=<tag0.pvp.fame>
+karma=<tag0.pvp.karma>
+kills=<tag0.pvp.kills>
+deaths=<tag0.pvp.deaths>
+clear_pvp_tags
+flags &= ~statf_criminal
+hits=<maxhits>
+mana=<maxmana>
+stam=<maxstam>
+resurrect
+obj.more2=2
+try uid.<argo.uid>.timer=<def.lootingtimer>
+try uid.<argo.uid>.say @07a1 You have <eval <def.lootingtimer>> secs to loot the corpse
+try uid.<argo.uid>.events +t_pvp_loot
+update
+ENDIF
+OBJ=<LOCAL.TMP>
+
+///////////////////////////
+
+[TYPEDEF t_pvp_loot]
+ON=@TIMER
+IF !(<link.flags>&statf_dead) && !(<link.tag0.event.id>)
+f_lootpvp <link.findlayer.21>
+ENDIF
+
+[function f_lootpvp]
+LOCAL.ITEMS=0
+LOCAL._FOR=0
+FORCONT <uid> 0
+LOCAL._FOR += 1
+TRY VAR.PVP.ITEM<EVAL <LOCAL._FOR>>=<UID>
+LOCAL.ITEMS += 1
+ENDFOR
+FOR <LOCAL.ITEMS>
+TRY UID.<VAR.PVP.ITEM<EVAL <LOCAL._FOR>>>.CONT=<ARGN1>
+TRY VAR.PVP.ITEM<EVAL <LOCAL._FOR>>
+ENDFOR
+
+///////////////////////////
+
+[ITEMDEF i_pvp_time]
+NAME=PVP Time
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@Create
+attr=attr_invis|attr_move_never
+
+////////////////////////////
+
+[FUNCTION clear_pvp_tags]
+tag.pvp.karma=
+tag.pvp.fame=
+tag.pvp.kills=
+tag.pvp.deaths=
+tag.pvp.lastp=
+events -e_pvp
+
+///////////////////////////
+
+[itemdef i_pvp_logout]
+NAME=LogOut Timer
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@Create
+attr=attr_invis|attr_decay
+
+ON=@Timer
+link.say <def.pvpendedlogout>
+link.timer
+remove
+return 1
+
+/////////////////////////////
+
+[function dismount]
+findlayer.21.updatex
+if (<findlayer.25>)
+obj=<findlayer.25.more2>
+obj.p=<p>
+findlayer.25.remove
+flags &= ~080000000
+OBJ.SHRINK
+BOUNCE <obj.ACTARG1>&~080000000
+LOCAL.BLAH=<obj.ACTARG1>&~080000000
+IF (0<ARGN1>==1)
+TRY UID.<LOCAL.BLAH>.CONT=<FINDLAYER.29>
+FINDLAYER.29.UPDATEX
+SYSMESSAGE @07a1 Your mount has been sent to your bank.
+ENDIF
+findlayer.21.updatex
+updatex
+endif
+
+[EOF]

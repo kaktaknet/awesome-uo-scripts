@@ -1,0 +1,34 @@
+//Elixir of Life potion, Version 1.0
+//Resurrects the target
+//By Rudenid
+
+[ITEMDEF i_potion_Life]
+NAME=Elixir of Life
+ID=i_bottle_YELLOW
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_ginseng 9, i_reag_garlic 6, i_reag_spider_silk 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 95.1
+
+ON=@Create
+COLOR=0482
+MORE1=s_resurrection
+MORE2=100.0
+
+ON=@DClick
+TARGET Who will you resurrect?
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.FLAGS>&statf_dead)
+SRC.SYSMESSAGE You can only use this on the dead
+RETURN 1
+ELSE
+SRC.EMOTE pour the elixir down <SRC.TARG.NAME>'s throat
+SRC.TARG.RESURRECT
+SRC.TARG.CONSUME i_deathshroud
+SRC.NEWITEM i_bottle_empty
+SRC.ACT.BOUNCE
+REMOVE
+RETURN 0
+ENDIF

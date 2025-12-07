@@ -1,0 +1,312 @@
+///////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// Jail System v 1.2 /////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+// This script was written by GM Seth aka kOcTuK
+// этот скрипт написан GM Seth`ом ака кќс“и 
+// the1@one.lv or TheDarkOne@rambler.ru
+// irc.delfi.lv nick kOcTuK #lunatic_asylum #lostdream(?!) #just4friends #BlackCompany
+// set these flags to the region where your jail is(поставить эти флаги на регион, где будет 
+// jail(желательно jail обнести двум€ стенами, во избежании багов):
+// region_antimagic_recall_in 00002 //Teleport, recall in, and mark are banned(телепорт, реколл в, и марк использовать нельз€.)
+// region_antimagic_recall_out 00004 //can't recall out of here.(отреколлитьс€ отсюда нельз€)
+// region_antimagic_gate 00008 //Can't cast gate here(нельз€ кастовать гейты)
+// region_antimagic_teleport 00010 //Can't teleport in this region.(телепортнутьс€ внутрь нельщ€)
+// region_antimagic_damage 00020 //No harmful magic allowed here(магию с нанесением урона исп. нельз€)
+// region_flag_nobuilding 00080 //No building in this area(нельз€ ставить дома в на этой зоне)
+// region_flag_safe 02000 //This region is safe from all harm.(инвул зона)
+// region_flag_no_pvp 08000 // No PvP (ѕвѕ запрещЄн)
+// havent done the mining section though... sorry =) maybe sometime.. =)
+// VERY IMPORTANT: Please, do not use .jail to jail players, it wont work with this script. Please
+// use a specially designed staff(.add i_jailing_staff)
+// P.S. Set the colors that you like. All colors in this script are default. =)
+// ENJOY!!!
+
+[ITEMDEF i_jailing_staff]
+ID=i_staff_black
+NAME=Jailing Staff of Justice
+WEIGHT=500
+
+ON=@CREATE
+HITPOINTS=5000
+ATTR=00010
+
+ON=@EQUIP
+IF <SRC.ACCOUNT.PLEVEL>==1
+SRC.FINDLAYER(2).REMOVE
+SRC.SYSMESSAGE You tried to use a GM item. You will be panished.
+SRC.NEWITEM=i_term
+SRC.ACT.BOUNCE
+SRC.GO Jail
+ELSE
+SRC.SYSMESSAGE You are allowed to use this.
+ENDIF
+
+ON=@DCLICK
+IF <SRC.ACCOUNT.PLEVEL>>1
+TARGET Jail Whom?
+ENDIF
+
+ON=@TARGON_CHAR
+SRC.TARG.GO Jail
+return 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE Cant send items to jail.
+return 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE Cant send.. ground to jail.. :-)
+return 1
+
+[ITEMDEF i_jail_stone_ld] // The main jail stone. √лавный стоун(где будет выбератьс€ дальнейший вид 
+ID=01184	       // работы.)
+NAME=Double click this please.
+WEIGHT=1000
+
+ON=@CREATE
+ATTR=08010
+
+ON=@DCLICK
+DIALOG jail_main
+return 1
+
+[DIALOG jail_main] // the main jail stones gump. √амп главного стоуна.
+0, 0
+PAGE 2
+gumppic 240 140 3504
+gumppic 480 114 3502
+gumppic 239 114 3501
+gumppic 214 140 3503
+gumppic 214 114 3500
+gumppic 480 140 3505
+gumppic 214 380 3506
+gumppic 240 380 3507
+gumppic 480 380 3508
+text 302 143 1153 6
+text 283 186 1153 7
+text 310 268 1153 8
+button 283 337 2311 2312 1 0 2
+button 374 337 243 241 1 0 3
+PAGE 1
+gumppic 107 70 3504
+gumppic 265 70 3504
+gumppic 107 219 3504
+gumppic 265 219 3504
+gumppic 505 459 3508
+gumppic 263 459 3507
+gumppic 107 459 3507
+gumppic 505 217 3505
+gumppic 81 459 3506
+gumppic 505 70 3505
+gumppic 263 44 3501
+gumppic 505 44 3502
+gumppic 106 44 3501
+gumppic 81 44 3500
+gumppic 81 70 3503
+gumppic 81 219 3503
+text 254 444 1152 0
+gumppic 314 117 12
+gumppic 455 62 2529
+gumppic 313 124 60430
+gumppic 315 117 50905
+gumppic 314 116 50701
+gumppic 315 118 50615
+gumppic 400 129 50635
+text 114 128 1153 1
+text 174 249 95 2
+text 152 359 95 3
+text 114 104 1153 4
+text 114 62 1153 5
+button 174 174 5555 5556 1 0 1
+button 174 288 5559 5560 0 2 0
+
+[DIALOG jail_main TEXT]
+Made by GM Seth aka kOcTuK
+Select your type of work
+Mining
+Lumberjacking
+You have been jailed...
+Lost Dream jail system.
+Are you sure?
+1 term = 1000 logs
+Good luck...
+
+
+[DIALOG jail_main BUTTON]
+on=1
+SRC.MESSAGE not available yet... Please choose lumberjacking.
+on=2
+SRC.GO jail_lumber
+on=3
+SRC.DIALOG jail_main
+
+[ITEMDEF i_jail_stone_hatchet]
+ID=01184
+NAME=Get a jail hatchet here!
+WEIGHT=1000
+
+ON=@CREATE
+ATTR=08010
+
+ON=@CLICK
+SRC.SYSMESSAGE double-click this
+
+ON=@DCLICK
+IF <SRC.RESTEST i_jail_hatchet>==1
+SRC.SYSMESSAGE You already have one.
+return 1
+ELSE
+SRC.NEWITEM=i_jail_hatchet
+SRC.ACT.BOUNCE
+SRC.ACT.EQUIP
+return 1
+ENDIF
+return 1
+
+[ITEMDEF i_jail_stone_lumber] // the lumberjacking type stone. —тоун ламберджекинга
+ID=01184
+NAME=Freedom
+WEIGHT=1000
+
+ON=@CREATE
+ATTR=08010
+
+ON=@CLICK
+SRC.SYSMESSAGE Double-click on the stone to give away your logs, when you have 0 terms, you can go out of jail.
+
+ON=@DCLICK
+IF <SRC.RESTEST i_term>>0
+	IF <SRC.RESTEST 1000 i_log>==1
+		SRC.CONSUME 1000 i_log
+		SRC.CONSUME i_term
+		SRC.MESSAGE You have to work less one term.
+		return 1
+	ELSE
+		SRC.MESSAGE You dont have the correct amount of logs[1000]. Try to get more.
+		return 1
+	ENDIF
+ELIF <SRC.RESTEST i_term>==0
+	SRC.FINDLAYER(2).UNEQUIP
+	SRC.CONSUME i_jail_hatchet
+	SRC.GO 1344,1750,20 // Set the P of the place you prefer the player to go after paying his penalty.
+	return 1
+ENDIF
+return 1
+
+[ITEMDEF i_term_creator] // term creator, if a cons cant use the .add command
+ID=0fc0
+NAME=term creator
+WEIGHT=100
+
+ON=@CREATE
+ATTR=00010
+
+ON=@CLICK
+IF <SRC.ACCOUNT.PLEVEL>>1
+TARG Add terms to whom?
+ELSE
+SRC.SYSMESSAGE You cant use this item.
+return 1
+ENDIF
+return 1
+
+ON=@DCLICK
+IF <SRC.ACCOUNT.PLEVEL>>1
+TARG Add terms to whom?
+ELSE
+SRC.SYSMESSAGE You cant use this item.
+return 1
+ENDIF
+return 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE Cant add terms to a ground.
+return 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE Cant add terms to an item.
+return 1
+
+ON=@TARGON_CHAR
+SRC.TARG.NEWITEM=i_term
+SRC.TARG.ACT.BOUNCE
+
+[ITEMDEF i_term] // a term. —–ќ .
+ID=01c13
+NAME=term
+WEIGHT=.1
+
+ON=@DCLICK
+SRC.SYSMESSAGE Its a term, work to get rid of it...
+return 1
+
+ON=@CREATE
+ATTR=00010
+
+[ITEMDEF i_jail_stone_mining] // the mining type stone. —тоун мининга.
+ID=01184
+NAME=Freedom
+WEIGHT=1000
+
+ON=@CREATE
+ATTR=08010
+
+ON=@CLICK
+SRC.SYSMESSAGE Double-click on the stone to give away your iron, when you have 0 terms, you can go out of jail.
+
+ON=@DCLICK
+IF <SRC.RESTEST i_term>>0
+	IF <SRC.RESTEST 1000 i_ingot_iron>==1
+		SRC.CONSUME 1000 i_ingot_iron
+		SRC.CONSUME i_term
+		SRC.MESSAGE You have to work less one term.
+		return 1
+	ELSE
+		SRC.MESSAGE You dont have the correct amount of iron[1000]. Try to get more.
+		return 1
+ELIF !<SRC.RESTEST i_term>
+	SRC.FINDLAYER(2).UNEQUIP
+	SRC.CONSUME i_jail_pickaxe
+	SRC.GO 1344,1750,20 // Set the P of the place you prefer the player to go after paying his penalty.
+	return 1
+ENDIF
+
+[ITEMDEF i_jail_pickaxe] // jail pickaxe, which will give 100 on equip, and players current skill
+ID=i_pickaxe		 // before equiption
+NAME=Jail pickaxe
+WEIGHT=25
+
+ON=@CREATE
+HITPOINTS={100 300}
+COLOR=color_o_blackrock
+
+ON=@EQUIP
+SRC.ACT.ATTR=00010
+SRC.TAG.MINING=<SRC.MINING>
+SRC.MINING=1000
+SRC.MESSAGE You will have 100 mining, while you are in jail and equip this hatchet.
+
+ON=@UNEQUIP
+SRC.MINING=<SRC.TAG.MINING>
+SRC.TAG.MINING=
+
+[ITEMDEF i_jail_hatchet] // the same as the hatchet, but gives mining. And ofcourse its a pickaxe
+ID=i_hatchet
+NAME=Jail hatchet
+WEIGHT=25
+
+ON=@CREATE
+HITPOINTS={100 300}
+COLOR=color_o_blackrock
+
+ON=@EQUIP
+SRC.ACT.ATTR=00010
+SRC.TAG.LUMBER=<SRC.LUMBERJACKING>
+SRC.LUMBERJACKING=1000
+SRC.MESSAGE You will have 100 lumberjacking, while you are in jail and equip this hatchet.
+
+ON=@UNEQUIP
+SRC.LUMBERJACKING=<SRC.TAG.LUMBER>
+SRC.TAG.LUMBER=
+
+[EOF]

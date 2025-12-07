@@ -1,0 +1,125 @@
+//Player Ran Atm Machine by Pogo 
+//
+//Player ran ATM Machine to install just place in script folder and
+//add i_deed_atm to a vandor or a craft menu 
+//if you place in a craft menu you will have to add a skill make for it (i to lazy)
+//
+//p.s it costs 20 gold to use the stone but the owner only gets 15 of it 
+//(its like tax) but it goes no where this can be edited but i let you 
+//clever lads out there figure it out
+
+
+[ITEMDEF i_deed_atm]
+DEFNAME=i_deed_atm
+NAME=Deed to a atm
+ID=i_deed
+RESOURCES=i_deed,I_player_atm
+
+CATEGORY=Pogo 
+SUBSECTION=Gangster Tools
+DESCRIPTION=deed to atm machine
+
+on=@clicK
+SRC.MESSAGE WARNING: The Atm will place at your feet!
+ON=@DCLICK
+ remove 
+ SRC.NEWITEM=i_PLAYER_ATM
+ SRC.ACT.P=<SRC.P>
+ SRC.ACT.LINK=<SRC.UID>
+ RETURN 1 
+
+[ITEMDEF I_player_atm] 
+ID=i_grave_stone
+NAME=Atm Machine 20gp to use
+CATEGORY=Pogo 
+SUBSECTION=Gangster Tools
+DESCRIPTION=ATM MACHINE
+
+ON=@Create 
+COLOR=0486
+MOREM=244
+ATTR=ATTR_STATIC
+
+ON=@CLICK
+MESSAGE=Use's left (<MOREM>)
+
+ON=@DCLICK 
+IF <DISTANCE> > 3 
+    SRC.MESSAGE I need to get closer to use this
+    RETURN 1 
+ENDIF 
+
+IF <LINK>==<SRC.UID>             
+   MENU=m_ATM 
+   RETURN 1 
+ENDIF    
+
+  IF (<SRC.RESTEST 1 i_mem_atm>)     
+     RETURN 1 
+  ENDIF 
+  
+  
+
+  
+IF <src.findlayer.21.rescount i_gold> > 19 
+         src.consume 20 i_gold 
+         sfx 50 
+         MORE1 = <MORE1>+15             
+         MORE2 = <more2>+15          
+          
+ELSE 
+SRC.SAY Insaficant funds! 
+RETURN 1 
+ENDIF 
+  IF (<MOREM>==0)
+	SAYUA 22,0,0,ENG, This machine is curently out of order!
+RETURN 1
+ELSE
+
+  SRC.NEWITEM=i_mem_atm 
+  SRC.ACT.TIMER=10
+  SRC.ACT.EQUIP 
+  
+	SRc.bank
+	MOREM=(<MOREM>+-1)
+return 1 
+
+
+
+
+[ITEMDEF i_mem_atm] 
+ID=i_memory 
+TYPE=t_eq_script 
+NAME=Slot machine Timer 
+
+ON=@EQUIP 
+ATTR=attr_decay | attr_invis 
+
+ON=@TIMER 
+REMOVE 
+
+[MENU m_ATM] 
+Machine Profit to date: <EVAL <MORE2>> gp. You pay a tax of 5gp per every 20gp
+ON=0 Take out profit <EVAL <MORE1>> 
+     SRC.NEWITEM=i_GOLD 
+     SRC.ACT.AMOUNT=<eval <more1>> 
+     SRC.ACT.P=<SRC.p> 
+     SRC.ACT.BOUNCE 
+     MORE1=0 
+RETURN 1 
+
+ON=0 Access bank (this will take 1 use off the stone, but costs nothing). 
+ IF (<MOREM>==0)
+	SAYUA 22,0,0,ENG, this machine is inactive!
+RETURN 1
+ELSE
+   MORE1=<MORE1>+-1
+   SRC.bank
+
+      
+RETURN 1 
+on=0 Remove bank stone
+ remove
+
+
+

@@ -1,0 +1,520 @@
+[PLEVEL 1]
+
+
+guild
+
+
+
+
+
+[FUNCTION guild]
+
+
+IF (<MEMORYFINDTYPE.memory_guild.LINK.UID>)
+
+
+guild_clear 1
+
+
+TRYP 0 VAR.GUILD.<UID>.COUNT 0
+
+
+SERV.ALLCLIENTS guild_all <MEMORYFINDTYPE.memory_guild.LINK.UID>
+
+
+TAG.GUILD 0
+
+
+DIALOG d_guild
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION guild_clear]
+
+
+IF (0<VAR.GUILD.<UID>.<ARGN>>)
+
+
+TRYP 0 VAR.GUILD.<UID>.<ARGN>
+
+
+guild_clear <ARGN> + 1
+
+
+ENDIF
+
+
+
+
+
+[FUNCTION guild_all]
+
+
+IF (<MEMORYFINDTYPE.memory_guild.LINK.UID> == <ARGN>)
+
+
+SRC.TRYP 0 VAR.GUILD.<SRC.UID>.COUNT <VAR.GUILD.<SRC.UID>.COUNT> + 1
+
+
+SRC.TRYP 0 VAR.GUILD.<SRC.UID>.<EVAL <VAR.GUILD.<SRC.UID>.COUNT>> <UID>
+
+
+ENDIF
+
+
+
+
+
+[DIALOG d_guild]
+
+
+206,101
+
+
+resizepic 0 0 3600 391 397
+
+
+text <EVAL (391 / 2) - ((STRLEN(<MEMORYFINDTYPE.memory_guild.NAME>) * 8) / 2)> 20 482 0
+
+
+
+
+
+button <EVAL 0 + 20> <EVAL 405 - 50> 4014 4016 1 0 1
+
+
+button <EVAL 391 - 50> <EVAL 405 - 50> 4005 4007 1 0 2
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 1>>.ISCHAR> - 1>
+
+
+text 23 45 1152 1
+
+
+croppedtext 145 45 110 20 1152 16
+
+
+text 261 45 1152 31
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 2>>.ISCHAR> - 1>
+
+
+text 23 65 1152 2
+
+
+croppedtext 145 65 110 20 1152 17
+
+
+text 261 65 1152 32
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 3>>.ISCHAR> - 1>
+
+
+text 23 85 1152 3
+
+
+croppedtext 145 85 110 20 1152 18
+
+
+text 261 85 1152 33
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 4>>.ISCHAR> - 1>
+
+
+text 23 105 1152 4
+
+
+croppedtext 145 105 110 20 1152 19
+
+
+text 261 105 1152 34
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 5>>.ISCHAR> - 1>
+
+
+text 23 125 1152 5
+
+
+croppedtext 145 125 110 20 1152 20
+
+
+text 261 125 1152 35
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 6>>.ISCHAR> - 1>
+
+
+text 23 145 1152 6
+
+
+croppedtext 145 145 110 20 1152 21
+
+
+text 261 145 1152 36
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 7>>.ISCHAR> - 1>
+
+
+text 23 165 1152 7
+
+
+croppedtext 145 165 110 20 1152 22
+
+
+text 261 165 1152 37
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 8>>.ISCHAR> - 1>
+
+
+text 23 185 1152 8
+
+
+croppedtext 145 185 110 20 1152 23
+
+
+text 261 185 1152 38
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 9>>.ISCHAR> - 1>
+
+
+text 23 205 1152 9
+
+
+croppedtext 145 205 110 20 1152 24
+
+
+text 261 205 1152 39
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 10>>.ISCHAR> - 1>
+
+
+text 23 225 1152 10
+
+
+croppedtext 145 225 110 20 1152 25
+
+
+text 261 225 1152 40
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 11>>.ISCHAR> - 1>
+
+
+text 23 245 1152 11
+
+
+croppedtext 145 245 110 20 1152 26
+
+
+text 261 245 1152 41
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 12>>.ISCHAR> - 1>
+
+
+text 23 265 1152 12
+
+
+croppedtext 145 265 110 20 1152 27
+
+
+text 261 265 1152 42
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 13>>.ISCHAR> - 1>
+
+
+text 23 285 1152 13
+
+
+croppedtext 145 285 110 20 1152 28
+
+
+text 261 285 1152 43
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 14>>.ISCHAR> - 1>
+
+
+text 23 305 1152 14
+
+
+croppedtext 145 305 110 20 1152 29
+
+
+text 261 305 1152 44
+
+
+
+
+
+page <EVAL <UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 15>>.ISCHAR> - 1>
+
+
+text 23 325 1152 15
+
+
+croppedtext 145 325 110 20 1152 30
+
+
+text 261 325 1152 45
+
+
+
+
+
+[DIALOG d_guild BUTTON]
+
+
+ONBUTTON 1
+
+
+TAG.GUILD 0<TAG.GUILD> - 15
+
+
+IF (<TAG.GUILD> < 0)
+
+
+TAG.GUILD 0
+
+
+ENDIF
+
+
+DIALOG d_guild
+
+
+
+
+
+ONBUTTON 2
+
+
+VAR.ACT <ACT>
+
+
+ACT <VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 16>>
+
+
+IF (<ACT.UID>)
+
+
+TAG.GUILD 0<TAG.GUILD> + 15
+
+
+ENDIF
+
+
+ACT <VAR.ACT>
+
+
+DIALOG d_guild
+
+
+
+
+
+[DIALOG d_guild TEXT]
+
+
+<MEMORYFINDTYPE.memory_guild.NAME>
+
+
+
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 1>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 2>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 3>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 4>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 5>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 6>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 7>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 8>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 9>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 10>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 11>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 12>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 13>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 14>>.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 15>>.NAME>
+
+
+
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 1>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 2>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 3>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 4>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 5>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 6>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 7>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 8>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 9>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 10>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 11>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 12>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 13>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 14>>.REGION.NAME>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 15>>.REGION.NAME>
+
+
+
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 1>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 2>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 3>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 4>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 5>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 6>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 7>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 8>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 9>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 10>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 11>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 12>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 13>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 14>>.P>
+
+
+<UID.<VAR.GUILD.<UID>.<EVAL 0<TAG.GUILD> + 15>>.P>

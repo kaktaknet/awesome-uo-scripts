@@ -1,0 +1,202 @@
+[comments] 
+**Script built by Tartaros (www.moria.cz)** 
+if you redistribute this file, let me know and let this header intact at least please 
+Enjoy!
+
+These are 2 functions that can be usefull for players (they are supposed to be
+available for [plevel 1]) if they need to remove scrolls from spellbooks and/or
+give them back fast. It works for the basic 64 spells and the 6 "necromancy"
+spells the functions are FULLBOOK and EMPTYBOOK, the use is quite clear i would
+say...  
+
+[function hasspell] 
+var.spellnumber=<eval (<args>&0ffff)-1> 
+var.r_hasspell=0 
+if (<var.spellnumber><32) 
+if (isbit(<more1>,<var.spellnumber>)) 
+  var.r_hasspell=1 
+endif 
+elseif (<var.spellnumber><64) 
+if (isbit(<more2>,<var.spellnumber>)) 
+  var.r_hasspell=1 
+endif 
+else 
+if (isbit(<morex>,(<var.spellnumber>-64))) 
+  var.r_hasspell=1 
+endif 
+endif 
+return <var.r_hasspell> 
+[function fullbook] 
+if !(<src.findtype t_spellbook>) 
+src.sysmessage You must posses a spellbook. 
+return 0 
+endif 
+newitem i_fullbookmem 
+act.equip 
+[itemdef i_fullbookmem] 
+id=i_memory 
+type=t_eq_script 
+name=fullbook memory 
+on=@equip 
+timer 20 
+target Target a container with scrolls to fill in your book with. 
+return 1 
+on=@timer 
+remove 
+return 1 
+on=@targon_item 
+if !(<src.findtype(t_spellbook)>) 
+src.sysmessage You must posses a spellbook. 
+return 1 
+elseif !(<src.targ.iscontainer>) 
+src.sysmessage This is not a container. 
+return 1 
+elseif (<src.targ.topobj.uid>!=<src.uid>)&&(<src.isgm>==0) 
+src.sysmessage You must posses the container. 
+return 1 
+elseif !(<src.targ.findtype(t_scroll)>) 
+src.sysmessage There are no scrolls in the container. 
+return 1 
+endif 
+src.act=<uid> 
+link=<src.findtype(t_spellbook).uid> 
+src.targ.contents f_fullbook 
+remove 
+return 1 
+[function f_fullbook] 
+if (<type>==t_scroll) 
+src.act.link.hasspell <morex> 
+if !(<var.r_hasspell>) 
+  src.act.link.addspell <morex> 
+  consume 1 
+endif 
+endif 
+[function emptybook] 
+newitem i_emptybookmem 
+act.equip 
+[itemdef i_emptybookmem] 
+id=i_memory 
+type=t_eq_script 
+name=emptybook memory 
+on=@equip 
+timer 20 
+target Which book do you want to empty? 
+return 1 
+on=@targon_item 
+if (<src.targ.type> != t_spellbook) 
+src.sysmessage This s not a spellbook. 
+elseif (<src.targ.topobj.uid>!=<src.uid>)&&(<src.isgm>==0) 
+src.sysmessage You must posses the spellbook. 
+else 
+f_emptybook_loop 1 
+src.targ.more1=0 
+src.targ.more2=0 
+src.targ.morex=0 
+endif 
+return 1 
+remove 
+on=@timer 
+remove 
+return 1 
+[function f_emptybook_loop] 
+src.act=<src.targ> 
+var.r_hasspell=0 
+src.targ.hasspell <argn> 
+if (<var.r_hasspell>) 
+doswitch <argn>-1 
+  src.newitem=i_scroll_clumsy    //1 
+  src.newitem=i_scroll_create_food 
+  src.newitem=i_scroll_feeblemind 
+  src.newitem=i_scroll_heal 
+  src.newitem=i_scroll_magic_arrow 
+  src.newitem=i_scroll_night_sight 
+  src.newitem=i_scroll_reactive_armor    
+  src.newitem=i_scroll_weaken 
+  src.newitem=i_scroll_agility 
+  src.newitem=i_scroll_cunning//10 
+  src.newitem=i_scroll_cure 
+  src.newitem=i_scroll_harm 
+  src.newitem=i_scroll_magic_trap 
+  src.newitem=i_scroll_magic_untrap 
+  src.newitem=i_scroll_protection 
+  src.newitem=i_scroll_strength 
+  src.newitem=i_scroll_bless 
+  src.newitem=i_scroll_fireball 
+  src.newitem=i_scroll_magic_lock 
+  src.newitem=i_scroll_poison //20 
+  src.newitem=i_scroll_telekinesis 
+  src.newitem=i_scroll_teleport 
+  src.newitem=i_scroll_unlock 
+  src.newitem=i_scroll_wall_of_stone 
+  src.newitem=i_scroll_archcure 
+  src.newitem=i_scroll_archprotection 
+  src.newitem=i_scroll_curse 
+  src.newitem=i_scroll_fire_field 
+  src.newitem=i_scroll_greater_heal 
+  src.newitem=i_scroll_lightning//30 
+  src.newitem=i_scroll_mana_drain 
+  src.newitem=i_scroll_recall 
+  src.newitem=i_scroll_blade_spirits    
+  src.newitem=i_scroll_dispel_field 
+  src.newitem=i_scroll_incognito 
+  src.newitem=i_scroll_magic_reflection 
+  src.newitem=i_scroll_mind_blast 
+  src.newitem=i_scroll_paralyze 
+  src.newitem=i_scroll_poison_field 
+  src.newitem=i_scroll_summon_creature //40 
+  src.newitem=i_scroll_dispel 
+  src.newitem=i_scroll_energy_bolt 
+  src.newitem=i_scroll_explosion 
+  src.newitem=i_scroll_invisibility 
+  src.newitem=i_scroll_mark 
+  src.newitem=i_scroll_mass_curse 
+  src.newitem=i_scroll_paralyze_field 
+  src.newitem=i_scroll_reveal 
+  src.newitem=i_scroll_chain_lightning 
+  src.newitem=i_scroll_energy_field //50 
+  src.newitem=i_scroll_flamestrike 
+  src.newitem=i_scroll_gate_travel 
+  src.newitem=i_scroll_mana_vampire 
+  src.newitem=i_scroll_mass_dispel 
+  src.newitem=i_scroll_meteor_swarm 
+  src.newitem=i_scroll_polymorph 
+  src.newitem=i_scroll_earthquake 
+  src.newitem=i_scroll_energy_vortex 
+  src.newitem=i_scroll_resurrection 
+  src.newitem=i_scroll_summon_elem_air //60 
+  src.newitem=i_scroll_summon_daemon 
+  src.newitem=i_scroll_summon_elem_earth 
+  src.newitem=i_scroll_summon_elem_fire 
+  src.newitem=i_scroll_summon_elem_water 
+  src.newitem=i_scroll_summon_undead 
+  src.newitem=i_scroll_animate_dead 
+  src.newitem=i_scroll_bone_armor 
+  src.newitem=i_scroll_light 
+  src.newitem=i_scroll_firebolt 
+  src.newitem=i_scroll_hallucination 
+enddo 
+endif 
+src.act.bounce 
+if (<argn> < 70) 
+f_emptybook_loop <argn>+1 
+endif
+
+[comments] 
+**Script built by Swindler** 
+This is a "library" function that has quite universal use...runs its argument on every item ain a container.
+
+[function contents] 
+if <rescount> 
+    var.count <rescount> 
+    contents_r <args> 
+endif 
+[function contents_r] 
+if <var.count> >= 1 
+try findcont.<eval <var.count> - 1>.<args> 
+    var.count <var.count> +- 1 
+else 
+    var.count 
+    return 1 
+endif 
+contents_r <args> 
+return 0

@@ -1,0 +1,273 @@
+/////////////////////////////////////////////////////////////////////////////
+////////////LADY KRYSTA'S STAFF OF EXPERIENCE GIVING /////////////////////
+/////////Instructions: Just equip the staff, Dbl click it. Target a player. Choose
+/////////How much exp you would like to give them as a reward. 
+//////// And voila! The prize has been given. Obviously most people 
+/////// Are going to have to customize some of this to fit there Experience/Level 
+//////// System. Just give me a little bit of credit for taking the time to write this 
+/////// Script and have fun with it. Experience deeds will also have to be 
+//////// Customized to fit your shard needs. Toodles ~Krysta
+/////////////////////////////////////////////////////////////////////////
+[ITEMDEF I_exp_staff]
+NAME=Staff of exp Giving
+ID=0df0
+DAM=30,45
+REQSTR=999 //So only gm's can use it
+WEIGHT=7.0
+
+CATEGORY=KRYSTA
+SUBSECTION=NEW ITEMS
+DESCRIPTION=Staff of exp giving
+
+ON=@Create
+HITPOINTS={200 210}
+COLOR=0990
+
+ON=@EQUIP
+SRC.SPELLEFFECT 06 1000
+
+ON=@DCLICK
+SRC.SYSMESSAGE Who would you like to give experience to?
+TARGET
+RETURN 1
+
+ON=@TARGON_CHAR
+DIALOG d_exp_s
+
+[DIALOG d_exp_s]
+//Exp Giver
+0,0
+resizepic 0 0 3600 607 440 // Curved Grey background
+resizepic 90 85 2620 425 315 // Gold trimmed box
+NoMove
+NoClose
+text 120 15 175 0 
+text 135 40 175 1 
+text 134 65 175 2 
+text 120 96 1152 3 
+text 120 126 1152 4
+text 120 156 1152 5 
+text 120 186 1152 6 
+text 120 216 1152 7 
+text 120 246 1152 8 
+text 120 276 1152 9 
+text 120 325 267 10
+text 235 400 175 11
+button 104 98 1209 1210 1 0 1
+button 104 128 1209 1210 1 0 2
+button 104 158 1209 1210 1 0 3
+button 104 188 1209 1210 1 0 4
+button 104 218 1209 1210 1 0 5
+button 104 248 1209 1210 1 0 6
+button 104 278 1209 1210 1 0 7
+button 104 327 1209 1210 1 0 8
+
+[DIALOG D_exp_S TEXT] 
+Lady Krystas Experience Giving Staff
+This staff is only to be used as a prize.
+For winning a Tourney, Or Quest.
+1000 EXP
+2000 EXP
+3000 EXP
+4000 EXP
+5000 EXP
+6000 EXP
+7000 EXP
+Exit
+<SERV.NAME>
+
+[DIALOG d_exp_s BUTTON] 
+ONBUTTON=1
+SRC.TARG.SOUND 61
+SRC.SYSMESSAGE You gave 1k exp to <SRC.TARG.NAME>!
+SRC.TARG.SYSMESSAGE <SRC.NAME> just gave you 1k exp!
+SRC.TARG.tag.experience=<eval <SRC.TARG.tag.experience> + 1000>
+RETURN 1
+
+ONBUTTON=2
+SRC.TARG.SOUND 61
+SRC.SYSMESSAGE You gave 2k exp to <SRC.TARG.NAME>!
+SRC.TARG.SYSMESSAGE <SRC.NAME> just gave you 2k exp!
+SRC.TARG.tag.experience=<eval <SRC.TARG.tag.experience> + 2000>
+RETURN 1
+
+ONBUTTON=3 
+SRC.TARG.SOUND 61
+SRC.SYSMESSAGE You gave 3k exp to <SRC.TARG.NAME>!
+SRC.TARG.SYSMESSAGE <SRC.NAME> just gave you 3k exp!
+SRC.TARG.tag.experience=<eval <SRC.TARG.tag.experience> + 3000>
+RETURN 1
+
+ONBUTTON=4 
+SRC.TARG.SOUND 61
+SRC.SYSMESSAGE You gave 4k exp to <SRC.TARG.NAME>!
+SRC.TARG.SYSMESSAGE <SRC.NAME> just gave you 4k exp!
+SRC.TARG.tag.experience=<eval <SRC.TARG.tag.experience> + 4000>
+RETURN 1
+
+ONBUTTON=5
+SRC.TARG.SOUND 61
+SRC.SYSMESSAGE You gave 5k exp to <SRC.TARG.NAME>!
+SRC.TARG.SYSMESSAGE <SRC.NAME> just gave you 5k exp!
+SRC.TARG.tag.experience=<eval <SRC.TARG.tag.experience> + 5000>
+RETURN 1
+
+ONBUTTON=6 
+SRC.TARG.SOUND 61
+SRC.SYSMESSAGE You gave 6k exp to <SRC.TARG.NAME>!
+SRC.TARG.SYSMESSAGE <SRC.NAME> just gave you 6k exp!
+SRC.TARG.tag.experience=<eval <SRC.TARG.tag.experience> + 6000>
+RETURN 1
+
+ONBUTTON=7 
+SRC.TARG.SOUND 61
+SRC.SYSMESSAGE You gave 7k exp to <SRC.TARG.NAME>!
+SRC.TARG.SYSMESSAGE <SRC.NAME> just gave you 7k exp!
+SRC.TARG.tag.experience=<eval <SRC.TARG.tag.experience> + 7000>
+RETURN 1
+
+ONBUTTON=8 //Exit 
+SFX 312
+
+CATEGORY=KRYSTA
+SUBSECTION=NEW ITEMS
+DESCRIPTION=Exp Giver
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////EXPERIENCE DEEDS///////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF I_deed_exp1]
+ID=014ef
+TYPE=0
+NAME=1000 exp deed
+WEIGHT=0
+VALUE=0
+ON=@CREATE
+COLOR=099b
+ATTR=020
+ON=@DCLICK
+SRC.MESSAGE You've just received 1000 exp
+SRC.tag.experience=<eval <SRC.tag.experience> + 1000>
+REMOVE
+
+
+CATEGORY=KRYSTA
+SUBSECTION=Deed
+DESCRIPTION=1000 exp Deed
+
+[ITEMDEF I_deed_exp2]
+ID=014ef
+TYPE=0
+NAME=2000 exp deed
+WEIGHT=0
+VALUE=0
+ON=@CREATE
+COLOR=099b
+ATTR=020
+ON=@DCLICK
+SRC.MESSAGE You've just received 2000 exp
+SRC.tag.experience=<eval <SRC.tag.experience> + 2000>
+REMOVE
+
+
+CATEGORY=KRYSTA
+SUBSECTION=Deed
+DESCRIPTION=2000 exp Deed
+
+[ITEMDEF I_deed_exp3]
+ID=014ef
+TYPE=0
+NAME=3000 exp deed
+WEIGHT=0
+VALUE=0
+ON=@CREATE
+COLOR=099b
+ATTR=020
+ON=@DCLICK
+SRC.MESSAGE You've just received 3000 exp
+SRC.tag.experience=<eval <SRC.tag.experience> + 3000>
+REMOVE
+
+
+CATEGORY=KRYSTA
+SUBSECTION=Deed
+DESCRIPTION=3000 exp Deed
+
+[ITEMDEF I_deed_exp4]
+ID=014ef
+TYPE=0
+NAME=4000 exp deed
+WEIGHT=0
+VALUE=0
+ON=@CREATE
+COLOR=099b
+ATTR=020
+ON=@DCLICK
+SRC.MESSAGE You've just received 4000 exp
+SRC.tag.experience=<eval <SRC.tag.experience> + 4000>
+REMOVE
+
+
+CATEGORY=KRYSTA
+SUBSECTION=Deed
+DESCRIPTION=4000 exp Deed
+
+[ITEMDEF I_deed_exp5]
+ID=014ef
+TYPE=0
+NAME=5000 exp deed
+WEIGHT=0
+VALUE=0
+ON=@CREATE
+COLOR=099b
+ATTR=020
+ON=@DCLICK
+SRC.MESSAGE You've just received 5000 exp
+SRC.tag.experience=<eval <SRC.tag.experience> + 5000>
+REMOVE
+
+
+CATEGORY=KRYSTA
+SUBSECTION=Deed
+DESCRIPTION=5000 exp Deed
+
+[ITEMDEF I_deed_exp6]
+ID=014ef
+TYPE=0
+NAME=6000 exp deed
+WEIGHT=0
+VALUE=0
+ON=@CREATE
+COLOR=099b
+ATTR=020
+ON=@DCLICK
+SRC.MESSAGE You've just received 6000 exp
+SRC.tag.experience=<eval <SRC.tag.experience> + 6000>
+REMOVE
+
+
+CATEGORY=KRYSTA
+SUBSECTION=Deed
+DESCRIPTION=6000 exp Deed
+
+
+[ITEMDEF I_deed_exp7]
+ID=014ef
+TYPE=0
+NAME=7000 exp deed
+WEIGHT=0
+VALUE=0
+ON=@CREATE
+COLOR=099b
+ATTR=020
+ON=@DCLICK
+SRC.MESSAGE You've just received 7000 exp
+SRC.tag.experience=<eval <SRC.tag.experience> + 7000>
+REMOVE
+
+
+CATEGORY=KRYSTA
+SUBSECTION=Deed
+DESCRIPTION=7000 exp Deed
+[EOF]

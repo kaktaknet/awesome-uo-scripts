@@ -1,0 +1,148 @@
+[comment TAS]
+You may freely use this script and not distribute the code, all I ask is that you leave 
+in this header.
+
+Timed Action Script (TAS) by Admin Ankron, AKA Matthew Hart
+
+try this script, it will alow you to do timed action sequences (TAS), meaning there is 
+a pause before the charactor starts doing the command/action. IE if I wanted a char to 
+wait 10 seconds before saying "...ok... You suck.", I'd type".var.time 100" 
+(because the script uses tenths of a second) and then I'd type ".taction say ...ok ... 
+You suck." Then 10 seconds later your char will say... "...ok ...You suck. This is a great 
+function for quests, and spliting up sentances and actions of npcs, heck you might even be
+able to create a UO movie with it, or animate players.
+
+Note: Some times typing ".var.time" is not required... There is a natural speech function 
+in this script so it will try to make the script wait based on the length of the speech.
+
+Here is an example of TAS in action, type ".test_tas"...
+
+[function test_tas]
+newnpc c_TAS_test
+act.go <p>
+var.time=5
+act.taction run n
+var.time=5
+act.face
+dir=0
+update
+
+[chardef c_TAS_test]
+id=c_man
+name=TAS
+
+on=@create
+str=50
+int=100
+dex=50
+magery=1000
+
+on=@skillstart
+action=-1
+timer=10
+if 0<tag.action>=0
+tag.action=1
+taction Say Hello!
+var.time=5
+taction say My name is <name>!
+taction say I was created by Ankron to demonstrait how things can be set to a timer in an easy, user friendly way. In a couple seconds I will be hurt.
+taction damage 40
+var.time=1
+taction hits <eval <str>/2>
+var.time=1
+taction say Ouch! See how my hitpoints are now low?
+taction say I will now heal my self to full health...
+taction say In Vas Mani
+time=30
+taction heal_self
+var.time=20
+taction say I think I'll take a walk...
+var.time=1
+taction walk n
+var.time=1
+taction walk e
+var.time=1
+taction walk s
+var.time=1
+taction walk s
+var.time=1
+taction walk w
+var.time=1
+taction walk w
+var.time=1
+taction walk n
+var.time=1
+taction walk n
+var.time=1
+taction walk e
+var.time=1
+taction walk s
+var.time=1
+taction say as you can see I am quite versitile, and usefull now. 
+taction say I might even make a qood npc for a quest if given the right lines.
+taction say So I hope you've enjoyed my little demonstraition, and hope you
+taction say will enjoy my masters little script
+taction say goodbye.
+var.time=1
+taction emote wave goodbye.
+taction tag.action
+tclear
+timer=10
+return 1
+
+[function heal_self]
+hits=<str>
+effect 2,i_fx_HEAL_EFFECT,10,50,0
+sound snd_SPELL_GREATER_HEAL
+
+[function tclear] //This command clears the timing tag, use after each sequence.
+tag.tclear
+
+[function taction] //This one adds an action to the sequence of actions.
+if strmatch("0<args>", "0")
+sysmessage Useage: .taction arguments example: .taction say I am a goon.
+else
+newitem i_action_timer
+act.p=<p>
+if <src.uid>!=<uid>
+act.more2=<src.uid>
+endif
+link=<uid>
+act.p=<p>
+act.name=<args>
+tag.timerd=<eval 0<tag.timerd>+0<var.time>>
+act.timerd=<eval 0<tag.timerd>>
+if 0<var.time>=0
+if (strmatch("say*","<args>"))
+var.time=<eval (strlen("<args>))-4)+2>
+elif (strmatch("emote*","<args>"))
+var.time=<eval (strlen("<args>))-6)+2>
+elif (strmatch("message*","<args>"))
+var.time=<eval (strlen("<args>))-7)+2>
+elif (strmatch("sysmessage*","<args>"))
+var.time=<eval (strlen("<args>))-10)+2>
+else
+var.time=10 //the default time is 10/10ths of a second other wise 
+//known as 1 second.
+endif
+endif
+
+[itemdef i_action_timer]
+id=02007
+name=Action Timer
+type=t_eq_script
+layer=30
+
+on=@create
+attr=attr_decay
+
+on=@timer
+link.tryp 0 <name>
+remove
+return 1
+
+on=@click
+message Action timer (<name>) [invis]
+return 1
+
+[EOF]

@@ -1,0 +1,116 @@
+//////////////////////////////////////////////////////////// 
+//Help Menu Update. v1.1 BETA for Sphere Version .55i 
+//Created by Zero aka Taturino. 
+//Creation Date: December 30h, 2002 
+//Thank you and enjoy. 
+//Feel free to hack and slash at your own will. 
+//Please leave this header and give credit to me. 
+//////////////////////////////////////////////////////////// 
+//Update To Old Help Menu, fixed minor bugs.
+//1.Missing SRC. at infomation and version.
+//2.Added timer for stuck.
+//3.Changed help text.
+////////////////////////////////////////////////////////////
+
+[DIALOG d_HELPNew]
+0,0
+resizepic 0 0 2600 607 440 // Curved Grey background
+page 0
+text 180 17 1153 0 // Title
+button 53 54 210 607 0 3 // Serv Status
+text 80 55 1101 1
+button 53 74 210 607 0 5 // Version
+text 80 75 1101 17
+button 30 230 210 211 1 0 1 // Start Stuck
+text 60 230 1104 2
+text 60 250 955 3
+text 60 270 955 4
+button 30 320 210 211 1 0 2 // Start General
+text 60 320 1104 5
+text 60 340 955 6
+text 60 360 955 7
+text 60 380 955 8
+button 280 230 210 211 1 0 4 // Start Harassment
+text 310 230 1104 9 // some one harassing me!!
+text 310 250 955 10 /harrassed
+text 310 270 995 11
+text 240 160 955 12 // Help Pages
+text 20 170 955 13 //------
+text 20 150 955 14 // -----
+text 576 160 955 15 // ||
+text 20 160 955 16 // ||
+ 
+[DIALOG d_HELPNew TEXT]
+Help Menu
+Server Status
+My Character is Stuck :
+-I Am Unable To Move.
+-Do Not Abuse This System.
+General Question :
+-Question About The Shard.
+-Question About Commands.
+-Question About Anything.
+Harrassment Or Rule Breaking
+-Being Harrassed.
+-Someone Breaking A Rule.
+Help Pages
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+||
+||
+Version
+ 
+[DIALOG d_HELPNew BUTTON]
+ONBUTTON=0
+ SRC.SYSMESSAGE Help request aborted.
+ 
+ONBUTTON=1
+ // Stuck was selected
+src.newitem i_tele_delay
+src.act.equip
+ 
+ONBUTTON=2
+ // General Questions was selected
+ SRC.GMPAGE
+ RETURN 1
+ 
+ONBUTTON=4
+ // Harassment was selected
+ SRC.GMPAGE
+ RETURN 1
+ 
+ONBUTTON=3
+ SRC.INFORMATION
+ 
+ONBUTTON=5
+ SRC.VERSION
+ 
+[ITEMDEF i_tele_delay]
+NAME=Teleportation Delay
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+WEIGHT=0
+LAYER=layer_special
+ 
+ON=@Create
+ ATTR=attr_invis|attr_decay
+ MORE1=10
+ MOREP=britain
+ 
+ON=@Equip
+ TIMER=25
+ 
+ON=@Timer
+ if ( <src> )
+  if ( <more1> )
+   src.message <EVAL(<more1>)>
+   more1=<more1>-1
+   TIMER=1
+   return 1
+  else
+   src.GOPLACE <morep>
+  endif
+ endif
+ remove
+ return 1
+[EOF]

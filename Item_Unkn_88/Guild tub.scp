@@ -1,0 +1,38 @@
+///Created For The Uberon Shard///
+///By: Dev Andrew
+///Please Leave This Here and Give Credit To Its Creator
+
+[ITEMDEF i_tub_guild]
+ID=I_dye_tub
+NAME=Guild dye Tub
+
+ON=@CREATE
+COLOR=00
+
+on=@click
+MESSAGE=@00a3a <name>
+return 1
+
+ON=@DCLICK
+	IF (<SRC.MEMORYFINDTYPE.0400.LINK> == <LINK>)
+		SRC.MESSAGE @0770 You've been allowed to Use the TUB.
+		TARGET
+	ELSE
+		SRC.MESSAGE @0790 You Are No Member Of This Guild.
+		RETURN 1
+	ENDIF
+	RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE=@0481 The item must be in your pack, or be your pack
+ELSE
+src.targ.color=<color>
+src.targ.update
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.ISMYPET>)
+src.targ.color=<color>
+src.targ.update

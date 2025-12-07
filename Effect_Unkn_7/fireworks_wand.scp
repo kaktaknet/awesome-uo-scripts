@@ -1,0 +1,97 @@
+//Script Made By Admin EvilMageGuy
+//Description: Fireworks wand like osi, it's newbie
+//Intended for sphere 55i
+[ITEMDEF i_fireworks_wand] 
+ID=0df3 
+NAME=fireworks wand 
+TYPE=t_wand 
+VALUE=70 
+ 
+CATEGORY=Other 
+SUBSECTION=Holiday Gifts 
+DESCRIPTION=Fireworks wand 
+ 
+ON=@Create 
+MORE2={10 30} 
+ATTR=attr_magic|attr_newbie 
+ 
+ON=@CLICK 
+NAME=fireworks wand (<eval <MORE2>> charges) 
+ 
+
+ON=@DCLICK 
+IF (<MORE2>==0) 
+SRC.SYSMESSAGE It seems to be out of charges. 
+RETURN 1 
+ELSE 
+MORE2=(<MORE2>-1) 
+ 
+DORAND 5 
+SRC.NEWITEM=i_fx_sparkle 
+SRC.NEWITEM=i_fx_heal_effect 
+SRC.NEWITEM=i_fx_bless_effect 
+SRC.NEWITEM=i_fx_curse 
+SRC.NEWITEM=i_fx_sparkle_2 
+ENDDO 
+src.act.p=<src.p> 
+//SRC.ACT.EFFECT=0,036e4,7 
+SRC.ACT.NAME=a fireworks display 
+SRC.SOUND=011e 
+SRC.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+SRC.ACT.ATTR=attr_decay|attr_static 
+SRC.ACT.TIMER={9 4} 
+SRC.ACT.NUDGEUP={25 20 35 30} 
+DORAND 4 
+SRC.ACT.MOVE=-1,2 
+SRC.ACT.MOVE=-2,1 
+SRC.ACT.MOVE=-3,3 
+SRC.ACT.MOVE=-3,1 
+ENDDO 
+ 
+DORAND 5 
+SRC.NEWITEM=i_fx_bless_effect 
+SRC.NEWITEM=i_fx_sparkle_2 
+SRC.NEWITEM=i_fx_sparkle 
+SRC.NEWITEM=i_fx_curse 
+SRC.NEWITEM=i_fx_heal_effect 
+ENDDO 
+src.act.p=<src.p> 
+//SRC.ACT.EFFECT=0,036e4,7 
+SRC.ACT.NAME=a fireworks display 
+SRC.SOUND=011f 
+SRC.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+SRC.ACT.ATTR=attr_decay|attr_static 
+SRC.ACT.TIMER={7 5} 
+SRC.ACT.NUDGEUP={15 30 35 25} 
+DORAND 4 
+SRC.ACT.MOVE=-1,-4 
+SRC.ACT.MOVE=-2,-1 
+SRC.ACT.MOVE=-3,-2 
+SRC.ACT.MOVE=-4,-1 
+ENDDO 
+ 
+DORAND 5 
+SRC.NEWITEM=i_fx_sparkle 
+SRC.NEWITEM=i_fx_heal_effect 
+SRC.NEWITEM=i_fx_curse 
+SRC.NEWITEM=i_fx_sparkle_2 
+SRC.NEWITEM=i_fx_bless_effect 
+ENDDO 
+src.act.p=<src.p> 
+//SRC.ACT.EFFECT=0,036e4,7 
+SRC.ACT.NAME=a fireworks display 
+SRC.SOUND=011e 
+SRC.ACT.COLOR={08fd 06 0b 010 015 01a 01f 024 029 02e 033 038 03d 042 047 04e 051 05b 060 065} 
+SRC.ACT.ATTR=attr_decay|attr_static 
+SRC.ACT.TIMER={6 8} 
+SRC.ACT.NUDGEUP={20 30 25 35} 
+DORAND 4 
+SRC.ACT.MOVE=-1,6 
+SRC.ACT.MOVE=-2,5 
+SRC.ACT.MOVE=2,-5 
+SRC.ACT.MOVE=-3,-1 
+ENDDO 
+RETURN 1 
+ENDIF 
+ 
+[EOF]

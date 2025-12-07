@@ -1,0 +1,727 @@
+// NEEDS: POTIONS.SCP come of the new potions still need to be filled in. New strengths of some potions.
+
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Saturday, June 3, 2000
+//
+VERSION=0.55
+
+[ITEMDEF i_keg_potion]
+NAME=empty potion Keg
+ID=i_KEG_WOOD
+TYPE=t_script
+VALUE={200 300}
+WEIGHT=40
+RESOURCES=8 i_BOARD, 1 i_BARREL_TAP, 1 i_BARREL_HOOPS
+SKILLMAKE=TINKERING 65.0,t_tinker_tools
+
+CATEGORY=Provisions - GM Items
+SUBSECTION=Special Items
+DESCRIPTION=Empty Potion Keg
+
+ON=@Create
+	MOREP=0 0 0	//number of potions stored in keg
+	MORE1=0 	//store BASEID of first potion (i_potion_heal)
+	MORE2=0		//store skillvalue off added potion
+
+ON=@DCLICK
+	TARGET What potion would you like to fill the keg with?
+	return 1
+
+ON=@TARGON_ITEM
+	if (<src.action> != -1 )
+		SRC.SYSMESSAGE You can't use this yet!
+		return 1
+	elseif <src.targ.baseid>==i_bottle_empty
+		if 0 >= <morex>
+			SRC.SYSMESSAGE You can't use this on a empty keg!
+			return 1
+		endif
+		if ( <src.targ.topobj.uid> != <src.uid> )
+			SRC.SYSMESSAGE The empty bottle should be in your backpack!
+			return 1
+		endif
+		SRC.SYSMESSAGE You fill an empty bottle.
+		SOUND=snd_Z_END_LIQUID
+		SRC.NEWITEM=<MORE1>
+		SRC.ACT.MORE2=<MORE2> //restore skillvalue 
+		SRC.ACT.ATTR=0
+		SRC.ACT.TIMER=-1
+		SRC.ACT.BOUNCE
+		MOREX=<MOREX> - 1
+		IF (<MOREX> == 0)
+			NAME=	//set original name
+			MORE1=0	//clear potion id	
+			MORE2=0	//clear makeskillvalue
+		ELSE
+			NAME=a <SRC.ACT.NAME> Keg(<MOREX>)
+		ENDIF
+		src.targ.CONSUME 1
+		RETURN 1
+	elseif <SRC.TARG.TYPE> != T_POTION
+		SRC.SYSMESSAGE Thats not a potion!
+		RETURN 1
+	elseif <MORE1> && (<SRC.TARG.BASEID>!=<MORE1>)
+		SRC.SYSMESSAGE You can't mix potion types!
+		RETURN 1
+	elseif (<MOREX> > 99) //max 100 potion
+		SRC.SYSMESSAGE There's no space for further potions!
+		RETURN 1
+	elseif (<MOREX>==0)
+		MORE1=<SRC.TARG.BASEID> // store potion baseid i_potion_xxx
+	elseif (<MORE1>!=<SRC.TARG.BASEID>)
+		SRC.SYSMESSAGE You can't fill up the keg with this potions!
+		RETURN 1
+	endif
+	MORE2=(<MORE2>*<MOREX>)
+	MOREX=(<MOREX> + 1)
+	MORE2=(<MORE2> + <SRC.TARG.MORE2>) //store average makeskillvalue
+	MORE2=(<MORE2> / <MOREX>)
+	NAME=a <SRC.TARG.NAME> Keg(<MOREX>)
+	SRC.SOUND=snd_Z_END_LIQUID
+	SRC.SYSMESSAGE You fill up the keg with a <SRC.TARG.NAME> Potion!
+	SRC.TARG.REMOVE
+	SRC.NEWITEM=i_bottle_empty
+	SRC.ACT.ATTR=0
+	SRC.ACT.TIMER=-1
+	SRC.ACT.BOUNCE
+	return 1
+
+[ITEMDEF i_potion_Agility]
+ID=0f0e
+NAME=Agility
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+
+RESOURCES=i_reag_blood_moss 2, i_bottle_empty
+SKILLMAKE=ALCHEMY 14.9
+
+ON=@Create
+COLOR=00492
+MORE1=s_Agility
+MORE2={ 15.1 60.0 }
+
+[ITEMDEF i_potion_AgilityGreat]
+ID=0f0e
+TYPE=T_POTION
+NAME=Greater Agility
+TDATA1=i_bottle_empty
+
+RESOURCES=i_reag_blood_moss 4, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 34.9
+
+ON=@Create
+COLOR=00492
+MORE1=s_Agility
+MORE2={ 70.1 80.0 }
+
+[ITEMDEF i_potion_CureLess]
+ID=0f0e
+TYPE=T_POTION
+NAME=Lesser Cure
+TDATA1=i_bottle_empty
+
+RESOURCES=i_reag_garlic, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 9.9
+
+ON=@Create
+COLOR=0054e
+MORE1=s_Cure
+MORE2=40.0
+
+[ITEMDEF i_potion_Cure]
+NAME=Cure
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+
+RESOURCES=i_reag_garlic 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 24.9
+
+ON=@Create
+COLOR=0054e
+MORE1=s_Cure
+MORE2=60.0
+
+[ITEMDEF i_potion_CureGreat]
+NAME=Greater Cure
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+
+RESOURCES=i_reag_garlic 5, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 44.9
+
+ON=@Create
+COLOR=0054e
+MORE1=s_archcure
+MORE2=90.0
+
+[ITEMDEF i_potion_ExplosionLess]
+NAME=Lesser Explosion
+ID=0f0e
+TYPE=T_POTION
+TDATA1=0
+RESOURCES=i_reag_sulfur_ash 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 39.9
+
+ON=@Create
+COLOR=0007d
+MORE1=s_explosion
+MORE2=50.0
+
+[ITEMDEF i_potion_Explosion]
+NAME=Explosion
+ID=0f0e
+TYPE=T_POTION
+TDATA1=0
+RESOURCES=i_reag_sulfur_ash 6, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 59.9
+
+ON=@Create
+COLOR=0007d
+MORE1=s_explosion
+MORE2=80.0
+
+[ITEMDEF i_potion_ExplosionGreat]
+NAME=Greater Explosion
+ID=0f0e
+TYPE=T_POTION
+TDATA1=0
+RESOURCES=i_reag_sulfur_ash 10, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 79.9
+
+ON=@Create
+COLOR=0007e
+MORE1=s_explosion
+MORE2=130.0
+
+[ITEMDEF i_potion_HealLess]
+NAME=Lesser Heal
+ID=0f0e
+RESOURCES=i_reag_ginseng 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 19.9
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+
+ON=@Create
+COLOR=00037
+MORE1=s_heal
+MORE2=40.0
+
+[ITEMDEF i_potion_Heal]
+NAME=Heal
+ID=0f0e
+RESOURCES=i_reag_ginseng 4, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 49.9
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+
+ON=@Create
+COLOR=00037
+MORE1=s_greater_heal
+MORE2=60.0
+
+[ITEMDEF i_potion_HealGreat]
+NAME=Greater Heal
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_ginseng 6, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 69.9
+
+ON=@Create
+COLOR=0078d
+MORE1=s_greater_heal
+MORE2=90.0
+
+[ITEMDEF i_potion_Nightsight]
+NAME=Nightsight
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_spider_silk 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 29.9
+
+ON=@Create
+COLOR=11111
+MORE1=s_night_sight
+MORE2=100.0
+
+[ITEMDEF i_potion_PoisonLess]
+NAME=Lesser Poison
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_nightshade 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 29.9
+
+ON=@Create
+COLOR=0055b
+MORE1=s_poison
+MORE2=40.0
+
+[ITEMDEF i_potion_Poison]
+NAME=Poison
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_nightshade 4, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 54.9
+
+ON=@Create
+COLOR=0055b
+MORE1=s_poison
+MORE2=50.0
+
+[ITEMDEF i_potion_PoisonGreat]
+NAME=Greater Poison
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_nightshade 6, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 79.9
+
+ON=@Create
+COLOR=0055b
+MORE1=s_poison
+MORE2=90.0
+
+[ITEMDEF i_potion_PoisonDeadly]
+NAME=Deadly Poison
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_nightshade 10, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 98.9
+
+ON=@Create
+COLOR=006f8
+MORE1=s_poison
+MORE2=110.0
+
+[ITEMDEF i_potion_Refresh]
+NAME=Refresh
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_black_pearl, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 0
+
+ON=@Create
+MORE1=s_Refresh
+MORE2=50.0
+
+[ITEMDEF i_potion_RefreshTotal]
+ID=0f0e
+NAME=Total Refresh
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_black_pearl 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 29.9
+
+ON=@Create
+MORE1=s_Refresh
+MORE2=100.0
+
+[ITEMDEF i_potion_Strength]
+ID=0f0e
+NAME=Strength
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_mandrake_root 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 34.9
+
+ON=@Create
+COLOR=00750
+MORE1=s_strength
+MORE2=60.0
+
+[ITEMDEF i_potion_StrengthGreat]
+NAME=Greater Strength
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_mandrake_root 4, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 49.9
+
+ON=@Create
+COLOR=0074c
+MORE1=s_strength
+MORE2=100.0
+
+// These are custom potions
+
+[ITEMDEF i_potion_shrink]
+DEFNAME=i_potion_shrink
+ID=0f0e
+NAME=Shrink Potion
+VALUE=1000
+TYPE=t_normal
+TDATA1=i_bottle_empty
+WEIGHT=1
+RESOURCES=i_reag_spider_silk 10, i_reag_dead_wood 5, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 98.9
+
+CATEGORY=Provisioners - Alchemy & Magic
+SUBSECTION=Potions
+DESCRIPTION=Potion of Shrink
+
+ON=@CREATE
+COLOR=004ff
+
+ON=@DROPON_CHAR
+SAY Double click the potion to shrink your pet!
+
+ON=@DCLICK
+IF <CONT.UID>!=<SRC.FINDLAYER(21).UID>
+SRC.MESSAGE The potion is not at hand!
+RETURN 1
+ENDIF
+IF <AMOUNT>>1
+SRC.MESSAGE You have to seperate this from the stack to use it
+RETURN 1
+ENDIF
+
+TARGET What do you want to shrink? Make sure it is a pet.
+return 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE Items cannot be shrunk!
+return 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.BODY>==c_man) || (<SRC.TARG.BODY>==c_woman) || (<SRC.TARG.NPC>==0)
+src.sysmessage You can not shrink a human!
+return 1
+elseif <src.targ.flags>&statf_conjured
+src.sysmessage You cannot shrink summoned pets!
+return 1
+elseif <src.targ.flags>&statf_war
+src.sysmessage Your pet is too angry to shrink.
+return 1
+elseif <src.targ.ismypet>
+src.targ.shrink
+src.sysmessage Your pet, <src.targ.name>, has been shrunk.
+remove
+return 0
+else
+src.sysmessage <src.targ.name>, This is not your pet!
+return 1
+
+[ITEMDEF i_potion_Invisibility]
+ID=0f0e
+NAME=Invisibility
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_obsidian 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 69.9
+
+ON=@Create
+COLOR=0083a
+MORE1=s_invisibility
+MORE2=100.0
+COLOR=COLOR_SPECTRAL
+
+[ITEMDEF i_potion_Mana]
+ID=0f0e
+NAME=Mana Refresh
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_eye_of_newt 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 64.9
+
+ON=@Create
+COLOR=000c0
+MORE1=s_mana
+MORE2=50.0
+COLOR=color_gray_lt
+
+[ITEMDEF i_potion_ManaTotal]
+ID=0f0e
+NAME=Total Mana Refresh
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_eye_of_newt 6, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 89.9
+
+ON=@Create
+COLOR=0005d
+MORE1=s_mana
+MORE2=100.0
+COLOR=color_gray_lt
+
+// Extended potions.
+
+[ITEMDEF i_beastform_timer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=A beastform potion timer
+
+ON=@TIMER
+LINK.BODY=<LINK.OBODY>
+LINK.RESEND
+LINK.SYSMESSAGE Your muscles ache as you regain your true form.
+IF (<EVAL(<LINK.STAM>-20)> > 5000)
+	LINK.STAM=0
+ELSE
+	LINK.STAM=<EVAL(<LINK.STAM>-{15 20})>
+ENDIF
+REMOVE
+RETURN 1
+
+[ITEMDEF i_potion_Beastform]
+ID=0f0e
+NAME=Beastform Potion
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+
+RESOURCES=i_reag_blood_moss 3, i_reag_ginseng 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 64.9
+
+ON=@CREATE
+COLOR=0005b
+
+ON=@DCLICK
+IF (<TOPOBJ.UID>!=<SRC.UID>)
+	SRC.SYSMESSAGE You need to have the potion in your pack to use it!
+	RETURN 1
+ENDIF
+IF !(<SRC.BODY> == <SRC.OBODY>)
+	SRC.SYSMESSAGE You can only drink this in your original shape!
+	RETURN 1
+ENDIF
+IF (<SRC.RESTEST 1 i_beastform_timer>)
+	SRC.SYSMESSAGE You have to wait to drink another of this kind of potion.
+	RETURN 1
+ENDIF
+SRC.CONSUME 1 i_potion_beastform
+DORAND 29
+SRC.BODY=c_dog
+SRC.BODY=c_cat
+SRC.BODY=c_horse_brown_dk
+SRC.BODY=c_chicken
+SRC.BODY=c_rat_giant
+SRC.BODY=c_spider_giant
+SRC.BODY=c_alligator
+SRC.BODY=c_gorilla
+SRC.BODY=c_bullfrog
+SRC.BODY=c_eagle
+SRC.BODY=c_bird_crow
+SRC.BODY=c_bird
+SRC.BODY=c_toad_giant
+SRC.BODY=c_headless
+SRC.BODY=c_rat
+SRC.BODY=c_bear_brown
+SRC.BODY=c_llama
+SRC.BODY=c_snake
+SRC.BODY=c_rabbit
+SRC.BODY=c_ostard_desert
+SRC.BODY=c_ostard_forest
+SRC.BODY=c_panther
+SRC.BODY=c_walrus
+SRC.BODY=c_goat
+SRC.BODY=c_bear_polar
+SRC.BODY=c_doe
+SRC.BODY=c_pig_big
+SRC.BODY=c_sheep_woolly
+ENDDO
+SRC.RESEND
+SRC.NEWITEM i_beastform_timer
+SRC.ACT.CONT=<SRC.UID>
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.TIMER=<EVAL(60+(<SRC.ALCHEMY>/20)+{1 30})>
+
+[ITEMDEF i_potion_Restore]
+// This potion increases both your hit points and your stamina.
+RESOURCES=i_reag_black_pearl, i_reag_mandrake_root, i_bottle_EMPTY
+ID=0f0e
+NAME=Restoration
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+SKILLMAKE=ALCHEMY 44.9
+
+ON=@Create
+COLOR=0003d
+MORE1=s_Restore
+MORE2=50.0
+
+[ITEMDEF i_potion_Restore_Great]
+// This potion increases both your hit points and your stamina.
+RESOURCES=i_reag_black_pearl 2, i_reag_mandrake_root 3, i_bottle_EMPTY
+ID=0f0e
+NAME=Greater Restoration
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+SKILLMAKE=ALCHEMY 74.9
+
+ON=@Create
+COLOR=0003d
+MORE1=s_Restore
+MORE2=100.0
+
+[ITEMDEF i_potion_Sustenance]
+// This potion serves to fill you up. (Remember, healing rate depends on how well fed you are!)
+// It comes in multiple strengths:
+// Greater: RESOURCES=i_reag_ginseng 2, i_reag_mandrake_root 2, i_bottle_EMPTY
+NAME=Sustenance
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_ginseng, i_reag_mandrake_root, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 34.9
+
+ON=@Create
+COLOR=0065c
+MORE1=s_Sustenance
+MORE2=60.0
+
+[ITEMDEF i_potion_Monster]
+// This potion polymorphs you into a monster for a while.
+// The monster it turns you into is determined when you make the potion (you can use taste id to determine which animal it does).
+NAME=Monster form
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_blood_moss, i_reag_mandrake_root, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 84.9
+
+ON=@Create
+MORE1=s_Monster_Form
+MORE2=100.0
+
+[ITEMDEF i_potion_Steelskin]
+// This potion turns your skin into steel, giving a boost to your AR.
+NAME=Steelskin
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_garlic,2 i_reag_ginseng, 2 i_reag_mandrake_root, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 59.9
+
+ON=@Create
+COLOR=00961
+MORE1=s_Steelskin
+MORE2=100.0
+
+[ITEMDEF i_potion_Stoneskin]
+// This potion turns your skin into stone, giving a boost to your AR.
+NAME=Stoneskin
+ID=0f0e
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_Garlic, i_reag_ginseng, i_reag_mandrake_root, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 39.9
+
+ON=@Create
+MORE1=s_Stoneskin
+MORE2=100.0
+
+
+[ITEMDEF i_potion_resurrect]
+ID=0f0e
+NAME=Elixir of Life
+TYPE=t_eq_script
+
+RESOURCES=i_reag_eye_of_newt 3, i_reag_batwing 5, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 99.9
+
+ON=@Create
+COLOR=00437
+
+ON=@DCLICK
+IF (<DISTANCE> > 2) && (<CANSEELOS>)
+	SRC.SYSMESSAGE You must be closer to the potion to be able to use it!
+	RETURN 1
+ENDIF
+TARGET Whom do you wish to resurrect?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.TYPE> == t_corpse)
+	SRC.SYSMESSAGE You can only use this on a body!
+	RETURN 1
+ENDIF
+IF !(<SRC.TARG.LINK.FLAGS>&statf_dead)
+	SRC.SYSMESSAGE That creature cannot be resurrected!
+	RETURN 1
+ENDIF
+IF (<SRC.TARG.LINKDISTANCE> > 3)
+	SRC.SYSMESSAGE The soul has wandered too far from the body to be able to be resurrected!
+	RETURN 1
+ENDIF
+SRC.TARG.LINK.RESURRECT
+SRC.EMOTE pour the potion down <SRC.TARG.LINK.NAME>'s throat
+SRC.NEWITEM i_bottle_empty
+SRC.ACT.BOUNCE
+REMOVE
+RETURN 0
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE That is not a body!
+RETURN 1
+
+//============================================== - Int Potion
+
+[ITEMDEF i_potion_forgetfull]
+ID=0f0e
+TYPE=T_POTION
+NAME=Forgetfull Potion
+TDATA1=i_bottle_empty
+
+RESOURCES=10 i_reag_nightshade, 10 i_reag_worm_heart, i_bottle_empty
+SKILLMAKE=ALCHEMY 99.0
+
+ON=@CREATE
+COLOR=00685
+
+ON=@DCLICK
+SRC.INT=<SRC.INT>+-1
+SRC.CONSUME=1 i_potion_forgetfull
+
+//============================================== - Dex Potion
+
+[ITEMDEF i_potion_stumble]
+ID=0f0e
+TYPE=T_POTION
+NAME=Stumble Potion
+TDATA1=i_bottle_empty
+
+RESOURCES=10 i_reag_mandrake_root, 10 i_reag_serpent_scale, i_bottle_empty
+SKILLMAKE=ALCHEMY 99.0
+
+ON=@CREATE
+COLOR=00704
+
+ON=@DCLICK
+SRC.DEX=<SRC.DEX>+-1
+SRC.CONSUME=1 i_potion_stumble
+
+//============================================== - Str Potion
+
+[ITEMDEF i_potion_weakness]
+ID=0f0e
+TYPE=T_POTION
+NAME=Weakness Potion
+TDATA1=i_bottle_empty
+
+RESOURCES=10 i_reag_garlic, 10 i_reag_dragon_blood, i_bottle_empty
+SKILLMAKE=ALCHEMY 99.0
+
+
+ON=@CREATE
+COLOR=008b8
+
+ON=@DCLICK
+SRC.STR=<SRC.STR>+-1
+SRC.CONSUME=1 i_potion_weakness
+
+
+[EOF]

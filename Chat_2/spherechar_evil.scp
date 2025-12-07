@@ -1,0 +1,4749 @@
+// ****************************************************************************
+// sphere by : menasoft ©1997-2000
+// www.sphereserver.com
+// all sphere script files and formats are copyright menasoft & partners.
+// this file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// menasoft & partners.  all donations and contributions
+// become the property of menasoft & partners.
+// ****************************************************************************
+// file last updated: thursday, june 29, 2000
+version=0.54
+
+[CHARDEF 0900]
+DEFNAME=c_m_skeletonarcher
+NAME=a skeletal archer
+ID=c_skeleton_w_axe
+CAN=mt_run|mt_equip|mt_walk|mt_run|mt_equip
+
+DAM=2
+ARMOR=20
+RESOURCES=8 i_reag_bone
+FOODTYPE=
+////alignment=evil
+TEVENTS=e_undead
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=skeleton archer
+
+ON=@CREATE
+TAG.LLL 2
+NPC=brain_undead
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+archery={100.0 250.0}
+parrying={45.0 55.0}
+magicresistance={45.0 60.0}
+tactics={45.0 60.0}
+wrestling={45.0 55.0}
+
+FAME={100 2000}
+KARMA={-1999 -4999}
+
+ON=@NPCRESTOCK
+ITEM=i_bow
+ITEM=rich_undead_backpack
+ITEM=i_arrow,{10 70}
+ITEM={ random_gold_pile 1 0 2 }
+ITEM={ i_bone_chest 1 i_bone_leggings 1 i_bone_arms 1 i_bone_gloves 1 i_bone_helmet 1 0 5 }
+
+[CHARDEF 01011]
+DEFNAME=c_m_dragon_ice
+NAME=an ice dragon
+ID=c_dragon_red
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_run
+DAM=20
+ARMOR=50
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+RESOURCES=99 i_ribs_raw,8 i_reag_dragon_blood,20 i_hide
+//shelter==r_caves,
+AVERSIONS=r_civilization,R_water
+TEVENTS=e_liches
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=ice dragon
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+NPC=brain_dragon
+COLOR=color_ice
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+////alignment=evil
+//spell_circle=7,8
+
+parrying={55.0 95.0}
+magery={99.0 100.0}
+magicresistance={99.0 100.0}
+tactics={99.0 100.0}
+wrestling={90.0 93.0}
+taming=100.0
+
+FAME={3000 9000}
+KARMA={-4999 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_ice_dragon
+
+[CHARDEF 01012]
+DEFNAME=c_m_elem_blood
+NAME=a blood elemental
+ID=c_elem_water
+SOUND=snd_elementl_watrel1
+DAM=20
+ARMOR=50
+RESOURCES=
+CAN=mt_run|mt_equip|mt_walk
+//shelter==
+DESIRES=
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+CATEGORY=Monsters
+SUBSECTION=elementals
+DESCRIPTION=blood elemental
+
+ON=@CREATE
+TAG.LLL 5
+NPC=brain_monster
+COLOR=colors_blood
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+////alignment=evil
+spellcircles=6,7
+
+parrying={85.0 95.0}
+magery={85.0 100.0}
+magicresistance={80.0 95.0}
+tactics={80.0 100.0}
+wrestling={80.0 100.0}
+
+FAME={1000 2000}
+KARMA={-5000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_elem_blood
+
+
+[CHARDEF 01013]
+DEFNAME=c_ice_snake
+NAME=an ice snake
+ID=c_snake
+SOUND=snd_animals_snake1
+DAM=2,14
+ARMOR=15
+RESOURCES=1 i_ribs_raw
+CAN=mt_run|mt_equip|mt_walk
+DESIRES=i_gold
+//shelter==r_caves,
+
+CATEGORY=animals
+SUBSECTION=land (wild)
+DESCRIPTION=ice snake
+
+ON=@CREATE
+NPC=brain_monster
+COLOR=color_ice
+STR={42 54}
+DEX={36 45}
+INT={26 30}
+////alignment=evil
+
+parrying={15.0 25.0}
+magicresistance={15.0 20.0}
+tactics={39.0 54.0}
+wrestling={39.0 54.0}
+
+ON=@NPCRESTOCK
+ITEM=loot_ice_snake
+
+[CHARDEF 01014]
+DEFNAME=c_lava_snake
+NAME=a lava snake
+ID=c_snake
+SOUND=snd_animals_snake1
+DAM=4,8
+ARMOR=12
+RESOURCES=1 i_ribs_raw
+CAN=mt_run|mt_equip|mt_walk|mt_fire_immune
+//shelter==r_caves,,R_desert
+DESIRES=i_gold
+
+DESCRIPTION=lava snake
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+NPC=brain_monster
+COLOR=colors_lava
+STR={43 55}
+DEX={16 25}
+INT={6 10}
+////alignment=evil
+
+parrying={15.0 25.0}
+magicresistance={15.0 20.0}
+tactics={19.0 34.0}
+wrestling={19.0 34.0}
+
+FAME=40
+KARMA={-300 -599}
+
+[CHARDEF 01015]
+DEFNAME=c_a_direwolf
+NAME=a dire wolf
+ID=c_wolf
+DAM=45,22
+ARMOR=11
+RESOURCES=6 i_ribs_raw, 4 i_fur_dark
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+//shelter==r_forests,R_caves
+DESIRES=c_a_direwolf
+AVERSIONS=r_civilization
+
+DESCRIPTION=dire wolf
+SUBSECTION=land (wild)
+CATEGORY=animals
+
+ON=@CREATE
+NPC=brain_animal
+STR={75 150}
+DEX={153 172}
+INT={51 90}
+
+parrying={63.0 75.0}
+magicresistance={58.0 75.0}
+tactics={50.0 70.0}
+wrestling={60.0 80.0}
+taming=90.0
+
+FAME=150
+KARMA={-600 -999}
+
+[CHARDEF 01016]
+DEFNAME=c_m_wyvern
+NAME=a wyvern
+ID=c_dragon_red
+DAM=20
+ARMOR=50
+RESOURCES=50 i_ribs_raw, 20 i_hide
+FOODTYPE=25 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_civilization,R_water
+TEVENTS=e_liches
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=wyvern
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+NPC=brain_dragon
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+////alignment=evil
+
+parrying={80.0 99.0}
+magicresistance={65.0 80.0}
+tactics={80.0 99.0}
+wrestling={65.0 80.0}
+poisoning=500.0
+
+FAME={3000 9000}
+KARMA={-5000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_wyvern
+
+[CHARDEF 01017]
+DEFNAME=c_m_hellhound
+NAME=a hell hound
+ID=c_wolf
+SOUND=snd_animals_wolf1
+DAM=2
+ARMOR=20
+CAN=mt_run|mt_equip|mt_walk|mt_fire_immune
+
+RESOURCES=6 i_ribs_raw
+FOODTYPE=15 t_meat_raw
+//shelter==r_caves
+DESIRES=c_m_hellhound,c_daemon,c_daemon_w_sword
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=hell hound
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+NPC=brain_monster
+COLOR=colors_red
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+
+parrying={63.0 75.0}
+magicresistance={58.0 75.0}
+tactics={50.0 70.0}
+wrestling={60.0 80.0}
+taming=90.0
+magery={60.0 90.0}
+
+FAME={800 1800}
+KARMA={-3000 -3999}
+
+itemnewbie=i_spellbook
+addspell=s_fireball
+
+ON=@NPCRESTOCK
+container=i_backpack
+ITEM=i_reag_sulfur_ash,{1 5}
+
+[CHARDEF 01018]
+DEFNAME=c_m_elem_ice
+NAME=an ice elemental
+ID=c_elem_earth
+SOUND=snd_elementl_erthel1
+ICON=i_pet_elem_earth
+DAM=2
+ARMOR=30
+CAN=mt_run|mt_equip|mt_walk
+RESOURCES=8 t_magic
+//shelter==r_caves,R_mountains
+DESIRES=r_caves
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+COLOR=color_ice
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+////alignment=evil
+
+parrying={40.0 65.0}
+magicresistance={40.0 95.0}
+tactics={70.0 100.0}
+wrestling={60.0 100.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-3000 -3999}
+
+ON=@NPCRESTOCK
+ITEM=loot_elem_ice
+
+CATEGORY=Monsters
+SUBSECTION=elementals
+DESCRIPTION=ice elemental
+
+[CHARDEF 01019]
+DEFNAME=c_m_icefiend
+NAME=an ice fiend
+ID=c_daemon
+SOUND=snd_monster_daemon1
+ICON=i_pet_daemon
+DAM=8
+ARMOR=40
+RESOURCES=9 i_ribs_raw, 8 i_reag_daemon_bone
+CAN=mt_run|mt_equip|mt_fly|mt_walk
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_civilization,R_water
+TEVENTS=e_liches
+CATEGORY=Monsters
+SUBSECTION=daemons & gargoyles
+DESCRIPTION=ice fiend
+TEVENTS=e_liches
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+COLOR=color_ice
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+////alignment=evil
+//spellcircles=5,7
+
+parrying={75.0 85.0}
+magery={80.0 90.0}
+magicresistance={80.0 90.0}
+tactics={80.0 90.0}
+wrestling={80.0 100.0}
+TAG.LLL 4
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_ice_fiend
+
+[CHARDEF 01020]
+DEFNAME=c_m_stoneharpy
+NAME=a stone harpy
+ID=c_harpy
+SOUND=snd_monster_harpy1
+ICON=i_pet_harpy
+CAN=mt_run|mt_equip|mt_fly|mt_walk|mt_female
+DAM=2
+ARMOR=30
+RESOURCES=3 i_ribs_raw, 50 i_feather, 5 tm_rocks
+FOODTYPE=5 t_meat_raw, 5 t_arock
+DESIRES=i_gold, t_arock, c_harpy
+//shelter==r_forests,R_mountains
+AVERSIONS=r_water,R_civilization
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+NPC=brain_monster
+COLOR=color_rock
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+////alignment=evil
+FAME={300 1000}
+KARMA={-4000 -4999}
+
+parrying={75.0 90.0}
+magicresistance={50.0 65.0}
+tactics={70.0 100.0}
+wrestling={60.0 90.0}
+
+ON=@NPCRESTOCK
+ITEM=loot_stone_harpy
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=stone harpy
+
+[CHARDEF 01021]
+DEFNAME=c_m_mongbat_arboreal
+//DEFNAME2=c_m_mongbat_1
+NAME=a mongbat
+ID=c_mongbat
+SOUND=snd_monster_mngbat1
+ICON=i_pet_mongbat
+
+DAM=4
+ARMOR=10
+RESOURCES=3 i_ribs_raw
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+FOODTYPE=5 t_meat_raw
+//shelter==r_forests,R_jungle,R_swamp
+DESIRES=i_gold
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+parrying={25.0 38.0}
+magicresistance={5.0 14.0}
+tactics={5.0 10.0}
+wrestling={5.0 10.0}
+taming=5.0
+
+NPC=brain_monster
+
+FAME={100 300}
+KARMA={-1000 -1999}
+
+ON=@NPCRESTOCK
+ITEM=loot_mongbat
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=arboreal mongbat
+
+[CHARDEF 01022]
+DEFNAME=c_m_mummy
+NAME=a mummy
+ID=c_zombie
+SOUND=snd_monster_ghost1
+ICON=i_pet_zombie
+DAM=8
+ARMOR=30
+RESOURCES=7 t_eerie_stuff
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+DESIRES=i_gold
+TEVENTS=e_undead
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+NPC=brain_undead
+COLOR=color_rock
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={20.0 60.0}
+magicresistance={15.0 40.0}
+tactics={35.0 50.0}
+wrestling={35.0 50.0}
+
+FAME={100 2000}
+KARMA={-4000 -4999}
+
+ON=@NPCRESTOCK
+ITEM=loot_mummy
+
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=mummy
+
+[CHARDEF 01023]
+DEFNAME=c_m_imp
+NAME=an imp
+ID=c_mongbat
+SOUND=snd_monster_mngbat1
+ICON=i_pet_mongbat
+DAM=2
+ARMOR=20
+RESOURCES=3 i_ribs_raw, 6 i_hide
+CAN=mt_run|mt_equip|mt_fly|mt_walk
+FOODTYPE=9 t_meat_raw
+DESIRES=c_m_imp
+//shelter==r_caves
+AVERSIONS=r_civilization,R_water
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=color_red1
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+//spellcircles=2,4
+
+parrying={50.0 60.0}
+magery={40.0 60.0}
+magicresistance={35.0 50.0}
+tactics={55.0 70.0}
+wrestling={60.0 75.0}
+taming=90.0
+
+NPC=brain_monster
+
+FAME={100 300}
+KARMA={-2000 -2999}
+
+ON=@NPCRESTOCK
+ITEM=loot_imp
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=imp
+
+[CHARDEF 01024]
+DEFNAME=c_m_kraken
+NAME=a kraken
+ID=c_corpser
+SOUND=snd_monster_corpsr1
+ICON=i_pet_corpser
+
+DAM=20
+ARMOR=50
+RESOURCES=10 t_eerie_stuff
+
+////alignment=chaotic
+CAN=mt_run|mt_equip|mt_walk|mt_swim
+FOODTYPE=24 t_meat_raw
+AVERSIONS=r_civilization
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+COLOR=01e9
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying={15.0 25.0}
+magicresistance={15.0 20.0}
+tactics={45.0 60.0}
+wrestling={45.0 60.0}
+hiding=75.0
+
+NPC=brain_monster
+
+FAME={200 1000}
+KARMA={-5000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_kraken
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=kraken
+
+[CHARDEF 01025]
+DEFNAME=c_m_dragon_wyrm
+//DEFNAME2=c_m_wyrm
+NAME=a wyrm
+ID=c_dragon_green
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+TEVENTS=e_liches
+DAM=20
+ARMOR=50
+RESOURCES=99 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+TEVENTS=e_liches
+////alignment=chaotic
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+//spellcircles=4,8
+FOODTYPE=80 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_civilization,R_water
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+COLOR=colors_wyrm
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying={55.0 95.0}
+magery=99.0
+magicresistance={99.0 100.0}
+tactics={98.0 100.0}
+wrestling={90.0 93.0}
+
+NPC=brain_dragon
+
+FAME={3000 9000}
+KARMA={-6000 -6999}
+
+ON=@NPCRESTOCK
+ITEM=loot_ancient_wyrm
+
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=wyrm
+
+[CHARDEF 01028]
+DEFNAME=c_m_balron
+NAME=a balron
+ID=c_daemon_w_sword
+SOUND=snd_monster_daemon1
+ICON=i_pet_dragon
+DAM=20
+ARMOR=50
+RESOURCES=9 i_ribs_raw, 8 i_reag_daemon_bone
+TEVENTS=e_liches
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+//spellcircles=6,8
+//shelter==,R_caves
+DESIRES=c_daemon,i_gold,t_wand
+AVERSIONS=r_water,R_mountains
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+COLOR=colors_daemon
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying={90.0 100.0}
+magery={90.0 100.0}
+magicresistance={90.0 100.0}
+tactics={90.0 100.0}
+wrestling={90.0 100.0}
+
+NPC=brain_monster
+
+FAME=30000
+KARMA=-11000
+
+ON=@NPCRESTOCK
+ITEM=loot_balron
+
+CATEGORY=Monsters
+SUBSECTION=daemons & gargoyles
+DESCRIPTION=balron
+
+[CHARDEF 01033]
+DEFNAME=c_m_gargoyle_stone
+NAME=a stone gargoyle
+ID=c_gargoyle
+SOUND=snd_monster_gargyl1
+ICON=i_pet_garg
+CAN=mt_run|mt_equip|mt_walk|mt_fly
+TEVENTS=e_liches
+DAM=8
+ARMOR=30
+RESOURCES=8 i_ribs_raw, 5 tm_rocks
+FOODTYPE=2 t_arock, 2 t_meat_raw
+DESIRES=c_m_gargoyle_stone,c_gargoyle,t_bone,i_gold,t_wand
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+//shelter==r_caves,
+AVERSIONS=r_civilization
+
+ON=@CREATE
+TAG.LLL 3
+COLOR=color_rock
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+////alignment=evil
+//spellcircles=3,6
+
+parrying={55.0 65.0}
+magery={50.0 65.0}
+magicresistance={50.0 65.0}
+tactics={50.0 70.0}
+wrestling={50.0 70.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-3000 -3999}
+
+ON=@NPCRESTOCK
+ITEM=loot_stone_gargoyle
+
+CATEGORY=Monsters
+SUBSECTION=daemons & gargoyles
+DESCRIPTION=stone gargoyle
+
+[CHARDEF 01034]
+DEFNAME=c_m_gazer_elder
+NAME=an elder gazer
+ID=c_gazer
+SOUND=snd_monster_gazer1
+CAN=mt_run|mt_equip|mt_walk
+DAM=8
+ARMOR=30
+RESOURCES=8 i_ribs_raw
+DESIRES=c_gazer
+//shelter==r_caves
+AVERSIONS=r_civilization
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+////alignment=evil
+//spellcircles=3,5
+
+parrying={55.0 65.0}
+magery={90.0 100.0}
+magicresistance={85.0 100.0}
+tactics={80.0 100.0}
+wrestling={80.0 100.0}
+
+NPC=brain_monster
+
+FAME={600 5000}
+KARMA={-4000 -4999}
+
+ON=@NPCRESTOCK
+ITEM=loot_elder_gazer
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=elder gazer
+
+[CHARDEF 01035]
+DEFNAME=c_m_frostooze
+NAME=a frosty ooze
+ID=c_slime
+SOUND=snd_monster_slime1
+DAM=1
+ARMOR=10
+RESOURCES=3 t_eerie_stuff
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=35 t_meat_raw
+//shelter==r_caves,
+DESIRES=c_m_frostooze,c_slime
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=color_snow
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+////alignment=evil
+
+parrying={15.0 21.0}
+magicresistance={15.0 20.0}
+tactics={19.0 34.0}
+wrestling={19.0 34.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-4000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_slime
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=frost ooze
+
+[CHARDEF 01036]
+DEFNAME=c_m_hellcat
+NAME=a hellcat
+ID=c_panther
+SOUND=snd_animals_panther1
+ICON=i_pet_panther_2
+DAM=1
+ARMOR=10
+RESOURCES=6 i_ribs_raw,2 i_fur_dark
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=2 t_meat_raw
+DESIRES=c_m_hellcat,c_daemon,c_daemon_w_sword
+//shelter==r_caves
+AVERSIONS=r_water,R_civilization
+DESCRIPTION=hellcat
+SUBSECTION=miscellaneous
+CATEGORY=Monsters
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_red
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+////alignment=evil
+
+parrying={23.0 45.0}
+magicresistance={15.0 30.0}
+tactics={9.0 18.0}
+wrestling={9.0 18.0}
+taming=80.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-1000 -1999}
+
+[CHARDEF 01037]
+DEFNAME=c_m_hellcat_pred
+NAME=a predator hellcat
+ID=c_panther
+SOUND=snd_animals_panther1
+ICON=i_pet_panther_2
+
+DAM=8
+ARMOR=30
+RESOURCES=6 i_ribs_raw,4 i_fur_dark
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+//shelter==r_caves
+DESIRES=c_m_hellcat_pred
+AVERSIONS=r_civilization,R_water
+DESCRIPTION=predator hellcat
+SUBSECTION=miscellaneous
+CATEGORY=Monsters
+
+ON=@CREATE
+TAG.LLL 3
+COLOR=colors_red
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={55.0 65.0}
+magicresistance={15.0 30.0}
+tactics={50.0 65.0}
+wrestling={50.0 65.0}
+taming=95.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-3000 -3999}
+
+[CHARDEF 01038]
+DEFNAME=c_m_efreet
+NAME=an efreet
+ID=c_elem_air
+SOUND=snd_elementl_airelem1
+ICON=i_pet_elem_air
+DAM=8
+ARMOR=30
+RESOURCES=8 t_magic
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=
+//shelter==r_mountains
+DESIRES=r_mountains
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+COLOR=color_rock
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+////alignment=evil
+//spellcircles=2,5
+
+parrying={65.0 75.0}
+magery={60.0 75.0}
+magicresistance={60.0 75.0}
+tactics={60.0 80.0}
+wrestling={60.0 80.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-3000 -3999}
+
+ON=@NPCRESTOCK
+ITEM=loot_efreet
+
+CATEGORY=Monsters
+SUBSECTION=elementals
+DESCRIPTION=efreet
+
+[CHARDEF 01039]
+DEFNAME=c_m_nightmare
+NAME=a nightmare
+ID=c_horse_brown_dk
+SOUND=snd_animals_horse1
+ICON=i_pet_horse_brown_dk
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+DAM=20
+ARMOR=50
+RESOURCES=25 i_ribs_raw,10 i_hide
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=5 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_civilization,R_water
+
+ON=@CREATE
+TAG.LLL 5
+COLOR=colors_black
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying={55.0 95.0}
+magicresistance={99.0 100.0}
+tactics={98.0 100.0}
+wrestling={90.0 93.0}
+taming=100.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_nightmare
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=nightmare
+
+[CHARDEF 01040]
+DEFNAME=c_m_ogre_lord
+NAME=an ogre lord
+ID=c_ogre
+SOUND=snd_monster_ogre1
+ICON=i_pet_ogre_2
+
+DAM=20
+ARMOR=75
+RESOURCES=10 i_ribs_raw
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+//shelter==r_forests,R_mountains
+DESIRES=c_ogre
+AVERSIONS=r_civilization
+
+ON=@CREATE
+TAG.LLL 5
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying={75.0 85.0}
+magicresistance={65.0 80.0}
+tactics={90.0 100.0}
+wrestling={90.0 100.0}
+
+NPC=brain_monster
+
+FAME=30000
+KARMA=-11000
+
+ON=@NPCRESTOCK
+ITEM=loot_orge_lord
+
+CATEGORY=Monsters
+SUBSECTION=ettins, ogres, trolls, cyclops, and titans
+DESCRIPTION=ogre lord
+
+[CHARDEF 01041]
+DEFNAME=c_m_liche_lord
+NAME=a liche lord
+ID=c_liche
+ICON=i_pet_lich
+
+DAM=20
+ARMOR=50
+RESOURCES=
+
+CAN=mt_run|mt_equip|mt_walk
+DESIRES=t_bone,i_gold,t_wand,t_reagent,e_undead
+TEVENTS=e_undead
+TEVENTS=e_liches
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+NPC=brain_undead
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying=300.0
+magery=99.9
+magicresistance={90.0 100.0}
+tactics={50.0 70.0}
+wrestling={60.0 80.0}
+
+////alignment=evil
+//spellcircles=5,8
+
+FAME=30000
+KARMA=-11000
+
+ON=@NPCRESTOCK
+ITEM=loot_lich_lord
+ITEM=i_illusion_stone,R3
+ITEM=i_deillusion_stone,R3
+
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=liche lord
+
+[CHARDEF 01042]
+DEFNAME=c_m_phoenix
+NAME=a phoenix
+ID=c_eagle
+SOUND=snd_animals_eagle1
+ICON=i_pet_eagle
+CAN=mt_run|mt_equip|mt_fly|mt_walk|mt_fire_immune
+DAM=20
+ARMOR=70
+RESOURCES=2 i_ribs_raw, 36 i_feather
+FOODTYPE=5 t_meat_raw
+//shelter==r_mountains
+TEVENTS=e_exp7
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 7
+COLOR=colors_lava
+STR={2500 3500}
+DEX={95 105}
+INT={2500 3500}
+////alignment=neutral
+//spellcircles=4,7
+
+magery={90.0 100.0}
+magicresistance={85.0 100.0}
+tactics={80.0 90.0}
+wrestling={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-5000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_phoenix
+random_special_drop1,R25
+ITEM=i_gold,{100 600}
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=phoenix
+
+[CHARDEF 01043]
+DEFNAME=c_m_elem_poison
+NAME=a poison elemental
+ID=c_elem_air
+SOUND=snd_elementl_watrel1
+ICON=i_pet_elem_air
+CAN=mt_run|mt_equip|mt_walk
+DAM=14
+ARMOR=40
+RESOURCES=3 t_magic
+//shelter==
+DESIRES=
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+TEVENTS=e_dead_poison_elem
+
+ON=@CREATE
+TAG.LLL 4
+NPC=brain_monster
+COLOR=colors_poison
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+////alignment=evil
+//spellcircles=3,6
+
+parrying={75.0 85.0}
+magery={80.0 95.0}
+magicresistance={80.0 95.0}
+tactics={80.0 100.0}
+wrestling={70.0 90.0}
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+CATEGORY=Monsters
+SUBSECTION=elementals
+DESCRIPTION=poison elemental
+
+[CHARDEF 01044]
+DEFNAME=c_m_ophidian_archmage
+NAME=an ophidian arch-mage
+ID=c_ophidian_mage
+DAM=8
+ARMOR=30
+RESOURCES=8 i_ribs_raw
+FOODTYPE=5 t_meat_raw, 5 t_food
+//shelter==r_civilization
+DESIRES=i_gold,t_magic,i_reag_spider_silk
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+NPC=brain_monster
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={65.0 87.0}
+magery={95.0 100.0}
+magicresistance={75.0 97.0}
+tactics={65.0 87.0}
+wrestling={20.0 60.0}
+
+////alignment=evil
+//spellcircles=4,7
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_ophidian_archmage
+ITEM=i_illusion_stone,R3
+ITEM=i_deillusion_stone,R3
+
+CATEGORY=Monsters
+SUBSECTION=t2a monsters
+DESCRIPTION=ophidian archmage
+
+[CHARDEF 01045]
+DEFNAME=c_m_silver_serpent
+NAME=a silver serpent
+ID=c_snake_giant
+SOUND=snd_animals_snake1
+ICON=i_pet_snake
+
+DAM=8
+ARMOR=30
+RESOURCES=1 i_ribs_raw, 8 i_reag_serpent_scale
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+magicresistance={25.0 40.0}
+tactics={60.0 80.0}
+wrestling={60.0 80.0}
+taming=65.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-4000 -4999}
+
+ON=@NPCRESTOCK
+container=i_backpack
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+
+CATEGORY=Monsters
+SUBSECTION=giant insects and reptiles
+DESCRIPTION=silver serpent
+
+[CHARDEF 01046]
+DEFNAME=c_m_skeleton_mage
+NAME=a skeletal mage
+ID=c_skeleton
+DAM=2
+ARMOR=20
+RESOURCES=8 i_reag_bone
+TEVENTS=e_undead
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+TEVENTS=e_liches
+
+ON=@CREATE
+TAG.LLL 2
+NPC=brain_undead
+COLOR=colors_red
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+//spellcircles=3,6
+
+parrying={45.0 55.0}
+magery={60.0 70.0}
+magicresistance={45.0 60.0}
+tactics={45.0 60.0}
+wrestling={45.0 55.0}
+
+FAME={100 2000}
+KARMA={-3000 -3999}
+
+ON=@NPCRESTOCK
+ITEM=loot_skeletal_mage
+
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=skeleton mage
+
+[CHARDEF 01047]
+DEFNAME=c_m_skeleton_knight
+NAME=a skeletal knight
+ID=c_skeleton_w_sword
+
+DAM=2
+ARMOR=20
+RESOURCES=8 i_reag_bone
+
+////alignment=evil
+TEVENTS=e_undead
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+NPC=brain_undead
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+parrying={85.0 95.0}
+magicresistance={65.0 80.0}
+tactics={85.0 100.0}
+wrestling={85.0 95.0}
+
+FAME={100 2000}
+KARMA={-3000 -3999}
+
+ON=@NPCRESTOCK
+ITEM=loot_skeletal_knight
+ITEM=i_illusion_stone,R3
+ITEM=i_deillusion_stone,R3
+
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=skeleton knight
+
+[CHARDEF 01048]
+DEFNAME=c_m_ophidian_knight
+NAME=an ophidian knight-errant
+ID=c_ophidian_warrior
+SOUND=snd_monster_ophidian_warrior1
+ICON=i_pet_ophid_war
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+DAM=20
+ARMOR=50
+RESOURCES=10 i_ribs_raw
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+
+ON=@CREATE
+TAG.LLL 5
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying={75.0 85.0}
+magicresistance={65.0 80.0}
+tactics={90.0 100.0}
+wrestling={90.0 100.0}
+poisoning=1500.0
+
+NPC=brain_monster
+
+FAME=30000
+KARMA=-11000
+
+ON=@NPCRESTOCK
+ITEM=loot_ophidian_knight
+ITEM=i_illusion_stone,R3
+ITEM=i_deillusion_stone,R3
+
+CATEGORY=Monsters
+SUBSECTION=t2a monsters
+DESCRIPTION=ophidian knight
+
+[CHARDEF 01049]
+DEFNAME=c_m_ice_serpent
+NAME=an ice serpent
+ID=c_snake_giant
+SOUND=snd_monster_seaserp1
+ICON=i_pet_snake_giant
+
+DAM=8
+ARMOR=30
+RESOURCES=20 i_ribs_raw, 15 i_hide, 8 i_reag_serpent_scale
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=6 t_meat_raw
+//shelter==
+AVERSIONS=r_civilization
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+COLOR=color_ice
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={45.0 60.0}
+magicresistance={25.0 40.0}
+tactics={75.0 80.0}
+wrestling={60.0 80.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-4000 -4999}
+
+ON=@NPCRESTOCK
+ITEM=loot_giant_ice_serpent
+
+CATEGORY=Monsters
+SUBSECTION=giant insects and reptiles
+DESCRIPTION=ice serpent
+
+[CHARDEF 01050]
+DEFNAME=c_m_lava_serpent
+NAME=a lava serpent
+ID=c_snake_giant
+
+CAN=mt_run|mt_equip|mt_walk|mt_fire_immune
+DAM=14
+ARMOR=40
+
+FOODTYPE=6 t_meat_raw
+RESOURCES=20 i_ribs_raw, 15 i_hide, 8 i_reag_serpent_scale
+
+////alignment=evil
+AVERSIONS=r_civilization
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 4
+COLOR=065a
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+parrying={45.0 60.0}
+magicresistance={25.0 40.0}
+tactics={65.0 70.0}
+wrestling={60.0 80.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-5000 -5999}
+
+ON=@NPCRESTOCK
+ITEM=loot_lava_lizard
+
+CATEGORY=Monsters
+SUBSECTION=giant insects and reptiles
+DESCRIPTION=lava serpent
+
+[CHARDEF 01051]
+DEFNAME=c_m_elem_snow
+NAME=a snow elemental
+ID=c_elem_earth
+SOUND=snd_elementl_airelem1
+ICON=i_pet_elem_earth
+DAM=8
+ARMOR=30
+RESOURCES=8 t_magic
+DESIRES=r_mountains
+//shelter==r_mountains
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 3
+NPC=brain_monster
+COLOR=color_snow
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={65.0 75.0}
+magicresistance={60.0 75.0}
+tactics={80.0 100.0}
+wrestling={80.0 100.0}
+
+FAME={100 2000}
+KARMA={-4000 -4999}
+
+////alignment=evil
+
+ON=@NPCRESTOCK
+ITEM=loot_elem_snow
+
+CATEGORY=Monsters
+SUBSECTION=elementals
+DESCRIPTION=snow elemental
+
+[CHARDEF 01052]
+DEFNAME=c_m_frostspider
+NAME=a frosty spider
+ID=c_spider_giant
+SOUND=snd_monster_gispidr1
+ICON=i_pet_spider_giant
+DAM=1
+ARMOR=10
+RESOURCES=8 i_reag_spider_silk, 5 t_eerie_stuff
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+//shelter==t_web,R_caves,
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=color_snow
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+////alignment=evil
+
+parrying={35.0 45.0}
+magicresistance={25.0 40.0}
+tactics={35.0 50.0}
+wrestling={50.0 65.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-1000 -5000}
+
+ON=@NPCRESTOCK
+ITEM=loot_frost_spider
+
+CATEGORY=Monsters
+SUBSECTION=giant insects and reptiles
+DESCRIPTION=frost spider
+
+[CHARDEF 01053]
+DEFNAME=c_m_swamp_tentacles
+NAME=a swamp tentacle
+ID=c_corpser
+SOUND=snd_monster_corpsr1
+ICON=i_pet_corpser
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=24 t_meat_raw
+DAM=1
+ARMOR=10
+//RESOURCES=5 t_eerie_stuff
+////alignment=chaotic
+//shelter==r_swamp
+AVERSIONS=r_civilization
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_green
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+parrying={15.0 25.0}
+magicresistance={15.0 20.0}
+tactics={65.0 80.0}
+wrestling={65.0 80.0}
+hiding=75.0
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-1000 -5000}
+
+ON=@NPCRESTOCK
+ITEM=loot_swamp_tentacle
+
+CATEGORY=Monsters
+SUBSECTION=miscellaneous
+DESCRIPTION=swamp tentacles
+
+[CHARDEF 01054]
+DEFNAME=c_m_frost_troll
+NAME=a frost troll
+ID=c_troll
+SOUND=snd_monster_troll1
+ICON=i_pet_titan
+DAM=2
+ARMOR=20
+RESOURCES=10 i_ribs_raw
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+//shelter==r_forests,R_mountains
+DESIRES=i_gold
+AVERSIONS=r_civilization
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=color_snow
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+
+parrying={65.0 80.0}
+magicresistance={65.0 80.0}
+tactics={80.0 100.0}
+wrestling={80.0 100.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-2000 -2999}
+
+ON=@NPCRESTOCK
+ITEM=loot_frost_troll
+
+CATEGORY=Monsters
+SUBSECTION=ettins, ogres, trolls, cyclops, and titans
+DESCRIPTION=frost troll
+
+[CHARDEF 01055]
+DEFNAME=c_m_terathan_avenger
+NAME=a terathan avenger
+ID=c_terathan_warrior
+SOUND=snd_monster_tera_warrior1
+ICON=i_pet_terathan_war
+
+DAM=20
+ARMOR=25
+RESOURCES=10 i_ribs_raw
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+AVERSIONS=r_civilization
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying={75.0 85.0}
+magery={70.0 80.0}
+magicresistance={65.0 80.0}
+tactics={90.0 100.0}
+wrestling={90.0 100.0}
+poisoning=500.0
+
+NPC=brain_monster
+FAME=30000
+KARMA=-11000
+
+ON=@NPCRESTOCK
+ITEM=loot_terathan_avenger
+ITEM=i_illusion_stone,R3
+ITEM=i_deillusion_stone,R3
+
+CATEGORY=Monsters
+SUBSECTION=t2a monsters
+DESCRIPTION=terathan avenger
+
+[CHARDEF 01057]
+DEFNAME=c_m_orc_captain
+NAME=an orc captain
+ID=c_orc_lord
+DAM=1
+ARMOR=10
+RESOURCES=8 i_ribs_raw //, orccamp
+FOODTYPE=15 t_meat_raw
+////alignment=evil
+//spellcircles=3,6
+//shelter==r_caves,,R_orc_camp
+DESIRES=i_gold,spk_orc
+tspeech=spk_orc
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+swordsmanship={70.0 85.0}
+parrying={70.0 95.0}
+magicresistance={70.0 85.0}
+tactics={85.0 100.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-2000 -2999}
+
+ON=@NPCRESTOCK
+container=i_backpack
+ITEM=loot_orc_captain
+
+CATEGORY=Monsters
+SUBSECTION=orcs
+DESCRIPTION=orc captain
+
+[CHARDEF 01058]
+DEFNAME=c_m_orc_mage
+NAME=an orcish mage
+ID=c_orc
+DAM=1
+ARMOR=10
+RESOURCES=8 i_ribs_raw
+FOODTYPE=15 t_meat_raw
+//shelter==r_caves,,R_orc_camp
+DESIRES=i_gold,spk_orc
+tspeech=spk_orc
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_green
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+////alignment=evil
+//spellcircles=5,7
+
+parrying={60.0 85.0}
+magery={70.0 95.0}
+magicresistance={70.0 85.0}
+tactics={75.0 90.0}
+
+NPC=brain_monster
+
+FAME={100 2000}
+KARMA={-3000 -3999}
+
+itemnewbie=i_spellbook
+//addspell=
+more1=06c0a0895
+more2=00000000
+
+ON=@NPCRESTOCK
+ITEM=loot_orcish_mage
+
+CATEGORY=Monsters
+SUBSECTION=orcs
+DESCRIPTION=orc mage
+
+[CHARDEF 01062]
+DEFNAME=c_m_lava_lizard
+NAME=a lava lizard
+ID=c_alligator
+SOUND=snd_monster_lavalizard1
+ICON=i_pet_croc
+DAM=1
+ARMOR=10
+RESOURCES=6 i_ribs_raw, 12 i_hide
+CAN=mt_run|mt_equip|mt_walk|mt_fire_immune
+FOODTYPE=5 t_meat_raw
+//shelter==r_caves
+AVERSIONS=r_civilization
+DESCRIPTION=lava lizard
+SUBSECTION=giant insects and reptiles
+CATEGORY=Monsters
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_lava
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+////alignment=evil
+
+parrying={48.0 82.0}
+magicresistance={55.0 70.0}
+tactics={60.0 80.0}
+wrestling={60.0 80.0}
+taming=90.0
+
+NPC=brain_monster
+
+FAME=50
+KARMA={-600 -799}
+
+[CHARDEF 01063]
+DEFNAME=c_m_energy_vortex
+NAME=energy llama
+SOUND=snd_elementl_airelem5
+ID=c_llama
+ICON=37eb
+DAM=45,10
+ARMOR=10
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune|mt_run|mt_usehands
+FOODTYPE=
+
+ON=@CREATE
+COLOR=color_energy_vortex
+NPC=brain_monster
+STR=300
+DEX=1000
+INT=1
+////alignment=evil
+//spellcircle=3,5
+
+tactics=500.0
+wrestling=500.0
+poisoning=600.0
+
+FAME=5000
+KARMA=-5000
+
+itemnewbie=i_light_source
+ATTR=attr_magic|attr_newbie
+
+CATEGORY=miscellaneous
+SUBSECTION=blade spirits
+DESCRIPTION=energy vortex
+
+[CHARDEF 01064]
+DEFNAME=c_m_goblin
+NAME=a goblin
+ID=c_orc
+RESOURCES=6 i_ribs_raw
+DAM=1
+ARMOR=10
+
+FOODTYPE=15 t_meat_raw
+
+//shelter==r_caves,,R_orc_camp
+DESIRES=i_gold,spk_orc
+tspeech=spk_orc
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_green
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+////alignment=evil
+magicresistance={50.0 75.0}
+parrying={35.0 55.0}
+tactics={55.0 80.0}
+wrestling={35.0 55.0}
+
+KARMA={-3000 -1000}
+FAME={100 500}
+
+NPC=brain_monster
+
+ON=@NPCRESTOCK
+container=i_backpack
+ITEM={ poor_gold_pile 1 meager_gold_pile 1 }
+ITEM={ i_boots_thigh 1 0 1 }
+ITEM={ poor_gold_pile 1 meager_gold_pile 1 0 1 }
+
+CATEGORY=Monsters
+SUBSECTION=goblins
+DESCRIPTION=goblin
+
+[CHARDEF 01065]
+DEFNAME=c_m_goblin_mage
+NAME=a goblin mage
+ID=c_orc
+
+RESOURCES=6 i_ribs_raw
+FOODTYPE=15 t_meat_raw
+////alignment=evil
+
+DAM=1
+ARMOR=10
+
+//shelter==r_caves,,R_orc_camp
+DESIRES=i_gold,spk_orc
+tspeech=spk_orc
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_green
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magery={35.0 60.0}
+magicresistance={50.0 75.0}
+parrying={35.0 55.0}
+tactics={55.0 80.0}
+wrestling={35.0 55.0}
+
+NPC=brain_monster
+
+KARMA={-3000 -1000}
+FAME={100 500}
+
+itemnewbie=i_spellbook
+//addspell=
+more1=068020811
+more2=00000000
+
+ON=@NPCRESTOCK
+container=i_backpack
+ITEM={ meager_gold_pile 3 average_gold_pile 1 }
+ITEM={ poor_gold_pile 1 meager_gold_pile 1 0 1 }
+ITEM=random_first_circle,R3
+ITEM=random_second_circle,R6
+
+CATEGORY=Monsters
+SUBSECTION=goblins
+DESCRIPTION=goblin mage
+
+[CHARDEF 01066]
+DEFNAME=c_m_goblin_chief
+NAME=a goblin chief
+ID=c_orc_lord
+
+RESOURCES=6 i_ribs_raw
+FOODTYPE=15 t_meat_raw
+////alignment=evil
+
+DAM=1
+ARMOR=10
+
+//shelter==r_caves,,R_orc_camp
+DESIRES=i_gold,spk_orc
+tspeech=spk_orc
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+NPC=brain_monster
+COLOR=colors_green
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={50.0 75.0}
+parrying={50.0 70.0}
+tactics={55.0 80.0}
+wrestling={50.0 70.0}
+
+KARMA={-3000 -1000}
+FAME={100 500}
+
+ON=@NPCRESTOCK
+ITEM={ meager_monster_backpack 1 average_monster_backpack 3 }
+ITEM={ i_boots_thigh 1 0 1 }
+ITEM={ meager_gold_pile 1 0 1 }
+ITEM=random_weapons
+
+CATEGORY=Monsters
+SUBSECTION=goblins
+DESCRIPTION=goblin chief
+
+[CHARDEF 01067]
+DEFNAME=c_m_ghoul
+DEFNAME2=c_ghoul
+NAME=a ghoul
+SOUND=snd_monster_zombie1
+ICON=i_pet_zombie
+ID=c_zombie
+
+FOODTYPE=
+CAN=mt_run|mt_equip|mt_walk
+////alignment=evil
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+DAM=1
+ARMOR=10
+TEVENTS=e_undead
+
+ON=@CREATE
+TAG.LLL 1
+NPC=brain_undead
+COLOR=colors_gray
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={30.0 60.0}
+parrying={40.0 70.0}
+tactics={50.0 75.0}
+wrestling={55.0 75.0}
+
+KARMA={-5000 -2500}
+FAME={600 900}
+
+ON=@NPCRESTOCK
+ITEM=loot_ghoul
+
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=ghoul
+
+[CHARDEF 01068]
+DEFNAME=c_m_wraith
+NAME=a wraith
+SOUND=snd_monster_ghost1
+ICON=i_pet_ghoul
+ID=c_spectre
+FOODTYPE=
+CAN=mt_run|mt_equip|mt_ghost|mt_walk
+DAM=2
+ARMOR=20
+TEVENTS=e_undead
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+NPC=brain_undead
+COLOR=colors_gray
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+
+magicresistance={60.0 85.0}
+parrying={60.0 85.0}
+tactics={60.0 85.0}
+wrestling={60.0 85.0}
+
+KARMA={-4000 -2000}
+FAME={1500 3000}
+
+ON=@NPCRESTOCK
+ITEM=loot_wraith
+
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=wraithh
+
+[CHARDEF 01069]
+DEFNAME=c_m_ghost
+NAME=a lost ghost
+SOUND=snd_monster_ghost1
+ICON=i_pet_ghoul
+ID=c_grim_reaper
+
+DAM=1
+ARMOR=20,25
+
+FOODTYPE=
+CAN=mt_run|mt_equip|mt_ghost|mt_walk
+////alignment=evil
+TEVENTS=e_undead
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+NPC=brain_undead
+COLOR=colors_gray
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={60.0 85.0}
+parrying={60.0 85.0}
+tactics={60.0 85.0}
+wrestling={60.0 85.0}
+
+KARMA={-4000 -2000}
+FAME={1500 3000}
+
+ON=@NPCRESTOCK
+ITEM={ average_undead_backpack 1 rich_undead_backpack 1 }
+ITEM={ random_gold_pile 1 0 2 }
+
+CATEGORY=Monsters
+SUBSECTION=undeads
+DESCRIPTION=ghost
+
+[CHARDEF 01070]
+DEFNAME=c_h_sprite_sprite
+NAME=#names_elf_female the sprite
+ID=c_woman
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_female
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_trap,t_eerie_stuff
+DAM=1
+ARMOR=10
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=045e
+
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+////alignment=evil
+
+fencing={65.0 88.0}
+wrestling={35.0 58.0}
+magicresistance={60.0 80.0}
+tactics={75.0 85.0}
+
+NPC=brain_human
+
+KARMA={-1500 -6000}
+FAME={1200 3200}
+
+itemnewbie=i_hair_ponytail
+COLOR=0597
+
+ON=@NPCRESTOCK
+ITEM=i_armor_female_plate
+COLOR=0599
+ITEM=i_kryss
+COLOR=0599
+ITEM=i_boots_calf
+COLOR=0599
+ITEM=i_cape
+COLOR=0599
+ITEM=random_coin_purse
+ITEM={ backpack_meager 1 backpack_average 2 }
+
+CATEGORY=civilized
+SUBSECTION=sprite-elf (evil)
+DESCRIPTION=sprite
+
+[CHARDEF 01071]
+DEFNAME=c_h_sprte_mage
+NAME=#names_elf_female the sprite mage
+ID=c_woman
+DAM=2
+ARMOR=20
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_trap,t_eerie_stuff
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_female
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=045e
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+wrestling={58.0 78.0}
+magicresistance={60.0 80.0}
+magery={65.0 85.0}
+
+NPC=brain_thief
+
+KARMA={-1500 -6000}
+FAME={1200 3200}
+
+itemnewbie=i_hair_ponytail
+COLOR=0597
+
+ON=@NPCRESTOCK
+ITEM=i_robe
+COLOR=0599
+ITEM=i_sandals
+COLOR=0599
+ITEM=random_coin_purse
+ITEM=backpack_average
+ITEM=random_scroll
+ITEM=random_scroll
+
+CATEGORY=civilized
+SUBSECTION=sprite-elf (evil)
+DESCRIPTION=sprite mage
+
+[CHARDEF 01072]
+DEFNAME=c_h_sprite_sorc
+//DEFNAME=c_h_sprite_sorceress
+NAME=#names_elf_female the sprite sorceress
+ID=c_woman
+
+DAM=2
+ARMOR=20
+
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_trap,t_eerie_stuff
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_female
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+tspeech=spk_human_prime
+tspeech=spk_human_default
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=045e
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+wrestling={68.0 88.0}
+magicresistance={70.0 85.0}
+magery={75.0 95.0}
+
+KARMA={-2000 -6500}
+FAME={1700 3700}
+
+NPC=brain_thief
+
+itemnewbie=i_hair_long
+COLOR=0
+
+ON=@NPCRESTOCK
+ITEM=i_hat_wizards
+COLOR=0599
+ITEM=i_robe
+COLOR=0595
+ITEM=i_sandals
+COLOR=0599
+ITEM=random_coin_purse
+ITEM=backpack_average
+ITEM=random_upper_scroll
+ITEM=random_scroll
+
+CATEGORY=civilized
+SUBSECTION=sprite-elf (evil)
+DESCRIPTION=sprite sorcerous
+
+[CHARDEF 01073]
+DEFNAME=c_h_sprite_archer
+NAME=#names_elf_female the sprite archer
+ID=c_woman
+
+DAM=2
+ARMOR=20
+
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_female
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_trap,t_eerie_stuff
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+tspeech=spk_human_prime
+tspeech=spk_human_default
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=045e
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+
+archery={65.0 88.0}
+wrestling={35.0 58.0}
+magicresistance={50.0 60.0}
+tactics={75.0 85.0}
+
+NPC=brain_human
+
+KARMA={-1500 -6000}
+FAME={1200 3200}
+
+itemnewbie=i_hair_krisna
+COLOR=0597
+
+ON=@NPCRESTOCK
+ITEM=i_arrow,{20 40}
+ITEM=i_leather_tunic
+COLOR=0595
+ITEM=i_leather_gloves
+COLOR=0595
+ITEM=i_leather_leggings
+COLOR=0595
+ITEM=i_bow
+ITEM=i_boots_calf
+COLOR=0599
+ITEM=i_cape
+COLOR=0599
+ITEM=random_coin_purse
+ITEM={ backpack_meager 1 backpack_average 2 }
+
+CATEGORY=civilized
+SUBSECTION=sprite-elf (evil)
+DESCRIPTION=sprite archer
+
+[CHARDEF 01074]
+DEFNAME=c_h_frostelf_archer
+NAME=#names_elf_male the frost elf archer
+ID=c_man
+DAM=2
+ARMOR=20
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+////alignment=evil
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+ON=@CREATE
+COLOR=05d
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+archery={70.0 90.0}
+magicresistance={20.0 30.0}
+tactics={70.0 90.0}
+wrestling={25.0 40.0}
+
+TAG.LLL 2
+NPC=brain_human
+
+KARMA={-3000 -4000}
+FAME={2500 4000}
+
+itemnewbie=i_hair_krisna
+
+ON=@NPCRESTOCK
+ITEM=i_studded_tunic
+ITEM=i_tunic
+ITEM=random_shoes
+COLOR=01bb
+ITEM=i_bow
+ITEM=i_arrow,{10 50}
+ITEM=random_jewel
+ITEM=i_gold,{1 10}
+
+CATEGORY=civilized
+SUBSECTION=frost-elf (evil)
+DESCRIPTION=frost elven archer
+
+[CHARDEF 01075]
+DEFNAME=c_h_frostelf_warrior
+NAME=#names_elf_male the frost elf warrior
+ID=c_man
+
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+////alignment=evil
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+DAM=1
+ARMOR=10
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=05d
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={35.0 45.0}
+tactics={70.0 90.0}
+wrestling={40.0 55.0}
+swordsmanship={70.0 90.0}
+
+NPC=brain_human
+
+KARMA={-3000 -4000}
+FAME={2500 4000}
+
+itemnewbie=i_hair_krisna
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1 5}
+ITEM=i_studded_tunic
+ITEM=i_tunic
+ITEM=random_shoes
+COLOR=01bb
+ITEM=i_halberd
+ITEM=random_jewel
+
+CATEGORY=civilized
+SUBSECTION=frost-elf (evil)
+DESCRIPTION=frost elven warrior
+
+[CHARDEF 01076]
+DEFNAME=c_h_frostelf_chief
+NAME=#names_elf_male the frost elf chieftain
+ID=c_man
+
+DAM=2
+ARMOR=20
+
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+////alignment=evil
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=05d
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+magicresistance={60.0 75.0}
+tactics={70.0 90.0}
+wrestling={40.0 55.0}
+swordsmanship=100.0
+parrying={75.0 100.0}
+
+NPC=brain_human
+
+KARMA={-4000 -6000}
+FAME={3500 5000}
+
+itemnewbie=i_hair_krisna
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1 10}
+ITEM=i_studded_tunic
+ITEM=i_tunic
+ITEM=i_pants_long
+ITEM=random_shoes
+COLOR=01bb
+ITEM=i_sword_viking
+ITEM=i_shield_kite_metal
+ITEM=random_jewel
+//ITEM=random_average_magic_loot
+ITEM=backpack_loaded
+
+CATEGORY=civilized
+SUBSECTION=frost-elf (evil)
+DESCRIPTION=frost elf chieftain
+
+[CHARDEF 01077]
+DEFNAME=c_h_frostelf_shaman
+NAME=#names_elf_male the frost elf shaman
+ID=c_man
+////alignment=evil
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+DAM=2
+ARMOR=20
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=05d
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+magicresistance={60.0 75.0}
+tactics={70.0 90.0}
+wrestling={40.0 55.0}
+magery={75.0 85.0}
+
+NPC=brain_human
+
+KARMA={-3000 -5000}
+FAME={2500 4000}
+
+itemnewbie=i_hair_krisna
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1 10}
+ITEM=i_robe
+ITEM=random_shoes
+COLOR=01bb
+ITEM=random_jewel
+ITEM=random_scroll
+ITEM=random_scroll
+container=i_bag
+ITEM=i_reag_black_pearl,15
+ITEM=i_reag_blood_moss,15
+ITEM=i_reag_garlic,50
+ITEM=i_reag_ginseng,15
+ITEM=i_reag_mandrake_root,15
+ITEM=i_reag_nightshade,15
+ITEM=i_reag_sulfur_ash,15
+ITEM=i_reag_spider_silk,15
+itemnewbie=i_spellbook
+//addspell=
+more1=0ffffffff
+more2=0ffffffff
+
+CATEGORY=civilized
+SUBSECTION=frost-elf (evil)
+DESCRIPTION=frost elf shaman
+
+[CHARDEF 01078]
+DEFNAME=c_h_frostelf_warrioress
+NAME=#names_elf_female the frost elf warrioress
+ID=c_woman
+
+DAM=1
+ARMOR=15
+
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+////alignment=evil
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+tspeech=spk_human_prime
+tspeech=spk_human_default
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=05d
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={35.0 45.0}
+tactics={70.0 90.0}
+wrestling={40.0 55.0}
+macefighting={70.0 90.0}
+
+NPC=brain_human
+
+KARMA={-3000 -4000}
+FAME={2500 4000}
+
+itemnewbie=i_hair_long
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1 5}
+ITEM=i_armor_female_studded
+ITEM=random_shoes
+COLOR=01bb
+ITEM=i_staff_quarter
+ITEM=random_jewel
+
+CATEGORY=civilized
+SUBSECTION=frost-elf (evil)
+DESCRIPTION=frost elven warrioress
+
+[CHARDEF 01079]
+DEFNAME=c_h_barbarian_warrior
+NAME=#names_humanmale the barbarian warrior
+ID=c_man
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+DAM=2
+ARMOR=20
+
+ON=@CREATE
+TAG.LLL 2
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+
+magicresistance={20.0 35.0}
+tactics={80.0 95.0}
+wrestling={80.0 95.0}
+swordsmanship=100.0
+parrying={75.0 100.0}
+
+NPC=brain_human
+
+KARMA={-4000 -6000}
+FAME={3500 5000}
+
+itemnewbie=i_hair_long
+COLOR=colors_red
+itemnewbie=i_beard_short_med
+COLOR=match_hair
+
+ON=@NPCRESTOCK
+ITEM=i_boots_calf
+COLOR=01bb
+ITEM=i_mask_deer
+ITEM=i_axe_double
+ITEM=i_leather_tunic
+ITEM=i_kilt
+COLOR=01bb
+
+ITEM=backpack_rich
+
+CATEGORY=civilized
+SUBSECTION=barbarians (evil)
+DESCRIPTION=barbarian warrior
+
+[CHARDEF 01080]
+DEFNAME=c_h_barbarian_chieftan
+NAME=#names_humanmale the barbarian chieftain
+ID=c_man
+////alignment=evil
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+DAM=8
+ARMOR=30
+
+ON=@CREATE
+TAG.LLL 3
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+magicresistance={20.0 35.0}
+tactics={90.0 100.0}
+wrestling={90.0 100.0}
+swordsmanship=100.0
+parrying={85.0 100.0}
+
+NPC=brain_human
+
+KARMA={-4500 -6500}
+FAME={4000 5500}
+
+itemnewbie=i_hair_long
+COLOR=colors_red
+itemnewbie=i_beard_long_med
+COLOR=match_hair
+
+ON=@NPCRESTOCK
+ITEM=i_boots_calf
+COLOR=01bb
+ITEM=i_leather_tunic
+ITEM=i_kilt
+COLOR=01bb
+ITEM=backpack_rich
+ITEM=i_axe_battle_large_ruin
+ITEM=i_mask_bear
+
+CATEGORY=civilized
+SUBSECTION=barbarians (evil)
+DESCRIPTION=barbarian chieftain
+
+[CHARDEF 01081]
+DEFNAME=c_h_barbarian_shaman
+NAME=#names_humanmale the barbarian shaman
+ID=c_man
+DAM=2
+ARMOR=20
+////alignment=evil
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+magicresistance={40.0 55.0}
+magery={60.0 75.0}
+tactics={80.0 95.0}
+wrestling={80.0 95.0}
+macefighting=100.0
+parrying={75.0 100.0}
+
+NPC=brain_human
+
+KARMA={-4000 -6000}
+FAME={3500 5000}
+
+itemnewbie=i_hair_long
+COLOR=colors_red
+itemnewbie=i_beard_short_med
+COLOR=match_hair
+
+ON=@NPCRESTOCK
+ITEM=i_boots_calf
+COLOR=01bb
+ITEM=i_staff_gnarled
+ITEM=i_sash
+COLOR=01bb
+ITEM=i_kilt
+COLOR=01bb
+ITEM=backpack_rich
+ITEM=i_mask_tribal_red
+//ITEM=random_average_magic_loot
+
+CATEGORY=civilized
+SUBSECTION=barbarians (evil)
+DESCRIPTION=barbarian shaman
+
+[CHARDEF 01082]
+DEFNAME=c_h_barbarian_warrioress
+NAME=#names_humanfemale the barbarian warrioress
+ID=c_woman
+DAM=1
+ARMOR=10
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+
+ON=@CREATE
+TAG.LLL 1
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={20.0 35.0}
+tactics={80.0 95.0}
+wrestling={80.0 95.0}
+swordsmanship=100.0
+parrying={65.0 90.0}
+
+NPC=brain_human
+
+FAME={3500 5000}
+KARMA={-4000 -6000}
+
+itemnewbie=i_hair_ponytail
+COLOR=colors_red
+
+ON=@NPCRESTOCK
+ITEM=i_boots_thigh
+COLOR=01bb
+ITEM=i_armor_female_studded
+ITEM=i_axe_battle
+ITEM=backpack_rich
+ITEM=i_mask_deer
+
+CATEGORY=civilized
+SUBSECTION=barbarians (evil)
+DESCRIPTION=barbarian warrioress
+
+[CHARDEF 01083]
+DEFNAME=c_h_warlock
+NAME=#names_humanmale the warlock
+ID=c_man
+DAM=2
+ARMOR=20
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_male
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=0599
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+magicresistance={90.0 95.0}
+tactics={70.0 90.0}
+wrestling={40.0 55.0}
+magery={95.0 100.0}
+
+NPC=brain_monster
+
+KARMA={-3000 -5000}
+FAME={2500 4000}
+
+itemnewbie=i_hair_long
+COLOR=0
+
+itemnewbie=i_spellbook
+//addspell=
+more1=0ffffffff
+more2=0ffffffff
+
+ON=@NPCRESTOCK
+ITEM=i_robe
+COLOR=1
+ITEM=i_hat_wizards
+COLOR=1
+ITEM=i_boots_calf
+COLOR=1
+ITEM=random_jewel
+ITEM=random_upper_scroll
+ITEM=random_scroll
+
+container=i_bag
+ITEM=i_reag_black_pearl,{ 1 15 }
+ITEM=i_reag_blood_moss,{ 1 15 }
+ITEM=i_reag_garlic,{ 1 15 }
+ITEM=i_reag_ginseng,{ 1 15 }
+ITEM=i_reag_mandrake_root,{ 1 15 }
+ITEM=i_reag_nightshade,{ 1 15 }
+ITEM=i_reag_sulfur_ash,{ 1 15 }
+ITEM=i_reag_spider_silk,{ 1 15 }
+
+CATEGORY=civilized
+SUBSECTION=witches (evil)
+DESCRIPTION=warlock
+
+[CHARDEF 01084]
+DEFNAME=c_h_witch
+NAME=#names_humanfemale the witch
+ID=c_woman
+DAM=2
+ARMOR=20
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_female
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=0599
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+
+tactics={70.0 90.0}
+wrestling={40.0 55.0}
+macefighting={55.0 75.0}
+magery={65.0 85.0}
+magicresistance={80.0 90.0}
+
+NPC=brain_human
+
+KARMA={-3000 -5000}
+FAME={2000 4000}
+
+itemnewbie=i_hair_long
+COLOR=color_gray_dk
+
+ON=@NPCRESTOCK
+ITEM=i_shirt_fancy
+COLOR=0
+ITEM=i_skirt_long
+COLOR=1
+ITEM=i_hat_wizards
+COLOR=1
+ITEM=i_boots_calf
+COLOR=1
+ITEM=random_potion
+ITEM=random_potion
+ITEM=i_reag_batwing,{ 1 5 }
+ITEM=i_reag_eye_of_newt,{ 1 5 }
+ITEM=i_staff_gnarled
+ITEM=i_gold,{1 10}
+
+CATEGORY=civilized
+SUBSECTION=witches (evil)
+DESCRIPTION=witch
+
+[CHARDEF 01085]
+DEFNAME=c_h_witch_high
+NAME=#names_humanfemale the high witch
+ID=c_woman
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk|mt_female
+DAM=2
+ARMOR=20
+
+tspeech=spk_human_prime
+tspeech=spk_human_default
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=0599
+////alignment=evil
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+magicresistance={90.0 95.0}
+tactics={80.0 90.0}
+wrestling={40.0 55.0}
+macefighting={75.0 95.0}
+magery={75.0 95.0}
+NPC=brain_human
+
+KARMA={-3000 -5000}
+FAME={2000 4000}
+
+itemnewbie=i_hair_long
+COLOR=color_gray_dk
+
+ON=@NPCRESTOCK
+ITEM=i_dress_plain
+COLOR=1
+ITEM=i_hat_wizards
+COLOR=1
+ITEM=i_boots_calf
+COLOR=1
+ITEM=random_potion
+ITEM=random_potion
+ITEM=i_reag_batwing
+ITEM=i_reag_batwing
+ITEM=i_reag_eye_of_newt,{ 1 5 }
+ITEM=i_staff_black
+ITEM=i_gold,{1 10}
+
+CATEGORY=civilized
+SUBSECTION=witches (evil)
+DESCRIPTION=high witch
+
+[CHARDEF 01086]
+DEFNAME=c_a_black_cat
+NAME=black cat
+SOUND=snd_animals_cat1
+ID=c_cat
+
+DAM=2
+ARMOR=4
+RESOURCES=2 i_ribs_raw
+
+////alignment=evil
+FOODTYPE=5 t_meat_raw, 5 t_fish
+//shelter==r_house
+DESIRES=e_human_greet,t_window
+CAN=mt_run|mt_equip|mt_walk|mt_run
+DESCRIPTION=black cat
+SUBSECTION=witches (evil)
+CATEGORY=civilized
+
+ON=@CREATE
+COLOR=047f
+STR=25
+DEX=35
+INT=5
+
+parrying=10.0
+magicresistance=20.0
+tactics=25.0
+wrestling=25.0
+taming=40.0
+
+NPC=brain_animal
+
+FAME={2500 4000}
+KARMA={-1000 -2000}
+
+[CHARDEF 01087]
+DEFNAME=c_h_bandit_m
+NAME=#names_humanmale the bandit
+ID=c_man
+
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk
+////alignment=evil
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_trap,t_eerie_stuff
+DAM=1
+ARMOR=10
+tspeech=spk_human_prime
+tspeech=jobbrigand
+tspeech=spk_needs
+tspeech=spk_rehello
+tspeech=spk_human_default
+
+TEVENTS=e_human_hearunk
+TEVENTS=e_human_convinit
+TEVENTS=e_human_greet
+TEVENTS=e_human_space
+TEVENTS=e_human_needs
+TEVENTS=e_human_refuse
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_skin
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+hiding={45.0 68.0}
+snooping={75.0 90.0}
+lockpicking={35.0 58.0}
+stealing={75.0 90.0}
+parrying={55.0 78.0}
+swordsmanship={35.0 58.0}
+wrestling={35.0 58.0}
+magicresistance={45.0 58.0}
+tactics={55.0 78.0}
+
+NPC=brain_thief
+
+KARMA={-3000 -4000}
+FAME={2500 4000}
+
+itemnewbie=random_male_hair
+COLOR=colors_hair
+itemnewbie=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRESTOCK
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=random_pants
+COLOR=colors_all
+ITEM=random_shoes
+COLOR=colors_neutral
+ITEM=i_skull_cap
+COLOR=colors_all
+ITEM=random_sword
+ITEM=random_coin_purse
+
+CATEGORY=civilized
+SUBSECTION=bandits (evil)
+DESCRIPTION=bandit (male)
+
+[CHARDEF 01088]
+DEFNAME=c_h_bandit_f
+NAME=#names_humanfemale the bandit
+ID=c_woman
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_equip|mt_usehands|mt_walk
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_trap,t_eerie_stuff
+DAM=4
+ARMOR=10
+tspeech=spk_human_prime
+tspeech=jobbrigand
+tspeech=spk_needs
+tspeech=spk_rehello
+tspeech=spk_human_default
+TEVENTS=e_human_hearunk
+
+TEVENTS=e_human_convinit
+TEVENTS=e_human_greet
+TEVENTS=e_human_space
+TEVENTS=e_human_needs
+TEVENTS=e_human_refuse
+TEVENTS=e_exp1
+
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_skin
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+hiding={45.0 68.0}
+snooping={75.0 90.0}
+lockpicking={35.0 58.0}
+stealing={75.0 90.0}
+parrying={55.0 78.0}
+wrestling={35.0 58.0}
+macefighting={35.0 58.0}
+magicresistance={45.0 58.0}
+tactics={55.0 78.0}
+
+NPC=brain_thief
+
+KARMA={-3000 -4000}
+FAME={2500 4000}
+
+itemnewbie=random_female_hair
+COLOR=colors_hair
+
+ON=@NPCRESTOCK
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=i_skirt_long
+COLOR=colors_all
+ITEM=random_shoes
+COLOR=colors_neutral
+ITEM=i_skull_cap
+COLOR=colors_all
+ITEM=random_mace
+ITEM=random_coin_purse
+
+CATEGORY=civilized
+SUBSECTION=bandits (evil)
+DESCRIPTION=bandit (female)
+
+[CHARDEF 01089]
+DEFNAME=c_h_dreadlord
+ID=c_man
+NAME=#names_dread_lord the dread lord
+SOUND=snd_human_m_die_01
+
+DAM=2
+ARMOR=20
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+//DESIRES=i_gold,e_notoriety
+AVERSIONS=t_trap,t_eerie_stuff
+////alignment=evil
+
+tspeech=spk_human_prime
+tspeech=jobmageevil
+tspeech=spk_needs
+tspeech=spk_rehello
+tspeech=spk_human_default
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=colors_skin
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+parrying={75.0 98.0}
+swordsmanship={80.0 95.0}
+wrestling={67.0 90.0}
+magicresistance={65.0 88.0}
+tactics={80.0 98.0}
+poisoning={90.0 100.0}
+detectinghidden={90.0 100.0}
+
+NPC=brain_monster
+
+FAME=9999
+KARMA=-9999
+
+itemnewbie=random_male_hair
+COLOR=colors_hair
+itemnewbie=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRESTOCK
+ITEM=i_platemail_gloves
+ITEM=i_platemail_helm
+ITEM=i_platemail_arms
+ITEM=i_platemail_gorget
+ITEM=i_platemail_chest
+ITEM=i_platemail_leggings
+ITEM=i_sword_viking
+ITEM=i_cape
+COLOR=020
+ITEM=i_sash
+COLOR=020
+ITEM=i_apron_half
+COLOR=020
+
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM=i_gold,{1 10}
+
+CATEGORY=civilized
+SUBSECTION=dread lords
+DESCRIPTION=dread lord
+
+[CHARDEF 01090]
+DEFNAME=c_h_dreadlord_captain
+ID=c_man
+NAME=#names_dread_lord the dread lord captain
+SOUND=snd_human_m_die_01
+DAM=14
+ARMOR=40
+//DESIRES=i_gold,e_notoriety
+AVERSIONS=t_trap,t_eerie_stuff
+////alignment=evil
+
+tspeech=spk_human_prime
+tspeech=jobmageevil
+tspeech=spk_needs
+tspeech=spk_rehello
+tspeech=spk_human_default
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+ON=@CREATE
+TAG.LLL 4
+COLOR=colors_skin
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+parrying={85.0 98.0}
+swordsmanship={90.0 95.0}
+wrestling={67.0 90.0}
+magicresistance={65.0 88.0}
+tactics={90.0 98.0}
+poisoning={90.0 100.0}
+magery={90.0 100.0}
+
+NPC=brain_monster
+
+FAME=9999
+KARMA=-9999
+
+itemnewbie=random_male_hair
+COLOR=colors_hair
+itemnewbie=random_facial_hair
+COLOR=match_hair
+
+ON=@NPCRESTOCK
+ITEM=i_platemail_gloves
+ITEM=i_platemail_helm
+ITEM=i_platemail_arms
+ITEM=i_platemail_gorget
+ITEM=i_platemail_chest
+ITEM=i_platemail_leggings
+ITEM=i_sword_viking
+ITEM=i_cape
+COLOR=020
+ITEM=i_sash
+COLOR=020
+ITEM=i_apron_half
+COLOR=020
+
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM=i_gold,{1 40}
+ITEM=random_upper_scroll
+ITEM=random_upper_scroll
+
+CATEGORY=civilized
+SUBSECTION=dread lords
+DESCRIPTION=dread lord captain
+
+[CHARDEF 01091]
+DEFNAME=c_m_scorpion_prince
+NAME=a scorpion prince
+ID=c_scorpion_giant
+SOUND=snd_monster_gscorp1
+ICON=i_pet_scorp
+
+DAM=2
+ARMOR=20
+RESOURCES=8 i_ribs_raw
+
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+//shelter==,R_caves,R_desert
+AVERSIONS=r_civilization
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=0387
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+////alignment=evil
+
+parrying={70.0 80.0}
+magicresistance={40.0 45.0}
+tactics={70.0 85.0}
+wrestling={60.0 75.0}
+poisoning={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-3000 -3999}
+
+ON=@NPCRESTOCK
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM=i_gold,{1 10}
+
+CATEGORY=Monsters
+SUBSECTION=scorpion race
+DESCRIPTION=scorpion prince
+
+[CHARDEF 01092]
+DEFNAME=c_m_scorpion_king
+NAME=a scorpion king
+ID=c_scorpion_giant
+SOUND=snd_monster_gscorp1
+ICON=i_pet_scorp
+
+DAM=8
+ARMOR=30
+RESOURCES=8 i_ribs_raw
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+//shelter==,R_caves,R_desert
+AVERSIONS=r_civilization
+
+ON=@CREATE
+TAG.LLL 3
+////alignment=evil
+COLOR=0505
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={80.0 90.0}
+magicresistance={50.0 65.0}
+tactics={80.0 95.0}
+wrestling={70.0 85.0}
+poisoning={99.0 100.0}
+magery={90.0 100.0}
+evaluatingintel={90.0 95.0}
+
+NPC=brain_monster
+
+FAME={3000 5000}
+KARMA={-4000 -4999}
+
+ON=@NPCRESTOCK
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM={ random_jewel 1 0 1 }
+ITEM=i_gold, {1 20}
+ITEM=random_upper_scroll
+ITEM=random_upper_scroll
+
+CATEGORY=Monsters
+SUBSECTION=scorpion race
+DESCRIPTION=scorpion king
+
+[CHARDEF 01093]
+DEFNAME=c_m_scorpion_queen
+NAME=a scorpion queen
+ID=c_scorpion_giant
+SOUND=snd_monster_gscorp1
+ICON=i_pet_scorp
+DAM=20
+ARMOR=50
+RESOURCES=8 i_ribs_raw
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 t_meat_raw
+//shelter==,R_caves,R_desert
+AVERSIONS=r_civilization
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+COLOR=0513
+////alignment=evil
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+
+parrying={80.0 90.0}
+magicresistance={50.0 65.0}
+tactics={80.0 95.0}
+wrestling={70.0 85.0}
+poisoning={99.0 100.0}
+magery={90.0 100.0}
+detectinghidden={90.0 100.0}
+evaluatingintel={90.0 95.0}
+
+NPC=brain_monster
+
+FAME={4000 6000}
+KARMA={-5000 -6999}
+
+ON=@NPCRESTOCK
+ITEM=random_jewel,R3
+ITEM=random_jewel,R3
+ITEM=random_jewel,R3
+ITEM=random_jewel,R3
+ITEM=random_jewel,R3
+ITEM=random_jewel,R3
+ITEM=i_gold,{1 60}
+ITEM=random_upper_scroll
+ITEM=random_upper_scroll
+ITEM=random_upper_scroll
+ITEM=random_upper_scroll
+
+CATEGORY=Monsters
+SUBSECTION=scorpion race
+DESCRIPTION=scorpion queen
+
+[CHARDEF 01094]
+DEFNAME=c_m_scorpion_thrall
+NAME=a scorpion thrall
+ID=c_spider_giant
+SOUND=snd_monster_gispidr1
+ICON=i_pet_spider_giant
+
+DAM=1
+ARMOR=10
+RESOURCES=8 i_reag_spider_silk
+
+////alignment=evil
+CAN=mt_run|mt_equip|mt_walk
+FOODTYPE=15 i_ribs_raw
+//shelter==t_web,R_caves,
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_gray
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+parrying={55.0 65.0}
+magicresistance={25.0 40.0}
+tactics={55.0 70.0}
+wrestling={70.0 85.0}
+poisoning={90.0 99.0}
+
+NPC=brain_monster
+
+FAME={800 1500}
+KARMA={-1999 -3999}
+
+ON=@NPCRESTOCK
+ITEM={i_reag_spider_silk 1 0 1},{3 10}
+ITEM={ random_jewel 1 0 1 }
+ITEM=i_gold,{1 5}
+
+CATEGORY=Monsters
+SUBSECTION=scorpion race
+DESCRIPTION=scorpion thrall
+
+[CHARDEF 01095]
+DEFNAME=c_h_woodelf_elite_ranger
+NAME=#names_elf_male the wood-elf elite ranger
+SOUND=snd_human_m_die_01
+ID=c_man
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+
+DAM=1
+ARMOR=10
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+tspeech=jobfighter
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=0597
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={15.0 38.0}
+tactics={50.0 100.0}
+wrestling={25.0 40.0}
+archery={80.0 100.0}
+bowcraft={60.0 80.0}
+swordsmanship={50.0 70.0}
+
+NPC=brain_human
+
+KARMA={-2000 -4000}
+
+itemnewbie=i_hair_long
+itemnewbie=i_beard_goatee
+
+ON=@NPCRESTOCK
+ITEM=i_cape
+COLOR=045e
+ITEM=i_studded_gloves
+COLOR=045e
+ITEM=i_studded_tunic
+COLOR=045e
+ITEM=i_studded_gorget
+COLOR=045e
+ITEM=i_studded_leggings
+COLOR=0599
+ITEM=i_studded_sleeves
+COLOR=0599
+ITEM=i_boots_calf
+COLOR=045e
+ITEM=i_sash
+COLOR=0599
+ITEM=i_bow
+COLOR=045e
+ITEM=i_arrow,{10 30}
+ITEM=i_gold,{1 5}
+
+CATEGORY=civilized
+SUBSECTION=wood elves
+DESCRIPTION=wood-elf elite ranger
+
+[CHARDEF 01096]
+DEFNAME=c_h_woodelf_elite_warrior
+NAME=#names_elf_male the wood-elf elite warrior
+SOUND=snd_human_m_die_01
+ID=c_man
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+DAM=1
+ARMOR=10
+
+tspeech=jobfighter
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=0597
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={15.0 38.0}
+swordsmanship={60.0 100.0}
+tactics={50.0 100.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-2000 -5000}
+
+itemnewbie=i_hair_long
+itemnewbie=i_beard_goatee
+
+ON=@NPCRESTOCK
+ITEM=i_sword_viking
+ITEM=i_shield_kite_wood
+ITEM=i_cape
+COLOR=045e
+ITEM=i_sash
+COLOR=0599
+ITEM=i_studded_sleeves
+COLOR=0599
+ITEM=i_studded_tunic
+COLOR=045e
+ITEM=i_studded_gloves
+COLOR=045e
+ITEM=i_studded_leggings
+COLOR=0599
+ITEM=i_studded_gorget
+COLOR=045e
+ITEM=i_boots_calf
+COLOR=045e
+
+ITEM=i_gold,{1 5}
+
+CATEGORY=civilized
+SUBSECTION=wood elves
+DESCRIPTION=wood-elf elite warrior
+
+[CHARDEF 01097]
+DEFNAME=c_h_woodelf_ranger
+NAME=#names_elf_male the wood-elf ranger
+SOUND=snd_human_m_die_01
+ID=c_man
+
+DAM=1
+ARMOR=13,13
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+
+tspeech=jobfighter
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=0597
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+archery={65.0 80.0}
+bowcraft={60.0 80.0}
+magicresistance={15.0 38.0}
+spiritspeak={30.0 100.0}
+swordsmanship={30.0 50.0}
+tactics={50.0 80.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-2000 -3000}
+
+itemnewbie=i_hair_long
+itemnewbie=i_beard_goatee
+
+ON=@NPCRESTOCK
+ITEM=i_studded_sleeves
+COLOR=0599
+ITEM=i_studded_tunic
+COLOR=0599
+ITEM=i_studded_gloves
+COLOR=01bb
+ITEM=i_studded_leggings
+COLOR=0599
+ITEM=i_studded_gorget
+COLOR=0599
+ITEM=i_boots_calf
+COLOR=01bb
+ITEM=i_cape
+COLOR=01bb
+ITEM=i_sash
+COLOR=01bb
+ITEM=i_bow
+ITEM=i_arrow,{10 50}
+ITEM=i_gold,{1 5}
+
+CATEGORY=civilized
+SUBSECTION=wood elves
+DESCRIPTION=wood-elf ranger
+
+[CHARDEF 01098]
+DEFNAME=c_h_woodelf_hunter
+NAME=#names_elf_male the wood-elf hunter
+SOUND=snd_human_m_die_01
+ID=c_man
+DAM=1
+ARMOR=10
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+
+tspeech=jobfighter
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=0597
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+fencing={40.0 60.0}
+magicresistance={15.0 38.0}
+tactics={38.0 50.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-2000 -3000}
+
+itemnewbie=i_hair_long
+itemnewbie=i_beard_long_med
+
+ON=@NPCRESTOCK
+ITEM=i_leather_tunic
+ITEM=i_leather_gorget
+ITEM=i_leather_leggings
+ITEM=i_sandals
+ITEM=i_spear
+ITEM=i_gold,{1 5}
+ITEM=i_hides_cut,{1 3}
+
+CATEGORY=civilized
+SUBSECTION=wood elves
+DESCRIPTION=wood-elf hunter
+
+[CHARDEF 01099]
+DEFNAME=c_darkelf_war_sword
+NAME=#names_elf_male the dark-elf warrior
+SOUND=snd_human_m_die_01
+ID=c_man
+
+DAM=2
+ARMOR=20
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+
+tspeech=jobfighter
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+CATEGORY=civilized
+SUBSECTION=dark elves
+DESCRIPTION=dark-elf warrior w/sword
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=0597
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+magicresistance={15.0 38.0}
+swordsmanship={60.0 100.0}
+tactics={50.0 100.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-3000 -5000}
+FAME={1000 3000}
+
+itemnewbie=i_beard_goatee
+itemnewbie=i_hair_long
+
+ON=@NPCRESTOCK
+ITEM=i_sword_viking
+ITEM=i_bone_chest
+COLOR=0455
+ITEM=i_bone_gloves
+COLOR=0455
+ITEM=i_bone_helmet
+COLOR=0455
+ITEM=i_chainmail_leggings
+COLOR=0455
+ITEM=i_boots_calf
+COLOR=0455
+ITEM=i_cape
+COLOR=0455
+ITEM=i_shield_round_metal
+ITEM=i_gold,{1 10}
+
+[CHARDEF 01100]
+DEFNAME=c_h_woodelf_fighter
+NAME=#names_elf_male the wood_elf fighter
+SOUND=snd_human_m_die_01
+ID=c_man
+
+DAM=1
+ARMOR=10
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+
+tspeech=jobfighter
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=0597
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+magicresistance={15.0 38.0}
+swordsmanship={60.0 80.0}
+tactics={50.0 80.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-2000 -4000}
+
+itemnewbie=i_hair_long
+
+ON=@NPCRESTOCK
+ITEM=i_sandals
+ITEM=i_gold,{1 5}
+ITEM=i_shield_wood
+ITEM=i_sword_long
+ITEM=i_studded_tunic
+COLOR=0599
+ITEM=i_studded_gloves
+COLOR=0599
+ITEM=i_studded_leggings
+COLOR=0599
+
+CATEGORY=civilized
+SUBSECTION=wood elves
+DESCRIPTION=wood-elf fighter
+
+[CHARDEF 01101]
+DEFNAME=c_darkelf_fight_mace
+NAME=#names_elf_male the dark-elf fighter
+SOUND=snd_human_m_die_01
+ID=c_man
+
+DAM=1
+ARMOR=10
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+
+tspeech=jobfighter
+CATEGORY=civilized
+SUBSECTION=dark elves
+DESCRIPTION=dark-elf fighter
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=0597
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+fencing={60.0 80.0}
+macefighting={60.0 80.0}
+magicresistance={15.0 38.0}
+swordsmanship={60.0 80.0}
+tactics={60.0 90.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-2000 -5000}
+
+itemnewbie=i_beard_goatee
+itemnewbie=i_hair_long
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1 5}
+ITEM=i_bone_chest
+COLOR=0455
+ITEM=i_bone_gloves
+
+COLOR=0455
+ITEM=i_bone_helmet
+COLOR=0455
+ITEM=i_boots_calf
+COLOR=0455
+ITEM=i_mace_war
+ITEM=i_shield_wood
+ITEM=i_studded_leggings
+COLOR=0455
+
+[CHARDEF 01102]
+DEFNAME=c_darkelf_grunt
+NAME=#names_elf_male the dark-elf grunt
+SOUND=snd_human_m_die_01
+ID=c_man
+
+DAM=1
+ARMOR=10
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+tspeech=jobfighter
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=0597
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+archery={60.0 80.0}
+fencing={60.0 80.0}
+macefighting={60.0 80.0}
+magicresistance={15.0 38.0}
+swordsmanship={60.0 80.0}
+tactics={60.0 90.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-2500 -3500}
+FAME={1000 2000}
+
+itemnewbie=i_beard_goatee
+itemnewbie=i_hair_long
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1 5}
+ITEM=i_bone_chest
+COLOR=0455
+ITEM=i_bone_gloves
+
+COLOR=0455
+ITEM=i_bone_helmet
+COLOR=0455
+ITEM=i_boots_calf
+COLOR=0455
+ITEM=i_studded_leggings
+COLOR=0455
+ITEM=i_shield_wood
+ITEM=i_axe_war
+
+CATEGORY=civilized
+SUBSECTION=dark elves
+DESCRIPTION=dark-elf grunt
+
+[CHARDEF 01103]
+DEFNAME=c_darkelf_fight_sword
+NAME=#names_elf_male the dark-elf fighter
+SOUND=snd_human_m_die_01
+ID=c_man
+
+DAM=2
+ARMOR=20
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+
+tspeech=jobfighter
+CATEGORY=civilized
+SUBSECTION=dark elves
+DESCRIPTION=dark-elf with sword
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=0597
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+archery={60.0 80.0}
+fencing={60.0 80.0}
+macefighting={60.0 80.0}
+magicresistance={15.0 38.0}
+swordsmanship={60.0 80.0}
+tactics={60.0 90.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-3000 -4000}
+FAME={2500 4000}
+
+itemnewbie=i_beard_goatee
+itemnewbie=i_hair_long
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1 10}
+ITEM=i_bone_chest
+COLOR=0455
+ITEM=i_bone_gloves
+
+COLOR=0455
+ITEM=i_bone_helmet
+COLOR=0455
+ITEM=i_boots_calf
+COLOR=0455
+ITEM=i_studded_leggings
+COLOR=0455
+ITEM=i_shield_wood
+ITEM=i_sword_broad
+
+[CHARDEF 01104]
+DEFNAME=c_darkelf_war_axe
+NAME=#names_elf_male the dark-elf warrior
+SOUND=snd_human_m_die_01
+ID=c_man
+
+DAM=2
+ARMOR=20
+TEVENTS=e_exp2
+TEVENTS=e_Monster_Name
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+
+tspeech=jobfighter
+
+CATEGORY=civilized
+SUBSECTION=dark elves
+DESCRIPTION=dark-elf warrior w/btl axe
+
+ON=@CREATE
+TAG.LLL 2
+COLOR=0597
+STR={150 250}
+DEX={95 105}
+INT={150 250}
+
+archery={75.0 100.0}
+macefighting={75.0 100.0}
+magicresistance={15.0 38.0}
+parrying={40.0 50.0}
+swordsmanship={75.0 100.0}
+tactics={75.0 100.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={ -3000 -5000 }
+FAME={3000 4000}
+
+itemnewbie=i_hair_long
+itemnewbie=i_beard_goatee
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1 10}
+ITEM=i_bone_chest
+COLOR=0455
+ITEM=i_bone_gloves
+
+COLOR=0455
+ITEM=i_bone_helmet
+COLOR=0455
+ITEM=i_chainmail_leggings
+COLOR=0455
+ITEM=i_boots_calf
+COLOR=0455
+ITEM=i_cape
+COLOR=0455
+ITEM=i_axe_two_hand
+
+[CHARDEF 01105]
+DEFNAME=c_h_woodelf_archer
+ID=c_man
+NAME=#names_elf_male the wood-elf archer
+SOUND=snd_human_m_die_01
+
+DAM=1
+ARMOR=10
+
+CAN=mt_run|mt_equip|mt_equip|mt_run|mt_usehands|mt_walk
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+tspeech=jobfighter
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=0597
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+archery={50.0 70.0}
+bowcraft={60.0 80.0}
+magicresistance={15.0 38.0}
+spiritspeak={30.0 100.0}
+swordsmanship={30.0 50.0}
+tactics={40.0 60.0}
+wrestling={25.0 40.0}
+
+NPC=brain_human
+
+KARMA={-2000 -4000}
+
+itemnewbie=i_hair_long
+
+ON=@NPCRESTOCK
+ITEM=i_arrow,{20 40}
+ITEM=i_leather_tunic
+COLOR=0599
+ITEM=i_leather_gloves
+COLOR=0599
+ITEM=i_leather_leggings
+COLOR=0599
+ITEM=i_bow
+ITEM=i_sandals
+ITEM=i_gold,{1 5}
+
+CATEGORY=civilized
+SUBSECTION=wood elves
+DESCRIPTION=wood-elf archer
+
+[CHARDEF 01106]
+DEFNAME=c_m_dragon_crystal
+ID=c_dragon_red
+NAME=a crystal dragon
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+TEVENTS=e_exp6
+TEVENTS=e_Monster_Name
+
+DAM=26
+ARMOR=60
+RESOURCES=99 i_ribs_raw,8 i_reag_dragon_blood,20 i_hide
+TEVENTS=e_liches
+////alignment=chaotic
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune
+//spellcircles=6
+FOODTYPE=80 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_water,R_civilization
+
+ON=@CREATE
+TAG.LLL 6
+NPC=brain_dragon
+COLOR=07fff
+STR={1500 2500}
+DEX={95 105}
+INT={1500 2500}
+
+parrying={55.0 95.0}
+magicresistance={99.0 100.0}
+tactics={98.0 100.0}
+wrestling={90.0 93.0}
+taming=99.0
+FAME=30000
+KARMA=-11000
+
+ON=@NPCRESTOCK
+ITEM={ rich_monster_backpack 1 filthy_rich_monster_backpack 3 }
+ITEM={ rich_monster_backpack 1 filthy_rich_monster_backpack 3 }
+ITEM={ rich_monster_backpack 1 filthy_rich_monster_backpack 3 }
+ITEM={ rich_gold_pile 1 filthy_rich_gold_pile 3 }
+ITEM={ rich_gold_pile 1 filthy_rich_gold_pile 3 }
+ITEM={ rich_gold_pile 1 }
+//ITEM=random_monster_goodie
+//ITEM=random_monster_goodie
+ITEM=i_gold,{150 430}
+//ITEM=ttm_lvl5,R99
+ITEM=t_randomallmagic,R25
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=crystal dragon
+
+[CHARDEF 01107]
+DEFNAME=c_m_dragon_greendrake
+ID=c_dragon_small_black
+NAME=a drake
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+DAM=20
+ARMOR=50
+RESOURCES=50 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune
+FOODTYPE=25 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_water,R_civilization
+TEVENTS=e_liches
+TEVENTS=e_exp5
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 5
+COLOR=0175
+STR={500 1000}
+DEX={95 105}
+INT={500 1000}
+////alignment=neutral
+//spellcircles=4
+
+parrying={65.0 80.0}
+magicresistance={65.0 80.0}
+tactics={65.0 90.0}
+wrestling={65.0 80.0}
+taming=100.0
+
+NPC=brain_dragon
+
+FAME={3000 9000}
+KARMA={-4999 -5999}
+ON=@NPCRESTOCK
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ random_rich_monster_goodie 1 random_filthy_rich_monster_goodie 1 }
+ITEM=i_gold,{80 400}
+ITEM=ttm_lvl3,R99
+
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=drake, green
+
+[CHARDEF 01108]
+DEFNAME=c_m_dragon_copperdrake
+ID=c_dragon_small_black
+NAME=a drake
+
+DAM=14
+ARMOR=40
+RESOURCES=50 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+TEVENTS=e_liches
+////alignment=neutral
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune
+//spellcircles=4
+FOODTYPE=25 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_water,R_civilization
+TEVENTS=e_liches
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 4
+COLOR=091
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+parrying={65.0 80.0}
+magicresistance={65.0 80.0}
+tactics={65.0 90.0}
+wrestling={65.0 80.0}
+taming=100.0
+
+NPC=brain_dragon
+
+FAME={3000 9000}
+KARMA={-4999 -5999}
+
+ON=@NPCRESTOCK
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ random_rich_monster_goodie 1 random_filthy_rich_monster_goodie 1 }
+ITEM={ random_gold_pile 3 0 1 }
+ITEM=ttm_lvl3,R99
+
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=drake, copper
+
+[CHARDEF 01109]
+DEFNAME=c_m_dragon_bluedrake
+ID=c_dragon_small_black
+NAME=a drake
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+
+DAM=14
+ARMOR=40
+RESOURCES=50 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+TEVENTS=e_liches
+//alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune
+//spellcircles=4
+FOODTYPE=25 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_water,R_civilization
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 4
+COLOR=05d
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+parrying={65.0 80.0}
+magicresistance={65.0 80.0}
+tactics={65.0 90.0}
+wrestling={65.0 80.0}
+taming=100.0
+
+NPC=brain_dragon
+FAME={3000 9000}
+KARMA={-4999 -5999}
+
+ON=@NPCRESTOCK
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ random_rich_monster_goodie 1 random_filthy_rich_monster_goodie 1 }
+ITEM={ random_gold_pile 3 0 1 }
+ITEM=ttm_lvl3,R99
+
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=drake, blue
+
+[CHARDEF 01110]
+DEFNAME=c_m_dragon_golddrake
+ID=c_dragon_small_black
+NAME=a drake
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+
+DAM=14
+ARMOR=40
+RESOURCES=50 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+
+//alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune
+//spellcircles=4
+FOODTYPE=25 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_water,R_civilization
+TEVENTS=e_liches
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 4
+COLOR=033
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+parrying={65.0 80.0}
+magicresistance={65.0 80.0}
+tactics={65.0 90.0}
+wrestling={65.0 80.0}
+taming=100.0
+
+NPC=brain_dragon
+
+FAME={3000 9000}
+KARMA={-4999 -5999}
+ON=@NPCRESTOCK
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ random_rich_monster_goodie 1 random_filthy_rich_monster_goodie 1 }
+ITEM={ random_gold_pile 3 0 1 }
+ITEM=ttm_lvl3,R99
+
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=drake, gold
+
+[CHARDEF 01111]
+DEFNAME=c_m_dragon_blackdrake
+ID=c_dragon_small_black
+NAME=a drake
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+
+DAM=14
+ARMOR=40
+RESOURCES=50 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+TEVENTS=e_liches
+//alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune
+//spellcircles=4
+FOODTYPE=25 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_water,R_civilization
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 4
+COLOR=0455
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+parrying={65.0 80.0}
+magicresistance={65.0 80.0}
+tactics={65.0 90.0}
+wrestling={65.0 80.0}
+taming=100.0
+
+NPC=brain_dragon
+
+FAME={3000 7000}
+KARMA={-3000 -8000}
+
+ON=@NPCRESTOCK
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ random_rich_monster_goodie 1 random_filthy_rich_monster_goodie 1 }
+ITEM={ random_gold_pile 3 0 1 }
+ITEM=ttm_lvl3,R99
+
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=drake, black
+
+[CHARDEF 01112]
+DEFNAME=c_m_dragon_silverdrake
+ID=c_dragon_small_red
+NAME=a drake
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+
+DAM=14
+ARMOR=40
+RESOURCES=50 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+TEVENTS=e_liches
+//alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune
+//spellcircles=4
+FOODTYPE=25 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_water,R_civilization
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 4
+COLOR=037a
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+parrying={65.0 80.0}
+magicresistance={65.0 80.0}
+tactics={65.0 90.0}
+wrestling={65.0 80.0}
+taming=100.0
+
+NPC=brain_dragon
+FAME={3000 9000}
+KARMA={-4999 -5999}
+ON=@NPCRESTOCK
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ random_rich_monster_goodie 1 random_filthy_rich_monster_goodie 1 }
+ITEM={ random_gold_pile 3 0 1 }
+ITEM=ttm_lvl3,R99
+
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=drake, silver
+
+[CHARDEF 01113]
+DEFNAME=c_m_dragon_crystaldrake
+ID=c_dragon_small_red
+NAME=a drake
+SOUND=snd_monster_dragon1
+ICON=i_pet_dragon
+
+DAM=14
+ARMOR=40
+RESOURCES=50 i_ribs_raw,20 i_hide,8 i_reag_dragon_blood
+
+//alignment=evil
+CAN=mt_run|mt_equip|mt_walk|mt_fly|mt_fire_immune
+//spellcircles=4
+FOODTYPE=25 t_meat_raw
+//shelter==r_caves,
+DESIRES=i_gold
+AVERSIONS=r_water,R_civilization
+TEVENTS=e_liches
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 4
+COLOR=07fff
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+parrying={65.0 80.0}
+magicresistance={65.0 80.0}
+tactics={65.0 90.0}
+wrestling={65.0 80.0}
+taming=100.0
+
+NPC=brain_dragon
+
+FAME={2000 6000}
+KARMA={-2000 -5000}
+
+ON=@NPCRESTOCK
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ rich_monster_backpack 3 filthy_rich_monster_backpack 1 }
+ITEM={ random_rich_monster_goodie 1 random_filthy_rich_monster_goodie 1 }
+ITEM={ random_gold_pile 3 0 1 }
+ITEM=ttm_lvl3,R99
+
+CATEGORY=Monsters
+SUBSECTION=dragons and drakes
+DESCRIPTION=drake, crystal
+
+[CHARDEF 01124]
+DEFNAME=c_m_frost_ettin
+NAME=a frost ettin
+ID=c_ettin
+SOUND=snd_monster_ettin1
+ICON=i_pet_ettin
+CAN=mt_run|mt_equip|mt_usehands|mt_walk
+
+DAM=8
+ARMOR=30
+TEVENTS=e_exp3
+TEVENTS=e_Monster_Name
+
+FOODTYPE=5 t_meat_raw
+RESOURCES={5 10} i_ribs_raw
+
+////alignment=evil
+
+ON=@CREATE
+TAG.LLL 3
+COLOR=color_snow
+STR={250 350}
+DEX={95 105}
+INT={250 350}
+
+parrying={56.6 65.8}
+magicresistance={46.9 55.8}
+tactics={52.1 78.8}
+wrestling={58.4 67.6}
+
+NPC=brain_monster
+
+FAME={4000 4000}
+KARMA={-2000 -2999}
+
+ON=@NPCRESTOCK
+ITEM={ backpack_rich 3 backpack_loaded 1 }
+ITEM=i_gem_amber
+ITEM=random_body_armor,R20
+ITEM=random_helms,R10
+ITEM=i_platemail_chest,R50
+ITEM=random_shield,R7
+ITEM=random_chest_armor,R30
+ITEM=i_deed,R100000
+ITEM=random_clothing
+
+CATEGORY=Monsters
+SUBSECTION=ettins, ogres, trolls, cyclops, and titans
+DESCRIPTION=frost ettin
+
+[CHARDEF 01125]
+DEFNAME=c_m_goblin_shaman
+NAME=a goblin shaman
+ID=c_orc
+
+DAM=1
+ARMOR=10
+RESOURCES=9 i_ribs_raw
+FOODTYPE=15 t_meat_raw
+////alignment=evil
+
+//shelter==r_caves,,R_orc_camp
+DESIRES=i_gold,spk_orc
+tspeech=spk_orc
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_green
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+
+
+magicresistance={51.6 75.2}
+parrying={56.2 75.2}
+tactics={55.7 88.5}
+magery={60.0 75.0}
+wrestling={46.5 68.6}
+
+NPC=brain_monster
+
+KARMA={-1000 -4000}
+FAME={450 800}
+
+ON=@NPCRESTOCK
+container=i_backpack
+ITEM=random_coin_purse
+ITEM=i_boots_thigh
+ITEM=average_gold_pile,{1 3}
+ITEM=random_scroll
+ITEM=random_scroll
+ITEM=random_scroll
+ITEM=random_body_armor,{1 2},R5
+ITEM=random_eighth_circle,R25
+
+CATEGORY=Monsters
+SUBSECTION=goblins
+DESCRIPTION=goblin shaman
+
+[CHARDEF 01126]
+DEFNAME=c_m_goblin_lord
+NAME=a goblin lord
+ID=c_orc_lord
+DAM=1
+ARMOR=10
+RESOURCES=9 i_ribs_raw
+FOODTYPE=15 t_meat_raw
+
+//shelter==r_caves,,R_orc_camp
+DESIRES=i_gold,spk_orc
+tspeech=spk_orc
+TEVENTS=e_exp1
+TEVENTS=e_Monster_Name
+
+ON=@CREATE
+TAG.LLL 1
+COLOR=colors_green
+STR={50 150}
+DEX={95 105}
+INT={50 150}
+////alignment=evil
+
+macefighting={40.0 55.0}
+magicresistance={25.0 35.0}
+parrying={45.0 60.0}
+tactics={45.0 55.5}
+wrestling={50.0 65.0}
+
+NPC=brain_monster
+
+KARMA={-100 -499}
+FAME={100 250}
+
+ON=@NPCRESTOCK
+ITEM=i_club
+container=i_backpack
+ITEM=random_coin_purse,{4 6}
+ITEM=i_boots_thigh
+ITEM=average_gold_pile
+ITEM=i_leather_tunic,R7
+ITEM=random_chest_armor,R23
+ITEM=random_all_armor,R30
+ITEM=random_coifs,R6
+ITEM=random_first_circle,R15
+ITEM=random_all_armor,R15
+ITEM=random_all_armor,R25
+ITEM=random_all_armor,R35
+ITEM=random_extra_armor,R40
+ITEM=random_shields,R20
+ITEM=random_shields,R30
+ITEM=random_scroll,R3
+ITEM=random_scroll,R3
+ITEM=random_scroll,R3
+ITEM=random_eighth_circle,R20
+ITEM=random_eighth_circle,R20
+ITEM=random_all_armor
+ITEM=i_deed,R5000
+
+CATEGORY=Monsters
+SUBSECTION=goblins
+DESCRIPTION=goblin lord  (club)
+
+[CHARDEF 01127]
+DEFNAME=c_m_cyclops_king
+NAME=a cyclops king
+SOUND=snd_monster_cyclops1
+ID=c_cyclops
+DAM=26
+ARMOR=60
+RESOURCES=30 i_ribs_raw
+FOODTYPE=15 t_meat_raw
+TEVENTS=e_exp6
+TEVENTS=e_Monster_Name
+
+CAN=mt_run|mt_equip|mt_walk
+////alignment=evil
+
+ON=@CREATE
+TAG.LLL 6
+STR={1500 2500}
+DEX={95 105}
+INT={1500 2500}
+
+magicresistance={90.0 175.0}
+parrying=500.0
+tactics=500.0
+wrestling=500.0
+
+NPC=brain_monster
+
+KARMA={-5000 -5999}
+FAME={100 2000}
+
+//itemnewbie=i_hair_long,R5
+
+ON=@NPCRESTOCK
+ITEM={ backpack_rich 1 backpack_loaded 3 }
+ITEM=t_randomallmagic,R25
+ITEM=t_randomallmagic,R35
+ITEM=t_randomallmagic,R45
+ITEM=random_special_drop1,R25
+ITEM=random_special_drop2,R25
+ITEM=i_gold,{100 700}
+
+CATEGORY=Monsters
+SUBSECTION=ettins, ogres, trolls, cyclops, and titans
+DESCRIPTION=cyclops king
+
+[CHARDEF 01128]
+DEFNAME=c_m_ettin_lord
+NAME=an ettin lord
+SOUND=snd_monster_ettin1
+ID=c_ettin_w_axe
+
+DAM=14
+ARMOR=40
+RESOURCES=20 i_ribs_raw
+TEVENTS=e_exp4
+TEVENTS=e_Monster_Name
+
+CAN=mt_run|mt_equip|mt_usehands|mt_walk
+FOODTYPE=15 t_meat_raw
+////alignment=evil
+
+ON=@CREATE
+TAG.LLL 4
+STR={350 450}
+DEX={95 105}
+INT={350 450}
+
+magery={10.0 50.0}
+magicresistance={90.0 155.0}
+parrying={50.0 60.0}
+swordsmanship={60.0 75.0}
+tactics={60.0 70.0}
+wrestling={50.0 60.0}
+
+NPC=brain_monster
+
+KARMA={-5000 -7999}
+FAME={4500 6999}
+
+itemnewbie=i_spellbook
+//addspell=
+more1=000000d1
+more2=00000000
+
+ON=@NPCRESTOCK
+ITEM=backpack_loaded
+ITEM=backpack_loaded,R15
+ITEM=backpack_loaded,R14
+ITEM={ rich_gold_pile 3 filthy_rich_gold_pile 1 }
+ITEM=i_axe_double
+ITEM=random_chest_armor_male
+ITEM=random_leg_armor,R10
+ITEM=random_hand_armor,R7
+ITEM=random_shields,R21
+ITEM=random_axes
+ITEM=random_pole_arms,R3
+ITEM=random_masks,R10
+ITEM=i_gem_diamond,{3 5}
+
+CATEGORY=Monsters
+SUBSECTION=ettins, ogres, trolls, cyclops, and titans
+DESCRIPTION=ettin lord
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[eof]

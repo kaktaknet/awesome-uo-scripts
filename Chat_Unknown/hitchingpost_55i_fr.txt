@@ -1,0 +1,43 @@
+// ********************************************************************************
+// | All Scripts in this file by: Trunks					  |
+// | www.majinnet.com/								  |
+// | This file may be freely edited for personal use, but may not be distributed  |	
+// | in whole or in part, in any format without express written permission from   |
+// | Trunks.  									  |
+// | E-Mail: MTrunks@saiyan.com   ICQ#: 42340665  Website: Http://majinnet.com/   |
+// ********************************************************************************
+
+
+//French Hitching Post Creadted by: Trunks for 54(x)+
+//Translated by: Mayva
+[ITEMDEF i_hitching_postf] 
+NAME=Hitching Post 
+ID=014e7 
+WEIGHT=500 
+ON=@DCLICK 
+SRC.SYSMESSAGE Ciblez la creature a accrocher. 
+TARGET 
+
+ON=@TARGON_ITEM 
+SRC.SYSMESSAGE Cet objet ne peut etre accroche! 
+RETURN 1 
+
+ON=@TARGON_CHAR 
+IF (<SRC.TARG.BODY>==c_man) | | (<SRC.TARG.BODY>==c_woman) 
+SRC.SYSMESSAGE Vous ne pouvez pas accrocher un humain! 
+RETURN 1 
+ELSEIF (<SRC.TARG.FLAGS>&040000) && <SRC.TARG.ISMYPET> 
+SRC.TARG.FLAGS=<SRC.TARG.FLAGS>&~040000 
+SRC.SYSMESSAGE Vous avez libere <SRC.TARG.NAME> du piquet! 
+RETURN 1 
+ELSE 
+SRC.TARG.FLAGS=<SRC.TARG.FLAGS>|040000 
+SRC.SYSMESSAGE <SRC.TARG.NAME> est accroche! 
+RETURN 1 
+ENDIF 
+
+CATEGORY=Stuff by Trunks 
+SUBSECTION=Server Items 
+DESCRIPTION=Hitching Post French 
+
+//--------END Hitching Posts-------\\

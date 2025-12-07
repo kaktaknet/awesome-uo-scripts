@@ -1,0 +1,534 @@
+// ############################## Age of Darkness Shard #############################
+// ############################## SOCKETED ITEMS SYSTEM ##########################
+// Script with a simple socket system to make items with sockets, where special gems
+// could be inserted to add power-ups to the items, causing special effects.
+// This is already known to anyone who ever played Diablo II, with some adaptations
+// to Ultima Online's style.
+// ##################################################################################
+// Scripted by Admin DevNull - AoD Shard
+// Sphere 0.55i
+// E-mail: dev.null@terra.com.br
+// ICQ#: 77862015
+// Please keep credits
+// ##################################################################################
+
+// COLORS USED BY THE SYSTEM
+[DEFNAME COLOR_GEMMED_SOCKETED]
+color_iron_socket     0764
+color_turmalina       00798
+color_ametista        0077e
+color_rubi            007a3
+color_safira          0078a
+color_esmeralda       007ac
+color_diamante	      0077b
+
+// Beginning with the items already socketed
+// At first, only iron platemail pieces and viking swords can be socketed
+// The only differences between socketed items and the normal ones are the socket,
+// the darker color and that they are not crafted as usual.
+
+[ITEMDEF i_platemail_arms_socket]
+ID=i_platemail_arms
+NAME=Socketed Platemail Arms
+TYPE=T_ARMOR
+FLIP=1
+SKILLMAKE=BLACKSMITHING 35.0
+RESOURCES=1 i_platemail_arms, 10 i_ingot_iron
+RESOURCES2=1 i_platemail_arms, 5 i_ingot_iron, 5 i_hinge
+WEIGHT=18
+ARMOR=40
+REQSTR=40
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Socketed Platemail Arms
+DUPELIST=01417
+
+ON=@Create
+COLOR=color_iron_socket
+HITPOINTS={51 65}
+
+[ITEMDEF i_platemail_leggings_socket]
+ID=i_platemail_leggings
+NAME=Socketed Platemail Leggings
+TYPE=T_ARMOR
+FLIP=1
+RESOURCES=1 i_platemail_leggings, 10 i_ingot_iron
+WEIGHT=20
+ARMOR=40
+REQSTR=40
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Socketed Platemail Leggings
+DUPELIST=0141a
+SKILLMAKE=BLACKSMITHING 35.0
+
+ON=@Create
+COLOR=color_iron_socket
+HITPOINTS={51 65}
+
+[ITEMDEF i_platemail_helm_socket]
+ID=i_platemail_helm
+NAME=Socketed Platemail Helm
+TYPE=T_ARMOR
+FLIP=1
+RESOURCES=1 i_platemail_helm, 10 i_ingot_iron
+WEIGHT=20
+ARMOR=40
+REQSTR=40
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Socketed Platemail Helm
+DUPELIST=01419
+SKILLMAKE=BLACKSMITHING 35.0
+
+ON=@Create
+COLOR=color_iron_socket
+HITPOINTS={51 65}
+
+[ITEMDEF i_platemail_gorget_socket]
+ID=i_platemail_gorget
+NAME=Socketed Platemail Gorget
+TYPE=T_ARMOR
+FLIP=1
+RESOURCES=1 i_platemail_gorget, 10 i_ingot_iron
+WEIGHT=6
+ARMOR=40
+REQSTR=30
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Socketed Platemail Gorget
+SKILLMAKE=BLACKSMITHING 35.0
+
+ON=@Create
+COLOR=color_iron_socket
+HITPOINTS={51 65}
+
+[ITEMDEF i_platemail_gloves_socket]
+ID=i_platemail_gloves
+NAME=Socketed Platemail Gauntlets
+TYPE=T_ARMOR
+FLIP=1
+RESOURCES=1 i_platemail_gloves, 10 i_ingot_iron
+WEIGHT=5
+ARMOR=40
+REQSTR=30
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Socketed Platemail Gauntlets
+DUPELIST=01418
+SKILLMAKE=BLACKSMITHING 35.0
+
+ON=@Create
+COLOR=color_iron_socket
+HITPOINTS={51 65}
+
+[ITEMDEF i_platemail_chest_socket]
+ID=i_platemail_chest
+NAME=Socketed Platemail Chest
+TYPE=T_ARMOR
+FLIP=1
+RESOURCES=1 i_platemail_chest, 10 i_ingot_iron
+WEIGHT=23
+ARMOR=40
+REQSTR=60
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Socketed Platemail Chest
+DUPELIST=01416
+SKILLMAKE=BLACKSMITHING 35.0
+
+ON=@Create
+COLOR=color_iron_socket
+HITPOINTS={51 65}
+
+[ITEMDEF i_sword_viking_socket]
+ID=i_sword_viking
+RESOURCES=1 i_sword_viking, 10 i_ingot_iron
+NAME=Socketed Viking Sword
+WEIGHT=8
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=4,32
+//SPEED=35
+SKILL=Swordsmanship
+REQSTR=40
+TWOHANDS=N
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Socketed Viking Sword
+DUPELIST=013ba
+SKILLMAKE=BLACKSMITHING 35.0
+
+ON=@Create
+COLOR=color_iron_socket
+HITPOINTS={31 100}
+
+[ITEMDEF i_shield_heater_socket]
+ID=i_shield_heater
+NAME=Socketed Heater Shield
+TYPE=t_shield
+FLIP=1
+RESOURCES=1 i_shield_heater, 10 i_ingot_iron
+WEIGHT=14
+ARMOR=23
+REQSTR=30
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Socketed Heater Shield
+DUPELIST=01b77
+SKILLMAKE=BLACKSMITHING 50.2
+
+ON=@Create
+COLOR=color_iron_socket
+HITPOINTS={31 37}
+
+// Now, the Blacksmithing menus for socketing the items.
+// This way, the script becomes more simple because it won't require a special item
+// and everything is made quicker, animated and with sounds with less work.
+
+[SKILLMENU sm_socketed]
+Socket Items
+
+ON=i_platemail_chest Platemail
+SKILLMENU=sm_platemail_socketed
+
+ON=i_shield_heater Shield
+SKILLMENU=sm_shield_socketed
+
+ON=i_sword_viking Sword
+SKILLMENU=sm_sword_socketed
+
+[SKILLMENU sm_platemail_socketed]
+Socket Platemail
+
+ON=i_platemail_chest_socket Socket Chest (<resmake>)
+MAKEITEM=i_platemail_chest_socket
+
+ON=i_platemail_gorget_socket Socket Gorget (<resmake>)
+MAKEITEM=i_platemail_gorget_socket
+
+ON=i_platemail_gloves_socket Socket Gauntlets (<resmake>)
+MAKEITEM=i_platemail_gloves_socket
+
+ON=i_platemail_leggings_socket Socket Leggings (<resmake>)
+MAKEITEM=i_platemail_leggings_socket
+
+ON=i_platemail_arms_socket Socket Arms (<resmake>)
+MAKEITEM=i_platemail_arms_socket
+
+ON=i_platemail_helm_socket Socket Helm (<resmake>)
+MAKEITEM=i_platemail_helm_socket
+
+[SKILLMENU sm_shield_socketed]
+Socket Shield
+
+ON=i_shield_heater_socket Socket Heater Shield (<resmake>)
+MAKEITEM=i_shield_heater_socket
+
+[SKILLMENU sm_sword_socketed]
+Socket Sword
+
+ON=i_sword_viking_socket Socket Viking Sword (<resmake>)
+MAKEITEM=i_sword_viking_socket
+
+// As gemas e suas respectivas regioes
+
+[ITEMDEF i_gema_esmeralda]
+//Emerald
+ID=i_virtstone_3
+NAME=Emerald Gem
+TYPE=T_GEM
+VALUE=90
+WEIGHT=1
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Emerald Gem
+
+[ITEMDEF i_gema_safira]
+//Sapphire
+ID=i_virtstone_2
+NAME=Sapphire Gem
+TYPE=T_GEM
+VALUE=70
+WEIGHT=1
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Sapphire Gem
+
+[ITEMDEF i_gema_rubi]
+//Ruby
+ID=i_virtstone_6
+NAME=Ruby Gem
+TYPE=T_GEM
+VALUE=80
+WEIGHT=1
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Ruby Gem
+
+[ITEMDEF i_gema_ametista]
+//Amethist
+ID=i_virtstone_5
+NAME=Amethist Gem
+TYPE=T_GEM
+VALUE=60
+WEIGHT=1
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Amethist Gem
+
+[ITEMDEF i_gema_turmalina]
+//Tourmaline
+ID=i_virtstone_8
+NAME=Tourmaline Gem
+TYPE=T_GEM
+VALUE=50
+WEIGHT=1
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Tourmaline Gem
+
+[ITEMDEF i_gema_diamante]
+//Diamond
+ID=i_virtstone_7
+NAME=Diamond Gem
+TYPE=T_GEM
+VALUE=100
+WEIGHT=1
+CATEGORY=AoD Shard
+SUBSECTION=Socket System
+DESCRIPTION=Diamond Gem
+
+// Region Resources for the Gems, so that they can be mined
+// like ore. This is an interesting way of doing it. If you like,
+// you can also make your own gems and put some stronger
+// ones as loot inside monsters.
+
+[REGIONRESOURCE mr_Turmalina]
+// t_rock
+SKILL_LO=30.0
+SKILL_HI=110.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gema_turmalina
+REGEN=60*60*5
+
+[REGIONRESOURCE mr_Ametista]
+// t_rock
+SKILL_LO=40.0
+SKILL_HI=110.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gema_ametista
+REGEN=60*60*5
+
+[REGIONRESOURCE mr_Rubi]
+// t_rock
+SKILL_LO=50.0
+SKILL_HI=110.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gema_rubi
+REGEN=60*60*5
+
+[REGIONRESOURCE mr_Safira]
+// t_rock
+SKILL_LO=60.0
+SKILL_HI=110.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gema_safira
+REGEN=60*60*5
+
+[REGIONRESOURCE mr_Esmeralda]
+// t_rock
+SKILL_LO=70.0
+SKILL_HI=110.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gema_esmeralda
+REGEN=60*60*5
+
+[REGIONRESOURCE mr_Diamante]
+// t_rock
+SKILL_LO=85.0
+SKILL_HI=110.0
+AMOUNT_LO=1
+AMOUNT_HI=2
+REAP=i_gema_diamante
+REGEN=60*60*5
+
+// The items with the inserted gems are in the other script, called
+// itens_gemmed.scp, because there are pretty many of them.
+// Below bgeins the Tinkering menus to insert the gems inside
+// the items' sockets. This is cool because it links two different
+// skills with one single purpose, and I pretty liked it this way
+// although some players amde some complaints about it, but
+// afterwards they enjoyed it a lot.
+
+[SKILLMENU sm_gemming]
+Insert Gem
+
+ON=i_platemail_chest Platemail
+SKILLMENU=sm_gem_armor
+
+ON=i_sword_viking Sword
+SKILLMENU=sm_gem_sword
+
+ON=i_shield_heater Shield
+SKILLMENU=sm_gem_shield
+
+[SKILLMENU sm_gem_armor]
+Gem Platemail
+
+ON=i_platemail_chest_turmalina Gem Tourmaline Chest (<resmake>)
+MAKEITEM=i_platemail_chest_turmalina
+
+ON=i_platemail_gorget_turmalina Gem Tourmaline Gorget (<resmake>)
+MAKEITEM=i_platemail_gorget_turmalina
+
+ON=i_platemail_gloves_turmalina Gem Tourmaline Gauntlets (<resmake>)
+MAKEITEM=i_platemail_gloves_turmalina
+
+ON=i_platemail_leggings_turmalina Gem Tourmaline Leggings (<resmake>)
+MAKEITEM=i_platemail_leggings_turmalina
+
+ON=i_platemail_arms_turmalina Gem Tourmaline Arms (<resmake>)
+MAKEITEM=i_platemail_arms_turmalina
+
+ON=i_platemail_helm_turmalina Gem Tourmaline Helm (<resmake>)
+MAKEITEM=i_platemail_helm_turmalina
+
+ON=i_platemail_chest_Ametista Gem Amethist Chest (<resmake>)
+MAKEITEM=i_platemail_chest_Ametista
+
+ON=i_platemail_gorget_Ametista Gem Amethist Gorget (<resmake>)
+MAKEITEM=i_platemail_gorget_Ametista
+
+ON=i_platemail_gloves_Ametista Gem Amethist Gauntlets (<resmake>)
+MAKEITEM=i_platemail_gloves_Ametista
+
+ON=i_platemail_leggings_Ametista Gem Amethist Leggings (<resmake>)
+MAKEITEM=i_platemail_leggings_Ametista
+
+ON=i_platemail_arms_Ametista Gem Amethist Arms (<resmake>)
+MAKEITEM=i_platemail_arms_Ametista
+
+ON=i_platemail_helm_Ametista Gem Amethist Helm (<resmake>)
+MAKEITEM=i_platemail_helm_Ametista
+
+ON=i_platemail_chest_Safira Gem Sapphire Chest (<resmake>)
+MAKEITEM=i_platemail_chest_Safira
+
+ON=i_platemail_gorget_Safira Gem Sapphire Gorget (<resmake>)
+MAKEITEM=i_platemail_gorget_Safira
+
+ON=i_platemail_gloves_Safira Gem Sapphire Gauntlets (<resmake>)
+MAKEITEM=i_platemail_gloves_Safira
+
+ON=i_platemail_leggings_Safira Gem Sapphire Leggings (<resmake>)
+MAKEITEM=i_platemail_leggings_Safira
+
+ON=i_platemail_arms_Safira Gem Sapphire Arms (<resmake>)
+MAKEITEM=i_platemail_arms_Safira
+
+ON=i_platemail_helm_Safira Gem Sapphire Helm (<resmake>)
+MAKEITEM=i_platemail_helm_Safira
+
+ON=i_platemail_chest_Rubi Gem Ruby Chest (<resmake>)
+MAKEITEM=i_platemail_chest_Rubi
+
+ON=i_platemail_gorget_Rubi Gem Ruby Gorget (<resmake>)
+MAKEITEM=i_platemail_gorget_Rubi
+
+ON=i_platemail_gloves_Rubi Gem Ruby Gauntlets (<resmake>)
+MAKEITEM=i_platemail_gloves_Rubi
+
+ON=i_platemail_leggings_Rubi Gem Ruby Leggings (<resmake>)
+MAKEITEM=i_platemail_leggings_Rubi
+
+ON=i_platemail_arms_Rubi Gem Ruby Arms (<resmake>)
+MAKEITEM=i_platemail_arms_Rubi
+
+ON=i_platemail_helm_Rubi Gem Ruby Helms (<resmake>)
+MAKEITEM=i_platemail_helm_Rubi
+
+ON=i_platemail_chest_Esmeralda Gem Emerald Chest (<resmake>)
+MAKEITEM=i_platemail_chest_Esmeralda
+
+ON=i_platemail_gorget_Esmeralda Gem Emerald Gorget (<resmake>)
+MAKEITEM=i_platemail_gorget_Esmeralda
+
+ON=i_platemail_gloves_Esmeralda Gem Emerald Gauntlets (<resmake>)
+MAKEITEM=i_platemail_gloves_Esmeralda
+
+ON=i_platemail_leggings_Esmeralda Gem Emerald Leggings (<resmake>)
+MAKEITEM=i_platemail_leggings_Esmeralda
+
+ON=i_platemail_arms_Esmeralda Gem Emerald Arms (<resmake>)
+MAKEITEM=i_platemail_arms_Esmeralda
+
+ON=i_platemail_helm_Esmeralda Gem Emerald Helm (<resmake>)
+MAKEITEM=i_platemail_helm_Esmeralda
+
+ON=i_platemail_chest_Diamante Gem Diamond Chest (<resmake>)
+MAKEITEM=i_platemail_chest_Diamante
+
+ON=i_platemail_gorget_Diamante Gem Diamond Gorget (<resmake>)
+MAKEITEM=i_platemail_gorget_Diamante
+
+ON=i_platemail_gloves_Diamante Gem Diamond Gauntlets (<resmake>)
+MAKEITEM=i_platemail_gloves_Diamante
+
+ON=i_platemail_leggings_Diamante Gem Diamond Leggings (<resmake>)
+MAKEITEM=i_platemail_leggings_Diamante
+
+ON=i_platemail_arms_Diamante Gem Diamond Arms (<resmake>)
+MAKEITEM=i_platemail_arms_Diamante
+
+ON=i_platemail_helm_Diamante Gem Diamond Helm (<resmake>)
+MAKEITEM=i_platemail_helm_Diamante
+
+[SKILLMENU sm_gem_sword]
+Gem Sword
+
+ON=i_sword_viking_turmalina Gem Tourmaline Viking (<resmake>)
+MAKEITEM=i_sword_viking_turmalina
+
+ON=i_sword_viking_Ametista Gem Amethist Viking (<resmake>)
+MAKEITEM=i_sword_viking_Ametista
+
+ON=i_sword_viking_Safira Gem Sapphire Viking (<resmake>)
+MAKEITEM=i_sword_viking_Safira
+
+ON=i_sword_viking_Rubi Gem Ruby Viking (<resmake>)
+MAKEITEM=i_sword_viking_Rubi
+
+ON=i_sword_viking_Esmeralda Gem Emerald Viking (<resmake>)
+MAKEITEM=i_sword_viking_Esmeralda
+
+ON=i_sword_viking_Diamante Gem Diamond Viking (<resmake>)
+MAKEITEM=i_sword_viking_Diamante
+
+[SKILLMENU sm_gem_shield]
+Gem Shield
+
+ON=i_shield_heater_turmalina Gem Tourmaline Heater (<resmake>)
+MAKEITEM=i_shield_heater_turmalina
+
+ON=i_shield_heater_Ametista Gem Amethist Heater (<resmake>)
+MAKEITEM=i_shield_heater_Ametista
+
+ON=i_shield_heater_Safira Gem Sapphire Heater (<resmake>)
+MAKEITEM=i_shield_heater_Safira
+
+ON=i_shield_heater_Rubi Gem Ruby Heater (<resmake>)
+MAKEITEM=i_shield_heater_Rubi
+
+ON=i_shield_heater_Esmeralda Gem Emerald Heater (<resmake>)
+MAKEITEM=i_shield_heater_Esmeralda
+
+ON=i_shield_heater_Diamante Gem Diamond Heater (<resmake>)
+MAKEITEM=i_shield_heater_Diamante
+
+[EOF]

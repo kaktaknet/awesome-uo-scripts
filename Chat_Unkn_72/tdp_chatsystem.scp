@@ -1,0 +1,113 @@
+//scripted by Rich/R1ch 
+//from www.thedarkportal.co.uk
+
+[PLEVEL 1]
+chat
+guild
+
+[PLEVEL 2]
+AddChat
+RemChat
+
+[FUNCTION remchat] 
+SRC.newitem=i_remchat_item 
+SRC.act.EQUIP 
+
+[FUNCTION addchat] 
+SRC.newitem=i_addchat_item 
+SRC.act.EQUIP 
+
+[FUNCTION chat]
+IF (<eval <src.tag.chatban>>==1)
+	SRC.SYSMESSAGE @32 Your chatting priviledges have been removed.
+	RETURN 1
+ENDIF
+IF (!STRCMPI("<ARGS>",""))
+	SRC.SYSMESSAGE @32 Usage:
+	SRC.SYSMESSAGE @32 .chat on
+	SRC.SYSMESsAGE @32 .chat off
+	SRC.SYSMESSAGE @32 .chat [message]
+return 1
+ENDIF
+IF (!STRCMPI("<ARGS>","on"))
+SRC.FINDID.I_chat_memory.remove
+SRC.NEWITEM i_chat_memory
+SRC.ACT.EQUIP
+SRC.SYSMESSAGE @32 Chat is on!
+return 1
+ENDIF
+IF (!STRCMPI("<ARGS>","off"))
+SRC.FINDID.I_chat_memory.remove
+SRC.SYSMESSAGE @32 Chat is off!
+return 1
+ENDIF
+IF <SRC.ACCOUNT.PLEVEL> = 1
+	SERV.ALLCLIENTS FINDID.i_chat_memory.cont.sysmessage @11 [<SRC.NAME>][P]: <ARGS>
+return 1
+ENDIF
+SERV.ALLCLIENTS FINDID.i_chat_memory.cont.sysmessage @67 [<SRC.NAME>][S]: <ARGS>
+return 1
+
+[ITEMDEF i_chat_memory]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Chat memory
+
+[ITEMDEF i_remchat_item]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Rem Chat memory
+
+ON=@EQUIP 
+target @32 Who to remove chat from? 
+TIMER=15
+
+ON=@TARGON_CHAR
+SRC.TARG.FINDID.I_CHAT_memory.REMOVE
+SRC.TARG.SYSMESSAGE @32 Your chatting priv's have been removed.
+SRC.TARG.TAG.CHATBAN=1
+return 1 
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[ITEMDEF i_addchat_item]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Add Chat memory
+
+ON=@EQUIP 
+target @32 Who to give chat privs too? 
+TIMER=15
+
+ON=@TARGON_CHAR
+SRC.TARG.SYSMESSAGE @32 Your chatting priv's have been reinstated.
+SRC.TARG.TAG.CHATBAN=
+return 1 
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[FUNCTION guild]
+IF <eval <memoryfindtype.memory_guild.link.uid>>==0
+RETURN 1
+ENDIF
+var.guildmessage=[<name>]:  <args>
+var.guilduid=<eval <memoryfindtype.memory_guild.link.uid>>
+serv.allclients sayguildmessage
+return 1
+
+[FUNCTION sayguildmessage]
+IF (<eval <memoryfindtype.memory_guild.link.uid>>==<var.guilduid>)
+SYSMESSAGE @45 <var.guildmessage>
+RETURN 1
+ELSE
+RETURN 1
+ENDIF
+
+
+[EOF]

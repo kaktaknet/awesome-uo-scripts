@@ -1,0 +1,55 @@
+[COMMENT spirit_speak_cloud]
+Put these lines under "[SKILL 32]" section.
+Very simple, hope you enjoy.
+
+ON=@Start
+IF (<HITS> >= <MAXHITS>)
+SYSMESSAGE @55 You don't need to heal.
+RETURN 1
+ENDIF
+
+ON=@Success
+IF (<HITS> >= <MAXHITS>)
+SYSMESSAGE @55 You don't need to heal.
+RETURN 1
+ENDIF
+skillgain SpiritSpeak 20
+FORITEMS 3
+IF (<TYPE>==t_corpse)
+IF (<CANSEELOS>)
+IF !(<MOREY>)
+LOCAL.MAXDAMHEALED=<EVAL <SPIRITSPEAK>/20>
+LOCAL.MINDAMHEALED=<EVAL (<FAME>/500)+1>
+IF (<LOCAL.MINDAMHEALED> < <LOCAL.MAXDAMHEALED>)
+SRC.HITS += <R<LOCAL.MINDAMHEALED>,<EVAL <LOCAL.MAXDAMHEALED>+1>>
+ELSE
+SRC.HITS += <LOCAL.MAXDAMHEALED>
+ENDIF
+SRC.SOUND 586
+SRC.SAY @751 Ahn Mih Sah Ko
+SRC.ANIM 17
+MOREY=1
+COLOR=0481
+IF (<SRC.HITS> > <SRC.MAXHITS>)
+SRC.HITS=<SRC.MAXHITS>
+ENDIF
+SRC.SYSMESSAGE You channel energy from a nearby corpse to heal your wounds.
+SRC.EFFECT 3,i_fx_bless_effect,1,20
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+ENDFOR
+IF (<SRC.MANA> >= 10)
+LOCAL.MAXDAMHEALED=<EVAL (<SPIRITSPEAK>/100)+4>
+LOCAL.MINDAMHEALED=<EVAL (<LOCAL.MAXDAMHEALED>/2)+1>
+SRC.HITS += <R<LOCAL.MINDAMHEALED>,<EVAL <LOCAL.MAXDAMHEALED>+1>>
+IF (<SRC.HITS> > <SRC.MAXHITS>)
+SRC.HITS=<SRC.MAXHITS>
+ENDIF
+SRC.SYSMESSAGE You channel your own spiritual energy to heal your wounds.
+SRC.MANA -= 10
+SRC.EFFECT 3,i_fx_bless_effect,1,20
+ENDIF
+
+//made by ClouD_BR

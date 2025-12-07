@@ -1,0 +1,310 @@
+//########################################################################################
+//##			    CONTROLLED TIMER SPAWN SYSTEM				##
+//##				BY FREEZOR (ORIGINALLY)					##
+//##			FOLLOW THE "INSTRUCTIONS.TXT" TO USE IT				##
+//########################################################################################				
+
+
+//---------------------------------------------------------------------------------
+//----------------------------------MONSTRUOS--------------------------------------
+//---------------------------------------------------------------------------------
+
+[CHARDEF C_wyrm_1]
+ID=c_dragon_small_red
+NAME=Undead Wyrm
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_DRAGON
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+DAM=4,24
+ARMOR=50
+RESOURCES=50 i_bone,8 i_reag_dragon_blood
+DESIRES=i_gold
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_water,r_civilization
+
+ON=@Create
+NPC=brain_dragon
+FAME={2000 6000}
+KARMA={-5000 -6999}
+COLOR=0b07
+STR={250 300}
+DEX={133 152}
+INT={100 140}
+ITEMNEWBIE=i_light_source
+PARRYING={40.0 60.0}
+MAGICRESISTANCE={60.0 65.0}
+TACTICS={60.0 70.0}
+WRESTLING={50.0 60.0}
+
+ON=@NPCRestock
+ITEM=loot_DAEMON
+
+on=@CLICK
+message @50 [Bronze]
+
+ON=@EnvironChange
+if (<eval <tag.noche>>==0)
+src.newitem=i_razpawn_timer
+src.act.timer=600
+src.act.link=<src.uid>
+act.p=<src.p>
+src.tag.noche=1
+return 1
+endif
+
+on=@HIT
+IF <SRC.NPC>==0
+Return 0
+else
+src.damage=<src.str>
+endif
+
+on=@DEATH
+if (<eval <act.tag.rq1>>==0)
+IF <ACT.NPC>==0 
+ACT.sysmessage @73,3 You put the Bronce Horn in your backpack
+ACT.tag.rq1=1
+ACT.NEWITEM=i_qr_horn
+ACT.ACT.CONT=<ACT.FINDLAYER(21).UID> 
+return 0
+endif
+else
+act.sysmessage @40,3 You cant Get the Item again!
+endif
+
+//-----------------------------------------
+
+[CHARDEF C_wyrm_2]
+ID=c_dragon_small_red
+NAME=Undead Wyrm
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_DRAGON
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+DAM=4,24
+ARMOR=50
+RESOURCES=50 i_bone,8 i_reag_dragon_blood
+DESIRES=i_gold
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_water,r_civilization
+
+ON=@Create
+NPC=brain_dragon
+FAME={2000 6000}
+KARMA={-5000 -6999}
+COLOR=0b34
+STR={300 350}
+DEX={133 152}
+INT={100 140}
+ITEMNEWBIE=i_light_source
+PARRYING={70.0 90.0}
+MAGICRESISTANCE={70.0 90.0}
+TACTICS={70.0 80.0}
+WRESTLING={70.0 90.0}
+
+ON=@NPCRestock
+ITEM=loot_DAEMON
+
+on=@CLICK
+message @90 [SILVER]
+
+ON=@EnvironChange
+if (<eval <tag.noche>>==0)
+src.newitem=i_razpawn_timer
+src.act.timer=600
+src.act.link=<src.uid>
+act.p=<src.p>
+src.tag.noche=1
+return 1
+endif
+
+on=@HIT
+IF <SRC.NPC>==0
+Return 0
+else
+src.damage=<src.str>
+endif
+
+on=@DEATH
+if (<eval <act.tag.rq2>>==0)
+IF <ACT.NPC>==0 
+ACT.sysmessage @95,3 You put the Silver Claws in your backpack
+ACT.tag.rq2=1
+ACT.NEWITEM=i_qr_claws
+ACT.ACT.CONT=<ACT.FINDLAYER(21).UID> 
+return 0
+endif
+else
+act.sysmessage @40,3 You cant Get the Item again!
+endif
+
+
+//-----------------------------------------
+[CHARDEF C_wyrm_3]
+ID=c_dragon_small_red
+NAME=Undead Wyrm
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_DRAGON
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+DAM=4,24
+ARMOR=50
+RESOURCES=50 i_bone,8 i_reag_dragon_blood
+DESIRES=i_gold
+SHELTER=r_caves,r_dungeon
+AVERSIONS=r_water,r_civilization
+
+ON=@Create
+NPC=brain_dragon
+FAME={2000 6000}
+KARMA={-5000 -6999}
+COLOR=0b55
+STR={400 430}
+DEX={133 152}
+INT={100 140}
+ANATOMY={90.0 100.0}
+PARRYING={90.0 100.0}
+MAGICRESISTANCE={80.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={80.0 100.0}
+ITEMNEWBIE=i_light_source
+
+ON=@NPCRestock
+ITEM=loot_DAEMON
+
+on=@CLICK
+message @54 [GOLDEN]
+
+ON=@EnvironChange
+if (<eval <tag.noche>>==0)
+src.newitem=i_razpawn_timer
+src.act.timer=600
+src.act.link=<src.uid>
+act.p=<src.p>
+src.tag.noche=1
+return 1
+endif
+
+on=@HIT
+IF <SRC.NPC>==0
+Return 0
+else
+src.damage=<src.str>
+endif
+
+on=@DEATH
+if (<eval <act.tag.rq3>>==0)
+IF <ACT.NPC>==0 
+ACT.sysmessage @54,3 You put the Golden Tail in your backpack
+ACT.tag.rq3=1
+ACT.NEWITEM=i_qr_tail
+ACT.ACT.CONT=<ACT.FINDLAYER(21).UID> 
+return 0
+endif
+else
+act.sysmessage @40,3 You cant Get the Item again!
+endif
+//------------------------------------------
+
+[itemdef i_razpawn_timer]
+id=i_worldgem_lg
+name=Dragon timer[Dont Erase]
+type=T_normal
+WEIGHT=0
+
+on=@Create
+ATTR=00096
+color=0b9b
+
+on=@Timer
+link.remove
+remove
+
+//--------------------------------------------
+[SPAWN 08999]
+DEFNAME=spawn_razas
+CATEGORY=Spawn Groups
+SUBSECTION=Monsters
+DESCRIPTION=Wyrms
+ID=c_Wyrm_1
+ID=c_wyrm_2
+ID=c_Wyrm_3
+
+//-------------------------------------------------------------------------------------------------------
+//-----------------------------------------------SPAWNERS------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
+
+[itemdef i_razpawn]
+id=i_worldgem_lg
+name=Spawneador [Dont Erase]
+
+on=@create
+ATTR=08090
+TYPE=34
+More=spawn_razas
+amount=1
+morep=10000 10000 3
+
+[itemdef i_Iniciador]
+id=i_pet_dragon
+name=Iniciador Quest [Don't Erase]
+type=T_normal
+WEIGHT=0
+
+on=@Create
+ATTR=00096
+color=0ba5
+
+on=@Timer
+if <var.clima>==0
+link.sector.light 9
+timer=60*60*2
+var.clima=1
+Return 1
+else
+link.sector.light 25
+link.timer=0
+var.clima=0
+timer=60*10
+return 1
+endif
+
+
+
+//---------------------------------------------------------------------------------
+//-----------------------------------ITEMS-----------------------------------------
+//---------------------------------------------------------------------------------
+
+[itemdef i_qr_claws]
+id=i_horse_shoes
+name=Silver Claws
+type=t_normal
+
+on=@create
+color=0b72
+attr=08014
+
+on=@Dclick
+src.message @90 Looks like a Silver Wyrm's Claws
+
+[itemdef i_qr_tail]
+id=i_cat_o_ninetails
+name=Golden Tail
+type=t_normal
+
+on=@create
+color=0ba1
+attr=08014
+
+on=@Dclick
+src.message @54 Looks like a Golden Wyrm's Tail
+
+[itemdef i_qr_horn]
+id=i_bird_dead_3
+name=Bronze Horn
+type=t_normal
+
+on=@create
+color=0b93
+attr=08014
+
+on=@Dclick
+src.message @50 Looks like a Bronze Wyrm's Horn

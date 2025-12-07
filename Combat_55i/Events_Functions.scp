@@ -1,0 +1,648 @@
+// ############################################################ 
+// RW's Special Abilities: Sphere-based UO Emu Servers 
+// Designed By: Dubious Advocate and DigiAnimus
+// Version=0.55i
+// FILE LAST UPDATED: August 22, 2002 
+// You are free to use this, repost it, chop it up, spindle, 
+// and mutilate to your heart's content. If you use it or post it 
+// then just don't claim it as your own. If you do try 
+// to claim credit for this script then the boogey man will 
+// get you. Or eventually you'll grow up and feel really silly 
+// about what a dumb kid you used to be. I expect I will sleep 
+// well at night no matter what. 
+// 
+// ------------------------------------------------------------ 
+// Installing this script -  
+// To install this race/class/level system: 
+// 1) Download all the files from http://scriptsharing.dntmedia.de/d_a.php
+// 2) Unzip and extract all the files into your scripts directory
+// 3) Save and Resync the server
+// ------------------------------------------------------------
+//
+// Any and all bugs or missing features should be reported to 
+//            DigitalWeapon@Hotmail.com
+//
+// Any changes to the default scripts or decisions to use this 
+// script system, without all the neccesary parts (race/class/level systems)
+// are the responsibilities of the user.
+// ######################################################## 
+// Events Enforcing Class Characteristics 
+
+
+[EVENTS e_Class_AntiPaladin] 
+ON=@GetHit 
+f_SuperiorDodge 
+ON=@SpellCast 
+f_SuperiorDodge 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+
+[EVENTS e_Class_Artisan] 
+ON=@SpellCast 
+RETURN 0 // all restrictions currently disabled 
+SRC.MESSAGE Artisans cannot use magic 
+RETURN 1 
+
+
+[EVENTS e_Class_Bard] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+
+[EVENTS e_Class_Beserker] 
+ON=@Hit 
+f_BeserkLunge 
+ON=@GetHit 
+f_SuperiorDodge 
+f_BeserkLunge 
+ON=@HitTry 
+f_BeserkLunge 
+ON=@SpellEffect 
+f_SuperiorDodge 
+
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+
+[EVENTS e_Class_Cleric] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+IF <ACT.BASEID>==i_hatchet 
+RETURN 0 
+ELSEIF <ACT.TYPE>==t_armor 
+SRC.MESSAGE Clerics are restricted in armor worn 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_bow 
+SRC.MESSAGE Clerics cannot use bows of any sort 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_mace_sharp 
+SRC.MESSAGE Clerics are restricted in weapons 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_sword 
+SRC.MESSAGE Clerics are restricted in bladed weapons 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_fence 
+SRC.MESSAGE Clerics are restricted in bladed weapons 
+RETURN 1 
+ENDIF 
+
+
+[EVENTS e_Class_Druid] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+
+[EVENTS e_Class_Hunter] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+
+[EVENTS e_Class_Mage] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+IF <ACT.TYPE>==t_armor // make sure it is acceptable armor 
+SRC.MESSAGE Mages are restricted in armor worn 
+RETURN 1 
+ENDIF 
+IF <ACT.TYPE>==t_weapon_bow 
+SRC.MESSAGE Mages cannot equip bows of any sort 
+RETURN 1 
+ELSEIF <ACT.TYPE>=t_weapon_mace_sharp 
+SRC.MESSAGE Mages are restricted in weapon use 
+RETURN 1 
+ELSEIF <ACT.TYPE>=t_weapon_sword 
+SRC.MESSAGE Mages are restricted in weapon use 
+RETURN 1 
+ELSEIF <ACT.TYPE>=t_weapon_fence 
+SRC.MESSAGE Mages are restricted in weapon use 
+RETURN 1 
+ELSEIF <ACT.TYPE>=t_weapon_mace_smith 
+SRC.MESSAGE Mages are restricted in weapon use 
+RETURN 1 
+ENDIF 
+
+
+[EVENTS e_Class_Monk] 
+ON=@GetHit 
+f_SuperiorDodge 
+ON=@SpellCast 
+f_SuperiorDodge 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+
+[EVENTS e_Class_Necromancer] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+IF <ACT.TYPE>==t_armor 
+SRC.MESSAGE Necromancers are restricted in armor worn 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_bow 
+SRC.MESSAGE Necromancers cannot use bows of any sort 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_mace_sharp 
+SRC.MESSAGE Necromancers are restricted in weapons 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_sword 
+SRC.MESSAGE Necromancers are restricted in bladed weapons 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_fence 
+SRC.MESSAGE Necromancers are restricted in bladed weapons 
+RETURN 1 
+ENDIF 
+
+
+[EVENTS e_Class_Paladin] 
+ON=@GetHit 
+f_SuperiorDodge 
+ON=@SpellCast 
+f_SuperiorDodge 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+
+[EVENTS e_Class_Ranger] 
+ON=@GetHit 
+f_SuperiorDodge 
+ON=@SpellCast 
+f_SuperiorDodge 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+IF <ACT.TYPE>==t_weapon_mace_smith 
+SRC.MESSAGE Rangers cannot use maces 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_sword 
+SRC.MESSAGE Rangers cannot use swords 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_fence 
+SRC.MESSAGE Rangers cannot use fencing 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_weapon_mace_staff 
+SRC.MESSAGE Rangers cannot use staffs 
+RETURN 1 
+ENDIF 
+
+
+[EVENTS e_Class_Shaman] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+
+[EVENTS e_Class_Sorceror] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+IF <ACT.TYPE>==t_armor // make sure it is acceptable armor. 
+SRC.MESSAGE Sorcerors are restricted in armor worn 
+RETURN 1 
+ENDIF 
+IF <ACT.TYPE>==t_weapon_bow 
+SRC.MESSAGE Sorcerors cannot equip bows of any sort 
+RETURN 1 
+ENDIF 
+
+
+[EVENTS e_Class_Thief] 
+ON=@DCLICK 
+RETURN 0 // all restrictions currently disabled 
+IF <ACT.BASEID>==i_spellbook // make sure it is a spellbook, if so disallow 
+SRC.MESSAGE Rogues cannot cast spells 
+RETURN 1 
+ENDIF 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+IF <ACT.TYPE>==10 // make sure it is acceptable armor. 
+SRC.MESSAGE Rogues are restricted in armor worn 
+RETURN 1 
+ENDIF 
+
+
+[EVENTS e_Class_Warrior] 
+ON=@GetHit 
+f_SuperiorDodge 
+ON=@SpellCast 
+f_SuperiorDodge 
+RETURN 0 // all restrictions currently disabled 
+IF <ACT.BASEID>==i_spellbook // make sure it is a spellbook, if so disallow. 
+SRC.MESSAGE Warriors cannot use magic 
+RETURN 1 
+ELSEIF <ACT.TYPE>==t_wand 
+SRC.MESSAGE Warriors cannot use wands 
+RETURN 1 
+ENDIF 
+
+
+[EVENTS e_Class_Witch] 
+ON=@EQUIP 
+RETURN 0 // all restrictions currently disabled 
+
+[events e_allplayers]
+on=@EnvironChange
+	// Make NPCs strip race events; yes it is unfair but
+	// it reduces load on the server.
+	IF <SRC.BRAIN> && <SRC.EVENTS>
+		IF <SRC.BRAIN>!=brain_monster && <SRC.BRAIN>!=brain_undead && <SRC.BRAIN>!=brain_beserk && <SRC.BRAIN>!=brain_dragon
+			f_StripRaceEvents
+		ENDIF
+	ENDIF
+
+	// Poison resistance check
+	IF ((<SRC.FLAGS>&STATF_Poisoned)==STATF_Poisoned)
+		IF <SRC.POISONING> > <RAND(200)>
+			SRC.FLAGS=<SRC.FLAGS>&~STATF_Poisoned
+			SRC.SPELLEFFECT=s_cure 1000
+			MESSAGE You overcome the poison
+		ENDIF
+	ENDIF
+ON=@DEATH
+	//SERV.ALLCLIENTS SYSMESSAGE <SRC.NAME> was killed by <SRC.MEMORYFINDTYPE.(0010).LINK.NAME> in <SRC.REGION.NAME>
+
+	// Re-enable Race events in case they died while events disabled
+	IF 1==0
+		//NO-OP
+	ELSEIF <SRC.TAG.Race>==RACE_Werven
+		IF (! <SRC.EVENTS.e_RaceWerven>)
+			EVENTS +e_RaceWerven
+		ENDIF
+		IF <SRC.TAG.Werven_Polymorph>
+			IF <SRC.BODY>!=<SRC.OBODY>
+				SRC.BODY=<SRC.OBODY>
+			ENDIF
+			IF <SRC.TAG.STR>
+				SRC.STR=<SRC.TAG.STR>
+			ENDIF
+			IF <SRC.TAG.DEX>
+				SRC.DEX=<SRC.TAG.DEX>
+			ENDIF
+			IF <SRC.TAG.INT>
+				SRC.INT=<SRC.TAG.INT>
+			ENDIF
+			IF <SRC.TAG.KARMA>
+				SRC.FAME=<SRC.TAG.KARMA>
+			ENDIF
+			IF <SRC.TAG.NAME>
+				SRC.NAME=<SRC.TAG.NAME>
+			ENDIF
+			IF <SRC.TAG.TITLE>
+				SRC.TITLE=<SRC.TAG.TITLE>
+			ENDIF
+			SRC.TAG.Werven_Polymorph=0
+			SRC.TAG.STR=0
+			SRC.TAG.DEX=0
+			SRC.TAG.INT=0
+			SRC.TAG.KARMA=0
+			SRC.TAG.FAME=0
+			SRC.TAG.NAME=0
+			SRC.TAG.TITLE=0
+		ENDIF
+	ELSEIF <SRC.TAG.Race>==RACE_Shapeshifter
+		IF (! <SRC.EVENTS.e_RaceShapeshifter>)
+			EVENTS +e_RaceShapeshifter
+		ENDIF
+		// We need to do something intelligent here
+		IF <SRC.TAG.Shapeshifter_Polymorph>
+			IF <SRC.BODY>!=<SRC.OBODY>
+				SRC.BODY=<SRC.OBODY>
+			ENDIF
+			IF <SRC.TAG.STR>
+				SRC.STR=<SRC.TAG.STR>
+			ENDIF
+			IF <SRC.TAG.DEX>
+				SRC.DEX=<SRC.TAG.DEX>
+			ENDIF
+			IF <SRC.TAG.INT>
+				SRC.INT=<SRC.TAG.INT>
+			ENDIF
+			IF <SRC.TAG.KARMA>
+				SRC.FAME=<SRC.TAG.KARMA>
+			ENDIF
+			IF <SRC.TAG.NAME>
+				SRC.NAME=<SRC.TAG.NAME>
+			ENDIF
+			IF <SRC.TAG.TITLE>
+				SRC.TITLE=<SRC.TAG.TITLE>
+			ENDIF
+			SRC.TAG.Shapeshifter_Polymorph=0
+			SRC.TAG.STR=0
+			SRC.TAG.DEX=0
+			SRC.TAG.INT=0
+			SRC.TAG.KARMA=0
+			SRC.TAG.FAME=0
+			SRC.TAG.NAME=0
+			SRC.TAG.TITLE=0
+		ENDIF
+	ENDIF
+
+	// Re-enable Class events in case they died while events disabled
+	// NO-OP
+
+ON=@LOGIN
+	SRC.MESSAGE You awaken as if from a dream
+ON=@LOGOUT
+	SRC.MESSAGE You slip into the dreamworld
+
+// ######################################################## 
+// Functions Enforcing General Class Characteristics 
+
+[FUNCTION f_StripClassEvents] 
+// Inherent Class Events 
+EVENTS -e_Class_AntiPaladin 
+EVENTS -e_Class_Artisan 
+EVENTS -e_Class_Bard 
+EVENTS -e_Class_Beserker 
+EVENTS -e_Class_Cleric 
+EVENTS -e_Class_Druid 
+EVENTS -e_Class_Hunter 
+EVENTS -e_Class_Mage 
+EVENTS -e_Class_Monk 
+EVENTS -e_Class_Necromancer 
+EVENTS -e_Class_Paladin 
+EVENTS -e_Class_Ranger 
+EVENTS -e_Class_Shaman 
+EVENTS -e_Class_Sorceror 
+EVENTS -e_Class_Thief 
+EVENTS -e_Class_Warrior 
+EVENTS -e_Class_Witch 
+
+// Special Class Events 
+
+
+// ######################################################## 
+// Functions Enforcing Specific Class Characteristics 
+
+
+// ######################################################## 
+// Initialize Class Profile 
+
+[FUNCTION f_CLASS_INITIALIZE_AntiPaladin] 
+TAG.ClassName=AntiPaladin 
+TAG.Class=<eval(CLASS_AntiPaladin)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Antipaladin 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Artisan] 
+TAG.ClassName=Artisan 
+TAG.Class=<eval(CLASS_Artisan)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Artisan 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Bard] 
+TAG.ClassName=Bard 
+TAG.Class=<eval(CLASS_Bard)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Bard 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Beserker] 
+TAG.ClassName=Beserker 
+TAG.Class=<eval(CLASS_Beserker)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Beserker 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Cleric] 
+TAG.ClassName=Cleric 
+TAG.Class=<eval(CLASS_Cleric)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Cleric 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Druid] 
+TAG.ClassName=Druid 
+TAG.Class=<eval(CLASS_Druid)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Druid 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Hunter] 
+TAG.ClassName=Hunter 
+TAG.Class=<eval(CLASS_Hunter)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Hunter 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Mage] 
+TAG.ClassName=Mage 
+TAG.Class=<eval(CLASS_Mage)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Mage 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Monk] 
+TAG.ClassName=Monk 
+TAG.Class=<eval(CLASS_Monk)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Monk 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Necromancer] 
+TAG.ClassName=Necromancer 
+TAG.Class=<eval(CLASS_Necromancer)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Necromancer 
+
+NEWITEM=i_necro_book 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+NEWITEM=i_necro_robe 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Paladin] 
+TAG.ClassName=Paladin 
+TAG.Class=<eval(CLASS_Paladin)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Paladin 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Ranger] 
+TAG.ClassName=Ranger 
+TAG.Class=<eval(CLASS_Ranger)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Ranger 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Shaman] 
+TAG.ClassName=Shaman 
+TAG.Class=<eval(CLASS_Shaman)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Shaman 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Sorceror] 
+TAG.ClassName=Sorceror 
+TAG.Class=<eval(CLASS_Sorceror)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Sorceror 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Thief] 
+TAG.ClassName=Thief 
+TAG.Class=<eval(CLASS_Thief)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Thief 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Warrior] 
+TAG.ClassName=Warrior 
+TAG.Class=<eval(CLASS_Warrior)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Warrior 
+
+
+[FUNCTION f_CLASS_INITIALIZE_Witch] 
+TAG.ClassName=Witch 
+TAG.Class=<eval(CLASS_Witch)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripClassEvents 
+// Attach class-specific events 
+EVENTS +e_Class_Witch 
+
+
+// ######################################################## 
+// NPC-specific Functions 
+
+
+// Initialize Stats for New NPC 
+
+[FUNCTION f_Stats_GuardStandard] 
+TAG.CurLevel=<EVAL(EXP_LEVELSTART_Good)> 
+TAG.Experience=0 
+STR=<STR> * 6 
+DEX=<DEX> * 4 
+INT=<INT> * 3 
+KARMA=<KARMA> * 3 
+FAME=<FAME> * 3 
+
+[FUNCTION f_Stats_GuardElite] 
+TAG.CurLevel=<EVAL(EXP_LEVELSTART_Strong)> 
+TAG.Experience=0 
+STR=<STR> * 6 
+DEX=<DEX> * 5 
+INT=<INT> * 4 
+KARMA=<KARMA> * 4 
+FAME=<FAME> * 4 
+
+[FUNCTION f_Stats_SoldierStandard] 
+TAG.CurLevel=<EVAL(EXP_LEVELSTART_VeryGood)> 
+TAG.Experience=0 
+STR=<STR> * 6 
+DEX=<DEX> * 4 
+INT=<INT> * 3 
+KARMA=<KARMA> * 5 
+FAME=<FAME> * 5 
+
+[FUNCTION f_Stats_SoldierElite] 
+TAG.CurLevel=<EVAL(EXP_LEVELSTART_VeryStrong)> 
+TAG.Experience=0 
+STR=<STR> * 6 
+DEX=<DEX> * 5 
+INT=<INT> * 4 
+KARMA=<KARMA> * 6 
+FAME=<FAME> * 6 
+
+
+// Initialize Skills for New NPC 
+
+[FUNCTION f_Skills_GuardStandard] 
+ARCHERY= <ARCHERY> * 4 
+MACEFIGHTING= <MACEFIGHTING> * 4 
+SWORDSMANSHIP= <SWORDSMANSHIP> * 4 
+FENCING= <FENCING> * 4 
+WRESTLING= <WRESTLING> * 4 
+ANATOMY= <ANATOMY> * 4 
+MAGICRESISTANCE= <MAGICRESISTANCE> * 4 
+PARRYING= <PARRYING> * 4 
+POISONING= <POISONING> * 4 
+TACTICS= <TACTICS> * 4 
+
+[FUNCTION f_Skills_GuardElite] 
+ARCHERY= <ARCHERY> * 5 
+MACEFIGHTING= <MACEFIGHTING> * 5 
+SWORDSMANSHIP= <SWORDSMANSHIP> * 5 
+FENCING= <FENCING> * 5 
+WRESTLING= <WRESTLING> * 5 
+ANATOMY= <ANATOMY> * 5 
+MAGICRESISTANCE= <MAGICRESISTANCE> * 5 
+PARRYING= <PARRYING> * 5 
+POISONING= <POISONING> * 5 
+TACTICS= <TACTICS> * 5 
+
+[FUNCTION f_Skills_SoldierStandard] 
+ARCHERY= <ARCHERY> * 4 
+MACEFIGHTING= <MACEFIGHTING> * 4 
+SWORDSMANSHIP= <SWORDSMANSHIP> * 4 
+FENCING= <FENCING> * 4 
+WRESTLING= <WRESTLING> * 4 
+ANATOMY= <ANATOMY> * 4 
+MAGICRESISTANCE= <MAGICRESISTANCE> * 4 
+PARRYING= <PARRYING> * 4 
+POISONING= <POISONING> * 4 
+TACTICS= <TACTICS> * 4 
+
+[FUNCTION f_Skills_SoldierElite] 
+ARCHERY= <ARCHERY> * 5 
+MACEFIGHTING= <MACEFIGHTING> * 5 
+SWORDSMANSHIP= <SWORDSMANSHIP> * 5 
+FENCING= <FENCING> * 5 
+WRESTLING= <WRESTLING> * 5 
+ANATOMY= <ANATOMY> * 5 
+MAGICRESISTANCE= <MAGICRESISTANCE> * 5 
+PARRYING= <PARRYING> * 5 
+POISONING= <POISONING> * 5 
+TACTICS= <TACTICS> * 5 
+
+
+[EOF]

@@ -1,0 +1,64 @@
+[comment on this script]
+This event adds a much asked for NPC-trigger to Sphere.55i.
+
+@NPCSeeNPC
+Chartrigger (NPC). Triggered when two NPC's see each other. 
+It is fired every few seconds, sometimes it takes a bit longer.
+SRC is the NPC that is seen.
+
+To use this Trigger NPC's need to have tevents=e_SeeNPC, desires=i_mem_SeeNPC and item=i_mem_SeeNPC on create.
+Also it seems there is a minimum of INT required, 40 should be enough.
+
+[chardef c_SeeNPC_example]
+id=c_man
+tevents=e_SeeNPC //********************this is needed
+desires=i_mem_SeeNPC //****************this is needed
+
+on=@Create
+int={50 100} //************************int should be higher than 40
+dex={50 100}
+str={50 100}
+item=i_mem_SeeNPC //*******************this is needed
+item=i_pants_long
+item=i_shirt_fancy
+
+on=@NPCSeeNPC
+face
+say I greet thee, <src.name>.
+
+
+[Events e_SeeNPC]
+on=@NPCSeeWantItem
+if  (<act.baseid>==i_mem_SeeNPC)&&(<act.CanSeeLOS>)
+	if  <act.link.uid>==<uid>
+		return 1
+	endif
+	act.more1=<uid>
+	act.link.equip <act.uid>
+endif
+
+[Itemdef i_mem_SeeNPC]
+id=i_memory
+type=t_eq_script
+layer=30
+
+on=@create
+timer=1
+
+on=@timer
+if  <cont>
+        link=<cont.uid>
+        name=Memoryitem fuer neuen Trigger - nicht loeschen!
+endif
+if  !<link.ischar>
+	remove
+	return 1
+endif
+p=<link.p>
+timer=5
+return 1
+
+on=@equip
+p=<link.p>
+timer=5
+tryp 0 serv.uid.<more1>.trigger @NPCSeeNPC

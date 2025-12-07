@@ -1,0 +1,609 @@
+//**Script built by Amlaruil, aka GM Dalzhim**//
+//http://scriptsharing.shorturl.com/
+//**Hoping anyone who makes use of this script gives credit to it's real author**//
+
+
+//Please do not remove this header..
+
+//Enjoy!
+
+[ITEMDEF i_strfish]
+DEFNAME=i_strfish
+ID=i_fish_big_1
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>89.9)
+MORE1=1
+COLOR=084C
+NAME=Strenght Fish
+SRC.MESSAGE You identify the fish as a Strenght Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.STR>>=140)
+SRC.MESSAGE You take a bite in the fish, but feel it cannot help your strenght anymore.
+ELSEIF (<AMOUNT>>1)
+SRC.STR=<SRC.STR>+1
+CONSUME 1
+ELSEIF (<AMOUNT>==1)
+SRC.STR=<SRC.STR>+1
+REMOVE
+ENDIF
+RETURN 1
+
+
+[ITEMDEF i_dexfish]
+DEFNAME=i_dexfish
+ID=i_fish_big_1
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>89.9)
+MORE1=1
+COLOR=078B
+NAME=Dexterity Fish
+SRC.MESSAGE You identify the fish as a Dexterity Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.DEX>>=140)
+SRC.MESSAGE You take a bite in the fish, but feel it cannot help your dexterity anymore.
+ELSEIF (<AMOUNT>>1)
+SRC.DEX=<SRC.DEX>+1
+CONSUME 1
+ELSEIF (<AMOUNT>==1)
+SRC.DEX=<SRC.DEX>+1
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_intelfish]
+DEFNAME=i_intelfish
+ID=i_fish_big_1
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>89.9)
+MORE1=1
+COLOR=0791
+NAME=Intelligence Fish
+SRC.MESSAGE You identify the fish as an Intelligence Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.INT>>=140)
+SRC.MESSAGE You take a bite in the fish, but feel it cannot help your intelligence anymore.
+ELSEIF (<AMOUNT>>1)
+SRC.INT=<SRC.INT>+1
+CONSUME 1
+ELSEIF (<AMOUNT>==1)
+SRC.INT=<SRC.INT>+1
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_killfish]
+DEFNAME=i_killfish
+ID=i_fish_big_1
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>89.9)
+MORE1=1
+COLOR=078C
+NAME=Forgiveness Fish
+SRC.MESSAGE You identify the fish as a Forgiveness Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.KILLS>==0)
+SRC.MESSAGE You take a bite in the fish but you feel no change.
+ELSEIF (<SRC.KILLS>>0) && (<AMOUNT>>1)
+SRC.KILLS=<SRC.KILLS>+-1
+SRC.MESSAGE As you eat the fish, you feel some weight leaving your mind.
+CONSUME 1
+ELSEIF (<SRC.KILLS>>0) && (<AMOUNT>==1)
+SRC.KILLS=<SRC.KILLS>+-1
+SRC.MESSAGE As you eat the fish, you feel some weight leaving your mind.
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_temp_str]
+DEFNAME=i_temp_str
+ID=i_fish_small
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>59.9)
+MORE1=1
+COLOR=07A1
+NAME=Temporary Strenght Fish
+SRC.MESSAGE You identify the fish as a Temporary Strenght Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.TAG.TEMPFISH>==0)
+SRC.NEWITEM=i_temp_str_effect
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.P=<P>
+SRC.ACT.TRIGGER=@DCLICK
+REMOVE
+ELSE
+SRC.MESSAGE You can't use another temporary fish yet.
+ENDIF
+
+[ITEMDEF i_temp_str_effect]
+DEFNAME=i_temp_str_effect
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=attr_invis
+TIMER=90
+
+ON=@DCLICK
+MORE1=RAND(10)+5
+LINK.STR=<LINK.STR>+<EVAL <MORE1>>
+LINK.TAG.TEMPFISH=1
+RETURN 1
+
+ON=@TIMER
+LINK.STR=<LINK.STR>+-<EVAL <MORE1>>
+LINK.TAG.TEMPFISH=0
+REMOVE
+RETURN 1
+
+[ITEMDEF i_temp_dex]
+DEFNAME=i_temp_dex
+ID=i_fish_small
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>59.9)
+MORE1=1
+COLOR=084C
+NAME=Temporary Dexterity Fish
+SRC.MESSAGE You identify the fish as a Temporary Dexterity Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.TAG.TEMPFISH>==0)
+SRC.NEWITEM=i_temp_dex_effect
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.P=<P>
+SRC.ACT.TRIGGER=@DCLICK
+REMOVE
+ELSE
+SRC.MESSAGE You can't use another temporary fish yet.
+ENDIF
+
+[ITEMDEF i_temp_dex_effect]
+DEFNAME=i_temp_dex_effect
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=attr_invis
+TIMER=90
+
+ON=@DCLICK
+MORE1=RAND(10)+5
+LINK.DEX=<LINK.DEX>+<EVAL <MORE1>>
+LINK.TAG.TEMPFISH=1
+RETURN 1
+
+ON=@TIMER
+LINK.DEX=<LINK.DEX>+-<EVAL <MORE1>>
+LINK.TAG.TEMPFISH=0
+REMOVE
+RETURN 1
+
+[ITEMDEF i_temp_int]
+DEFNAME=i_temp_int
+ID=i_fish_small
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>59.9)
+MORE1=1
+COLOR=078C
+NAME=Temporary Intelligence Fish
+SRC.MESSAGE You identify the fish as a Temporary Intelligence Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.TAG.TEMPFISH>==0)
+SRC.NEWITEM=i_temp_int_effect
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.P=<P>
+SRC.ACT.TRIGGER=@DCLICK
+REMOVE
+ELSE
+SRC.MESSAGE You can't use another temporary fish yet.
+ENDIF
+
+[ITEMDEF i_temp_int_effect]
+DEFNAME=i_temp_int_effect
+ID=i_floor_blue
+
+ON=@CREATE
+ATTR=attr_invis
+TIMER=90
+
+ON=@DCLICK
+MORE1=RAND(10)+5
+LINK.INT=<LINK.INT>+<EVAL <MORE1>>
+LINK.TAG.TEMPFISH=1
+RETURN 1
+
+ON=@TIMER
+LINK.INT=<LINK.INT>+-<EVAL <MORE1>>
+LINK.TAG.TEMPFISH=0
+REMOVE
+RETURN 1
+
+[ITEMDEF i_fish_healing]
+DEFNAME=i_fish_healing
+ID=i_fish_small
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>69.9)
+MORE1=1
+COLOR=0798
+NAME=Healing Fish
+SRC.MESSAGE You identify the fish as a Healing Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF !(<SRC.TAG.HEALINGFISH>==1) && !(<SRC.HITS>>=<SRC.STR>)
+SRC.TAG.HEALINGFISH=1
+SRC.NEWITEM=i_fish_healing_effect
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+REMOVE
+ELSE
+SRC.MESSAGE You cannot use the healing fish with full health.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_fish_healing_effect]
+DEFNAME=i_fish_healing_effect
+ID=i_floor_blue
+
+ON=@CREATE
+MORE1=0
+MORE2={1 15}
+SAY <EVAL <MORE2>>
+TIMER=1
+ATTR=attr_invis
+
+ON=@TIMER
+
+MORE1=<MORE1>+1
+TIMER = 1
+
+IF (<MORE1>==1) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==2) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==3) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==4) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==5) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==6) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==7) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==8) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==9) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==10) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==11) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==12) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==13) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==14) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==15) && (<MORE1><=<MORE2>)
+LINK.HITS=<LINK.HITS>+1
+ENDIF
+
+IF (<MORE1>==15) && (<MORE1>>=<MORE2>)
+LINK.TAG.HEALINGFISH=0
+REMOVE
+ENDIF
+
+return 1
+
+[ITEMDEF i_fish_mana_healing]
+DEFNAME=i_fish_mana_healing
+ID=i_fish_small
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>79.9)
+MORE1=1
+COLOR=0791
+NAME=Mana Healing Fish
+SRC.MESSAGE You identify the fish as a Mana Healing Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF !(<SRC.TAG.MANAHEALINGFISH>==1) && !(<SRC.MANA>>=<SRC.INT>)
+SRC.TAG.MANAHEALINGFISH=1
+SRC.NEWITEM=i_fish_mana_healing_effect
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+REMOVE
+ELSE
+SRC.MESSAGE You cannot use the mana fish with full mana.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_fish_mana_healing_effect]
+DEFNAME=i_fish_mana_healing_effect
+ID=i_floor_blue
+
+ON=@CREATE
+MORE1=0
+MORE2={1 15}
+SAY <EVAL <MORE2>>
+TIMER=1
+ATTR=attr_invis
+
+ON=@TIMER
+
+MORE1=<MORE1>+1
+TIMER = 1
+
+IF (<MORE1>==1) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==2) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==3) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==4) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==5) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==6) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==7) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==8) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==9) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==10) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==11) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==12) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==13) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==14) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==15) && (<MORE1><=<MORE2>)
+LINK.MANA=<LINK.MANA>+1
+ENDIF
+
+IF (<MORE1>==15) && (<MORE1>>=<MORE2>)
+LINK.TAG.MANAHEALINGFISH=0
+REMOVE
+ENDIF
+
+return 1
+
+[ITEMDEF i_fish_stam_healing]
+DEFNAME=i_fish_stam_healing
+ID=i_fish_small
+NAME=Unknown Fish
+
+ON=@DCLICK
+IF (<MORE1>==0)
+IF (<SRC.FISHING>>69.9)
+MORE1=1
+COLOR=078B
+NAME=Stamina Healing Fish
+SRC.MESSAGE You identify the fish as a Stamina Healing Fish.
+RETURN 1
+ELSE
+SRC.MESSAGE You aren't skilled enough to identify the fish.
+RETURN 1
+ENDIF
+ENDIF
+IF !(<SRC.TAG.STAMHEALINGFISH>==1) && !(<SRC.STAM>>=<SRC.DEX>)
+SRC.TAG.STAMHEALINGFISH=1
+SRC.NEWITEM=i_fish_stam_healing_effect
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.P=<SRC.P>
+SRC.ACT.TRIGGER=@DCLICK
+REMOVE
+ELSE
+SRC.MESSAGE You cannot use the stamina fish with full stamina.
+ENDIF
+RETURN 1
+
+[ITEMDEF i_fish_stam_healing_effect]
+DEFNAME=i_fish_stam_healing_effect
+ID=i_floor_blue
+
+ON=@CREATE
+MORE1=0
+MORE2={1 15}
+TIMER=1
+ATTR=attr_invis
+
+ON=@TIMER
+
+MORE1=<MORE1>+1
+TIMER = 1
+
+IF (<MORE1>==1) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==2) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==3) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==4) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==5) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==6) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==7) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==8) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==9) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==10) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==11) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==12) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==13) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==14) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==15) && (<MORE1><=<MORE2>)
+LINK.STAM=<LINK.STAM>+1
+ENDIF
+
+IF (<MORE1>==15) && (<MORE1>>=<MORE2>)
+LINK.TAG.STAMHEALINGFISH=0
+REMOVE
+ENDIF
+
+return 1

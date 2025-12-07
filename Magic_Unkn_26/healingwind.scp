@@ -1,0 +1,38 @@
+[ITEMDEF i_scroll_healing_wind]
+ID=i_scroll_resurrection
+NAME=Healing Wind Scroll
+TYPE=t_normal
+
+ON=@Create
+ATTR=020
+
+ON=@DClick
+IF (<SRC.MANA> < 55)
+SRC.SYSMESSAGE You do not have enough mana to cast this spell
+RETURN 1
+ELSE
+SRC.MANA=<SRC.MANA> + {-55 -35}
+SRC.SAY In Mani Hur
+SRC.ANIM 17
+ATTR=<ATTR>|attr_invis
+P=<SRC.P>
+LINK=<SRC.UID>
+TIMERd=17
+RETURN 1
+ENDIF
+
+ON=@Timer
+LINK.HEALWIND <LINK.MAGERY>
+IF (<AMOUNT> > 1)
+AMOUNT=<AMOUNT>+(-1)
+CONT=<LINK.FINDLAYER(layer_pack).UID>
+ATTR=<ATTR> &~ attr_invis
+ELSE
+REMOVE
+ENDIF
+RETURN 1
+
+[FUNCTION HEALWIND]
+//Put this in PLEVEL 2 of your spheretables to prevent abuse!
+SECTOR.ALLCLIENTS SFX 498
+SECTOR.ALLCLIENTS SPELLEFFECT 29, <ARGN>

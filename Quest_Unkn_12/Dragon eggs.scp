@@ -1,0 +1,203 @@
+//Ok, I wasn't in the mood of scripting hard scripts, this one is pretty simple and works
+//it would be a rare item to add :). Mayb the forges would be very crowded of dragons if u
+//don't vigilate the amount lol.
+//This time I made it completely random, so you might get any kind of dragon with 
+//any kind of stats, which will make eggs.
+//The event e_malefemale is the same that the chocobo script one
+//The last stuff is untested(the egg laying stuff)
+//Scripted by <GM_Ramon>, please leave credit
+//Bugs to waghk@hotmail.com
+
+[ITEMDEF i_dragon_egg2]
+ID=01726
+NAME=Dragon egg
+TYPE=t_script
+
+ON=@CREATE
+MORE={0 7}
+
+ON=@DCLICK
+TARGET Where would you like to incubate this?
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_forge)
+SRC.SYSMESSAGE You put the egg in the forge.
+SRC.NEWITEM i_dragon_egg2
+SRC.ACT.P=<SRC.TARG.P>
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.MORE2=1
+SRC.ACT.NAME=<SRC.ACT.NAME>[incubating]
+SRC.ACT.ATTR=010
+VAR.TIMERDRAGON=<EVAL <EVAL {10*60 60*60}>+(-<EVAL <SRC.TARG.MORE>*10>)>
+IF (<VAR.TIMERDRAGON> < 60)
+VAR.TIMERDRAGON=60
+ENDIF
+SRC.ACT.TIMER=<VAR.TIMERDRAGON>
+SRC.ACT.MOVE 0 0 5
+CONSUME
+RETURN 1
+
+ON=@TIMER
+IF (0<MORE2>==1)
+f_getnewdragon
+ENDIF
+REMOVE
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE You need to find a hot place to incubate this!
+RETURN 1
+
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE You need to find a hot place to incubate this!
+RETURN 1
+
+[FUNCTION f_getnewdragon]		
+DOSWITCH <MORE>
+LINK.NEWNPC c_dragon_small_black
+LINK.NEWNPC c_dragon_small_red
+LINK.NEWNPC c_m_Dragon_blackdrake
+LINK.NEWNPC c_m_Dragon_bluedrake
+LINK.NEWNPC c_m_Dragon_copperdrake
+LINK.NEWNPC c_m_Dragon_golddrake
+LINK.NEWNPC c_m_Dragon_greendrake
+LINK.NEWNPC c_m_Dragon_silverdrake
+ENDDO
+LINK.MESSAGE The dragon has been born!
+LINK.ACT.TAG.MALE=<EVAL {1 2}>
+VAR.BONIF=<EVAL {0 <EVAL <MORE>*20>}>
+LINK.ACT.STR=<EVAL {100 500}>+<VAR.BONIF>+(-<EVAL <EVAL {0 <VAR.BONIF>}>*<LINK.TAG.MALE>>)
+LINK.ACT.DEX=<VAR.BONIF>+<EVAL {20 100}>(-<EVAL <EVAL {0 <VAR.BONIF>}>*<LINK.TAG.MALE>>)
+LINK.ACT.TACTICS=<EVAL {200 700}>+<VAR.BONIF>
+LINK.ACT.WRESTLING=<EVAL {200 700}>+<VAR.BONIF>
+LINK.ACT.MAGICRESISTANCE=<EVAL {200 700}>+<VAR.BONIF>
+LINK.ACT.PARRYING=<EVAL {200 700}>+<VAR.BONIF>
+LINK.ACT.EVENTS +e_malefemaledragon
+LINK.ACT.EVENTS +e_trainable2
+LINK.TAG.MYSON=<MORE>
+LINK.ACT.TAG.SUBEPLUS=<EVAL {0 <EVAL 0<MORE>>}>
+LINK.ACT.P=<P>
+LINK.ACT.KARMA=5000
+LINK.ACT.FAME=0
+LINK.ACT.FOOD=50
+LINK.ACT.SAY <LINK.SEX DADDY/MOMMY>!
+LINK.ACT.MOVE n
+LINK.ACT.BRAIN=brain_animal
+VAR.DRAGONUID=<LINK.ACT.UID>
+LINK.NEWITEM i_memory
+LINK.ACT.COLOR memory_ipet
+LINK.ACT.MORE1 04
+LINK.ACT.MORE <SERV.TIME>
+LINK.ACT.MOREP <P>
+LINK.ACT.LINK <LINK.UID>
+LINK.ACT.CONT <VAR.DRAGONUID>
+LINK.NEWITEM i_memory_oldness
+LINK.ACT.MORE2=<eval {0 5}>
+LINK.ACT.TIMER=<EVAL {60*60 6*60*60}>
+LINK.ACT.CONT <VAR.DRAGONUID>
+
+[EVENTS e_trainable2]		//This is not the same event
+ON=@HIT
+IF (<MEMORYFINDTYPE.memory_ipet>)&&!(<FLAGS>&04000000)
+	VAR.QUESUBO=<EVAL {0 4}>
+
+IF (<VAR.QUESUBO>==0)
+	IF (RAND(7)==<VAR.QUESUBO>)&&(<STR> < 800)
+	STR=<STR>+<EVAL {1 3}>+(<EVAL 0<TAG.SUBEPLUS>>)
+	SAY *<NAME> is now stronger!!!*
+	ENDIF
+ELSEIF (<VAR.QUESUBO>==1)
+	IF (RAND(7)==<VAR.QUESUBO>)&&(<DEX> < 250)
+	DEX=<DEX>+<EVAL {1 3}>+(<EVAL 0<TAG.SUBEPLUS>>)
+	SAY *<NAME> is now more agile!!!*	
+	ENDIF
+ELSEIF (<VAR.QUESUBO>==2)
+	IF (RAND(7)==<VAR.QUESUBO>)&&(<TACTICS> < 150.0)
+	TACTICS=<TACTICS>+0.5+(<EVAL 0<TAG.SUBEPLUS>>)
+	SAY *<NAME> has better war tactics!!!*
+	ENDIF
+
+ELSEIF (<VAR.QUESUBO>==4)
+	IF (RAND(7)==<VAR.QUESUBO>)&&(<WRESTLING> < 150.0)
+	WRESTLING=<WRESTLING>+0.5+(<EVAL 0<TAG.SUBEPLUS>>)
+	SAY *<NAME> fights better now!!!*
+	ENDIF
+ENDIF
+IF (<TACTICS> > 150.0)
+TACTICS=150.0
+ENDIF
+IF (<WRESTLING> > 150.0)
+TACTICS=150.0
+ENDIF
+ENDIF
+
+ON=@GETHIT
+	IF (RAND(10)==0)&&(<PARRYING> < 150.0)
+	PARRYING=<PARRYING>+0.5+(<EVAL 0<TAG.SUBEPLUS>>)
+	SAY *<NAME> blocks better now!!!*
+	ENDIF
+IF (<PARRYING> > 150.0)
+TACTICS=150.0
+ENDIF
+
+ON=@SPELLEFFECT
+IF !(<SRC.UID>==<MEMORYFINDTYPE.memory_ipet.LINK>)
+IF (<ARGN>==1)||(<ARGN>==3)||(<ARGN>==5)||(<ARGN>==8)||(<ARGN>==12)||(<ARGN>==18)||(<ARGN>==20)||(<ARGN>==27)||(<ARGN>==28)||(<ARGN>==30)||(<ARGN>==31)||(<ARGN>==37)||(<ARGN>==39)||(<ARGN>==42)||(<ARGN>==43)||(<ARGN>==46)||(<ARGN>==47)||(<ARGN>==49)||(<ARGN>==51)||(<ARGN>==53)||(<ARGN>==55)||(<ARGN>==57)||(<ARGN>==69)||(<ARGN>==70)
+		IF (RAND(7)==1)&&(<MAGICRESISTANCE> < 125.0)
+		MAGICRESISTANCE=<MAGICRESISTANCE>+0.5
+		SAY *<NAME> is more used now to magic!*
+		ENDIF
+	IF (RAND(189) < <EVAL <MAGICRESISTANCE>/10>)
+		SYSMESSAGE *the spell has no effect on <NAME>!*
+	RETURN 1
+	ENDIF	
+ENDIF
+ENDIF
+
+
+
+[EVENTS e_malefemaledragon] //This is the event of the chocobo script, for the dragons
+ON=@CLICK
+IF (0<TAG.MALE>==1)
+VAR.GENDER=male
+ELSE
+VAR.GENDER=female
+ENDIF
+MESSAGE [<VAR.GENDER>]
+
+[ITEMDEF i_memory_oldness]
+ID=i_memory
+TYPE=t_eq_script
+NAME=My age
+
+ON=@TIMER
+MORE=<MORE>+1
+CONT.SAY I'm getting older!
+CONT.STR=<CONT.STR>+<EVAL {10 40}>
+CONT.DEX=<CONT.DEX>+<EVAL {1 20}>
+IF (<MORE> > <EVAL {13 20}>
+CONT.SUICIDE
+ENDIF
+IF (<MORE> > 8)&&(<MORE2>==7)&&(<CONT.TAG.MALE>==2)
+	IF (RAND(25)==1)
+		CONT.NEWITEM i_dragon_egg2
+		CONT.ACT.P=<CONT.P>
+		CONT.SAY I just coved an egg! //Argh! I don't think it's said like this!
+	ENDIF
+ENDIF
+IF (<MORE> > 6)&&(<MORE2> <= 5)
+CONT.SAY I'm an adult now!
+DOSWITCH <MORE2>
+CONT.BODY=c_dragon_green
+CONT.BODY=c_dragon_red
+CONT.BODY=c_m_dragon_wyrm
+CONT.BODY=c_m_dragon_ice
+CONT.BODY=c_m_dragon_crystal
+CONT.BODY=c_m_wyvern
+ENDDO
+CONT.UPDATE
+MORE2=7
+ENDIF
+TIMER=<EVAL {60*60 4*60*60}>
+RETURN 1

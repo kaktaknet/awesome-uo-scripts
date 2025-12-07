@@ -1,0 +1,365 @@
+//Made by The_Blind_Sniper, bugs to ppocrack@hotmail.com
+[TYPEDEF t_cosa_locked] //This thing doesn't work well as a predefined type, still...
+ON=@DCLICK
+IF !(<LINK.UID>)
+SRC.NEWITEM i_key_copper
+SRC.ACT.MORE=<UID>
+SRC.ACT.CONT=<SRC.UID>
+SRC.NEWITEM i_key_copper
+SRC.ACT.MORE=<UID>
+SRC.ACT.CONT=<UID>
+LINK=<SRC.UID>
+ELSEIF (<SRC.FINDTYPE.t_key.MORE>==<UID>)
+OPEN
+ELSE
+SRC.SYSMESSAGE You haven't got the key of this chest!
+ENDIF
+RETURN 1
+
+[TYPEDEF t_lockpickwarro]
+ON=@DCLICK
+IF (<TOPOBJ.UID>==<SRC.UID>)
+IF !(<SRC.FINDID.I_memoria_lockpicking>)
+TARGET What are you willing to unlock?
+ELSE
+SRC.SYSMESSAGE You are still handling the lock!
+ENDIF
+ELSE
+SRC.SYSMESSAGE You must have them on you!
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE mmmm.... it has no lock...
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE mmmm.... it has no lock...
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TYPE>==t_door_locked)&&(<SRC.TARG.MORE2H>==0)  //The predefined door locked in UO
+VAR.DIFICULTAD=50
+VAR.TIPO=0
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked)&&(<SRC.TARG.MORE2H>==1)
+VAR.DIFICULTAD=55
+VAR.TIPO=1
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked)&&(<SRC.TARG.MORE2H>==2)
+VAR.DIFICULTAD=60
+VAR.TIPO=2
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked)&&(<SRC.TARG.MORE2H>==3)
+VAR.DIFICULTAD=65
+VAR.TIPO=3
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked)&&(<SRC.TARG.MORE2H>==4)
+VAR.DIFICULTAD=70
+VAR.TIPO=4
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked)&&(<SRC.TARG.MORE2H>==5) //For gm use only...
+VAR.DIFICULTAD=100
+VAR.TIPO=5
+ELSEIF (<SRC.TARG.TYPE>==t_cosa_locked)
+VAR.DIFICULTAD=65
+VAR.TIPO=6
+ELSEIF (<SRC.TARG.TYPE>==t_container_locked)&&(<SRC.TARG.MORE2H>==0) //The predefined container locked in UO
+VAR.DIFICULTAD=50
+VAR.TIPO=7
+ELSEIF (<SRC.TARG.TYPE>==t_container_locked)&&(<SRC.TARG.MORE2H>==1)
+VAR.DIFICULTAD=55
+VAR.TIPO=8
+ELSEIF (<SRC.TARG.TYPE>==t_container_locked)&&(<SRC.TARG.MORE2H>==2)
+VAR.DIFICULTAD=60
+VAR.TIPO=9
+ELSEIF (<SRC.TARG.TYPE>==t_container_locked)&&(<SRC.TARG.MORE2H>==3)
+VAR.DIFICULTAD=65
+VAR.TIPO=10
+ELSEIF (<SRC.TARG.TYPE>==t_container_locked)&&(<SRC.TARG.MORE2H>==4)
+VAR.DIFICULTAD=70
+VAR.TIPO=11
+ELSEIF (<SRC.TARG.TYPE>==t_container_locked)&&(<SRC.TARG.MORE2H>==5) //For gm use only...
+VAR.DIFICULTAD=100
+VAR.TIPO=12
+ELSEIF (<SRC.TARG.TYPE>==t_secure)
+VAR.DIFICULTAD=70
+VAR.TIPO=13
+ELSEIF (<SRC.TARG.TYPE>==t_secure_f)
+VAR.DIFICULTAD=70
+VAR.TIPO=14
+ELSEIF (<SRC.TARG.TYPE>==t_door_locked)&&(<SRC.TARG.MORE2H>==6)
+VAR.DIFICULTAD=55
+VAR.TIPO=15
+ELSE
+VAR.DIFICULTAD=0
+ENDIF
+IF !(<VAR.DIFICULTAD>==0)
+	SRC.EMOTE try to unlock the lock with a lockpick
+	f_intenta_forzar <EVAL (<EVAL {0 10}>+<EVAL <SRC.LOCKPICKING>/100>)>
+		SRC.NEWITEM i_memoria_lockpicking
+		SRC.ACT.TIMER=<EVAL {1 2}>
+		SRC.ACT.CONT=<SRC.UID>
+		SRC.SFX 0242
+		VAR.DIFICULTAD2=<EVAL <VAR.DIFICULTAD>+(-<EVAL {0 10}>)>
+		SRC.SAY Lock's difficulty: <EVAL <VAR.DIFICULTAD2>>!
+	IF (<EVAL <VAR.FORZADURA>> >= <VAR.DIFICULTAD2>)
+		IF (<VAR.TIPO> < 6)
+		SRC.NEWITEM i_perateya
+		SRC.ACT.P=<SRC.P>
+		SRC.ACT.LINK=<SRC.TARG.UID>
+		SRC.ACT.TIMER=(<SRC.LOCKPICKING>/10)*2
+		SRC.ACT.MORE=<SRC.TAG.TIPO>
+		SRC.TARG.TYPE=t_door
+		SRC.TARG.MORE2h=0
+		SRC.CONSUME 1 I_lockpick
+		SRC.SYSMESSAGE You have unlocked the door!
+		ELSEIF (<VAR.TIPO> < 6)&&(RAND(40)==0)
+		SRC.TARG.TYPE=t_door
+		SRC.TARG.MORE2h=0
+		SRC.CONSUME 1 I_lockpick
+		SRC.SYSMESSAGE You've unlocked the door, but you've broken the lock!
+		ELSEIF (<VAR.TIPO>==15)	//This is an easy way to add custom locks
+		SRC.TARG.TYPE=t_door //or let it t_door_locked(with the worst lock)???
+		SRC.TARG.MORE2h=0
+		SRC.CONSUME 1 I_lockpick
+		SRC.SYSMESSAGE You've unlocked the door, and triggered a trap!
+		SRC.NEWITEM i_gold
+		SRC.ACT.TYPE=T_explosion
+		SRC.ACT.TIMERD=1
+		SRC.ACT.SOUND=snd_SPELL_EXPLOSION 
+		SRC.ACT.LINK=<SRC.ACT.uid>
+		SRC.ACT.P=<SRC.TARG.P>
+		SRC.ACT.morex=120
+		SRC.ACT.morez = 6 
+		SRC.ACT.morey=090
+		ELSEIF (<VAR.TIPO> >= 6)&&(RAND(29)==0)
+		SRC.TARG.TYPE=t_container
+		SRC.CONSUME 1 I_lockpick
+		SRC.TARG.MORE2h=0
+		SRC.SYSMESSAGE You've unlocked the chest, but you've broken the lock!
+		ELSE
+		SRC.NEWITEM i_perateya
+		SRC.ACT.P=<SRC.P>
+		SRC.ACT.LINK=<SRC.TARG.UID>
+		SRC.ACT.TIMER=(<SRC.LOCKPICKING>/10)*2
+		SRC.ACT.MORE=<VAR.TIPO>
+		SRC.TARG.TYPE=t_container
+		SRC.CONSUME 1 I_lockpick
+		SRC.TARG.MORE2h=0
+		SRC.SYSMESSAGE You have unlocked the chest!
+		ENDIF
+		SRC.KILLS=<SRC.KILLS>+1
+		f_sube_skill_lp
+		RETURN 1
+	ELSE
+		IF (<SRC.LOCKPICKING> < 30.0)
+			f_sube_skill_lp
+		ENDIF
+		SRC.CONSUME 1 I_lockpick
+		SRC.SYSMESSAGE You haven't been able to unlock it!
+		RETURN 1
+	ENDIF
+	SRC.KARMA=<SRC.KARMA>+(-200)		//Nota: es mu malo forzar cosas
+ELSE
+SRC.SYSMESSAGE You can't unlock that!
+ENDIF
+RETURN 1
+
+[ITEMDEF i_memoria_lockpicking]
+ID=i_memory
+NAME=Wait a little to lockpick again :P
+TYPE=t_eq_script
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+
+[ITEMDEF i_perateya]
+ID=i_worldgem_bit
+NAME=I put again the t_blabla_locked!
+TYPE=t_script
+
+ON=@CREATE
+ATTR=attr_invis
+COLOR=0245
+
+ON=@TIMER
+f_findtype
+LINK.SAY *The lock has re-armed again!*
+REMOVE
+RETURN 1
+
+[FUNCTION f_intenta_forzar]
+DOSWITCH <ARGS>
+VAR.FORZADURA=<EVAL {0 3}>	//No cuenta
+VAR.FORZADURA=<EVAL {1 50}>
+VAR.FORZADURA=<EVAL {2 51}>
+VAR.FORZADURA=<EVAL {3 52}>
+VAR.FORZADURA=<EVAL {4 53}>
+VAR.FORZADURA=<EVAL {4 54}>
+VAR.FORZADURA=<EVAL {4 55}>
+VAR.FORZADURA=<EVAL {4 56}>
+VAR.FORZADURA=<EVAL {4 57}>
+VAR.FORZADURA=<EVAL {4 58}>
+VAR.FORZADURA=<EVAL {5 59}>
+VAR.FORZADURA=<EVAL {6 60}>
+VAR.FORZADURA=<EVAL {7 61}>
+VAR.FORZADURA=<EVAL {8 62}>
+VAR.FORZADURA=<EVAL {9 63}>
+VAR.FORZADURA=<EVAL {10 64}>
+VAR.FORZADURA=<EVAL {15 65}>
+VAR.FORZADURA=<EVAL {15 66}>
+VAR.FORZADURA=<EVAL {15 67}>
+VAR.FORZADURA=<EVAL {17 68}>
+VAR.FORZADURA=<EVAL {19 70}>
+VAR.FORZADURA=<EVAL {20 71}>
+ENDDO
+IF (<SRC.ISGM>)
+VAR.FORZADURA=100
+ENDIF
+IF (0<SRC.TAG.DEBUG.COMBAT>)
+SRC.SAY My try: <EVAL <VAR.FORZADURA>>!
+ENDIF
+
+[FUNCTION f_findtype]
+DOSWITCH <MORE>
+LINK.TYPE=t_door_locked
+LINK.TYPE=t_door_locked
+LINK.TYPE=t_door_locked
+LINK.TYPE=t_door_locked
+LINK.TYPE=t_door_locked
+LINK.TYPE=t_door_locked
+LINK.TYPE=t_cosa_locked
+LINK.TYPE=t_container_locked
+LINK.TYPE=t_container_locked
+LINK.TYPE=t_container_locked
+LINK.TYPE=t_container_locked
+LINK.TYPE=t_container_locked
+LINK.TYPE=t_container_locked
+LINK.TYPE=t_secure
+LINK.TYPE=t_secure_f
+LINK.TYPE=t_door_locked
+ENDDO
+
+[FUNCTION f_sube_skill_lp]
+IF (<VAR.FORZADURA> >= RAND(100))&&(<SRC.LOCKPICKING> < 100.0)
+	SRC.LOCKPICKING=<SRC.LOCKPICKING>+0.1
+
+	IF (<VAR.FORZADURA> >= RAND(200))
+		SRC.LOCKPICKING=<SRC.LOCKPICKING>+0.1
+	ENDIF
+ENDIF
+
+[ITEMDEF i_lock_1]
+ID=i_clock 
+NAME=Weak lock
+TYPE=t_lock
+RESOURCES=15 i_ingot_iron
+SKILLMAKE=55.0 TINKERING,t_tinker_Tools
+
+ON=@CREATE
+color=0538
+MORE=0
+
+[ITEMDEF i_lock_2]
+ID=i_clock 
+NAME=Novice's lock
+TYPE=t_lock
+RESOURCES=17 i_ingot_iron
+SKILLMAKE=65.0 TINKERING,t_tinker_Tools
+
+ON=@CREATE
+color=0538
+MORE=1
+
+[ITEMDEF i_lock_3]
+ID=i_clock 
+NAME=Difficult lock
+TYPE=t_lock
+RESOURCES=18 i_ingot_iron
+SKILLMAKE=85.0 TINKERING,t_tinker_Tools
+
+ON=@CREATE
+color=0538
+MORE=2
+
+[ITEMDEF i_lock_4]
+ID=i_clock 
+NAME=Very difficult lock
+TYPE=t_lock
+RESOURCES=19 i_ingot_iron
+SKILLMAKE=85.0 TINKERING,t_tinker_Tools
+
+ON=@CREATE
+color=0538
+MORE=3
+
+[ITEMDEF i_lock_5]
+ID=i_clock 
+NAME=Goddamned difficult lock
+TYPE=t_lock
+RESOURCES=25 i_ingot_iron
+SKILLMAKE=100.0 TINKERING,t_tinker_Tools
+
+ON=@CREATE
+color=0538
+MORE=4
+
+[ITEMDEF i_lock_6]
+ID=i_clock 
+NAME=GM lock
+TYPE=t_lock
+
+ON=@CREATE
+color=0538
+MORE=5
+
+[ITEMDEF i_lock_Spec_1]			//An easy way to create new locks...
+ID=i_clock 
+NAME=Explosive lock
+TYPE=t_lock
+RESOURCES=25 i_ingot_iron,   //3 I_dosis_dinamita
+SKILLMAKE=100.0 TINKERING,t_tinker_Tools
+
+ON=@CREATE
+color=0538
+MORE=6
+MORE2=1 	//Only works with doors
+
+[TYPEDEF t_lock]
+ON=@DCLICK
+TARGET Where do you wish to place a lock?
+RETURN 1
+
+ON=@TARGOn_ITEM
+	IF !(<SRC.TARG.MORE2H> >= <MORE>) 
+		IF (<SRC.FINDLAYER(21).FINDTYPE.T_KEY.MORE>==<SRC.TARG.MORE>)&&(<SRC.FINDLAYER(21).FINDTYPE.T_KEY.MORE>!=0)||(<SRC.ISGM>)
+		IF (<MORE2>==0)||(<SRC.TARG.TYPE>==t_door)&&(<MORE2>==1)||(<SRC.TARG.TYPE>==t_door_locked)&&(<MORE2>==1)
+		SRC.TARG.MORE2h=<MORE>
+			IF (<SRC.TARG.TYPE>==t_door_locked)||(<SRC.TARG.TYPE>==t_door)
+			SRC.TARG.TYPE=t_door_locked
+			SRC.EMOTE mount the lock in the door.
+			ELSEIF (<SRC.TARG.TYPE>==t_container_locked)||(<SRC.TARG.TYPE>==t_container)
+			SRC.TARG.TYPE=t_container_locked
+			SRC.EMOTE mount the lock in the chest.
+			ELSE
+			SRC.SYSMESSAGE EINNNN???????
+			ENDIF
+		CONSUME
+		ELSE
+		SRC.MESSAGE *That lock only fits in doors*!
+		ENDIF
+		ELSE
+		SRC.MESSAGE *You haven't got the key of that*!
+		ENDIF
+	ELSE
+	SRC.MESSAGE *That door has an equal or better lock than that!*
+	ENDIF
+RETURN 1
+
+ON=@TARGON_GROUND
+SRC.SYSMESSAGE Hey, you can't do that!
+RETURN 1
+
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE Hey, you can't do that!
+RETURN 1
+
+[EOF]

@@ -1,0 +1,1212 @@
+[DIALOG d_troll_leather_menu]
+100, 100
+PAGE 0
+resizepic 0 0 3600 400 400
+text 148 18 455 0
+text 22 63 455 1
+text 114 65 455 2
+text 76 90 2010 3
+text 70 117 2010 4
+text 71 144 2010 5
+text 67 171 2010 6
+text 62 198 2010 7
+text 251 90 2010 8
+text 253 117 2010 9
+text 252 144 2010 10
+text 249 171 2010 11
+text 210 64 455 12
+text 282 64 455 13
+text 70 227 2010 14
+text 252 46 270 15
+text 74 42 270 16
+button 36 94 2117 2118 1 0 1
+button 36 120 2117 2118 1 0 2
+button 36 147 2117 2118 1 0 3
+button 36 174 2117 2118 1 0 4
+button 36 202 2117 2118 1 0 5
+button 36 229 2117 2118 1 0 6
+button 135 121 2117 2118 1 0 7
+button 135 148 2117 2118 1 0 8
+button 135 176 2117 2118 1 0 9
+button 135 203 2117 2118 1 0 10
+button 135 231 2117 2118 1 0 11
+button 225 95 2117 2118 1 0 12
+button 225 122 2117 2118 1 0 13
+button 225 149 2117 2118 1 0 14
+button 225 175 2117 2118 1 0 15
+button 306 150 2117 2118 1 0 16
+button 306 175 2117 2118 1 0 17
+button 358 363 1150 1151 1 0 0
+text 15 244 270 17
+text 51 259 270 18
+text 73 283 2010 19
+text 72 305 2010 20
+text 72 327 2010 21
+text 71 349 2010 22
+button 51 288 2117 2118 1 0 18
+button 51 310 2117 2118 1 0 19
+button 51 332 2117 2118 1 0 20
+button 51 353 2117 2118 1 0 21
+
+[DIALOG d_troll_leather_menu TEXT]
+Troll Leather
+Normal
+Studded
+Cap
+Gorget
+Tunic
+Sleeves
+Leggings
+Shorts
+Skirt
+Armor
+Bustier
+Normal
+Studded
+Gloves
+Female
+Male
+-----------------------------------------
+Footwear
+Boots
+Sandals
+Shoes
+Thigh Boots
+
+
+[DIALOG d_troll_leather_menu BUTTON]
+on=1
+	IF (<SRC.TAILORING>>=212)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST 2 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-212)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=2 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_cap
+		  SRC.ACT.NAME=troll cap crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=2 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=2 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_cap
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=2 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=2 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=2
+	IF (<SRC.TAILORING>>=689)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST 4 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-689)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_gorget
+		  SRC.ACT.NAME=troll gorget crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_gorget
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=4 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=3
+	IF (<SRC.TAILORING>>=855)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST 12 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-855)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=12 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_tunic
+		  SRC.ACT.NAME=troll tunic crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=12 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=12 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_tunic
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=12 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=12 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=4
+	IF (<SRC.TAILORING>>=689)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST 4 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-689)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_sleeves
+		  SRC.ACT.NAME=troll sleeves crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_sleeves
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=4 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=5
+	IF (<SRC.TAILORING>>=813)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST 10 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-813)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_leggings
+		  SRC.ACT.NAME=troll leggings crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_leggings
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=10 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=6
+	IF (<SRC.TAILORING>>=668)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST 4 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-668)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_gloves
+		  SRC.ACT.NAME=troll gloves crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_gloves
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=4 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=7
+	IF (<SRC.TAILORING>>=938)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST 6 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-938)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_gorget
+		  SRC.ACT.NAME=studded troll gorget crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_gorget
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=6 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=8
+	IF (<SRC.TAILORING>>=1000)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST14 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-1000)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=14 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_tunic
+		  SRC.ACT.NAME=studded troll tunic crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=14 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=14 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_tunic
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=14 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=14 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=9
+	IF (<SRC.TAILORING>>=1000)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST10 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-1000)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_sleeves
+		  SRC.ACT.NAME=studded troll sleeves crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_sleeves
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=10 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=10
+	IF (<SRC.TAILORING>>=1000)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST12 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-1000)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=12 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_leggings
+		  SRC.ACT.NAME=studded troll leggings crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=12 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=12 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_leggings
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=12 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=12 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=11
+	IF (<SRC.TAILORING>>=978)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST8 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-978)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_gloves
+		  SRC.ACT.NAME=studded troll gloves crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_studded_gloves
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=8 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=12
+	IF (<SRC.TAILORING>>=772)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST8 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-772)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_shorts
+		  SRC.ACT.NAME=troll shorts crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_shorts
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=8 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=13
+	IF (<SRC.TAILORING>>=730)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST6 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-730)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_skirt
+		  SRC.ACT.NAME=troll skirt crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_skirt
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=6 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=14
+	IF (<SRC.TAILORING>>=772)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST8 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-772)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_armor
+		  SRC.ACT.NAME=troll armor crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_armor
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=8 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=15
+	IF (<SRC.TAILORING>>=730)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST6 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-730)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_bustier
+		  SRC.ACT.NAME=troll bustier crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_bustier
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=6 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=16
+	IF (<SRC.TAILORING>>=1000)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST8 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-1000)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_studded_armor
+		  SRC.ACT.NAME=studded troll armor crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_studded_armor
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=8 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=17
+	IF (<SRC.TAILORING>>=979)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST8 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-979)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_studded_bustier
+		  SRC.ACT.NAME=studded troll bustier crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_female_studded_bustier
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=8 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=18
+	IF (<SRC.TAILORING>>=481)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST8 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-481)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_boots
+		  SRC.ACT.NAME=troll boots crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_boots
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=8 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=8 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=19
+	IF (<SRC.TAILORING>>=274)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST4 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-274)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_sandals
+		  SRC.ACT.NAME=troll sandals crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_sandals
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=4 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=4 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=20
+	IF (<SRC.TAILORING>>=315)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST6 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-315)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_shoes
+		  SRC.ACT.NAME=troll shoes crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_shoes
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=6 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=6 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+on=21
+	IF (<SRC.TAILORING>>=564)
+	  IF (<SRC.RESTEST 1 i_leathercrafting_kit>)&&(<SRC.RESTEST 1 l_cut_troll_leather>)
+	   IF (<SRC.RESTEST10 l_cut_troll_leather>)
+	    IF <EVAL RAND(100)> < ((((<SRC.TAILORING>+-564)*50)/550)+50)
+  	      IF (<SRC.TAILORING>>99.9)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut and tie the leather together.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_thigh_boots
+		  SRC.ACT.NAME=troll thigh boots crafted by <SRC.NAME>
+		  SRC.ACT.BOUNCE
+		  SRC.MESSAGE With your exceptional skill, you engrave your name onto this item.
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ELSE (<SRC.TAILORING><100.0)
+		IF (RAND(3)==1) || (RAND(3)==0)
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You cut tie the leather together.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  SRC.NEWITEM=i_troll_thigh_boots
+		  SRC.ACT.BOUNCE
+		  RETURN 1
+		ELSE
+		  SRC.SOUND=0248
+		  SRC.MESSAGE You failed to make anything.
+		  SRC.CONSUME=10 l_cut_troll_leather
+		  RETURN 1
+		ENDIF
+	      ENDIF
+	    ELSE
+  	      SRC.SOUND=0248
+	      SRC.MESSAGE You failed to make anything.
+	      SRC.CONSUME=10 l_cut_troll_leather
+  	      RETURN 1
+	    ENDIF
+	   ELSE
+	    SRC.MESSAGE *You do not have enough leather to craft this object*
+	   ENDIF
+	  ELSE
+	    SRC.MESSAGE *You must have the material and tools in your backpack*
+	    RETURN 1
+	  ENDIF
+	ELSE
+	  SRC.MESSAGE *You do not possess the skill to craft this item*
+	  RETURN 1
+	ENDIF
+	RETURN 0
+[EOF]

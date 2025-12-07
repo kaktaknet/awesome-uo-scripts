@@ -1,0 +1,247 @@
+///Treasure Maps by ClouD_BR///
+
+[itemdef i_mapa_tesouro]
+NAME=Treasure Map
+ID=i_map_rolled
+VALUE=5000
+TYPE=t_normal
+WEIGHT=3
+
+ON=@Create
+tag.status=Not deciphred
+color=07a1
+f_selecionar_local_tesouro
+
+on=@click
+message @07a1 <name>
+message @07ad (<tag.status>)
+return 1
+
+on=@dclick
+IF (<src.mapplane>)
+src.sysmessage @07a3 You can't use this map in another mapplane!
+elif (<more2>) && !(<more1>) && !(<src.isnextp <eval <morex>> <eval <morey>> 10>)
+sdialog d_tesouro_mapa
+elif (<topobj.uid>!=<src>) && !(<src.isgm>)
+src.message @07a3 The map isn't with you.
+elif (<more1>)
+src.sysmessage @07a0 The treasure has already been found.
+elif (<more2>)
+IF (<src.isnextp <eval <morex>> <eval <morey>> 10>) 
+IF !(<src.findid.i_shovel>)
+src.sysmessage @07a3 You need a shovel.
+else
+IF !(<src.isnewbie>)
+FOR 4
+serv.newnpc=c_orc
+new.p=<morep>
+new.fix
+new.home=<new.p>
+new.homedist 10
+new.removetimer <EVAL 60*30>
+ENDFOR
+serv.newnpc=c_m_cyclops_king
+new.p=<morep>
+new.fix
+new.home=<new.p>
+new.homedist 10
+new.removetimer <EVAL 60*30>
+serv.newnpc=c_m_efreet
+new.p=<morep>
+new.fix
+new.home=<new.p>
+new.homedist 10
+new.removetimer <EVAL 60*30>
+serv.newnpc=c_m_dragon_crystal
+new.p=<morep>
+new.tag.prizemoney=<eval <src.cartography>*10>
+new.tag.prizeitem=<hval <def.random_treasure_prize>>
+new.moveback
+new.fix
+new.home=<new.p>
+new.homedist 10
+new.events +e_tesouro_chefe
+new.removetimer <EVAL 60*30>
+new.say @07ad Who dares to take my treasure!?
+new.effect 1,i_gold,20,20
+ELSE
+FOR 3
+serv.newnpc=c_orc
+new.p=<morep>
+new.fix
+new.home=<new.p>
+new.homedist 10
+new.removetimer <EVAL 60*30>
+ENDFOR
+serv.newnpc=c_m_ettin_lord
+new.p=<morep>
+new.tag.prizemoney=<eval <src.cartography>*10>
+new.tag.prizeitem=<hval <def.random_treasure_prize>>
+new.moveback
+new.fix
+new.home=<new.p>
+new.homedist 10
+new.events +e_tesouro_chefe
+new.say @07ad Who dares to take my treasure!?
+new.effect 1,i_gold,20,20
+new.removetimer <EVAL 60*30>
+ENDIF
+tag.status=Treasure found
+src.sysmessage @07a1 Now you've gotta kill the monsters to get the treasure.
+more1=1
+ENDIF
+ENDIF
+ELIF !(RAND(6))
+IF !(<SRC.CARTOGRAPHY> >= 100.0)
+SRC.CARTOGRAPHY += <EVAL {1 2}>
+ENDIF
+MORE2=1
+src.message @0ad You decipher the map.
+tag.status=Deciphred by <src.name>
+dispid=i_map
+attr=attr_newbie
+update
+ELSE
+src.message @0ad You fail!
+ENDIF
+RETURN 1
+
+//////////////
+
+[DIALOG d_tesouro_mapa] 
+200,90
+src.closealldialogs
+PAGE 0
+resizepic 0 0 5120 403 494 
+gumppic 10 10 5528 
+gumppic <EVAL (10+((<morex>*100)/1337))> <EVAL (10+((<morey>*100)/1067))> 0938
+gumppic <EVAL (10+((<src.p.x>*100)/1337))> <EVAL (10+((<src.p.y>*100)/1067))> 0939
+dhtmlgump 20 400 240 85 1 200 The treasure is in <TAG0.LUGAR>, at <eval <morex>>,<eval <morey>>
+tilepic 280 400 7575
+tilepic 302 400 7576
+
+///////////////////
+
+[function isnextp]
+serv.newitem=i_gold
+new.attr=attr_invis|attr_decay
+new.p=<argn1>,<argn2>
+IF (<new.distance> <= <argn3>)
+new.remove
+return 1
+else
+new.remove
+return 0
+ENDIF
+
+/////////////////
+
+[DEFNAME premios_tesouro]
+random_treasure_ingots { I_ORE_VALORITE 1 I_ORE_VERITE 1 I_ORE_MYTHERIL 1 }
+random_treasure_prize { RANDOM_PLATEMAIL_INVULNERABILITY 1 RANDOM_PLATEMAIL_DEFENSE 1 random_treasure_ingots 1 RANDOM_PLATEMAIL_FORTIFICATION 1 RANDOM_PLATEMAIL_GUARDING 1 RANDOM_PLATEMAIL_HARDENING 1 RANDOM_WEAPON_FORCE 1 RANDOM_WEAPON_MIGHT 1 RANDOM_WEAPON_POWER 1 RANDOM_WEAPON_RUIN 1 RANDOM_WEAPON_vanq 1 RANDOM_SHIELD_INVULNERABILITY 1 RANDOM_SHIELD_DEFENSE 1 RANDOM_SHIELD_FORTIFICATION 1 RANDOM_SHIELD_GUARDING 1 RANDOM_SHIELD_HARDENING 1 }
+
+//////////////////
+
+[events e_tesouro_chefe]
+ON=@Death
+FINDID.i_mapa_tesouro.REMOVE
+
+ON=@DEATHCORPSE
+serv.newitem=i_chest_metal
+new.color=07ad
+new.attr=attr_decay|attr_move_never
+new.p=<argo.p>
+new.nudgeup 12
+new.timer=360
+new.events +t_bau_tesouro
+new.more1=<EVAL {100 1000}>
+local.bau=<new>
+serv.newitem=i_gold
+new.amount=<tag.prizemoney>
+new.cont=<Local.Bau>
+serv.newitem=<tag.prizeitem>
+new.cont=<local.bau>
+IF (<NEW.TYPE>==t_ore)
+NEW.AMOUNT=<EVAL {1 3}>
+ENDIF
+try uid.<argo.uid>.nudgedown 5
+try uid.<local.bau>.update
+try uid.<uid.<argo.uid>.more2>.sysmessage @07a1 You killed the guardian, now take the treasure!
+
+///////////////////
+
+[function f_selecionar_local_tesouro]
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+DORAND 3
+NEW.RANDLOCATION
+NEW.DUNGLOCATION
+NEW.RANDLOCATION
+ENDDO
+TAG.LUGAR=<NEW.REGION.NAME>
+MOREP=<NEW.P>
+NEW.REMOVE
+
+[TYPEDEF t_bau_tesouro]
+ON=@Dclick
+IF !(<SRC.LOCKPICKING> >= <MORE2>)
+SRC.DAMAGE <EVAL {50 150}> 01 <UID>
+ENDIF
+
+[FUNCTION removetimer]
+SERV.NEWITEM i_removetimer_mem
+EQUIP <NEW>
+NEW.TIMER=<ARGN1>
+
+[ITEMDEF i_removetimer_mem]
+ID=i_memory
+NAME=remove timer
+TYPE=t_eq_script
+
+ON=@Timer
+cont.remove
+return 1
+
+[FUNCTION RANDLOCATION]
+DORAND 2
+P=<eval {792 1336}>,<eval {640 2432}>
+P=<eval {664 2801}>,<eval {424 1000}>
+ENDDO
+LOCAL.TMP=<OBJ>
+OBJ=<region.uid>
+IF (<obj.type>==t_multi)
+OBJ=<LOCAL.TMP>
+RANDLOCATION
+RETURN 1
+ELIF (<region.flags>&region_flag_guarded) || (<region.flags>&region_flag_safe) || (<isneartype t_rock>) || (<isneartype t_tree>) || (<isneartype t_door>) || (<isneartype t_wall>) || (<isneartype t_water>) || (<isneartype t_multi 10>) || (<serv.map(<p>).terrain>==0244)
+OBJ=<LOCAL.TMP>
+RANDLOCATION
+RETURN 1
+ENDIF
+FIX
+OBJ=<LOCAL.TMP>
+
+[FUNCTION DUNGLOCATION]
+DORAND 6
+P=<eval {5313 5326}>,<eval {577 625}>
+P=<eval {5394 5592}>,<eval {1954 2028}>
+P=<eval {5388 5512}>,<eval {662 754}>
+P=<eval {5134 5163}>,<eval {798 870}>
+P=<eval {5914 5990}>,<eval {147 238}>
+P=<eval {5515 5621}>,<eval {15 119}>
+ENDDO
+LOCAL.TMP=<OBJ>
+OBJ=<region.uid>
+IF (<obj.type>==t_multi)
+OBJ=<LOCAL.TMP>
+DUNGLOCATION
+RETURN 1
+ELIF (<region.flags>&region_flag_guarded) || (<region.flags>&region_flag_safe) || (<isneartype t_rock>) || (<isneartype t_tree>) || (<isneartype t_door>) || (<isneartype t_wall>) || (<isneartype t_water>) || (<isneartype t_multi 10>) || (<serv.map(<p>).terrain>==0244)
+OBJ=<LOCAL.TMP>
+DUNGLOCATION
+RETURN 1
+ENDIF
+FIX
+OBJ=<LOCAL.TMP>
+
+[EOF]

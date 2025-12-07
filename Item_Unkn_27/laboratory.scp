@@ -1,0 +1,762 @@
+///////////////////////////////////////////////////////////////////////////////
+// Lab script Version 1.00 (written for 55i)
+//
+// Created by Belgar of 'A Virtual Paradise'. A free, player run, shard
+// This file is free for use on other free shards
+//
+// Please do not repost this script without my permission
+// If you modify this file, please leave this header intact
+///////////////////////////////////////////////////////////////////////////////
+
+//////////////////SPEECH SECTION/////////////////////
+
+[SPEECH spk_lab]
+//defname=spk_lab
+
+on=help //display a help message on speaking 'help'
+src.sysmessage To use any commands, stand in the middle of the lab
+src.sysmessage
+src.sysmessage say 'activate' to activate your lab
+src.sysmessage
+src.sysmessage say 'status' or double click the scales to get the lab menu
+src.sysmessage
+src.sysmessage say 'expand' to buy new options for your lab
+return 1
+
+on=expand // this is the command for buying add-ons for the lab
+if (<distance> == 0) //is the player standing in the middle?
+src.getact //get the "tag store"
+if (<src.act.more1>==<src.uid>) //check for ownership
+src.flags=<src.flags>|040000 //freeze the player on the spot to prevent misuse
+src.dialog d_lab //bring up the buy dialog
+return 1
+endif
+return 1
+endif
+
+on=status //display the lab status page
+if (<distance> == 0) //check if player is in the middle
+src.getact //get the "tag store"
+if (<src.act.more1>==<src.uid>) //owner?
+src.flags=<src.flags>|040000 //freeze player
+src.dialog d_lab_status //get status dialog
+return 1
+endif
+return 1
+endif
+
+on=activate //this will activate the lab and place the "tag store"
+if (<distance> == 0) //only if the player is in the middle
+if (<link>==04fffffff) //no tag store yet?
+src.message You activate your new lab
+src.newitem i_tagstore //place the tag store
+src.act.p=<src.p> //at players feet
+src.act.move 0,-1,10 //move north
+src.act.fix
+src.act.more1=<src.uid> //set owner on the tag store
+//src.act.link=<link>
+link=<src.act.uid> //link the lab to the tag store
+
+src.newitem i_empty_name //place an "empty token"
+src.act.p=<src.p> //at players feet
+var.temp = <src.act.uid> //store the uid of the "empty"
+src.getact //get the "tag store"
+src.act.tag.empty=<var.temp> //store the uid of "empty" on "tag store"
+src.act.tag.loc1i=<src.act.tag.empty> //set the 6 locations to "empty"
+src.act.tag.loc2i=<src.act.tag.empty>
+src.act.tag.loc3i=<src.act.tag.empty>
+src.act.tag.loc4i=<src.act.tag.empty>
+src.act.tag.loc5i=<src.act.tag.empty>
+src.act.tag.loc6i=<src.act.tag.empty>
+else
+src.message lab allready activated //cannot activate twice
+endif
+endif
+
+//////////////FUNCTIONS SECTION//////////////////
+
+[function makepotion] //function that will make any potion
+
+try src.makeitem=<args> //make <args>. this will return an error if makeitem is invalid
+
+[function getact] //retrieve the location of the "tag store"
+
+var.x=<src.region.uid> // retrieves the uid of the lab
+act=<uid.<var.x>.link> // sets acting item to the link of lab (tag store)
+
+[function buylab] //function for buying additions
+
+if (<src.rescount i_gold> < <eval <act.tag.buyval>>) //enough gold?
+src.message Not enough Gold to buy this
+src.flags=<src.flags>&~040000 //unfreeze
+return 1
+else //any location still free?
+if (<act.tag.loc1>==1) || (<act.tag.loc2>==1) || (<act.tag.loc3>==1) || (<act.tag.loc4>==1) || (<act.tag.loc5>==1) || (<act.tag.loc6>==1)
+src.consume=<eval <act.tag.buyval>> i_gold
+act.tag.buyval=
+buyplace //actually put it on screen (another function)
+else
+src.message not enough space left to place this
+src.flags=<src.flags>&~040000 //unfreeze
+return 1
+endif
+return 1
+endif
+
+[function buyplace] //place bought items onscreen
+if (<src.act.tag.loc1>==1) //location 1 free?
+src.act.tag.loc1=<src.act.tag.buyex> //define what will be there
+src.newitem=i_lab_burner //place burner
+src.act.p=<src.p> //at players feet
+src.act.move -1,-1,10 //move NW
+src.act.fix
+var.uidb = <src.act.uid> //store uid
+getact
+src.newitem=<src.act.tag.buyex> //get bought item
+src.act.p=<src.p> //place at players feet
+src.act.move -1,-1,10 //move nw
+src.act.fix //put it on top of the burner
+var.uid = <src.act.uid> //store for later reference
+src.flags=<src.flags>&~040000 //unfreeze
+getact
+src.act.tag.loc1b = <var.uidb> //store uid's on tag store
+src.act.tag.loc1i = <var.uid>
+return 1
+endif
+getact
+if (<src.act.tag.loc2>==1) //next possible location
+src.act.tag.loc2=<src.act.tag.buyex>
+src.newitem=i_lab_burner
+src.act.p=<src.p>
+src.act.move 1,-1,10
+src.act.fix
+var.uidb = <src.act.uid>
+getact
+src.newitem=<src.act.tag.buyex>
+src.act.p=<src.p>
+src.act.move 1,-1,10
+src.act.fix
+var.uid = <src.act.uid>
+src.flags=<src.flags>&~040000
+getact
+src.act.tag.loc2b = <var.uidb>
+src.act.tag.loc2i = <var.uid>
+return 1
+endif
+getact
+if (<src.act.tag.loc3>==1)
+src.act.tag.loc3=<src.act.tag.buyex>
+src.newitem=i_lab_burner
+src.act.p=<src.p>
+src.act.move -1,0,10
+src.act.fix
+var.uidb = <src.act.uid>
+getact
+src.newitem=<src.act.tag.buyex>
+src.act.p=<src.p>
+src.act.move -1,0,10
+src.act.fix
+var.uid = <src.act.uid>
+src.flags=<src.flags>&~040000
+getact
+src.act.tag.loc3b = <var.uidb>
+src.act.tag.loc3i = <var.uid>
+return 1
+endif
+getact
+if (<src.act.tag.loc4>==1)
+src.act.tag.loc4=<src.act.tag.buyex>
+src.newitem=i_lab_burner
+src.act.p=<src.p>
+src.act.move 1,0,10
+src.act.fix
+var.uidb = <src.act.uid>
+getact
+src.newitem=<src.act.tag.buyex>
+src.act.p=<src.p>
+src.act.move 1,0,10
+src.act.fix
+var.uid = <src.act.uid>
+src.flags=<src.flags>&~040000
+getact
+src.act.tag.loc4b = <var.uidb>
+src.act.tag.loc4i = <var.uid>
+return 1
+endif
+getact
+if (<src.act.tag.loc5>==1)
+src.act.tag.loc5=<src.act.tag.buyex>
+src.newitem=i_lab_burner
+src.act.p=<src.p>
+src.act.move -1,1,10
+src.act.fix
+var.uidb = <src.act.uid>
+getact
+src.newitem=<src.act.tag.buyex>
+src.act.p=<src.p>
+src.act.move -1,1,10
+src.act.fix
+var.uid = <src.act.uid>
+src.flags=<src.flags>&~040000
+getact
+src.act.tag.loc5b = <var.uidb>
+src.act.tag.loc5i = <var.uid>
+return 1
+endif
+getact
+if (<src.act.tag.loc6>==1)
+src.act.tag.loc6=<src.act.tag.buyex>
+src.newitem=i_lab_burner
+src.act.p=<src.p>
+src.act.move 1,1,10
+src.act.fix
+var.uidb = <src.act.uid>
+getact
+src.newitem=<src.act.tag.buyex>
+src.act.p=<src.p>
+src.act.move 1,1,10
+src.act.fix
+var.uid = <src.act.uid>
+src.flags=<src.flags>&~040000
+getact
+src.act.tag.loc6b = <var.uidb>
+src.act.tag.loc6i = <var.uid>
+return 1
+endif
+
+[function getowner] //who owns this region ??
+var.x=<src.region.uid> //get the region
+src.act=<var.x>
+//src.message <uid.<src.act.more1>.name>
+return 1
+
+/////////////////DIALOGS SECTION///////////////////////
+
+[DIALOG d_lab] //buy dialog
+
+0, 0
+page 0
+resizepic 100 100 2620 450 300 //black background
+//text 110 110 3 0
+
+page 1
+button 105 130 82 82 1 1 1 //invisible button
+tilepic 121 169 6185
+tilepic 120 140 6203 //greater heal
+text 170 135 3 0
+text 170 155 3 1
+
+button 105 190 82 82 1 1 2 //invisible button
+tilepic 120 230 6185
+tilepic 120 200 6201 //explosion
+text 170 195 3 2
+text 170 215 3 3
+
+button 105 250 82 82 1 1 3
+tilepic 120 269 6221
+tilepic 120 260 6199 //deadly poison
+text 170 255 3 4
+text 170 275 3 5
+
+button 105 310 82 82 1 1 4
+tilepic 120 340 6185
+tilepic 120 320 6188 //shrink
+text 170 315 3 6
+text 170 335 3 7
+
+[dialog d_lab text]
+Greater Heal Equipment
+price: 40000 GP
+Greater Explosion Tools
+price: 40000 GP
+Deadly Poison Distillery
+price: 40000 GP
+Shrink Concentrater
+price: 40000 GP
+
+[dialog d_lab button]
+
+onbutton=0 //closing the dialog
+src.flags=<src.flags>&~040000 //unfreeze
+
+onbutton=1
+getact
+act.tag.buyex=i_lab_heal //set bought item to i_lab_heal item
+act.tag.buyval=40000 //set price
+src.buylab //get it done
+return 1
+
+onbutton=2
+getact
+act.tag.buyex=i_lab_explode
+act.tag.buyval=40000
+src.buylab
+return 1
+
+onbutton=3
+getact
+act.tag.buyex=i_lab_poison
+act.tag.buyval=40000
+src.buylab
+return 1
+
+onbutton=4
+getact
+act.tag.buyex=i_lab_shrink
+act.tag.buyval=40000
+src.buylab
+return 1
+
+
+[dialog d_lab_status] //lab status screen
+0,0
+page 0
+resizepic 100 100 5120 300 300 //grey background
+text 110 110 850 0
+text 200 190 850 1
+text 200 220 850 2
+text 200 250 850 3
+text 200 280 850 4
+text 200 310 850 5
+text 200 340 850 6
+text 150 190 871 7
+text 150 220 871 8
+text 150 250 871 9
+text 150 280 871 10
+text 150 310 871 11
+text 150 340 871 12
+button 110 190 4020 4022 1 1 1 //remove buttons
+button 110 220 4020 4022 1 1 2
+button 110 250 4020 4022 1 1 3
+button 110 280 4020 4022 1 1 4
+button 110 310 4020 4022 1 1 5
+button 110 340 4020 4022 1 1 6
+text 105 175 850 13
+button 330 110 2642 2642 1 1 7 //redeed button
+text 325 145 850 14
+
+[dialog d_lab_status text]
+Lab Status Screen
+<uid.<src.act.tag.loc1i>.name>
+<uid.<src.act.tag.loc2i>.name>
+<uid.<src.act.tag.loc3i>.name>
+<uid.<src.act.tag.loc4i>.name>
+<uid.<src.act.tag.loc5i>.name>
+<uid.<src.act.tag.loc6i>.name>
+pos1:
+pos2:
+pos3:
+pos4:
+pos5:
+pos6:
+Remove
+Redeed
+
+[dialog d_lab_status button]
+
+onbutton=0 //close dialog
+src.flags=<src.flags>&~040000 //unfreeze
+
+onbutton=1
+if !(<src.act.tag.loc1> == 1) //is anything there?
+src.act=<src.act.tag.loc1i> //if so remove the item
+src.act.remove
+getact
+src.act=<src.act.tag.loc1b> // remove the burner as well
+src.act.remove
+getact
+src.act.tag.loc1i=<src.act.tag.empty> //set to "empty" again
+src.act.tag.loc1=1 //location is free for use again
+dialog d_lab_status //return to the dialog
+return 1
+else
+dialog d_lab_status //return anyway
+return 1
+endif
+return 1
+
+onbutton=2
+if !(<src.act.tag.loc2> == 1)
+src.act=<src.act.tag.loc2i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc2b>
+src.act.remove
+getact
+src.act.tag.loc2i=<src.act.tag.empty>
+src.act.tag.loc2=1
+dialog d_lab_status
+return 1
+else
+dialog d_lab_status
+return 1
+endif
+return 1
+
+onbutton=3
+if !(<src.act.tag.loc3> == 1)
+src.act=<src.act.tag.loc3i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc3b>
+src.act.remove
+getact
+src.act.tag.loc3i=<src.act.tag.empty>
+src.act.tag.loc3=1
+dialog d_lab_status
+return 1
+else
+dialog d_lab_status
+return 1
+endif
+return 1
+
+onbutton=4
+if !(<src.act.tag.loc4> == 1)
+src.act=<src.act.tag.loc4i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc4b>
+src.act.remove
+getact
+src.act.tag.loc4i=<src.act.tag.empty>
+src.act.tag.loc4=1
+dialog d_lab_status
+return 1
+else
+dialog d_lab_status
+return 1
+endif
+return 1
+
+onbutton=5
+if !(<src.act.tag.loc5> == 1)
+src.act=<src.act.tag.loc5i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc5b>
+src.act.remove
+getact
+src.act.tag.loc5i=<src.act.tag.empty>
+src.act.tag.loc5=1
+dialog d_lab_status
+return 1
+else
+dialog d_lab_status
+return 1
+endif
+return 1
+
+onbutton=6
+if !(<src.act.tag.loc6> == 1)
+src.act=<src.act.tag.loc6i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc6b>
+src.act.remove
+getact
+src.act.tag.loc6i=<src.act.tag.empty>
+src.act.tag.loc6=1
+dialog d_lab_status
+return 1
+else
+dialog d_lab_status
+return 1
+endif
+return 1
+
+onbutton=7 //redeed
+getact
+if (<src.act.more1>==<src.uid> //make sure it is owner of lab
+src.flags=<src.flags>&~040000 //unfreeze
+getact
+if !(<src.act.tag.loc1> == 1) //if pos1 is occupied, remove
+src.act=<src.act.tag.loc1i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc1b> // burner as well
+src.act.remove
+endif
+getact
+if !(<src.act.tag.loc2> == 1)
+src.act=<src.act.tag.loc2i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc2b>
+src.act.remove
+endif
+getact
+if !(<src.act.tag.loc3> == 1)
+src.act=<src.act.tag.loc3i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc3b>
+src.act.remove
+endif
+getact
+if !(<src.act.tag.loc4> == 1)
+src.act=<src.act.tag.loc4i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc4b>
+src.act.remove
+endif
+getact
+if !(<src.act.tag.loc5> == 1)
+src.act=<src.act.tag.loc5i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc5b>
+src.act.remove
+endif
+getact
+if !(<src.act.tag.loc6> == 1)
+src.act=<src.act.tag.loc6i>
+src.act.remove
+getact
+src.act=<src.act.tag.loc6b>
+src.act.remove
+endif
+getact
+src.act=<src.act.tag.empty> //remove the "empty" token
+src.act.remove
+getact
+src.act.remove //remove the tag store
+var.x=<src.region.uid>
+src.act=<var.x>
+src.act.remove //remove the actual lab
+src.newitem i_deed_lab //give them the deed
+src.act.bounce //put in backpack
+else
+src.message only the owner of the lab can redeed it
+endif
+
+//////////////////ITEMS SECTION /////////////////////
+
+[itemdef i_tagstore] //the "tag store" for our tags and other info
+id=i_scales //looks like scales, not out of place in a lab
+TYPE=t_script //make it store tags
+name=Magic Scales //interesting name....
+
+on=@create
+attr=010 //nonmovable
+tag.loc1=1 // "reset" all positions to available
+tag.loc2=1
+tag.loc3=1
+tag.loc4=1
+tag.loc5=1
+tag.loc6=1
+
+on=@dclick
+src.getowner //the owner of the lab and the house can access this
+if (<src.act.more1>==<src.uid>) //the actual check
+src.getact
+src.flags=<src.flags>|040000 //freeze them
+src.dialog d_lab_status //bring up status display
+return 1
+else
+return 1
+endif
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=lab tag store
+
+
+[itemdef i_multi_lab] //Yes, finally the actual lab itself
+name=Alchemy Lab
+id=i_rune_alchem_1 //this is what the middle looks like
+type=t_multi
+Multiregion=-1,-1,1,1 //make sure it is an actual multi
+component=i_bar_piece -1 -1 //the pieces
+component=0191a 0 -1
+component=01911 1 -1
+component=01918 -1 0
+component=0191c 1 0
+component=01918 -1 1
+component=0191c 1 1
+TSPEECH=spk_lab //this item uses the speech commands
+
+on=@create
+attr 010
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=An Alchemist Lab
+
+[itemdef i_region_counter] //this makes sure the house becomes no-build again
+id=i_gold
+name=region resetter
+type=t_script
+
+on=@create
+attr=090
+timer=10 //10 seconds after placement
+
+on=@timer
+region.flags=<region.flags>|080 //activate no-build
+remove
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=region reset - no build
+
+[itemdef i_deed_lab] //the deed to the lab
+id=i_deed
+type=t_deed
+NAME=Deed to a Laboratory
+
+on=@create
+more=i_multi_lab
+
+on=@dclick
+src.getowner //do they own this house??
+if (<src.act.more1>==<src.uid>)
+src.region.flags=<src.region.flags>&~080 //make this area buildable
+src.getact
+var.p=<src.act.p> //get location of the house sign
+src.newitem i_region_counter
+src.act.p = <var.p> //place region counter at house sign
+return 0 //allow build
+else
+src.message you must be the owner of the house to place this
+return 1 //don't allow build
+endif
+
+CATEGORY=Provisions - Deeds
+SUBSECTION=Profession related
+DESCRIPTION=Alchemist lab deed
+
+[itemdef i_empty_name] //"empty" token
+id i_gold
+name=empty
+
+on=@create
+attr 090 //invisible
+
+[itemdef i_lab_burner] //lab burner
+id=6221
+name=burner
+type=00
+
+on=@create
+attr=010
+
+on=@dclick
+return 1 //make sure they can't turn it on (screws up graphics)
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=Lab burner
+
+[itemdef i_lab_heal] //greater healing potion option
+id=6203
+name=Healing Equipment
+type=t_script //stores tags
+
+on=@create
+attr=010
+tag.potiontype=i_potion_healgreat //this is the potion that is in this
+
+on=@dclick
+getowner //only owner of lab and owner of house can use this
+if (<src.act.more1> == <src.uid>)
+if (<src.canmake <tag.potiontype>>) //make sure they can make this
+src.makepotion <tag.potiontype> //make the potion for them
+return 1
+else
+src.message You do not have the correct reagents or skill to make this
+return 1
+endif
+else
+src.message you don't own the lab or the house
+return 1
+endif
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=Greater heal section
+
+[itemdef i_lab_explode]
+id=6201
+name=Explosion Tools
+type=t_script
+
+on=@create
+attr=010
+tag.potiontype=i_potion_explosiongreat
+
+on=@dclick
+getowner
+if (<src.act.more1> == <src.uid>)
+if (<src.canmake <tag.potiontype>>)
+src.makepotion <tag.potiontype>
+return 1
+else
+src.message You do not have the correct reagents or skill to make this
+return 1
+endif
+else
+src.message you don't own the lab or the house
+return 1
+endif
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=greater explosion section
+
+[itemdef i_lab_poison]
+id=6199
+name=Poison Distillery
+type=t_script
+
+on=@create
+attr=010
+tag.potiontype=i_potion_poisondeadly
+
+on=@dclick
+getowner
+if (<src.act.more1> == <src.uid>)
+if (<src.canmake <tag.potiontype>>)
+src.makepotion <tag.potiontype>
+return 1
+else
+src.message You do not have the correct reagents or skill to make this
+return 1
+endif
+else
+src.message you don't own the lab or the house
+return 1
+endif
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=deadly poison section
+
+[itemdef i_lab_shrink]
+id=6188
+name=Shrink Concentrator
+type=t_script
+
+on=@create
+attr=010
+tag.potiontype=i_potion_shrink
+
+on=@dclick
+getowner
+if (<src.act.more1> == <src.uid>)
+if (<src.canmake <tag.potiontype>>)
+src.makepotion <tag.potiontype>
+return 1
+else
+src.message You do not have the correct reagents or skill to make this
+return 1
+endif
+else
+src.message you don't own the lab or the house
+return 1
+endif
+
+CATEGORY=Items by Professions
+SUBSECTION=Alchemist
+DESCRIPTION=shrink section

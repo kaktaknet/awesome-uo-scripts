@@ -1,0 +1,368 @@
+[Comment On ths script]
+This scripts does not use anatomy or lumberjacking as damage adds.
+Tactics is the skill axes are based on.
+This skill was based on a "buy skills with gold" shard, so theres no raise system.
+I started basing on kell combat system but i finished making this monster :/
+
+Just add event "e_combat" on all the playerds and creatures.
+
+Setting MOREX and MOREZ of a weapon gives that weapon specials propierties.
+
+MOREX
+IF <ARGN1> > 0 && <SRC.KARMA> < 0
+	+20% DAM
+ENDIF
+IF <ARGN1> > 1
+	20% of bless
+ENDIF
+IF <ARGN1> > 2
+	Mana draining
+ENDIF
+IF <ARGN1> > 3
+	20% of paralyze
+ENDIF
+IF <ARGN1> > 4
+	dobules damage on npcs, not human and wich karma is < 0
+ENDIF
+
+////////MOREZ////////
+IF <ARGN1> > 0 && <SRC.KARMA> > 0
+	+20% DAM
+ENDIF
+IF <ARGN1> > 1
+	20% of poisoning
+ENDIF
+IF <ARGN1> > 2
+	20% of draining 5 hit points
+ENDIF
+IF <ARGN1> > 3
+	20% of paralyze
+ENDIF
+IF <ARGN1> > 4
+	doubles damage on npcs humans
+ENDIF
+
+[EVENTS e_combat]
+ON=@HITTRY
+IF <SRC.UID> == <UID>
+RETURN 1
+ENDIF
+
+if ( <SRC.REGION.FLAGS> & (region_flag_safe|region_flag_no_pvp) ) 
+return 1 
+endif 
+
+if ( <REGION.FLAGS> & (region_flag_safe|region_flag_no_pvp) ) 
+return 1 
+endif 
+
+if ( <src.flags> & statf_invul ) 
+return 1 
+endif 
+
+if ( 0 ) 
+elseif ( <argo.TYPE> == 0 ) // WRESTLING 
+f_hit_skill <wrestling>
+elseif ( <argo.TYPE> == t_weapon_fence ) // FENCING 
+f_hit_skill <FENCING> 
+elseif ( (<argo.TYPE> == t_weapon_sword) ) 
+f_hit_skill <SWORDSMANSHIP> 
+elseif ( (<argo.TYPE> == t_weapon_bow) | (<argo.TYPE> == t_weapon_xbow) ) 
+f_hit_skill <ARCHERY> 
+elseif ( (<argo.TYPE> == t_weapon_axe) | (<argo.TYPE> == T_WEAPON_MACE_SHARP ) ) 
+f_hit_skill <TACTICS> 
+else // MACEFIGHTING 
+f_hit_skill <MACEFIGHTING> 
+endif 
+
+
+ON=@HIT
+VAR.DAM=<f_calc_dam>
+ARGN1 = <eval <VAR.DAM>>
+IF <ARGN1> <= 1 && <eval <VAR.DAM>> >= -10 
+ARGN1 = 1
+ELSEIF <VAR.DAM> < -10
+ARGN1 = 0
+ENDIF
+SRC.SAY=@00846 <ARGN1>
+VAR.ADD.BONUS = 0
+
+ON=@GETHIT
+ARGN2 = 01
+
+[FUNCTION f_calc_dam]
+VAR.OLD_ACT = <ACT> 
+ACT = <findlayer(layer_hand1).uid> 
+if ( 0<ACT.UID> == 0 ) 
+ACT = <findlayer(layer_hand2).uid> 
+endif 
+
+if ( <ACT.UID> == 0 ) 
+elseif ( <ACT.type> == t_weapon_mace_smith ) 
+elseif ( <ACT.type> == t_weapon_mace_sharp ) 
+elseif ( <ACT.type> == t_weapon_mace_staff ) 
+elseif ( <ACT.type> == t_weapon_mace_crook ) 
+elseif ( <ACT.type> == t_weapon_mace_pick ) 
+elseif ( <ACT.type> == t_weapon_sword ) 
+elseif ( <ACT.type> == t_weapon_axe ) 
+elseif ( <ACT.type> == t_weapon_fence ) 
+elseif ( <ACT.type> == t_weapon_bow ) 
+elseif ( <ACT.type> == t_weapon_xbow ) 
+else 
+ACT = 0 
+endif 
+
+if (<ACT.UID> == 0) //wrest
+	NEWITEM i_gold
+	VAR.MOREP = <ACT.MOREP> 
+	ACT.MOREP = <DAM> 
+	VAR.WPN.MIN = <ACT.MOREx> 
+	VAR.WPN.MAX = <ACT.MOREy> 
+IF (<NPC>)
+	VAR.WPN.MIN = <ACT.MOREx> *2
+	VAR.WPN.MAX = <ACT.MOREy> *2
+ELSEIF <VAR.WPN.MIN> < 1
+	VAR.WPN.MIN = 3
+	VAR.WPN.MAX = 8 
+ENDIF
+
+	ACT.MOREP = <VAR.MOREP> 
+	if ( <VAR.WPN.MAX> < <VAR.WPN.MIN> ) 
+		VAR.WPN.MAX = <VAR.WPN.MIN> 
+	endif 
+	ACT.REMOVE
+else 
+	VAR.WPN.TYPE = <ACT.TYPE> 
+	VAR.MOREX = <ACT.MOREX>
+	VAR.MOREY = <ACT.MOREY>
+	VAR.MOREZ = <ACT.MOREZ>
+	f_extract <ACT.DAM>
+	if ( <VAR.WPN.MAX> < <VAR.WPN.MIN> ) 
+		VAR.WPN.MAX = <VAR.WPN.MIN> 
+	endif 
+endif 
+
+VAR.WPN.DAM = <eval ( { <VAR.WPN.MIN> <VAR.WPN.MAX> } )> 
+VAR.WPN.BONUS = 100 
+
+
+VAR.STAM_LOSS = <eval (rand(2))> 
+if ( !<NPC> ) 
+VAR.STAM_LOSS = <eval (<VAR.STAM_LOSS> + rand(2))> 
+elseif ( rand(2) ) 
+VAR.STAM_LOSS = 0 
+endif 
+
+if ( <VAR.STAM_LOSS> > <SRC.STAM> ) 
+SRC.STAM = 0 
+else 
+SRC.STAM = <eval (<SRC.STAM> - <VAR.STAM_LOSS>)> 
+endif 
+
+f_bonus
+IF !<NPC>
+f_bonus_valor <VAR.MOREX>
+f_bonus_shadow <VAR.MOREZ>
+ENDIF
+VAR.DAM.FINAL = (<eval <VAR.WPN.DAM>> * <eval <VAR.WPN.BONUS>>)/100
+f_bonus_mago <VAR.MOREY>
+VAR.DAM.FINAL = <VAR.DAM.FINAL> + <VAR.BONUS.MAGO>
+f_bonus_golpe <var.dam.final>
+
+f_quita_armadura <SRC.AC> <SRC.STR> <SRC.NPC>
+
+F_parry <SRC.PARRYING> 
+
+
+return <eval <var.dam.final>>
+
+
+
+[FUNCTION f_bonus]
+if ( 0 ) 
+elseif ( <VAR.WPN.TYPE> == 0 ) // WRESTLING 
+f_aplica_skill <wrestling>
+elseif ( <VAR.WPN.TYPE> == t_weapon_fence ) // FENCING 
+f_aplica_skill <FENCING> 
+elseif ( (<VAR.WPN.TYPE> == t_weapon_sword) ) 
+f_aplica_skill <SWORDSMANSHIP> 
+elseif ( (<VAR.WPN.TYPE> == t_weapon_bow) | (<VAR.WPN.TYPE> == t_weapon_xbow) ) 
+f_aplica_skill <ARCHERY> 
+elseif ( (<VAR.WPN.TYPE> == t_weapon_axe) | (<argo.TYPE> == T_WEAPON_MACE_SHARP ) )  
+f_aplica_skill <TACTICS> 
+else // MACE FIGHTING 
+f_aplica_skill <MACEFIGHTING> 
+endif 
+
+[FUNCTION f_hit_skill]
+VAR.HIT = 80.0 + <argn1>
+VAR.GOOD = 50.0 + <argn1>/2
+VAR.CRIT = <ARGN1> / 20
+
+
+If <eval(<VAR.HIT>)> > RAND(1025)
+ACTDIFF = 0
+VAR.GOLPE = 1
+ELSE
+ACTDIFF = -10
+return 0
+ENDIF
+
+
+If <eval(<VAR.GOOD>)> > RAND(1025)
+ACTDIFF = 0
+VAR.GOLPE = 2
+ELSE
+return 0
+ENDIF
+
+
+If <eval(<VAR.CRIT>)> > RAND(1025)
+ACTDIFF = 0
+VAR.GOLPE = 3
+ELSE
+return 0
+ENDIF
+//ACTDIFF = -10
+
+
+[FUNCTION f_bonus_golpe]
+IF <VAR.GOLPE> == 1
+VAR.DAM.FINAL = (<ARGN1> * 3)/4
+ELSEIF <VAR.GOLPE> == 2
+VAR.DAM.FINAL = <ARGN1> 
+ELSEIF <VAR.GOLPE> == 3
+VAR.DAM.FINAL = <ARGN1> + <ARGN1>/2
+ENDIF
+
+[FUNCTION f_bonus_mago]
+VAR.BONUS.MAGO = <argn1>/50
+
+
+[FUNCTION f_aplica_skill]
+VAR.WPN.BONUS = 100 + <argn1>/10
+VAR.WPN.BONUS += (- 20)
+
+[FUNCTION f_quita_armadura]
+VAR.RAND = <eval {-5 5}>
+VAR.dam.final = <var.dam.final> + (-<argn1>) + <var.rand>
+IF <ARGN3>
+VAR.DAM.FINAL = <var.dam.final> - <ARGN2>/75
+ENDIF
+
+[FUNCTION f_send_damage]
+IF <ARGN1> && <ARGN2>
+SRC.SENDPACKET 0bf W11 W022 01 D<ARGN2> <ARGN1>
+ENDIF
+
+[FUNCTION f_bonus_valor]
+IF <ARGN1> > 0
+	IF <SRC.KARMA> < 0
+	VAR.WPN.BONUS = <VAr.WPN.BONUS> + 20
+	ENDIF
+ENDIF
+IF <ARGN1> > 1
+	IF <eval {1 5}> == 1
+	SPELLEFFECT 17 1000
+	SFX snd_SPELL_BLESS
+	ENDIF
+ENDIF
+IF <ARGN1> > 2
+	IF <eval {1 5}> == 1
+	VAR.CONSUME = <eval {10 30}>
+	IF <SRc.MANA> > <var.consume>
+	SRC.MANA = <SRC.MANA> - <var.consume>
+	ELSE
+	SRC.MANA = 0
+	ENDIF
+	SRC.SFX 01f5
+	ENDIF
+ENDIF
+IF <ARGN1> > 3
+	IF <eval {1 5}> == 1
+	SRC.SPELLEFFECT 38 1000
+	SRC.SFX snd_SPELL_PARALYZE
+	ENDIF
+ENDIF
+IF <ARGN1> > 4
+	IF <SRC.NPC> && <SRC.KARMA> < 0 && (<SRC.BODY> != c_man || <SRC.BODY> != c_woman)
+	VAR.WPN.BONUS = <VAR.WPN.BONUS> + 100
+	ENDIF
+ENDIF
+
+
+[FUNCTION f_bonus_shadow]
+IF <ARGN1> > 0
+	IF <SRC.KARMA> > 0
+	VAR.WPN.BONUS = <VAr.WPN.BONUS> + 20
+	ENDIF
+ENDIF
+IF <ARGN1> > 1
+	IF <eval {1 5}> == 1
+	SRC.POISON 1000
+	SRC.SFX snd_SPELL_CURSE
+	ENDIF
+ENDIF
+IF <ARGN1> > 2
+	IF <eval {1 5}> == 1
+	HITS = <HITS> + {1 5}
+	SRC.SFX 01f5
+	ENDIF
+ENDIF
+IF <ARGN1> > 3
+	IF <eval {1 5}> == 1
+	SRC.SPELLEFFECT 38 100
+	SRC.SFX snd_SPELL_PARALYZE
+	ENDIF
+ENDIF
+IF <ARGN1> > 4
+	IF <SRC.NPC> && (<SRC.BODY> == c_man || <SRC.BODY> == c_woman)
+	VAR.WPN.BONUS = <VAR.WPN.BONUS> + 100
+	ENDIF
+ENDIF
+
+[FUNCTION f_parry]
+IF <SRC.FINDLAYER(2).TYPE> == t_shield
+IF (0)
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_buckler
+VAR.PAR.PROB = 0
+VAr.PAR.MENOS = 10
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_round_bronze
+VAR.PAR.PROB = 8
+VAr.PAR.MENOS = 15
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_kite_metal
+VAR.PAR.PROB = 16
+VAr.PAR.MENOS = 20
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_kite_wood
+VAR.PAR.PROB = 24
+VAr.PAR.MENOS = 25
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_wood
+VAR.PAR.PROB = 32
+VAr.PAR.MENOS = 30
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_round_metal
+VAR.PAR.PROB = 40
+VAr.PAR.MENOS = 35
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_heater
+VAR.PAR.PROB = 45
+VAr.PAR.MENOS = 40
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_chaos
+VAR.PAR.PROB = 40
+VAr.PAR.MENOS = 50
+ELSEIF <SRC.FINDLAYER(2).BASEID> == i_shield_order
+VAR.PAR.PROB = 40
+VAr.PAR.MENOS = 50
+ENDIF
+
+VAR.PARRY = <ARGN1>/2 - <VAR.PAR.PROB>
+
+IF <eval <var.parry>> > <eval rand(1025)>
+VAR.dam.final = <var.dam.final> + (-<var.par.menos>)
+SRC.EFFECT 3, i_fx_glow2, 1, 16, 0
+ENDIF
+ENDIF
+
+[FUNCTION f_extract]
+	VAR.WPN.MIN = <ARGN1> 
+	VAR.WPN.MAX = <ARGN2>
+
+[EOF]

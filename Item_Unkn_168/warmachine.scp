@@ -1,0 +1,118 @@
+//################################################################
+//##		War Machine Made by Freezor			##
+//##	Instructions: Use it as Tinkering Craftable Item	##
+//##	   		Installation				##
+//##	   							##
+//##	   	Open SPHERESKILL.SCP and add:			##
+//##	   							##
+//##	   	ON=i_warmachine <name> (<resmake>)		##
+//##	   	MAKEITEM=i_warmachine				##
+//##	   							##
+//##   At the end of [SKILLMENU sm_tinker] Section.		##
+//################################################################
+
+[itemdef i_warmachine]
+id=i_fx_blade_spirit_1
+type=t_eq_script
+name=War Machine
+VALUE={30000 35000}
+WEIGHT=20
+RESOURCES=20 i_gears, 4 i_sword_long, 30 i_wire_iron
+SKILLMAKE=TINKERING 100.0,t_tinker_tools
+
+on=@Dclick
+src.newnpc=c_bs
+src.act.tag.repar=<tag.repar>
+src.act.tag.tname=<name>
+VAR.SLAVEUID=<SRC.ACT.UID>
+SRC.NEWITEM=i_memory
+SRC.ACT.COLOR=memory_ipet
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.NAME=WARMACHINE PET
+SRC.ACT.LAYER=layer_special
+SRC.ACT.CONT=<VAR.SLAVEUID>
+remove
+
+[chardef c_bs]
+id=023e
+Name=War Machine
+dam=5,10
+can=MT_WALK|MT_RUN
+DESIRES=c_man
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_civilization
+
+on=@Create
+NPC=Brain_animal
+STR=150
+DEX=500
+INT=1
+TACTICS=250.0
+WRESTLING=250.0
+FAME=0
+KARMA=1500
+
+
+on=@death
+if (<eval <tag.repar>> > 2)
+newitem=i_gears
+act.p=<p>
+act.say The War Machine is Destroyed!
+newitem=i_sword_long
+act.p=<p>
+act.flip
+act.move n
+newitem=i_sword_long
+act.p=<p>
+act.flip
+act.move s
+newitem=i_sword_long
+act.p=<p>
+act.move w
+newitem=i_sword_long
+act.p=<p>
+act.move e
+sfx 041
+else
+newitem=i_bs_brk
+act.name=<tag.tname>
+act.tag.repar=<tag.repar>
+act.p=<p>
+sfx 011d
+EFFECT=0,0,8,10,1
+endif
+
+[Itemdef i_bs_brk]
+id=i_fx_blade_spirit_1
+Name=War Machine
+type=t_eq_script
+
+on=@Click
+message @42 [Broken]
+
+on=@Dclick
+if (<src.tinkering> < 1000)
+src.message you lack Level to repair this
+Return 0
+Elseif (!<src.restest 5 i_wire_iron>)
+src.message You lack iron wire to repair this.
+return 0
+elseif (!<src.restest 3 i_gears>)
+src.message You lack gears to repair this.
+return 0
+elseif (!<src.restest 1 i_sword_long>)
+src.message You lack a long sword to repair this.
+return 0
+else
+remove
+src.consume 5 i_wire_iron
+src.consume 3 i_gears
+src.consume 1 i_sword_long
+src.newitem i_warmachine
+src.act.tag.repar=<eval <tag.repar>>+1
+src.act.name=<name>
+src.act.bounce
+src.sfx 04b
+src.message You repair the War Machine..
+return 1
+Endif

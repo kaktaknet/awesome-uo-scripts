@@ -1,0 +1,107 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//Chaos/Order Shields v1.0
+
+//Info:
+//These shields will actually unequip and severely damage the player if he/she is not within the same alignment.
+
+[ITEMDEF 01bc4]
+DEFNAME=i_shield_order
+TYPE=t_shield
+VALUE=220000
+FLIP=1
+RESOURCES=4 i_ingot_silver, 8 i_ingot_blackrock, 2 i_ingot_gold
+WEIGHT=1
+ARMOR=30
+REQSTR=0
+DUPELIST=01bc5
+
+CATEGORY=Provisions - Armor
+SUBSECTION=Shields
+DESCRIPTION=Order Shield
+
+ON=@Create
+ATTR=attr_magic|attr_move_always // no smelting.
+HITPOINTS={101 115}
+
+ON=@EQUIP
+TIMERD=1
+
+ON=@TIMER
+IF !(<TOPOBJ.NPC>) && (<TOPOBJ.ISCHAR>) && (0<TOPOBJ.UID>) && (0<CONT.UID>)
+	IF (<TOPOBJ.GM>)
+		RETURN 1
+	ENDIF
+	IF (0<TOPOBJ.MEMORYFINDTYPE.memory_guild.UID>)
+		IF (<TOPOBJ.MEMORYFINDTYPE.memory_guild.LINK.ALIGN>==1)
+			TOPOBJ.SOUND=SND_SPELL_EXPLOSION
+		ELSE
+			TOPOBJ.SOUND=SND_SPELL_LIGHTNING
+			TOPOBJ.EFFECT=1,1
+			VAR.X=<EVAL <TOPOBJ.HITPOINTS> /2>
+			TOPOBJ.DAMAGE=<VAR.X> 0001 <TOPOBJ.UID>
+			TOPOBJ.SYSMESSAGE=Your guild alignment must be Order to wear this shield.
+			CONT=<TOPOBJ.FINDLAYER.(21).UID>
+		ENDIF
+	ELSE
+		TOPOBJ.SOUND=SND_SPELL_LIGHTNING
+		TOPOBJ.EFFECT=1,1
+		VAR.X=<EVAL <TOPOBJ.HITPOINTS> /2>
+		TOPOBJ.DAMAGE=<VAR.X> 0001 <CONT.UID>
+		TOPOBJ.SYSMESSAGE=You need to be part of an Order guild to wear this shield.
+		CONT=<TOPOBJ.FINDLAYER.(21).UID>
+	ENDIF
+	RETURN 1
+ENDIF
+
+[ITEMDEF 01bc3]
+DEFNAME=i_shield_chaos
+TYPE=t_shield
+VALUE=220000
+FLIP=1
+RESOURCES=4 i_ingot_silver, 10 i_ingot_blackrock
+WEIGHT=1
+ARMOR=32
+REQSTR=0
+
+CATEGORY=Provisions - Armor
+SUBSECTION=Shields
+DESCRIPTION=Chaos Shield
+
+ON=@Create
+ATTR=attr_magic|attr_move_always // no smelting.
+HITPOINTS={101 115}
+
+ON=@EQUIP
+TIMERd=1
+
+ON=@TIMER
+IF !(<TOPOBJ.NPC>) && (<TOPOBJ.ISCHAR>) && (0<TOPOBJ.UID>) && (0<CONT.UID>)
+	IF (<TOPOBJ.GM>)
+		RETURN 1
+	ENDIF
+	IF (0<TOPOBJ.MEMORYFINDTYPE.memory_guild.UID>)
+		IF (<TOPOBJ.MEMORYFINDTYPE.memory_guild.LINK.ALIGN>==2)
+			TOPOBJ.SOUND=SND_SPELL_LIGHTNING
+		ELSE
+			TOPOBJ.SOUND=SND_SPELL_EXPLOSION
+			TOPOBJ.EFFECT=3,i_fx_explode,15,15,1
+			VAR.X=<EVAL <TOPOBJ.HITPOINTS> /2>
+			TOPOBJ.DAMAGE=<VAR.X> 0001 <CONT.UID>
+			TOPOBJ.SYSMESSAGE=Your guild alignment must be Chaos to wear this shield.
+			CONT=<TOPOBJ.FINDLAYER.(21).UID>
+		ENDIF
+	ELSE
+		TOPOBJ.SOUND=SND_SPELL_LIGHTNING
+		TOPOBJ.EFFECT=1,1
+		VAR.X=<EVAL <TOPOBJ.HITPOINTS> /2>
+		TOPOBJ.DAMAGE=<VAR.X> 0001 <TOPOBJ.UID>
+		TOPOBJ.SYSMESSAGE=You need to be part of an Chaos guild to wear this shield.
+		CONT=<TOPOBJ.FINDLAYER.(21).UID>
+	ENDIF
+	RETURN 1
+ENDIF
+
+[EOF]

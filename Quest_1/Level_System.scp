@@ -1,0 +1,724 @@
+// ############################################################ 
+// RW's Special Abilities: Sphere-based UO Emu Servers 
+// Designed By: Dubious Advocate and DigiAnimus
+// You are free to use this, repost it, chop it up, spindle, 
+// and mutilate to your heart's content. If you use it without 
+// any change then don't claim it as your own. If you do try 
+// to claim full credit for this script then the boogey man will 
+// get you. Or eventually you'll grow up and feel really silly 
+// about what a dumb kid you used to be. I expect I will sleep 
+// well at night no matter what. 
+// 
+// ------------------------------------------------------------ 
+// Installing this script - 
+// Installing it is the easy part. Just copy it into your 
+// scripts directory. 
+// 
+// FILE LAST UPDATED: July 26, 2001 
+// 
+Version=0.54 
+// 
+// But you're not done yet. Now you need to update all animals, 
+// all monsters, and all players so that they have two things 
+// added to them. 
+// 
+// The first is that they all need the event called 
+// "e_Experience_KillAward" as one of their TEVENTS. 
+// 
+// The second thing is that all CHARDEFs need a new tag added 
+// under the @Create trigger. The tag stores their level which 
+// is used by the experience system to calculate how much 
+// exp to award the victor. Here's an example - 
+// 
+// ON=@Create 
+// f_InitializeLevel Mediocre 
+// NPC=brain_monster 
+// blah blah 
+// 
+// This calls the function f_InitializeLevel found here in this 
+// file, and passes it a LABEL def that is actually a narrow 
+// range. In the example MEDIOCRE chooses a number between 3-6. 
+// 
+// ------------------------------------------------------------ 
+// Details for Game Designers - 
+// 
+// Currently experience is strictly biased towards combat. 
+// Eventually I'll upgrade this design so that crafts also 
+// contribute towards level. 
+// 
+// My system is based on 50 levels. Characters can advance 
+// level forever, and there is benefit for this in the Special 
+// Abilities found in my (separate) Race/Class system. But as 
+// far as skill growth is concerned Level 50 is the "best of 
+// the best". 
+// 
+// Currently a Level is defined as 299,999 experience points. 
+// When experience awarded exceeds that maximum the player has 
+// "leveled", and their current skill caps are adjusted upwards. 
+// 
+// In my system only skill advancement is controlled by leveling. 
+// Stat and reputation advancement is only capped by the Race 
+// maximums specified in the DEFs file. My philosophy is that 
+// improving body and mind is a different process than the education 
+// practice of skills. It is quite possible for a Level 0 player 
+// to have the maximum stats, but that is unlikely and suggests 
+// that such a player is an exploiter. Some things are best 
+// handled by policy rather than programming. :) 
+// 
+// The game designer sets the maximum skill values per race 
+// per class in the experience DEFs file. Class values can 
+// never be higher than Race values, but Class values can 
+// (and often should) be less than Race as decided by the 
+// game designer. 
+// 
+// The maximum values in the DEFs file are "hard" caps - they 
+// are the highest the character can ever achieve for that 
+// combination of Class and Race. In this file there are also 
+// "soft" caps - those values are a percentage of the maximum. 
+// As the character levels the "soft" cap adjusts itself up a 
+// little bit more closer towards the maximum hard cap. 
+// 
+// How much adjustment at each level varies. It is not the same 
+// amount for each new level. Instead at the lower levels the 
+// amount of adjustment is much higher. As the character gets 
+// closer to Level 50 the amount of adjustment gets much less. 
+// 
+// All players at Level 9 or lower are treated as Level 10. 
+// By Level 50 the character is allowed to max all skills per 
+// the values specified by the game designer for each combination 
+// of Class and Skill. 
+// 
+// Experience awarded is based on the respective level for both 
+// victor and victim. Vanquishing victims more than 10 levels 
+// below the victor grant no experience. Victors with a lower 
+// level than the victim get much more experience than when 
+// their level is higher than the victim's. 
+// 
+// ------------------------------------------------------------ 
+// Acknowledgements - 
+// 
+// My thanks to Virtuous Viper for the idea of (a) the actual 
+// Double Experience event/item, and for (b) the 
+// Resurrection w/Penalities event/item. 
+// 
+// My thanks to Evren for his incredibly creative approaches 
+// and specifically for the function that loops memory objects. 
+// 
+// All other ideas used in this system are my own. 
+// 
+// ############################################################ 
+// FILE LAST UPDATED: July 26, 2001 
+// 
+Version=0.54 
+
+
+// ######################################################### 
+[DEFNAME EXPERIENCE_SYSTEM] 
+EXP_LEVELSTART_VeryWeak {0 1} 
+EXP_LEVELSTART_Weak {0 3} 
+EXP_LEVELSTART_Mediocre {3 6} 
+EXP_LEVELSTART_Average {5 15} 
+EXP_LEVELSTART_AboveAverage {15 25} 
+EXP_LEVELSTART_Good {20 30} 
+EXP_LEVELSTART_VeryGood {25 35} 
+EXP_LEVELSTART_Strong {30 40} 
+EXP_LEVELSTART_VeryStrong {35 45} 
+EXP_LEVELSTART_Extraordinary {45 55} 
+EXP_LEVELSTART_Indomitable {60 80} 
+EXP_LEVELSTART_Epic {75 100} 
+EXP_LEVELSTART_Godlike {100 150} 
+
+
+// ######################################################### 
+// New Commands 
+
+// This should be a Player command 
+[FUNCTION Level] 
+MESSAGE [Level <EVAL(<TAG.CurLevel>)>, Exp <EVAL(<TAG.Experience>)>] 
+
+// This should NOT be a Player command - up to you 
+[FUNCTION xLevel] 
+TARGET 
+MESSAGE [Level <EVAL(<TARG.TAG.CurLevel>)>, Exp <EVAL(<TARG.TAG.Experience>)>] 
+
+
+// ######################################################### 
+// Experience Modifiers 
+
+[ITEMDEF i_dbl_exp] 
+DEFNAME=i_dbl_exp 
+ID=i_handr_1 
+NAME=DBL EXP 
+TYPE=t_EQ_script 
+WEIGHT=0 
+LAYER=layer_special 
+
+ON=@CREATE 
+TIMER=3600 
+
+ON=@TIMER 
+CONT.SYSMESSAGE Your double experience time is over. 
+CONT.TAG.DEXP 0 
+REMOVE 
+
+[FUNCTION f_InitializeLevel] 
+TAG.CurLevel=<eval(EXP_LEVELSTART_<args>)> 
+
+
+// ######################################################### 
+// Resurrection Manager 
+
+[ITEMDEF i_ResurrectManager] 
+DEFNAME=i_ResurrectManager 
+ID=i_handr_1 
+NAME=RES YES NO 
+TYPE=t_EQ_script 
+LAYER=layer_special 
+
+ON=@CREATE 
+ATTR=attr_decay 
+
+ON=@EQUIP 
+TIMER=5 
+
+ON=@TIMER 
+CONT.MENU m_resurrect_yesno 
+REMOVE 
+
+
+[TYPEDEF t_res_yesno] 
+ON=@DCLICK 
+IF (<SRC.UID>=<LINK>) 
+MENU m_resurrect_yesno 
+ELSE 
+SRC.SYSMESSAGE This is not your corpse! 
+ENDIF 
+
+
+[MENU m_resurrect_yesno] 
+Do you wish to resurrect? Only Level 10+ players are penalized for this 
+ON=0 Yes, I do! 
+SRC.RESURRECT 
+SRC.NEWITEM=i_temp_safe 
+SRC.ACT.ATTR=attr_decay 
+SRC.ACT.EQUIP 
+IF (<EVAL <SRC.TAG.CurLevel>> > 29) 
+SRC.TAG.CurLevel=<EVAL(<SRC.TAG.CurLevel>-3)> 
+ELSEIF (<EVAL <SRC.TAG.CurLevel>> > 19) 
+SRC.TAG.CurLevel=<EVAL(<SRC.TAG.CurLevel>-2)> 
+ELSEIF (<EVAL <SRC.TAG.CurLevel>> > 9) 
+SRC.TAG.CurLevel=<EVAL(<SRC.TAG.CurLevel>-1)> 
+ENDIF 
+
+ON=0 No, I do not! 
+SRC.SYSMESSAGE You have chosen not to resurrect 
+
+
+[ITEMDEF i_temp_safe] 
+DEFNAME=i_temp_safe 
+ID=i_handr_1 
+NAME=TEMP SAFE 
+LAYER=layer_special 
+TYPE=t_EQ_script 
+
+ON=@CREATE 
+ATTR=ATTR_DECAY 
+
+ON=@EQUIP 
+CONT.INVUL 
+CONT.SYSMESSAGE You are safe for 15 seconds 
+TIMER=15 
+
+ON=@TIMER 
+CONT.SYSMESSAGE You feel as if you are no longer safe 
+CONT.INVUL 
+REMOVE 
+
+
+// ######################################################### 
+// Award Experience 
+[FUNCTION f_memory_loop] 
+VAR.call_fun = <args> 
+f_memory_loop_rec 0 
+
+[FUNCTION f_memory_loop_rec] 
+if ( <findcont(<args>).uid> == 0 ) 
+return 0 // stop 
+endif 
+if ( <findcont(<args>).baseid> == i_memory ) 
+TRY <VAR.call_fun> <findcont(<args>).uid> // call the function 
+endif 
+f_memory_loop_rec <eval (<args>+1)> 
+
+[FUNCTION f_memory_AwardFoes] 
+// if !( <UID.<args>.COLOR> & memory_fight ) 
+// if !( <UID.<args>.COLOR> & memory_WAR_TARG ) 
+// if !( <UID.<args>.COLOR> & memory_HARMEDBY ) 
+if !( <UID.<args>.COLOR> & memory_fight ) 
+return 0 
+endif 
+TRY UID.<args>.LINK.NEWITEM=i_Experience_KillAward 
+TRY UID.<args>.LINK.ACT.MOREY=1 
+TRY UID.<args>.LINK.ACT.ATTR=attr_decay 
+TRY UID.<args>.LINK.ACT.TAG.CurLevel=<TAG.CurLevel> 
+TRY UID.<args>.LINK.ACT.TAG.Name=<NAME> 
+TRY UID.<args>.LINK.ACT.TAG.Type=<TYPE> 
+TRY UID.<args>.LINK.ACT.CONT = <UID.<args>.LINK.UID> // place in their backpack 
+
+
+[EVENTS e_Experience_KillAward] 
+ON=@DEATH 
+// Give player chance to resurrect with penalties 
+NEWITEM=i_ResurrectManager 
+ACT.EQUIP 
+
+// Attach Award Item to Victor 
+f_memory_loop f_memory_AwardFoes 
+
+
+[ITEMDEF i_Experience_KillAward] 
+DEFNAME=i_Experience_KillAward 
+NAME=ExpKill Award 
+ID=i_handr_1 
+WEIGHT=0 
+LAYER=30 
+TYPE=T_EQ_SCRIPT 
+
+ON=@CREATE 
+TIMER=1 
+
+ON=@TIMER 
+VAR.X= 
+IF <CONT.TAG.CurLevel> > (<eval(<TAG.CurLevel>)> + 10) 
+CONT.SYSMESSAGE You cannot gain any more experience from that creature 
+REMOVE 
+RETURN 0 
+ENDIF 
+
+// Calculate actual experience award 
+VAR.X=<EVAL(<TAG.CurLevel>)> * 10 
+IF <CONT.TAG.DEXP> 
+VAR.X=<eval(<VAR.X> * 2)> 
+ENDIF 
+
+// Accelerate award based on level 
+IF <CONT.TAG.CurLevel> < 02 // 02 = 2 
+VAR.X=<VAR.X> * 0fa // 0fa = 250 
+ELSEIF <CONT.TAG.CurLevel> < 05 // 05 = 5 
+VAR.X=<VAR.X> * 064 // 064 = 100 
+ELSEIF <CONT.TAG.CurLevel> < 0a // 0a = 10 
+VAR.X=<VAR.X> * 028 // 028 = 40 
+ELSEIF <CONT.TAG.CurLevel> < 0f // 0f = 15 
+VAR.X=<VAR.X> * 0f // 0f = 15 
+ELSEIF <CONT.TAG.CurLevel> < 014 // 014 = 20 
+VAR.X=<VAR.X> * 02 // 028 = 2 
+ENDIF 
+
+IF (<CONT.TAG.CurLevel> > <TAG.CurLevel>) 
+VAR.X=<EVAL(<VAR.X>+ -((<CONT.TAG.CurLevel>+ -<TAG.CurLevel>) * 10))> 
+ENDIF 
+
+
+CONT.SAY The defeat of <TAG.Name> earned you <eval(<VAR.X>)> experience 
+// CONT.SYSMESSAGE The defeat of <TAG.Name> earned you <eval(<VAR.X>)> experience 
+CONT.TAG.EXPERIENCE=<CONT.TAG.EXPERIENCE> + <VAR.X> 
+
+CONT.f_ManageLevel 
+REMOVE 
+
+
+[FUNCTION f_ManageLevel] 
+IF (<eval(<TAG.EXPERIENCE>)> < 299999) 
+RETURN 0 
+ENDIF 
+
+TAG.CurLevel=<TAG.CurLevel> + 1 
+TAG.EXPERIENCE=<eval(<TAG.EXPERIENCE>)>+ -299999 
+
+// Recurse until they have truly leveled 
+IF (<eval(<TAG.EXPERIENCE>)> > 299999) 
+f_ManageLevel 
+RETURN 0 
+ENDIF 
+
+// reset skill cap modifiers 
+f_SetSkill_CapFactor 
+IF ! <TAG.Polymorph> 
+f_Class_SoftcapAll 
+f_Race_SoftcapAll 
+ENDIF 
+
+// Brag to the world 
+SERV.ALLCLIENTS SOUND 0fe 
+SERV.ALLCLIENTS SYSMESSAGE <NAME> <TITLE> has achieved level <eval(<TAG.CurLevel>)>! 
+
+
+// ######################################################################################## 
+// Calculate Cap Factor Driving Caps by Level 
+
+[FUNCTION f_SetSkill_CapFactor] 
+// Treat L9 or below as if they were L10 
+VAR.x=<SRC.TAG.CurLevel> 
+IF <eval(<VAR.x>)> < 10 
+VAR.x=10 
+ENDIF 
+
+// Calculate Cap Factor for this level 
+// Factor Kernal is taken from Level 50 Spreadsheet 
+// At L50 they are permitted to max out their skills to whatever is specified in the DEFs 
+IF <EVAL(<VAR.x>)> < 10 
+SRC.TAG.SkillCapFactor=<eval(10+(<eval(<VAR.x>)>*2))> 
+ELSEIF <EVAL(<VAR.x>)> < 20 
+SRC.TAG.SkillCapFactor=<eval(30+((<eval(<VAR.x>)>-10)*3))> 
+ELSEIF <EVAL(<VAR.x>)> < 30 
+SRC.TAG.SkillCapFactor=<eval(60+((<eval(<VAR.x>)>-20)*1))> 
+ELSEIF <EVAL(<VAR.x>)> < 40 
+SRC.TAG.SkillCapFactor=<eval(70+((<eval(<VAR.x>)>-30)*2))> 
+ELSEIF <EVAL(<VAR.x>)> < 50 
+SRC.TAG.SkillCapFactor=<eval(90+((<eval(<VAR.x>)>-40)*1))> 
+ELSE 
+SRC.TAG.SkillCapFactor=100 
+ENDIF 
+
+
+// ######################################################################################## 
+// Set Skill Softcaps for Race & Class 
+
+// Always run this BEFORE the Race version 
+[FUNCTION f_Class_SoftcapAll] 
+IF <BRAIN> 
+// Only players are capped like this 
+// NPCs always have Max Caps for Race 
+RETURN 0 
+ENDIF 
+IF <STR> > <eval(CLASS_STRMAX_<TAG.ClassName>)> 
+STR=<eval(CLASS_STRMAX_<TAG.ClassName>)> 
+ENDIF 
+IF <DEX> > <eval(CLASS_DEXMAX_<TAG.ClassName>)> 
+DEX=<eval(CLASS_DEXMAX_<TAG.ClassName>)> 
+ENDIF 
+IF <INT> > <eval(CLASS_INTMAX_<TAG.ClassName>)> 
+INT=<eval(CLASS_INTMAX_<TAG.ClassName>)> 
+ENDIF 
+// IF <SRC.Alchemy> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Alchemy) ) / 100 )> 
+// SRC.Alchemy=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Alchemy) ) / 100 )> 
+IF <eval(<SRC.Alchemy>)> > <eval( ( <eval(<SRC.TAG.SkillCapFactor>)> * <eval(CLASS_SKILLMAX_<SRC.TAG.ClassName>_Alchemy)> ) / 100 )> 
+SRC.Alchemy=<eval( ( <eval(<SRC.TAG.SkillCapFactor>)> * <eval(CLASS_SKILLMAX_<SRC.TAG.ClassName>_Alchemy)> ) / 100 )> 
+ENDIF 
+IF <SRC.Anatomy> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Anatomy) ) / 100 )> 
+SRC.Anatomy=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Anatomy) ) / 100 )> 
+ENDIF 
+IF <SRC.AnimalLore> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_AnimalLore) ) / 100 )> 
+SRC.AnimalLore=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_AnimalLore) ) / 100 )> 
+ENDIF 
+IF <SRC.Archery> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Archery) ) / 100 )> 
+SRC.Archery=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Archery) ) / 100 )> 
+ENDIF 
+IF <SRC.ArmsLore> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_ArmsLore) ) / 100 )> 
+SRC.ArmsLore=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_ArmsLore) ) / 100 )> 
+ENDIF 
+IF <SRC.Begging> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Begging) ) / 100 )> 
+SRC.Begging=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Begging) ) / 100 )> 
+ENDIF 
+IF <SRC.Blacksmithing> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Blacksmithing) ) / 100 )> 
+SRC.Blacksmithing=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Blacksmithing) ) / 100 )> 
+ENDIF 
+IF <SRC.Bowcraft> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Bowcraft) ) / 100 )> 
+SRC.Bowcraft=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Bowcraft) ) / 100 )> 
+ENDIF 
+IF <SRC.Camping> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Camping) ) / 100 )> 
+SRC.Camping=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Camping) ) / 100 )> 
+ENDIF 
+IF <SRC.Carpentry> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Carpentry) ) / 100 )> 
+SRC.Carpentry=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Carpentry) ) / 100 )> 
+ENDIF 
+IF <SRC.Cartography> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Cartography) ) / 100 )> 
+SRC.Cartography=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Cartography) ) / 100 )> 
+ENDIF 
+IF <SRC.Cooking> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Cooking) ) / 100 )> 
+SRC.Cooking=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Cooking) ) / 100 )> 
+ENDIF 
+IF <SRC.DetectingHidden> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_DetectingHidden) ) / 100 )> 
+SRC.DetectingHidden=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_DetectingHidden) ) / 100 )> 
+ENDIF 
+IF <SRC.Enticement> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Enticement) ) / 100 )> 
+SRC.Enticement=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Enticement) ) / 100 )> 
+ENDIF 
+IF <SRC.EvaluatingIntel> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_EvaluatingIntel) ) / 100 )> 
+SRC.EvaluatingIntel=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_EvaluatingIntel) ) / 100 )> 
+ENDIF 
+IF <SRC.Fencing> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Fencing) ) / 100 )> 
+SRC.Fencing=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Fencing) ) / 100 )> 
+ENDIF 
+IF <SRC.Fishing> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Fishing) ) / 100 )> 
+SRC.Fishing=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Fishing) ) / 100 )> 
+ENDIF 
+IF <SRC.Forensics> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Forensics) ) / 100 )> 
+SRC.Forensics=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Forensics) ) / 100 )> 
+ENDIF 
+IF <SRC.Healing> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Healing) ) / 100 )> 
+SRC.Healing=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Healing) ) / 100 )> 
+ENDIF 
+IF <SRC.Herding> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Herding) ) / 100 )> 
+SRC.Herding=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Herding) ) / 100 )> 
+ENDIF 
+IF <SRC.Hiding> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Hiding) ) / 100 )> 
+SRC.Hiding=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Hiding) ) / 100 )> 
+ENDIF 
+IF <SRC.Inscription> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Inscription) ) / 100 )> 
+SRC.Inscription=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Inscription) ) / 100 )> 
+ENDIF 
+IF <SRC.ItemID> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_ItemID) ) / 100 )> 
+SRC.ItemID=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_ItemID) ) / 100 )> 
+ENDIF 
+IF <SRC.LockPicking> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_LockPicking) ) / 100 )> 
+SRC.LockPicking=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_LockPicking) ) / 100 )> 
+ENDIF 
+IF <SRC.Lumberjacking> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Lumberjacking) ) / 100 )> 
+SRC.Lumberjacking=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Lumberjacking) ) / 100 )> 
+ENDIF 
+IF <SRC.Macefighting> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Macefighting) ) / 100 )> 
+SRC.Macefighting=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Macefighting) ) / 100 )> 
+ENDIF 
+IF <SRC.Magery> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Magery) ) / 100 )> 
+SRC.Magery=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Magery) ) / 100 )> 
+ENDIF 
+IF <SRC.MagicResistance> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_MagicResistance) ) / 100 )> 
+SRC.MagicResistance=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_MagicResistance) ) / 100 )> 
+ENDIF 
+IF <SRC.Meditation> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Meditation) ) / 100 )> 
+SRC.Meditation=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Meditation) ) / 100 )> 
+ENDIF 
+IF <SRC.Mining> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Mining) ) / 100 )> 
+SRC.Mining=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Mining) ) / 100 )> 
+ENDIF 
+IF <SRC.Musicianship> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Musicianship) ) / 100 )> 
+SRC.Musicianship=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Musicianship) ) / 100 )> 
+ENDIF 
+IF <SRC.Necromancy> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Necromancy) ) / 100 )> 
+SRC.Necromancy=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Necromancy) ) / 100 )> 
+ENDIF 
+IF <SRC.Parrying> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Parrying) ) / 100 )> 
+SRC.Parrying=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Parrying) ) / 100 )> 
+ENDIF 
+IF <SRC.Peacemaking> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Peacemaking) ) / 100 )> 
+SRC.Peacemaking=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Peacemaking) ) / 100 )> 
+ENDIF 
+IF <SRC.Poisoning> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Poisoning) ) / 100 )> 
+SRC.Poisoning=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Poisoning) ) / 100 )> 
+ENDIF 
+IF <SRC.Provocation> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Provocation) ) / 100 )> 
+SRC.Provocation=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Provocation) ) / 100 )> 
+ENDIF 
+IF <SRC.RemoveTrap> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_RemoveTrap) ) / 100 )> 
+SRC.RemoveTrap=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_RemoveTrap) ) / 100 )> 
+ENDIF 
+IF <SRC.Snooping> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Snooping) ) / 100 )> 
+SRC.Snooping=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Snooping) ) / 100 )> 
+ENDIF 
+IF <SRC.SpiritSpeak> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_SpiritSpeak) ) / 100 )> 
+SRC.SpiritSpeak=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_SpiritSpeak) ) / 100 )> 
+ENDIF 
+IF <SRC.Stealing> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Stealing) ) / 100 )> 
+SRC.Stealing=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Stealing) ) / 100 )> 
+ENDIF 
+IF <SRC.Stealth> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Stealth) ) / 100 )> 
+SRC.Stealth=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Stealth) ) / 100 )> 
+ENDIF 
+IF <SRC.Swordsmanship> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Swordsmanship) ) / 100 )> 
+SRC.Swordsmanship=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Swordsmanship) ) / 100 )> 
+ENDIF 
+IF <SRC.Tactics> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Tactics) ) / 100 )> 
+SRC.Tactics=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Tactics) ) / 100 )> 
+ENDIF 
+IF <SRC.Tailoring> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Tailoring) ) / 100 )> 
+SRC.Tailoring=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Tailoring) ) / 100 )> 
+ENDIF 
+IF <SRC.Taming> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Taming) ) / 100 )> 
+SRC.Taming=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Taming) ) / 100 )> 
+ENDIF 
+IF <SRC.TasteID> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_TasteID) ) / 100 )> 
+SRC.TasteID=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_TasteID) ) / 100 )> 
+ENDIF 
+IF <SRC.Tinkering> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Tinkering) ) / 100 )> 
+SRC.Tinkering=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Tinkering) ) / 100 )> 
+ENDIF 
+IF <SRC.Tracking> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Tracking) ) / 100 )> 
+SRC.Tracking=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Tracking) ) / 100 )> 
+ENDIF 
+IF <SRC.Veterinary> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Veterinary) ) / 100 )> 
+SRC.Veterinary=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Veterinary) ) / 100 )> 
+ENDIF 
+IF <SRC.Wrestling> > <eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Wrestling) ) / 100 )> 
+SRC.Wrestling=<eval( ( <SRC.TAG.SkillCapFactor> * (CLASS_SKILLMAX_<SRC.TAG.ClassName>_Wrestling) ) / 100 )> 
+ENDIF 
+
+[FUNCTION f_RACE_SoftcapAll] 
+IF <BRAIN> 
+// Only players are capped like this 
+// NPCs always have Max Caps for Race 
+RETURN 0 
+ENDIF 
+IF <STR> > <eval(RACE_STRMAX_<TAG.RaceName>)> 
+STR=<eval(RACE_STRMAX_<TAG.RaceName>)> 
+ENDIF 
+IF <DEX> > <eval(RACE_DEXMAX_<TAG.RaceName>)> 
+DEX=<eval(RACE_DEXMAX_<TAG.RaceName>)> 
+ENDIF 
+IF <INT> > <eval(RACE_INTMAX_<TAG.RaceName>)> 
+INT=<eval(RACE_INTMAX_<TAG.RaceName>)> 
+ENDIF 
+IF <SRC.Alchemy> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Alchemy) ) / 100 )> 
+SRC.Alchemy=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Alchemy) ) / 100 )> 
+ENDIF 
+IF <SRC.Anatomy> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Anatomy) ) / 100 )> 
+SRC.Anatomy=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Anatomy) ) / 100 )> 
+ENDIF 
+IF <SRC.AnimalLore> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_AnimalLore) ) / 100 )> 
+SRC.AnimalLore=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_AnimalLore) ) / 100 )> 
+ENDIF 
+IF <SRC.Archery> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Archery) ) / 100 )> 
+SRC.Archery=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Archery) ) / 100 )> 
+ENDIF 
+IF <SRC.ArmsLore> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_ArmsLore) ) / 100 )> 
+SRC.ArmsLore=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_ArmsLore) ) / 100 )> 
+ENDIF 
+IF <SRC.Begging> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Begging) ) / 100 )> 
+SRC.Begging=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Begging) ) / 100 )> 
+ENDIF 
+IF <SRC.Blacksmithing> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Blacksmithing) ) / 100 )> 
+SRC.Blacksmithing=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Blacksmithing) ) / 100 )> 
+ENDIF 
+IF <SRC.Bowcraft> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Bowcraft) ) / 100 )> 
+SRC.Bowcraft=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Bowcraft) ) / 100 )> 
+ENDIF 
+IF <SRC.Camping> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Camping) ) / 100 )> 
+SRC.Camping=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Camping) ) / 100 )> 
+ENDIF 
+IF <SRC.Carpentry> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Carpentry) ) / 100 )> 
+SRC.Carpentry=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Carpentry) ) / 100 )> 
+ENDIF 
+IF <SRC.Cartography> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Cartography) ) / 100 )> 
+SRC.Cartography=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Cartography) ) / 100 )> 
+ENDIF 
+IF <SRC.Cooking> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Cooking) ) / 100 )> 
+SRC.Cooking=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Cooking) ) / 100 )> 
+ENDIF 
+IF <SRC.DetectingHidden> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_DetectingHidden) ) / 100 )> 
+SRC.DetectingHidden=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_DetectingHidden) ) / 100 )> 
+ENDIF 
+IF <SRC.Enticement> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Enticement) ) / 100 )> 
+SRC.Enticement=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Enticement) ) / 100 )> 
+ENDIF 
+IF <SRC.EvaluatingIntel> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_EvaluatingIntel) ) / 100 )> 
+SRC.EvaluatingIntel=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_EvaluatingIntel) ) / 100 )> 
+ENDIF 
+IF <SRC.Fencing> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Fencing) ) / 100 )> 
+SRC.Fencing=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Fencing) ) / 100 )> 
+ENDIF 
+IF <SRC.Fishing> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Fishing) ) / 100 )> 
+SRC.Fishing=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Fishing) ) / 100 )> 
+ENDIF 
+IF <SRC.Forensics> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Forensics) ) / 100 )> 
+SRC.Forensics=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Forensics) ) / 100 )> 
+ENDIF 
+IF <SRC.Healing> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Healing) ) / 100 )> 
+SRC.Healing=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Healing) ) / 100 )> 
+ENDIF 
+IF <SRC.Herding> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Herding) ) / 100 )> 
+SRC.Herding=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Herding) ) / 100 )> 
+ENDIF 
+IF <SRC.Hiding> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Hiding) ) / 100 )> 
+SRC.Hiding=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Hiding) ) / 100 )> 
+ENDIF 
+IF <SRC.Inscription> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Inscription) ) / 100 )> 
+SRC.Inscription=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Inscription) ) / 100 )> 
+ENDIF 
+IF <SRC.ItemID> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_ItemID) ) / 100 )> 
+SRC.ItemID=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_ItemID) ) / 100 )> 
+ENDIF 
+IF <SRC.LockPicking> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_LockPicking) ) / 100 )> 
+SRC.LockPicking=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_LockPicking) ) / 100 )> 
+ENDIF 
+IF <SRC.Lumberjacking> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Lumberjacking) ) / 100 )> 
+SRC.Lumberjacking=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Lumberjacking) ) / 100 )> 
+ENDIF 
+IF <SRC.Macefighting> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Macefighting) ) / 100 )> 
+SRC.Macefighting=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Macefighting) ) / 100 )> 
+ENDIF 
+IF <SRC.Magery> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Magery) ) / 100 )> 
+SRC.Magery=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Magery) ) / 100 )> 
+ENDIF 
+IF <SRC.MagicResistance> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_MagicResistance) ) / 100 )> 
+SRC.MagicResistance=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_MagicResistance) ) / 100 )> 
+ENDIF 
+IF <SRC.Meditation> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Meditation) ) / 100 )> 
+SRC.Meditation=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Meditation) ) / 100 )> 
+ENDIF 
+IF <SRC.Mining> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Mining) ) / 100 )> 
+SRC.Mining=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Mining) ) / 100 )> 
+ENDIF 
+IF <SRC.Musicianship> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Musicianship) ) / 100 )> 
+SRC.Musicianship=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Musicianship) ) / 100 )> 
+ENDIF 
+IF <SRC.Necromancy> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Necromancy) ) / 100 )> 
+SRC.Necromancy=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Necromancy) ) / 100 )> 
+ENDIF 
+IF <SRC.Parrying> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Parrying) ) / 100 )> 
+SRC.Parrying=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Parrying) ) / 100 )> 
+ENDIF 
+IF <SRC.Peacemaking> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Peacemaking) ) / 100 )> 
+SRC.Peacemaking=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Peacemaking) ) / 100 )> 
+ENDIF 
+IF <SRC.Poisoning> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Poisoning) ) / 100 )> 
+SRC.Poisoning=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Poisoning) ) / 100 )> 
+ENDIF 
+IF <SRC.Provocation> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Provocation) ) / 100 )> 
+SRC.Provocation=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Provocation) ) / 100 )> 
+ENDIF 
+IF <SRC.RemoveTrap> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_RemoveTrap) ) / 100 )> 
+SRC.RemoveTrap=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_RemoveTrap) ) / 100 )> 
+ENDIF 
+IF <SRC.Snooping> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Snooping) ) / 100 )> 
+SRC.Snooping=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Snooping) ) / 100 )> 
+ENDIF 
+IF <SRC.SpiritSpeak> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_SpiritSpeak) ) / 100 )> 
+SRC.SpiritSpeak=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_SpiritSpeak) ) / 100 )> 
+ENDIF 
+IF <SRC.Stealing> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Stealing) ) / 100 )> 
+SRC.Stealing=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Stealing) ) / 100 )> 
+ENDIF 
+IF <SRC.Stealth> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Stealth) ) / 100 )> 
+SRC.Stealth=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Stealth) ) / 100 )> 
+ENDIF 
+IF <SRC.Swordsmanship> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Swordsmanship) ) / 100 )> 
+SRC.Swordsmanship=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Swordsmanship) ) / 100 )> 
+ENDIF 
+IF <SRC.Tactics> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Tactics) ) / 100 )> 
+SRC.Tactics=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Tactics) ) / 100 )> 
+ENDIF 
+IF <SRC.Tailoring> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Tailoring) ) / 100 )> 
+SRC.Tailoring=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Tailoring) ) / 100 )> 
+ENDIF 
+IF <SRC.Taming> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Taming) ) / 100 )> 
+SRC.Taming=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Taming) ) / 100 )> 
+ENDIF 
+IF <SRC.TasteID> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_TasteID) ) / 100 )> 
+SRC.TasteID=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_TasteID) ) / 100 )> 
+ENDIF 
+IF <SRC.Tinkering> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Tinkering) ) / 100 )> 
+SRC.Tinkering=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Tinkering) ) / 100 )> 
+ENDIF 
+IF <SRC.Tracking> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Tracking) ) / 100 )> 
+SRC.Tracking=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Tracking) ) / 100 )> 
+ENDIF 
+IF <SRC.Veterinary> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Veterinary) ) / 100 )> 
+SRC.Veterinary=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Veterinary) ) / 100 )> 
+ENDIF 
+IF <SRC.Wrestling> > <eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Wrestling) ) / 100 )> 
+SRC.Wrestling=<eval( ( <SRC.TAG.SkillCapFactor> * (RACE_SKILLMAX_<SRC.TAG.RACEName>_Wrestling) ) / 100 )> 
+ENDIF 
+
+
+
+[EOF]

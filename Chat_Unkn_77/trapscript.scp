@@ -1,0 +1,325 @@
+//Trap system
+//v1.0
+//by Rudenid
+//Sphere version: 55i
+//Installation difficulty: 6.5/10
+//Dependencies: Fire memory item from new arrows script required for fire traps.
+
+//Add the event below to your players.
+//See the very end of the script for a skillmenu to add to sphereskill.scp
+
+[EVENTS e_player_traps]
+ON=@ItemDClick
+IF ((<ACT.TYPE> = t_container)||(<ACT.TYPE> = t_container_locked))
+
+	VAR.TRAPZ=<ACT.MOREZ>
+	VAR.TRAPM=<ACT.MOREM>
+	VAR.OLDACT=<SRC.ACT.UID>
+
+	IF !(<SRC.ISGM>)
+		ACT.MOREZ=0
+		ACT.MOREM=0
+
+		DOSWITCH <EVAL <VAR.TRAPZ>>
+			RETURN 0
+			BEGIN
+				//MOREZ=1 - Explosion trap
+				SRC.NEWITEM i_fx_explode
+				SRC.ACT.TYPE=t_explosion
+				SRC.ACT.MOREP=<EVAL <VAR.TRAPM>>,094,5
+				SRC.ACT.ATTR=attr_move_never
+				SRC.ACT.P=<SRC.P>
+				SRC.ACT.TIMERd=1
+			END
+			BEGIN
+				//MOREZ=2 - Poison trap
+				SRC.SFX 517
+				SRC.POISON <EVAL {<EVAL <VAR.TRAPM> * 20> <EVAL <VAR.TRAPM> * 40>}>
+			END
+			BEGIN
+				//MOREZ=3 - Drain trap
+				SRC.SFX 504
+				SRC.HITS=1
+				SRC.MANA=1
+				SRC.STAM=1
+			END
+			BEGIN
+				//MOREZ=4 - Fire trap
+				SRC.SYSMESSAGE You were set on fire!
+				SRC.NEWITEM i_fire_memory
+				SRC.ACT.LINK=<UID>
+				SRC.ACT.MORE2=<EVAL <VAR.TRAPM> / 10>
+				SRC.ACT.EQUIP
+			END
+			BEGIN
+				//MOREZ=5 - Cold trap
+				SRC.DAMAGE <EVAL <VAR.TRAPM> * 12 / 10>,0284
+				SRC.NEWITEM i_fire_column
+				SRC.ACT.ATTR=attr_magic|attr_move_never|attr_decay
+				SRC.ACT.COLOR=0480
+				SRC.ACT.P=<SRC.P>
+				SRC.ACT.TIMER=3
+			END
+		ENDDO
+
+	ELSE
+		DOSWITCH <EVAL <VAR.TRAPZ>>
+			RETURN 0
+			SYSMESSAGE <ACT.NAME> is a trapped container. Type = Explosion, strength = <EVAL <VAR.TRAPM>>/100
+			SYSMESSAGE <ACT.NAME> is a trapped container. Type = Poison, strength = <EVAL <VAR.TRAPM>>/100
+			SYSMESSAGE <ACT.NAME> is a trapped container. Type = Drain
+			SYSMESSAGE <ACT.NAME> is a trapped container. Type = Fire, strength = <EVAL <VAR.TRAPM>>/100
+			SYSMESSAGE <ACT.NAME> is a trapped container. Type = Cold, strength = <EVAL <VAR.TRAPM>>/100
+
+		ENDDO
+	ENDIF
+
+	SRC.ACT=<EVAL <VAR.OLDACT>>
+ENDIF
+
+ON=@SkillStart
+IF ((<ACTION>==48)||(<ACTION>==skill_remove_trap))
+
+	IF (<FINDID.i_memory_remove_trap>)
+		FINDID.i_memory_remove_trap.REMOVE
+	ENDIF
+
+	IF ((<ACT.TYPE> = t_container)||(<ACT.TYPE> = t_container_locked))
+		IF ((<ACT.MOREZ> > 0)&&(<ACT.MOREM> > 0))
+			IF (<EVAL <REMOVETRAP> / 10> < <EVAL <ACT.MOREM>+(-20)>)
+				SYSMESSAGE Your remove trap needs to be <EVAL <ACT.MOREM>+(-20)> or higher to attempt this.
+			ELSE
+				VAR.OLDACT=<ACT.UID>
+				NEWITEM i_memory_remove_trap
+				ACT.LINK=<EVAL <VAR.OLDACT>>
+				ACT.TIMER={1 3}
+				ACT.EQUIP
+				ACT=<EVAL <VAR.OLDACT>>
+				VAR.OLDACT=
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@SpellCast
+IF (<ARGN> = 13)
+	IF ((<ACT.TYPE> != t_container)&&(<ACT.TYPE> != t_container_locked))
+		SRC.SYSMESSAGE You may only magic trap containers.
+	ELSE
+		ACT.MOREZ={1 5}
+		ACT.MOREM=<EVAL (<SRC.MAGERY>+<SRC.REMOVETRAP>) / 50>
+		ACT.SFX 495
+	ENDIF
+
+	RETURN 1
+ENDIF
+
+IF (<ARGN> = 14)
+	IF ((<ACT.TYPE> != t_container)&&(<ACT.TYPE> != t_container_locked))
+		IF ((<ACT.TYPE> = t_trap_active)||(<ACT.TYPE> = t_trap))
+			ACT.TYPE=t_trap_inactive
+			ACT.EMOTE is untrapped
+		ELSE
+			SRC.SYSMESSAGE You can only untrap containers or traps.
+		ENDIF
+	ELSE
+		IF ((<EVAL <SRC.MAGERY> / 10> < <ACT.MOREM>)&&(<EVAL <SRC.REMOVETRAP> / 10> < <ACT.MOREM>))
+			SRC.SYSMESSAGE Either your magery or your remove trap needs to be <ACT.MOREM> or higher to attempt this.
+			RETURN 1
+		ENDIF
+
+		IF ((RAND(<EVAL <SRC.MAGERY> / 10>) > RAND(<ACT.MOREM>))&&(RAND(<EVAL <SRC.REMOVETRAP> / 10>) > RAND(<ACT.MOREM>)))
+			ACT.MOREZ=0
+			ACT.MOREM=0
+			ACT.SFX 496
+			ACT.EMOTE is untrapped
+		ELSE
+			ACT.EMOTE remains trapped
+		ENDIF
+
+		RETURN 1
+	ENDIF
+ENDIF
+
+
+
+[ITEMDEF i_memory_remove_trap]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@Create
+ATTR=attr_move_never|attr_invis
+
+ON=@Timer
+
+IF (RAND(<EVAL <CONT.REMOVETRAP> / 10>) > RAND(<LINK.MOREM>))
+	LINK.MOREZ=0
+	LINK.MOREM=0
+	LINK.SFX 496
+	LINK.EMOTE is untrapped
+ELSE
+	LINK.EMOTE remains trapped
+ENDIF
+
+IF (<CONT.REMOVETRAP> < 100.0)
+
+	IF (<CONT.REMOVETRAP> < 30.0)
+		IF (rand(3)=1)
+			CONT.REMOVETRAP=<CONT.REMOVETRAP> + {.1 .2}
+		ENDIF
+	ELSEIF (<CONT.REMOVETRAP> < 50.0)
+		IF (rand(15)=1)
+			CONT.REMOVETRAP=<CONT.REMOVETRAP> + .1
+		ENDIF
+	ELSEIF (<CONT.REMOVETRAP> < 80.0)
+		IF (rand(40)=1)
+			CONT.REMOVETRAP=<CONT.REMOVETRAP> + .1
+		ENDIF
+	ELSE
+		IF (rand(60)=1)
+			CONT.REMOVETRAP=<CONT.REMOVETRAP> + .1
+		ENDIF
+	ENDIF
+ENDIF
+
+REMOVE
+RETURN 1
+
+[ITEMDEF i_trap_kit_lesser]
+ID=i_toolkit
+NAME=Lesser Trap Kit
+TYPE=t_normal
+RESOURCES=10 i_gears, 10 i_hinge, 1 i_wire_iron
+SKILLMAKE=TINKERING 75.0,t_tinker_tools
+
+ON=@Create
+ATTR=attr_decay
+MORE1=34.0
+
+ON=@DClick
+TARGET Choose the container you wish to trap.
+RETURN 1
+
+ON=@Targon_Item
+IF ((<SRC.TARG.TYPE> = t_container)||(<SRC.TARG.TYPE> = t_container_locked))
+	SRC.TAG.TRAPKIT=<UID>
+	SRC.SKILLMENU sm_trap
+ELSE
+	SRC.SYSMESSAGE You can only trap containers.
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_trap_kit]
+ID=i_toolkit
+NAME=Trap Kit
+TYPE=t_normal
+RESOURCES=15 i_gears, 15 i_hinge, 2 i_wire_iron, 2 i_wire_silver
+SKILLMAKE=TINKERING 85.0,t_tinker_tools
+
+ON=@Create
+ATTR=attr_decay
+MORE1=67.0
+
+ON=@DClick
+TARGET Choose the container you wish to trap.
+RETURN 1
+
+ON=@Targon_Item
+IF ((<SRC.TARG.TYPE> = t_container)||(<SRC.TARG.TYPE> = t_container_locked))
+	SRC.TAG.TRAPKIT=<UID>
+	SRC.SKILLMENU sm_trap
+ELSE
+	SRC.SYSMESSAGE You can only trap containers.
+ENDIF
+
+RETURN 1
+
+[ITEMDEF i_trap_kit_greater]
+ID=i_toolkit
+NAME=Greater Trap Kit
+TYPE=t_normal
+RESOURCES=20 i_gears, 20 i_hinge, 4 i_wire_iron, 2 i_wire_silver, 4 i_wire_gold
+SKILLMAKE=TINKERING 95.0,t_tinker_tools
+
+ON=@Create
+ATTR=attr_decay
+MORE1=100.0
+
+ON=@DClick
+TARGET Choose the container you wish to trap.
+RETURN 1
+
+ON=@Targon_Item
+IF ((<SRC.TARG.TYPE> = t_container)||(<SRC.TARG.TYPE> = t_container_locked))
+	SRC.TAG.TRAPKIT=<UID>
+	SRC.SKILLMENU sm_trap
+ELSE
+	SRC.SYSMESSAGE You can only trap containers.
+ENDIF
+
+RETURN 1
+
+[FUNCTION TRAPCONTAINER]
+VAR.OLDACT=<ACT.UID>
+ACT=<EVAL <TAG.TRAPKIT>>
+TAG.TRAPKIT=
+IF ((<ARGN> = 3)||(<ARGN> = 4))
+	IF (<ACT.BASEID> != i_trap_kit_greater)
+		SYSMESSAGE You cannot create these two types of traps with anything but a greater kit.
+		ACT=<EVAL <VAR.OLDACT>>
+		VAR.OLDACT=
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<ARGN> = 5)
+	IF (<ACT.BASEID> = i_trap_kit_lesser)
+		SYSMESSAGE You cannot create a cold trap with a lesser trap kit.
+		ACT=<EVAL <VAR.OLDACT>>
+		VAR.OLDACT=
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF ((<SRC.TARG.TYPE> != t_container)&&(<SRC.TARG.TYPE> != t_container_locked))
+	SYSMESSAGE Only containers can be trapped.
+	ACT=<EVAL <VAR.OLDACT>>
+	VAR.OLDACT=
+	RETURN 1
+ENDIF
+
+SRC.TARG.MOREZ=<ARGN>
+SRC.TARG.MOREM=<EVAL (<ACT.MORE1>+<REMOVETRAP>) / 20>
+ACT.MORE2=<EVAL <ACT.MORE2>+1>
+IF (<ACT.MORE2> > 9)
+SRC.SYSMESSAGE Your trap kit has broken!
+ACT.REMOVE
+ENDIF
+
+SYSMESSAGE The container has been trapped.
+SRC.TARG.SFX 495
+ACT=<EVAL <VAR.OLDACT>>
+VAR.OLDACT=
+
+
+//This goes in sphereskill.scp.
+
+[SKILLMENU sm_trap]
+Traps
+
+ON=i_fire Explosion Trap
+TRAPCONTAINER 1
+
+ON=i_skull_candle Poison Trap
+TRAPCONTAINER 2
+
+ON=i_skull_candle Drain Trap
+TRAPCONTAINER 3
+
+ON=i_fire Fire Trap
+TRAPCONTAINER 4
+
+ON=i_rune_glowing_2 Cold Trap
+TRAPCONTAINER 5

@@ -1,0 +1,284 @@
+//TDS Taming scripted by Admin Vertigo
+//www.tdsuo.com
+//Do not bug me with how to do this and that, script works to implement taming on tds, failure to understand would be your problem, not mine.
+//Meanwhile, if you do appreciate the script, please donate to TDS a token sum to contribute to TDS's monthly bandwidth upkeep.
+//Donation details are on TDS webpage and TDS announcement boards.
+
+
+
+[events e_taming]
+on=@skillstart
+if (<src.action>==35)||(<src.action>==skill_taming)
+//Src.Sysmessage Start Taming
+src.tag.tametarg=<src.act.uid>
+//test for able to tame
+if ( <src.act.distance> > 7 ) // check for distance to fishing point
+src.consume 100 i_mem_tamingcounter_fail
+src.consume 100 i_mem_tamingcounter_success
+Src.Sysmessage You Are Too Far Away.
+src.action = -1
+return 1
+elseif ( <src.act.brain>!=brain_monster )&&(<src.act.brain>!=brain_animal)&&(<src.act.brain>!=brain_dragon)
+Src.Sysmessage You Cannot Tame That
+src.action = -1
+return 1
+elseif ( <src.act.taming>==0 )
+Src.Sysmessage That Cannot Be Tamed
+src.action = -1
+return 1
+elseif ( !<src.act.canseelos> )
+Src.Sysmessage You Can't See The Creature
+consume 100 i_mem_tamingcounter_fail
+consume 100 i_mem_tamingcounter_success
+src.action = -1
+return 1
+elseif ( (<src.act.flags> & statf_war) && (<src.act.uid> != <src.uid> ) )
+//remove taming while animal is attacking
+Src.Sysmessage You Can't Do That While They're Fighting!
+consume 100 i_mem_tamingcounter_fail
+consume 100 i_mem_tamingcounter_success
+src.action = -1
+return 1
+endif
+// can't tame those with higher taming skill with taming > 1000
+if <src.act.taming>>1000
+if ( <src.act.taming> > <taming> )
+Src.Sysmessage They Are Too Wild For You To Tame Them.
+src.action = -1
+return 1
+endif
+endif
+//test for taming delay
+if (<src.restest 1 i_mem_tamingcounter_fail>)||(<src.restest 1 i_mem_tamingcounter_success>)
+Src.Sysmessage You Have To Wait Before Taming Again.
+src.consume 100 i_mem_tamingcounter_fail
+src.consume 100 i_mem_tamingcounter_success
+src.action = -1
+return 1
+endif
+if ( <src.act.flags> & statf_pet ) // faster via flag
+Src.Sysmessage That Is Already Tame
+src.consume 100 i_mem_tamingcounter_fail
+src.consume 100 i_mem_tamingcounter_success
+src.action = -1
+return 1
+endif
+if ( <src.act.memoryfind.<src.uid>.color> & 040 )
+if ( <src.act.memoryfind.<src.uid>.more1l> == 4 )
+Src.Sysmessage The Creature Remembers You
+src.f_tame_success
+return 1
+endif
+// spoke, but didn't tame
+endif
+src.tag.tamesuccess=0
+//skillgain section, pet must not be previously tamed as well
+if <src.taming><1000
+if (<src.act.region.flags>&02000)||(<src.act.memoryfindtype.042.color>==042)
+//no skillgain
+else
+Src.Sysmessage You Attempt To Tame <src.Act.Name>
+//start of skillgain
+if (<src.taming> < 500)
+if (<eval (rand(5))>==0)
+src.tag.tamesuccess=1
+endif
+elseif (<src.taming> < 800)
+if (<eval (rand(20))>==0)
+if (<src.act.str>>40)
+src.tag.tamesuccess=1
+endif
+endif
+elseif (<src.taming> < 1000)
+if (<eval (rand(40))>==0)
+if (<src.act.str>>75)
+src.tag.tamesuccess=1
+endif
+endif
+endif
+//end of skillgain
+endif
+//end of region test
+endif
+//end of memory test
+//end of skilgain section
+//custom taming: test for whether animal becomes tamed
+//rates for success
+if (<src.taming><=1000) && (<src.act.taming><=1000)
+//Src.Sysmessage Src Less Than Gm And Target Less Than Gm
+if <src.taming><100
+if <eval rand(50)>==0
+f_taming_success
+return 1
+endif
+elseif <src.taming><200
+if <eval rand(45)>==0
+f_taming_success
+return 1
+endif
+elseif <src.taming><300
+if <eval rand(40)>==0
+f_taming_success
+return 1
+endif
+elseif <src.taming><400
+if <eval rand(30)>==0
+f_taming_success
+return 1
+endif
+elseif <src.taming><500
+if <eval rand(25)>==0
+f_taming_success
+return 1
+endif
+elseif <src.taming><600
+if <eval rand(20)>==0
+f_taming_success
+return 1
+endif
+elseif <src.taming><700
+if <eval rand(15)>==0
+f_taming_success
+return 1
+endif
+elseif <src.taming><800
+if <eval rand(10)>==0
+f_taming_success
+return 1
+endif
+elseif <src.taming><900
+if <eval rand(7)>==0
+f_taming_success
+return 1
+endif
+else
+if <eval rand(5)>==0
+f_taming_success
+return 1
+endif
+endif
+else
+//src greater than gm
+//close of taming less than gm
+//taming for creatures > gm taming: eg: dragons/zos/orns
+if <src.act.taming>>1500
+//Src.Sysmessage Target Greater Than 150.0
+if <eval rand(<src.act.taming>/5)>==0
+f_taming_success
+return 1
+endif
+else
+//Src.Sysmessage Target Less Than 150.0
+if <eval rand(2)>==0
+f_taming_success
+return 1
+endif
+endif
+endif
+//rates for failure
+f_taming_failure
+return 1
+endif
+
+
+
+[function f_taming_failure]
+src.newitem i_mem_tamingcounter_fail
+src.act.equip
+src.act.link=<src.tag.tametarg>
+src.act.timer 1
+return 0
+
+[function f_taming_success]
+src.newitem i_mem_tamingcounter_success
+src.act.equip
+src.act.link=<src.tag.tametarg>
+src.act.timer 1
+return 0
+
+[itemdef i_mem_tamingcounter_success]
+id=i_memory
+NAME=Taming Delay
+type=t_eq_script
+layer=30
+on=@create
+attr=08
+morex=4
+on=@timer
+if <morex>!=0
+dorand 4
+Cont.Say I Wont Hurt You.
+Cont.Say I Always Wanted A <link.Name> Like You.
+Cont.Say Here <link.Name>
+Cont.Say Good <link.Name>
+enddo
+timer 2
+morex=<morex> +-1
+return 1
+else
+cont.newitem=i_memory//add ownership
+cont.act.color=042
+cont.act.link=<cont.uid>
+cont.act.cont <link.uid>
+link.karma=0
+link.flags=<link.flags>|statf_pet
+link.flags=<link.flags>&~statf_war
+link.findlayer(21).remove //remove pack
+link.events=e_pet
+Cont.Sysmessage Thou Hast Tamed <link.Name>
+if <cont.tag.tamesuccess>==1
+cont.taming=<cont.taming> +1
+if <cont.taming>==1000
+cont.try consume=uni_level_0_taminggain<name>_<mapplane>_<link.name>_<link.uid>_<cont.name>_<cont.uid>_<serv.rtimetext>
+endif
+cont.tag.tamesuccess=0
+endif
+remove
+return 0
+endif
+return 1
+CATEGORY=!Tds Script Items
+SUBSECTION=Taming
+DESCRIPTION=Taming Delay Success
+
+[itemdef i_mem_tamingcounter_fail]
+id=i_memory
+NAME=Taming Delay
+type=t_eq_script
+layer=30
+on=@create
+attr=08
+morex=4
+on=@timer
+if <morex>!=0
+dorand 4
+Cont.Say I Wont Hurt You.
+Cont.Say I Always Wanted A <link.Name> Like You.
+Cont.Say Here <link.Name>
+Cont.Say Good <link.Name>
+enddo
+timer 2
+morex=<morex> +-1
+return 1
+else
+if <cont.tag.tamesuccess>==1
+cont.taming=<cont.taming> +1
+if <cont.taming>==1000
+cont.try consume=uni_level_0_taminggain<name>_<mapplane>_<link.name>_<link.uid>_<cont.name>_<cont.uid>_<serv.rtimetext>
+endif
+cont.tag.tamesuccess=0
+endif
+dorand 4
+Cont.Message *<link.Name> Looks Blankly At Your Silly Antics*
+Cont.Message *<link.Name> Is Highly Insulted By Your Behaviour*
+Cont.Message *<link.Name> Shys Away From You, Highly Suspicious Of Your Intent*
+Cont.Message *<link.Name> Thinks You Smell Bad*
+enddo
+cont.action = -1
+remove
+return 0
+endif
+return 1
+CATEGORY=!Tds Script Items
+SUBSECTION=Taming
+DESCRIPTION=Taming Delay Fail

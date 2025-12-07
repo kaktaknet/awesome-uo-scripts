@@ -1,0 +1,87 @@
+// This script for the OSI savage loot, bola, was created by Shteou and Laz
+// If you wish to use this script simply add to your scripts folder and resync the shard.
+// To use the bola ball simply double click the bola ball and target the person to dismount.
+// To make it craftable I suggest allowing a tailor to use a cannon ball in conjunction with leather.
+// Then change the ITEMS_SKILLMENU.SCP to include the I_Bola
+// Thank you and enjoy!!!!
+// A few updates and improvements by AdminAnubis *wub wub*
+
+[ITEMDEF I_bola]
+DEFNAME=I_bola
+ID=I_Cannon_Ball
+NAME=Bola
+RESOURCES=i_hides_cut 50,i_cannon_ball
+SKILLMAKE=TAILORING 60.0
+
+
+ON=@CREATE
+	color=colors_brown
+	attr attr_decay|attr_can_decay
+
+
+ON=@dclick
+	IF !(<TOPOBJ.UID>==<SRC.UID>)
+		SRC.SYSMESSAGE The bola must be in your backpack!
+	RETURN 1
+	END IF
+	IF (<TIMER> >=1)
+		SRC.SYSMESSAGE You have not regained the strength to throw this again so soon!
+	RETURN 1
+	ENDIF
+	IF (<SRC.RESTEST 2 i_bola>)
+		src.sysmessage You may only have one bola in your pack at a time!
+	RETURN 1
+	ENDIF
+	if <src.STR> < 90
+		src.sysmessage You not strong enough to throw a bola!
+	return 1
+	else
+		target Who do you want to unmount?
+	ENDIF
+	RETURN 1
+
+
+on=@targon_item
+	src.sysmessage You cant use it on items!
+RETURN 1
+
+
+on=@targon_ground
+	src.sysmessage You cant use it on the ground!
+return 1
+
+
+on=@targon_char
+	IF <SRC.TARG>=<src.uid>
+		src.sysmessage You attempt to throw the bola at yourself but realise it is impossible!
+	return 1
+	elIF <SRC.TARG.NPC>
+		src.sysmessage You cant use this on NPC's!
+	return 1
+	elIF <SRC.TARG.ISGM>
+		src.sysmessage You cant unmount GM's!
+	return 1
+	elIF <src.TARG.DISTANCE> > 9 // 9 blocks away..
+		src.sysmessage You are too far away from you mark!
+	return 1
+	else
+	if (<src.targ.findlayer.25.uid> )
+		SRC.TARG.DAMAGE 1 01 <SRC.UID>
+		SRC.TARG.HITPOINTS=<SRC.TARG.HITPOINTS>+1
+		src.anim 9
+		src.act=<src.targ.findlayer.25.more2>
+		src.act.p=<src.targ.p>
+		src.targ.findlayer.25.remove
+		src.targ.update
+		src.update
+		src.targ.emote get unmounted by <src.name>
+		src.targ.ANIM 22
+		REGION.ALLCLIENTS FIX
+		update
+		//remove if u want that bola ball is removed after used it once....
+		TIMER 20
+	else
+		src.sysmessage The player must be mounted!
+	endif
+	return 1
+	ENDIF

@@ -1,0 +1,1 @@
+In order to connect to a server, you must edit the host.cfg file with any text editor.  The first line is the address of the server.  It could very well be an ip address or a domain name.  On the second line, you must supply the username, and on the third line, the password that will be processed by the server.  If the username or password is wrong, the client simply won't start.

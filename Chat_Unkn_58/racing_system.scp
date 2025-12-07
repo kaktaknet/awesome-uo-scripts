@@ -1,0 +1,92 @@
+//CREATED BY RASZITH
+
+//RACING EVENT\\
+[ITEMDEF i_race_start_stone] 
+ID=i_gravestone
+name=Race Starting Stone
+
+ON=@CREATE
+ATTR=0010
+
+ON=@DCLICK
+	IF (<SRC.findid.i_race_stone>)
+	SRC.SYSMESSAGE You are already in a Race!
+	RETURN 1
+ELSE
+	f_ctf_bank
+	SRC.NEWITEM i_race_stone
+	SRC.ACT.BOUNCE
+	SRC.GO=<morep>
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_race_stone] 
+ID=01f19
+name=Race Stone
+
+ON=@CREATE
+ATTR=0014
+COLOR=0959
+MOREX=5
+
+ON=@DCLICK
+IF (<SRC.findid.i_race_stone>)
+SRC.SYSMESSAGE <SRC.findid.i_race_stone.morex> more laps to go!
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You are not in the Race!
+RETURN 1
+ENDIF
+
+[ITEMDEF i_halfway_race_line]
+ID=i_snow
+name=Halfway Race Line
+
+ON=@CREATE
+ATTR=0090
+
+ON=@STEP
+IF (<SRC.findid.i_race_stone>)&&(<SRC.TAG.HALFWAY>==0)	
+	SRC.TAG.HALFWAY=1
+	RETURN 1
+ELSE
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_race_line] 
+ID=i_snow
+name=Race Course Line
+
+ON=@CREATE
+ATTR=0090
+
+ON=@STEP
+IF (<SRC.findid.i_race_stone>)&&(<SRC.TAG.HALFWAY>==1)	
+	IF (<SRC.findid.i_race_stone>)&&(<SRC.findid.i_race_stone.morex>>1)
+		SRC.findid.i_race_stone.morey=<SRC.findid.i_race_stone.morey>+(1)
+		SRC.SAY Lap <SRC.findid.i_race_stone.morey>
+		SRC.findid.i_race_stone.morex=<SRC.findid.i_race_stone.morex>-(1)
+		SRC.SYSMESSAGE <SRC.findid.i_race_stone.morex> more laps to go!
+		SRC.TAG.HALFWAY=0
+		RETURN 1
+
+	ELSEIF (<SRC.findid.i_race_stone>)&&(<SRC.findid.i_race_stone.morex>==1)
+		SRC.findid.i_race_stone.remove
+		SRC.SAYUA 33,0,0,eng Finished!
+		f_ctf_unbank_pack		
+		SRC.GO=<morep>
+		RETURN 1
+
+	ELSEIF (<SRC.findid.i_race_stone>)&&(<SRC.findid.i_race_stone.morex>==0)
+		SRC.SYSMESSAGE The Race Laps have not been determined.
+
+	ELSE
+		SRC.SYSMESSAGE Your not in the Race!
+		RETURN 1
+
+	ENDIF
+ELSE
+RETURN 1
+ENDIF
+
+[EOF]

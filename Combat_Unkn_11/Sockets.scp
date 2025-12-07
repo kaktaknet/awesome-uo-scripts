@@ -1,0 +1,214 @@
+/////////////////////////////////////////////////////////////////////////
+// Socketed weapons 
+//
+// Created by Belgar of 'A Virtual Paradise'. A free, player run, shard
+// This file is free for use on other free shards
+// www.virtual-paradise.org 
+//
+// Please do not repost this script without my permission
+// If you modify this file, please leave this header intact
+/////////////////////////////////////////////////////////////////////////
+
+//I didn't add the jewels to this script, just the socketed weapon. There are 2 sockets. each takes 4 bits in morem. this leaves 15 possible gems to put in each slot. Currently i included 8 possible choices and the graphics for them. 
+
+//the command to add them to socket 1: 
+
+//morem=<morem>|(1_to_8) 
+
+//socket 2: 
+
+//morem=(<morem>|(1_to_8 * 16)) 
+
+//Or you could use your windows calculator for those more experienced with bit operations. 
+
+//To add your gems, just add to the on=@targon_item trigger. 
+
+//If you want to make lots of socketed weapons, add the event to functions and call the functions like Evren suggested 
+
+[itemdef i_socket_longsword] 
+id=i_sword_long 
+name=socketed longsword 
+dam=5 
+
+on=@create 
+attr=020 
+morem=0 
+hitpoints=100 
+
+on=@targon_item 
+if (<src.targ.dispid>==i_gold) 
+if (<var.socket>==1) 
+morem =(<morem>|1) 
+return 1 
+else 
+morem=(<morem>|16) 
+return 1 
+endif 
+return 1 
+endif 
+
+on=@dclick 
+equip 
+return 1 
+
+on=@click 
+var.sock1=<morem>&0f 
+var.sock2=<eval ((<morem>&0f0)/0f)> 
+if (0<var.sock1>==0) 
+var.pic1=16383 
+else 
+var.pic1=(6248+<eval <var.sock1>>) 
+endif 
+if (0<var.sock2>==0) 
+var.pic2=16383 
+else 
+var.pic2=(6248+<eval <var.sock2>>) 
+endif 
+src.act=<uid> 
+dialog d_socket_weapon 
+return 0 
+
+on=@equip 
+link=<SRC.UID> 
+
+on=@damage 
+var.sock1=<morem>&0f 
+var.sock2=<eval ((<morem>&0f0)/0f)> 
+var.dam=<eval <dam>> 
+var.damh=<eval (<var.dam>*4)> 
+var.damage=<eval (<var.dam> + RAND(<var.damh>))> 
+var.damage=<eval (<var.damage> + (<link.str>/10))> 
+src.damage <var.damage> 
+
+if (0<var.sock1>==01)||(0<var.sock2>==01) //damage good 
+if (<src.karma> > 2000) 
+src.effect 1,1 
+src.hits=(<src.hits>-{5 10}) 
+endif 
+endif 
+
+if (0<var.sock1>==02)||(0<var.sock2>==02) //cause terror 
+if !(RAND(10)) 
+src.emote run with terror 
+if (<link.dir>==0) 
+src.run n 
+src.run n 
+src.run n 
+elif (<link.dir>==1) 
+src.run ne 
+src.run ne 
+src.run ne 
+elif (<link.dir>==2) 
+src.run e 
+src.run e 
+src.run e 
+elif (<link.dir>==3) 
+src.run se 
+src.run se 
+src.run se 
+elif (<link.dir>==4) 
+src.run s 
+src.run s 
+src.run s 
+elif (<link.dir>==5) 
+src.run sw 
+src.run sw 
+src.run sw 
+elif (<link.dir>==6) 
+src.run w 
+src.run w 
+src.run w 
+elif (<link.dir>==7) 
+src.run nw 
+src.run nw 
+src.run nw 
+endif 
+endif 
+endif 
+
+if (0<var.sock1>==03)||(0<var.sock2>==03) //poison 
+morez=60 
+endif 
+
+if (0<var.sock1>==04)||(0<var.sock2>==04) //paralyze 
+if !(rand(10)) 
+src.newitem i_paramem 
+src.act.equip 
+endif 
+endif 
+
+if (0<var.sock1>==05)||(0<var.sock2>==05) //dispel 
+if !(rand(5)) 
+src.spelleffect 41 1000 
+endif 
+endif 
+
+if (0<var.sock1>==06)||(0<var.sock2>==06) //drain life 
+link.hits=<link.hits> + (<eval <var.damage>> / 8) 
+if (<link.hits> > <link.str>) 
+link.hits=<link.str> 
+endif 
+endif 
+
+if (0<var.sock1>==07)||(0<var.sock2>==07) //double damage undead 
+if (<src.npc>==12) 
+src.damage <var.damage> 
+endif 
+endif 
+
+if (0<var.sock1>==08)||(0<var.sock2>==08) //damage evil 
+if (<src.karma> < -2000) 
+src.effect 1,1 
+src.hits=(<src.hits>-{5 10}) 
+endif 
+endif 
+
+[dialog d_socket_weapon] 
+0,0 
+resizepic 100 100 5054 120 60 
+tilepic 125 120 <src.act.dispiddec> 
+button 108 109 209 209 1 0 1 
+button 108 130 209 209 1 0 2 
+tilepic 95 113 <eval <var.pic1>> 
+tilepic 95 134 <eval <var.pic2>> 
+
+[dialog d_socket_weapon text] 
+
+[dialog d_socket_weapon button] 
+onbutton=0 
+return 1 
+
+onbutton=1 
+var.sock1=<src.act.morem>&0f 
+if !(<var.sock1>) 
+target Select a jewel to insert 
+var.socket=1 
+return 1 
+endif 
+
+onbutton=2 
+var.sock2=<eval ((<src.act.morem>&0f0)/0f)> 
+if !(<var.sock2>) 
+target Select a jewel to insert 
+var.socket=2 
+return 1 
+endif 
+
+
+[itemdef i_paramem] 
+id=i_bottle_empty 
+type=t_eq_script 
+name=paralyser 
+layer=30 
+
+on=@create 
+attr 090 
+
+on=@equip 
+link=<src.uid> 
+timer=1 
+
+on=@timer 
+link.spelleffect 38 100 
+remove 
+return 1 

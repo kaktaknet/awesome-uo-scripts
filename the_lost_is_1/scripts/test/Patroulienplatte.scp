@@ -1,0 +1,87 @@
+//---------------------NPC-Patrollie!-------------------------------
+//Idee, Grundlage von: Sir Maurice 
+//Erweitert: Golwan, 10.2002
+[ITEMDEF i_NPCq] // dieses Item dem NPC in den Backpack legen.
+DEFNAME=i_npcq // Es dient zur Identifizierung des NPC´s, ob
+NAME=NPC-Qualli // dieser auf die Platten reagieren soll oder nicht.
+TYPE= t_normal
+ID=01397
+CATEGORY=Neue Objekte
+SUBSECTION=Patroulien
+DESCRIPTION=Erkennungsitem
+ON=@create
+attr = 08094 // invis, never moveable und newbified
+
+[ITEMDEF i_Pplatte] // Die Patroulienplatte
+DEFNAME=i_Pplatte // Es müssen mind. 2 davon gelegt werden. (nach oben keine Grenze)
+NAME=Patroulien-Platte // sie beschreiben den Patroulienweg. Die Platten werden dann
+TYPE= t_normal // in der Reihenfolge gelinkt, wie sie abgelaufen werden sollen.
+ID=050b // z.b bei 4 Platten platte1 zu platte 2, platte 2 zu platte 3
+CATEGORY=Neue Objekte // platte3 zu platte 4, platte 4 zu platte1
+SUBSECTION=Patroulien // Um die Platten sollte in alle Richtunge 1 freies Feld sein.
+DESCRIPTION=Platte // Der Name der Platten spielt keine Rolle, kann also geändert werden.
+// Die Platten können auch nachträglich verschoben werden, wenn sie einmal
+// gelinkt sind.
+ON=@create
+attr = 08090 // invis, never move und static
+color=025
+
+on=@DClick
+if <src.isgm>
+targetg waehle den naechsten Wegpunkt oder eine Wache
+return 1
+endif
+return 0
+ON=@Targon_char
+if <src.targ.npc>>0
+src.targ.newitem i_NPCq
+src.targ.act.cont=<src.targ.uid>
+src.targ.homedist=1
+src.targ.home=<p>
+src.targ.say Zu Befehl Sir! Gehe auf Streife
+endif
+return 1
+
+ON=@TARGON_item
+if (<src.targ.baseid>==i_Pplatte)
+link=<src.targ.uid>
+say linked
+else
+src.sysmessage ihr koennt nur Wegpunkte auswaehlen
+endif
+return 1
+
+ON=@step // Hier findet die Abfrage auf Betreten einer Platte statt.
+if (<SRC.RESTEST 1 i_npcq>)&&(<src.npc>>0) // ..hat der NPC ein Qualli-Item in seinem Rucksack ?
+if <link>!=04fffffff
+SRC.HOME = <link.p> // Bei betreten einer Platte wird dem NPC die Pos. der nächsten
+endif // gelinkten Platte als sein neues HOME gesetzt, welches er dann
+// durch die Homdistance = 1 geziehlt ansteuert.
+if 0<morex>==0
+IF (<SRC.DIR> == 0) // dieser Teil sorgt dafür, das der NPC immer ein Feld über die Platte
+SRC.WALK N 1 // hinwegtritt, damit es (im nächsten Teil) nicht zu mehr-
+elif (<SRC.DIR> == 1) // fachen Emotes kommt.(sonnst bleiben NPC´s gerne mal ne Sekunde
+SRC.WALK NE 1 // auf der Platte stehen, was zum mehrfachtriggern der Platte führt)
+elif (<SRC.DIR> == 2) 
+SRC.WALK E 1
+elif (<SRC.DIR> == 3)
+SRC.WALK SE 1
+elif (<SRC.DIR> == 4)
+SRC.WALK S 1
+elif (<SRC.DIR> == 5)
+SRC.WALK SW 1
+elif (<SRC.DIR> == 6)
+SRC.WALK W 1
+elif (<SRC.DIR> == 7)
+SRC.WALK NW 1
+Endif
+DORAND 2
+SRC.say *sucht verdaechtige Subjekte*
+SRC.say *haellt Ausschau*
+ENDDO
+endif
+endif
+return 1
+
+
+

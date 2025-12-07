@@ -1,0 +1,797 @@
+//**********************************************
+//**Scripted By: Blizzard (www.marchadium.com)**
+//**********************************************
+
+//Healing Script v1.1
+//-replaced CONT with TOPOBJ as TOPOBJ is a more powerful method to check for the player
+
+//Info:
+//This script allows players to use veterinary, heal poison, fast heal in combat, and resurrect all through healing.
+
+//With 0.0 Anatomy:
+//-12 to heal in war mode
+//-14 to heal out of war mode (does 2x healing than war mode)
+//-14 to cure
+//-16 to resurrect
+//With 100.0 Anatomy:
+//-2 to heal in war mode
+//-4 to heal out of war made
+//-4 to cure
+//-6 to resurrect
+
+[ITEMDEF 0e21]
+DEFNAME=i_bandage
+RESOURCES=i_cloth
+TYPE=t_normal
+WEIGHT=.1
+VALUE=1
+
+CATEGORY=Items by Professions
+SUBSECTION=Healer
+DESCRIPTION=Clean Bandages (fix)
+
+ON=@DCLICK
+IF (0<TOPOBJ.UID>==0<SRC.UID>)
+	TARGET=Who do you want to use this on?
+ELSE
+	SRC.SYSMESSAGE=These must be in your players pack to use.
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+IF !(<SRC.TARG.CANSEELOS>==1)
+	SRC.SYSMESSAGE=You can not see <SRC.TARG.NAME>.
+	RETURN 1
+ENDIF
+IF (<SRC.TARG.DISTANCE> > 3)
+	SRC.SYSMESSAGE=You are too far away.
+	RETURN 1
+ENDIF
+IF (<SRC.RESTEST 1 i_bandage_cure>)
+	SRC.MESSAGE=You couldn't apply the bandages.
+	SRC.CONSUME=i_bandage_cure
+ELSEIF (<SRC.RESTEST 1 i_bandage_cure_vet>)
+	SRC.MESSAGE=You couldn't apply the bandages.
+	SRC.CONSUME=i_bandage_cure_vet
+ELSEIF (<SRC.RESTEST 1 i_bandage_heal_war>)
+	SRC.MESSAGE=You couldn't apply the bandages.
+	SRC.CONSUME=i_bandage_heal_war
+ELSEIF (<SRC.RESTEST 1 i_bandage_heal_war_vet>)
+	SRC.MESSAGE=You couldn't apply the bandages.
+	SRC.CONSUME=i_bandage_heal_war_vet
+ELSEIF (<SRC.RESTEST 1 i_bandage_heal>)
+	SRC.MESSAGE=You couldn't apply the bandages.
+	SRC.CONSUME=i_bandage_heal
+ELSEIF (<SRC.RESTEST 1 i_bandage_heal_vet>)
+	SRC.MESSAGE=You couldn't apply the bandages.
+	SRC.CONSUME=i_bandage_heal_vet
+ELSEIF (<SRC.RESTEST 1 i_bandage_res>)
+	SRC.MESSAGE=You couldn't apply the bandages.
+	SRC.CONSUME=i_bandage_res
+ENDIF
+IF (<SRC.TARG.HITPOINTS> >= <SRC.TARG.STR>) && !( <SRC.TARG.FLAGS> & statf_poisoned ) && !( <SRC.TARG.FLAGS> & statf_dead )
+	SRC.SYSMESSAGE=<SRC.TARG.NAME> does not require you to heal or cure them.
+	RETURN 1
+ELSEIF ( <SRC.TARG.FLAGS> & statf_poisoned ) //are they poisoned?
+	IF (<SRC.UID>==<SRC.TARG.UID>) //is it yourself?
+		SRC.EVENTS=<SRC.EVENTS> +e_bandage
+		SRC.NEWITEM=i_bandage_cure
+		SRC.ACT.LINK=<SRC.TARG.UID>
+		SRC.ACT.EQUIP
+		SRC.EMOTE=apply bandages
+	ENDIF
+	IF (<SRC.TARG.NPC>==0) //is it another player?
+		SRC.EVENTS=<SRC.EVENTS> +e_bandage
+		SRC.NEWITEM=i_bandage_cure
+		SRC.ACT.LINK=<SRC.TARG.UID>
+		SRC.ACT.EQUIP
+		SRC.EMOTE=apply bandages
+	ELSE //not a player? then it's a npc
+		SRC.EVENTS=<SRC.EVENTS> +e_bandage
+		SRC.NEWITEM=i_bandage_cure_vet
+		SRC.ACT.LINK=<SRC.TARG.UID>
+		SRC.ACT.EQUIP
+		SRC.EMOTE=apply bandages
+	ENDIF
+ELSEIF ( <SRC.TARG.FLAGS> & statf_dead ) && (<SRC.TARG.NPC>==0) //are they dead?
+	IF (<SRC.RESTEST 20 i_bandage>) //do you have enuf bandies?
+		SRC.EVENTS=<SRC.EVENTS> +e_bandage
+		SRC.NEWITEM=i_bandage_res
+		SRC.ACT.LINK=<SRC.TARG.UID>
+		SRC.ACT.EQUIP
+		SRC.EMOTE=apply bandages
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE=You need more bandages to resurrect.
+		RETURN 1
+	ENDIF
+ENDIF
+IF (<SRC.TARG.HITPOINTS> < <SRC.TARG.STR>) && (<SRC.UID>==<SRC.TARG.UID>) //is it yourself?
+	IF ( <SRC.FLAGS> & statf_war ) //quick heal
+		SRC.EMOTE=quickly apply bandages
+		SRC.NEWITEM=i_bandage_heal_war
+		SRC.ACT.EQUIP
+		SRC.ACT.LINK=<SRC.TARG.UID>
+		SRC.EVENTS=<SRC.EVENTS> +e_bandage
+		RETURN 1
+	ELSE //normal heal
+		SRC.EMOTE=apply bandages
+		SRC.NEWITEM=i_bandage_heal
+		SRC.ACT.LINK=<SRC.TARG.UID>
+		SRC.ACT.EQUIP
+		SRC.EVENTS=<SRC.EVENTS> +e_bandage
+		RETURN 1
+	ENDIF
+ELSEIF (<SRC.TARG.HITPOINTS> < <SRC.TARG.STR>) && !(<SRC.UID>==<SRC.TARG.UID>) //is it someone else?
+	IF ( <SRC.FLAGS> & statf_war ) //quick heal
+		IF (<SRC.TARG.NPC>==0) //this is a player
+			SRC.EMOTE=quickly apply bandages
+			SRC.EVENTS=<SRC.EVENTS> +e_bandage
+			SRC.NEWITEM=i_bandage_heal_war
+			SRC.ACT.LINK=<SRC.TARG.UID>
+			SRC.ACT.EQUIP
+			RETURN 1
+		ELSE //this is not a player, then we use vet to heal
+			SRC.EMOTE=quickly apply bandages
+			SRC.EVENTS=<SRC.EVENTS> +e_bandage
+			SRC.NEWITEM=i_bandage_heal_war_vet
+			SRC.ACT.LINK=<SRC.TARG.UID>
+			SRC.ACT.EQUIP
+			RETURN 1
+		ENDIF
+	ELSEIF !(<SRC.TARG.NPC>==0) //vet skill applied here
+			SRC.EMOTE=apply bandages
+			SRC.EVENTS=<SRC.EVENTS> +e_bandage
+			SRC.NEWITEM=i_bandage_heal_vet
+			SRC.ACT.LINK=<SRC.TARG.UID>
+			SRC.ACT.EQUIP
+			RETURN 1
+	ELSEIF (<SRC.TARG.NPC>==0) //this is a human and vet does not apply, regular heal
+			SRC.EMOTE=apply bandages
+			SRC.EVENTS=<SRC.EVENTS> +e_bandage
+			SRC.NEWITEM=i_bandage_heal
+			SRC.ACT.LINK=<SRC.TARG.UID>
+			SRC.ACT.EQUIP
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE=You can't think of a way to use this.
+RETURN 1
+
+[ITEMDEF i_bandage_cure]
+DEFNAME=i_bandage_cure
+ID=i_memory
+NAME=Cure Memory
+TYPE=t_eq_script
+
+ON=@CREATE
+MORE1=0
+COLOR=025
+
+ON=@EQUIP
+TIMER=14 +-<EVAL <SRC.ANATOMY> /100>
+
+ON=@TIMER
+f_healing_chance
+IF (<EVAL <VAR.HEAL>>==2)
+	TOPOBJ.NEWITEM=i_memory_distance
+	TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	IF (<TOPOBJ.TAG.OLD_DISTANCE> > 3)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	IF !(<TOPOBJ.TAG.OLD_CANSEELOS>==1)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	LINK.FLAGS=<LINK.FLAGS> & ~statf_poisoned
+	LINK.CONSUME=i_rune_poison
+	LINK.UPDATE
+	IF !(<LINK.UID>==<TOPOBJ.UID>)
+		LINK.SYSMESSAGE=You have been cured by <TOPOBJ.NAME>
+	ENDIF
+	TOPOBJ.NEWITEM=i_bandage_bloody
+	TOPOBJ.ACT.TOPOBJ=<TOPOBJ.UID>
+	TOPOBJ.CONSUME=i_bandage
+	IF (<LINK.UID>==<TOPOBJ.UID>
+		TOPOBJ.SYSMESSAGE=You successfully cure your wounds.
+	ELSE
+		TOPOBJ.SYSMESSAGE=Your bandages cure <LINK.NAME>.
+	ENDIF
+	f_healing_hi_gain
+	REMOVE
+	RETURN 1
+ELSE
+	TOPOBJ.MESSAGE=You couldn't apply the bandages.
+	TOPOBJ.CONSUME=i_bandage
+	f_healing_lo_gain
+	REMOVE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[ITEMDEF i_bandage_cure_vet]
+DEFNAME=i_bandage_cure_vet
+ID=i_memory
+NAME=Cure Memory
+TYPE=t_eq_script
+
+ON=@CREATE
+MORE1=0
+COLOR=025
+
+ON=@EQUIP
+TIMER=14 +-<EVAL <SRC.ANATOMY> /100>
+
+ON=@TIMER
+f_healing_chance
+IF (<EVAL <VAR.HEAL>>==2)
+	TOPOBJ.NEWITEM=i_memory_distance
+	TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	IF (<TOPOBJ.TAG.OLD_DISTANCE> > 3)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	IF !(<TOPOBJ.TAG.OLD_CANSEELOS>==1)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	LINK.FLAGS=<LINK.FLAGS> & ~statf_poisoned
+	LINK.CONSUME=i_rune_poison
+	LINK.UPDATE
+	TOPOBJ.NEWITEM=i_bandage_bloody
+	TOPOBJ.ACT.TOPOBJ=<TOPOBJ.UID>
+	TOPOBJ.CONSUME=i_bandage
+	TOPOBJ.SYSMESSAGE=Your bandages cure <LINK.NAME>.
+	f_vet_hi_gain
+	REMOVE
+	RETURN 1
+ELSE
+	TOPOBJ.MESSAGE=You couldn't apply the bandages.
+	TOPOBJ.CONSUME=i_bandage
+	f_vet_lo_gain
+	REMOVE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[ITEMDEF i_bandage_heal_war]
+DEFNAME=i_bandage_heal_war
+ID=i_memory
+NAME=Heal Memory
+TYPE=t_eq_script
+
+ON=@CREATE
+MORE1=0
+COLOR=025
+
+ON=@EQUIP
+TIMER=12 +-<EVAL <SRC.ANATOMY> /100>
+
+ON=@TIMER
+f_healing_chance
+IF (<EVAL <VAR.HEAL>>==2)
+	TOPOBJ.NEWITEM=i_memory_distance
+	TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	IF (<TOPOBJ.TAG.OLD_DISTANCE> > 3)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	IF !(<TOPOBJ.TAG.OLD_CANSEELOS>==1)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME
+		REMOVE
+		RETURN 1
+	ENDIF
+	VAR.X=<EVAL <VAR.HEALSTR>> /2
+	VAR.X2=<EVAL <VAR.HEALSTR>> -<EVAL <VAR.X>>
+	LINK.HITPOINTS=<LINK.HITPOINTS> +<EVAL <VAR.X2>>
+	LINK.UPDATE
+		IF (<LINK.HITPOINTS> > <LINK.STR>)
+		LINK.HITPOINTS=<LINK.STR>
+	ENDIF
+	IF !(<LINK.UID>==<TOPOBJ.UID>)
+		LINK.SYSMESSAGE=You have been healed by <TOPOBJ.NAME>
+	ENDIF
+	TOPOBJ.NEWITEM=i_bandage_bloody
+	TOPOBJ.ACT.TOPOBJ=<TOPOBJ.UID>
+	TOPOBJ.CONSUME=i_bandage
+	IF (<LINK.UID>==<TOPOBJ.UID>
+		TOPOBJ.SYSMESSAGE=You successfully heal the wounds.
+	ELSE
+		TOPOBJ.SYSMESSAGE=Your bandages heal <LINK.NAME>.
+	ENDIF
+	f_healing_hi_gain
+	REMOVE
+	RETURN 1
+ELSE
+	TOPOBJ.MESSAGE=You couldn't apply the bandages.
+	TOPOBJ.CONSUME=i_bandage
+	f_healing_lo_gain
+	REMOVE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[ITEMDEF i_bandage_heal_war_vet]
+DEFNAME=i_bandage_heal_war_vet
+ID=i_memory
+NAME=Heal Memory
+TYPE=t_eq_script
+
+ON=@CREATE
+MORE1=0
+COLOR=025
+
+ON=@EQUIP
+TIMER=12 +-<EVAL <SRC.ANATOMY> /100>
+
+ON=@TIMER
+f_healing_chance
+IF (<EVAL <VAR.HEAL>>==2)
+	TOPOBJ.NEWITEM=i_memory_distance
+	TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	IF (<TOPOBJ.TAG.OLD_DISTANCE> > 3)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	IF !(<TOPOBJ.TAG.OLD_CANSEELOS>==1)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	VAR.X=<EVAL <VAR.HEALSTR>> /2
+	VAR.X2=<EVAL <VAR.HEALSTR>> -<EVAL <VAR.X>>
+	LINK.HITPOINTS=<LINK.HITPOINTS> +<EVAL <VAR.X2>>
+	LINK.UPDATE
+	IF (<LINK.HITPOINTS> > <LINK.STR>)
+		LINK.HITPOINTS=<LINK.STR>
+	ENDIF
+	TOPOBJ.NEWITEM=i_bandage_bloody
+	TOPOBJ.ACT.TOPOBJ=<TOPOBJ.UID>
+	TOPOBJ.CONSUME=i_bandage
+	TOPOBJ.SYSMESSAGE=Your bandages heal <LINK.NAME>.
+	f_vet_hi_gain
+	REMOVE
+	RETURN 1
+ELSE
+	TOPOBJ.MESSAGE=You couldn't apply the bandages.
+	TOPOBJ.CONSUME=i_bandage
+	f_vet_lo_gain
+	REMOVE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[ITEMDEF i_bandage_heal]
+DEFNAME=i_bandage_heal
+ID=i_memory
+NAME=Heal Memory
+TYPE=t_eq_script
+
+ON=@CREATE
+MORE1=0
+COLOR=025
+
+ON=@EQUIP
+TIMER=14 +-<EVAL <SRC.ANATOMY> /100>
+
+ON=@TIMER
+f_healing_chance
+IF (<EVAL <VAR.HEAL>>==2)
+	TOPOBJ.NEWITEM=i_memory_distance
+	TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	IF (<TOPOBJ.TAG.OLD_DISTANCE> > 3)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	IF !(<TOPOBJ.TAG.OLD_CANSEELOS>==1)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+		ENDIF
+	LINK.HITPOINTS=<LINK.HITPOINTS> +<EVAL <VAR.HEALSTR>>
+	LINK.UPDATE
+	IF (<LINK.HITPOINTS> > <LINK.STR>)
+		LINK.HITPOINTS=<LINK.STR>
+	ENDIF
+	IF !(<LINK.UID>==<TOPOBJ.UID>)
+		LINK.SYSMESSAGE=You have been healed by <TOPOBJ.NAME>.
+	ENDIF
+	TOPOBJ.NEWITEM=i_bandage_bloody
+	TOPOBJ.ACT.TOPOBJ=<TOPOBJ.UID>
+	TOPOBJ.CONSUME=i_bandage
+	IF (<LINK.UID>==<TOPOBJ.UID>
+		TOPOBJ.SYSMESSAGE=You successfully heal the wounds.
+	ELSE
+		TOPOBJ.SYSMESSAGE=Your bandages heal <LINK.NAME>.
+	ENDIF
+	f_healing_hi_gain
+	REMOVE
+	RETURN 1
+ELSE
+	TOPOBJ.MESSAGE=You couldn't apply the bandages.
+	TOPOBJ.CONSUME=i_bandage
+	f_healing_lo_gain
+	REMOVE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[ITEMDEF i_bandage_heal_vet]
+DEFNAME=i_bandage_heal_vet
+ID=i_memory
+NAME=Heal Memory
+TYPE=t_eq_script
+
+ON=@CREATE
+MORE1=0
+COLOR=025
+
+ON=@EQUIP
+TIMER=14 +-<EVAL <SRC.ANATOMY> /100>
+
+ON=@TIMER
+f_healing_chance
+IF (<EVAL <VAR.HEAL>>==2)
+	TOPOBJ.NEWITEM=i_memory_distance
+	TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	IF (<TOPOBJ.TAG.OLD_DISTANCE> > 3)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	IF !(<TOPOBJ.TAG.OLD_CANSEELOS>==1)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	LINK.HITPOINTS=<LINK.HITPOINTS> +<EVAL <VAR.HEALSTR>>
+	LINK.UPDATE
+	IF (<LINK.HITPOINTS> > <LINK.STR>)
+		LINK.HITPOINTS=<LINK.STR>
+	ENDIF
+	TOPOBJ.NEWITEM=i_bandage_bloody
+	TOPOBJ.ACT.TOPOBJ=<TOPOBJ.UID>
+	TOPOBJ.CONSUME=i_bandage
+	TOPOBJ.SYSMESSAGE=Your bandages heal <LINK.NAME>.
+	f_vet_hi_gain
+	REMOVE
+	RETURN 1
+ELSE
+	TOPOBJ.MESSAGE=You couldn't apply the bandages.
+	TOPOBJ.CONSUME=i_bandage
+	f_vet_lo_gain
+	REMOVE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[ITEMDEF i_bandage_res]
+DEFNAME=i_bandage_res
+ID=i_memory
+NAME=Heal Memory
+TYPE=t_eq_script
+
+ON=@CREATE
+MORE1=0
+COLOR=025
+
+ON=@EQUIP
+TIMER=16 +-<EVAL <SRC.ANATOMY> /100>
+
+ON=@TIMER
+f_healing_chance
+IF (<EVAL <VAR.HEAL>>==2)
+	TOPOBJ.NEWITEM=i_memory_distance
+	TOPOBJ.EQUIP=<TOPOBJ.ACT>
+	IF (<TOPOBJ.TAG.OLD_DISTANCE> > 3)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	IF !(<TOPOBJ.TAG.OLD_CANSEELOS>==1)
+		TOPOBJ.SYSMESSAGE=You can not see <LINK.NAME>
+		REMOVE
+		RETURN 1
+	ENDIF
+	LINK.NEWRESURRECT
+	LINK.SYSMESSAGE=You have been resurrected by <TOPOBJ.NAME>.
+	LINK.UPDATE
+	TOPOBJ.NEWITEM=i_bandage_bloody
+	TOPOBJ.ACT.AMOUNT=20
+	TOPOBJ.ACT.TOPOBJ=<TOPOBJ.UID>
+	TOPOBJ.CONSUME=20 i_bandage
+	TOPOBJ.SYSMESSAGE=Your bandages resurrect <LINK.NAME>.
+	f_healing_hi_gain
+	REMOVE
+	RETURN 1
+ELSE
+	TOPOBJ.MESSAGE=You couldn't apply the bandages.
+	TOPOBJ.CONSUME=i_bandage
+	f_healing_lo_gain
+	REMOVE
+	RETURN 1
+ENDIF
+RETURN 1
+
+[FUNCTION f_healing_chance]
+f_healing_calc1
+
+[FUNCTION f_healing_calc1]
+IF (<TOPOBJ.HEALING> >= 100.0)
+	VAR.HEALCHANCE=<EVAL {1 30}>
+	VAR.HEALSTR=<EVAL {60 70}>
+ELSEIF (<TOPOBJ.HEALING> >= 80.0)
+	VAR.HEALCHANCE=<EVAL {1 30}>
+	VAR.HEALSTR=<EVAL {50 60}>
+ELSEIF (<TOPOBJ.HEALING> >= 60.0)
+	VAR.HEALCHANCE=<EVAL {1 30}>
+	VAR.HEALSTR=<EVAL {40 50}>
+ELSEIF (<TOPOBJ.HEALING> >= 40.0)
+	VAR.HEALCHANCE=<EVAL {1 30}>
+	VAR.HEALSTR=<EVAL {30 40}>
+ELSEIF (<TOPOBJ.HEALING> >= 20.0)
+	VAR.HEALCHANCE=<EVAL {1 30}>
+	VAR.HEALSTR=<EVAL {25 30}>
+ELSEIF (<TOPOBJ.HEALING> < 20.0)
+	VAR.HEALCHANCE=<EVAL {1 30}>
+	VAR.HEALSTR=<EVAL {15 25}>
+ENDIF
+f_healing_calc2
+
+[FUNCTION f_healing_calc2]
+IF (<TOPOBJ.ANATOMY> >= 100.0)
+	VAR.HEALCHANCE=<EVAL <VAR.HEALCHANCE>> +<EVAL {20 30}>
+ELSEIF (<TOPOBJ.ANATOMY> >= 80.0)
+	VAR.HEALCHANCE=<EVAL <VAR.HEALCHANCE>> +<EVAL {15 25}>
+ELSEIF (<TOPOBJ.ANATOMY> >= 60.0)
+	VAR.HEALCHANCE=<EVAL <VAR.HEALCHANCE>> +<EVAL {10 20}>
+ELSEIF (<TOPOBJ.ANATOMY> >= 40.0)
+	VAR.HEALCHANCE=<EVAL <VAR.HEALCHANCE>> +<EVAL {5 15}>
+ELSEIF (<TOPOBJ.ANATOMY> >= 20.0)
+	VAR.HEALCHANCE=<EVAL <VAR.HEALCHANCE>> +<EVAL {1 10}>
+ENDIF
+f_healing_calc3
+
+[FUNCTION f_healing_calc3]
+IF (<TOPOBJ.HEALING> >= 100.0)
+	IF (<EVAL <VAR.HEALCHANCE>> >= 5)
+		VAR.HEAL=2
+	ELSE
+		VAR.HEAL=1
+	ENDIF
+ELSEIF (<TOPOBJ.HEALING> >= 80.0)
+	IF (<EVAL <VAR.HEALCHANCE>> >= 10)
+		VAR.HEAL=2
+	ELSE
+		VAR.HEAL=1
+	ENDIF
+ELSEIF (<TOPOBJ.HEALING> >= 60.0)
+	IF (<EVAL <VAR.HEALCHANCE>> >= 10)
+		VAR.HEAL=2
+	ELSE
+		VAR.HEAL=1
+	ENDIF
+ELSEIF (<TOPOBJ.HEALING> >= 40.0)
+	IF (<EVAL <VAR.HEALCHANCE>> >= 15)
+		VAR.HEAL=2
+	ELSE
+		VAR.HEAL=1
+	ENDIF
+ELSEIF (<TOPOBJ.HEALING> >= 20.0)
+	IF (<EVAL <VAR.HEALCHANCE>> >= 15)
+		VAR.HEAL=2
+	ELSE
+		VAR.HEAL=1
+	ENDIF
+ELSEIF (<TOPOBJ.HEALING> < 20.0)
+	IF (<EVAL <VAR.HEALCHANCE>> >= 20)
+		VAR.HEAL=2
+	ELSE
+		VAR.HEAL=1
+	ENDIF
+ENDIF
+
+[FUNCTION f_healing_lo_gain]
+TOPOBJ.TAG.XH=<EVAL <TOPOBJ.TAG.XH>> +20
+IF (<TOPOBJ.HEALING> >= 100.0)
+	TOPOBJ.TAG.XH=0
+ENDIF
+IF (<EVAL <TOPOBJ.HEALING>> <= <EVAL <TOPOBJ.TAG.XH>>)
+	TOPOBJ.HEALING=<TOPOBJ.HEALING> +0.1
+	TOPOBJ.TAG.XH=0
+ENDIF
+TOPOBJ.EVENTS=<TOPOBJ.EVENTS> -e_bandage
+
+[FUNCTION f_healing_hi_gain]
+TOPOBJ.TAG.XH=<EVAL <TOPOBJ.TAG.XH>> +40
+IF (<TOPOBJ.HEALING> >= 100.0)
+	TOPOBJ.TAG.XH=0
+ENDIF
+IF (<EVAL <TOPOBJ.HEALING>> <= <EVAL <TOPOBJ.TAG.XH>>)
+	TOPOBJ.HEALING=<TOPOBJ.HEALING> +0.1
+	TOPOBJ.TAG.XH=0
+ENDIF
+TOPOBJ.EVENTS=<TOPOBJ.EVENTS> -e_bandage
+VAR.X2=<EVAL {10 30}>
+
+[FUNCTION f_vet_lo_gain]
+TOPOBJ.TAG.XV=<EVAL <TOPOBJ.TAG.XV>> +20
+IF (<TOPOBJ.VETERINARY> >= 100.0)
+	TOPOBJ.TAG.XV=0
+ENDIF
+IF (<EVAL <TOPOBJ.VETERINARY>> <= <EVAL <TOPOBJ.TAG.XV>>)
+	TOPOBJ.VETERINARY=<TOPOBJ.VETERINARY> +0.1
+	TOPOBJ.TAG.XV=0
+ENDIF
+TOPOBJ.EVENTS=<TOPOBJ.EVENTS> -e_bandage
+
+[FUNCTION f_vet_hi_gain]
+TOPOBJ.TAG.XV=<EVAL <TOPOBJ.TAG.XV>> +40
+IF (<TOPOBJ.VETERINARY> >= 100.0)
+	TOPOBJ.TAG.XV=0
+ENDIF
+IF (<EVAL <TOPOBJ.VETERINARY>> <= <EVAL <TOPOBJ.TAG.XV>>)
+	TOPOBJ.VETERINARY=<TOPOBJ.VETERINARY> +0.1
+	TOPOBJ.TAG.XV=0
+ENDIF
+TOPOBJ.EVENTS=<TOPOBJ.EVENTS> -e_bandage
+VAR.X2=<EVAL {10 30}>
+TOPOBJ.TAG.EXP=<EVAL <TOPOBJ.TAG.EXP>> + <EVAL <VAR.X2>>
+TOPOBJ.f_experience_display You have gained <EVAL <VAR.X2>> experience.
+TOPOBJ.CHECK
+
+[ITEMDEF i_memory_distance]
+DEFNAME=i_memory_distance
+NAME=Memory Distance Check
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+IF (<SRC.TARG.UID>==<SRC.UID>)
+	SRC.TAG.OLD_DISTANCE=0
+	SRC.TAG.OLD_CANSEELOS=1
+ELSE
+	SRC.TAG.OLD_DISTANCE=<SRC.TARG.DISTANCE>
+	SRC.TAG.OLD_CANSEELOS=<SRC.TARG.CANSEELOS>
+ENDIF
+REMOVE
+
+[FUNCTION newresurrect]
+VAR.OLD_ACT=<ACT>
+NEWITEM=i_res_memory
+EQUIP=<ACT>
+ACT=<VAR.OLD_ACT>
+
+[ITEMDEF i_res_memory]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Resurrect Memory
+
+ON=@EQUIP
+SRC.RESURRECT
+REMOVE
+
+[EVENTS e_bandage]
+ON=@HIT
+IF (<RESTEST 1 i_bandage_cure>) || (<RESTEST 1 i_bandage_cure_vet>) || (<RESTEST 1 i_bandage_heal_war>) || (<RESTEST 1 i_bandage_heal_war_vet>) || (<RESTEST 1 i_bandage_heal>) || (<RESTEST 1 i_bandage_heal_vet>) || (<RESTEST 1 i_bandage_res>)
+	IF (<RESTEST i_bandage_res>)
+		CONSUME=20 i_bandage
+	ELSE
+		CONSUME=i_bandage
+	ENDIF
+	CONSUME=i_bandage_cure
+	CONSUME=i_bandage_cure_vet
+	CONSUME=i_bandage_heal_war
+	CONSUME=i_bandage_heal_war_vet
+	CONSUME=i_bandage_heal
+	CONSUME=i_bandage_heal_vet
+	CONSUME=i_bandage_res
+	MESSAGE=You couldn't apply the bandages.
+	EVENTS -e_bandage
+ENDIF
+
+ON=@GETHIT
+IF (<RESTEST 1 i_bandage_cure>) || (<RESTEST 1 i_bandage_cure_vet>) || (<RESTEST 1 i_bandage_heal_war>) || (<RESTEST 1 i_bandage_heal_war_vet>) || (<RESTEST 1 i_bandage_heal>) || (<RESTEST 1 i_bandage_heal_vet>) || (<RESTEST 1 i_bandage_res>)
+	IF (<RESTEST i_bandage_res>)
+		CONSUME=20 i_bandage
+	ELSE
+		CONSUME=i_bandage
+	ENDIF
+	CONSUME=i_bandage_cure
+	CONSUME=i_bandage_cure_vet
+	CONSUME=i_bandage_heal_war
+	CONSUME=i_bandage_heal_war_vet
+	CONSUME=i_bandage_heal
+	CONSUME=i_bandage_heal_vet
+	CONSUME=i_bandage_res
+	MESSAGE=You couldn't apply the bandages.
+	EVENTS -e_bandage
+ENDIF
+
+ON=@SKILLSTART
+IF ( <SRC.FLAGS> & 000000020 )
+	IF (<SRC.ACTION>==Skill_Swordsmanship) || (<SRC.ACTION>==028)
+		RETURN 0
+	ELSEIF (<SRC.ACTION>==Skill_Macefighting) || (<SRC.ACTION>==029)
+		RETURN 0
+	ELSEIF (<SRC.ACTION>==Skill_Fencing) || (<SRC.ACTION>==02a)
+		RETURN 0
+	ELSEIF (<SRC.ACTION>==Skill_Wrestling) || (<SRC.ACTION>==02b)
+		RETURN 0
+	ELSEIF (<SRC.ACTION>==skill_archery) || (<SRC.ACTION>==1f)
+		RETURN 0
+	ENDIF
+ENDIF
+IF (<SRC.RESTEST 1 i_bandage_cure>) || (<SRC.RESTEST 1 i_bandage_cure_vet>) || (<SRC.RESTEST 1 i_bandage_heal_war>) || (<SRC.RESTEST 1 i_bandage_heal_war_vet>) || (<SRC.RESTEST 1 i_bandage_heal>) || (<SRC.RESTEST 1 i_bandage_heal_vet>) || (<SRC.RESTEST 1 i_bandage_res>)
+	IF (<SRC.RESTEST i_bandage_res>)
+		SRC.CONSUME=20 i_bandage
+	ELSE
+		SRC.CONSUME=i_bandage
+	ENDIF
+	SRC.CONSUME=i_bandage_cure
+	SRC.CONSUME=i_bandage_cure_vet
+	SRC.CONSUME=i_bandage_heal_war
+	SRC.CONSUME=i_bandage_heal_war_vet
+	SRC.CONSUME=i_bandage_heal
+	SRC.CONSUME=i_bandage_heal_vet
+	SRC.CONSUME=i_bandage_res
+	SRC.MESSAGE=You couldn't apply the bandages.
+	SRC.EVENTS -e_bandage
+ENDIF
+
+ON=@SPELLEFFECT
+IF (<RESTEST 1 i_bandage_cure>) || (<RESTEST 1 i_bandage_cure_vet>) || (<RESTEST 1 i_bandage_heal_war>) || (<RESTEST 1 i_bandage_heal_war_vet>) || (<RESTEST 1 i_bandage_heal>) || (<RESTEST 1 i_bandage_heal_vet>) || (<RESTEST 1 i_bandage_res>)
+	IF (<RESTEST i_bandage_res>)
+		CONSUME=20 i_bandage
+	ELSE
+		CONSUME=i_bandage
+	ENDIF
+	CONSUME=i_bandage_cure
+	CONSUME=i_bandage_cure_vet
+	CONSUME=i_bandage_heal_war
+	CONSUME=i_bandage_heal_war_vet
+	CONSUME=i_bandage_heal
+	CONSUME=i_bandage_heal_vet
+	CONSUME=i_bandage_res
+	MESSAGE=You couldn't apply the bandages.
+	EVENTS -e_bandage
+ENDIF
+
+ON=@SPELLCAST
+IF (<SRC.RESTEST 1 i_bandage_cure>) || (<SRC.RESTEST 1 i_bandage_cure_vet>) || (<SRC.RESTEST 1 i_bandage_heal_war>) || (<SRC.RESTEST 1 i_bandage_heal_war_vet>) || (<SRC.RESTEST 1 i_bandage_heal>) || (<SRC.RESTEST 1 i_bandage_heal_vet>) || (<SRC.RESTEST 1 i_bandage_res>)
+	IF (<SRC.RESTEST i_bandage_res>)
+		SRC.CONSUME=20 i_bandage
+	ELSE
+		SRC.CONSUME=i_bandage
+	ENDIF
+	SRC.CONSUME=i_bandage_cure
+	SRC.CONSUME=i_bandage_cure_vet
+	SRC.CONSUME=i_bandage_heal_war
+	SRC.CONSUME=i_bandage_heal_war_vet
+	SRC.CONSUME=i_bandage_heal
+	SRC.CONSUME=i_bandage_heal_vet
+	SRC.CONSUME=i_bandage_res
+	MESSAGE=You couldn't apply the bandages.
+	EVENTS -e_bandage
+ENDIF
+
+ON=@ITEMPICKUP_PACK
+IF (<ACT.BASEID>==i_bandage)
+	IF (0<ACT.TOPOBJ.UID>==0<SRC.UID>)
+		RETURN 1
+	ENDIF
+ENDIF
+
+[EOF]

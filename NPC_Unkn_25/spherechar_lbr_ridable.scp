@@ -1,0 +1,470 @@
+/////////////////////////////LBR Rides v.1.0 by Admin Laz/////////////////////////////////////
+// Okay here it is, working LBR rides without any verdata patching.			    //
+// You must use lbr or aos client and in sphere.ini enable EF_AgeOfShadows and FEATURES=000F// 
+// Script by Admin Laz (laz404@hotmail.com), also thx to someone for the f_ride function,   //
+// and thx to melt for explaining me the ride items... :)				    //
+// And PLEASE DO NOT REMOVE THE HEADER!							    //
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//	RIDE FUNCTION									    //
+// add this to ride ON=@dclick f_ride i_mt_<ride_item>					    //
+// this function is not by me, it was Furios or someones at sphereserver's italy forums     //
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+[FUNCTION f_ride]
+IF (<SRC.FLAGS>&statf_freeze) || (<DISTANCE>>3) && !(<SRC.ISGM>)
+SRC.SYSMESSAGE You can't reach the creature.
+ELSEIF !(<SRC.BODY>==c_man) && !(<SRC.BODY>==c_woman) && !(<SRC.BODY>==c_man_gm) 
+SRC.SYSMESSAGE You are not physically capable of riding a horse.
+ELSEIF !(<ISMYPET>)
+SRC.SYSMESSAGE You dont own that horse.
+ELSE
+VAR.OLDACT=<SRC.ACT.UID>
+SRC.ACT=<SRC.FINDLAYER.25.MORE2>
+SRC.FINDLAYER.25.REMOVE //dismount
+SRC.ACT.P=<SRC.P>
+SRC.ACT.DIR=<SRC.DIR>
+SRC.ACT.FLAGS=<SRC.ACT.FLAGS>&~statf_ridden
+SRC.ACT.UPDATE
+SRC.NEWITEM=<ARGS>
+SRC.ACT.NAME=<NAME>
+SRC.ACT.COLOR=<COLOR>
+SRC.ACT.LINK=<SRC.UID>
+SRC.ACT.MORE2=<UID>
+SRC.ACT.MORE=<BASEID>
+SRC.ACT.TIMER=10
+SRC.ACT.CONT=<SRC.UID>
+ACTARG1=<SRC.ACT.UID>|030000000
+ACTION=112
+DISCONNECT
+FLAGS=<FLAGS>|statf_ridden
+SRC.ACT=<VAR.OLDACT>
+VAR.OLDACT=
+ENDIF
+RETURN 1
+
+
+//////// BEGIN OF KIRIN SCRIPT ///////////
+
+[chardef 084]
+defname=c_kirin
+name=Kirin
+SOUND=snd_animals_horse1
+ICON=i_pet_horse_brown_dk
+DAM=10,30
+ARMOR=35
+RESOURCES=15 i_ribs_raw,10 i_hide
+CAN=MT_WALK|MT_RUN
+FOODTYPE=40 t_meat_raw
+SHELTER=r_stables,e_Human_Greet
+DESIRES=e_horses,c_man,c_woman
+AVERSIONS=e_carnivores3
+
+CATEGORY=Monsters
+SUBSECTION=LBR
+DESCRIPTION=Kirin
+
+
+ON=@Create
+NPC=brain_animal
+FAME={100 3000}
+KARMA={-5000 -6999}
+STR={550 650}
+INT={200 240}
+DEX={90 110}
+
+PARRYING={60.0 95.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={98.0 100.0}
+WRESTLING={95.0 100.0}
+TAMING=130.0
+
+ON=@dclick
+f_ride i_mt_kirin
+return 1
+
+///// KIRIN RIDE ITEM //////
+
+[itemdef 03EAD]
+name=kirin mount
+defname=i_mt_kirin
+TYPE=T_EQ_HORSE 
+LAYER=25 
+TDATA3=C_kirin
+
+ON=@EQUIP 
+LINK=<SRC.UID>
+attr=08010
+
+
+/////////// END OF KIRIN SCRIPT ////////////
+
+////////// BEGIN Swamp Dragon script ///////////
+
+[chardef 031a]
+defname=c_swamp_dragon
+name=Swamp Dragon
+DAM=3,24
+ARMOR=20
+SOUND=snd_monster_dragon1
+ICON=i_pet_DRAGON
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+RESOURCES=60 i_ribs_raw
+FOODTYPE=80 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+CATEGORY=Monsters
+SUBSECTION=LBR
+DESCRIPTION=Swamp Dragon
+
+ON=@Create
+NPC=brain_dragon
+STR={400 430}
+DEX={153 172}
+INT={51 90}
+FAME={3000 9000}
+KARMA={-5000 -5999}
+
+PARRYING={65.0 80.0}
+MAGICRESISTANCE={65.0 80.0}
+TACTICS={65.0 90.0}
+WRESTLING={65.0 80.0}
+TAMING=120.0
+
+ON=@dclick
+f_ride i_mt_swamp_dragon
+return 1
+
+///// Swamp dragon ride item //////////
+
+[itemdef 03EBD]
+name=swamp dragon mount
+defname=i_mt_swamp_dragon
+TYPE=T_EQ_HORSE 
+LAYER=25 
+TDATA3=c_swamp_dragon
+
+ON=@EQUIP 
+LINK=<SRC.UID>
+attr=08010
+
+////////// END Swamp dragon script //////////////
+////////// BEGIN Armored Swamp Dragon script ////////
+
+[chardef 031f]
+defname=c_armored_swamp_dragon
+name=Armored Swamp Dragon
+DAM=3,24
+ARMOR=50
+SOUND=snd_monster_dragon1
+ICON=i_pet_DRAGON
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+RESOURCES=60 i_ribs_raw
+FOODTYPE=80 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+CATEGORY=Monsters
+SUBSECTION=LBR
+DESCRIPTION=Armoured Swamp Dragon
+
+
+ON=@Create
+NPC=brain_dragon
+STR={400 430}
+DEX={153 172}
+INT={51 90}
+FAME={3000 9000}
+KARMA={-5000 -5999}
+
+PARRYING={65.0 80.0}
+MAGICRESISTANCE={65.0 80.0}
+TACTICS={65.0 90.0}
+WRESTLING={65.0 80.0}
+TAMING=110.0
+ON=@dclick
+f_RIDE i_mt_swamp_dragon_armored
+return 1
+
+//// armored swamp dragon mount item
+
+[itemdef 03EBE]
+name=armored swamp dragon mount
+defname=i_mt_swamp_dragon_armored
+TYPE=T_EQ_HORSE 
+LAYER=25 
+TDATA3=c_armored_swamp_dragon
+
+ON=@EQUIP 
+LINK=<SRC.UID>
+attr=08010
+
+/////// end of armored swamp dragon mount script //
+/////// Begin Giant beetle script /////////////////
+
+[chardef 0317]
+defname=c_giant_beetle
+name=Giant Beetle
+CAN=MT_WALK|MT_RUN
+SOUND=snd_monster_tera_drone1
+ICON=i_pet_terathan_drone
+DAM=5,10
+ARMOR=50
+RESOURCES=
+FOODTYPE=
+SHELTER=r_caves,r_dungeon
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+CATEGORY=Monsters
+SUBSECTION=LBR
+DESCRIPTION=Giant Beetle
+
+ON=@Create
+NPC=brain_dragon
+STR={400 430}
+DEX={153 172}
+INT={51 90}
+FAME={3000 9000}
+KARMA={-5000 -5999}
+TAMING=110.0
+
+PARRYING={65.0 80.0}
+MAGICRESISTANCE={65.0 80.0}
+TACTICS={65.0 90.0}
+WRESTLING={65.0 80.0}
+TAMING=110.0
+
+on=@dclick
+f_RIDE i_mt_giant_beetle
+return 1
+
+/////// Giant beetle mount item /////
+
+
+[itemdef 03EBC]
+name=Giant beetle mount
+defname=i_mt_giant_beetle
+TYPE=T_EQ_HORSE 
+LAYER=25 
+TDATA3=c_giant_beetle
+
+ON=@EQUIP 
+LINK=<SRC.UID>
+attr=08010
+
+////////// END Giant beetle script //////////
+
+////////////// RIDGEBACK SCRIPT ////////////
+
+[chardef 0bb]
+defname=c_ridgeback
+name=Ridgeback
+SOUND=snd_animal_ostard_desert1
+ICON=i_pet_OSTARD_Forest
+DAM=4,12
+ARMOR=9
+ANIM=01fff
+RESOURCES=15 i_ribs_raw
+CAN=MT_WALK|MT_RUN
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_Human_Greet
+DESIRES=e_OSTARDS,c_man,c_woman
+
+CATEGORY=Monsters
+SUBSECTION=LBR
+DESCRIPTION=Ridgeback
+
+
+ON=@Create
+NPC=brain_animal
+FAME=0
+KARMA={-400 -599}
+STR={94 170}
+DEX={36 55}
+INT={6 10}
+
+PARRYING={35.0 45.0}
+MAGICRESISTANCE={25.0 30.0}
+TACTICS={29.0 44.0}
+WRESTLING={29.0 44.0}
+TAMING=100.0
+
+ON=@dclick
+f_RIDE i_mt_ridgeback
+return 1
+
+///////// ridgeback mount item //////////
+
+[itemdef 03EBA]
+name=Rigdeback mount item
+defname=i_mt_ridgeback
+TYPE=T_EQ_HORSE 
+LAYER=25 
+TDATA3=c_ridgeback
+
+ON=@EQUIP 
+LINK=<SRC.UID>
+attr=08010
+
+/////// END RIDGEBACK MOUNT ////////////
+/////// BEGIN SAVAGE RIDGEBACK MOUNT SCRIPT //////
+
+[chardef 0bc]
+defname=c_savage_ridgeback
+name=Savage Ridgeback
+SOUND=snd_animal_ostard_frenzied1
+ICON=i_pet_OSTARD_ZOSTRICH
+DAM=8,23
+ARMOR=15
+ANIM=01fff
+RESOURCES=15 i_ribs_raw
+CAN=MT_WALK|MT_RUN
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_Human_Greet
+DESIRES=e_OSTARDS,c_man,c_woman
+
+CATEGORY=Monsters
+SUBSECTION=LBR
+DESCRIPTION=Ridgeback
+
+ON=@Create
+NPC=brain_animal
+FAME=0
+KARMA={-400 -599}
+STR={94 170}
+DEX={96 115}
+INT={6 10}
+
+PARRYING={75.0 85.0}
+MAGICRESISTANCE={75.0 80.0}
+TACTICS={79.0 94.0}
+WRESTLING={79.0 94.0}
+TAMING=12.0
+
+ON=@DCLICK
+f_RIDE i_mt_ridgeback_savage
+return 1
+
+///// savage ridgeback mount item /////
+[itemdef 03EB8]
+name=Savage Rigdeback mount item
+defname=i_mt_ridgeback_savage
+TYPE=T_EQ_HORSE 
+LAYER=25 
+TDATA3=c_savage_ridgeback
+
+ON=@EQUIP 
+LINK=<SRC.UID>
+attr=08010
+
+///////// END SAVAGE Ridgeback script /////
+
+////// BEGIN SKELETAL MOUNT SCRIPT //////
+
+[chardef 0319]
+defname=c_skeletal_mount
+name=Skeletal Mount
+SOUND=snd_animals_horse1
+ICON=i_pet_horse_brown_dk
+DAM=9,29
+ARMOR=30
+RESOURCES=25 i_ribs_raw,10 i_hide
+CAN=MT_WALK|MT_RUN
+FOODTYPE=40 t_meat_raw
+SHELTER=r_caves,r_dungeon
+DESIRES=e_horses,c_man,c_woman
+AVERSIONS=e_carnivores3
+
+CATEGORY=Monsters
+SUBSECTION=LBR
+DESCRIPTION=Skeletal Mount
+
+TEVENTS=e_undead
+
+ON=@Create
+NPC=brain_monster 
+FAME={100 2000}
+KARMA={-5000 -5999}
+STR={500 630}
+INT={200 240}
+DEX={86 105}
+
+PARRYING={55.0 95.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={98.0 100.0}
+WRESTLING={90.0 93.0}
+TAMING=130.0
+
+ON=@DCLICK
+f_RIDE i_mt_skeletal_mount
+return 1
+
+[itemdef 03EBB]
+name=Skeletal mount
+defname=i_mt_skeletal_mount
+TYPE=T_EQ_HORSE 
+LAYER=25 
+TDATA3=c_skeletal_mount
+
+ON=@EQUIP 
+LINK=<SRC.UID>
+attr=08010
+
+//////////////  END SKELETAL MOUNT //////
+////////// BEGIN UNICORN ////////////////
+
+[chardef 07a]
+defname=c_m_unicorn
+name=Unicorn
+SOUND=snd_animals_horse1
+ICON=i_pet_horse_gray
+DAM=10,15
+ARMOR=20
+RESOURCES=15 i_ribs_raw,10 i_hide
+CAN=MT_WALK|MT_RUN
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+SHELTER=r_stables,e_Human_Greet
+DESIRES=e_horses,c_man,c_woman
+AVERSIONS=e_carnivores3
+
+CATEGORY=Monsters
+SUBSECTION=LBR
+DESCRIPTION=Unicorn
+
+ON=@Create
+NPC=brain_animal
+FAME=3000
+KARMA=0
+STR={600 650}
+INT={200 240}
+DEX={100 150}
+
+PARRYING={40.0 50.0}
+MAGICRESISTANCE={25.0 30.0}
+TACTICS={30.0 50.0}
+WRESTLING={45.0 60.0}
+TAMING=130.0
+
+ON=@DCLICK
+f_RIDE i_mt_unicorn
+return 1
+
+[itemdef 03EB4]
+name=Unicorn mount item
+defname=i_mt_unicorn
+TYPE=T_EQ_HORSE 
+LAYER=25 
+TDATA3=c_m_unicorn
+
+ON=@EQUIP 
+LINK=<SRC.UID>
+attr=08010
+
+////////////// END UNICORN SCRIPT /////////
+[EOF]

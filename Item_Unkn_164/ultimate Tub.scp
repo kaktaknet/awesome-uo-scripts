@@ -1,0 +1,48 @@
+//Dye Tub Made By Admin Crazy Aka big_boy_uk89
+//Fix's Done By Cloud This script dyes Every thing that is own'd by the player Using it.
+//Works with Sphere 55r + Only Tested On Sphere 4.0.2 But SHould Work On 55r + Any Bugs Email Admin@crazypk.com
+
+[ITEMDEF I_ultima_DYETUB]
+//Dying Tub
+ID=0fab
+NAME=Ultimate Tub
+WEIGHT=10
+CATEGORY=Items by Professions
+SUBSECTION=Tailor
+DESCRIPTION=Special Dye Tub
+Dye=1
+RESOURCES=5 i_log
+SKILLMAKE=CARPENTRY 50.0, t_carpentry
+RESOURCES2=10 i_board
+
+ON=@CREATE
+ATTR=attr_newbie
+COLOR={0791 1 0792 1 0793 1 0794 1 0795 1 0796 1 0797 1 0798 1 0799 1 079a 1 079b 1 079c 1 079d 1 079e 1 079f 1 07a0 1 07a1 1 07a2 1 07a3 1 07a4 1 07a5 1 07a6 1 07a7 1 07a8 1 07a9 1 07aa 1 07ab 1 07ac 1 07ad 1 07ae 1 07af 1 07b0 1 07b1 1 07b2 1 07b3 1 07b4 1 07b5 1 07b6 1 07b7 07b8 1 07b9 1 07ba 1 07bb 1 07bc 1 07bd 1 07be 1 07bf 1 07c0 1 07c1 1 07c2 1 07c3 1 07c4 1 07c5 1 07c6 1 07c7 1 07c8 1 07c9 1 07ca 1 07cb 1 07cc 1 07cd 1 07ce 1 07e3 1 07e4 1 07e5 1 07e6 1 07e7 1 07e8 1 07e9 1 07ea 1 07eb 1 07ec 1 07ed 1 07ee 1 07ef 1 07f0 1 07f1 1 07f2 1 07f3 1 07f4 1 07f5 1 07f6 1 07f7 1 07f8 1 07f9 1 07fa 1 07fb 1 07fc 1 07fd 1 07fe 1 07ff 1 0800 1 0801 1 0802 1 0803 1 0804 1 0805 1 0806 1 0807 1 0808 1 0809 1 080a 1 080b 1 080c 1 080d 1 080e 1 080f 1 0810 1 0811 1 0812 1 0813 1 0814 1 0815 1 0816 1 0817 1 0818 1 0819 1 081a 1 081b 1 081c 1 081d 1 081e 1 081f 1 0820 1 0821 1 0822 1 0823 1 0824 1 0825 1 0826 1 0827 1 0828 1 0829 1 082a 1 082b 1 082c 1 082d 1 082e 1 082f 1 0830 1 0831 1 0832 1 0833 1 0834 1 0b9d 1 0b9e 1 0b9f 1 0ba0 1 0ba1 1 0ba2 1 0ba3 1 0ba4 1 0ba5 1 0ba6 1 0ba7 1 0ba8 1 0480 1 0481 1 0482 1 0483 1 0484 1 0485 1 0486 1 0487 1 0488 1 0489 1 048a 1 048b 1 048c 1 048d 1 048e 1 048f 1 0490 1 0491 1 0492 1 0493 1 0775 1 0776 1 0777 1 0778 1 0779 1 077a 1 077b 1 077c 1 077d 1 077e 1 077f 1  0780 1 0781 1 0782 1 0783 1 0784 1 0785 1 0786 1 0787 1 0789 1 078a 1 078b 1 078c 1 078d 1 078e 1 078f 1 0790 1}
+
+on=@click
+MESSAGE=@00a3a <name>
+return 1
+
+ON=@DCLICK
+TARGET Select some thing to dye.
+RETURN 1
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.TOPOBJ.UID>!=<SRC.UID>)
+SRC.SYSMESSAGE=@0481 The item must be in your pack, or be your pack
+ELSE
+src.targ.color=<color>
+src.targ.update
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.ISMYPET>)
+src.targ.color=<color>
+src.targ.update
+ELSE
+SRC.SYSMESSAGE=@0481=You can't dye that.
+ENDIF
+return 1
+
+[EOF]

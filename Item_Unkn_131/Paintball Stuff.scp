@@ -1,0 +1,156 @@
+[ITEMDEF i_blue_bow]
+DEFNAME=i_blue_bow
+Id=013b1
+NAME=Blue Paintball Bow
+WEIGHT=5
+DAM=0
+SKILL=Archery
+REQSTR=20
+TWOHANDS=Y
+CATEGORY=Event Items
+SUBSECTION=Paintball
+DESCRIPTION=PB Bow (blue)
+
+TDATA3=i_Blue_paint
+
+on=@create
+color=07a0
+hitpoints=200
+
+on=@damage
+sound 607
+src.go 5577,1757
+SRC.SYSMESSAGE <CONT.NAME> of the Blue Team Hit You
+
+
+[ITEMDEF i_blue_paint]
+ID=0f23
+Name=Blue Paintballs
+
+on=@create
+color=07a0
+
+CATEGORY=Event Items
+SUBSECTION=Paintball
+DESCRIPTION=PB Paint (blue)
+
+
+
+
+[ITEMDEF i_white_bow]
+DEFNAME=i_white_bow
+Id=013b1
+NAME=White Paintball Bow
+WEIGHT=5
+SKILL=Archery
+REQSTR=20
+TWOHANDS=Y
+CATEGORY=Event Items
+SUBSECTION=Paintball
+DESCRIPTION=PB Bow (white)
+
+TDATA3=i_White_paint
+
+
+on=@create
+color=07a1
+hitpoints=200
+
+on=@damage
+sound 607
+src.go 5577,1720
+SRC.SYSMESSAGE <CONT.NAME> of the Blue Team Hit You
+
+[ITEMDEF i_white_paint]
+ID=0f23
+Name=White Paintballs
+
+on=@create
+color=07a1
+
+CATEGORY=Event Items
+SUBSECTION=Paintball
+DESCRIPTION=PB Paint (white)
+
+[ITEMDEF i_robe_blue]
+ID=i_robe
+Name=Paintball Robe (Blue)
+
+on=@create
+color=07a0
+hitpoints=500
+
+CATEGORY=Event Items
+SUBSECTION=Paintball
+DESCRIPTION=PB Robe (Blue)
+
+[ITEMDEF i_robe_white]
+ID=i_robe
+Name=Paintball Robe (white)
+
+on=@create
+color=07a1
+hitpoints=500
+
+CATEGORY=Event Items
+SUBSECTION=Paintball
+DESCRIPTION=PB Robe (White)
+
+
+[ITEMDEF i_blue_Start]
+DEFNAME=i_blue_Start
+Id=i_gravestone_17
+NAME=Blue Paintball Start
+WEIGHT=5
+
+
+
+CATEGORY=Event Items
+SUBSECTION=Paintball
+DESCRIPTION=PB Start (blue)
+
+on=@create
+attr=010
+color=07a0
+
+on=@dclick
+src.newitem i_blue_bow
+src.act.bounce 
+src.newitem i_robe_blue
+src.act.bounce
+src.newitem i_blue_paint
+src.act.amount 100
+src.act.bounce
+src.go 5578,1719
+return 1
+
+[ITEMDEF i_white_Start]
+DEFNAME=i_white_Start
+Id=i_gravestone_17
+NAME=White Paintball Start
+WEIGHT=5
+
+
+
+CATEGORY=Event Items
+SUBSECTION=Paintball
+DESCRIPTION=PB Start (White)
+
+on=@create
+attr=010
+color=07a1
+
+on=@dclick
+src.newitem i_white_bow
+src.act.bounce 
+src.newitem i_robe_white
+src.act.bounce
+src.newitem i_white_paint
+src.act.amount 100
+src.act.bounce
+src.go 5577,1757
+return 1
+
+
+
+

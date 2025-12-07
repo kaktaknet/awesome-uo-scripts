@@ -1,0 +1,30 @@
+[DIALOG d_online]
+100,100
+PAGE 0
+resizepic 0 0 3500 200 300
+FOR <tag0.clientlist> <eval <tag0.clientlist>+10>
+IF !(<serv.client.<eval <local._for>>.uid>==0)
+dtext 20 <eval (<local._for>*20)+20> 1152 <serv.client.<eval <local._for>>.name>
+endif
+ENDFOR
+button 170 260 2117 2118 1 0 1
+
+[DIALOG d_online BUTTON]
+ON=0
+tag.clientlist=
+
+ON=1
+IF (<serv.clients> > <eval <tag0.clientlist>+9>)
+tag.clientlist=<eval <tag0.clientlist>+10>
+sdialog d_online
+else
+tag.clientlist=
+endif
+
+[plevel 1]
+clist
+
+[function clist]
+sdialog d_online
+
+[EOF]

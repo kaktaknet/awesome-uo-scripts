@@ -1,0 +1,347 @@
+/////////////////////////////////////
+/////// Charm system v1.5 /////////
+///////////////////////////////////
+//// Bugs fixed ////
+// 1. Player cant use charm effect if he don't have a weapon equiped.
+// 2. If player don't have weapon, and have charm in pack, charm effect will not be used.
+// ////////////
+////////////
+//// Addons ////
+// 1. When player clics on charm, chram name will be colored as charm color.
+// 2.When player clics on item, and hase charm in pack, charm name will shows.
+////////////
+// Installation
+// 1. Add to all players e_charm.
+////////////
+// Credits :
+// 1. big_boy_uk_89 [creator of this script]
+// 2. Satanic [bug fixes and some addons]
+///////////
+///////////
+//    Have ideas ? our maybee found a bug ? PM me at www.scriptsharing.org , nick : Satan !
+//////////
+[ITEMDEF i_charm]
+ID=i_rune_marker
+TYPE=t_charm
+NAME=Charm
+
+ON=@CREATE
+MOREY {1 52}
+MOREX 52  // charges
+
+[EVENTS e_charm]
+On=@ItemClick
+if (! StrMatch("t_weapon*","<act.type>"))
+elif (<SRC.FINDTYPE.t_charm.UID>)
+act.message <act.name> <var.name> (charm)
+return 1
+ else
+act.message <act.name>
+return 1
+endif
+
+ON=@HIT
+IF (STRMATCH("t_weapon*","<FINDLAYER(01).TYPE>")) || (STRMATCH("t_weapon*","<FINDLAYER(02).TYPE>")))
+IF (<FINDTYPE.t_charm.UID>)
+TRY f_charm_<FINDTYPE.t_charm.MOREY>
+IF !(<FINDTYPE.t_charm.MOREX>)
+FINDTYPE.t_charm.REMOVE
+SYSMESSAGE The charm is exhausted, and vanishes.
+RETURN 0
+ENDIF
+FINDTYPE.t_charm.MOREX <FINDTYPE.t_charm.MOREX> +- 1
+ENDIF
+Else
+return 0
+endif
+
+[TYPEDEF t_charm]
+ON=@CLICK
+IF !(<MOREM>)
+f_charm_name <MOREY>
+f_charm_colour <MOREY>
+MOREM 1
+ENDIF
+local.color = <src.findtype.t_charm.color>
+MESSAGE Charges: <MOREX>
+message @<local.color> Charm <var.name>
+return 1
+
+[FUNCTION f_charm_1]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 1 080 <UID>
+
+[FUNCTION f_charm_2]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 2 080 <UID>
+
+[FUNCTION f_charm_3]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 3 080 <UID>
+
+[FUNCTION f_charm_4]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 4 080 <UID>
+
+[FUNCTION f_charm_5]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 5 080 <UID>
+
+[FUNCTION f_charm_6]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 6 080 <UID>
+
+[FUNCTION f_charm_7]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 7 080 <UID>
+
+[FUNCTION f_charm_8]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 8 080 <UID>
+
+[FUNCTION f_charm_9]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 9 080 <UID>
+
+[FUNCTION f_charm_10]
+ACT.EFFECT 3,i_fx_curse,6,16,0
+ACT.DAMAGE 10 080 <UID>
+
+[FUNCTION f_charm_11]
+ACT.POISON 100
+
+[FUNCTION f_charm_12]
+ACT.POISON 200
+
+[FUNCTION f_charm_13]
+ACT.POISON 300
+
+[FUNCTION f_charm_14]
+ACT.POISON 400
+
+[FUNCTION f_charm_15]
+ACT.POISON 500
+
+[FUNCTION f_charm_16]
+ACT.POISON 600
+
+[FUNCTION f_charm_17]
+ACT.POISON 700
+
+[FUNCTION f_charm_18]
+ACT.POISON 800
+
+[FUNCTION f_charm_19]
+ACT.POISON 900
+
+[FUNCTION f_charm_20]
+ACT.POISON 1000
+
+[FUNCTION f_charm_21]
+ACT.EFFECT 1,1
+ACT.DAMAGE 5 080 <UID>
+
+[FUNCTION f_charm_22]
+ACT.EFFECT 1,1
+ACT.DAMAGE 6 080 <UID>
+
+[FUNCTION f_charm_23]
+ACT.EFFECT 1,1
+ACT.DAMAGE 7 080 <UID>
+
+[FUNCTION f_charm_24]
+ACT.EFFECT 1,1
+ACT.DAMAGE 8 080 <UID>
+
+[FUNCTION f_charm_25]
+ACT.EFFECT 1,1
+ACT.DAMAGE 9 080 <UID>
+
+[FUNCTION f_charm_26]
+ACT.EFFECT 1,1
+ACT.DAMAGE 10 080 <UID>
+
+[FUNCTION f_charm_27]
+ACT.EFFECT 1,1
+ACT.DAMAGE 11 080 <UID>
+
+[FUNCTION f_charm_28]
+ACT.EFFECT 1,1
+ACT.DAMAGE 12 080 <UID>
+
+[FUNCTION f_charm_29]
+ACT.EFFECT 1,1
+ACT.DAMAGE 13 080 <UID>
+
+[FUNCTION f_charm_30]
+ACT.EFFECT 1,1
+ACT.DAMAGE 14 080 <UID>
+
+[FUNCTION f_charm_31]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 9 080 <UID>
+
+[FUNCTION f_charm_32]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 10 080 <UID>
+
+[FUNCTION f_charm_33]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 11 080 <UID>
+
+[FUNCTION f_charm_34]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 12 080 <UID>
+
+[FUNCTION f_charm_35]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 13 080 <UID>
+
+[FUNCTION f_charm_36]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 14 080 <UID>
+
+[FUNCTION f_charm_37]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 15 080 <UID>
+
+[FUNCTION f_charm_38]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 16 080 <UID>
+
+[FUNCTION f_charm_39]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 17 080 <UID>
+
+[FUNCTION f_charm_40]
+ACT.EFFECT 3,i_fx_explode,6,16,0
+ACT.DAMAGE 18 080 <UID>
+
+[FUNCTION f_charm_41]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 11 080 <UID>
+
+[FUNCTION f_charm_42]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 12 080 <UID>
+
+[FUNCTION f_charm_43]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 13 080 <UID>
+
+[FUNCTION f_charm_44]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 14 080 <UID>
+
+[FUNCTION f_charm_45]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 15 080 <UID>
+
+[FUNCTION f_charm_46]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 16 080 <UID>
+
+[FUNCTION f_charm_47]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 17 080 <UID>
+
+[FUNCTION f_charm_48]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 18 080 <UID>
+
+[FUNCTION f_charm_49]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 19 080 <UID>
+
+[FUNCTION f_charm_50]
+ACT.EFFECT 3,i_fire_column,6,16,0
+ACT.DAMAGE 20 080 <UID>
+
+[FUNCTION f_charm_51]
+	ACT.EFFECT=3,i_fx_explode,15,15,1 0b81
+	ACT.EFFECT=3,i_fx_explode,15,15,1 0b81
+	ACT.EFFECT=3,i_fx_explode,15,15,1 0b81
+	ACT.EFFECT=3,i_fx_explode,15,15,1 0b81
+	SRC.SOUND=snd_spell_fire_field
+ACT.DAMAGE 12 080 <UID>
+
+[FUNCTION f_charm_52]
+SRC.EFFECT=3,i_fire_column,15,15,1 0b73
+ACT.EFFECT=3,i_fx_explode,15,15,1 0b81
+	SRC.SOUND=snd_spell_fire_field
+ACT.DAMAGE 2 080 <UID>
+
+
+[FUNCTION f_charm_name]
+DOSWITCH <ARGS>
+RETURN 0
+VAR.NAME of Harm +1
+VAR.NAME of Harm +2
+VAR.NAME of Harm +3
+VAR.NAME of Harm +4
+VAR.NAME of Harm +5
+VAR.NAME of Harm +6
+VAR.NAME of Harm +7
+VAR.NAME of Harm +8
+VAR.NAME of Harm +9
+VAR.NAME of Harm +10
+VAR.NAME of Poison +1
+VAR.NAME of Poison +2
+VAR.NAME of Poison +3
+VAR.NAME of Poison +4
+VAR.NAME of Poison +5
+VAR.NAME of Poison +6
+VAR.NAME of Poison +7
+VAR.NAME of Poison +8
+VAR.NAME of Poison +9
+VAR.NAME of Poison +10
+VAR.NAME of Lightning +1
+VAR.NAME of Lightning +2
+VAR.NAME of Lightning +3
+VAR.NAME of Lightning +4
+VAR.NAME of Lightning +5
+VAR.NAME of Lightning +6
+VAR.NAME of Lightning +7
+VAR.NAME of Lightning +8
+VAR.NAME of Lightning +9
+VAR.NAME of Lightning +10
+VAR.NAME of Explosion +1
+VAR.NAME of Explosion +2
+VAR.NAME of Explosion +3
+VAR.NAME of Explosion +4
+VAR.NAME of Explosion +5
+VAR.NAME of Explosion +6
+VAR.NAME of Explosion +7
+VAR.NAME of Explosion +8
+VAR.NAME of Explosion +9
+VAR.NAME of Explosion +10
+VAR.NAME of Flamestrike +1
+VAR.NAME of Flamestrike +2
+VAR.NAME of Flamestrike +3
+VAR.NAME of Flamestrike +4
+VAR.NAME of Flamestrike +5
+VAR.NAME of Flamestrike +6
+VAR.NAME of Flamestrike +7
+VAR.NAME of Flamestrike +8
+VAR.NAME of Flamestrike +9
+VAR.NAME of Flamestrike +10
+VAR.NAME of Mass Flame Strike
+VAR.NAME of Hell
+ENDDO
+NAME <NAME> <VAR.NAME>
+
+
+[FUNCTION f_charm_colour]
+IF (<MOREY> <= 10)
+COLOR 020
+ELSEIF (<MOREY> <= 20)
+COLOR 04d
+ELSEIF (<MOREY> <= 30)
+COLOR 02
+ELSEIF (<MOREY> <= 40)
+COLOR 0793
+ELSEIF (<MOREY> <= 52)
+COLOR 077a
+ENDIF
+
+[EOF]

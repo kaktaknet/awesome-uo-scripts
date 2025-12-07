@@ -1,0 +1,104 @@
+//testsharp.scp compiled by PySphere Release 17 from testsharp.py.
+//#prefix-local
+//
+//def testsharp:
+[function testsharp]
+//	local.i=0
+ARG(i,0)
+//	local.i+=42
+ARG(i,#+42)
+//	local.i-=17
+ARG(i,#-17)
+//	local.i*=53
+ARG(i,#*53)
+//	local.j=local.i
+ARG(j,<?ARG(i)?>)
+//	local.j%=22
+ARG(j,#%22)
+//	local.i/=22
+ARG(i,#/22)
+//	var.x*=5
+var.x=<?var.x?>*5
+//	
+//	sysmessage('local.i='+local.i+'. It should be 60.')
+sysmessage(local.i=<?ARG(i)?>. It should be 60.)
+//	sysmessage('local.j='+local.j+'. It should be 5.')
+sysmessage(local.j=<?ARG(j)?>. It should be 5.)
+//
+//#sphere-99w
+//def testnosharp:
+[function testnosharp]
+//	local.i=0
+ARG(i,0)
+//	local.i+=42
+ARG(i,#+42)
+//	local.i-=17
+ARG(i,#-17)
+//	local.i*=53
+ARG(i,#*53)
+//	local.j=local.i
+ARG(j,<ARG(i)>)
+//	local.j%=22
+ARG(j,#%22)
+//	local.i/=22
+ARG(i,#/22)
+//	var.x*=5
+var.x=<var.x>*5
+//	
+//	sysmessage('local.i='+local.i+'. It should be 60.')
+sysmessage(local.i=<ARG(i)>. It should be 60.)
+//	sysmessage('local.j='+local.j+'. It should be 5.')
+sysmessage(local.j=<ARG(j)>. It should be 5.)
+//
+//#produce-readable-code
+//#sphere-99x
+//def testreadsharp:
+[function testreadsharp]
+//	local.i=0
+var.i=0
+//	local.i+=42
+var.i=<var.i>+42
+//	local.i-=17
+var.i=<var.i>-17
+//	local.i*=53
+var.i=<var.i>*53
+//	local.j=local.i
+var.j=<var.i>
+//	local.j%=22
+var.j=<var.j>%22
+//	local.i/=22
+var.i=<var.i>/22
+//	var.x*=5
+var.x=<var.x>*5
+//	
+//	sysmessage('local.i='+local.i+'. It should be 60.')
+sysmessage(local.i=<var.i>. It should be 60.)
+//	sysmessage('local.j='+local.j+'. It should be 5.')
+sysmessage(local.j=<var.j>. It should be 5.)
+//
+//#sphere-99w
+//def testreadnosharp:
+[function testreadnosharp]
+//	local.i=0
+ARG(i,0)
+//	local.i+=42
+ARG(i,#+42)
+//	local.i-=17
+ARG(i,#-17)
+//	local.i*=53
+ARG(i,#*53)
+//	local.j=local.i
+ARG(j,<ARG(i)>)
+//	local.j%=22
+ARG(j,#%22)
+//	local.i/=22
+ARG(i,#/22)
+//	var.x*=5
+var.x=<var.x>*5
+//	
+//	sysmessage('local.i='+local.i+'. It should be 60.')
+sysmessage(local.i=<ARG(i)>. It should be 60.)
+//	sysmessage('local.j='+local.j+'. It should be 5.')
+sysmessage(local.j=<ARG(j)>. It should be 5.)
+//
+//	

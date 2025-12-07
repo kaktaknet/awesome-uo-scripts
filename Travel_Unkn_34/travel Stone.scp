@@ -1,0 +1,219 @@
+///Created For The Uberon Shard///
+///By: Dev Andrew
+///Please Leave This Here and Give Credit To Its Creator
+
+[ITEMDEF i_stone_travel] 
+NAME=Travel Stone 
+ID=i_grave_stone 
+type=t_script
+
+ON=@CREATE 
+COLOR=0BAF 
+ATTR=08010 
+type=t_Script
+
+ON=@click
+IF ( <SRC.FLAGS> & 00000002 )
+	MESSAGE @0BAF Res Stone
+	SRC.RESURRECT
+	SRC.ACT.EQUIP
+	RETURN 1
+	ELSE
+	MESSAGE @0BAF Travel Stone
+ENDIF
+RETURN 1
+
+ON=@DCLICK
+IF (<DISTANCE> >= 3)
+	SRC.SYSMESSAGE=You can't reach that.
+	RETURN 1
+ENDIF
+IF ( <SRC.FLAGS> & 00000002 )
+	RETURN 1
+	ELSE
+	Dialog d_travel
+ENDIF
+RETURN 1
+
+[DIALOG d_travel]
+0,0
+gumppic 0 0 9001
+gumppic 500 320 9000
+gumppic 80 300 11300
+gumppic 80 330 11301
+gumppic 80 360 11302
+gumppic 80 390 11303
+text 130 450 84 24
+text 150 300 900 0
+text 150 320 901 1
+text 150 350 900 2
+text 250 350 900 3
+text 350 350 900 4
+BUTTON 160 380 9721 9722 0 2
+BUTTON 260 380 9721 9722 0 3
+BUTTON 360 380 9721 9722 0 4
+PAGE 2
+0,0
+gumppic 0 0 9001
+gumppic 80 300 11300
+gumppic 80 330 11301
+gumppic 80 360 11302
+gumppic 80 390 11303
+text 150 300 900 0
+text 150 320 901 1
+text 150 350 100 5
+BUTTON 260 350 1210 1209 1 0 1
+text 150 370 32 6
+BUTTON 260 370 1210 1209 1 0 2
+text 150 390 100 7
+BUTTON 260 390 1210 1209 1 0 3
+text 150 410 100 8
+BUTTON 260 410 1210 1209 1 0 4
+text 280 350 100 9
+BUTTON 390 350 1210 1209 1 0 5
+text 280 370 100 10
+BUTTON 390 370 1210 1209 1 0 6
+text 280 390 100 11
+BUTTON 390 390 1210 1209 1 0 7
+text 280 410 100 12
+BUTTON 390 410 1210 1209 1 0 8
+text 410 350 100 13
+BUTTON 520 350 1210 1209 1 0 9
+text 410 370 100 14
+BUTTON 520 370 1210 1209 1 0 10
+text 410 390 100 15
+BUTTON 520 390 1210 1209 1 0 11
+PAGE 3
+0,0
+gumppic 0 0 9001
+gumppic 80 300 11300
+gumppic 80 330 11301
+gumppic 80 360 11302
+gumppic 80 390 11303
+text 150 300 900 0
+text 150 320 901 1
+text 150 350 32 16
+BUTTON 260 350 1210 1209 1 0 12
+text 150 370 32 17
+BUTTON 260 370 1210 1209 1 0 13
+text 150 390 32 18
+BUTTON 260 390 1210 1209 1 0 14
+text 150 410 32 19
+BUTTON 260 410 1210 1209 1 0 15
+text 280 350 32 20
+BUTTON 390 350 1210 1209 1 0 16
+text 280 370 32 21
+BUTTON 390 370 1210 1209 1 0 17
+text 280 390 32 22
+BUTTON 390 390 1210 1209 1 0 18
+PAGE 4
+0,0
+gumppic 0 0 9001
+text 150 300 900 0
+text 150 320 901 1
+text 300 400 077 23
+
+
+[DIALOG d_travel TEXT]
+Uberon Travel System By Admin Andrew
+Where Would You Like To Go
+Towns
+Dungeons
+Events
+//towns
+Britain
+Bucaneers Den
+Cove
+Jholem
+Minoc
+Moonglow
+Occlo
+Serpents Hold
+Trinsic
+Vesper
+Yew
+//dungeons
+Covetous
+Deceit
+Despise
+Destard
+Hythloth
+Shame
+Wrong
+//events
+Not Added Yet
+//Extre Information
+Single Click Travel Stone To Res When Dead
+
+[DIALOG d_travel BUTTON]
+ONBUTTON 1
+SRC.GO Britain
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 2
+SRC.GO 2736,2166,1
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 3
+SRC.GO Cove
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 4
+SRC.GO 1485,3695,0
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 5
+SRC.GO Minoc
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 6
+SRC.GO Moonglow
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 7
+SRC.GO Occlo
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 8
+SRC.GO 3021,3397,15
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 9
+SRC.GO Trinsic
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 10
+SRC.GO Vesper
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 11
+SRC.GO Yew
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 12
+SRC.GO 5456,1862,0
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 13
+SRC.GO 5189,637,0
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 14
+SRC.GO 1301,1080,0
+SRC.SAYU You Enter Despise
+
+ONBUTTON 15
+SRC.GO 5243,1004,0
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 16
+SRC.GO 5907,0028,44
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 17
+SRC.GO 5395,126,0
+SRC.SAYU You Enter <region.name>
+
+ONBUTTON 18
+SRC.GO 5825,630,0
+SRC.SAYU You Enter <region.name>

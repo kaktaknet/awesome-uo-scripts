@@ -1,0 +1,217 @@
+// ****************************************************************************
+// Created for Age of Avatars. 
+// Original Idea by: Yoshio Barkuda  ||  Scripted by: Trunks  
+// Bug Reports should be posted to the Majin Network message board OR E-Mailed to Trunks. 
+//
+// THIS FILE SHOULD ONLY BE DOWNLOADED FROM THE MAJIN NETWORK!
+// IT IS THE ONLY WAY TO BE SURE YOU HAVE THE NEWEST VERSION!
+// ****************************************************************************
+// 
+// |&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|
+// |&|          Support Links                    |&|
+// |&| MNet Website: www.majinnet.com            |&|
+// |&| MNet Forums: www.majinnet.com/forums      |&|
+// |&| Trunks' E-Mail: trunks@majinnet.com       |&|
+// |&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|&|
+//
+//
+// LAST UPDATE: September 27, 2001 by Trunks
+//
+// Simply put this file in your \scripts\ directory and resync your server.
+// Ingame add a Tax Ticket Stone, and a Tax Ticket Bin somehwere in the town.
+// Give teh "mayor" of that town the Tax Ticket Collector stone, and the Mayor
+// Memory added stone. Once he has added the memory by using this stone it will 
+// delete it self and he will be able to collect taxes.
+
+
+[ITEMDEF i_tax_ticket]
+NAME=Tax Ticket Stone
+ID=01183
+TYPE=t_eq_script
+WEIGHT=1000
+
+CATEGORY=Stuff by Trunks
+SUBSECTION=Tax Scripts
+DESCRIPTION=Tax Ticket Stone
+
+ON=@CREATE
+COLOR=0480
+ATTR=ATTR_STATIC
+
+ON=@DCLICK
+ SRC.MENU m_taxes
+RETURN 1
+
+[MENU m_taxes]
+Welcome to the Tax Collecting System. Simply Choose the Tax Bracket you belong to and click OK.
+Please place your ticket in the "Tax Ticket Bin" located next to this stone. Thank you.
+
+ON=0 Home Owner (40,000gp)
+ IF <SRC.RESTEST 40000 i_gold>
+  SRC.NEWITEM= i_tax_homeowner
+  SRc.ACT.NAME= <SRC.NAME>'s Tax Ticket(40k)
+  SRc.ACT.ATTR= ATTR_NEWBIE
+  SRC.ACT.BOUNCE 
+  SRC.CONSUME= 40000 i_gold
+  SRC.SYSMESSAGE Here is your tax ticket, please place it in the "Tax Ticket Bin."
+ ELSE 
+  SRC.SYSMESSAGE You do not have enough gold.
+ ENDIF
+ON=0 ShopKeeper/Citizen (20,000gp)
+ IF <SRC.RESTEST 20000 i_gold>
+  SRC.NEWITEM= i_tax_shop_citizen
+  SRc.ACT.NAME= <SRC.NAME>'s Tax Ticket(20K)
+  SRc.ACT.ATTR= ATTR_NEWBIE 
+  SRC.ACT.BOUNCE 
+  SRC.CONSUME= 20000 i_gold
+  SRC.SYSMESSAGE Here is your tax ticket, please place it in the "Tax Ticket Bin."
+ ELSE 
+  SRC.SYSMESSAGE You do not have enough gold.
+ ENDIF
+ON=0 Politician/Army/Guard (10,000gp)
+ IF <SRC.RESTEST 10000 i_gold>
+  SRC.NEWITEM= i_tax_army_guard
+  SRc.ACT.NAME= <SRC.NAME>'s Tax Ticket(10K)
+  SRc.ACT.ATTR= ATTR_NEWBIE 
+  SRC.ACT.BOUNCE 
+  SRC.CONSUME= 10000 i_gold
+  SRC.SYSMESSAGE Here is your tax ticket, please place it in the "Tax Ticket Bin."
+ ELSE 
+  SRC.SYSMESSAGE You do not have enough gold.
+ ENDIF
+
+[ITEMDEF i_tax_collector]
+NAME=Tax Collector
+ID=0139a
+TYPE=t_eq_script
+WEIGHT=0.1
+
+CATEGORY=Stuff by Trunks
+SUBSECTION=Tax Scripts
+DESCRIPTION=Tax Collector Stone
+
+ON=@CREATE
+COLOR=0480
+ATTR=ATTR_NEWBIE
+
+ON=@DCLICK
+TARGET 
+SRC.SYSMESSAGE Choose the Tax Ticket to Collect.
+
+ON=@TARGON_ITEM
+IF (<SRC.TARG.BASEID>==i_tax_homeowner)
+ SRC.NEWITEM= i_gold
+ SRC.ACT.AMOUNT= 40000
+ SRC.ACT.BOUNCE
+ SRC.CONSUME= 1 i_tax_homeowner
+ SRC.SYSMESSAGE Here is the gold for <SRC.TARG.NAME>!
+ELSEIF (<SRC.TARG.BASEID>==i_tax_shop_citizen)
+ SRC.NEWITEM= i_gold
+ SRC.ACT.AMOUNT= 20000
+ SRC.ACT.BOUNCE
+ SRC.CONSUME= 1 i_tax_shop_citizen
+ SRC.SYSMESSAGE Here is the gold for <SRC.TARG.NAME>!
+ELSEIF (<SRC.TARG.BASEID>==i_tax_army_guard)
+ SRC.NEWITEM= i_gold
+ SRC.ACT.AMOUNT= 10000
+ SRC.ACT.BOUNCE
+ SRC.CONSUME= 1 i_tax_army_guard
+ SRC.SYSMESSAGE Here is the gold for <SRC.TARG.NAME>!
+ELSE 
+ SRC.SYSMESSAGE That is not a Tax Ticket!
+ENDIF
+
+[ITEMDEF i_tax_homeowner]
+ID=014ef
+
+ON=@CREATE
+COLOR=0480
+ATTR=ATTR_NEWBIE
+
+CATEGORY=Stuff by Trunks
+SUBSECTION=Tax Scripts
+DESCRIPTION=Homeowner Ticket
+
+[ITEMDEF i_tax_shop_citizen]
+ID=014ef
+
+ON=@CREATE
+COLOR=0480
+ATTR=ATTR_NEWBIE
+
+CATEGORY=Stuff by Trunks
+SUBSECTION=Tax Scripts
+DESCRIPTION=ShopKeeper/Citizen Ticket
+
+[ITEMDEF i_tax_army_guard]
+ID=014ef
+
+ON=@CREATE
+COLOR=0480
+ATTR=ATTR_NEWBIE
+
+CATEGORY=Stuff by Trunks
+SUBSECTION=Tax Scripts
+DESCRIPTION=Army/Guard Ticket
+
+[ITEMDEF i_tax_bin]
+NAME=Tax Ticket Bin
+ID=09ab
+
+ON=@CREATE
+ COLOR=0590
+ ATTR=ATTR_STATIC
+
+ON=@DROPON_ITEM
+IF (<SRC.TARG.BASEID>==i_tax_homeowner)
+ SRC.SYSMESSAGE Thank you for paying your taxes <SRC.NAME!
+ELSEIF (<SRC.TARG.BASEID>==i_tax_shop_citizen)
+ SRC.SYSMESSAGE Thank you for paying your taxes <SRC.NAME>!
+ELSEIF (<SRC.TARG.BASEID>==i_tax_army_guard)
+ SRC.SYSMESSAGE Thank you for paying your taxes <SRC.NAME>!
+ELSE
+ SRC.SYSMESSAGE This is only for paying taxes!
+ENDIF
+
+ON=@DCLICK
+IF <SRC.RESTEST 1 i_mem_mayor_trin>
+ SRC.SYSMESSAGE Welcome to the Tax Ticket Bin Mayor <SRC.NAME>!
+ RETURN 0
+ELSEIF <SRC.ISGM>
+ SRC.SYSMESSAGE Welcome to the Tax Ticket Bin GM <SRC.NAME>!
+ RETURN 0
+ELSE 
+ SRC.SYSMESSAGE You are not the Mayor of this town or a GM, begone theif!
+ RETURN 1
+ENDIF
+
+CATEGORY=Stuff by Trunks
+SUBSECTION=Tax Scripts
+DESCRIPTION=Tax Ticket Bin
+
+
+[ITEMDEF i_mem_adder]
+NAME=Add Mayor Memory
+ID=01ecd
+
+ON=@CREATE
+COLOR=0481
+
+ON=@DCLICK
+SRC.NEWITEM= i_mem_mayor_trin
+SRC.ACT.BOUNCE
+SRC.SYSMESSAGE You are now the Mayor of Trinsic.
+SRC.CONSUME= 1 i_mem_adder
+Return 1
+
+CATEGORY=Stuff by Trunks
+SUBSECTION=Tax Scripts
+DESCRIPTION=Mayor Memory Added
+
+[ITEMDEF i_mem_mayor_trin]
+NAME=DO NOT REMOVE!
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR=ATTR_INVIS|ATTR_NEWBIE

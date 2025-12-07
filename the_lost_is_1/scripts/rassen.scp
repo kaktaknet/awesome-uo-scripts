@@ -1,0 +1,1118 @@
+//Rassensystem by Asdru
+//Besten Dank an NINA(Deathangel) für die Events und Verbesserungsvorschläge und //alles und soweiter...
+
+[DEFNAME RACES]
+Race_Unset 0
+Race_mensch 1
+Race_zwerg 2
+Race_hochelf 3
+Race_waldelf 4
+Race_drow 5
+Race_ork 6
+Race_barbar 7
+Race_vampir 8
+Race_halbdrache 9
+
+[Itemdef i_rasse_mensch]
+NAME=Menschentor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Mensch
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Mensch
+SRC.tag.race=race_mensch
+SRC.MESSAGE Du bist nun ein Mensch
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_mensch
+[events e_race_mensch] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 100 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=100
+ENDIF
+ENDIF
+IF <SRC.INT> > 90 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=90
+ENDIF
+ENDIF
+IF <SRC.DEX> > 100// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=100
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+ON=@LogOut 
+IF <SRC.HIDING> > 450   
+SRC.ALCHEMY=450 
+ENDIF   
+
+[Itemdef i_rasse_zwerg]
+NAME=Zwergentor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Zwerg
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Zwerg
+SRC.tag.race=race_zwerg
+SRC.MESSAGE Du bist nun ein Zwerg
+SRC.Color=083ea
+SRC.OSKIN=083ea
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_zwerg
+[events e_race_zwerg] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 100 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=100
+ENDIF
+ENDIF
+IF <SRC.INT> > 100 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=100
+ENDIF
+ENDIF
+IF <SRC.DEX> > 90// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=90
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+
+
+[Itemdef i_rasse_hochelf]
+NAME=Hochelfentor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Hochelf
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Hochelf
+SRC.tag.race=race_Hochelf
+SRC.MESSAGE Du bist nun ein Hochelf
+SRC.COLOR=08342
+SRC.OSKIN=08342
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_helf
+[events e_race_helf] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 80 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=80
+ENDIF
+ENDIF
+IF <SRC.INT> > 100 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=100
+ENDIF
+ENDIF
+IF <SRC.DEX> > 110// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=110
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+
+
+[Itemdef i_rasse_Waldelf]
+NAME=Waldelfentor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Waldelf
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Waldelf
+SRC.tag.race=race_waldelf
+SRC.MESSAGE Du bist nun ein Waldelf
+SRC.Color=083ea
+SRC.OSKIN=083ea
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_welf
+[events e_race_welf] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 80 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=80
+ENDIF
+ENDIF
+IF <SRC.INT> > 100 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=100
+ENDIF
+ENDIF
+IF <SRC.DEX> > 110// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=110
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+
+
+[Itemdef i_rasse_drow]
+NAME=Drowtor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Drow
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Drow
+SRC.tag.race=race_drow
+SRC.MESSAGE Du bist nun ein Drow
+SRC.Color=0455
+SRC.OSKIN=0455
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_drow
+[events e_race_drow] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 80 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=80
+ENDIF
+ENDIF
+IF <SRC.INT> > 100 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=100
+ENDIF
+ENDIF
+IF <SRC.DEX> > 110// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=110
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+
+
+[Itemdef i_rasse_ork]
+NAME=Orkentor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Ork
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Ork
+SRC.tag.race=race_Ork
+SRC.MESSAGE Du bist nun ein Ork
+SRC.BODY=c_orc
+SRC.obody=c_orc
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_ork
+[events e_race_ork] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 100 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=100
+ENDIF
+ENDIF
+IF <SRC.INT> > 110 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=110
+ENDIF
+ENDIF
+IF <SRC.DEX> > 80// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=80
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+
+
+[Itemdef i_rasse_barbar]
+NAME=Barbarentor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Barbar
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Barbar
+SRC.tag.race=race_Barbar
+SRC.MESSAGE Du bist nun ein Barbar
+SRC.Color=07e1
+SRC.OSKIN=07e1
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_barbar
+[events e_race_barbar] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 110 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=110
+ENDIF
+ENDIF
+IF <SRC.INT> > 100 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=100
+ENDIF
+ENDIF
+IF <SRC.DEX> > 80// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=80
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+
+
+[Itemdef i_rasse_vampir]
+NAME=Vampirtor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Vampir
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Vampir
+SRC.tag.race=race_Vampir
+SRC.MESSAGE Du bist nun ein Vampir
+SRC.Color=0835
+SRC.OSKIN=0835
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_Vampir
+[events e_race_Vampir] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 90 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=90
+ENDIF
+ENDIF
+IF <SRC.INT> > 100 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=100
+ENDIF
+ENDIF
+IF <SRC.DEX> > 100// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=100
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+
+[Itemdef i_rasse_halbdrache]
+NAME=Halbdrachentor
+ID=i_moongate_red
+TYPE=t_normal
+WEIGHT=1
+
+Category=Asdru
+Subsection=Rassenzeug
+Description=Rassentor Halbdrache
+
+ON=@CREATE
+ATTR=00010
+
+ON=@STEP
+SRC.TITLE=Halbdrache
+SRC.tag.race=race_halbdrache
+SRC.MESSAGE Du bist nun ein Halbdrache
+SRC.Color=0835
+SRC.OSKIN=0835
+SRC.GO 5188,1766,5
+SRC.MESSAGE Willkommen auf <SERV.SERVNAME>
+src.events=+e_race_halbdrache
+[events e_race_halbdrache] 
+ON=@itemDCLICK 
+IF <SRC.STR> > 90 // Strength Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.STR=90
+ENDIF
+ENDIF
+IF <SRC.INT> > 110 // Intelligence Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.INT=110
+ENDIF
+ENDIF
+IF <SRC.DEX> > 100// Dexterity Cap 
+if ! (<src.findid.i_rune_bless> || <src.findid.i_rune_agility> || <src.findid.i_rune_strength> || <src.findid.i_rune_cunning> || <src.findid.i_rune_polymorph>)
+SRC.DEX=100
+ENDIF
+ENDIF
+ON=@LOGIN
+
+SRC.EVENTS=+e_armor_noplate
+SRC.EVENTS=+e_armor_noshield
+SRC.EVENTS +e_fame_karma_gain
+SRC.EVENTS +e_pickupitem
+SRC.EVENTS -e_fix_para
+SRC.EVENTS +e_sk
+SRC.EVENTS +e_taming
+
+
+//BUGFIXES danke an NINA
+
+
+//Taming Bugfix -- bekommt jeder beim login
+[FUNCTION FIXACTION]
+RETURN <ACTION> | 0D2000000
+
+[DEFNAME def_Taming]
+Taming_Delay 2
+
+[EVENTS e_taming]		//event
+ON=@LogOut
+IF (<FINDID.i_taming>)
+FINDID.i_taming.REMOVE
+ENDIF
+
+ON=@SkillStart
+IF (<FIXACTION> == Skill_Taming)
+IF (<FINDID.i_taming>)
+SYSMESSAGE You must wait to perform another action
+ELSE
+ACTION -1
+MESSAGE
+MESSAGE
+MESSAGE
+Taming_TAME
+RETURN 1
+ENDIF
+ELIF !(<fixaction_is_combat>)
+IF (<FINDID.i_taming.TIMER> == -1)
+FINDID.i_taming.REMOVE
+ENDIF
+IF (<FINDID.i_taming>)
+ACTION -1
+SYSMESSAGE="You must wait to perform another action"
+RETURN 1
+ENDIF
+ENDIF
+
+
+[FUNCTION Taming_TAME]
+IF !(<ACT.CanSeeLOS>)
+MESSAGE="I can not attempt to tame what I can not see."
+
+ELIF (<ACT.NPC> != brain_animal) && (<ACT.NPC> != brain_dragon) //nicht mehr möglich: //&& (<ACT.NPC> != brain_monster) && (<ACT.NPC> != brain_undead)
+
+MESSAGE "I can not tame this."
+ELIF !(<ACT.TAMING>)
+MESSAGE "I can not tame this."
+ELIF (<EVAL <TAMING> + 30.0> < <ACT.TAMING>)
+MESSAGE "I am not skilled enouh to tame <SRC.TARG.NAME>"
+
+ELIF (<FLAGS> & (statf_dead|statf_freeze|statf_invisible|statf_sleeping|statf_polymorph|statf_stone|statf_hidden))
+MESSAGE "I can not tame this in my current state."
+ELIF (<ACT.MEMORYFINDTYPE.memory_ipet>)
+MESSAGE "That is already tame."
+ELIF (<ACT.MEMORYFINDTYPE.memory_fight>)
+MESSAGE "The creature is too enraged."
+ELIF (<ACT.DISTANCE> > 4)
+MESSAGE "I am too far away to tame that."
+ELSE
+NEWITEM i_taming
+ACT.LINK <TARG.UID>
+ACT.CONT <UID>
+ACT.TIMER <EVAL Taming_Delay>
+ENDIF
+
+[ITEMDEF i_taming]
+ID=i_memory
+TYPE=t_eq_script
+NAME="Taming"
+ON=@Create
+ATTR attr_decay
+MORE1 {3 7}
+ON=@Timer
+IF (<CONT.ISGM>) && !(<LINK.MEMORYFINDTYPE.memory_ipet>)
+Taming_SUCCESS
+RETURN 0
+ENDIF
+CONT.CHECKS <LINK.UID>
+IF !(<VAR.SEE>)
+CONT.SYSMESSAGE "I can no longer see my target."
+
+ELIF (<LINK.NPC> != brain_animal) && (<LINK.NPC> != brain_dragon) && (<LINK.NPC> != brain_monster) //&& (<LINK.NPC> != brain_undead)
+CONT.SYSMESSAGE "I can not tame this."
+ELIF !(<LINK.TAMING>)
+CONT.SYSMESSAGE "I can not tame this."
+ELIF (<EVAL <CONT.TAMING> + 30.0> < <LINK.TAMING>)
+CONT.SYSMESSAGE "I could not begin to tame this!"
+
+ELIF (<CONT.FLAGS> & (statf_dead|statf_freeze|statf_invisible|statf_sleeping|statf_polymorph|statf_stone|statf_hidden))
+CONT.SYSMESSAGE "I can not continue taming in my current state."
+ELIF (<LINK.MEMORYFINDTYPE.memory_ipet>)
+CONT.SYSMESSAGE "Someone tamed it before I could!"
+ELIF (<LINK.MEMORYFINDTYPE.memory_fight>)
+CONT.SYSMESSAGE "The creature is too enraged."
+ELIF (<VAR.DIST> > 4)
+CONT.SYSMESSAGE "The <LINK.NAME> is too far away."
+ELSE
+IF (<MORE1>)
+DORAND 4
+CONT.SAY "Good <LINK.NAME>"
+CONT.SAY "I won't hurt you."
+CONT.SAY "Here <LINK.NAME>"
+CONT.SAY "I always wanted a <LINK.NAME> like you"
+ENDDO
+MORE1 <EVAL <MORE1> - 1>
+TIMER {<EVAL Taming_Delay> <EVAL <EVAL Taming_Delay> + 2>}
+RETURN 1
+ELSE
+IF (<EVAL <LINK.TAMING> - <CONT.TAMING>> <= 0)
+IF (RAND(<EVAL ((<CONT.TAMING> - <LINK.TAMING>) / 20) + 3>))
+Taming_SUCCESS
+ELSE
+Taming_FAILURE
+ENDIF
+ELIF !(RAND(<EVAL ((<LINK.TAMING> - <CONT.TAMING>) / 20) + 3>))
+Taming_SUCCESS
+ELSE
+Taming_FAILURE
+ENDIF
+ENDIF
+ENDIF
+
+[FUNCTION checks]
+NEWITEM i_checks
+ACT.LINK <ARGN>
+EQUIP <ACT.UID>
+
+[ITEMDEF i_checks]
+ID=i_memory
+TYPE=t_eq_script
+NAME="Checks"
+
+ON=@Equip
+VAR.DIST <LINK.DISTANCE>
+VAR.SEE <LINK.CanSeeLOS>
+REMOVE
+
+[FUNCTION Taming_SUCCESS]
+CONT.NEWITEM i_memory
+CONT.ACT.ATTR attr_newbie
+CONT.ACT.COLOR memory_ipet
+CONT.ACT.MORE1 04
+CONT.ACT.LINK <CONT.UID>
+CONT.ACT.MORE2 <SERV.TIME>
+CONT.ACT.MOREP <LINK.P>
+CONT.ACT.CONT <LINK.UID>
+LINK.FOOD 50
+LINK.KARMA 2000
+CONT.SYSMESSAGE "It seems to accept you as its master."
+CONT.Taming_SKILLGAIN 10
+
+[FUNCTION Taming_FAILURE]
+CONT.SYSMESSAGE "You fail to tame the creature."
+CONT.Taming_SKILLGAIN 5
+
+[FUNCTION Taming_SKILLGAIN]
+IF (<TAMING> < 1000)
+TAG.Taming_Fudge <EVAL 0<TAG.Taming_Fudge> + <ARGN>>
+IF (<TAG.Taming_Fudge> > <TAMING>)
+TAG.Taming_Fudge
+TAMING <TAMING> + 1
+ENDIF
+ENDIF
+
+[FUNCTION fixaction_is_combat]
+IF (<FIXACTION> == Skill_Archery)
+RETURN 1
+ELIF (<FIXACTION> == Skill_Fencing)
+RETURN 1
+ELIF (<FIXACTION> == Skill_Macefighting)
+RETURN 1
+ELIF (<FIXACTION> == Skill_Parrying)
+RETURN 1
+ELIF (<FIXACTION> == Skill_Swordsmanship)
+RETURN 1
+ELIF (<FIXACTION> == Skill_Wrestling)
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+//auto hit Bugfix -- hat keiner - noch unwichtig
+[EVENTS e_autohit]
+ON=@HitTry
+if ( <SRC.UID> == <UID> )
+SRC.ACTION = -1
+SRC.FLAGS = <SRC.FLAGS> & ~statf_war
+return 1
+endif
+
+
+
+//Magic resistance Bugfix
+// EVENT : e_magicres
+[FUNCTION SPELLARGN] 
+VAR.SPELLARGN <ARGN> + 0dc000000 
+
+[FUNCTION SPELLCIRCLE] 
+IF (<VAR.SPELLARGN> == s_clumsy) || (<VAR.SPELLARGN> == s_create_food) || (<VAR.SPELLARGN> == s_feeblemind) || (<VAR.SPELLARGN> == s_heal) || (<VAR.SPELLARGN> == s_magic_arrow) || (<VAR.SPELLARGN> == s_night_sight) || (<VAR.SPELLARGN> == s_reactive_armor) || (<VAR.SPELLARGN> == s_weaken) 
+VAR.SPELLCIRCLE 1 
+ELIF (<VAR.SPELLARGN> == s_agility) || (<VAR.SPELLARGN> == s_cunning) || (<VAR.SPELLARGN> == s_cure) || (<VAR.SPELLARGN> == s_harm) || (<VAR.SPELLARGN> == s_magic_trap) || (<VAR.SPELLARGN> == s_magic_untrap) || (<VAR.SPELLARGN> == s_protection) || (<VAR.SPELLARGN> == s_strength) 
+VAR.SPELLCIRCLE 2 
+ELIF (<VAR.SPELLARGN> == s_bless) || (<VAR.SPELLARGN> == s_fireball) || (<VAR.SPELLARGN> == s_magic_lock) || (<VAR.SPELLARGN> == s_poison) || (<VAR.SPELLARGN> == s_telekinesis) || (<VAR.SPELLARGN> == s_teleport) || (<VAR.SPELLARGN> == s_unlock) || (<VAR.SPELLARGN> == s_wall_of_stone) 
+VAR.SPELLCIRCLE 3 
+ELIF (<VAR.SPELLARGN> == s_archcure) || (<VAR.SPELLARGN> == s_archprotection) || (<VAR.SPELLARGN> == s_curse) || (<VAR.SPELLARGN> == s_fire_field) || (<VAR.SPELLARGN> == s_greater_heal) || (<VAR.SPELLARGN> == s_lightning) || (<VAR.SPELLARGN> == s_mana_drain) || (<VAR.SPELLARGN> == s_recall) 
+VAR.SPELLCIRCLE 4 
+ELIF (<VAR.SPELLARGN> == s_blade_spirits) || (<VAR.SPELLARGN> == s_dispel_field) || (<VAR.SPELLARGN> == s_incognito) || (<VAR.SPELLARGN> == s_magic_reflection) || (<VAR.SPELLARGN> == s_mind_blast) || (<VAR.SPELLARGN> == s_paralyze) || (<VAR.SPELLARGN> == s_poison_field) || (<VAR.SPELLARGN> == s_summon_creature) 
+VAR.SPELLCIRCLE 5 
+ELIF (<VAR.SPELLARGN> == s_dispel) || (<VAR.SPELLARGN> == s_energy_bolt) || (<VAR.SPELLARGN> == s_explosion) || (<VAR.SPELLARGN> == s_invisibility) || (<VAR.SPELLARGN> == s_mark) || (<VAR.SPELLARGN> == s_mass_curse) || (<VAR.SPELLARGN> == s_paralyzation_field) || (<VAR.SPELLARGN> == s_reveal) 
+VAR.SPELLCIRCLE 6 
+ELIF (<VAR.SPELLARGN> == s_chain_lightning) || (<VAR.SPELLARGN> == s_energy_field) || (<VAR.SPELLARGN> == s_flamestrike) || (<VAR.SPELLARGN> == s_gate_travel) || (<VAR.SPELLARGN> == s_mana_vampire) || (<VAR.SPELLARGN> == s_mass_dispel) || (<VAR.SPELLARGN> == s_meteor_swarm) || (<VAR.SPELLARGN> == s_polymorph) 
+VAR.SPELLCIRCLE 7 
+ELIF (<VAR.SPELLARGN> == s_earthquake) || (<VAR.SPELLARGN> == s_energy_vortex) || (<VAR.SPELLARGN> == s_resurrection) || (<VAR.SPELLARGN> == s_summon_elem_air) || (<VAR.SPELLARGN> == s_summon_daemon) || (<VAR.SPELLARGN> == s_summon_elem_earth) || (<VAR.SPELLARGN> == s_summon_elem_fire) || (<VAR.SPELLARGN> == s_summon_elem_water) 
+VAR.SPELLCIRCLE 8 
+ENDIF 
+
+[EVENTS e_magicres] 
+ON=@SpellCast 
+IF (<SRC.FLAGS>&statf_freeze)
+SRC.SYSMESSAGE="You can't do much in your current state."
+ACTION= -1
+RETURN 1
+ENDIF
+IF (<SRC.ACT.ISCHAR>) 
+IF !(<SRC.ACT.ISEVENT.e_magicres>) 
+SRC.ACT.EVENTS +e_magicres 
+ENDIF 
+ENDIF 
+ON=@SpellEffect 
+IF !(<SRC.ISEVENT.e_magicres>) 
+SRC.EVENTS +e_magicres 
+ENDIF 
+
+SPELLARGN <ARGN> 
+IF (<VAR.SPELLARGN> == s_harm) || (<VAR.SPELLARGN> == s_lightning) || (<VAR.SPELLARGN> == s_energy_bolt) || (<VAR.SPELLARGN> == s_chain_lightning) || (<VAR.SPELLARGN> == s_earthquake) || (<VAR.SPELLARGN> == s_paralyzation_field) || (<VAR.SPELLARGN> == s_poison_field) || (!(<CAN> & mt_fire_immune) && ((<VAR.SPELLARGN> == s_magic_arrow) || (<VAR.SPELLARGN> == s_fireball) || (<VAR.SPELLARGN> == s_explosion) || (<VAR.SPELLARGN> == s_meteor_swarm) || (<VAR.SPELLARGN> == s_flamestrike) || (<VAR.SPELLARGN> == s_fire_field))) 
+SPELLCIRCLE <ARGN> 
+IF (<EVAL ((<MAGICRESISTANCE> / 5) + 5) / 10>) > (<EVAL ((<MAGICRESISTANCE> - (((<SRC.MAGERY> - 20.0) / 5) + (<VAR.SPELLCIRCLE> * 5))) + 5) / 10>) 
+IF (RAND(100) < <EVAL ((<MAGICRESISTANCE> / 5) + 5) / 10>) 
+TAG.RESIST 1 
+ELSE 
+TAG.RESIST 2 
+ENDIF 
+ELSE 
+IF (RAND(100) < <EVAL ((<MAGICRESISTANCE> - (((<SRC.MAGERY> - 20.0) / 5) + (<VAR.SPELLCIRCLE> * 5))) + 5) / 10>) 
+TAG.RESIST 1 
+ELSE 
+TAG.RESIST 2 
+ENDIF 
+ENDIF 
+ENDIF 
+
+
+[FUNCTION Resist_EVALINT] 
+IF !(<NPC>) 
+IF (<MAGICRESISTANCE> > <SRC.EVALUATINGINTEL>) 
+VAR.MODIFIER <EVAL 10 + ((<SRC.EVALUATINGINTEL> - <MAGICRESISTANCE>) / 200)> 
+ELIF (<MAGICRESISTANCE> < <SRC.EVALUATINGINTEL>) 
+VAR.MODIFIER <EVAL 10 + ((<SRC.EVALUATINGINTEL> - <MAGICRESISTANCE>) / 500)> 
+ENDIF 
+HITS <EVAL <HITS> + (<ARGN> - ((<VAR.MODIFIER> * <ARGN>) / 10))> 
+ENDIF 
+
+[FUNCTION RESISTGAIN] 
+IF !(<NPC>) 
+IF (<MAGICRESISTANCE> < 1000) 
+TAG.Resist_Fudge <EVAL 0<TAG.Resist_Fudge> + <ARGN>> 
+IF (0<TAG.Resist_Fudge> > <MAGICRESISTANCE>) 
+TAG.Resist_Fudge 
+MAGICRESISTANCE <MAGICRESISTANCE> + 0.1 
+ENDIF 
+ENDIF 
+ENDIF
+
+
+// Karma Fame Bugfix
+//***Fame/Karma Fix - Fame and karma doesnt 
+//rise over 4000 and people cant get gm.
+//modifyd by Avel
+[EVENTS e_fame_karma_gain] 
+ON=@Hit 
+TAG.TEMPFAMETAG <SRC.FAME> 
+TAG.TEMPKARMATAG <SRC.KARMA> 
+RETURN 0 
+
+ON=@Death 
+//ACT.FAME <TAG.TEMPFAMETAG> 
+//IF (<ACT.FAME> < 10000) && (<ACT.FAME> < <FAME>) 
+//ACT.FAME <ACT.FAME>+((<FAME>+-<ACT.FAME>)/10) 
+	//def: f_show_fame_gain
+//IF <ACT.FAME> > 10000 
+//ACT.FAME 10000 
+//ENDIF 
+//ENDIF 
+ACT.KARMA <TAG.TEMPKARMATAG> 
+IF (<ACT.KARMA> > -10000) && (<ACT.KARMA> < 10000) 
+IF <KARMA> > 0 
+ACT.KARMA <ACT.KARMA>+-(<KARMA>/10) 
+f_show_karma_loss
+ELSE 
+ACT.KARMA <ACT.KARMA>+((<ACT.KARMA>+-(<KARMA>))/10) 
+f_show_karma_gain 
+ENDIF 
+IF <ACT.KARMA> > 10000 
+ACT.KARMA 10000 
+ELSEIF <ACT.KARMA> < -10000 
+ACT.KARMA -10000 
+ENDIF 
+ENDIF 
+RETURN 0 
+
+//[FUNCTION f_show_fame_gain] 
+//IF ((<FAME>+-<ACT.FAME>)/10)>500 
+//ACT.SYSMESSAGE You have gained huge amounts of fame. 
+//ELSEIF ((<FAME>+-<ACT.FAME>)/10)>250 
+//ACT.SYSMESSAGE You have gained a lot of fame. 
+//ELSEIF ((<FAME>+-<ACT.FAME>)/10)>100 
+//ACT.SYSMESSAGE You have gained a moderate amount of fame. 
+//ELSEIF ((<FAME>+-<ACT.FAME>)/10)>50 
+//ACT.SYSMESSAGE You have gained a little fame. 
+//ELSEIF ((<FAME>+-<ACT.FAME>)/10)>0 
+//ACT.SYSMESSAGE You have gained a bit of fame. 
+//ENDIF 
+
+[FUNCTION f_show_karma_loss] 
+IF (<KARMA>/10)>500 
+ACT.SYSMESSAGE You have lost huge amounts of karma. 
+ELSEIF (<KARMA>/10)>250 
+ACT.SYSMESSAGE You have lost a lot of karma. 
+ELSEIF (<KARMA>/10)>100 
+ACT.SYSMESSAGE You have lost a moderate amount of karma. 
+ELSEIF (<KARMA>/10)>50 
+ACT.SYSMESSAGE You have lost a little of karma. 
+ELSEIF (<KARMA>/10)>0 
+ACT.SYSMESSAGE You have lost a bit of karma. 
+ENDIF 
+
+[FUNCTION f_show_karma_gain] 
+IF ((<ACT.KARMA>+-(<KARMA>))/10)>500 
+ACT.SYSMESSAGE You have gained huge amounts of karma. 
+ELSEIF ((<ACT.KARMA>+-(<KARMA>))/10)>250 
+ACT.SYSMESSAGE You have gained a lot of karma. 
+ELSEIF ((<ACT.KARMA>+-(<KARMA>))/10)>100 
+ACT.SYSMESSAGE You have gained a moderate amount of karma. 
+ELSEIF ((<ACT.KARMA>+-(<KARMA>))/10)>50 
+ACT.SYSMESSAGE You have gained a little karma. 
+ELSEIF ((<ACT.KARMA>+-(<KARMA>))/10)>0 
+ACT.SYSMESSAGE You have gained a bit of karma. 
+ENDIF 
+
+
+//Resource Bug-Fix
+[events e_pickupitem]
+ON=@itempickup_pack
+IF (<SRC.ACTION>==skill_alchemy ) || (<SRC.ACTION>==skill_blacksmith ) || (<SRC.ACTION>==skill_bowcraft ) || (<SRC.ACTION>== skill_carpentry ) || (<SRC.ACTION>==skill_cooking ) || (<SRC.ACTION>==skill_cartography ) || (<SRC.ACTION>==skill_inscription ) || (<SRC.ACTION>==skill_magery ) || (<SRC.ACTION>==skill_tailoring ) || (<SRC.ACTION>==skill_tinkering )
+SRC.MESSAGE="You can only do that when you're less occupied!"
+SRC.ACTION = -1
+RETURN 1
+ENDIF
+
+
+//Wird rausgenommen...
+[EVENTS e_fix_para]
+[EVENTS e_dam_bonus]
+
+
+//by Avel: einige Skillfixes
+[Events e_sk]
+ON=@SKillStart
+IF <SRC.FLAGS>&statf_freeze
+SRC.SYSMESSAGE="You can't do much in your current state."
+ACTION= -1
+RETURN 1
+ENDIF
+IF (<SRC.ACTION> == SKILL_ANIMAL_LORE)
+IF (<SRC.TARG.BRAIN> !=BRAIN_ANIMAL)
+SRC.SYSMESSAGE="Thats not an animal !"
+SRC.ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.ACTION> == SKILL_APPRAISE)		//ItemID
+IF !(<SRC.TARG.isITEM>)||(<SRC.TARG.DISPID>==i_corpse)
+SRC.SYSMESSAGE="Thats not an item!"
+SRC.ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+IF (<SRC.ACTION> == SKILL_EVALINT)
+IF (<SRC.TARG.TYPE>|| (<SRC.TARG.VALUE>)
+SRC.ACTION=-1
+SRC.SYSMESSAGE="That does not appear to be a living beeing"
+RETURN 1
+ENDIF 
+ENDIF
+//IF (<FIXACTION> == SKILL_ARMSLORE)
+
+//Meditation Skillgain/Fix
+//Avel: 28.05.2003
+[EVENTS e_meditation]
+ON=@SKILLSTART
+IF (<FIXACTION> == SKILL_MEDITATION)
+//Wenn jemand Rüstung trägt, verhindert Meditation
+IF (<SRC.FINDLAYER(6).TYPE> == t_armor) //Head
+IF (<SRC.FINDLAYER(6).BASEID> == i_platemail_helm)	//gilt besonderst für kein plate helm
+SRC.SYSMESSAGE="You can't meditate at this time!"
+SRC.ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+IF (<SRC.FINDLAYER(13).TYPE> == t_armor ) //chest
+IF (<SRC.FINDLAYER(13).BASEID> == i_platemail_chest)	//platemail chest
+SRC.SYSMESSAGE="You can't meditate at this time!"
+SRC.ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+IF (<SRC.FINDLAYER(24).TYPE> == t_armor ) //legs
+IF (<SRC.FINDLAYER(24).BASEID> == i_platemail_leggings)	//platemail leggings
+SRC.SYSMESSAGE="You can't meditate at this time!"
+SRC.ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+//Anti Cheat Gain
+IF (<FINDID.i_mem_meditation>)
+IF (<FINDID.i_mem_meditation.timer> ==-1 //If timer expired
+FINDID.i_mem_meditation.remove
+ENDIF
+FINDID.i_passive_regen.remove
+SRC.newitem=i_passive_regen
+SRC.ACT.equip
+RETURN 1
+ELSE
+SRC.NEWITEM=i_mem_meditation
+SRC.ACT.EQUIP
+
+//Skill gain
+IF (<SRC.MANA> <05)
+VAR.GAIN = 1
+ELIF (<SRC.MANA> <10)
+VAR.GAIN = 4
+ELIF (<SRC.MANA> <20)
+VAR.GAIN = 8
+ELIF (<SRC.MANA> <30)
+VAR.GAIN = 10
+ELIF (<SRC.MANA> <40)
+VAR.GAIN = 15
+ELIF (<SRC.MANA> <50)
+VAR.GAIN = 20
+ELIF (<SRC.MANA> <60)
+VAR.GAIN = 25
+ELIF (<SRC.MANA> <70)
+VAR.GAIN = 30
+ELIF (<SRC.MANA> <80)
+VAR.GAIN = 35
+ELIF (<SRC.MANA> <90)
+VAR.GAIN = 40
+ELIF (<SRC.MANA> <100)
+VAR.GAIN = 50
+ELIF (<SRC.MANA> >100)	 //Bug Fix
+VAR.GAIN = 100
+ENDIF
+
+IF (<SRC.MEDITATION> < 10.0)
+VAR.GAIN2= 1
+ELIF (<SRC.MEDITATION> < 20.0 )
+VAR.GAIN2=2
+ELIF (<SRC.MEDITATION> < 30.0 )
+VAR.GAIN2=3
+ELIF (<SRC.MEDITATION> < 40.0 )
+VAR.GAIN2=5
+ELIF (<SRC.MEDITATION> < 50.0 )
+VAR.GAIN2=7
+ELIF (<SRC.MEDITATION> < 60.0 )
+VAR.GAIN2=10
+ELIF (<SRC.MEDITATION> < 70.0 )
+VAR.GAIN2=12
+ELIF (<SRC.MEDITATION> < 80.0 )
+VAR.GAIN2=15
+ELIF (<SRC.MEDITATION> < 90.0 )
+VAR.GAIN2=18
+ELIF (<SRC.MEDITATION> < 100.0 )
+VAR.GAIN2=20
+ELIF (<SRC.MEDITATION> > 100.0 )
+VAR.GAIN2=1000	//bug buster, to not gain
+MEDITATION= 100.0
+ENDIF
+//Skillgain auswertung...
+IF (<VAR.GAIN>) && (<VAR.GAIN2>)
+VAR.GAIN3 = (<VAR.GAIN> + <VAR.GAIN2>)
+VAR.X= <EVAL (rand(<VAR.GAIN3> ))>
+IF <VAR.X> ==01
+IF (<MEDITATION> < 1000) && (<SRC.SKILLLOCK[46]> == 0 )
+MEDITATION <MEDITATION> + 0.1
+ELSE
+MEDITATION <MEDITATION>
+ENDIF
+ENDIF
+ENDIF
+
+FINDID.i_passive_regen.REMOVE
+//SRC.MESSAGE="VARG.GAIN2= <VAR.GAIN2>"
+//SRC.MESSAGE="*<SRC.NAME> attempt to mediate*"			//Message
+SRC.NEWITEM=i_passive_regen
+SRC.ACT.EQUIP
+ENDIF
+ENDIF
+
+[ITEMDEF i_mem_meditation]
+NAME=Anti Meditation Gain BugFix
+ID=i_worldgem_bit
+TYPE=t_eq_script
+WEIGHT=0
+LAYER=layer_special
+
+ON=@CREATE
+COLOR=021
+ATTR=attr_invis|attr_decay
+ON=@EQUIP
+TIMER=10
+ON=@TIMER
+RETURN 1
+
+[ITEMDEF i_passive_regen]
+NAME=Mana Regeneration Timer
+ID=i_worldgem_bit
+TYPE=t_eq_script
+WEIGHT=0
+LAYER=layer_special
+
+ON=@CREATE
+COLOR=021
+ATTR=attr_invis|attr_decay
+ON=@EQUIP
+TIMER=1
+RETURN 0
+ON=@TIMER
+IF (<CONT.FIXACTION> == SKILL_MEDITATION)
+IF (<CONT.FINDLAYER(6).TYPE> == t_armor)
+IF (<CONT.FINDLAYER(6).BASEID> == i_chainmail_coif) //execlude coif
+RETURN 0
+ELSE
+CONT.SYSMESSAGE="You can't meditate at this time!"
+CONT.ACTION=-1
+RETURN 1
+ENDIF
+ELIF (<CONT.FINDLAYER(13).TYPE> == t_armor) //chest
+CONT.SYSMESSAGE="You can't meditate at this time!"
+CONT.ACTION=-1
+RETURN 1
+ELIF (<CONT.FINDLAYER(24).TYPE> == t_armor) //legs
+CONT.SYSMESSAGE="You can't meditate at this time!"
+CONT.ACTION=-1
+RETURN 1
+ENDIF
+ENDIF
+
+IF (<CONT.MANA> < <CONT.INT> ) //has mana lost?
+
+//Check armor parts to increase timer :D
+VAR.AddedARTimer= 1
+VAR.AddedTimer= 1
+IF (<CONT.FINDLAYER(6).TYPE> ==t_armor) //Head
+VAR.AddedARTimer= <VAR.AddedARTimer> +1
+ENDIF
+IF (<CONT.FINDLAYER(13).TYPE> ==t_armor) //chest
+VAR.AddedARTimer= <VAR.AddedARTimer> +1
+ENDIF
+IF (<CONT.FINDLAYER(19).TYPE> ==t_armor) //arms
+VAR.AddedARTimer= <VAR.AddedARTimer> +1
+ENDIF
+IF (<CONT.FINDLAYER(24).TYPE> ==t_armor) //legs
+VAR.AddedARTimer= <VAR.AddedARTimer> +1
+ENDIF
+
+IF (<CONT.MEDITATION> < 10.0)
+VAR.AddedTimer= 15
+ELSEIF (<CONT.MEDITATION> < 20.0)
+VAR.AddedTimer= 13
+ELSEIF (<CONT.MEDITATION> < 30.0)
+VAR.AddedTimer= 11
+ELSEIF (<CONT.MEDITATION> < 40.0)
+VAR.AddedTimer= 10
+ELSEIF (<CONT.MEDITATION> < 50.0)
+VAR.AddedTimer= 9
+ELSEIF (<CONT.MEDITATION> < 60.0)
+VAR.AddedTimer= 8
+ELSEIF (<CONT.MEDITATION> < 70.0)
+VAR.AddedTimer= 7
+ELSEIF (<CONT.MEDITATION> < 80.0)
+VAR.AddedTimer= 5
+ELSEIF (<CONT.MEDITATION> < 90.0)
+VAR.AddedTimer= 3			//
+ELSEIF (<CONT.MEDITATION> == 100.0)
+VAR.AddedTimer= 1
+ENDIF
+
+VAR.AddedTimer=<VAR.AddedTimer> + <VAR.AddedARTimer>
+CONT.MANA=<CONT.MANA> +1
+TIMER= <VAR.AddedTimer>
+
+ELSE			//mana regen'd?
+
+TIMER=0
+ENDIF
+RETURN 1
+
+//Funktion zum checken des Namens
+//menasoft , modify Avel
+[FUNCTION FIXNAME]
+  if ( 0 )
+  elseif ( strmatch( "Sir *",		"<NAME>" ) )
+  elseif ( strmatch( "Lord *",		"<NAME>" ) )
+  elseif ( strmatch( "Master *",	"<NAME>" ) )
+  elseif ( strmatch( "Lady *",	"<NAME>" ) )
+  elseif ( strmatch( "King *",	 	"<NAME>" ) )
+  elseif ( strmatch( "Boss *",	"<NAME>" ) )
+  elseif ( strmatch( "Held *",		"<NAME>" ) )
+  elseif ( strmatch( "Gangsta *",	"<NAME>" ) )
+  elseif ( strmatch( "Dracula *",	"<NAME>" ) )
+  elseif ( strmatch( "Nigga *",	"<NAME>" ) )
+  else
+     return 0
+  endif
+  TRY FIXNAME_<NAME>
+
+[FUNCTION FIXNAME_sir]
+   NAME	= <args>
+[FUNCTION FIXNAME_lord]
+   NAME	= <args>
+[FUNCTION FIXNAME_master]
+   NAME	= <args>
+[FUNCTION FIXNAME_lady]
+   NAME	= <args>
+[FUNCTION FIXNAME_king]
+   NAME	= <args>
+[FUNCTION FIXNAME_boss]
+   NAME	= <args>
+[FUNCTION FIXNAME_held]
+   NAME	= <args>
+[FUNCTION FIXNAME_gangsta]
+   NAME	= <args>
+[FUNCTION FIXNAME_dracula]
+   NAME	= <args>
+[FUNCTION FIXNAME_nigga]
+   NAME	= <args>
+
+

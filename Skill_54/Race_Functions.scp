@@ -1,0 +1,1032 @@
+// ############################################################ 
+// RW's Special Abilities: Sphere-based UO Emu Servers 
+// Designed By: Dubious Advocate and DigiAnimus
+// You are free to use this, repost it, chop it up, spindle, 
+// and mutilate to your heart's content. If you use it without 
+// any change then don't claim it as your own. If you do try 
+// to claim full credit for this script then the boogey man will 
+// get you. Or eventually you'll grow up and feel really silly 
+// about what a dumb kid you used to be. I expect I will sleep 
+// well at night no matter what. 
+// 
+// ------------------------------------------------------------ 
+// Installing this script - 
+// Installing it is the easy part. Just copy it into your 
+// scripts directory. 
+// 
+// FILE LAST UPDATED: July 26, 2001 
+// 
+Version=0.54 
+
+// ######################################################## 
+// Barbarian 
+// Drow 
+// Duergar 
+// Dwarf 
+// Elf 
+// Halfelf 
+// Halforc 
+// Human 
+// Shapeshifter 
+// Vampire 
+// Warlock 
+// Werven 
+// 
+// Functions Enforcing General Racial Characteristics 
+// f_StripRaceEvents 
+// f_BumpSkill 
+// 
+// Functions Initializing a Race Character 
+// f_RACE_INITIALIZE_Barbarian 
+// f_RACE_INITIALIZE_Drow 
+// f_RACE_INITIALIZE_Duergar 
+// f_RACE_INITIALIZE_Dwarf 
+// f_RACE_INITIALIZE_Elf 
+// f_RACE_INITIALIZE_Halfelf 
+// f_RACE_INITIALIZE_Halforc 
+// f_RACE_INITIALIZE_Human 
+// f_RACE_INITIALIZE_Shapeshifter 
+// f_RACE_INITIALIZE_Vampire 
+// f_RACE_INITIALIZE_Warlock 
+// f_RACE_INITIALIZE_Werven 
+// 
+// Functions Enforcing Specific Racial Characteristics 
+// f_RACE_EnforceAppearance_Barbarian 
+// f_RACE_EnforceAppearance_Drow 
+// f_RACE_EnforceAppearance_Duergar 
+// f_RACE_EnforceAppearance_Dwarf 
+// f_RACE_EnforceAppearance_Elf 
+// f_RACE_EnforceAppearance_Halfelf 
+// f_RACE_EnforceAppearance_Halforc 
+// f_RACE_EnforceAppearance_Human 
+// f_RACE_EnforceAppearance_Shapeshifter 
+// f_RACE_EnforceAppearance_Vampire 
+// f_RACE_EnforceAppearance_Warlock 
+// f_RACE_EnforceAppearance_Werven 
+// 
+// ######################################################## 
+VERSION=0.55 
+
+// ######################################################## 
+// Functions Enforcing General Racial Characteristics 
+
+[FUNCTION f_InitCommonFlags] 
+// Initialize Common Status Fields 
+TAG.Polymorph=0 
+TAG.SkillCapFactor=0 
+TAG.CurLevel=0 
+TAG.EXPERIENCE=0 
+
+TAG.STR=0 
+TAG.DEX=0 
+TAG.INT=0 
+TAG.KARMA=0 
+TAG.FAME=0 
+TAG.NAME=0 
+TAG.TITLE=0 
+TAG.BODY=0 
+
+
+[FUNCTION f_StripRaceEvents] 
+// Special Race Events 
+EVENTS -e_Beserk_Lunge 
+EVENTS -e_Blood_Feeder 
+EVENTS -e_Charm_Wolf 
+EVENTS -e_Corrupted_Creature 
+EVENTS -e_Disdained_Weapon 
+EVENTS -e_Dumb_Luck 
+EVENTS -e_Glowbug 
+EVENTS -e_LifeBite 
+EVENTS -e_LifeClaw 
+EVENTS -e_Night_Vision 
+EVENTS -e_Polymorph_Self 
+EVENTS -e_Superior_Concentration 
+EVENTS -e_Superior_Dodge 
+EVENTS -e_Undead 
+EVENTS -e_Unnatural_Constitution 
+
+
+[FUNCTION f_BumpSkill] 
+IF (skill_Alchemy == <VAR.X> ) 
+Alchemy= <Alchemy> + <VAR.Y> 
+ELSEIF (skill_Anatomy == <VAR.X> ) 
+Anatomy= <Anatomy> + <VAR.Y> 
+ELSEIF (skill_Animal_Lore == <VAR.X> ) 
+AnimalLore= <AnimalLore> + <VAR.Y> 
+ELSEIF (skill_Archery == <VAR.X> ) 
+Archery= <Archery> + <VAR.Y> 
+ELSEIF (skill_ArmsLore == <VAR.X> ) 
+ArmsLore= <ArmsLore> + <VAR.Y> 
+ELSEIF (skill_Begging == <VAR.X> ) 
+Begging= <Begging> + <VAR.Y> 
+ELSEIF (skill_Blacksmith == <VAR.X> ) 
+Blacksmithing= <Blacksmithing> + <VAR.Y> 
+ELSEIF (skill_Bowcraft == <VAR.X> ) 
+Bowcraft= <Bowcraft> + <VAR.Y> 
+ELSEIF (skill_Camping == <VAR.X> ) 
+Camping= <Camping> + <VAR.Y> 
+ELSEIF (skill_Carpentry == <VAR.X> ) 
+Carpentry= <Carpentry> + <VAR.Y> 
+ELSEIF (skill_Cartography == <VAR.X> ) 
+Cartography= <Cartography> + <VAR.Y> 
+ELSEIF (skill_Cooking == <VAR.X> ) 
+Cooking= <Cooking> + <VAR.Y> 
+ELSEIF (skill_DetectHidden == <VAR.X> ) 
+DetectingHidden= <DetectingHidden> + <VAR.Y> 
+ELSEIF (skill_Enticement == <VAR.X> ) 
+Enticement= <Enticement> + <VAR.Y> 
+ELSEIF (skill_EvalInt == <VAR.X> ) 
+EvaluatingIntel= <EvaluatingIntel> + <VAR.Y> 
+ELSEIF (skill_Fencing == <VAR.X> ) 
+Fencing= <Fencing> + <VAR.Y> 
+ELSEIF (skill_Fishing == <VAR.X> ) 
+Fishing= <Fishing> + <VAR.Y> 
+ELSEIF (skill_Forensics == <VAR.X> ) 
+Forensics= <Forensics> + <VAR.Y> 
+ELSEIF (skill_Healing == <VAR.X> ) 
+Healing= <Healing> + <VAR.Y> 
+ELSEIF (skill_Herding == <VAR.X> ) 
+Herding= <Herding> + <VAR.Y> 
+ELSEIF (skill_Hiding == <VAR.X> ) 
+Hiding= <Hiding> + <VAR.Y> 
+ELSEIF (skill_Inscription == <VAR.X> ) 
+Inscription= <Inscription> + <VAR.Y> 
+ELSEIF (skill_Appraise == <VAR.X> ) 
+ItemID= <ItemID> + <VAR.Y> 
+ELSEIF (skill_LockPick == <VAR.X> ) 
+LockPicking= <LockPicking> + <VAR.Y> 
+ELSEIF (skill_Lumberjack == <VAR.X> ) 
+Lumberjacking= <Lumberjacking> + <VAR.Y> 
+ELSEIF (skill_Macefighting == <VAR.X> ) 
+Macefighting= <Macefighting> + <VAR.Y> 
+ELSEIF (skill_Magery == <VAR.X> ) 
+Magery= <Magery> + <VAR.Y> 
+ELSEIF (skill_MagicResist == <VAR.X> ) 
+MagicResistance= <MagicResistance> + <VAR.Y> 
+ELSEIF (skill_Meditation == <VAR.X> ) 
+Meditation= <Meditation> + <VAR.Y> 
+ELSEIF (skill_Mining == <VAR.X> ) 
+Mining= <Mining> + <VAR.Y> 
+ELSEIF (skill_Musicianship == <VAR.X> ) 
+Musicianship= <Musicianship> + <VAR.Y> 
+ELSEIF (skill_Necromancy == <VAR.X> ) 
+Necromancy= <Necromancy> + <VAR.Y> 
+ELSEIF (skill_Parrying == <VAR.X> ) 
+Parrying= <Parrying> + <VAR.Y> 
+ELSEIF (skill_Peacemaking == <VAR.X> ) 
+Peacemaking= <Peacemaking> + <VAR.Y> 
+ELSEIF (skill_Poisoning == <VAR.X> ) 
+Poisoning= <Poisoning> + <VAR.Y> 
+ELSEIF (skill_Provocation == <VAR.X> ) 
+Provocation= <Provocation> + <VAR.Y> 
+ELSEIF (skill_REMOVE_Trap == <VAR.X> ) 
+RemoveTrap= <RemoveTrap> + <VAR.Y> 
+ELSEIF (skill_Snooping == <VAR.X> ) 
+Snooping= <Snooping> + <VAR.Y> 
+ELSEIF (skill_SpiritSpeak == <VAR.X> ) 
+SpiritSpeak= <SpiritSpeak> + <VAR.Y> 
+ELSEIF (skill_Stealing == <VAR.X> ) 
+Stealing= <Stealing> + <VAR.Y> 
+ELSEIF (skill_Stealth == <VAR.X> ) 
+Stealth= <Stealth> + <VAR.Y> 
+ELSEIF (skill_Swordsmanship == <VAR.X> ) 
+Swordsmanship= <Swordsmanship> + <VAR.Y> 
+ELSEIF (skill_Tactics == <VAR.X> ) 
+Tactics= <Tactics> + <VAR.Y> 
+ELSEIF (skill_Tailoring == <VAR.X> ) 
+Tailoring= <Tailoring> + <VAR.Y> 
+ELSEIF (skill_Taming == <VAR.X> ) 
+Taming= <Taming> + <VAR.Y> 
+ELSEIF (skill_TasteID == <VAR.X> ) 
+TasteID= <TasteID> + <VAR.Y> 
+ELSEIF (skill_Tinkering == <VAR.X> ) 
+Tinkering= <Tinkering> + <VAR.Y> 
+ELSEIF (skill_Tracking == <VAR.X> ) 
+Tracking= <Tracking> + <VAR.Y> 
+ELSEIF (skill_Vet == <VAR.X> ) 
+Veterinary= <Veterinary> + <VAR.Y> 
+ELSEIF (skill_Wrestling == <VAR.X> ) 
+Wrestling= <Wrestling> + <VAR.Y> 
+ENDIF 
+RETURN 0 
+
+
+[FUNCTION f_RACE_INITIALIZE_Skills] 
+// Set All Stats to Starting Level 
+STR=<eval(RACE_STRSTART_<TAG.RaceName>)> 
+DEX=<eval(RACE_DEXSTART_<TAG.RaceName>)> 
+INT=<eval(RACE_INTSTART_<TAG.RaceName>)> 
+FAME=<eval(RACE_FAMESTART_<TAG.RaceName>)> 
+KARMA=<eval(RACE_KARMASTART_<TAG.RaceName>)> 
+
+// Set All Skills to Starting Level 
+Alchemy=<eval(RACE_SKILLSTART_<TAG.RaceName>_Alchemy)> 
+Anatomy=<eval(RACE_SKILLSTART_<TAG.RaceName>_Anatomy)> 
+AnimalLore=<eval(RACE_SKILLSTART_<TAG.RaceName>_AnimalLore)> 
+Archery=<eval(RACE_SKILLSTART_<TAG.RaceName>_Archery)> 
+ArmsLore=<eval(RACE_SKILLSTART_<TAG.RaceName>_ArmsLore)> 
+Begging=<eval(RACE_SKILLSTART_<TAG.RaceName>_Begging)> 
+Blacksmithing=<eval(RACE_SKILLSTART_<TAG.RaceName>_Blacksmithing)> 
+Bowcraft=<eval(RACE_SKILLSTART_<TAG.RaceName>_Bowcraft)> 
+Camping=<eval(RACE_SKILLSTART_<TAG.RaceName>_Camping)> 
+Carpentry=<eval(RACE_SKILLSTART_<TAG.RaceName>_Carpentry)> 
+Cartography=<eval(RACE_SKILLSTART_<TAG.RaceName>_Cartography)> 
+Cooking=<eval(RACE_SKILLSTART_<TAG.RaceName>_Cooking)> 
+DetectingHidden=<eval(RACE_SKILLSTART_<TAG.RaceName>_DetectingHidden)> 
+Enticement=<eval(RACE_SKILLSTART_<TAG.RaceName>_Enticement)> 
+EvaluatingIntel=<eval(RACE_SKILLSTART_<TAG.RaceName>_EvaluatingIntel)> 
+Fencing=<eval(RACE_SKILLSTART_<TAG.RaceName>_Fencing)> 
+Fishing=<eval(RACE_SKILLSTART_<TAG.RaceName>_Fishing)> 
+Forensics=<eval(RACE_SKILLSTART_<TAG.RaceName>_Forensics)> 
+Healing=<eval(RACE_SKILLSTART_<TAG.RaceName>_Healing)> 
+Herding=<eval(RACE_SKILLSTART_<TAG.RaceName>_Herding)> 
+Hiding=<eval(RACE_SKILLSTART_<TAG.RaceName>_Hiding)> 
+Inscription=<eval(RACE_SKILLSTART_<TAG.RaceName>_Inscription)> 
+ItemID=<eval(RACE_SKILLSTART_<TAG.RaceName>_ItemID)> 
+LockPicking=<eval(RACE_SKILLSTART_<TAG.RaceName>_LockPicking)> 
+Lumberjacking=<eval(RACE_SKILLSTART_<TAG.RaceName>_Lumberjacking)> 
+Macefighting=<eval(RACE_SKILLSTART_<TAG.RaceName>_Macefighting)> 
+Magery=<eval(RACE_SKILLSTART_<TAG.RaceName>_Magery)> 
+MagicResistance=<eval(RACE_SKILLSTART_<TAG.RaceName>_MagicResistance)> 
+Meditation=<eval(RACE_SKILLSTART_<TAG.RaceName>_Meditation)> 
+Mining=<eval(RACE_SKILLSTART_<TAG.RaceName>_Mining)> 
+Musicianship=<eval(RACE_SKILLSTART_<TAG.RaceName>_Musicianship)> 
+Necromancy=<eval(RACE_SKILLSTART_<TAG.RaceName>_Necromancy)> 
+Parrying=<eval(RACE_SKILLSTART_<TAG.RaceName>_Parrying)> 
+Peacemaking=<eval(RACE_SKILLSTART_<TAG.RaceName>_Peacemaking)> 
+Poisoning=<eval(RACE_SKILLSTART_<TAG.RaceName>_Poisoning)> 
+Provocation=<eval(RACE_SKILLSTART_<TAG.RaceName>_Provocation)> 
+RemoveTrap=<eval(RACE_SKILLSTART_<TAG.RaceName>_RemoveTrap)> 
+Snooping=<eval(RACE_SKILLSTART_<TAG.RaceName>_Snooping)> 
+SpiritSpeak=<eval(RACE_SKILLSTART_<TAG.RaceName>_SpiritSpeak)> 
+Stealing=<eval(RACE_SKILLSTART_<TAG.RaceName>_Stealing)> 
+Stealth=<eval(RACE_SKILLSTART_<TAG.RaceName>_Stealth)> 
+Swordsmanship=<eval(RACE_SKILLSTART_<TAG.RaceName>_Swordsmanship)> 
+Tactics=<eval(RACE_SKILLSTART_<TAG.RaceName>_Tactics)> 
+Tailoring=<eval(RACE_SKILLSTART_<TAG.RaceName>_Tailoring)> 
+Taming=<eval(RACE_SKILLSTART_<TAG.RaceName>_Taming)> 
+TasteID=<eval(RACE_SKILLSTART_<TAG.RaceName>_TasteID)> 
+Tinkering=<eval(RACE_SKILLSTART_<TAG.RaceName>_Tinkering)> 
+Tracking=<eval(RACE_SKILLSTART_<TAG.RaceName>_Tracking)> 
+Veterinary=<eval(RACE_SKILLSTART_<TAG.RaceName>_Veterinary)> 
+Wrestling=<eval(RACE_SKILLSTART_<TAG.RaceName>_Wrestling)> 
+
+
+// ######################################################## 
+// Initialize Race for New Character 
+
+[FUNCTION f_RACE_INITIALIZE_Barbarian] 
+TAG.RaceName=Barbarian 
+TAG.RACE=<eval(RACE_Barbarian)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Beserk_Lunge 
+EVENTS +e_Dumb_Luck 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Enforce Physical Appearance 
+COLOR=color_Barbarian_skin 
+OSKIN=color_Barbarian_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <BODY> == c_man 
+NEWITEM=i_hair_2_pigtails 
+ACT.COLOR=color_Barbarian_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+NEWITEM=i_beard_vandyke 
+ACT.COLOR=color_Barbarian_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ELSE 
+NEWITEM=RANDOM_FEMALE_HAIR 
+ACT.COLOR=colors_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Drow] 
+TAG.RaceName=Drow 
+TAG.RACE=<eval(RACE_Drow)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Disdained_Weapon 
+EVENTS +e_Night_Vision 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Enforce Physical Appearance 
+OSKIN=color_Drow_skin 
+COLOR=color_Drow_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <ID>==c_man 
+NEWITEM i_hair_short 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Drow_hair 
+ACT.EQUIP 
+ELSE 
+NEWITEM i_hair_long 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Drow_hair 
+ACT.EQUIP 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Duergar] 
+TAG.RaceName=Duergar 
+TAG.RACE=<eval(RACE_Duergar)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Disdained_Weapon 
+EVENTS +e_Night_Vision 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Enforce Physical Appearance 
+OSKIN=color_Duergar_skin 
+COLOR=color_Duergar_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <BODY> == c_man 
+NEWITEM=i_hair_2_pigtails 
+ACT.COLOR=color_Duergar_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+NEWITEM={ i_beard_long 1 i_beard_long_med 1 } 
+ACT.COLOR=color_Duergar_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ELSE 
+NEWITEM={ i_hair_short 1 i_hair_long 1 i_hair_ponytail 1 i_hair_mohawk 1 i_hair_pageboy 1 i_hair_afro 1 i_hair_receding 1 i_hair_2_pigtails 1 i_hair_krisna 1 } 
+ACT.COLOR=color_Duergar_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Dwarf] 
+TAG.RaceName=Dwarf 
+TAG.RACE=<eval(RACE_Dwarf)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Disdained_Weapon 
+EVENTS +e_Night_Vision 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Enforce Physical Appearance 
+OSKIN=color_Dwarf_skin 
+COLOR=color_Dwarf_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <BODY> == c_man 
+NEWITEM=i_hair_2_pigtails 
+ACT.COLOR=color_Dwarf_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+NEWITEM={ i_beard_long 1 i_beard_long_med 1 } 
+ACT.COLOR=<FINDLAYER(layer_hair).COLOR> 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ELSE 
+NEWITEM={ i_hair_short 1 i_hair_long 1 i_hair_ponytail 1 i_hair_mohawk 1 i_hair_pageboy 1 i_hair_afro 1 i_hair_receding 1 i_hair_2_pigtails 1 i_hair_krisna 1 } 
+ACT.COLOR=color_Dwarf_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Elf] 
+TAG.RaceName=Elf 
+TAG.RACE=<eval(RACE_ELF)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Disdained_Weapon 
+EVENTS +e_Night_Vision 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Set Body Appearance 
+OSKIN=color_Elf_skin 
+COLOR=color_Elf_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <ID>==c_man 
+NEWITEM i_hair_ponytail 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Elf_hair 
+ACT.EQUIP 
+ELSE 
+NEWITEM i_hair_ponytail 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Elf_hair 
+ACT.EQUIP 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Halfelf] 
+TAG.RaceName=Halfelf 
+TAG.RACE=<eval(RACE_Halfelf)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Disdained_Weapon 
+EVENTS +e_Dumb_Luck 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Set Body Appearance 
+OSKIN=color_Halfelf_skin 
+COLOR=color_Halfelf_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <ID>==c_man 
+NEWITEM i_hair_ponytail 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Halfelf_hair 
+ACT.EQUIP 
+ELSE 
+NEWITEM i_hair_ponytail 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Halfelf_hair 
+ACT.EQUIP 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Halforc] 
+TAG.RaceName=Halforc 
+TAG.RACE=<eval(RACE_HALFORC)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Disdained_Weapon 
+EVENTS +e_Dumb_Luck 
+
+// Preset All Race Flags 
+// None to set 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Enforce Physical Appearance 
+COLOR=color_Halforc_skin 
+OSKIN=color_Halforc_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <BODY> == c_man 
+NEWITEM=i_hair_mohawk 
+ACT.COLOR=color_Halforc_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ELSE 
+NEWITEM={ i_hair_mohawk 1 i_hair_pageboy 1 i_hair_afro 1 } 
+ACT.COLOR=color_Halforc_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+NEWITEM=i_helm_orc 
+ACT.HITPOINTS=300 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+NEWITEM=i_mask_orc 
+ACT.HITPOINTS=300 
+ACT.COLOR=color_Halforc_skin 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Human] 
+TAG.RACE=<eval(RACE_Human)> 
+TAG.RaceName=Human 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Dumb_Luck 
+
+// Preset All Race Flags 
+// None to set 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Set Body Appearance 
+OSKIN=colors_skin 
+COLOR=colors_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <BODY> == c_man 
+NEWITEM=i_hair_pageboy 
+ACT.COLOR=colors_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+NEWITEM=RANDOM_FACIAL_HAIR 
+ACT.COLOR=<FINDLAYER(layer_hair).COLOR> 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ELSE 
+NEWITEM=RANDOM_FEMALE_HAIR 
+ACT.COLOR=colors_hair 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+FINDID(layer_hair).COLOR=colors_hair 
+FINDID(layer_beard).COLOR=<FINDID(layer_hair).COLOR> 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Shapeshifter] 
+TAG.RaceName=Shapeshifter 
+TAG.RACE=<eval(RACE_Shapeshifter)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Superior_Concentration 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+TAG.Shapeshifter_Polymorph=0 
+
+// Enforce Physical Appearance 
+OSKIN=color_Shapeshifter_skin 
+COLOR=color_Shapeshifter_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+
+// Attach Race specific items 
+IF ! <FINDLAYER(layer_pack).RESCOUNT i_race_Shapeshifter_PolymorphStone> 
+NEWITEM=i_race_Shapeshifter_PolymorphStone 
+ACT.BOUNCE 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Vampire] 
+TAG.RaceName=Vampire 
+TAG.RACE=<eval(RACE_Vampire)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+// EVENTS +e_Unnatural_Constitution 
+// EVENTS +e_Superior_Dodge 
+// EVENTS +e_LifeBite 
+// EVENTS +e_Night_Vision 
+// EVENTS +e_Blood_Feeder 
+// EVENTS +e_Corrupted_Creature 
+// EVENTS +e_Disdained_Weapon 
+// EVENTS +e_Undead 
+
+// Preset All Race Flags 
+// None to set 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Enforce Physical Appearance 
+OSKIN=color_Vampire_skin 
+COLOR=color_Vampire_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+IF <ID>==c_man 
+NEWITEM i_hair_short 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ELSE 
+NEWITEM i_hair_long 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+FINDID(layer_hair).COLOR=color_Vampire_hair 
+
+// Attach Race specific items 
+IF ! <FINDLAYER(layer_pack).RESCOUNT i_race_Vampire_PolymorphStone> 
+NEWITEM=i_race_Vampire_PolymorphStone 
+ACT.BOUNCE 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Warlock] 
+TAG.RaceName=Warlock 
+TAG.RACE=<eval(RACE_Warlock)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Corrupted_Creature 
+EVENTS +e_Superior_Concentration 
+
+// Preset All Race Flags 
+TAG.Warlock_Polymorph=0 
+
+// Enforce Physical Appearance 
+OSKIN=color_Warlock_skin 
+COLOR=color_Warlock_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+NEWITEM=i_hair_long 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Warlock_hair 
+ACT.EQUIP 
+IF <BODY> == c_man 
+NEWITEM=i_beard_goatee 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Warlock_hair 
+ACT.EQUIP 
+ENDIF 
+
+// Attach Race specific items 
+// None to attach 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+// none to set 
+
+// Attach Race specific items 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+[FUNCTION f_RACE_INITIALIZE_Werven] 
+TAG.RaceName=Werven 
+TAG.RACE=<eval(RACE_Werven)> 
+TITLE=the <TAG.RaceName> <TAG.ClassName> 
+
+f_StripRaceEvents 
+// Attach global events 
+EVENTS +e_allplayers 
+// Attach race-specific events 
+EVENTS +e_Corrupted_Creature 
+EVENTS +e_Disdained_Weapon 
+EVENTS +e_LifeClaw 
+EVENTS +e_Unnatural_Constitution 
+
+// Initialize Common Status Fields 
+f_InitCommonFlags 
+// Preset All Race Flags 
+TAG.Werven_Polymorph=0 
+
+// Enforce Physical Appearance 
+OSKIN=color_Werven_skin 
+COLOR=color_Werven_skin 
+FINDLAYER(layer_hair).REMOVE 
+FINDLAYER(layer_beard).REMOVE 
+NEWITEM=i_hair_short 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Werven_hair 
+ACT.EQUIP 
+NEWITEM=i_beard_short_med 
+ACT.ATTR=attr_newbie 
+ACT.COLOR=color_Werven_hair 
+ACT.EQUIP 
+
+// Attach Race specific items 
+IF ! <FINDLAYER(layer_pack).RESCOUNT i_race_Werven_PolymorphStone> 
+NEWITEM=i_race_Werven_PolymorphStone 
+ACT.BOUNCE 
+ENDIF 
+IF ! <FINDLAYER(layer_pack).RESCOUNT i_Werven_torc> 
+NEWITEM=i_Werven_torc 
+ACT.BOUNCE 
+ENDIF 
+
+// Set All Stats & Skills to Starting Level 
+f_RACE_INITIALIZE_Skills 
+
+
+// ######################################################## 
+// Functions Enforcing Specific Racial Characteristics 
+
+[FUNCTION f_RACE_EnforceAppearance_Barbarian] 
+IF <COLOR> != color_Barbarian_skin 
+COLOR=color_Barbarian_skin 
+ENDIF 
+IF <OSKIN> != color_Barbarian_skin 
+OSKIN=color_Barbarian_skin 
+ENDIF 
+IF <FINDLAYER(layer_hair).BASEID> && <FINDID(layer_hair).COLOR> != color_Barbarian_hair 
+FINDID(layer_hair).COLOR=color_Barbarian_hair 
+ENDIF 
+IF <FINDLAYER(layer_beard).BASEID> && <FINDID(layer_beard).COLOR> != color_Barbarian_hair 
+FINDID(layer_beard).COLOR=color_Barbarian_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Drow] 
+IF <FINDLAYER(layer_beard).BASEID> 
+FINDLAYER(layer_beard).REMOVE 
+ENDIF 
+
+IF <COLOR> != color_Drow_skin 
+COLOR=color_Drow_skin 
+ENDIF 
+IF <OSKIN> != color_Drow_skin 
+OSKIN=color_Drow_skin 
+ENDIF 
+IF <FINDLAYER(layer_hair).BASEID> && <FINDID(layer_hair).COLOR> != color_Drow_hair 
+FINDID(layer_hair).COLOR=color_Drow_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Duergar] 
+IF <BODY> == c_man && ! <FINDLAYER(layer_beard).BASEID> 
+NEWITEM={ i_beard_long 1 i_beard_long_med 1 } 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+IF <BODY> == c_woman && <FINDLAYER(layer_beard).BASEID> 
+FINDLAYER(layer_beard).REMOVE 
+ENDIF 
+
+IF <COLOR> != color_Duergar_skin 
+COLOR=color_Duergar_skin 
+ENDIF 
+IF <OSKIN> != color_Duergar_skin 
+OSKIN=color_Duergar_skin 
+ENDIF 
+IF <FINDLAYER(layer_hair).BASEID> && <FINDID(layer_hair).COLOR> != color_Duergar_hair 
+FINDID(layer_hair).COLOR=color_Duergar_hair 
+ENDIF 
+IF <FINDLAYER(layer_beard).BASEID> && <FINDID(layer_beard).COLOR> != color_Duergar_hair 
+FINDID(layer_beard).COLOR=color_Duergar_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Dwarf] 
+IF <BODY> == c_man && ! <FINDLAYER(layer_beard).BASEID> 
+NEWITEM={ i_beard_long 1 i_beard_long_med 1 } 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+IF <BODY> == c_woman && <FINDLAYER(layer_beard).BASEID> 
+FINDLAYER(layer_beard).REMOVE 
+ENDIF 
+
+IF <COLOR> != color_Dwarf_skin 
+COLOR=color_Dwarf_skin 
+ENDIF 
+IF <OSKIN> != color_Dwarf_skin 
+OSKIN=color_Dwarf_skin 
+ENDIF 
+IF <FINDLAYER(layer_hair).BASEID> && <FINDID(layer_hair).COLOR> != color_Dwarf_hair 
+FINDID(layer_hair).COLOR=color_Dwarf_hair 
+ENDIF 
+IF <FINDLAYER(layer_beard).BASEID> && <FINDID(layer_beard).COLOR> != color_Dwarf_hair 
+FINDID(layer_beard).COLOR=color_Dwarf_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Elf] 
+IF <FINDLAYER(layer_beard).BASEID> 
+FINDLAYER(layer_beard).REMOVE 
+ENDIF 
+
+IF <COLOR> != color_Elf_skin 
+COLOR=color_Elf_skin 
+ENDIF 
+IF <OSKIN> != color_Elf_skin 
+OSKIN=color_Elf_skin 
+ENDIF 
+IF <FINDID(layer_hair).COLOR> != color_Elf_hair 
+FINDID(layer_hair).COLOR=color_Elf_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Halfelf] 
+IF <FINDLAYER(layer_beard).BASEID> 
+FINDLAYER(layer_beard).REMOVE 
+ENDIF 
+
+IF <COLOR> != color_Halfelf_skin 
+COLOR=color_Halfelf_skin 
+ENDIF 
+IF <OSKIN> != color_Halfelf_skin 
+OSKIN=color_Halfelf_skin 
+ENDIF 
+IF <FINDID(layer_hair).COLOR> != color_Halfelf_hair 
+FINDID(layer_hair).COLOR=color_Halfelf_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Halforc] 
+IF <BODY> == c_man && <FINDLAYER(layer_hair).BASEID> != i_hair_mohawk 
+FINDLAYER(layer_hair).REMOVE 
+NEWITEM=i_hair_mohawk 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+IF <BODY> == c_woman && (<FINDLAYER(layer_hair).BASEID> != i_hair_mohawk) && (<FINDLAYER(layer_hair).BASEID> != i_hair_pageboy) && (<FINDLAYER(layer_hair).BASEID> != i_hair_afro) 
+FINDLAYER(layer_hair).REMOVE 
+NEWITEM={ i_hair_mohawk 1 i_hair_pageboy 1 i_hair_afro 1 } 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+IF <FINDLAYER(layer_beard).BASEID> 
+FINDLAYER(layer_beard).REMOVE 
+ENDIF 
+
+IF <COLOR> != color_Halforc_skin 
+COLOR=color_Halforc_skin 
+ENDIF 
+IF <OSKIN> != color_Halforc_skin 
+OSKIN=color_Halforc_skin 
+ENDIF 
+IF <FINDID(layer_hair).COLOR> != color_Halforc_hair 
+FINDID(layer_hair).COLOR=color_Halforc_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Human] 
+IF <COLOR> != color_Human_skin 
+COLOR=color_Human_skin 
+ENDIF 
+IF <OSKIN> != color_Human_skin 
+OSKIN=color_Human_skin 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Shapeshifter] 
+IF <FINDLAYER(layer_hair).BASEID> 
+FINDLAYER(layer_hair).REMOVE 
+ENDIF 
+IF <FINDLAYER(layer_beard).BASEID> 
+FINDLAYER(layer_beard).REMOVE 
+ENDIF 
+
+IF <COLOR> != color_Shapeshifter_skin 
+COLOR=color_Shapeshifter_skin 
+ENDIF 
+IF <OSKIN> != color_Shapeshifter_skin 
+OSKIN=color_Shapeshifter_skin 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Vampire] 
+IF <FINDLAYER(layer_beard).BASEID> 
+FINDLAYER(layer_beard).REMOVE 
+ENDIF 
+
+IF <COLOR> != color_Vampire_skin 
+COLOR=color_Vampire_skin 
+ENDIF 
+IF <OSKIN> != color_Vampire_skin 
+OSKIN=color_Vampire_skin 
+ENDIF 
+IF <FINDID(layer_hair).COLOR> != color_Vampire_hair 
+FINDID(layer_hair).COLOR=color_Vampire_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Warlock] 
+IF <FINDLAYER(layer_hair).BASEID> != i_hair_long 
+FINDLAYER(layer_hair).REMOVE 
+NEWITEM=i_hair_long 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+IF (<BODY> == c_man) && (<FINDLAYER(layer_beard).BASEID> != i_beard_goatee) 
+FINDLAYER(layer_beard).REMOVE 
+NEWITEM=i_beard_goatee 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+ENDIF 
+
+IF <COLOR> != color_Warlock_skin 
+COLOR=color_Warlock_skin 
+ENDIF 
+IF <OSKIN> != color_Warlock_skin 
+OSKIN=color_Warlock_skin 
+ENDIF 
+IF <FINDLAYER(layer_hair).BASEID> && <FINDID(layer_hair).COLOR> != color_Warlock_hair 
+FINDID(layer_hair).COLOR=color_Warlock_hair 
+ENDIF 
+IF <FINDLAYER(layer_beard).BASEID> && <FINDID(layer_beard).COLOR> != color_Warlock_hair 
+FINDID(layer_beard).COLOR=color_Warlock_hair 
+ENDIF 
+
+
+[FUNCTION f_RACE_EnforceAppearance_Werven] 
+IF <FINDLAYER(layer_hair).BASEID> != i_hair_short 
+FINDLAYER(layer_hair).REMOVE 
+NEWITEM=i_hair_short 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+VAR.X=1 
+ENDIF 
+IF <FINDLAYER(layer_beard).BASEID> != i_beard_short_med 
+FINDLAYER(layer_beard).REMOVE 
+NEWITEM=i_beard_short_med 
+ACT.ATTR=attr_newbie 
+ACT.EQUIP 
+VAR.X=1 
+ENDIF 
+
+IF <COLOR> != color_Werven_skin 
+COLOR=color_Werven_skin 
+ENDIF 
+IF <OSKIN> != color_Werven_skin 
+OSKIN=color_Werven_skin 
+ENDIF 
+IF <FINDLAYER(layer_hair).BASEID> && <FINDID(layer_hair).COLOR> != color_Werven_hair 
+FINDID(layer_hair).COLOR=color_Werven_hair 
+ENDIF 
+IF <FINDLAYER(layer_beard).BASEID> && <FINDID(layer_beard).COLOR> != color_Werven_hair 
+FINDID(layer_beard).COLOR=color_Werven_hair 
+ENDIF 
+
+
+
+[EOF]

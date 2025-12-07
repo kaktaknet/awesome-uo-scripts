@@ -1,0 +1,425 @@
+***************************************
+**     Note: Please dont modify this              **
+**	           Script                               **
+**                                                             **
+**       Scripted By: aKuma                         **
+***************************************
+//Note: If you want can modify the rewards of the book
+
+//---------------------------------------------------------------------------------//
+
+[itemdef i_book_reward]
+defname=i_book_reward
+name=Gm:s Reward Book
+id=i_spellbook
+type=t_normal
+
+on=@create 
+color=0ad5
+
+on=@click 
+message @55 You can only use it 1 time every 0,5 hour.
+
+on=@dclick
+if (0<src.findid.i_reward_timer_2.uid>)
+src.sysmessage @55 you may mot use the reward book again.
+return 1
+else
+menu=m_reward
+return 1
+endif
+
+
+[menu m_reward]
+Here can you chose what kinda event prize you wanna give. (Gm will color the things and name it.)
+
+on=0 1v1 Event
+menu m_reward_1v1
+return 1
+
+on=0 2v2 Event
+menu m_reward_2v2
+return 1
+
+on=0 3v3 Event 
+menu m_reward_3v3
+return 1
+
+on=0 FFA Event
+menu m_reward_ffa
+
+on=0 Monster Bash Event
+menu m_reward_mb
+return 1
+
+////////////////////////////////////////////////////reward Menu 1v1////////////////////////////////////////
+
+[menu m_reward_1v1]
+here will you chose what kinda prize you wanna give. (Better if its more players in it)
+
+on=0 4-8 player prize
+src.newitem=t_bag_4_8_1_1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 9-14 player prize
+src.newitem=t_bag_9_14_1_1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 15-20 player prize 
+src.newitem=t_bag_15_20_1_1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+///////////////////////////////////////////////////////reward Menu 2v2/////////////////////////////////////
+
+[menu m_reward_2v2]
+here will you chose what kinda prize you wanna give. (Better if its more players in it)
+
+on=0 6-10 Players Prize
+src.newitem=t_bag_6_10_2_2
+src.act.amount=2
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 11-18 Players Prize
+src.newitem=t_bag_11_18_2_2
+src.act.amount=2
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 19-30 Players Prize
+src.newitem=t_bag_19_30_2_2
+src.act.amount=2
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+//////////////////////////////////////////////////////////////reward Menu 3v3////////////////////////////////////
+
+[menu m_reward_3v3]
+here will you chose what kinda prize you wanna give. (Better if its more players in it)
+
+on=0 9-15 Players Prize
+src.newitem=t_bag_9_15_3_3
+src.act.amount=3
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 16-21 Players Prize
+src.newitem=t_bag_16_21_3_3
+src.act.amount=3
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 22-36 Players Prize
+src.newitem=t_bag_22_36_3_3
+src.act.amount=3
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+//////////////////////////////////////////////////////////////reward Menu FFA////////////////////////////////////
+
+[menu m_reward_ffa]
+here will you chose what kinda prize you wanna give. (Better if its more players in it)
+
+on=0 3-8 Players Prize
+src.newitem=t_bag_3_8_ffa
+src.act.amount=1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 9-16 Players Prize
+src.newitem=t_bag_9_16_ffa
+src.act.amount=1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 17-28 Players Prize
+src.newitem=t_bag_17_28_ffa
+src.act.amount=1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+//////////////////////////////////////////////////////////////reward Menu MB////////////////////////////////////
+
+[menu m_reward_mb]
+here will you chose what kinda prize you wanna give. (Better if its more players in it)
+
+on=0 3-8 Players Prize
+src.newitem=t_bag_3_8_mb
+src.act.amount=1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 9-16 Players Prize
+src.newitem=t_bag_9_16_mb
+src.act.amount=1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+on=0 17-28 Players Prize
+src.newitem=t_bag_17_28_mb
+src.act.amount=1
+src.act.bounce
+src.newitem=i_reward_timer_2
+src.act.bounce
+return 1
+
+
+///////////////////////////////////////////////Timer////////////////////////////////////////////////////////
+
+[itemdef i_reward_timer_2]
+defname=i_reward_timer_2
+name=Reward Timer
+id=i_memory
+type=t_eq_script
+
+on=@create
+attr=attr_invis|attr_move_never
+
+on=@equip
+timer=60*30
+
+on=@timer
+topbj.sysmessage @88 you may now use the prize book again.
+remove
+return 1
+
+///////////////////////////////////////////The 1v1 Bags//////////////////////////////////////////////////////
+
+[template t_bag_4_8_1_1]
+container=i_bag
+name=I Won 1v1 Event With 4-8 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 20000
+item=i_skill_coin, 10000
+
+
+[template t_bag_9_14_1_1]
+container=i_bag
+name=I Won 1v1 Event With 9-14 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 35000
+item=i_skill_coin, 20000
+
+
+[template t_bag_15_20_1_1]
+container=i_bag
+name=I Won 1v1 Event With 15-20 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 50000
+item=i_skill_coin, 35000
+item=i_robe
+attr=04
+name=I won a 1v1 with 15-20 Players in. (Newbied)
+
+
+///////////////////////////////////////////////The 2v2 Bags////////////////////////////////////////////////////////
+
+[template t_bag_6_10_2_2]
+container=i_bag
+name=I Won 2v2 Event With 6-10 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 20000
+item=i_skill_coin, 10000
+
+
+[template t_bag_11_18_2_2]
+container=i_bag
+name=I Won 2v2 Event With 11-18 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 35000
+item=i_skill_coin, 20000
+
+
+[template t_bag_19_30_2_2]
+container=i_bag
+name=I Won 2v2 Event With 19-30 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 50000
+item=i_skill_coin, 35000
+item=i_robe
+attr=04
+name=I won a 2v2 with 19-30 Players in. (Newbied)
+
+
+///////////////////////////////////////////////The 3v3 Bags////////////////////////////////////////////////////////
+
+[template t_bag_9_15_3_3]
+container=i_bag
+name=I Won 3v3 Event With 9-15 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 35000
+item=i_skill_coin, 15000
+
+
+[template t_bag_16_21_3_3]
+container=i_bag
+name=I Won 3v3 Event With 16-21 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 45000
+item=i_skill_coin, 25000
+
+
+[template t_bag_22_36_3_3]
+container=i_bag
+name=I Won 3v3 Event With 22-36 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 65000
+item=i_skill_coin, 45000
+item=i_robe
+attr=04
+name=I won a 3v3 with 22-36 Players in. (Newbied)
+
+
+///////////////////////////////////////////////The FFA Bags////////////////////////////////////////////////////////
+
+[template t_bag_3_8_ffa]
+container=i_bag
+name=I Won FFA Event With 3-8 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_ingot_yrral
+item=i_skill_coin, 20000
+item=i_cape
+attr=04
+name=I won a FFA with 3-8 Players in (Newbied)
+
+
+[template t_bag_9_16_ffa]
+container=i_bag
+name=I Won FFA Event With 9-16 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 20000
+item=i_skill_coin, 25000
+item=i_ingot_yrral
+item=i_cape
+attr=04
+name=I won a FFA with 9-16 Players in (Newbied)
+
+
+
+[template t_bag_17_28_ffa]
+container=i_bag
+name=I Won FFA Event With 17-28 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_skill_coin, 25000
+item=i_ingot_yrral, 2
+item=i_cape
+attr=04
+name=I won a FFA with 17-28 Players in (Newbied)
+item=i_robe
+attr=04
+name=I won a FFA with 17-28 Players in (Newbied)
+
+///////////////////////////////////////////////The MB Bags////////////////////////////////////////////////////////
+
+[template t_bag_3_8_mb]
+container=i_bag
+name=I Won Monster Bash Event With 3-8 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_ingot_yrral
+item=i_skill_coin, 20000
+item=i_mask_bear
+attr=04
+name=I won a Monster Bash with 3-8 Players in (Newbied)
+
+
+[template t_bag_9_16_mb]
+container=i_bag
+name=I Won Monster Bash Event With 9-16 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_gold, 20000
+item=i_skill_coin, 25000
+item=i_ingot_yrral
+item=i_mask_bear
+attr=04
+name=I won a Monster Bash with 9-16 Players in (Newbied)
+
+
+
+[template t_bag_17_28_mb]
+container=i_bag
+name=I Won Monster Bash Event With 17-28 Players In
+item={ i_pet_horse 1 i_pet_ostard_forest 1 i_pet_ostard_zostrich 1 i_pet_zombie 1 i_pet_dragon 1 i_pet_skeleton 1 i_pet_ettin 1 i_pet_orc 1 i_pet_ogre 1 i_pet_snake 1 i_pet_snake_giant 1 i_pet_Cow 1 i_pet_chicken 1 i_pet_panther 1 i_pet_bear 1 i_pet_spider_giant 1 i_pet_toad_giant 1 i_pet_titan 1 }
+type=t_normal
+attr=04
+item=i_skill_coin, 25000
+item=i_ingot_yrral, 2
+item=i_mask_bear
+attr=04
+name=I won a Monster Bash with 17-28 Players in (Newbied)
+item=i_leather_tunic
+attr=04
+name=I won a Monster Bash with 17-28 Players in (Newbied)
+item=i_leather_sleeves
+attr=04
+name=I won a Monster Bash with 17-28 Players in (Newbied)
+item=i_leather_gloves
+attr=04
+name=I won a Monster Bash with 17-28 Players in (Newbied)
+item=i_leather_leggings
+attr=04
+name=I won a Monster Bash with 17-28 Players in (Newbied)
+item=i_leather_gorget
+attr=04
+name=I won a Monster Bash with 17-28 Players in (Newbied)
+
+
+[eof]

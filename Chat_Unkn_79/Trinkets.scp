@@ -1,0 +1,88 @@
+//**********************************************
+//*Scripted By:big_boy_uk89 and my MSN friends.*
+//**********************************************
+//Just put this file in with ur scripts and rysnc shard and
+//your ready to go
+
+[itemdef i_ring_skill]
+id=i_ring_gold
+name=Skill Ring
+
+on=@create
+color={3 1000}
+tag.skill = <serv.skill(<eval(rand(49)>).key>
+tag.amnt = <eval(rand(1,15))>
+name = "a + <eval (<tag.amnt>> <tag.skill> <name>"
+
+on=@equip
+tryp 0 src.<tag.skill> = <src.<tag.skill>> + <eval(<tag.amnt>*10)>
+src.sysmessage "You feel more skilled in <tag.skill>"
+
+on=@unequip
+tryp 0 src.<tag.skill> = <src.<tag.skill>> +- <eval(<tag.amnt>*10)>
+src.sysmessage "You feel less skilled in <tag.skill>" 
+//////////earings
+
+
+[ITEMDEF i_skill_earring]
+ID=i_earrings_gold
+NAME=skill earrings
+
+on=@create
+color={3 1000}
+tag.skill = <serv.skill(<eval(rand(49)>).key>
+tag.amnt = <eval(rand(1,15))>
+name = "a + <eval (<tag.amnt>> <tag.skill> <name>"
+
+on=@equip
+tryp 0 src.<tag.skill> = <src.<tag.skill>> + <eval(<tag.amnt>*10)>
+src.sysmessage "You feel more skilled in <tag.skill>"
+
+on=@unequip
+tryp 0 src.<tag.skill> = <src.<tag.skill>> +- <eval(<tag.amnt>*10)>
+src.sysmessage "You feel less skilled in <tag.skill>" 
+
+//////////Bracelet
+
+
+[ITEMDEF i_skill_bracelet]
+ID=i_bracelet_gold
+NAME=skill bracelet
+
+on=@create
+HITPOINTS=3000
+color={3 2000}
+tag.skill = <serv.skill(<eval(rand(49)>).key>
+tag.amnt2 = <eval(rand(1,15))>
+name = "a + <eval (<tag.amnt2>> <tag.skill> <name>"
+
+on=@equip
+tryp 0 src.<tag.skill> = <src.<tag.skill>> + <eval(<tag.amnt2>*10)>
+src.sysmessage "You feel more skilled in <tag.skill>"
+
+on=@unequip
+tryp 0 src.<tag.skill> = <src.<tag.skill>> +- <eval(<tag.amnt2>*10)>
+src.sysmessage "You feel less skilled in <tag.skill>" 
+
+///////////////Skill Robe
+
+[ITEMDEF i_skill_robe]
+ID=i_robe
+NAME=skill Robe
+
+
+on=@create
+color={3 1000}
+tag.skill = <serv.skill(<eval(rand(49)>).key>
+tag.amnt3 = <eval(rand(1,15))>
+name = "a + <eval (<tag.amnt3>> <tag.skill> <name>"
+
+on=@equip
+tryp 0 src.<tag.skill> = <src.<tag.skill>> + <eval(<tag.amnt3>*10)>
+src.sysmessage "You feel more skilled in <tag.skill>"
+
+on=@unequip
+tryp 0 src.<tag.skill> = <src.<tag.skill>> +- <eval(<tag.amnt3>*10)>
+src.sysmessage "You feel less skilled in <tag.skill>" 
+
+[EOF]

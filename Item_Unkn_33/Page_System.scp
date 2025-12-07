@@ -1,0 +1,523 @@
+[DEFNAME def_page]
+PAGE_CONT 04000xxxx
+
+[FUNCTION helppage]
+DIALOG d_help_menu
+
+[DIALOG d_paging_conduct]
+223,21
+resizepic 0 0 3600 353 557
+text 124 20 482 0
+
+text 29 45 482 1
+htmlgump 27 66 300 56 2 0 1
+
+text 29 127 482 3
+htmlgump 27 148 300 56 4 0 1
+
+text 29 209 482 5
+htmlgump 27 230 300 56 6 0 1
+
+text 29 291 482 7
+htmlgump 27 312 300 56 8 0 1
+
+text 29 372 482 9
+htmlgump 27 394 300 56 10 0 1
+
+text 29 455 482 11
+htmlgump 27 476 300 56 12 0 1
+
+[DIALOG d_paging_conduct TEXT]
+Paging Conduct
+
+# 1
+You will do as instructed at the bottom left of your screen when paging. When instructed to "Describe how you got stuck." you will do so, and NOT page with "I'm stuck!"
+
+# 2
+Your page will NOT contain vulgar language nor will it contain any of the following words: "wtf" "omg" "help". (You wouldn't be paging if you didn't need help.)
+
+# 3
+Your page will NOT be in all-caps, alternating caps, 1337 $p3a|{, or any variation thereof. Your page will also not contain excessive punctuation such as "???" or "?!?" // }
+
+# 4
+You will NOT page asking if a specific staff member is online, if you can purchase/have item(s), if your stats/skills can be adjusted, or if a GM can broadcast a message for you.
+
+# 5
+You will be as detailed as you can possibly be, general pages such as "May i talk to a gm" and "I have some suggestions" are NOT acceptable. You have plenty of space to elaborate, so do so.
+
+# 6
+You will NOT respond directly to an individual staff member by re-paging. Other staff members won't be able to make sense out of pages such as "I remember" "Okay" "But why?" "That sucks" etc, so DON'T do it.
+
+[DIALOG d_paging_conduct BUTTON]
+ONBUTTON 0
+DIALOG d_help_menu
+
+[DIALOG d_help_menu]
+50,0
+resizepic 0 0 3600 700 600
+gumppic 50 192 1800
+gumppic 75 232 12
+gumppic 75 232 50987
+gumppic 75 232 50984
+text 40 32 1152 13
+text 40 50 1152 14
+htmlgump 40 72 250 80 0 1 0
+resizepic 300 22 5170 375 555
+
+button 323 53 5601 5601 1 0 1
+text 350 51 <EVAL 036> 1
+htmlgump 348 72 300 60 2 1 1
+
+button 323 135 5601 5601 1 0 2
+text 350 133 193 3
+htmlgump 348 154 300 60 4 1 1
+
+button 323 217 5601 5601 1 0 3
+text 350 215 193 5
+htmlgump 348 236 300 60 6 1 1
+
+button 323 299 5601 5601 1 0 4
+text 350 297 193 7
+htmlgump 348 318 300 60 8 1 1
+
+button 323 381 5601 5601 1 0 5
+text 350 379 193 9
+htmlgump 348 400 300 60 10 1 1
+
+button 323 463 5601 5601 1 0 6
+text 350 461 193 11
+htmlgump 348 482 300 60 12 1 1
+
+[DIALOG d_help_menu TEXT]
+Language: <SERV.LANG>, Age: <SERV.AGE>, Clients: <SERV.CLIENTS>, Version: <VERSION>, Items: <SERV.ITEMS>, Chars: <SERV.CHARS>, Memory: <SERV.MEM>, Admin: <SERV.ADMIN>, TimeZone: <SERV.TIMEZONE>
+
+Paging Conduct
+Read this, because if you don't adhere to it, your page will be deleted. Soon it will yield more severe consequences.
+
+Stuck
+You're stuck and you've tried everything to get free including recalling, teleporting, and swimming.
+
+Report Abuser
+Someone's breaking a shard rule, using an exploit or speedhacking.
+
+Bug/Exploit
+You discovered a bug/exploit. (something possible that wasn't intended to be possible by the staff)
+
+Item/Spawn
+Your problem involves an item or a spawn. (Feel free to page if you want a new monster spawn somewhere, or a current one removed or tweaked.)
+
+Other
+You have a suggestion, question, or a problem that doesn't fit into the other categories.
+
+<SERV.NAME>
+<SERV.URL>
+
+[DIALOG d_help_menu BUTTON]
+ONBUTTON 1
+DIALOG d_paging_conduct
+
+ONBUTTON 2
+ACT <TAG.PAGE>
+IF (<ACT.BASEID> == i_page)
+ACT.TAG.CATEGORY Stuck
+ACT.TAG.CATEGORYCOLOR 020
+ACT.MORE2 0
+SYSMESSAGE You have 5 minutes to: Describe how you got stuck.
+INPDLG ACT.TAG.TEXT 255
+ELSE
+NEWITEM i_page
+TAG.PAGE <ACT.UID>
+ACT.TAG.CATEGORY Stuck
+ACT.TAG.CATEGORYCOLOR 020
+ACT.MORE2 0
+ACT.TAG.TIME <SERV.TIME>
+ACT.LINK <UID>
+ACT.CONT <UID>
+SYSMESSAGE You have 5 minutes to: Describe how you got stuck.
+INPDLG ACT.TAG.TEXT 255
+ENDIF
+
+ONBUTTON 4
+ACT <TAG.PAGE>
+IF (<ACT.BASEID> == i_page)
+ACT.TAG.CATEGORY Bug/Exploit
+ACT.TAG.CATEGORYCOLOR 02a
+ACT.MORE2 1
+SYSMESSAGE You have 5 minutes to: Describe the Bug/Exploit
+INPDLG ACT.TAG.TEXT 255
+ELSE
+NEWITEM i_page
+TAG.PAGE <ACT.UID>
+ACT.TAG.CATEGORY Bug/Exploit
+ACT.TAG.CATEGORYCOLOR 02a
+ACT.MORE2 1
+ACT.TAG.TIME <SERV.TIME>
+ACT.LINK <UID>
+ACT.CONT <UID>
+SYSMESSAGE You have 5 minutes to: Describe the Bug/Exploit
+INPDLG ACT.TAG.TEXT 255
+ENDIF
+
+ONBUTTON 3
+ACT <TAG.PAGE>
+IF (<ACT.BASEID> == i_page)
+ACT.TAG.CATEGORY Report Abuser
+ACT.TAG.CATEGORYCOLOR 033
+ACT.MORE2 2
+SYSMESSAGE You have 5 minutes to: State the Abuser and the Abusive Act
+INPDLG ACT.TAG.TEXT 255
+ELSE
+NEWITEM i_page
+TAG.PAGE <ACT.UID>
+ACT.TAG.CATEGORY Report Abuser
+ACT.TAG.CATEGORYCOLOR 033
+ACT.MORE2 2
+ACT.TAG.TIME <SERV.TIME>
+ACT.LINK <UID>
+ACT.CONT <UID>
+SYSMESSAGE You have 5 minutes to: State the Abuser and the Abusive Act
+INPDLG ACT.TAG.TEXT 255
+ENDIF
+
+ONBUTTON 5
+ACT <TAG.PAGE>
+IF (<ACT.BASEID> == i_page)
+ACT.TAG.CATEGORY Item/Spawn
+ACT.TAG.CATEGORYCOLOR 042
+ACT.MORE2 3
+SYSMESSAGE You have 5 minutes to: Describe your reason for paging.
+INPDLG ACT.TAG.TEXT 255
+ELSE
+NEWITEM i_page
+TAG.PAGE <ACT.UID>
+ACT.TAG.CATEGORY Item/Spawn
+ACT.TAG.CATEGORYCOLOR 042
+ACT.MORE2 3
+ACT.TAG.TIME <SERV.TIME>
+ACT.LINK <UID>
+ACT.CONT <UID>
+SYSMESSAGE You have 5 minutes to: Describe your reason for paging.
+INPDLG ACT.TAG.TEXT 255
+ENDIF
+
+ONBUTTON 6
+ACT <TAG.PAGE>
+IF (<ACT.BASEID> == i_page)
+ACT.TAG.CATEGORY Other
+ACT.TAG.CATEGORYCOLOR 0c0
+ACT.MORE2 4
+SYSMESSAGE You have 5 minutes to: Describe your reason for paging.
+INPDLG ACT.TAG.TEXT 255
+ELSE
+NEWITEM i_page
+TAG.PAGE <ACT.UID>
+ACT.TAG.CATEGORY Other
+ACT.TAG.CATEGORYCOLOR 0c0
+ACT.MORE2 4
+ACT.TAG.TIME <SERV.TIME>
+ACT.LINK <UID>
+ACT.CONT <UID>
+SYSMESSAGE You have 5 minutes to: Describe your reason for paging.
+INPDLG ACT.TAG.TEXT 255
+ENDIF
+
+[ITEMDEF i_page]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Page
+
+ON=@Create
+ATTR attr_decay
+TIMER 5
+MORE1 60
+TAG.STATUS Unanswered
+
+ON=@Timer
+IF !(STRMATCH(<TAG.TEXT>,))
+CONT.SYSMESSAGE Available staff members have been notified of your request.
+CONT.SYSMESSAGE There are <CONT.UID.<VAR.PAGE_CONT>.RESCOUNT> messages queued ahead of you.
+VAR.SUA_COLOR <EVAL <TAG.CATEGORYCOLOR> + 1>
+DOSWITCH <MORE2>
+SERV.ALLCLIENTS STAFFPAGE Incoming Stuck Page ( answer with .queue ) [<CONT.NAME>]: <TAG.TEXT>
+SERV.ALLCLIENTS STAFFPAGE Incoming Bug/Exploit Report ( answer with .queue ) [<CONT.NAME>]: <TAG.TEXT>
+SERV.ALLCLIENTS STAFFPAGE Incoming Abuser Report ( answer with .queue ) [<CONT.NAME>]: <TAG.TEXT>
+SERV.ALLCLIENTS STAFFPAGE Incoming Item/Spawn Page ( answer with .queue ) [<CONT.NAME>]: <TAG.TEXT>
+SERV.ALLCLIENTS STAFFPAGE Incoming "Other" Page ( answer with .queue ) [<CONT.NAME>]: <TAG.TEXT>
+ENDDO
+CONT <VAR.PAGE_CONT>
+ELSE
+MORE1 <EVAL <MORE1> - 1>
+IF (<MORE1> <= 0)
+REMOVE
+ENDIF
+TIMER 5
+ENDIF
+RETURN 1
+
+[FUNCTION staffpage]
+IF (<ACCOUNT.PLEVEL> > 1)
+SYSMESSAGEUA <ARGS>
+ENDIF
+
+[PLEVEL 2]
+queue
+
+[FUNCTION queue]
+IF (STRMATCH(<ARGS>,?))
+SYSMESSAGE .queue d/del/delete - Deletes Current Page
+SYSMESSAGE .queue u/undo - Marks Page as Unanswered
+SYSMESSAGE .queue g/go - Takes You to Player Who Paged
+SYSMESSAGE .queue v/verb - Perform Any Function On Player Who Paged
+SYSMESSAGE .queue wipe - Wipes All Pages (GM+ Only)
+ELIF (STRMATCH(<ARGS>,d)) || (STRMATCH(<ARGS>,del)) || (STRMATCH(<ARGS>,delete))
+ACT <TAG.ANSWER_PAGE>
+IF (<ACT.BASEID> == i_page)
+SYSMESSAGE Page Deleted
+TAG.ANSWER_PAGE
+ACT.REMOVE
+ELSE
+TAG.ANSWER_PAGE
+ENDIF
+ELIF (STRMATCH(<ARGS>,u)) || (STRMATCH(<ARGS>,undo))
+ACT <TAG.ANSWER_PAGE>
+IF (<ACT.BASEID> == i_page)
+SYSMESSAGE Page Marked as Unanswered
+TAG.ANSWER_PAGE
+ACT.TAG.STATUS Unanswered
+ELSE
+TAG.ANSWER_PAGE
+ENDIF
+ELIF (STRMATCH(<ARGS>,g)) || (STRMATCH(<ARGS>,go))
+ACT <TAG.ANSWER_PAGE>
+IF (<ACT.BASEID> == i_page)
+GO <ACT.LINK.P>
+ELSE
+TAG.ANSWER_PAGE
+ENDIF
+ELIF (STRMATCH(<ARGS>,v)) || (STRMATCH(<ARGS>,verb))
+ACT <TAG.ANSWER_PAGE>
+IF (<ACT.BASEID> == i_page)
+TARG <ACT.LINK.UID>
+HIDEMESSAGE
+EVERBTARG
+ELSE
+TAG.ANSWER_PAGE
+ENDIF
+ELIF (STRMATCH(<ARGS>,wipe))
+IF (<ACCOUNT.PLEVEL> >= 4)
+ACT <VAR.PAGE_CONT>
+ACT.EMPTY
+SYSMESSAGE All Pages Have Been Wiped
+ENDIF
+ELSE
+ACT <TAG.ANSWER_PAGE>
+IF (<ACT.BASEID> == i_page)
+SYSMESSAGE <ACT.TAG.CATEGORY> - [<ACT.LINK.NAME>]: <ACT.TAG.TEXT>
+VAR.DAYS <EVAL ((<EVAL (<SERV.TIME> - <ACT.TAG.TIME>) / 10> / 60) / 60) / 24>
+VAR.HOURS <EVAL ((<EVAL (<SERV.TIME> - <ACT.TAG.TIME>) / 10> - (<VAR.DAYS> * 60 * 60 * 24)) / 60) / 60>
+VAR.MINUTES <EVAL ((<EVAL (<SERV.TIME> - <ACT.TAG.TIME>) / 10> - (<VAR.DAYS> * 60 * 60 * 24)) - (<VAR.HOURS> * 60 * 60)) / 60>
+IF (<VAR.DAYS> == 1)
+VAR.DAYS <EVAL <VAR.DAYS>> day
+ELSE
+VAR.DAYS <EVAL <VAR.DAYS>> days
+ENDIF
+IF (<VAR.HOURS> == 1)
+VAR.HOURS <EVAL <VAR.HOURS>> hr
+ELSE
+VAR.HOURS <EVAL <VAR.HOURS>> hrs
+ENDIF
+IF (<VAR.MINUTES> == 1)
+VAR.MINUTES <EVAL <VAR.MINUTES>> min
+ELSE
+VAR.MINUTES <EVAL <VAR.MINUTES>> mins
+ENDIF
+SYSMESSAGE Time: <VAR.DAYS>, <VAR.HOURS>, <VAR.MINUTES>
+ELSE
+ACT <VAR.PAGE_CONT>
+IF (<ACT.RESCOUNT>)
+TAG.PAGE_NUM <EVAL <ACT.RESCOUNT> - 1>
+queue1 <EVAL <ACT.RESCOUNT> - 1>
+ELSE
+SYSMESSAGE There are no pages at the moment.
+ENDIF
+ENDIF
+ENDIF
+
+[FUNCTION queue1]
+ACT <VAR.PAGE_CONT>
+IF (<ACT.FINDCONT.<ARGN>.LINK.KARMA> < <EVAL <SERV.PLAYERNEUTRAL> - 6000>)
+VAR.NOTO 085
+ELIF (<ACT.FINDCONT.<ARGN>.LINK.KILLS> > <SERV.MURDERMINCOUNT>)
+VAR.NOTO 085
+ELIF (<ACT.FINDCONT.<ARGN>.LINK.KARMA> < <SERV.PLAYERNEUTRAL>)
+VAR.NOTO 0038e
+ELIF (<ACT.FINDCONT.<ARGN>.LINK.FLAGS> & statf_criminal)
+VAR.NOTO 0038e
+ELSE
+VAR.NOTO 0124
+ENDIF
+
+IF (<ACT.FINDCONT.<ARGN>.LINK.MEMORYFINDTYPE.memory_guild>)
+VAR.GUILD <ACT.FINDCONT.<ARGN>.LINK.MEMORYFINDTYPE.memory_guild.LINK.ABBREV>
+ELSE
+VAR.GUILD
+ENDIF
+
+VAR.DAYS <EVAL ((<EVAL (<SERV.TIME> - <ACT.FINDCONT.<ARGN>.TAG.TIME>) / 10> / 60) / 60) / 24>
+VAR.HOURS <EVAL ((<EVAL (<SERV.TIME> - <ACT.FINDCONT.<ARGN>.TAG.TIME>) / 10> - (<VAR.DAYS> * 60 * 60 * 24)) / 60) / 60>
+VAR.MINUTES <EVAL ((<EVAL (<SERV.TIME> - <ACT.FINDCONT.<ARGN>.TAG.TIME>) / 10> - (<VAR.DAYS> * 60 * 60 * 24)) - (<VAR.HOURS> * 60 * 60)) / 60>
+IF (<VAR.DAYS> == 1)
+VAR.DAYS <EVAL <VAR.DAYS>> day
+ELSE
+VAR.DAYS <EVAL <VAR.DAYS>> days
+ENDIF
+IF (<VAR.HOURS> == 1)
+VAR.HOURS <EVAL <VAR.HOURS>> hr
+ELSE
+VAR.HOURS <EVAL <VAR.HOURS>> hrs
+ENDIF
+IF (<VAR.MINUTES> == 1)
+VAR.MINUTES <EVAL <VAR.MINUTES>> min
+ELSE
+VAR.MINUTES <EVAL <VAR.MINUTES>> mins
+ENDIF
+
+IF (STRMATCH(<ACT.FINDCONT.<ARGN>.LINK.REGION.NAME>,0))
+VAR.LOCATIONCOLOR 0184
+VAR.P <ACT.FINDCONT.<ARGN>.LINK.P>
+NEWITEM i_gold
+ACT.P <VAR.P>
+VAR.LOCATION <ACT.REGION.NAME>
+ACT.REMOVE
+ACT <VAR.PAGE_CONT>
+ELSE
+VAR.LOCATIONCOLOR 0480
+VAR.LOCATION <ACT.FINDCONT.<ARGN>.LINK.REGION.NAME>
+ENDIF
+
+IF (STRMATCH(<ACT.FINDCONT.<ARGN>.TAG.STATUS>,Answered))
+VAR.STATUSCOLOR 0184
+ELSE
+VAR.STATUSCOLOR 0480
+ENDIF
+
+TRY ACT.FINDCONT.<ARGN>.TAG.TIMELEFT <VAR.DAYS>, <VAR.HOURS>, <VAR.MINUTES>
+TRY ACT.FINDCONT.<ARGN>.DIALOG d_queue
+
+[DIALOG d_queue]
+250,153
+resizepic 0 0 3600 300 293
+tilepic 250 15 <EVAL <LINK.ICON>>
+text 20 15 482 0
+text 40 15 1152 1
+text 20 35 482 2
+text 100 35 <EVAL <VAR.NOTO>> 3
+text 20 55 482 4
+text 100 55 1152 5
+text 20 75 482 6
+text 100 75 <EVAL <VAR.LOCATIONCOLOR>> 7
+text 20 95 482 8
+text 100 95 1152 9
+text 20 115 482 10
+text 100 115 <EVAL <TAG.CATEGORYCOLOR>> 11
+text 20 135 482 12
+text 100 135 <EVAL <VAR.STATUSCOLOR>> 13
+text 20 155 482 14
+text 100 155 1152 15
+
+htmlgump 23 179 253 65 16 1 1
+
+button 25 250 4014 4016 1 0 1
+
+button 69 250 4020 4022 1 0 2
+button 113 250 4002 4004 1 0 3
+button 157 250 4023 4025 1 0 4
+button 201 250 4026 4028 1 0 5
+
+button 245 250 4005 4007 1 0 6
+
+[DIALOG d_queue TEXT]
+#
+<EVAL <SRC.TAG.PAGE_NUM> + 1>
+Name
+<LINK.NAME>
+Action
+<LINK.ACTION>
+Location
+<VAR.LOCATION>
+Guild
+<VAR.GUILD>
+Category
+<TAG.CATEGORY>
+Status
+<TAG.STATUS>
+Time
+<TAG.TIMELEFT>
+<TAG.TEXT>
+
+[DIALOG d_queue BUTTON]
+ONBUTTON 1
+IF (<EVAL 0<SRC.TAG.PAGE_NUM> - 1>) >= 0)
+SRC.TAG.PAGE_NUM <EVAL 0<SRC.TAG.PAGE_NUM> - 1>
+SRC.queue1 <SRC.TAG.PAGE_NUM>
+ELSE
+SRC.queue
+ENDIF
+ONBUTTON 2
+SRC.SYSMESSAGE When implemented this will be the button for sending a warning to the player because their page doesn't follow the paging conduct viewable in the help menu.
+ONBUTTON 3
+REMOVE
+SRC.queue
+ONBUTTON 4
+SRC.GO <LINK.P>
+SRC.SYSMESSAGE <TAG.CATEGORY> - [<LINK.NAME>]: <TAG.TEXT>
+TAG.STATUS Answered
+SRC.ACT <SRC.TAG.ANSWER_PAGE>
+IF (<SRC.ACT.BASEID> == i_page)
+IF (<SRC.ACT.UID> != <UID>)
+SRC.ACT.TAG.STATUS Unanswered
+ENDIF
+ENDIF
+SRC.TAG.ANSWER_PAGE <UID>
+SRC.ACT <LINK.UID>
+ONBUTTON 5
+SRC.TARG <LINK.UID>
+SRC.HIDEMESSAGE
+SRC.EVERBTARG
+ONBUTTON 6
+SRC.ACT <VAR.PAGE_CONT>
+IF (<SRC.ACT.FINDCONT.<EVAL 0<SRC.TAG.PAGE_NUM> + 1>.UID>)
+SRC.TAG.PAGE_NUM <EVAL 0<SRC.TAG.PAGE_NUM> + 1>
+SRC.queue1 <SRC.TAG.PAGE_NUM>
+ELSE
+SRC.TAG.PAGE_NUM 0
+SRC.queue1 <SRC.TAG.PAGE_NUM>
+ENDIF
+
+[COMMENT Taran's Code Below!]
+*****************************************************
+*****************************************************
+*****************************************************
+*****************************************************
+*****************************************************
+
+[FUNCTION sysmessageua]
+// Store color in <VAR.SUA_COLOR>
+// Store text to be displayed in <ARGS>
+VAR.OLDACT <ACT>
+VAR.BLAH=<P>
+NEWITEM=i_memory
+ACT.P=5190 1150
+VAR.OLD_FLAGS=<ACT.REGION.FLAGS>
+VAR.OLD_EVENTS=<REGION.EVENTS>
+ACT.REGION.FLAGS=<REGION.FLAGS>
+ACT.CONT=<UID>
+REGION.EVENTS -0
+P=5190 1150
+ACT.SAYUA <EVAL <VAR.SUA_COLOR>> 0 0 1 <ARGS>
+P=<VAR.BLAH>
+REGION.EVENTS <VAR.OLD_EVENTS>
+ACT.P=5190 1150
+ACT.REGION.FLAGS=<VAR.OLD_FLAGS>
+ACT.REMOVE
+ACT <VAR.OLDACT>

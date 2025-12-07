@@ -1,0 +1,99 @@
+################Big######################
+#################_#######################
+################Boy######################
+#################_#######################
+################Uk89#####################
+[ITEMDEF i_RuneStone]
+DEFNAME=i_RuneStone
+WEIGHT=10
+ID={01869 0186a 0186b 0186c 0186d 0186e 0186f 0170}
+NAME=Rune Stone
+TYPE=t_script
+FLIP=0
+
+CATEGORY=NEW
+SUBSECTION=RUNEWEPS
+DESCRIPTION=Rune Stone
+
+ON=@DCLICK
+SRC.CHECKSTATS
+TARGET Which sword do you wish to enchant?
+  
+return 1
+
+ON=@TARGON_Item
+IF (<SRC.TARG.TYPE> != t_weapon_mace_smith) && (<SRC.TARG.TYPE> != t_weapon_fence)&& (<SRC.TARG.TYPE> != t_weapon_bow) && (<SRC.TARG.TYPE> != t_weapon_sword) && (<SRC.TARG.TYPE> != t_weapon_mace_sharp) && (<SRC.TARG.TYPE> != t_weapon_mace_staff) && (<SRC.TARG.TYPE> != t_armor) && (<SRC.TARG.TYPE> != t_shield)
+SRC.SYSMESSAGE You can only Bind this to a weapon or piece of armor!!
+RETURN 1
+ENDIF
+SRC.SYSMESSAGE You bind the gem into the <SRC.TARG.NAME>, and strange runes rise out of the metal.
+SRC.EMOTE Bind the Gem to the <SRC.TARG.NAME>
+
+SRC.TARG.COLOR={007a0 1 007a1 1 007a2 1 007a3 1 007a4 1 007a5 1 007a6 1 007a7 1 007a8 1 007a9 1 00793 1 007c0 1 00823 1 0077c 1 0077b 1 007a1 1}
+
+IF <SRC.TARG.ATTR>&0021
+	IF (<SRC.TARG.MOREY>>2000)
+	SRC.TARG.MOREY = <SRC.TARG.MOREY>+50
+	ELSE
+	SRC.TARG.MOREY = <SRC.TARG.MOREY>+150
+	ENDIF
+	if (<SRC.TARG.MOREM> == 0)
+	SRC.TARG.NAME = Rune <SRC.TARG.NAME>
+	SRC.TARG.MOREM = 1
+	remove
+	ENDIF
+REMOVE
+else
+
+SRC.TARG.ATTR = <SRC.TARG.ATTR> + 0021
+IF (<SRC.TARG.MOREY>>2000)
+SRC.TARG.MOREY = <SRC.TARG.MOREY>+50
+ELSE
+SRC.TARG.MOREY = <SRC.TARG.MOREY>+150
+ENDIF
+if (<SRC.TARG.MOREM> == 0)
+SRC.TARG.NAME = Rune <SRC.TARG.NAME>
+SRC.TARG.MOREM = 1
+ENDIF
+remove
+
+remove 1
+return 1
+
+[ITEMDEF i_Rune_stone123]
+DEFNAME=i_Rune_Stone123
+WEIGHT=10
+ID={01869 0186a 0186b 0186c 0186d 0186e 0186f 0170}
+NAME=Rune Stoney
+TYPE=0
+FLIP=0
+
+CATEGORY=NEW
+SUBSECTION=RUNEWEPS
+DESCRIPTION=Rune_Stone
+
+ON=@DCLICK
+TARGET Which sword do you wish to enchant?
+return 1
+
+on=@TARGON_Item
+SRC.SYSMESSAGE You bind the gem into the weapon, and strange runes rise out of the metal.
+SRC.EMOTE Binds Gem to Weapon
+
+IF <SRC.TARG.ATTR>&0021
+SRC.TARG.MOREY = <SRC.TARG.MOREY>+150
+if (<SRC.TARG.MOREM> == 0)
+SRC.TARG.NAME = Rune <SRC.TARG.NAME>
+SRC.TARG.MOREM = 1
+ENDIF
+
+else
+
+SRC.TARG.ATTR = <SRC.TARG.ATTR> + 0021
+SRC.TARG.MOREY = <SRC.TARG.MOREY>+150
+if (<SRC.TARG.MOREM> == 0)
+SRC.TARG.NAME = Rune <SRC.TARG.NAME>
+SRC.TARG.MOREM = 1
+end if
+
+[EOF]

@@ -1,0 +1,258 @@
+// Weight Bug Workaround
+// by Serdar "Valthoron" Üþenmez
+// Please do not: partially or completely steal, rewrite with a few line changes, claim credit for this workaround, and/or remove any of these lines.
+// Those who don't obey these are subject to being called "lamer", or more complicated and intentionally offensive words by common sense, and especially by me.
+
+// Management item
+[ITEMDEF i_weight]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround Timer
+TYPE=t_eq_script
+
+ON=@Create
+	ATTR=attr_decay
+
+ON=@Equip
+	TIMER 1 // Adjust to will, suggested 3, maximum 10
+
+ON=@Timer
+	topobj.f_weight
+	TIMER 1
+	RETURN 1 // Also adjust this
+
+// Comparison function, to be used for test purposes
+[FUNCTION f_weight_compare]
+src.f_weight_calculate
+src.tag.diff=(<eval(<src.tag.weight>)>-<eval(<src.weight>)>)
+src.sysmessage Weight: <src.weight>
+src.sysmessage Script: <eval(<src.tag.weight>)>
+src.sysmessage Differ: <eval(<src.tag.diff>)>
+src.tag.diff
+src.tag.weight
+
+// Main functions
+[FUNCTION f_weight]
+f_weight_calculate
+f_weight_clear
+if (<eval(<weight>)> < <eval(<tag.weight>)>)
+	tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+	f_weight_balance
+	tag.diff
+endif
+f_weight_clear
+tag.weight
+
+[FUNCTION f_weight_clear]
+consume <rescount i_weight_1> i_weight_1
+consume <rescount i_weight_5> i_weight_5
+consume <rescount i_weight_10> i_weight_10
+consume <rescount i_weight_50> i_weight_50
+consume <rescount i_weight_100> i_weight_100
+consume <rescount i_weight_500> i_weight_500
+consume <rescount i_weight_1000> i_weight_1000
+consume <rescount i_weight_5000> i_weight_5000
+consume <rescount i_weight_10000> i_weight_10000
+consume <rescount i_weight_50000> i_weight_50000
+
+[FUNCTION f_weight_balance]
+if (<tag.diff>>50000)
+	f_weight_balance_50k
+endif
+if (<tag.diff>>10000)
+	f_weight_balance_10k
+endif
+if (<tag.diff>>5000)
+	f_weight_balance_5k
+endif
+if (<tag.diff>>1000)
+	f_weight_balance_1k
+endif
+if (<tag.diff>>500)
+	f_weight_balance_500
+endif
+if (<tag.diff>>100)
+	f_weight_balance_100
+endif
+if (<tag.diff>>50)
+	f_weight_balance_50
+endif
+if (<tag.diff>>10)
+	f_weight_balance_10
+endif
+if (<tag.diff>>5)
+	f_weight_balance_5
+endif
+if (<tag.diff>>0)
+	f_weight_balance_1
+endif
+
+// Balance functions
+[FUNCTION f_weight_balance_50k]
+newitem i_weight_50000
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>50000)
+	f_weight_balance_50k
+endif
+
+[FUNCTION f_weight_balance_10k]
+newitem i_weight_10000
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>10000)
+	f_weight_balance_10k
+endif
+
+[FUNCTION f_weight_balance_5k]
+newitem i_weight_5000
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>5000)
+	f_weight_balance_5k
+endif
+
+[FUNCTION f_weight_balance_1k]
+newitem i_weight_1000
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>1000)
+	f_weight_balance_1k
+endif
+
+[FUNCTION f_weight_balance_500]
+newitem i_weight_500
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>500)
+	f_weight_balance_500
+endif
+
+[FUNCTION f_weight_balance_100]
+newitem i_weight_100
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>100)
+	f_weight_balance_100
+endif
+
+[FUNCTION f_weight_balance_50]
+newitem i_weight_50
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>50)
+	f_weight_balance_50
+endif
+
+[FUNCTION f_weight_balance_10]
+newitem i_weight_10
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>10)
+	f_weight_balance_10
+endif
+
+[FUNCTION f_weight_balance_5]
+newitem i_weight_5
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>5)
+	f_weight_balance_5
+endif
+
+[FUNCTION f_weight_balance_1]
+newitem i_weight_1
+equip <act>
+tag.diff=(<eval(<tag.weight>)>-<eval(<weight>)>)
+if (<tag.diff>>0)
+	f_weight_balance_1
+endif
+
+// Calculation function
+[FUNCTION f_weight_calculate]
+tag.weight=30
+tag.weight=<tag.weight>+(<findlayer(1).weight>
+tag.weight=<tag.weight>+(<findlayer(2).weight>
+tag.weight=<tag.weight>+(<findlayer(3).weight>
+tag.weight=<tag.weight>+(<findlayer(4).weight>
+tag.weight=<tag.weight>+(<findlayer(5).weight>
+tag.weight=<tag.weight>+(<findlayer(6).weight>
+tag.weight=<tag.weight>+(<findlayer(7).weight>
+tag.weight=<tag.weight>+(<findlayer(8).weight>
+tag.weight=<tag.weight>+(<findlayer(9).weight>
+tag.weight=<tag.weight>+(<findlayer(10).weight>
+tag.weight=<tag.weight>+(<findlayer(11).weight>
+tag.weight=<tag.weight>+(<findlayer(12).weight>
+tag.weight=<tag.weight>+(<findlayer(13).weight>
+tag.weight=<tag.weight>+(<findlayer(14).weight>
+tag.weight=<tag.weight>+(<findlayer(16).weight>
+tag.weight=<tag.weight>+(<findlayer(17).weight>
+tag.weight=<tag.weight>+(<findlayer(18).weight>
+tag.weight=<tag.weight>+(<findlayer(19).weight>
+tag.weight=<tag.weight>+(<findlayer(20).weight>
+tag.weight=<tag.weight>+(<findlayer(21).weight>
+tag.weight=<tag.weight>+(<findlayer(22).weight>
+tag.weight=<tag.weight>+(<findlayer(23).weight>
+tag.weight=<tag.weight>+(<findlayer(24).weight>
+
+// Counterweights
+[ITEMDEF i_weight_1]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=0.1
+
+[ITEMDEF i_weight_5]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=0.5
+
+[ITEMDEF i_weight_10]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=1
+
+[ITEMDEF i_weight_50]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=5
+
+[ITEMDEF i_weight_100]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=10
+
+[ITEMDEF i_weight_500]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=50
+
+[ITEMDEF i_weight_1000]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=100
+
+[ITEMDEF i_weight_5000]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=500
+
+[ITEMDEF i_weight_10000]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=1000
+
+[ITEMDEF i_weight_50000]
+ID=i_worldgem_bit
+NAME=Weight Bug Workaround - 1
+TYPE=t_eq_script
+WEIGHT=5000
+
+[EOF]

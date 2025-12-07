@@ -1,0 +1,285 @@
+//////////////////////////////////////////////////////////////////////////////////////// 
+//Mordaunt's Inhouse player commands v1.4a 
+//nudgeup, nudgedown, flip & lockdown
+//Allows player more control over decorating their homes with less need for a GM 
+//Designed for use with Amlaruil's Housing menu. 
+// 
+//To use this script paste all the code of this into Amlaruil's House Menu version 1.0 or 
+//later. 
+//
+//
+//v1.4a revision - Issue with locking down items in backpack fixed - Dark
+//v1.3a revision - Issue with pointer memories remaining after function resolved
+//		   Bug with locking crafted items resolved - dev infinity
+//		   Secure command removed, as it was defunct (from something which
+//		   I never finished) and didn't work correctly.
+//v1.2a revision - Lockdown & secure bugs identified by dev infinity resolved
+//////////////////////////////////////////////////////////////////////////////////////// 
+
+
+on=*raise*this* 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || ((<SRC.UID>==<SRC.TAG.COOWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_nudgeu 
+SRC.ACT.EQUIP 
+ELSE 
+RETURN 1 
+ENDIF 
+
+on=*lower*this* 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || ((<SRC.UID>==<SRC.TAG.COOWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_nudged 
+SRC.ACT.EQUIP 
+ELSE 
+RETURN 1 
+ENDIF 
+
+on=*flip*this* 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || ((<SRC.UID>==<SRC.TAG.COOWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_flipx 
+SRC.ACT.EQUIP 
+ELSE 
+RETURN 1 
+ENDIF 
+
+on=*lock*this* 
+IF (<SRC.UID>==<SRC.TAG.OWNER>) || ((<SRC.UID>==<SRC.TAG.COOWNER>) || (<SRC.ISGM>) 
+SRC.NEWITEM=i_lockdown 
+SRC.ACT.EQUIP 
+ELSE 
+RETURN 1 
+ENDIF 
+
+[FUNCTION nudgeu]
+NEWITEM=i_nudgeu
+SRC.ACT.EQUIP
+[ITEMDEF i_nudgeu]
+NAME=pointer
+id=i_memory 
+type=t_eq_script 
+WEIGHT=0
+ 
+ON=@CREATE
+ATTR=attr_invis
+TIMER=15
+
+ON=@EQUIP
+IF (<SRC.UID.<SRC.REGION.UID>.TYPE> == t_multi) && (<SRC.UID> == <SRC.UID.<SRC.REGION.UID>.MORE1>)
+TARGETG
+SRC.SYSMESSAGE What do you wish to nudge up?
+ELSE 
+SRC.SYSMESSAGE You must be in your house to use this command
+RETURN 0
+ENDIF
+RETURN 1
+ 
+ON=@TARGON_ITEM
+SRC.TARG.Z (<SRC.TARG.Z>+1) 
+REMOVE
+f_remove_nudgeu
+RETURN 1
+ 
+ON=@TARGON_CHAR
+SYSMESSAGE I think they would take offense...
+REMOVE
+f_remove_nudgeu
+RETURN 1
+ 
+ON=@TARGON_GROUND 
+SYSMESSAGE You cannot nudge that
+REMOVE
+f_remove_nudgeu
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+
+[ITEMDEF i_nudged]
+NAME=pointer
+id=i_memory 
+type=t_eq_script 
+WEIGHT=0
+ 
+ON=@CREATE
+ATTR=attr_invis
+TIMER=15
+ 
+ON=@EQUIP
+IF (<SRC.UID.<SRC.REGION.UID>.TYPE> == t_multi) && (<SRC.UID> == <SRC.UID.<SRC.REGION.UID>.MORE1>)
+TARGETG
+SRC.SYSMESSAGE What do you wish to nudge down?
+ELSE 
+SRC.SYSMESSAGE You must be in your house to use this command
+RETURN 0
+ENDIF
+RETURN 1
+ 
+ON=@TARGON_ITEM
+SRC.TARG.Z (<SRC.TARG.Z>-1) 
+REMOVE
+f_remove_nudged
+RETURN 1
+ 
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE I think they would take offense...
+REMOVE
+f_remove_nudged
+RETURN 1
+ 
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE You cannot nudge that
+REMOVE
+f_remove_nudged
+RETURN 1
+
+ON=@TIMER
+REMOVE 
+RETURN 1
+
+[ITEMDEF i_flipx]
+NAME=pointer
+id=i_memory 
+type=t_eq_script 
+WEIGHT=0
+ 
+ON=@CREATE
+ATTR=attr_invis
+TIMER=15
+
+ON=@EQUIP
+IF (<SRC.UID.<SRC.REGION.UID>.TYPE> == t_multi) && (<SRC.UID> == <SRC.UID.<SRC.REGION.UID>.MORE1>)
+TARGETG
+SRC.SYSMESSAGE What do you wish to flip?
+ELSE 
+SRC.SYSMESSAGE You must be in your house to use this command
+RETURN 0
+ENDIF
+RETURN 1
+ 
+ON=@TARGON_ITEM
+SRC.TARG.FLIP
+REMOVE
+f_remove_flipx
+RETURN 1
+ 
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE I think they would take offense...
+REMOVE
+f_remove_flipx
+RETURN 1
+ 
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE You cannot flip that
+REMOVE
+f_remove_flipx
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1 
+
+[ITEMDEF i_lockdown]
+NAME=pointer
+id=i_memory 
+type=t_eq_script 
+WEIGHT=0
+ 
+ON=@CREATE
+ATTR=attr_invis
+TIMER=15
+
+ON=@EQUIP
+IF (<SRC.UID.<SRC.REGION.UID>.TYPE> == t_multi) && (<SRC.UID> == <SRC.UID.<SRC.REGION.UID>.MORE1>)
+TARGETG
+SRC.SYSMESSAGE What do you wish to Lockdown/Release?
+ELSE 
+SRC.SYSMESSAGE You must be in your house to use this command
+RETURN 1
+ENDIF
+RETURN 1
+ 
+ON=@TARGON_ITEM 
+IF !(<SRC.TARG.TOPOBJ.UID>==<SRC.UID>) 
+IF (<SRC.TARG.ATTR>&ATTR_MOVE_NEVER) 
+SRC.TARG.ATTR=(<SRC.TARG.ATTR>&~ATTR_MOVE_NEVER) 
+SRC.TARG.SAYU [Released] 
+//SRC.TARG.EVENTS -e_lockeddown //events can be found at the bottom if you wish to enable them 
+ELSE 
+SRC.TARG.ATTR=(<SRC.TARG.ATTR>|ATTR_MOVE_NEVER&~ATTR_MOVE_ALWAYS)
+SRC.TARG.SAYU [Locked Down] 
+//SRC.TARG.EVENTS +e_lockeddown 
+REMOVE 
+ENDIF 
+ELSE
+SYSMESSAGE You can only lockdown items in your house!
+ENDIF
+f_remove_lockdown
+RETURN 1 
+ 
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE I think they would take offense...
+REMOVE
+f_remove_lockdown
+RETURN 1
+ 
+ON=@TARGON_GROUND 
+SRC.SYSMESSAGE You cannot lockdown/release that
+REMOVE
+f_remove_lockdown
+RETURN 1
+
+ON=@TIMER
+REMOVE
+RETURN 1 
+
+//fudge to remove unused pointers from previous used of the functions
+//and because memories may not remove if the script is used in quick succession.
+//Although this section should fire very rarely, it will clear any pointers
+//for people who have used previous versions of this script.
+
+[FUNCTION f_remove_nudged] 
+IF <src.restest i_nudgeu> 
+src.findid.i_nudgeu
+src.consume
+f_remove_nudged
+ENDIF
+RETURN 1
+
+[FUNCTION f_remove_nudgeu] 
+IF <src.restest i_nudged> 
+src.findid.i_nudged
+src.consume
+f_remove_nudgeu
+ENDIF
+RETURN 1
+
+[FUNCTION f_remove_flipx]
+IF <src.restest i_flipx> 
+src.findid.i_flipx
+src.consume
+f_remove_flipx
+ENDIF
+RETURN 1
+
+[FUNCTION f_remove_lockdown]
+IF <src.restest i_lockdown> 
+src.findid.i_lockdown.remove 
+src.consume
+f_remove_lockdown
+ENDIF
+RETURN 1
+
+//.99+ ONLY, I discovered after doing this, but you could implement it for that series, 
+//but you will need to change some triggers to the newer syntax
+//If you wish for lockdown status to be displayed on items all the time
+//remove the comment in the below, and comment the lines SRC.TARG.EVENTS -e_lockeddown and
+//SRC.TARG.EVENTS +e_lockeddown
+
+//[EVENTS e_lockeddown]
+
+//ON=@CLICK
+//MESSAGE [Locked Down]
+
+
+[EOF]

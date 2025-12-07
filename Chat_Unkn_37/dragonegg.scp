@@ -1,0 +1,78 @@
+//################################################################
+//##		Dragon Egg Made by Freezor			##
+//##	   		FIX: Now are really 6 hours		##
+//##	   		FIX:2 Updates Player's Backpack		##
+//##	Instructions: add i_dragonegg then Double click on it	##
+//################################################################
+
+
+[itemdef i_dragonegg]
+id=i_fruit_coconut
+name=Dragons Egg
+type=t_eq_script
+
+on=@Create
+color={0b7a 1 0b79 1 0b7b 1 colors_all 5}
+attr=attr_decay|attr_magic
+
+
+on=@CLICK
+if (<EVAL <TAG.CICLO>> == 1)
+message @63 [Newly Laid]
+elseif (<EVAL <TAG.CICLO>> == 2)
+message @54 [Growing]
+elseif (<EVAL <TAG.CICLO>> == 3)
+message @40 [Close to Hatching]
+else
+return 0
+Endif
+
+on=@Dclick
+if !(<cont>==<src.findlayer(21).uid>)
+src.message the item must be in your backpack
+return 0
+else
+if (!<EVAL <TAG.CICLO>>)
+src.message @54 You begin to warm up the egg.
+src.newitem=i_dhatcht
+src.act.link=<uid>
+src.act.equip
+TAG.CICLO=1
+Attr=00034
+return 1
+ELSE
+src.message The <name> is growing.
+ENDIF
+endif
+
+[itemdef i_dhatcht]
+id=i_memory
+name=Dragon Hatching Timer
+type=t_eq_script
+layer=layer_special
+
+on=@create
+attr=attr_newbie|attr_decay
+
+on=@equip
+timer=60*60*2
+
+on=@timer
+if (<EVAL <LINK.TAG.CICLO>> == 3)
+cont.newitem=i_pet_dragon
+cont.act.color=<link.color>
+cont.act.name=#NAMES_DRAGON
+cont.act.more1=c_dragon_small_red
+cont.act.attr=020
+cont.act.cont=<cont>
+cont.message <cont.act.name> has born!
+cont.sfx 016a
+LINK.remove
+REMOVE
+cont.update
+Return 0
+ELSE
+LINK.TAG.CICLO=<EVAL <LINK.TAG.CICLO>>+1
+TIMER=60*60*2
+Return 1
+ENDIF

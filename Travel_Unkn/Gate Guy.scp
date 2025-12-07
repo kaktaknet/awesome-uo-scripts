@@ -1,0 +1,286 @@
+/////////////////////////////////////////////////
+//                    GATE GUY BY LADY KRYSTA                 //
+//               THE GUMPPIC IS RIPPED OFF OF             //
+//                 THE .MAP COMMAND GUMP               //
+//           THE GATE GUY ONLY WORKS WITH         //
+//   TOWNS AS OF RIGHT NOW, AND HE MAY     //
+//    BE EDITED ANY WHICH WAY YOU WANT      //
+//   ALSO BE SURE TO EDIT THE NAME LIST AT   //
+//   THE BOTTOM OF THE PAGE. THE NAMES     //
+//   I USED WERE JUST GUYS NAMES OFF THE    //
+//   TOP OF MY HEAD. SOME IN WHICH MAY     //
+//    MAY NOT EVEN BE GUYS NAMES. HEHE     //
+//               GATE GUY IS ALSO A BANKER               //
+//          WHICH MAKES HIM PRETTY USEFUL      //
+//     PLEASE GIVE ME A TINY BIT OF CREDIT       //
+//      BECAUSE I TOOK THE TIME TO MAKE        //
+//            THIS. (IT COSTS 100GP TO TRAVEL)       //
+//          KNOWN BUGS:                (NONE)               //
+//            PLEASE REPORT ANY BUGS TO:              //
+//     IDONTSEEDEADPEOPLE@YAHOO.COM     //
+///////////////////////////////////////////////
+
+[CHARDEF C_GATE_GUY]
+NAME=#NAMES_GATEGUY the Gate Guy
+ID=C_MAN
+DAM=1, 1
+CAN=MT_WALK|MT_EQUIP|MT_MALE
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+TEVENTS=e_Human_Greet
+
+TSPEECH=gateguy
+TSPEECH=spk_rehello
+
+ON=@Create
+STR={46 60}
+DEX={31 72}
+INT={41 93}
+
+WRESTLING=(80.0)
+TACTICS=(75.0)
+PARRYING=(60.0)
+
+NPC=brain_Human
+
+KARMA=(400)
+FAME=(2500)
+
+ITEMNEWBIE=i_backpack
+
+ON=@NPCRestock
+ITEM=i_pants_long
+COLOR=colors_all
+ITEM=i_hat_wide_brim
+COLOR=colors_all
+ITEM=i_shirt_plain
+COLOR=colors_all
+ITEM=i_sandals
+COLOR=colors_all
+
+CATEGORY=Civilized
+SUBSECTION=KRYSTA
+DESCRIPTION=Gate Guy
+
+[SPEECH gateguy]
+ON=*Gate*
+DORAND 2
+SAY Gate?!, Oh, right... im the gate guy, Just say Map to see my locations?
+SAY Gate this, Gate that. Can't you just say Map?!
+ENDDO
+
+ON=*Map*
+DIALOG d_x_travel_m
+RETURN 1
+
+ON=*bank*
+BEGIN
+SAY Here is your bank <SRC.NAME>
+SRC.BANK
+END
+
+[DIALOG d_x_travel_m] 
+0, 0 
+gumppic  400 200 5528
+text 470 175 1153 0 
+text 495 241 1153 1 //Britain
+text 485 396 1153 2 //Trinsic
+text 585 421 1153 3 //Yew
+text 435 346 1153 4 //Moonglow
+text 435 471 1153 5 //buc's den
+text 635 246 1153 6 //minoc
+text 545 291 1153 7 //ocllo
+text 625 296 1153 8 //serps hold
+text 605 321 1153 9 //skara brae
+text 660 546 1153 10 //vesper
+text 645 471 1153 11 //cove
+text 675 366 1153 12 //magincia
+text 465 541 1153 13 //jhelom
+button 480 245 1209 1210 1 0 1 //Britain
+button 470 400 1209 1210 1 0 2 //Trinsic
+button 570 425 1209 1210 1 0 3 //Yew
+button 420 350 1209 1210 1 0 4 //Moonglow
+button 420 475 1209 1210 1 0 5 //buc's den
+button 620 250 1209 1210 1 0 6 //minoc
+button 530 295 1209 1210 1 0 7 //ocllo
+button 610 300 1209 1210 1 0 8 //serps hold
+button 590 325 1209 1210 1 0 9 //skara brae
+button 645 550 1209 1210 1 0 10 //vesper
+button 630 475 1209 1210 1 0 11 //cove
+button 660 370 1209 1210 1 0 12 //magincia
+button 450 545 1209 1201 1 0 13 //jhelom
+
+[DIALOG d_x_travel_m TEXT] 
+You must have 100gp to travel
+Britain 
+Trinsic 
+Yew 
+Moonglow 
+Buc's Den 
+Minoc 
+Ocllo 
+Serpent's Hold 
+Skara Brae 
+Vesper 
+Cove 
+Magincia 
+Jhelom 
+
+[DIALOG d_x_travel_m BUTTON] 
+ONBUTTON=0 
+SRC.SYSMESSAGE=You have exited the travel menu 
+ONBUTTON=1 //Britain
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO BRITAIN
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=2 //Trinsic
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO 1867, 2780
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=3 //yew
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO YEW
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=4 //Moonglow
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO 4442, 1172
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=5 //Bucs Den
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO BUCCANEER'S DEN
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=6 //Minoc  
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO MINOC
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=7 //Ocllo
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO OCLLO
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=8 //Serps hold
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO 3010, 3371, 15
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=9 //Skara Brae
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO SKARA BRAE
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=10 //Vesper
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO VESPER
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=11 //Cove 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO COVE
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=12 //Magincia 
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO MAGINCIA
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+ONBUTTON=13 //Jhelom
+IF (<SRC.RESTEST 100 i_GOLD> ) 
+SRC.CONSUME=100 i_gold 
+SRC.GO JHELOM
+SRC.SYSMESSAGE Welcome to <SRC.REGION.NAME>! That'll be 100gp
+RETURN 1
+ELSE 
+SRC.SAY You need 100gp to travel. Nothing more, Nothing less.
+RETURN 1
+ENDIF
+
+
+[NAMES NAMES_GATEGUY]
+19
+Joe
+Adam
+Harry
+Theo
+Mativa
+Jim
+Ed
+Mike
+Brian
+Scott
+Timmy
+Billy
+Mark
+Tony
+Allen
+Alexander
+Stewart
+Kyle
+Thomas
+
+[EOF]
