@@ -14,7 +14,15 @@
 
 ## Overview
 
-A comprehensive, well-organized repository of Sphere Server scripts covering everything from skill systems and housing to PvP arenas and quest management. All scripts are organized by category, documented with READMEs, and ready to use.
+A comprehensive, well-organized repository of **756+ Sphere Server scripts** sourced from the legendary **[mirror.ashkantra.de/scripts/Sphere/](https://mirror.ashkantra.de/scripts/Sphere/)** archive. These scripts cover everything from skill systems and housing to PvP arenas and quest management.
+
+All scripts have been:
+- ✨ **Cataloged with descriptive names** - Based on content analysis
+- 📚 **Documented** - Every script has a README
+- 🗂️ **Organized** - 13 logical categories with version numbering
+- 🔍 **Indexed** - Complete searchable index available
+
+Ready to use for setting up Sphere Server shards.
 
 ### Quick Facts
 
@@ -212,13 +220,23 @@ Most scripts work across versions. Check individual README files for version com
 - Authors preserved in documentation
 - Created for community use
 
-### 🙏 Special Thanks
+### 🙏 Special Thanks & Source Attribution
 
-This collection of scripts comes from **[mirror.ashkantra.de/scripts/Sphere/](https://mirror.ashkantra.de/scripts/Sphere/)** - an invaluable archive that has preserved decades of Ultima Online community knowledge and development.
+**This entire collection originates from:** 🌐 **[mirror.ashkantra.de/scripts/Sphere/](https://mirror.ashkantra.de/scripts/Sphere/)**
 
-We are deeply grateful to the maintainers of this mirror for their dedication to preserving our community's memory and the countless hours of work by script developers over the years. Without their efforts, these priceless contributions to the Ultima Online ecosystem would have been lost.
+This legendary archive has been preserving decades of Ultima Online and Sphere Server community knowledge and development. All 756+ scripts in this repository were sourced from this invaluable mirror.
 
-**Thank you for keeping the spirit of Ultima Online alive! 🙏**
+### Gratitude
+
+We are deeply grateful to the maintainers of **mirror.ashkantra.de** for their unwavering dedication to:
+- Preserving our community's collective memory
+- Maintaining an accessible archive of countless hours of work by script developers
+- Ensuring that the priceless contributions to the Ultima Online ecosystem are never lost
+- Supporting the UO community for years
+
+Without their efforts, these irreplaceable scripts and knowledge would have vanished. This repository exists to make that preserved knowledge more accessible, organized, and discoverable.
+
+**Special thanks to [mirror.ashkantra.de](https://mirror.ashkantra.de/scripts/Sphere/) for keeping the spirit of Ultima Online alive! 🙏**
 
 ## ✨ What Makes This Repository Awesome
 
