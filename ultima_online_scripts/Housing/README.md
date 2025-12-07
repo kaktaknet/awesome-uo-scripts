@@ -21,61 +21,51 @@ This category is useful for:
 
 ```
 Housing/
-├── House_53x/
-├── House_Menu_1/
-├── House_Unkn/
-├── House_Unkn_1/
-├── House_Unkn_10/
-├── House_Unkn_11/
-├── House_Unkn_12/
-├── House_Unkn_13/
-├── House_Unkn_14/
-├── House_Unkn_15/
-├── House_Unkn_16/
-├── House_Unkn_17/
-├── House_Unkn_18/
-├── House_Unkn_19/
-├── House_Unkn_2/
-├── House_Unkn_20/
-├── House_Unkn_21/
-├── House_Unkn_22/
-├── House_Unkn_23/
-├── House_Unkn_24/
-├── House_Unkn_25/
-├── House_Unkn_26/
-├── House_Unkn_27/
-├── House_Unkn_28/
-├── House_Unkn_29/
-├── House_Unkn_3/
-├── House_Unkn_30/
-├── House_Unkn_31/
-├── House_Unkn_32/
-├── House_Unkn_33/
-├── House_Unkn_34/
-├── House_Unkn_35/
-├── House_Unkn_36/
-├── House_Unkn_37/
-├── House_Unkn_38/
-├── House_Unkn_39/
-├── House_Unkn_4/
-├── House_Unkn_40/
-├── House_Unkn_41/
-├── House_Unkn_42/
-├── House_Unkn_43/
-├── House_Unkn_44/
-├── House_Unkn_45/
-├── House_Unkn_46/
-├── House_Unkn_5/
-├── House_Unkn_6/
-├── House_Unkn_7/
-├── House_Unkn_8/
-├── House_Unkn_9/
-├── House_Unknown/
-├── house_menu_v10/
-├── housesystem_1/
-├── in-house_commands14/
-└── in-house_commands14a/
+├── House_53x/                    (Legacy system)
+├── House_Decoration_v1/ - v13/   (13 decoration/customization systems)
+├── House_Door_v1/                (Door locking and access)
+├── House_Helper_Function_v1/ - v4/  (4 helper functions)
+├── House_Interior_Commands_v1/ - v2/  (2 interior command systems)
+├── House_Menu_1/                 (Menu system)
+├── House_Placement_v1/           (House placement mechanics)
+├── House_Rental_v1/ - v3/        (3 rental/lease systems)
+├── House_Security_v1/ - v3/      (3 security systems)
+├── House_Unkn_1, House_Unkn_2,   (30 legacy unknown systems)
+│   House_Unkn_3, ... House_Unkn_46
+├── House_Unknown/                (Unknown system)
+├── house_menu_v10/               (Menu system v10)
+└── housesystem_1/                (Legacy housing system)
 ```
+
+## Script Categories
+
+### Decoration Systems (13 scripts)
+House customization and visual decoration features.
+- House_Decoration_v1 through House_Decoration_v13
+
+### Security Systems (3 scripts)
+House security and access control.
+- House_Security_v1 through House_Security_v3
+
+### Rental Systems (3 scripts)
+House rental, leasing, and payment systems.
+- House_Rental_v1 through House_Rental_v3
+
+### Helper Functions (4 scripts)
+Supporting functions for housing systems.
+- House_Helper_Function_v1 through House_Helper_Function_v4
+
+### Interior Commands (2 scripts)
+In-house command systems and menus.
+- House_Interior_Commands_v1, House_Interior_Commands_v2
+
+### Other Systems
+- House_Door_v1 - Door access control
+- House_Placement_v1 - House placement mechanics
+- House_53x - Legacy system
+- House_Menu_1 - Menu interface
+- house_menu_v10 - Menu system
+- housesystem_1 - Legacy housing
 
 ## Installation Guide
 
@@ -127,6 +117,7 @@ For a complete server, consider combining:
 ## Changelog
 
 - **2025-12-07**: Complete category organization and documentation
+- **2025-12-07**: Renamed 27 Housing folders with meaningful names based on content analysis
 
 ---
 
