@@ -120,19 +120,68 @@ To contribute scripts or improvements:
 3. Include relevant keywords in README for discoverability
 4. Submit organized contributions to the appropriate category
 
-## 📞 Support
+## 📞 Resources & Support
 
-For questions about specific scripts, refer to:
-- Individual script README.md files
-- Category README.md files for overview
-- [Sphere Server Documentation](http://www.spherecommunity.net/)
-- [Ultima Online Lore](https://uo.com/)
+### Official Resources
+
+**Ultima Online:**
+- [Official UO Website](https://uo.com/) - Latest news, updates, and official servers
+- [UO New Legacy](https://uo.com/new-legacy/) - Modern UO ruleset launched 2024
+- [Wikipedia - Ultima Online](https://en.wikipedia.org/wiki/Ultima_Online) - History and overview
+
+**Sphere Server - Official:**
+- [SphereServer.com](https://www.sphereserver.com/) - Main Sphere Server project
+- [Sphere Community](https://www.sphereserver.net/) - Community and resources
+- [SphereWiki](https://wiki.spherecommunity.net/) - **Comprehensive scripting documentation** 📚
+- [Sphere GitHub](https://github.com/Sphereserver/) - Official source code repositories
+- [Sphere Community Forum](https://forum.spherecommunity.net/) - Discussion board and support
+
+### Getting Help
+
+For questions about scripts in this repository:
+1. Check individual script **README.md** files
+2. Review **Category README.md** files for overviews
+3. Consult [SphereWiki Documentation](https://wiki.spherecommunity.net/) for Sphere script reference
+4. Ask questions on [Sphere Community Forum](https://forum.spherecommunity.net/)
+5. Search [Sphere GitHub Discussions](https://github.com/Sphereserver/Source-X/discussions)
+
+### Learning Resources
+
+- **SphereWiki Tutorials**: https://wiki.spherecommunity.net/index.php/Category:Tutorial
+- **Script Language Reference**: https://wiki.spherecommunity.net/index.php/Script_Language
+- **Server Setup Guide**: https://wiki.spherecommunity.net/index.php/Server_Setup
+- **Community Scripts**: Shared in the forums and repositories
+
+### Community Projects
+
+Popular Sphere community projects:
+- **UO Outlands** (https://uooutlands.com/) - Active free-to-play Sphere shard
+- **UO Forever** (https://uoforever.com/) - Nostalgia-focused shard
+- **Source-X** (https://github.com/Sphereserver/Source-X) - Modern Sphere fork with active development
 
 ## 🎮 About Ultima Online & Sphere Server
 
-**Ultima Online** is one of the most influential MMORPGs of all time. **Sphere Server** is a popular open-source server emulator that allows running private UO servers with custom scripts written in the Sphere Script Language.
+### Ultima Online
+**Ultima Online** (launched 1997) is one of the most influential MMORPGs of all time. It pioneered many features now standard in MMOs. The game is still actively maintained by EA/Origin with:
+- Original servers running continuously for 28+ years
+- **UO New Legacy** - A new ruleset for modern players (launched October 2024)
+- Active community with thousands of players
+- Official website: https://uo.com/
 
-This repository serves as a comprehensive resource for Sphere Server script development and server customization.
+### Sphere Server
+**Sphere Server** is a popular open-source server emulator for Ultima Online that allows:
+- Running private UO servers (shards)
+- Custom gameplay through Sphere Script Language
+- Complete control over game mechanics and content
+- Active community development and support
+
+This repository contains **756+ scripts** covering all major game systems, making it the most comprehensive collection of Sphere Server scripts available for developers, administrators, and players looking to customize their UO experience.
+
+### Perfect For:
+- 🎮 **Players**: Understanding server mechanics and custom content
+- 🛠️ **Admins**: Finding ready-to-use systems for their shards
+- 👨‍💻 **Developers**: Learning from real-world script examples
+- 🎓 **Students**: Understanding game server architecture
 
 ---
 
