@@ -1,8 +1,7 @@
 <div align="center">
-<img src="assets/awesome_ultima-online_cover.jpg" alt="Ultima Online Logo" width="1280">
-
 # Awesome Ultima Online Scripts
-
+  
+<img src="assets/awesome_ultima-online_cover.jpg" alt="Ultima Online Logo" width="1280">
 </div>
 
 > A curated collection of **756+ script packages** for Sphere Server - the free Ultima Online server emulator. Fully documented with meaningful naming and organized for easy discovery.
