@@ -1,57 +1,111 @@
+! ============================================================
+! DNS Allowlist — OAuth, Webmaster Tools, Analytics
+! ============================================================
+! Назначение : OAuth-авторизация, панели вебмастеров
+!              (Google, Bing, Yandex, Cloudflare),
+!              аналитика (Метрика, Clarity, GA),
+!              Microsoft Marketplace / Office.
+! Формат     : AdGuard DNS / AdGuard Home → User rules
+! Обновлено  : 2026-03-26
+!
+! ВНИМАНИЕ: следующие домены явно присутствуют в блок-листе
+!           и намеренно перекрыты здесь:
+!   mc.yandex.ru, mc.yandex.com, clarity.ms,
+!   google-analytics.com, yadro.ru
+! ============================================================
+
 ! ========================================
-! ALLOWLIST: OAuth providers
+! OAuth: Google
 ! ========================================
 @@||accounts.google.com^
 @@||oauth2.googleapis.com^
 @@||apis.google.com^
 @@||accounts.youtube.com^
+
+! ========================================
+! OAuth: Microsoft
+! ========================================
 @@||login.microsoftonline.com^
 @@||login.live.com^
 @@||account.microsoft.com^
+
+! ========================================
+! OAuth: Yandex
+! ========================================
 @@||login.yandex.ru^
 @@||passport.yandex.ru^
 @@||oauth.yandex.ru^
+
+! ========================================
+! OAuth: VK
+! ========================================
 @@||id.vk.com^
 @@||oauth.vk.com^
 @@||id.vk.ru^
 @@||oauth.vk.ru^
 @@||workspace.vk.ru^
-@@||marketplace.microsoft.com^$important,document
-@@||pages.store.office.com^$important,document
-@@||analytics.google.com^$important,document
-@@||dash.cloudflare.com^$important,document
+
 ! ========================================
-! ALLOWLIST: Google Search Console / Webmaster
+! Google Search Console / Webmaster
 ! ========================================
 @@||search.google.com^
 @@||searchconsole.google.com^
 @@||www.google.com^
+@@||ssl.gstatic.com^
+@@||www.gstatic.com^
+@@||fonts.gstatic.com^
+@@||fonts.googleapis.com^
 
 ! ========================================
-! ALLOWLIST: Bing Webmaster Tools
+! Bing Webmaster Tools
 ! ========================================
 @@||www.bing.com^
 @@||webmaster.bing.com^
 
 ! ========================================
-! ALLOWLIST: Yandex Webmaster
+! Cloudflare Dashboard
+! ========================================
+@@||dash.cloudflare.com^
+@@||api.cloudflare.com^
+@@||cloudflare.com^
+
+! ========================================
+! Microsoft Marketplace / Office
+! ========================================
+@@||marketplace.microsoft.com^
+@@||pages.store.office.com^
+@@||appsource.microsoft.com^
+
+! ========================================
+! Yandex Webmaster
 ! ========================================
 @@||webmaster.yandex.ru^
 @@||yandex.ru^
+@@||yastatic.net^
 
 ! ========================================
-! ALLOWLIST: Yandex Metrika (аналитика)
+! Yandex Metrika — mc.yandex.ru/com в блок-листе
 ! ========================================
 @@||metrika.yandex.ru^
 @@||metrika.yandex.com^
+@@||mc.yandex.ru^
+@@||mc.yandex.com^
+@@||counter.yadro.ru^
 
 ! ========================================
-! ALLOWLIST: Microsoft Clarity
+! Microsoft Clarity — clarity.ms в блок-листе
 ! ========================================
 @@||clarity.ms^
 @@||www.clarity.ms^
+@@||c.clarity.ms^
+@@||d.clarity.ms^
+@@||l.clarity.ms^
+@@||j.clarity.ms^
 
 ! ========================================
-! ALLOWLIST: Google Analytics (если нужно)
+! Google Analytics — google-analytics.com в блок-листе
 ! ========================================
 @@||analytics.google.com^
+@@||www.google-analytics.com^
+@@||ssl.google-analytics.com^
+@@||region1.google-analytics.com^
